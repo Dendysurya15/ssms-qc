@@ -1529,7 +1529,7 @@
 
         var lokasiKerja = "{{ session('lok') }}";
         // console.log(lokasiKerja);
-        if (lokasiKerja == 'Regional 2') {
+        if (lokasiKerja == 'Regional II') {
             $('#regionalPanen').val('2');
             $('#regionalDataweek').val('2');
             $('#regionalData').val('2');
