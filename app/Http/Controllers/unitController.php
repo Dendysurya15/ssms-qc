@@ -354,6 +354,7 @@ class unitController extends Controller
                         ->orWhere('unit', '=', $value['est']);
                 })
                 ->whereYear('tanggal', $year)
+                ->orderBy('tanggal')
                 ->get();
 
 
