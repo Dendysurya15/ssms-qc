@@ -132,6 +132,10 @@
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
                             <h5><b>REKAPITULASI RANKING NILAI KUALITAS PANEN</b></h5>
                         </div>
+                        <!-- <li class="nav-item d-none d-sm-inline-block">
+                            <a class="nav-link">Selamat datang, {{ session('departemen') }} </a>
+                            <a class="nav-link">Lokasi Kerja: {{ session('lok') }} </a>
+                        </li> -->
 
                         <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
                             <div class="row w-100">
@@ -1521,13 +1525,28 @@
 
     /////
     $(document).ready(function() {
-        changeData()
-        getFindData()
-        dataDashboard()
-        dashboard_tahun()
-        graphFilter()
-        dashboard_week()
+        // set the value of regionalPanen to 2 (Regional 2)
+
+        var lokasiKerja = "{{ session('lok') }}";
+        // console.log(lokasiKerja);
+        if (lokasiKerja == 'Regional 2') {
+            $('#regionalPanen').val('2');
+            $('#regionalDataweek').val('2');
+            $('#regionalData').val('2');
+            $('#regDataIns').val('2');
+            $('#regFind').val('2');
+            $('#regGrafik').val('2');
+            // $('#regDataMap').val('2');
+        }
+
+        changeData();
+        getFindData();
+        dataDashboard(); // this should now load the data for Regional 2 by default
+        dashboard_tahun();
+        graphFilter();
+        dashboard_week();
     });
+
 
     function initializeMap() {
         var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
@@ -3035,14 +3054,19 @@
                 });
                 // console.log(newData_data_Est3)
 
-                var arrTbody3 = newData_data_Est3.filter(element => !["SRE", "SKE", "LDE"].includes(element.est));
-                arrTbody3.push({
-                    est: 'PT.MUA',
-                    em: 'EM',
-                    nama: '-',
-                    rank: '-',
-                    skor: skor_ptmua[0][1]
-                });
+                if (regInpt == '1') {
+                    var arrTbody3 = newData_data_Est3.filter(element => !["SRE", "SKE", "LDE"].includes(element.est));
+                    arrTbody3.push({
+                        est: 'PT.MUA',
+                        em: 'EM',
+                        nama: '-',
+                        rank: '-',
+                        skor: skor_ptmua[0][1]
+                    });
+                } else {
+                    var arrTbody3 = newData_data_Est3
+                }
+
                 arrTbody3.sort((a, b) => b['skor'] - a['skor']);
 
                 // Assign ranks to the sorted array
@@ -5907,14 +5931,19 @@
                 });
                 // console.log(newData_data_Est3)
 
-                var arrTbody3 = newData_data_Est3.filter(element => !["SRE", "SKE", "LDE"].includes(element.est));
-                arrTbody3.push({
-                    est: 'PT.MUA',
-                    em: 'EM',
-                    nama: '-',
-                    rank: '-',
-                    skor: skor_ptmua[0][1]
-                });
+                if (regData == '1') {
+                    var arrTbody3 = newData_data_Est3.filter(element => !["SRE", "SKE", "LDE"].includes(element.est));
+                    arrTbody3.push({
+                        est: 'PT.MUA',
+                        em: 'EM',
+                        nama: '-',
+                        rank: '-',
+                        skor: skor_ptmua[0][1]
+                    });
+                } else {
+                    var arrTbody3 = newData_data_Est3
+                }
+
                 arrTbody3.sort((a, b) => b['skor'] - a['skor']);
 
                 // Assign ranks to the sorted array
@@ -6945,14 +6974,31 @@
         const showBtn = document.getElementById('btnShow');
         const regionalSelect = document.getElementById('regionalPanen');
 
-        let currentRegion = '1';
+        let currentRegion = regionalSelect.value;
 
-        estBtn.addEventListener('click', () => handleSort('est'));
-        rankBtn.addEventListener('click', () => handleSort('rank'));
-        showBtn.addEventListener('click', () => {
+        let firstClick = true; // Add a flag to indicate the first click
+
+        estBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('est');
+        });
+        rankBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('rank');
+        });
+        showBtn.addEventListener('click', handleShow);
+
+        // Define the new handleShow function
+        function handleShow() {
             currentRegion = regionalSelect.value;
             handleFilterShow(currentRegion);
-        });
+        }
 
         function handleSort(sortType) {
             const sortMap = {
@@ -6999,14 +7045,31 @@
         const showBtn = document.getElementById('showWeek');
         const regionalSelect = document.getElementById('regionalDataweek');
 
-        let currentRegion = '1';
+        let currentRegion = regionalSelect.value;
 
-        estBtn.addEventListener('click', () => handleSort('est'));
-        rankBtn.addEventListener('click', () => handleSort('rank'));
-        showBtn.addEventListener('click', () => {
+        let firstClick = true; // Add a flag to indicate the first click
+
+        estBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('est');
+        });
+        rankBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('rank');
+        });
+        showBtn.addEventListener('click', handleShow);
+
+        // Define the new handleShow function
+        function handleShow() {
             currentRegion = regionalSelect.value;
             handleFilterShow(currentRegion);
-        });
+        }
 
         function handleSort(sortType) {
             const sortMap = {
