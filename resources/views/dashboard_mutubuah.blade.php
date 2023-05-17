@@ -1281,12 +1281,23 @@
     var currentMode = 'all';
 
     $(document).ready(function() {
-        //untuk table etc
+
+
+        var lokasiKerja = "{{ session('lok') }}";
+        // console.log(lokasiKerja);
+        if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
+            $('#regionalPanen').val('2');
+            $('#regionalData').val('2');
+            $('#regDataTahun').val('2');
+            $('#regFindingYear').val('2');
+            $('#regional_data').val('2');
+            $('#reg_sbiThun').val('2');
+
+        }
         getweek()
         dashboard_tahun()
         dashboardData_tahun()
         dashboardFindingYear()
-
         getweekData()
         sbi_tahun()
 

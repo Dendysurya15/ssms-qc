@@ -1203,12 +1203,21 @@
     renderChartBuahTglTphYear.render();
     var renderChartBuahRestanNoneYear = new ApexCharts(document.querySelector("#rst_noneYear"), lbMonth);
     renderChartBuahRestanNoneYear.render();
-
+    var lokasiKerja = "{{ session('lok') }}";
+    // console.log(lokasiKerja);
+    if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
+      $('#regionalSidak').val('2');
+      $('#regionalSidakMonth').val('2');
+      $('#regionalSidakYear').val('2');
+      $('#regDataTph').val('2');
+    }
     getDataTph()
     getDataTphMonth()
     getDataTphYear()
     changeData()
     fetchEstates(regDataMapSelect.value)
+
+
 
     $("#btnShow").click(function() {
       $('#tbody1').empty()
@@ -1504,37 +1513,7 @@
       }
     }
 
-    // document.getElementById('btnExport').onclick = function() {
-    //   var _token = $('input[name="_token"]').val();
-    //   var weekData = document.getElementById('dateWeek').value
-    //   var regional = document.getElementById('regionalSidak').value
-    //   const week = weekData.substring(6, 8);
-    //   const year = weekData.substring(0, 4);
-    //   const month = moment(document.getElementById('dateWeek').value).subtract(-6, 'days').format(
-    //     "M");
-    //   const url = 'https://mobilepro.srs-ssms.com/storage/app/public/pdf/sidak_tph/STPH-' + year +
-    //     '-0' + month + '-Week' + week + '-Reg1.pdf';
-    //   const phpUrl = 'https://srs-ssms.com/sidak_tph/render_chart.php?regional=' + encodeURIComponent(regional);
 
-    //   $.ajax({
-    //     url: "{{ route('downloadPDF') }}",
-    //     method: "POST",
-    //     data: {
-    //       url: url,
-    //       _token: _token,
-    //       regional: regional
-    //     },
-    //     success: function(result) {
-    //       var parseResult = JSON.parse(result)
-    //       if (parseResult['status'] == 200) {
-    //         window.open(parseResult['url'], '_blank');
-    //       } else {
-    //         alert('FILE PDF BELUM TERSEDIA!');
-    //         // window.location = "/dashboardtph";
-    //       }
-    //     }
-    //   });
-    // }
     document.getElementById('btnExport').onclick = function() {
       var _token = $('input[name="_token"]').val();
       var weekData = document.getElementById('dateWeek').value;
@@ -5008,14 +4987,31 @@
     const showBtn = document.getElementById('btnShowMonth');
     const regionalSelect = document.getElementById('regionalSidakMonth');
 
-    let currentRegion = '1';
+    let currentRegion = regionalSelect.value;
 
-    estBtn.addEventListener('click', () => handleSort('est'));
-    rankBtn.addEventListener('click', () => handleSort('rank'));
-    showBtn.addEventListener('click', () => {
+    let firstClick = true; // Add a flag to indicate the first click
+
+    estBtn.addEventListener('click', () => {
+      if (firstClick) {
+        showBtn.click();
+        firstClick = false; // Set the flag to false after the first click
+      }
+      handleSort('est');
+    });
+    rankBtn.addEventListener('click', () => {
+      if (firstClick) {
+        showBtn.click();
+        firstClick = false; // Set the flag to false after the first click
+      }
+      handleSort('rank');
+    });
+    showBtn.addEventListener('click', handleShow);
+
+    // Define the new handleShow function
+    function handleShow() {
       currentRegion = regionalSelect.value;
       handleFilterShow(currentRegion);
-    });
+    }
 
     function handleSort(sortType) {
       const sortMap = {
@@ -5057,14 +5053,31 @@
     const showBtn = document.getElementById('btnShow');
     const regionalSelect = document.getElementById('regionalSidak');
 
-    let currentRegion = '1';
+    let currentRegion = regionalSelect.value;
 
-    estBtn.addEventListener('click', () => handleSort('est'));
-    rankBtn.addEventListener('click', () => handleSort('rank'));
-    showBtn.addEventListener('click', () => {
+    let firstClick = true; // Add a flag to indicate the first click
+
+    estBtn.addEventListener('click', () => {
+      if (firstClick) {
+        showBtn.click();
+        firstClick = false; // Set the flag to false after the first click
+      }
+      handleSort('est');
+    });
+    rankBtn.addEventListener('click', () => {
+      if (firstClick) {
+        showBtn.click();
+        firstClick = false; // Set the flag to false after the first click
+      }
+      handleSort('rank');
+    });
+    showBtn.addEventListener('click', handleShow);
+
+    // Define the new handleShow function
+    function handleShow() {
       currentRegion = regionalSelect.value;
       handleFilterShow(currentRegion);
-    });
+    }
 
     function handleSort(sortType) {
       const sortMap = {
