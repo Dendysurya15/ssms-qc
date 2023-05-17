@@ -11,6 +11,7 @@ use App\Http\Controllers\inspectController;
 use App\Http\Controllers\mutubuahController;
 use App\Http\Controllers\perumController;
 use App\Http\Controllers\userNewController;
+use App\Http\Controllers\UserQCController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,3 +148,10 @@ Route::post('/storeAsisten', [userNewController::class, 'storeAsisten'])->name('
 
 Route::get('/getWeekInpeksi', [inspectController::class, 'getWeekInpeksi'])->name('getWeekInpeksi');
 Route::post('/pdfBA_excel', [inspectController::class, 'pdfBA_excel'])->name('pdfBA_excel');
+
+Route::get('/user_qc/{lokasi_kerja}', [UserQCController::class, 'index'])->name('user_qc');
+Route::get('/create', [UserQCController::class, 'create'])->name('create');
+Route::post('/store/{lokasi_kerja}', [UserQCController::class, 'store'])->name('store');
+Route::get('/edit/{id}', [UserQCController::class, 'edit'])->name('edit');
+Route::post('/update/{id}/{lokasi_kerja}', [UserQCController::class, 'update'])->name('update');
+Route::post('/delete/{id}', [UserQCController::class, 'destroy'])->name('delete');
