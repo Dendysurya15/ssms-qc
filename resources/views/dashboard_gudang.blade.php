@@ -137,9 +137,13 @@
                     <option value="2022">2022</option>
                 </select>
             </div>
-            <div class="col-md-2 col-12">
+            <div class="col-md-3 col-12">
                 @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada')
                 <a href="{{ route('listktu') }}" class="btn btn-success mr-2">List KTU</a>
+                <a href="{{ route('user_qc', ['lokasi_kerja' => session('lok')]) }}" class="btn btn-success mr-2">List
+                    All
+                    User
+                    QC</a>
                 @endif
             </div>
         </div>
