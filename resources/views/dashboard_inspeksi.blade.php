@@ -132,7 +132,10 @@
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
                             <h5><b>REKAPITULASI RANKING NILAI KUALITAS PANEN</b></h5>
                         </div>
-
+                        <!-- <li class="nav-item d-none d-sm-inline-block">
+                            <a class="nav-link">Selamat datang, {{ session('departemen') }} </a>
+                            <a class="nav-link">Lokasi Kerja: {{ session('lok') }} </a>
+                        </li> -->
 
                         <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
                             <div class="row w-100">
@@ -1925,7 +1928,7 @@
                 // console.log(sortedArray);
 
 
-                // console.log(newCum);
+                console.log(newCum);
                 var arrTbody1 = newCum
                 // console.log(arrTbody1);
 

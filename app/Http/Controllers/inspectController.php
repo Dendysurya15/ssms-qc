@@ -10514,23 +10514,23 @@ class inspectController extends Controller
 
 
 
-        $newArray = [];
-        foreach($defaultNew as $estate => $months){
-            foreach($months as $month => $afdelings){
-                foreach($afdelings as $afdeling => $bloks){
-                    foreach($bloks as $blok){
-                        $blokName = $blok["blok"];
-                        if(!isset($newArray[$estate][$month][$afdeling][$blokName])){
-                            $newArray[$estate][$month][$afdeling][$blokName] = [];
-                        }
-                        $newArray[$estate][$month][$afdeling][$blokName][] = $blok;
-                    }
-                }
-            }
-        }
+        // $newArray = [];
+        // foreach($defaultNew as $estate => $months){
+        //     foreach($months as $month => $afdelings){
+        //         foreach($afdelings as $afdeling => $bloks){
+        //             foreach($bloks as $blok){
+        //                 $blokName = $blok["blok"];
+        //                 if(!isset($newArray[$estate][$month][$afdeling][$blokName])){
+        //                     $newArray[$estate][$month][$afdeling][$blokName] = [];
+        //                 }
+        //                 $newArray[$estate][$month][$afdeling][$blokName][] = $blok;
+        //             }
+        //         }
+        //     }
+        // }
 
 
-        dd($newArray);
+        // dd($newArray);
         // menimpa nilai defaultnew dengan value mutu buah yang ada isi nya
         // dd($defaultMTbh, $dataPerBulanMTbh);
         foreach ($defaultMTbh as $key => $estValue) {
@@ -10698,7 +10698,7 @@ class inspectController extends Controller
             }
         }
 
-        dd($mutuTransAFD['BTE']['May']);
+        // dd($mutuTransAFD['BTE']['May']);
         // hitungan per est per bulan
         $mutuTransEst = array();
         foreach ($mutuTransAFD as $key => $value) {
@@ -24673,7 +24673,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($RegData == '2' || $RegData == 2) {
                         if ($dataBLok != 0) {
                             $brdPertph = round($sum_bt / $tot_sample, 2);
                         } else {
@@ -24687,7 +24687,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($RegData == '2' || $RegData == 2) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = round($sum_rst / $tot_sample, 2);
                         } else {
@@ -24737,7 +24737,7 @@ class inspectController extends Controller
                 $mtPLA[$key][$key1]['skorWil'] = $totalSkor;
 
                 //PERHITUNGAN PERESTATE
-                if ($Reg == '2' || $Reg == 2) {
+                if ($RegData == '2' || $RegData == 2) {
                     $dataBLokEst += $tot_sample;
                 }else {
                     $dataBLokEst += $dataBLok;
