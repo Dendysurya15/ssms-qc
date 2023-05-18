@@ -1092,77 +1092,110 @@ class inspectController extends Controller
             }
         }
 
-       
-            // $ancak_status = $ancak[''];
-            $transport = array();
-            foreach ($dataMTTrans as $key => $value) {
-                foreach ($value as $key1 => $value2) {     
-                    $tph_tod = 0;
-                    foreach ($value2 as $key2 => $value3) {
-                        $sum_bt = 0;
-                        $sum_Restan = 0;
-                        $tph_sample = 0;
-                        $listBlokPerAfd = array();
-                        foreach ($value3 as $key3 => $value4) {
-                            $listBlokPerAfd[] = $value4['estate'] . ' ' . $value4['afdeling'] . ' ' . $value4['blok'];
-                            $sum_Restan += $value4['rst'];
-                            $tph_sample = count($listBlokPerAfd);
-                            $sum_bt += $value4['bt'];
+        $transNewdata = array();
+        foreach ($dataMTTrans as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                
+                foreach ($value1 as $key2 => $value2) {
+                    $sum_bt = 0;
+                    $sum_Restan = 0;
+                    $tph_sample = 0;
+                    $listBlokPerAfd = array();
+                    foreach ($value2 as $key3 => $value3) {
+                        $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
+                        $sum_Restan += $value3['rst'];
+                        $tph_sample = count($listBlokPerAfd);
+                        $sum_bt += $value3['bt'];
+                    }
+                    $panenKey = 0;
+                    $LuasKey = 0;
+                    if (isset($ancak[$key][$key1][$key2]['status_panen'])) {
+                        $transNewdata[$key][$key1][$key2]['status_panen'] = $ancak[$key][$key1][$key2]['status_panen'];
+                        $panenKey = $ancak[$key][$key1][$key2]['status_panen'];
+                    }
+                    if (isset($ancak[$key][$key1][$key2]['luas_blok'])) {
+                        $transNewdata[$key][$key1][$key2]['luas_blok'] = $ancak[$key][$key1][$key2]['luas_blok'];
+                        $LuasKey = $ancak[$key][$key1][$key2]['luas_blok'];
+                    }
+                   
+        
+                    if ($panenKey !== 0 && $panenKey <= 3) {
+                        if(count($value3) == 1 && $value3[0]['blok'] == '0'){
+                            $tph_sample = $value3[0]['tph_baris']; 
+                            $sum_bt = $value3[0]['bt'];  
+                        }else{
+                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
                         }
-                        $panenKey = 0;
-                        $LuasKey = 0;
-                        if (isset($ancak[$key][$key1][$key2]['status_panen'])) {
-                            $transport[$key][$key1][$key2]['status_panen'] = $ancak[$key][$key1][$key2]['status_panen'];
-                            $panenKey = $ancak[$key][$key1][$key2]['status_panen'];
-                        }
-                        if (isset($ancak[$key][$key1][$key2]['luas_blok'])) {
-                            $transport[$key][$key1][$key2]['luas_blok'] = $ancak[$key][$key1][$key2]['luas_blok'];
-                            $LuasKey = $ancak[$key][$key1][$key2]['luas_blok'];
-                        }
-                       
-            
-                        if ($panenKey !== 0 && $panenKey <= 3) {
-                            if(count($value3) == 1 && $value3[0]['blok'] == '0'){
-                                $tph_sample = $value3[0]['tph_baris']; 
-                                $sum_bt = $value3[0]['bt'];  
-                            }else{
-                                $transport[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
-                            }
-                        } else {
-                            $transport[$key][$key1][$key2]['tph_sample'] = $tph_sample;
-                        }
+                    } else {
+                        $transNewdata[$key][$key1][$key2]['tph_sample'] = $tph_sample;
+                    }
 
-                        
+                    
 
-                        $transport[$key][$key1][$key2]['estate'] = $value4['estate'];
-                        $transport[$key][$key1][$key2]['afdeling'] = $value4['afdeling'];
-                        $transport[$key][$key1][$key2]['bt_total'] = $sum_bt;
-                        $transport[$key][$key1][$key2]['restan_total'] = $sum_Restan;
-                        $transport[$key][$key1][$key2]['tph_sample2'] = $tph_sample;
-                        $transport[$key][$key1][$key2]['skor'] = ($tph_sample != 0) ? round($sum_bt / $tph_sample, 2) : 0;
-                        $transport[$key][$key1][$key2]['skor_restan'] = ($tph_sample != 0) ? round($sum_Restan / $tph_sample, 2) : 0;
+                    $transNewdata[$key][$key1][$key2]['estate'] = $value4['estate'];
+                    $transNewdata[$key][$key1][$key2]['afdeling'] = $value4['afdeling'];
+                    $transNewdata[$key][$key1][$key2]['bt_total'] = $sum_bt;
+                    $transNewdata[$key][$key1][$key2]['restan_total'] = $sum_Restan;
+                    $transNewdata[$key][$key1][$key2]['tph_sample2'] = $tph_sample;
+                    $transNewdata[$key][$key1][$key2]['skor'] = ($tph_sample != 0) ? round($sum_bt / $tph_sample, 2) : 0;
+                    $transNewdata[$key][$key1][$key2]['skor_restan'] = ($tph_sample != 0) ? round($sum_Restan / $tph_sample, 2) : 0;
+                    $transNewdata[$key][$key1][$key2]['estate'] = $value3['estate'];
+
+                   
+                    
+                   
+                    
+
+                    
+                   
+                }
+              
+               
+            }
+        }
+
+        // dd($transNewdata);
+        foreach ($ancak as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+             
+                foreach ($value1 as $key2 => $value2) {
+                    if (!isset($transNewdata[$key][$key1][$key2])) {
+                        $transNewdata[$key][$key1][$key2] = $value2;
                         
-                        if ($panenKey !== 0 && $panenKey <= 3) {
-                            if(count($value3) == 1 && $value3[0]['blok'] == '0'){
-                                
-                                $tph_tod +=  $value3[0]['tph_baris'];
-                            }else{
-                                
-                                $tph_tod += round($LuasKey * 1.3);
-                            }
+                        if ($value2['status_panen'] <= 3) {
+                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($value2['luas_blok'] * 1.3, 2);
                         } else {
-                            $tph_tod += $tph_sample;
+                            $transNewdata[$key][$key1][$key2]['tph_sample'] = 0;
                         }
                     }
-                    $transport[$key][$key1]['total_tph'] = $tph_tod;
+                    // If 'tph_sample' key exists, add its value to $tph_tod
+                    if (isset($value2['tph_sample'])) {
+                        $tph_tod += $value2['tph_sample'];
+                    }
                 }
+                // Store total_tph for each $key1 after iterating all $key2
+             
             }
-            
-            // dd($transport['BTE']['OA']);
+        }
         
-        // dd($dataMTTrans['BTE']['OA'] ,$dataAncaks['BTE']['OA']);
+        
+        foreach ($transNewdata as $key => &$value) {
+            foreach ($value as $key1 => &$value1) {
+                $tph_sample_total = 0; // initialize the total
+                foreach ($value1 as $key2 => $value2) {
+                    // add up all the 'tph_sample' values
+                    if (isset($value2['tph_sample'])) {
+                        $tph_sample_total += $value2['tph_sample'];
+                    }
+                }
+                // store the total 'tph_sample' under 'total_Sample' key for each $key1
+                $value1['total_tph'] = $tph_sample_total;
+            }
+        }
+        unset($value); // unset the reference
+        unset($value1); // unset the reference
 
-       
+    
         $dataSkor = array();
         
         foreach ($queryEstate as $value1) {
@@ -1445,7 +1478,7 @@ class inspectController extends Controller
                     $sum_skor_bt += $sum_bt;
                     $sum_jjg += $sum_Restan;
                     if ($regs === '2') {
-                        foreach ($transport as $transportKey => $transportValue) {
+                        foreach ($transNewdata as $transportKey => $transportValue) {
                             if ($transportKey === $key) {
                                 foreach ($transportValue as $innerTransportKey => $innerTransportValue) {
                                     if ($innerTransportKey === $key2) {
@@ -1796,6 +1829,7 @@ class inspectController extends Controller
               'regional' => $regs
         ]);
     }
+
 
 
     public function dashboard_inspeksi(Request $request)
@@ -9441,10 +9475,12 @@ class inspectController extends Controller
         $arrView['mttrans_buah'] =  $chrTransbuahv2;
         $arrView['mttrans_wilbrd'] =  $WilTransBRD;
         $arrView['mttrans_wilbuah'] =  $WilTransBuah;
+        $arrView['list_asisten'] =  $queryAsisten;
         // dd($FinalTahun);
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
+
 
 
     public function filterTahun(Request $request)
@@ -18511,7 +18547,7 @@ class inspectController extends Controller
             $ancak[$key]['luas_ha'] = $luas_ha;
             $ancak[$key]['jml_jjg_panen'] = $jml_jjg_panen;
             if ($reg == 2 || $reg == '2') {
-                $ancak[$key]['akp_real'] = round( (($jml_jjg_panen + $tot_jjg) /$jumPokok),2);
+                $ancak[$key]['akp_real'] = round( (($jml_jjg_panen + $tot_jjg) /$jumPokok * 100),2);
             }else {
                 $ancak[$key]['akp_real'] = count_percent($jml_jjg_panen, $jumPokok);
             }
@@ -24664,7 +24700,6 @@ class inspectController extends Controller
         exit();
     }
 
-    
     public function pdfBA_excel(Request $request)
     {
         $est = $request->input('estBA_excel');
@@ -24914,120 +24949,120 @@ class inspectController extends Controller
 
    
     
-    foreach ($mutuBuahQuery as $key => $value) {
-            $sum_blok = 0;
-            $sum_janjang = 0;
-            $sum_jjg_mentah = 0;
-            $sum_jjg_mentah2 = 0;
-            $sum_jjg_over = 0;
-            $sum_jjg_empty = 0;
-            $sum_jjg_abnormal = 0;
-            $sum_jjg_vcut = 0;
-            $sum_jjg_als = 0;
-            foreach ($value as $key2 => $value2) {
-                $listBlokPerAfd = array();
-                $janjang = 0;
-                $Jjg_Mth = 0;
-                $Jjg_Mth2 = 0;
-                $Jjg_Over = 0;
-                $Jjg_Empty = 0;
-                $Jjg_Abr = 0;
-                $Jjg_Vcut = 0;
-                $Jjg_Als = 0;
-                foreach ($value2 as $key3 => $value3) {
-                    // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] . ' ' . $value3['tph_baris'], $listBlokPerAfd)) {
-                    $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] . ' ' . $value3['tph_baris'];
-                    // }
-                    $dtBlok = count($listBlokPerAfd);
-                    $janjang += $value3['jumlah_jjg'];
-                    $Jjg_Mth += $value3['bmt'];
-                    $Jjg_Mth2 += $value3['bmk'];
-                    $Jjg_Over += $value3['overripe'];
-                    $Jjg_Empty += $value3['empty_bunch'];
-                    $Jjg_Abr += $value3['abnormal'];
-                    $Jjg_Vcut += $value3['vcut'];
-                    $Jjg_Als += $value3['alas_br'];
+        foreach ($mutuBuahQuery as $key => $value) {
+                $sum_blok = 0;
+                $sum_janjang = 0;
+                $sum_jjg_mentah = 0;
+                $sum_jjg_mentah2 = 0;
+                $sum_jjg_over = 0;
+                $sum_jjg_empty = 0;
+                $sum_jjg_abnormal = 0;
+                $sum_jjg_vcut = 0;
+                $sum_jjg_als = 0;
+                foreach ($value as $key2 => $value2) {
+                    $listBlokPerAfd = array();
+                    $janjang = 0;
+                    $Jjg_Mth = 0;
+                    $Jjg_Mth2 = 0;
+                    $Jjg_Over = 0;
+                    $Jjg_Empty = 0;
+                    $Jjg_Abr = 0;
+                    $Jjg_Vcut = 0;
+                    $Jjg_Als = 0;
+                    foreach ($value2 as $key3 => $value3) {
+                        // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] . ' ' . $value3['tph_baris'], $listBlokPerAfd)) {
+                        $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] . ' ' . $value3['tph_baris'];
+                        // }
+                        $dtBlok = count($listBlokPerAfd);
+                        $janjang += $value3['jumlah_jjg'];
+                        $Jjg_Mth += $value3['bmt'];
+                        $Jjg_Mth2 += $value3['bmk'];
+                        $Jjg_Over += $value3['overripe'];
+                        $Jjg_Empty += $value3['empty_bunch'];
+                        $Jjg_Abr += $value3['abnormal'];
+                        $Jjg_Vcut += $value3['vcut'];
+                        $Jjg_Als += $value3['alas_br'];
+                    }
+                    $jml_mth = ($Jjg_Mth + $Jjg_Mth2);
+                    $jml_mtg = $janjang - ($jml_mth + $Jjg_Over + $Jjg_Empty + $Jjg_Abr);
+                    $sum_blok += $dtBlok;
+                    $sum_janjang += $janjang;
+                    $sum_jjg_mentah += $Jjg_Mth;
+                    $sum_jjg_mentah2 += $Jjg_Mth2;
+                    $sum_jjg_over += $Jjg_Over;
+                    $sum_jjg_empty += $Jjg_Empty;
+                    $sum_jjg_abnormal += $Jjg_Abr;
+                    $sum_jjg_vcut += $Jjg_Vcut;
+                    $sum_jjg_als += $Jjg_Als;
+
+                    $dataSkorbuah[$key][$key2]['blok_mb'] = $dtBlok ?? 0;
+                    $dataSkorbuah[$key][$key2]['alas_mb'] = $Jjg_Als ?? 0;
+                    $dataSkorbuah[$key][$key2]['jml_janjang'] = $janjang ?? 0;
+                    $dataSkorbuah[$key][$key2]['jml_mentah'] = $jml_mth ?? 0;
+                    $dataSkorbuah[$key][$key2]['jml_masak'] = $jml_mtg ?? 0;
+                    $dataSkorbuah[$key][$key2]['jml_over'] = $Jjg_Over ?? 0;
+                    $dataSkorbuah[$key][$key2]['jml_empty'] = $Jjg_Empty ?? 0;
+                    $dataSkorbuah[$key][$key2]['jml_abnormal'] = $Jjg_Abr ?? 0;
+                    $dataSkorbuah[$key][$key2]['jml_vcut'] = $Jjg_Vcut ?? 0;
+                    
+                    $dataSkorbuah[$key][$key2]['jml_krg_brd'] = $dtBlok == 0 ? $Jjg_Als : round($Jjg_Als / $dtBlok, 2);
+                    $denom = ($janjang - $Jjg_Abr) != 0 ? ($janjang - $Jjg_Abr) : 1;
+
+                    $dataSkorbuah[$key][$key2]['PersenBuahMentah'] = round(($jml_mth / $denom) * 100, 2) ?? 0;
+                    $dataSkorbuah[$key][$key2]['PersenBuahMasak'] = round(($jml_mtg / $denom) * 100, 2) ?? 0;
+                    $dataSkorbuah[$key][$key2]['PersenBuahOver'] = round(($Jjg_Over / $denom) * 100, 2) ?? 0;
+                    $dataSkorbuah[$key][$key2]['PersenPerJanjang'] = round(($Jjg_Empty / $denom) * 100, 2) ?? 0;
+
+                    $dataSkorbuah[$key][$key2]['PersenVcut'] = count_percent($Jjg_Vcut, $janjang) ?? 0;
+                    $dataSkorbuah[$key][$key2]['PersenAbr'] = count_percent($Jjg_Abr, $janjang) ?? 0;
+                    $dataSkorbuah[$key][$key2]['PersenKrgBrd'] = count_percent($Jjg_Als, $dtBlok) ?? 0;
+
+                    $dataSkorbuah[$key][$key2]['skor_mentah'] = skor_buah_mentah_mb(round(($jml_mth / $denom) * 100, 2) ?? 0);
+                    $dataSkorbuah[$key][$key2]['skor_matang'] = skor_buah_masak_mb(round(($jml_mtg / $denom) * 100, 2) ?? 0);
+                    $dataSkorbuah[$key][$key2]['skor_over'] = skor_buah_over_mb(round(($Jjg_Over / $denom) * 100, 2) ?? 0);
+                    $dataSkorbuah[$key][$key2]['skor_kosong'] = skor_jangkos_mb(round(($Jjg_Empty / $denom) * 100, 2) ?? 0);
+                    $dataSkorbuah[$key][$key2]['skor_vcut'] = skor_vcut_mb(count_percent($Jjg_Vcut, $janjang) ?? 0);
+                    $dataSkorbuah[$key][$key2]['skor_karung'] = skor_abr_mb(count_percent($Jjg_Als, $dtBlok) ?? 0);
+
                 }
-                $jml_mth = ($Jjg_Mth + $Jjg_Mth2);
-                $jml_mtg = $janjang - ($jml_mth + $Jjg_Over + $Jjg_Empty + $Jjg_Abr);
-                $sum_blok += $dtBlok;
-                $sum_janjang += $janjang;
-                $sum_jjg_mentah += $Jjg_Mth;
-                $sum_jjg_mentah2 += $Jjg_Mth2;
-                $sum_jjg_over += $Jjg_Over;
-                $sum_jjg_empty += $Jjg_Empty;
-                $sum_jjg_abnormal += $Jjg_Abr;
-                $sum_jjg_vcut += $Jjg_Vcut;
-                $sum_jjg_als += $Jjg_Als;
+                $jml_mth_est = ($sum_jjg_mentah + $sum_jjg_mentah2);
+                $jml_mtg_est = $sum_janjang - ($jml_mth_est + $sum_jjg_over + $sum_jjg_empty + $sum_jjg_abnormal);
 
-                $dataSkorbuah[$key][$key2]['blok_mb'] = $dtBlok ?? 0;
-                $dataSkorbuah[$key][$key2]['alas_mb'] = $Jjg_Als ?? 0;
-                $dataSkorbuah[$key][$key2]['jml_janjang'] = $janjang ?? 0;
-                $dataSkorbuah[$key][$key2]['jml_mentah'] = $jml_mth ?? 0;
-                $dataSkorbuah[$key][$key2]['jml_masak'] = $jml_mtg ?? 0;
-                $dataSkorbuah[$key][$key2]['jml_over'] = $Jjg_Over ?? 0;
-                $dataSkorbuah[$key][$key2]['jml_empty'] = $Jjg_Empty ?? 0;
-                $dataSkorbuah[$key][$key2]['jml_abnormal'] = $Jjg_Abr ?? 0;
-                $dataSkorbuah[$key][$key2]['jml_vcut'] = $Jjg_Vcut ?? 0;
-                
-                $dataSkorbuah[$key][$key2]['jml_krg_brd'] = $dtBlok == 0 ? $Jjg_Als : round($Jjg_Als / $dtBlok, 2);
-                $denom = ($janjang - $Jjg_Abr) != 0 ? ($janjang - $Jjg_Abr) : 1;
-
-                $dataSkorbuah[$key][$key2]['PersenBuahMentah'] = round(($jml_mth / $denom) * 100, 2) ?? 0;
-                $dataSkorbuah[$key][$key2]['PersenBuahMasak'] = round(($jml_mtg / $denom) * 100, 2) ?? 0;
-                $dataSkorbuah[$key][$key2]['PersenBuahOver'] = round(($Jjg_Over / $denom) * 100, 2) ?? 0;
-                $dataSkorbuah[$key][$key2]['PersenPerJanjang'] = round(($Jjg_Empty / $denom) * 100, 2) ?? 0;
-
-                $dataSkorbuah[$key][$key2]['PersenVcut'] = count_percent($Jjg_Vcut, $janjang) ?? 0;
-                $dataSkorbuah[$key][$key2]['PersenAbr'] = count_percent($Jjg_Abr, $janjang) ?? 0;
-                $dataSkorbuah[$key][$key2]['PersenKrgBrd'] = count_percent($Jjg_Als, $dtBlok) ?? 0;
-
-                $dataSkorbuah[$key][$key2]['skor_mentah'] = skor_buah_mentah_mb(round(($jml_mth / $denom) * 100, 2) ?? 0);
-                $dataSkorbuah[$key][$key2]['skor_matang'] = skor_buah_masak_mb(round(($jml_mtg / $denom) * 100, 2) ?? 0);
-                $dataSkorbuah[$key][$key2]['skor_over'] = skor_buah_over_mb(round(($Jjg_Over / $denom) * 100, 2) ?? 0);
-                $dataSkorbuah[$key][$key2]['skor_kosong'] = skor_jangkos_mb(round(($Jjg_Empty / $denom) * 100, 2) ?? 0);
-                $dataSkorbuah[$key][$key2]['skor_vcut'] = skor_vcut_mb(count_percent($Jjg_Vcut, $janjang) ?? 0);
-                $dataSkorbuah[$key][$key2]['skor_karung'] = skor_abr_mb(count_percent($Jjg_Als, $dtBlok) ?? 0);
-
+                $dataSkorbuah[$key]['tot_blok'] = $sum_blok;
+                $dataSkorbuah[$key]['tot_alas'] = $sum_jjg_als;
+                $dataSkorbuah[$key]['tot_jjg'] = $sum_janjang;
+                $dataSkorbuah[$key]['tot_mentah'] = $jml_mth_est;
+                $dataSkorbuah[$key]['tot_matang'] = $jml_mtg_est;
+                $dataSkorbuah[$key]['tot_over'] = $sum_jjg_over;
+                $dataSkorbuah[$key]['tot_empty'] = $sum_jjg_empty;
+                $dataSkorbuah[$key]['tot_abr'] = $sum_jjg_abnormal;
+                $dataSkorbuah[$key]['tot_vcut'] = $sum_jjg_vcut;
+                $dataSkorbuah[$key]['tot_krg_brd'] = $sum_blok == 0 ? $sum_jjg_als : round($sum_jjg_als / $sum_blok, 2);
+                $dataSkorbuah[$key]['tot_PersenBuahMentah'] = round(($jml_mth_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
+                $dataSkorbuah[$key]['tot_PersenBuahMasak'] = round(($jml_mtg_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
+                $dataSkorbuah[$key]['tot_PersenBuahOver'] = round(($sum_jjg_over / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
+                $dataSkorbuah[$key]['tot_PersenPerJanjang'] = round(($sum_jjg_empty / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
+                $dataSkorbuah[$key]['tot_PersenVcut'] = count_percent($sum_jjg_vcut, $sum_janjang);
+                $dataSkorbuah[$key]['tot_PersenAbr'] = count_percent($sum_jjg_abnormal, $sum_janjang);
+                $dataSkorbuah[$key]['tot_PersenKrgBrd'] = count_percent($sum_jjg_als, $sum_blok);
             }
-            $jml_mth_est = ($sum_jjg_mentah + $sum_jjg_mentah2);
-            $jml_mtg_est = $sum_janjang - ($jml_mth_est + $sum_jjg_over + $sum_jjg_empty + $sum_jjg_abnormal);
-
-            $dataSkorbuah[$key]['tot_blok'] = $sum_blok;
-            $dataSkorbuah[$key]['tot_alas'] = $sum_jjg_als;
-            $dataSkorbuah[$key]['tot_jjg'] = $sum_janjang;
-            $dataSkorbuah[$key]['tot_mentah'] = $jml_mth_est;
-            $dataSkorbuah[$key]['tot_matang'] = $jml_mtg_est;
-            $dataSkorbuah[$key]['tot_over'] = $sum_jjg_over;
-            $dataSkorbuah[$key]['tot_empty'] = $sum_jjg_empty;
-            $dataSkorbuah[$key]['tot_abr'] = $sum_jjg_abnormal;
-            $dataSkorbuah[$key]['tot_vcut'] = $sum_jjg_vcut;
-            $dataSkorbuah[$key]['tot_krg_brd'] = $sum_blok == 0 ? $sum_jjg_als : round($sum_jjg_als / $sum_blok, 2);
-            $dataSkorbuah[$key]['tot_PersenBuahMentah'] = round(($jml_mth_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-            $dataSkorbuah[$key]['tot_PersenBuahMasak'] = round(($jml_mtg_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-            $dataSkorbuah[$key]['tot_PersenBuahOver'] = round(($sum_jjg_over / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-            $dataSkorbuah[$key]['tot_PersenPerJanjang'] = round(($sum_jjg_empty / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-            $dataSkorbuah[$key]['tot_PersenVcut'] = count_percent($sum_jjg_vcut, $sum_janjang);
-            $dataSkorbuah[$key]['tot_PersenAbr'] = count_percent($sum_jjg_abnormal, $sum_janjang);
-            $dataSkorbuah[$key]['tot_PersenKrgBrd'] = count_percent($sum_jjg_als, $sum_blok);
-        }
-   
-
-    // dd($dataSkor_trans);
-    $arrView = array();
-    $arrView['mutuAncak'] =  $mutuAncak;
-    $arrView['mutuAncak_total'] =  $dataSkor ?? array(); // Provide a default value (empty array) if $dataSkor is not set
-    $arrView['mutuTransport_total'] =  $dataSkor_trans ?? array(); // Provide a default value (empty array) if $dataSkor_trans is not set
-    $arrView['mutuBuah_total'] =  $dataSkorbuah ?? array(); // Provide a default value (empty array) if $dataSkorbuah is not set
     
-  
-    $arrView['est'] =  $est;
-    $arrView['afd'] =  $afd;
-    $arrView['tanggal'] =  $date;
-    $arrView['reg'] =  $reg;
 
-    // dd($ancak);
-    return view('inpeksiBA_excel')->with('data', $arrView);
+        // dd($dataSkor_trans);
+        $arrView = array();
+        $arrView['mutuAncak'] =  $mutuAncak;
+        $arrView['mutuAncak_total'] =  $dataSkor ?? array(); // Provide a default value (empty array) if $dataSkor is not set
+        $arrView['mutuTransport_total'] =  $dataSkor_trans ?? array(); // Provide a default value (empty array) if $dataSkor_trans is not set
+        $arrView['mutuBuah_total'] =  $dataSkorbuah ?? array(); // Provide a default value (empty array) if $dataSkorbuah is not set
+        
+    
+        $arrView['est'] =  $est;
+        $arrView['afd'] =  $afd;
+        $arrView['tanggal'] =  $date;
+        $arrView['reg'] =  $reg;
+
+        // dd($ancak);
+        return view('inpeksiBA_excel')->with('data', $arrView);
 
 
     }

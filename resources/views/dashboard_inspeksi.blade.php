@@ -132,10 +132,7 @@
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
                             <h5><b>REKAPITULASI RANKING NILAI KUALITAS PANEN</b></h5>
                         </div>
-                        <!-- <li class="nav-item d-none d-sm-inline-block">
-                            <a class="nav-link">Selamat datang, {{ session('departemen') }} </a>
-                            <a class="nav-link">Lokasi Kerja: {{ session('lok') }} </a>
-                        </li> -->
+
 
                         <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
                             <div class="row w-100">
@@ -1928,7 +1925,7 @@
                 // console.log(sortedArray);
 
 
-                console.log(newCum);
+                // console.log(newCum);
                 var arrTbody1 = newCum
                 // console.log(arrTbody1);
 
@@ -2399,6 +2396,7 @@
                 const plasmaEM = Object.entries(parseResult['plasmaEM']);
                 const plasmaGM = Object.entries(parseResult['plasmaGM']);
                 const skor_ptmua = Object.entries(parseResult['pt_mua']);
+                const list_asisten = Object.entries(parseResult['list_asisten']);
                 // console.log(plasma);
                 const newPlasma = plasma.map(([_, data]) => ({
 
@@ -3052,14 +3050,43 @@
                     tbody3.appendChild(tr)
                     // }
                 });
-                // console.log(newData_data_Est3)
+                // console.log(list_asisten)
+
+                // Assuming your data is stored in a variable called data
+
+
+
+
 
                 if (regInpt == '1') {
+                    var data = list_asisten
+
+                    function getNamaByEstAndAfd(data, est, afd) {
+                        // Filter the array to find the matching object
+                        var matchingObjects = data.filter(function(item) {
+                            // Each item is an array, and the second element of the array is an object
+                            // Check if this object's est and afd match the given values
+                            return item[1].est === est && item[1].afd === afd;
+                        });
+
+                        // If we found a matching object, return its nama
+                        if (matchingObjects.length > 0) {
+                            return matchingObjects[0][1].nama;
+                        } else {
+                            // If there was no matching object, return null
+                            return null;
+                        }
+                    }
+
+                    // Use the function
+                    var est = "PT.MUA";
+                    var afd = "EM";
+                    var nama = getNamaByEstAndAfd(data, est, afd);
                     var arrTbody3 = newData_data_Est3.filter(element => !["SRE", "SKE", "LDE"].includes(element.est));
                     arrTbody3.push({
                         est: 'PT.MUA',
                         em: 'EM',
-                        nama: '-',
+                        nama: nama,
                         rank: '-',
                         skor: skor_ptmua[0][1]
                     });
