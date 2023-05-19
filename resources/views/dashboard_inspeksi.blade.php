@@ -4362,6 +4362,8 @@
                                 td.style.backgroundColor = "#fffc04";
                             } else if (item >= 65 && item < 75) {
                                 td.style.backgroundColor = "#ffc404";
+                            } else if (item == 0) {
+                                td.style.backgroundColor = "white";
                             } else {
                                 td.style.backgroundColor = "red";
                             }
@@ -4456,6 +4458,8 @@
                                 td.style.backgroundColor = "#fffc04";
                             } else if (item >= 65 && item < 75) {
                                 td.style.backgroundColor = "#ffc404";
+                            } else if (item == 0) {
+                                td.style.backgroundColor = "white";
                             } else {
                                 td.style.backgroundColor = "red";
                             }
@@ -4518,6 +4522,8 @@
                                 td.style.backgroundColor = "#fffc04";
                             } else if (item >= 65 && item < 75) {
                                 td.style.backgroundColor = "#ffc404";
+                            } else if (item == 0) {
+                                td.style.backgroundColor = "white";
                             } else {
                                 td.style.backgroundColor = "red";
                             }
@@ -4595,6 +4601,8 @@
                             td.style.backgroundColor = "#fffc04";
                         } else if (item >= 65 && item < 75) {
                             td.style.backgroundColor = "#ffc404";
+                        } else if (item == 0) {
+                            td.style.backgroundColor = "white";
                         } else {
                             td.style.backgroundColor = "red";
                         }
