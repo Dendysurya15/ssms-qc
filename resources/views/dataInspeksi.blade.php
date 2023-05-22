@@ -476,7 +476,7 @@
     <tr>
         <td>{{ $key2 }}</td>
         <!-- <td>{{ $key3 }}</td> -->
-        <td> <a href="dataDetail/{{$key}}/{{$key2}}/{{$tanggal}}/{{$regional}}"> {{$key2}}</a></td>
+        <td> <a href="dataDetail/{{$key2}}/{{$key3}}/{{$tanggal}}/{{$regional}}"> {{$key3}}</a></td>
         <td>{{ $item2['jml_pokok_sampel'] }}</td>
         <td>{{ $item2['luas_ha'] }}</td>
         <td>{{ $item2['jml_jjg_panen'] }}</td>
