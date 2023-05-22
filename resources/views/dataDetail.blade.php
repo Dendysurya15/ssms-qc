@@ -104,21 +104,7 @@
         animation: fadeIn 0.5s;
     }
 
-    .modal-content {
-        background-color: #ffffff;
-        margin: 5% auto;
-        padding: 20px;
-        border: 1px solid #dee2e6;
-        width: 40%;
-        max-width: 500px;
-        max-height: 70%;
-        /* Set a maximum height */
-        overflow-y: auto;
-        /* Enable vertical scrolling if content overflows */
-        border-radius: 0.3rem;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        animation: scaleUp 0.3s;
-    }
+
 
 
     /* Add Bootstrap-like button styling */
@@ -433,18 +419,10 @@
     </div>
 
 
-
-
-    <!--  -->
-
-
-
-
-
     <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark ">
         <div class="Wraping">
             <h1 class="text-center">Tabel Mutu Ancak</h1>
-            <table border="1" id="mutu_ancak">
+            <table class="table table-striped table-bordered" border="1" id="mutu_ancak">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -492,7 +470,7 @@
     <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
         <div class="Wraping">
             <h1 class="text-center">Tabel Mutu Buah</h1>
-            <table border="1">
+            <table class="table table-striped table-bordered" border="1">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -528,7 +506,7 @@
     <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
         <div class="Wraping">
             <h1 class="text-center">Tabel Mutu Transport</h1>
-            <table border="1">
+            <table class="table table-striped table-bordered" border="1">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -561,8 +539,47 @@
             <img id="modalImage" src="" style="width: 100%;">
         </div>
     </div>
-    <div id="update-modal" class="modal">
-        <div class="modal-content">
+    <style>
+        .modal-custom-update {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content-custom-update {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            max-width: 400px;
+            /* Adjust the width as needed */
+            text-align: center;
+        }
+
+        .modal-content-custom-update h2 {
+            margin-top: 0;
+        }
+
+        .modal-content-custom-update .form-control {
+            width: 100%;
+        }
+
+        .modal-content-custom-update .btn {
+            margin-top: 10px;
+        }
+
+        .modal-content-custom-update .mb-3 {
+            margin-bottom: 15px;
+        }
+    </style>
+    <div id="update-modal" class="modal-custom-update">
+        <div class="modal-content-custom-update">
             <h2>Update Mutu Ancak</h2>
             <button id="close-modal" class="btn btn-secondary">Tutup</button>
             <form id="update-form" action="{{ route('updateBA') }}" enctype="multipart/form-data" method="POST">
@@ -658,8 +675,8 @@
         </div>
     </div>
 
-    <div id="update-modal-buah" class="modal">
-        <div class="modal-content">
+    <div id="update-modal-buah" class="modal-custom-update">
+        <div class="modal-content-custom-update">
             <h2>Update Mutu Buah</h2>
             <button id="close-modal-buah" class="btn btn-secondary">Tutup</button>
             <form id="update-formBuah" action="{{ route('updateBA') }}" enctype="multipart/form-data" method="POST">
@@ -735,8 +752,12 @@
             </form>
         </div>
     </div>
-    <div id="update-modal-trans" class="modal">
-        <div class="modal-content">
+
+
+
+
+    <div id="update-modal-trans" class="modal-custom-update">
+        <div class="modal-content-custom-update">
             <h2>Update Mutu Trans</h2>
             <button id="close-modal-trans" class="btn btn-secondary">Tutup</button>
             <form id="update-formTrans" action="{{ route('updateBA') }}" enctype="multipart/form-data" method="POST">
@@ -787,13 +808,39 @@
     </div>
 
 
-    <!-- Delete Confirmation Modal -->
-    <div id="delete-modal" class="modal">
-        <div class="modal-content">
+    <style>
+        .modal-custom {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content-custom {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .modal-content-custom {
+                width: 80%;
+            }
+        }
+    </style>
+    <div id="delete-modal" class="modal-custom">
+        <div class="modal-content-custom">
             <h2>Delete Mutu Ancak</h2>
             <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
             <form id="delete-form" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
-
                 {{ csrf_field() }}
                 <input type="hidden" id="delete-id" name="id">
                 <p>Apakah anda Yakin ingin Menghapus?</p>
@@ -801,7 +848,6 @@
             </form>
         </div>
     </div>
-
     <div id="delete-modal-buah" class="modal">
         <div class="modal-content">
             <h2>Delete Mutu Buah</h2>
@@ -815,8 +861,8 @@
         </div>
     </div>
 
-    <div id="delete-modal-transport" class="modal">
-        <div class="modal-content">
+    <div id="delete-modal-transport" class="modal-custom">
+        <div class="modal-content-custom">
             <h2>Delete Mutu Transport</h2>
             <button id="close-delete-transport" class="btn btn-secondary">Tutup</button>
             <form id="delete-form-trans" method="POST" onsubmit="event.preventDefault();">
@@ -825,9 +871,9 @@
                 <p>Apakah anda Yakin ingin Menghapus?</p>
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-
         </div>
     </div>
+
     <style>
         .info.legend {
             background-color: white;
@@ -858,15 +904,58 @@
             font-size: 20px;
             color: #888;
         }
+
+        .legend-icon {
+            width: 16px;
+            /* Adjust the width to make the icons smaller */
+            height: 16px;
+            /* Adjust the height to make the icons smaller */
+        }
     </style>
 
     <div class="card p-4">
         <h4 class="text-center mt-2" style="font-weight: bold">Tracking Plot Inpeksi - {{$est}} {{$afd}} </h4>
         <hr>
         <div id="map" style="height:650px"></div>
-
-
     </div>
+
+    <style>
+        .modal-dialog {
+            max-width: 100%;
+            margin: auto;
+        }
+
+        .modal-content {
+            width: 100%;
+        }
+
+        .modal-body {
+            text-align: center;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: calc(100vh - 200px);
+            object-fit: contain;
+        }
+    </style>
+
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="modalCloseButton" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="modal-image" id="img01">
+                    <p>Komentar:</p>
+                    <p id="modalKomentar"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 </div>
@@ -874,18 +963,38 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 
 @include('layout/footer')
 
 <script>
+    function openModal(src, komentar) {
+        var modalImg = document.getElementById("img01");
+        modalImg.src = src;
+        var modalKomentar = document.getElementById("modalKomentar");
+        modalKomentar.textContent = komentar;
+
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {});
+        myModal.show();
+
+        var closeButton = document.getElementById('modalCloseButton');
+        closeButton.addEventListener('click', function() {
+            myModal.hide();
+        });
+    }
+
     // bagian untuk map
     function updateTanggal() {
         const selectedDate = document.getElementById("inputDate").value;
         document.getElementById("tglPDF_excel").value = selectedDate;
         document.getElementById("selectedDate").textContent = selectedDate;
     }
+
 
 
 
@@ -960,56 +1069,243 @@
                 var ancakGroup = L.layerGroup();
 
                 // Add markers to the corresponding Layer Groups
+                //             function trans() {
+                //                 for (var i = 0; i < trans_plot.length; i++) {
+                //                     var lat = parseFloat(trans_plot[i].lat);
+                //                     var lon = parseFloat(trans_plot[i].lon);
+                //                     var blok = trans_plot[i].blok;
+
+                //                     // Assuming foto_temuan, foto_fu, and komentar properties exist in your data
+                //                     var foto_temuan = trans_plot[i].foto_temuan;
+                //                     var foto_fu = trans_plot[i].foto_fu;
+                //                     var komentar = trans_plot[i].komentar;
+
+                //                     // Create a marker
+                //                     var marker = L.marker([lat, lon]);
+
+                //                     // Bind a popup with the blok name, images and comments
+                //                     marker.bindPopup(
+                //                         `<strong>Mutu Trans Blok: </strong> ${blok} <br/>
+                // <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"> <br/>
+                // <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"> <br/>
+                // <strong>Komentar: </strong> ${komentar}`
+                //                     );
+
+                //                     // Add the marker to the Layer Group
+                //                     transGroup.addLayer(marker);
+                //                 }
+                //             }
+
+                //             options: {
+                //     shadowUrl: 'leaf-shadow.png',
+                //     iconSize:     [38, 95],
+                //     shadowSize:   [50, 64],
+                //     iconAnchor:   [22, 94],
+                //     shadowAnchor: [4, 62],
+                //     popupAnchor:  [-3, -76]
+                // }
+                var transIconUrl = '{{ asset("img/dump-truck.png") }}';
+                var transicon = L.icon({
+                    iconUrl: transIconUrl,
+                    iconSize: [30, 45], // Adjust the size of the main icon
+                    iconAnchor: [15, 45], // Adjust the anchor point of the main icon
+                    popupAnchor: [0, -30], // Adjust the anchor point for the popup
+                    shadowUrl: transIconUrl,
+                    shadowSize: [0, 0], // Set the shadow size to [0, 0] if you don't want a shadow
+                    shadowAnchor: [0, 0], // Set the shadow anchor to [0, 0] if you don't want a shadow
+                });
+
+                var transTmuanUrl = '{{ asset("img/carrier.png") }}';
+                var transtemuan = L.icon({
+                    iconUrl: transTmuanUrl,
+                    iconSize: [30, 45], // Adjust the size of the main icon
+                    iconAnchor: [15, 45], // Adjust the anchor point of the main icon
+                    popupAnchor: [0, -30], // Adjust the anchor point for the popup
+                    shadowUrl: transTmuanUrl,
+                    shadowSize: [0, 0], // Set the shadow size to [0, 0] if you don't want a shadow
+                    shadowAnchor: [0, 0], // Set the shadow anchor to [0, 0] if you don't want a shadow
+                });
+                var transFollowUrl = '{{ asset("img/batch-picking.png") }}';
+                var transFollowup = L.icon({
+                    iconUrl: transFollowUrl,
+                    iconSize: [30, 45], // Adjust the size of the main icon
+                    iconAnchor: [15, 45], // Adjust the anchor point of the main icon
+                    popupAnchor: [0, -30], // Adjust the anchor point for the popup
+                    shadowUrl: transFollowUrl,
+                    shadowSize: [0, 0], // Set the shadow size to [0, 0] if you don't want a shadow
+                    shadowAnchor: [0, 0], // Set the shadow anchor to [0, 0] if you don't want a shadow
+                });
+
                 function trans() {
                     for (var i = 0; i < trans_plot.length; i++) {
                         var lat = parseFloat(trans_plot[i].lat);
                         var lon = parseFloat(trans_plot[i].lon);
                         var blok = trans_plot[i].blok;
+                        var foto_temuan = trans_plot[i].foto_temuan;
+                        var foto_fu = trans_plot[i].foto_fu;
+                        var komentar = trans_plot[i].komentar;
 
-                        // Create a marker
-                        var marker = L.marker([lat, lon]);
+                        var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
 
-                        // Bind a popup with the blok name
-                        marker.bindPopup('<strong>Mutu Trans Blok: </strong>' + blok);
 
-                        // Add the marker to the Layer Group
+                        var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
+
+                        if (foto_temuan) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+                        if (foto_fu) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+
+                        popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                        var marker = L.marker([lat, lon], {
+                            icon: markerIcon
+                        });
+
+                        marker.bindPopup(popupContent);
+
                         transGroup.addLayer(marker);
                     }
                 }
+
+
+                var myIconUrl = '{{ asset("img/harvest.png") }}';
+                var myIcon = L.icon({
+                    iconUrl: myIconUrl,
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
+                    shadowUrl: myIconUrl,
+                    shadowSize: [0, 0],
+                    shadowAnchor: [0, 0],
+                });
+                var myIconUrl2 = '{{ asset("img/fruit-tree.png") }}';
+                var myIcon2 = L.icon({
+                    iconUrl: myIconUrl2,
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
+                    shadowUrl: myIconUrl2,
+                    shadowSize: [0, 0],
+                    shadowAnchor: [0, 0],
+                });
+
+
 
                 function buah() {
                     for (var i = 0; i < buah_plot.length; i++) {
                         var lat = parseFloat(buah_plot[i].lat);
                         var lon = parseFloat(buah_plot[i].lon);
                         var blok = buah_plot[i].blok;
+                        var foto_temuan = buah_plot[i].foto_temuan;
+                        var komentar = buah_plot[i].komentar;
 
-                        // Create a red marker
+                        var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
+
+                        var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
+
+                        if (foto_temuan) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+                        popupContent += `<strong>Komentar: </strong>${komentar}`;
+
                         var marker = L.marker([lat, lon], {
-                            icon: redIcon
+                            icon: markerIcon
                         });
 
-                        // Bind a popup with the blok name
-                        marker.bindPopup('<strong>Mutu Buah Blok: </strong>' + blok);
+                        marker.bindPopup(popupContent);
 
-                        // Add the marker to the Layer Group
                         buahGroup.addLayer(marker);
                     }
                 }
+
+
+                var ancakTemuan1 = '{{ asset("img/palm-tree.png") }}';
+                var caktemuan1 = L.icon({
+                    iconUrl: ancakTemuan1,
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
+                    shadowUrl: ancakTemuan1,
+                    shadowSize: [0, 0],
+                    shadowAnchor: [0, 0],
+                });
+
+                var ancakTemuan2 = '{{ asset("img/palm-oil-free.png") }}';
+                var caktemuan2 = L.icon({
+                    iconUrl: ancakTemuan2,
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
+                    shadowUrl: ancakTemuan2,
+                    shadowSize: [0, 0],
+                    shadowAnchor: [0, 0],
+                });
+                var ancak_fu1 = '{{ asset("img/checklist.png") }}';
+                var cakfu1 = L.icon({
+                    iconUrl: ancak_fu1,
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
+                    shadowUrl: ancak_fu1,
+                    shadowSize: [0, 0],
+                    shadowAnchor: [0, 0],
+                });
+                var ancak_fu2 = '{{ asset("img/checklist.png") }}';
+                var cakfu2 = L.icon({
+                    iconUrl: ancak_fu2,
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
+                    shadowUrl: ancak_fu2,
+                    shadowSize: [0, 0],
+                    shadowAnchor: [0, 0],
+                });
 
                 function ancak() {
                     for (var i = 0; i < ancak_plot.length; i++) {
                         var lat = parseFloat(ancak_plot[i].lat);
                         var lon = parseFloat(ancak_plot[i].lon);
                         var blok = ancak_plot[i].blok;
+                        var ket = ancak_plot[i].ket;
+                        var foto_temuan1 = ancak_plot[i].foto_temuan1;
+                        var foto_temuan2 = ancak_plot[i].foto_temuan2;
+                        var foto_fu1 = ancak_plot[i].foto_fu1;
+                        var foto_fu2 = ancak_plot[i].foto_fu2;
+                        var komentar = ancak_plot[i].komentar;
+
+                        var markerIcon = (foto_fu1 || foto_fu2) ? cakfu2 : (foto_temuan1 || foto_temuan2) ? caktemuan2 : caktemuan1;
+
+                        var popupContent = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
+
+                        if (foto_temuan1) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan1}" alt="Foto Temuan 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+                        if (foto_temuan2) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan2}" alt="Foto Temuan 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+                        if (foto_fu1) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu1}" alt="Foto FU 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+                        if (foto_fu2) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu2}" alt="Foto FU 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+                        popupContent += `<strong>Komentar: </strong>${komentar}`;
 
                         var marker = L.marker([lat, lon], {
-                            icon: yellowIcon
+                            icon: markerIcon
                         });
 
-                        // Bind a popup with the blok name
-                        marker.bindPopup('<strong>Mutu Ancak Blok: </strong>' + blok);
+                        marker.bindPopup(popupContent);
 
-                        // Add the marker to the Layer Group
                         ancakGroup.addLayer(marker);
                     }
                 }
@@ -1027,42 +1323,103 @@
                     position: 'bottomright'
                 });
 
+
+                var estateIcon = '{{ asset("img/brazil.png") }}';
+                var Estatecon = L.icon({
+                    iconUrl: estateIcon,
+                    iconSize: [30, 80],
+                    iconAnchor: [30, 80],
+                    popupAnchor: [-3, -76],
+                    shadowUrl: estateIcon,
+                    shadowSize: [30, 80],
+                    shadowAnchor: [30, 80],
+                });
+                var afdIcon = '{{ asset("img/territory.png") }}';
+                var afdCon = L.icon({
+                    iconUrl: afdIcon,
+                    iconSize: [30, 80],
+                    iconAnchor: [30, 80],
+                    popupAnchor: [-3, -76],
+                    shadowUrl: afdIcon,
+                    shadowSize: [30, 80],
+                    shadowAnchor: [30, 80],
+                });
+
+
                 legend.onAdd = function(map) {
                     var div = L.DomUtil.create('div', 'info legend');
-                    var labels = ["Estate(klik icon mata untuk filter)", "Afdeling", "Mutu Ancak", "Mutu Transport", "Mutu Buah"];
-                    var colors = ["blue", "yellow", "red", "blue", "green"];
+                    var labels = ["Estate (klik icon untuk filter)", "Afdeling", "Mutu Ancak-Temuan-Follow Up", "Mutu Transport-Temuan-FolowUp", "Mutu Buah-Temuan"];
+                    var icons = [Estatecon, afdCon, [caktemuan1, caktemuan2, cakfu1],
+                        [transicon, transtemuan, transFollowup],
+                        [myIcon2, myIcon]
+                    ];
                     var layers = [estatePolygon, plotBlokPolygon, ancakGroup, transGroup, buahGroup];
+                    var checkboxes = []; // Array to store checkbox elements
 
                     // Create legend content
-                    for (var i = 0; i < colors.length; i++) {
+                    for (var i = 0; i < icons.length; i++) {
                         var item = L.DomUtil.create('div', 'legend-item', div);
-                        var eye = L.DomUtil.create('i', 'eye-icon', item);
-                        eye.innerHTML = '&#128065;'; // Unicode character for the eye icon
-                        eye.style.cursor = 'pointer';
-                        eye.dataset.index = i; // Store the index of the layer
 
-                        var colorBox = L.DomUtil.create('span', 'color-box', item);
-                        colorBox.style.backgroundColor = colors[i];
+                        var checkbox = L.DomUtil.create('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.checked = true; // Initially checked
+                        checkbox.dataset.index = i; // Store the index of the layer
+
+                        // Toggle layer visibility based on checkbox state
+                        checkbox.addEventListener('change', function() {
+                            var index = parseInt(this.dataset.index);
+                            if (this.checked) {
+                                map.addLayer(layers[index]);
+                            } else {
+                                map.removeLayer(layers[index]);
+                            }
+                        });
+
+                        checkboxes.push(checkbox); // Add checkbox to the array
+
+                        var iconContainer = L.DomUtil.create('div', 'icon-container', item);
+
+                        // Check if icons[i] is an array of icons
+                        if (Array.isArray(icons[i])) {
+                            for (var j = 0; j < icons[i].length; j++) {
+                                var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
+                                icon.src = icons[i][j].options.iconUrl;
+                            }
+                        } else {
+                            var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
+                            icon.src = icons[i].options.iconUrl;
+                        }
 
                         var label = L.DomUtil.create('span', 'label', item);
                         label.innerHTML = labels[i];
 
-                        // Toggle layer visibility when the eye icon is clicked
-                        eye.addEventListener('click', function() {
-                            var index = parseInt(this.dataset.index);
-                            if (map.hasLayer(layers[index])) {
-                                map.removeLayer(layers[index]);
-                            } else {
-                                map.addLayer(layers[index]);
-                            }
-                        });
+                        item.appendChild(checkbox); // Add checkbox to the legend item
+                        item.appendChild(iconContainer);
+                        item.appendChild(label);
                     }
+
+                    // Function to show/hide layers based on checkbox selection
+                    function updateLayerVisibility() {
+                        for (var i = 0; i < checkboxes.length; i++) {
+                            var checkbox = checkboxes[i];
+                            var index = parseInt(checkbox.dataset.index);
+                            if (checkbox.checked) {
+                                map.addLayer(layers[index]);
+                            } else {
+                                map.removeLayer(layers[index]);
+                            }
+                        }
+                    }
+
+                    // Initial layer visibility update
+                    updateLayerVisibility();
 
                     return div;
                 };
 
-
                 legend.addTo(map);
+
+
                 // Toggle layer visibility when the eye icon is clicked
                 // Toggle layer visibility when the eye icon is clicked
                 eye.addEventListener('click', function() {
@@ -1371,7 +1728,7 @@
                     pokok_panen_cak) {
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada') {
+                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -1560,7 +1917,7 @@
 
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada') {
+                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -1712,7 +2069,7 @@
                     td.style.alignItems = 'center';
                     td.style.justifyContent = 'center';
 
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada') {
+                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim') {
 
                         const updateButton = document.createElement('button');
                         updateButton.className = 'btn btn-success mr-2';
@@ -2113,7 +2470,7 @@
             // Set the desired tab in the local storage
             localStorage.setItem('selectedTab', 'nav-data-tab');
             // Navigate back to the dashboard_inspeksi page
-            window.location.href = 'http://qc-web.test/dashboard_inspeksi';
+            window.location.href = 'https://qc-apps.srs-ssms.com/dashboard_inspeksi';
         });
     });
 </script>

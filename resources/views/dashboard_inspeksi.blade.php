@@ -1330,12 +1330,25 @@
                                         <option value="3">Regional 3</option>
                                     </select>
                                 </div>
+
                                 <div class="col-md-4">
+                                    <select class="form-control" id="wilayahGrafik">
+                                        <!-- Options will be populated dynamically based on the selected regional value -->
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <select class="form-control" id="estateGrafik">
+                                        <!-- Options will be populated dynamically based on the selected wilayah preset value -->
+                                    </select>
+                                </div>
+
+                                <!-- <div class="col-md-4">
                                     {{ csrf_field() }}
                                     <select class="form-control" id="estData" name="estData">
 
                                     </select>
-                                </div>
+                                </div> -->
                             </div>
                             <button class="btn btn-primary mb-3 ml-3" id="GraphFilter">Show</button>
                             <!-- <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
@@ -1522,14 +1535,11 @@
     fetchEstates(regDataMapSelect.value);
 
 
+    var lokasiKerja = "{{ session('lok') }}";
+    var isTableHeaderModified = false;
 
-    /////
     $(document).ready(function() {
-        // set the value of regionalPanen to 2 (Regional 2)
-
-        var lokasiKerja = "{{ session('lok') }}";
-        // console.log(lokasiKerja);
-        if (lokasiKerja == 'Regional II') {
+        if (lokasiKerja == 'Regional II' && !isTableHeaderModified) {
             $('#regionalPanen').val('2');
             $('#regionalDataweek').val('2');
             $('#regionalData').val('2');
@@ -1537,6 +1547,34 @@
             $('#regFind').val('2');
             $('#regGrafik').val('2');
             // $('#regDataMap').val('2');
+
+            const thElement1 = document.getElementById('thead1');
+            const thElement2 = document.getElementById('thead2');
+            const thElement3 = document.getElementById('thead3');
+            const thElement4 = document.getElementById('thead3x');
+            const thElement1x = document.getElementById('theads1');
+            const thElement2x = document.getElementById('theads2');
+            const thElement3x = document.getElementById('theads3');
+            const thElement4x = document.getElementById('theads3x');
+            thElement1.textContent = 'WILAYAH IV';
+            thElement2.textContent = 'WILAYAH V';
+            thElement3.textContent = 'WILAYAH VI';
+            thElement4.textContent = 'PLASMA II';
+            thElement1x.textContent = 'WILAYAH IV';
+            thElement2x.textContent = 'WILAYAH V';
+            thElement3x.textContent = 'WILAYAH VI';
+            thElement4x.textContent = 'PLASMA II';
+
+            thElement1.classList.add("text-center");
+            thElement2.classList.add("text-center");
+            thElement3.classList.add("text-center");
+            thElement4.classList.add("text-center");
+            thElement1x.classList.add("text-center");
+            thElement2x.classList.add("text-center");
+            thElement3x.classList.add("text-center");
+            thElement4x.classList.add("text-center");
+
+            isTableHeaderModified = true;
         }
 
         changeData();
@@ -1546,6 +1584,7 @@
         graphFilter();
         dashboard_week();
     });
+
 
 
     function initializeMap() {
@@ -1928,7 +1967,7 @@
                 // console.log(sortedArray);
 
 
-                console.log(newCum);
+                // console.log(newCum);
                 var arrTbody1 = newCum
                 // console.log(arrTbody1);
 
@@ -2046,10 +2085,12 @@
             thElement1.textContent = 'WILAYAH I';
             thElement2.textContent = 'WILAYAH II';
             thElement3.textContent = 'WILAYAH III';
+            thElement4.textContent = 'PLASMA I';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
             thElement3.classList.add("text-center");
+            thElement4.classList.add("text-center");
 
             s.classList.add("col-lg-3");
             m.classList.add("col-lg-3");
@@ -2066,10 +2107,11 @@
             resetClassList(l);
             resetClassList(n);
 
+
             thElement1.textContent = 'WILAYAH IV';
             thElement2.textContent = 'WILAYAH V';
             thElement3.textContent = 'WILAYAH VI';
-            thElement4.textContent = 'PLASMA 2';
+            thElement4.textContent = 'PLASMA II';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
@@ -2093,7 +2135,7 @@
 
             thElement1.textContent = 'WILAYAH VII';
             thElement2.textContent = 'WILAYAH VIII';
-            thElement4.textContent = 'PLASMA 3';
+            thElement4.textContent = 'PLASMA III';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
@@ -4928,7 +4970,7 @@
         var est = ''
         var yearGraph = ''
         var reg = ''
-        var est = document.getElementById('estData').value
+        var est = document.getElementById('estateGrafik').value
 
         var yearGraph = document.getElementById('yearGraph').value
         var reg = document.getElementById('regGrafik').value
@@ -4971,25 +5013,25 @@
                 // console.log(est_values);
 
                 var regGrafik = document.getElementById("regGrafik");
-                var estData = document.getElementById("estData");
+                // var estData = document.getElementById("estData");
 
-                function populateEstData() {
-                    estData.innerHTML = ""; // Clear existing options
+                // function populateEstData() {
+                //     estData.innerHTML = ""; // Clear existing options
 
-                    var est_values = list_est.map(item => item[1].est);
+                //     var est_values = list_est.map(item => item[1].est);
 
-                    est_values.forEach(function(est) {
-                        var option = document.createElement("option");
-                        option.value = est;
-                        option.text = est;
-                        estData.add(option);
-                    });
-                }
+                //     est_values.forEach(function(est) {
+                //         var option = document.createElement("option");
+                //         option.value = est;
+                //         option.text = est;
+                //         estData.add(option);
+                //     });
+                // }
 
-                regGrafik.addEventListener("change", populateEstData);
+                // regGrafik.addEventListener("change", populateEstData);
 
-                // Populate the estData select element when the page loads
-                populateEstData();
+                // // Populate the estData select element when the page loads
+                // populateEstData();
 
 
                 var graphBtt = '['
@@ -5255,6 +5297,9 @@
             thElement1x.classList.add("text-center");
             thElement2x.classList.add("text-center");
             thElement3x.classList.add("text-center");
+            thElement4x.textContent = 'PLASMA I';
+            thElement4x.classList.add("text-center");
+
 
             sx.classList.add("col-lg-3");
             mx.classList.add("col-lg-3");
@@ -5274,7 +5319,7 @@
             thElement1x.textContent = 'WILAYAH IV';
             thElement2x.textContent = 'WILAYAH V';
             thElement3x.textContent = 'WILAYAH VI';
-            thElement4x.textContent = 'PLASMA 2';
+            thElement4x.textContent = 'PLASMA II';
 
             thElement1x.classList.add("text-center");
             thElement2x.classList.add("text-center");
@@ -5297,7 +5342,7 @@
 
             thElement1x.textContent = 'WILAYAH VII';
             thElement2x.textContent = 'WILAYAH VIII';
-            thElement4x.textContent = 'PLASMA 3';
+            thElement4x.textContent = 'PLASMA III';
 
             thElement1x.classList.add("text-center");
             thElement2x.classList.add("text-center");
@@ -7160,22 +7205,90 @@
             localStorage.removeItem('selectedTab');
         }
     });
-    document.addEventListener('DOMContentLoaded', function() {
-        const regGrafik = document.getElementById('regGrafik');
-        const estData = document.getElementById('estData');
-        const graphFilter = document.getElementById('GraphFilter');
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const regGrafik = document.getElementById('regGrafik');
+    //     const estData = document.getElementById('estData');
+    //     const graphFilter = document.getElementById('GraphFilter');
 
-        // Disable estData dropdown initially
-        estData.disabled = true;
+    //     // Disable estData dropdown initially
+    //     estData.disabled = true;
 
-        // When the user changes the regional dropdown, disable estData until the "Show" button is clicked
-        regGrafik.addEventListener('change', function() {
-            estData.disabled = true;
+    //     // When the user changes the regional dropdown, disable estData until the "Show" button is clicked
+    //     regGrafik.addEventListener('change', function() {
+    //         estData.disabled = true;
+    //     });
+
+    //     // When the user clicks the "Show" button, enable estData dropdown
+    //     graphFilter.addEventListener('click', function() {
+    //         estData.disabled = false;
+    //     });
+    // });
+
+
+    // filter grafik perwilayah
+    // Define the group data obtained from the server
+    var groupData = <?php echo json_encode($groupedArray); ?>;
+
+    // Function to populate the options for the wilayah preset filter
+    function populateWilayahOptions(regionalValue) {
+        var wilayahSelect = $('#wilayahGrafik');
+        wilayahSelect.empty();
+
+        // Define the minimum and maximum wilayah values based on the selected regional value
+        var minWilayah, maxWilayah;
+        if (regionalValue == 1) {
+            minWilayah = 1;
+            maxWilayah = 3;
+        } else if (regionalValue == 2) {
+            minWilayah = 4;
+            maxWilayah = 6;
+        } else if (regionalValue == 3) {
+            minWilayah = 7;
+            maxWilayah = 8;
+        }
+
+        // Populate the options for the wilayah preset filter
+        for (var i = minWilayah; i <= maxWilayah; i++) {
+            var option = $('<option>').val(i).text('Wilayah ' + i);
+            wilayahSelect.append(option);
+        }
+
+        // Trigger change event for the wilayah preset filter to populate the options for the estate filter
+        wilayahSelect.trigger('change');
+    }
+
+    // Function to populate the options for the estate filter
+    function populateEstateOptions(wilayahValue) {
+        var estateSelect = $('#estateGrafik');
+        estateSelect.empty();
+
+        // Get the corresponding estate array based on the selected wilayah preset value
+        var estateArray = groupData[wilayahValue];
+
+        // Populate the options for the estate filter
+        $.each(estateArray, function(index, value) {
+            var option = $('<option>').val(value).text(value);
+            estateSelect.append(option);
         });
+    }
 
-        // When the user clicks the "Show" button, enable estData dropdown
-        graphFilter.addEventListener('click', function() {
-            estData.disabled = false;
-        });
+    // Event listener for the regional filter change
+    $('#regGrafik').on('change', function() {
+        var selectedRegional = $(this).val();
+
+        // Populate the options for the wilayah preset filter based on the selected regional value
+        populateWilayahOptions(selectedRegional);
     });
+
+    // Event listener for the wilayah preset filter change
+    $('#wilayahGrafik').on('change', function() {
+        var selectedWilayah = $(this).val();
+
+        // Populate the options for the estate filter based on the selected wilayah preset value
+        populateEstateOptions(selectedWilayah);
+    });
+
+    // Initial population of the wilayah preset options based on the default regional value
+    var defaultRegional = $('#regGrafik').val();
+    populateWilayahOptions(defaultRegional);
 </script>

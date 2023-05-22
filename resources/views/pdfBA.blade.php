@@ -200,7 +200,7 @@
                                 <th colspan="5">Brondolan Tinggal</th>
 
                                 <th colspan="6">Buah Tinggal</th>
-                                <th colspan="2">Palepah Sengklek</th>
+                                <th colspan="2">Pelepah Sengkleh</th>
                                 <th rowspan="2">TPH Sample</th>
                                 <th colspan="2">Brondolan Tingal</th>
                                 <th colspan="2">Buah TInggal</th>
@@ -289,7 +289,7 @@
                                 foreach ($data['mutuAncak'] as $mutuAncak) {
                                 $totalPokokSample += $mutuAncak['pokok_sample'] ?? 0;
 
-                                $luasBloks += (int)($mutuAncak['luas_blok'] ?? 0);
+                                $luasBloks += (float) number_format($mutuAncak['luas_blok'] ?? 0, 2);
 
 
                                 $totaljumPanen += $mutuAncak['jml_jjg_panen'] ?? 0;
@@ -314,7 +314,7 @@
                                 $avg = $data['avg']['average'];
                                 $TotLuasSam += $mutuAncak['luas_ha'] ?? 0;
 
-                                $persen_sampNew = $luasBloks !=0 ? round ($TotLuasSam / $luasBloks,2) : '-';
+                                $persen_sampNew = $luasBloks !=0 ? round ($TotLuasSam / $luasBloks * 100,2) : '-';
 
                                 $TotPersenSam = $avg != 0 ? round(($TotLuasSam / $avg), 2) : '-';
 
@@ -619,7 +619,7 @@
                                 <th colspan="5">Brondolan Tinggal</th>
 
                                 <th colspan="6">Buah Tinggal</th>
-                                <th colspan="2">Palepah Sengklek</th>
+                                <th colspan="2">Palepah Sengkleh</th>
                                 <th rowspan="2">TPH Sample</th>
                                 <th colspan="2">Brondolan Tingal</th>
                                 <th colspan="2">Buah TInggal</th>
@@ -709,7 +709,8 @@
                                 foreach ($data['mutuAncak'] as $mutuAncak) {
                                 $totalPokokSample += $mutuAncak['pokok_sample'] ?? 0;
 
-                                $luasBloks += (int)($mutuAncak['luas_blok'] ?? 0);
+                                $luasBloks += (float) number_format($mutuAncak['luas_blok'] ?? 0, 2);
+
 
 
                                 $totaljumPanen += $mutuAncak['jml_jjg_panen'] ?? 0;
@@ -735,9 +736,9 @@
                                 $TotLuasSam += $mutuAncak['luas_ha'] ?? 0;
                                 $TotLuasBlok += $mutuAncak['luas_blok'] ?? 0;
 
-                                $persen_sampNew = $luasBloks !=0 ? round ($TotLuasSam / $luasBloks,2) : '-';
+                                $persen_sampNew = $luasBloks !=0 ? round ($TotLuasSam / $luasBloks * 100,2) : '-';
 
-                                $TotPersenSam = $avg != 0 ? round(($TotLuasSam / $avg), 2) : '-';
+                                $TotPersenSam = $avg != 0 ? round(($TotLuasSam / $avg) * 100, 2) : '-';
 
 
 
@@ -795,38 +796,6 @@
                                 <!-- <td>{{ $data['mutuTransport'][$key]['panes_status'] ?? '-' }}</td> -->
                             </tr>
                             @endforeach
-                            @foreach ($data['ancak_trans'] as $key => $val)
-                            <tr>
-                                <td>{{$val['status_panentrans']}}</td>
-                                <td>{{$key}}</td>
-                                <td colspan="2">-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>{{$val['tph_sampleTrans']}}</td>
-                                <td>{{$val['bt_total']}}</td>
-                                <td>{{$val['skor']}}</td>
-                                <td>{{$val['restan_total']}}</td>
-                                <td>{{$val['skor_restan']}}</td>
-                            </tr>
-                            @endforeach
                             @for ($i = 0; $i < $emptyRows; $i++) <tr>
                                 <td>&nbsp;</td>
                                 <td></td>
@@ -865,8 +834,10 @@
                                     <td colspan="4">Total</td>
                                     <td>{{ $TotLuasBlok }}</td>
                                     <td></td>
+
                                     <td>{{ $totalPokokSample }}</td>
                                     <td>{{$TotLuasSam}}</td>
+                                    <!--<td>oke</td>-->
                                     <td>{{$TotPersenSam}}</td>
                                     <td>{{$totaljumPanen}}</td>
                                     <td>{{$akp_real}}</td>

@@ -1035,7 +1035,9 @@ class inspectController extends Controller
         
         
                     $ancak[$key][$key1][$key2]['luas_blok'] = $first;
-                    $ancak[$key][$key1][$key2]['persenSamp'] = ($first != '-') ? round(($luas_ha / $first) * 100, 2) : '-';
+                    // dd($ancak);
+                   $ancak[$key][$key1][$key2]['persenSamp'] = ($first != '-') ? round((floatval($luas_ha) / floatval($first)) * 100, 2) : '-';
+
         
                     if ($regs === '2') {
                     $status_panen = explode(",", $value4['status_panen']);
@@ -1092,6 +1094,7 @@ class inspectController extends Controller
             }
         }
 
+        // dd($ancak);
         $transNewdata = array();
         foreach ($dataMTTrans as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -1124,7 +1127,7 @@ class inspectController extends Controller
                             $tph_sample = $value3[0]['tph_baris']; 
                             $sum_bt = $value3[0]['bt'];  
                         }else{
-                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
+                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round(floatval($LuasKey) * 1.3);
                         }
                     } else {
                         $transNewdata[$key][$key1][$key2]['tph_sample'] = $tph_sample;
@@ -1140,14 +1143,7 @@ class inspectController extends Controller
                     $transNewdata[$key][$key1][$key2]['skor'] = ($tph_sample != 0) ? round($sum_bt / $tph_sample, 2) : 0;
                     $transNewdata[$key][$key1][$key2]['skor_restan'] = ($tph_sample != 0) ? round($sum_Restan / $tph_sample, 2) : 0;
                     $transNewdata[$key][$key1][$key2]['estate'] = $value3['estate'];
-
-                   
-                    
-                   
-                    
-
-                    
-                   
+       
                 }
               
                
@@ -1163,7 +1159,8 @@ class inspectController extends Controller
                         $transNewdata[$key][$key1][$key2] = $value2;
                         
                         if ($value2['status_panen'] <= 3) {
-                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($value2['luas_blok'] * 1.3, 2);
+                         $transNewdata[$key][$key1][$key2]['tph_sample'] = round(floatval($value2['luas_blok'] * 1.3), 2);
+
                         } else {
                             $transNewdata[$key][$key1][$key2]['tph_sample'] = 0;
                         }
@@ -1819,7 +1816,7 @@ class inspectController extends Controller
             }
         }        
         // dd($dataSkor[5]['BTE'],$transport);  
-        // dd($dataSkor);
+        // dd($dataSkor_ancak);
         return view('dataInspeksi', [
             'dataSkor' => $dataSkor,
             'dataSkor_ancak' => $dataSkor_ancak,
@@ -1829,7 +1826,6 @@ class inspectController extends Controller
               'regional' => $regs
         ]);
     }
-
 
 
     public function dashboard_inspeksi(Request $request)
@@ -4109,8 +4105,21 @@ class inspectController extends Controller
         unset($value1); // unset the reference
         
            
-        // dd($ancak,$transNewdata);
-
+       
+        $filterGrafik = DB::connection('mysql2')->table('estate')
+        ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+        ->get();
+    
+        $filterGrafik = json_decode($filterGrafik, true);
+        $groupedArray = [];
+        
+        foreach ($filterGrafik as $item) {
+            $wil = $item['wil'];
+            $groupedArray[$wil][] = $item['est'];
+        }
+    
+    
+        //  dd($groupedArray);
         // dd($dataSkor_ancak, $dataSkor_trans, $dataSkor_ancak);
         return view('dashboard_inspeksi', [
             'dataRaw' => $dataRaw,
@@ -4133,7 +4142,8 @@ class inspectController extends Controller
             'buahPerwil' => $buahPerwil,
             'dataTahunEst' => $dataTahunEst,
             'FinalTahun' => $FinalTahun,
-            'datefilter' => $years
+            'datefilter' => $years,
+            'groupedArray' => $groupedArray
         ]);
     }
 
@@ -4757,7 +4767,9 @@ class inspectController extends Controller
                             $tph_sample = $value3[0]['tph_baris']; 
                             $sum_bt = $value3[0]['bt'];  
                         }else{
-                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
+                            // $transNewdata[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
+                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round(floatval($LuasKey) * 1.3);
+
                         }
                     } else {
                         $transNewdata[$key][$key1][$key2]['tph_sample'] = $tph_sample;
@@ -19445,7 +19457,7 @@ class inspectController extends Controller
         $sum = array_sum($sph_values);
 
         // Calculate the average of sph values
-        $average = round($sum / count($sph_values), 2);
+        $average = round($sum / count($sph_values), 0);
 
         // dd($average, $ancak);
 
@@ -19722,7 +19734,7 @@ class inspectController extends Controller
         // dd($transReg2,$transport);
         // dd($transReg2);
         // Session::put('transReg2', $transReg2);
-        // dd($transport);
+        // dd($ancak);
         $arrView = array();
         $arrView['hitung'] =  $CalculateStack;
 
@@ -19852,18 +19864,31 @@ class inspectController extends Controller
             return $carry;
         }, []);
 
-
+        // dd($groupedBuah);
         $buah_plot = [];
         foreach ($groupedBuah as $blok => $coords) {
             foreach ($coords as $coord) {
-                $buah_plot[] = ['blok' => $blok, 'lat' => $coord['lat'], 'lon' => $coord['lon']];
+                $buah_plot[] = ['blok' => $blok,
+                 'lat' => $coord['lat'],
+                  'lon' => $coord['lon'],
+                  'foto_temuan' => $coord['foto_temuan'],
+                  'komentar' => $coord['komentar']
+                ];
             }
         }
 
+        // dd($buah_plot);
         $trans_plot = [];
         foreach ($groupedTrans as $blok => $coords) {
             foreach ($coords as $coord) {
-                $trans_plot[] = ['blok' => $blok, 'lat' => $coord['lat'], 'lon' => $coord['lon']];
+                $trans_plot[] = [
+                    'blok' => $blok, 
+                    'lat' => $coord['lat'],
+                     'lon' => $coord['lon'],
+                     'foto_temuan' => $coord['foto_temuan'],
+                     'foto_fu' => $coord['foto_fu'],
+                     'komentar' => $coord['komentar']
+                    ];
             }
         }
 
@@ -19883,18 +19908,158 @@ class inspectController extends Controller
             return $carry;
         }, []);
 
+        $queryancakFL = DB::connection('mysql2')->table("follow_up_ma")
+            ->select("follow_up_ma.*", "estate.wil")
+            ->join('estate', 'estate.est', '=', 'follow_up_ma.estate')
+            ->where('follow_up_ma.estate', $est)
+            ->where('follow_up_ma.afdeling', $afd)
+            ->where('waktu_temuan', 'like', '%' . $date . '%')
+            ->where('follow_up_ma.afdeling', '!=', 'Pla')
+            ->get();
+        $queryancakFL = json_decode($queryancakFL, true);
+
+        $groupedAncakFL = array_reduce($queryancakFL, function ($carry, $item) {
+            $carry[$item['blok']][] = $item;
+            return $carry;
+        }, []);
+        // dd($groupedAncak['T01505'],$groupedAncakFL['T01505']);
+        // dd($ancak_plot);
+        $ancak_fa = [];
+        foreach ($groupedAncakFL as $blok => $coords) {
+            foreach ($coords as $coord) {
+                $ancak_fa[] = [
+                 'blok' => $blok,
+                 'estate' => $coord['estate'], 
+                 'afdeling' => $coord['afdeling'], 
+                 'br1' => $coord['br1'],
+                 'br2' => $coord['br2'],
+                 'jalur_masuk' => $coord['jalur_masuk'],
+                 'foto_temuan1' => $coord['foto_temuan1'],
+                 'foto_temuan2' => $coord['foto_temuan2'],
+                 'foto_fu1' => $coord['foto_fu1'],
+                 'foto_fu2' => $coord['foto_fu2'],
+                 'komentar' => $coord['komentar'],
+                 'lat' => $coord['lat'], 
+                 'lon' => $coord['lon']
+                ];
+            }
+        }
         // dd($groupedAncak);
         $ancak_plot = [];
         foreach ($groupedAncak as $blok => $coords) {
             foreach ($coords as $coord) {
-                $ancak_plot[] = ['blok' => $blok, 'lat' => $coord['lat_awal'], 'lon' => $coord['lon_awal']];
-                $ancak_plot[] = ['blok' => $blok, 'lat' => $coord['lat_akhir'], 'lon' => $coord['lon_akhir']];
+                $ancak_fa_item = array();
+                $matchingAncakFa = [];
+        
+                foreach ($ancak_fa as $key => $value) {
+                    if ($coord['blok'] == $value['blok'] && $coord['br1'] == $value['br1'] && $coord['br2'] == $value['br2']  && $coord['jalur_masuk'] == $value['jalur_masuk']) {
+                        $matchingAncakFa[] = $value;
+                    }
+                }
+        
+                $foto_temuan1 = null;
+                $foto_temuan2 = null;
+                $foto_fu1 = null;
+                $foto_fu2 = null;
+                $komentar = null;
+        
+                if (!empty($matchingAncakFa)) {
+                    $firstMatch = $matchingAncakFa[0];
+                    $foto_temuan1 = $firstMatch['foto_temuan1'];
+                    $foto_temuan2 = $firstMatch['foto_temuan2'];
+                    $foto_fu1 = $firstMatch['foto_fu1'];
+                    $foto_fu2 = $firstMatch['foto_fu2'];
+                    $komentar = $firstMatch['komentar'];
+                }
+        
+                $ancak_plot[] = [
+                    'blok' => $blok,
+                    'estate' => $coord['estate'],
+                    'afdeling' => $coord['afdeling'],
+                    'br1' => $coord['br1'],
+                    'br2' => $coord['br2'],
+                    'jalur_masuk' => $coord['jalur_masuk'],
+                    'foto_temuan1' => $foto_temuan1,
+                    'foto_temuan2' => $foto_temuan2,
+                    'foto_fu1' => $foto_fu1,
+                    'foto_fu2' => $foto_fu2,
+                    'komentar' => $komentar,
+                    'ket' => 'Lokasi awal',
+                    'lat' => $coord['lat_awal'],
+                    'lon' => $coord['lon_awal']
+                ];
+        
+                $ancak_plot[] = [
+                    'blok' => $blok,
+                    'estate' => $coord['estate'],
+                    'afdeling' => $coord['afdeling'],
+                    'br1' => $coord['br1'],
+                    'br2' => $coord['br2'],
+                    'jalur_masuk' => $coord['jalur_masuk'],
+                    'foto_temuan1' => $foto_temuan1,
+                    'foto_temuan2' => $foto_temuan2,
+                    'foto_fu1' => $foto_fu1,
+                    'foto_fu2' => $foto_fu2,
+                    'komentar' => $komentar,
+                    'ket' => 'Lokasi akhir',
+                    'lat' => $coord['lat_akhir'],
+                    'lon' => $coord['lon_akhir']
+                ];
             }
         }
+        
+
+
+        
+      
         // dd($ancak_plot);
 
-
-        // dd($trans_plot);
+        // $ancak_new = [];
+        // foreach ($ancak_plot as $key => $value) {
+        //     foreach ($ancak_fa as $key2 => $value2) {
+        //         if ($key2 == $key
+        //             && $value['br1'] == $value2['br1']
+        //             && $value['br2'] == $value2['br2']
+        //             && $value['jalur_masuk'] == $value2['jalur_masuk']
+        //         ) {
+        //             $lat_awal = isset($value['lat_awal']) ? $value['lat_awal'] : null;
+        //             $lon_awal = isset($value['lon_awal']) ? $value['lon_awal'] : null;
+        //             $lat_akhir = isset($value['lat_akhir']) ? $value['lat_akhir'] : null;
+        //             $lon_akhir = isset($value['lon_akhir']) ? $value['lon_akhir'] : null;
+        
+        //             $ancak_new[] = [
+        //                 'blok' => $key,
+        //                 'estate' => $value['estate'],
+        //                 'afdeling' => $value['afdeling'],
+        //                 'br1' => $value['br1'],
+        //                 'br2' => $value['br2'],
+        //                 'jalur_masuk' => $value['jalur_masuk'],
+        //                 'foto_temuan1' => $value2['foto_temuan1'],
+        //                 'foto_temuan2' => $value2['foto_temuan2'],
+        //                 'foto_fu1' => $value2['foto_fu1'],
+        //                 'foto_fu2' => $value2['foto_fu2'],
+        //                 'komentar' => $value2['komentar'],
+        //                 'ket' => 'Lokasi awal',
+        //                 'lat' => $lat_awal,
+        //                 'lon' => $lon_awal
+        //             ];
+        //             $ancak_new[] = [
+        //                 'blok' => $key,
+        //                 'estate' => $value['estate'],
+        //                 'afdeling' => $value['afdeling'],
+        //                 'br1' => $value['br1'],
+        //                 'br2' => $value['br2'],
+        //                 'jalur_masuk' => $value['jalur_masuk'],
+        //                 'ket' => 'Lokasi akhir',
+        //                 'lat' => $lat_akhir,
+        //                 'lon' => $lon_akhir
+        //             ];
+        //         }
+        //     }
+        // }
+        
+        
+        // dd($ancak_new);
 
         return response()->json([
             'coords' => $convertedCoords,
@@ -20537,7 +20702,9 @@ class inspectController extends Controller
                             $tph_sample = $value3[0]['tph_baris']; 
                             $sum_bt = $value3[0]['bt'];  
                         }else{
-                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
+                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round(floatval($LuasKey) * 1.3);
+
+                            // $transNewdata[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
                         }
                     } else {
                         $transNewdata[$key][$key1][$key2]['tph_sample'] = $tph_sample;
