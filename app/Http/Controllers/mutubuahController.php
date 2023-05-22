@@ -14,7 +14,6 @@ use function PHPUnit\Framework\isEmpty;
 require '../app/helpers.php';
 class mutubuahController extends Controller
 {
-    //
     public function dashboard_mutubuah(Request $request)
     {
 
@@ -6017,5 +6016,101 @@ class mutubuahController extends Controller
 
         // return view('pdfBA', [$arrView ]);
 
+    }
+
+    public function findIssueSmb(Request $request) {
+        $queryEstate = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $request->get('regional'))
+            ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->orderBy('estate.id', 'asc')
+            ->get();
+        $queryEstate = json_decode($queryEstate, true);
+
+        foreach ($queryEstate as $value1) {
+            $querySmb = DB::connection('mysql2')->table('sidak_mutu_buah')
+                ->select("sidak_mutu_buah.*")
+                ->where('estate', $value1['est'])
+                ->where('datetime', 'like', '%' . $request->get('date') . '%')
+                ->get();
+            $dataSmb = $querySmb->groupBy('estate');
+            $dataSmb = json_decode($dataSmb, true);
+
+            foreach ($dataSmb as $key => $value) {
+                $total_temuan = array();
+                foreach ($value as $key2 => $value2) {
+                    if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $total_temuan)) {
+                        $splitPhoto = explode(";", str_replace(" ", "", $value2['foto_temuan']));
+                        foreach ($splitPhoto as $value3) {
+                            if (!empty($value3)) {
+                                $total_temuan[] = $value3;
+                            }
+                        }
+                    }
+                    $tot_temuan = count($total_temuan);
+                }
+                $dataFinding[$value1['wil']][$key]['total_temuan'] = $tot_temuan;
+            }
+        }
+        
+        $arrView = array();
+        $arrView['dataFinding'] = $dataFinding;
+        echo json_encode($arrView);
+        exit();
+    }
+
+    public function cetakFiSmb($est, $tgl)
+    {
+        $querySmb = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select("sidak_mutu_buah.*")
+            ->where('estate', $est)
+            ->where('datetime', 'like', '%' . $tgl . '%')
+            ->orderBy('afdeling', 'asc')
+            ->get();
+        $dataSmb = $querySmb->groupBy('estate');
+        $dataSmb = json_decode($dataSmb, true);
+
+        $inc = 0;
+        foreach ($dataSmb as $key => $value) {
+            $totalTemuan = array();
+            foreach ($value as $key2 => $value2) {
+                if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $totalTemuan)) {
+                    $splitKomen = explode(";", str_replace(" ", "", $value2['komentar']));
+                    $splitPhoto = explode(";", str_replace(" ", "", $value2['foto_temuan']));
+                    foreach ($splitPhoto as $key3 => $value3) {
+                        foreach ($splitKomen as $key4 => $value4) {
+                            $isLastElement = ($key3 === array_key_last($splitPhoto));
+                            if ($key3 == $key4) {
+                                if (!empty($value3)) {
+                                    $dataFinding[$inc]['estate'] = $value2['estate'];
+                                    $dataFinding[$inc]['afdeling'] = $value2['afdeling'];
+                                    $dataFinding[$inc]['blok'] = $value2['blok'];
+                                    $dataFinding[$inc]['komen'] = $value4;
+                                    $dataFinding[$inc]['fotoTemuan'] = $value3;
+                                    if ($isLastElement) {
+                                        $tglLast = Carbon::parse($value2['datetime'])->format('d F Y');
+                                    }
+                                    $totalTemuan[] = $value3;
+                                }
+                            }
+                        }
+                        $temuanResult = count($totalTemuan);
+                        $inc++;
+                    }
+                }
+            }
+        }
+        // dd($dataFinding);
+
+        $pdf = pdf::loadview('cetakFiSmb', [
+            'tgl' => $tglLast,
+            'totalTemuan' => $temuanResult,
+            'dataResult' => $dataFinding
+        ]);
+        $pdf->set_paper('A2', 'potraits');
+
+        $filename = 'Finding Issue SMB - ' . $est . ' - ' . $tgl . '.pdf';
+        return $pdf->stream($filename);
     }
 }

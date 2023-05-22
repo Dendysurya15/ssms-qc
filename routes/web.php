@@ -129,6 +129,8 @@ Route::get('filterdetialMutubuah', [MutubuahController::class, 'filterdetialMutu
 Route::post('/updateBA_mutubuah', [MutubuahController::class, 'updateBA_mutubuah'])->name('updateBA_mutubuah');
 Route::post('/deleteBA_mutubuah', [MutubuahController::class, 'deleteBA_mutubuah'])->name('deleteBA_mutubuah');
 Route::post('/pdfBA_sidakbuah', [MutubuahController::class, 'pdfBA_sidakbuah'])->name('pdfBA_sidakbuah');
+Route::post('/findIssueSmb', [MutubuahController::class, 'findIssueSmb'])->name('findIssueSmb');
+Route::get('/cetakFiSmb/{est}/{tgl}', [MutubuahController::class, 'cetakFiSmb'])->name('cetakFiSmb');
 
 
 Route::post('/getMapsdetail', [inspectController::class, 'getMapsdetail'])->name('getMapsdetail');

@@ -92,6 +92,7 @@
                         <a class="nav-item nav-link active" id="nav-utama-tab" data-toggle="tab" href="#nav-utama" role="tab" aria-controls="nav-utama" aria-selected="true">Halaman Utama</a>
                         <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Data</a>
                         <a class="nav-item nav-link" id="nav-sbi-tab" data-toggle="tab" href="#nav-sbi" role="tab" aria-controls="nav-sbi" aria-selected="false">SBI</a>
+                        <a class="nav-item nav-link" id="nav-issue-tab" data-toggle="tab" href="#nav-issue" role="tab" aria-controls="nav-issue" aria-selected="false">Finding Issue</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
@@ -795,7 +796,7 @@
                                             <table class="table table-bordered" style="font-size: 13px">
                                                 <thead bgcolor="gainsboro">
                                                     <tr>
-                                                        <th rowspan="3" class="align-middle">ESTATE</th>
+                                                        <thclass="align-middle">ESTATE</thclass=>
                                                         <th colspan="5">Temuan Pemeriksaan Panen</th>
                                                         <th rowspan="3" class="align-middle">Foto Temuan</th>
                                                         <!-- <th rowspan="3" class="align-middle">Visit 2</th>
@@ -1228,6 +1229,48 @@
 
                         <!-- <a class="nav-item nav-link" id="nav-sbi-tab" data-toggle="tab" href="#nav-sbi" role="tab" aria-controls="nav-sbi" aria-selected="false">SBI</a> -->
                     </div>
+
+                    <div class=" tab-pane fade" id="nav-issue" role="tabpanel" aria-labelledby="nav-issue-tab">
+                        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
+                            <h5><b>QC PANEN</b></h5>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
+                            <div class="row w-100">
+                                <div class="col-md-2 offset-md-8">
+                                    {{csrf_field()}}
+                                    <select class="form-control" id="regFind">
+                                        <option value="1" selected>Regional 1</option>
+                                        <option value="2">Regional 2</option>
+                                        <option value="3">Regional 3</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                    {{ csrf_field() }}
+                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl" id="dateFind">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mb-3 ml-3" id="showFinding">Show</button>
+                        </div>
+
+                        <div class="ml-4 mr-4">
+                            <div class="row text-center">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" style="font-size: 13px">
+                                        <thead bgcolor="gainsboro">
+                                            <tr>
+                                                <th class="align-middle" style="width: 30%;">ESTATE</th>
+                                                <th>Jumlah Temuan Pemeriksaan Panen</th>
+                                                <th class="align-middle" style="width: 30%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bodyIssue">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
     </section>
@@ -1300,8 +1343,13 @@
         dashboardFindingYear()
         getweekData()
         sbi_tahun()
+        getFindData()
 
 
+    });
+
+    $("#showFinding").click(function() {
+        getFindData()
     });
 
     const c = document.getElementById('btnShow');
@@ -5313,4 +5361,55 @@
             localStorage.removeItem('selectedTab');
         }
     });
+
+    function getFindData() {
+        $('#bodyIssue').empty()
+
+        var regional = $("#regFind").val();
+        var date = $("#dateFind").val();
+        var _token = $('input[name="_token"]').val();
+
+        $.ajax({
+            url: "{{ route('findIssueSmb') }}",
+            method: "POST",
+            data: {
+                regional: regional,
+                date: date,
+                _token: _token
+            },
+            success: function(result) {
+                var parseResult = JSON.parse(result)
+                var dataFinding = Object.entries(parseResult['dataFinding'])
+
+                dataFinding.forEach(function (value, key) {
+                dataFinding[key].forEach(function (value1, key1) {
+                    Object.entries(value1).forEach(function (value2, key2) {
+                        if (value2[0] != 0) {
+                            // console.log(value2)
+                            var tbody1 = document.getElementById('bodyIssue');
+
+                            tr = document.createElement('tr')
+
+                            let item1 = value2[0]
+                            let item2 = value2[1]['total_temuan']
+
+                            let itemElement1 = document.createElement('td')
+                            let itemElement2 = document.createElement('td')
+                            let itemElement3 = document.createElement('td')
+
+                            itemElement1.innerText  = item1
+                            itemElement2.innerText  = item2
+                            itemElement3.innerHTML  =  '<a href="/cetakFiSmb/' + value2[0] + '/'+ date + '" class="btn btn-primary" target="_blank"><i class="nav-icon fa fa-download"></i></a>'
+                            
+                            tr.appendChild(itemElement1)
+                            tr.appendChild(itemElement2)
+                            tr.appendChild(itemElement3)
+                            tbody1.appendChild(tr)
+                        }
+                    });
+                });
+              });
+            }
+        });
+    }
 </script>
