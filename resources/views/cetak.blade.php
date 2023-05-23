@@ -11,269 +11,527 @@
 
 </head>
 <style>
-    table.table-bordered>thead>tr>th {
-        border: 1px solid rgb(0, 0, 0);
+    td.my-cell {
+        border: 2px solid black;
     }
 
-    table.table-bordered>tbody>tr>td {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    table.table-active>thead>tr>th {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    table.table-active>tbody>tr>td {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    table.table-primary>thead>tr>th {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    table.table-primary>tbody>tr>td {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    table.table-bordered>tbody>tr>th {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    table.table-warning>thead>tr>th {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    table.table-warning>tbody>tr>td {
-        border: 1px solid rgb(0, 0, 0);
-    }
-
-    body {
-        font-size: 15px;
+    th.my-cell {
+        border: 2px solid black;
     }
 </style>
 
 <body>
-    <table class="table  col-xs-1 text-center">
+
+
+
+    <table class="table">
+
         <thead>
             <tr>
-                <th>III.PEMERIKSAAN GUDANG</th>
+                <th style="border:2px solid black" colspan="6" class="text-center">III.PEMERIKSAAN GUDANG</th>
             </tr>
+            <tr>
+                <td></td>
+                <td style="border-top:2px solid black" colspan="5"></td>
+            </tr>
+            <tr>
+                <td class="font-weight-bold" style="width:200px;border:2px solid black">ESTATE</td>
+                <td style="width:300px;border:2px solid black">{{$data->nama}}</td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                <td class="font-weight-bold text-center" style="width:200px;border:2px solid black">SKOR</td>
+            </tr>
+            <tr>
+                <td class="font-weight-bold" style="border:2px solid black">TANGGAL</td>
+                <td style="border:2px solid black"> {{ $data->tanggal_formatted }}</td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                <td class="font-weight-bold text-center" style="border:2px solid black">{{$data->skor_total}}</td>
+            </tr>
+            <tr>
+                <td class="font-weight-bold" style="border:2px solid black">KTU</td>
+                <td style="border:2px solid black"> {{ $data->nama_ktu }}</td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                @if ($data->skor_total >= 95)
+                <td class="table-primary text-center" style="border:2px solid black">EXCELLENT</td>
+                @elseif($data->skor_total >= 85 && $data->skor_total <95) <td class="table-success text-center"
+                    style="border:2px solid black">
+                    Good</td>
+                    @elseif($data->skor_total >= 75 && $data->skor_total <85) <td class="table text-center"
+                        style="background-color: yellow;border:2px solid black">Satisfactory</td>
+                        @elseif($data->skor_total >= 65 && $data->skor_total <75) <td class="table-warning text-center"
+                            style="border:2px solid black">
+                            Fair</td>
+                            @elseif($data->skor_total <75) <td class="table text-center"
+                                style="background-color: red;border:2px solid black">
+                                Poor
+                                </td>
+                                @endif
+            </tr>
+            <tr>
+                <td class="font-weight-bold" style="border:2px solid black">KEPALA GUDANG</td>
+                <td style="border:2px solid black">{{$data->kpl_gudang}}</td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+                <td style="border: 1px solid white"></td>
+            </tr>
+            @php
+            $petugas = explode(";", $data->qc);
+            @endphp
+            <tr>
+                <th class="font-weight-bold" style="border:2px solid black">DIPERIKSA OLEH</th>
+                <td style="border:2px solid black">@if (isset($petugas[1])) 1. @endif {{ $petugas[0] }}</td>
+                <td style="border-bottom:1px solid white"></td>
+            </tr>
+
+            @if (isset($petugas[1]))
+            <tr>
+                <td style="border:2px solid black"></td>
+                <td style="border:2px solid black">2. {{ $petugas[1] }}</td>
+                <td style="border-bottom:1px solid black"></td>
+            </tr>
+
+            @endif
+            <tr>
+                <td></td>
+                <td style="border-top:1px solid black"></td>
+            </tr>
+
         </thead>
     </table>
 
-    <div class="row col-12">
-        {{-- <div class="col"> --}}
-            <table class="table table-bordered" style="border: 1px solid black">
-                <tbody>
-                    <tr>
-                        <th>ESTATE</th>
-                        <td>{{ $data->nama }}</td>
-                        <td style="color: white;border:1px solid white"></td>
-                        <td style="color: white;border:1px solid white"></td>
-                        <td style="color: white;border:1px solid white"></td>
-                        <td style="color: white;border:1px solid white"></td>
-                        <td style="color: white;border:1px solid white"></td>
-                        <td style="color: white;border:1px solid white"></td>
-                        <td style="color: white;border-top:1px solid white;border-bottom:1px solid white"></td>
-                        <td colspan="3" class="table text-center">SKOR</td>
-                        {{-- <th class="table-bordered-warning" colspan="2">SKOR</th> --}}
-                        {{-- <td>Sulung</td> --}}
-                    </tr>
-                    <tr>
-                        <th>TANGGAL</th>
-                        <td>
-                            {{ $data->tanggal_formatted }}
-                        </td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border-top:1px solid white;border-bottom:1px solid white">test</td>
-                        <td colspan="3" class="text-center">{{ $data->skor_total }}</td>
-                        {{-- <th class="table-bordered-warning" colspan="2">100</th> --}}
-                        {{-- <td>Sulung</td> --}}
-                    </tr>
-                    <tr>
-                        <th>KTU</th>
-                        <td>{{ $data->nama_ktu }}</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border-top:1px solid white;border-bottom:1px solid white">test</td>
-                        @if ($data->skor_total >= 95)
-                        <td colspan="3" class="table-primary text-center">EXCELLENT</td>
-                        @elseif($data->skor_total >= 85 && $data->skor_total <95) <td colspan="3"
-                            class="table-success text-center">
-                            Good</td>
-                            @elseif($data->skor_total >= 75 && $data->skor_total <85) <td colspan="3"
-                                class="table text-center" style="background-color: yellow">Satisfactory</td>
-                                @elseif($data->skor_total >= 65 && $data->skor_total <75) <td colspan="3"
-                                    class="table-warning text-center">Fair</td>
-                                    @elseif($data->skor_total <75) <td colspan="3" class="table text-center"
-                                        style="background-color: red">Poor
-                                        </td>
-                                        @endif
-                                        {{-- <th class="table-bordered-warning" colspan="2">EXCELLENT</th> --}}
-                                        {{-- <td>Sulung</td> --}}
-                    </tr>
-                    <tr>
-                        <th>KEPALA GUDANG</th>
-                        <td>{{ $data->kpl_gudang }}</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td style="color: white;border:1px solid white">test</td>
-                        <td
-                            style="color: white;border-top:1px solid white;border-bottom:1px solid white;border-right:1px solid white">
-                            test</td>
-                        <td colspan="3" style="border-left:1px solid white;border-right:1px solid white"></td>
-                    </tr>
-                    <tr>
-                        <th>DIPERIKSA OLEH</th>
-                        <td>{{ $data->qc }}</td>
-                        <td style="border-bottom:1px solid white"></td>
-                    </tr>
-                </tbody>
-            </table>
+    @if ($data->unit == 'CWS1' || $data->unit == 'CWS2' || $data->unit == 'CWS3')
+    <table class="table">
+        <thead>
+            <tr>
+                <th class=" text-center table-primary" style="border: 2px solid black" colspan="2">
+                    1.KESESUAIAN FISIK VS
+                    BINCARD
+                </th>
+                <th class=" text-center table-primary" style="border: 2px solid black" colspan="2">
+                    2.KESESUAIAN FISIK VS
+                    PPRO
+                </th>
+                <th class=" text-center table-primary" style="border: 2px solid black" colspan="2">3.BARANG NON-STOCK
+                </th>
 
-            {{--
-        </div> --}}
-
-    </div>
-
-    <br>
-    <table class="table table-bordered ">
+            </tr>
+        </thead>
         <tbody>
             <tr>
-                <th class="table-primary"></th>
-                <th class="table-primary">1.KESESUAIAN FISIK VS BINCARD</th>
-                <th class="table-primary"></th>
-                <th class="table-primary">2.KESESUAIAN FISIK VS PPRO</th>
-                <th class="table-primary"></th>
-                <th class="table-primary">3.BARANG CHEMICAL EXPIRED</th>
+                <td class="my-cell text-center" style="width:130px">HASIL</td>
+                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width:130px">HASIL</td>
+                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width:130px">HASIL</td>
+                <td class="my-cell text-center" style="width: 350px">FOTO</td>
             </tr>
             <tr>
-                <td class="table-active">HASIL</td>
-                <td class="table-active">FOTO</td>
-                <td class="table-active">HASIL</td>
-                <td class="table-active">FOTO</td>
-                <td class="table-active">HASIL</td>
-                <td class="table-active">FOTO</td>
-            </tr>
-            <tr>
-                <td rowspan="2">sesuai</td>
-                <td><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td rowspan="2">sesuai</td>
-                <td><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td rowspan="2">sesuai</td>
-                <td> <img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_1}}"
-                        style="weight:75pt;height:150pt"></td>
-            </tr>
-            <tr>
-                <td><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td> <img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_2}}"
-                        style="weight:75pt;height:150pt"></td>
-            </tr>
-            <tr>
-                <td class="text-center" colspan="2">{{ $data->komentar_kesesuaian_bincard }}</td>
-                <td class="text-center" colspan="2">{{ $data->komentar_kesesuaian_ppro }}</td>
-                <td class="text-center" colspan="2">{{ $data->komentar_chemical_expired }}</td>
-            </tr>
-            <tr>
-                <th class="table-primary"></th>
-                <th class="table-primary">4.BARANG NON-STOCK</th>
-                <th class="table-primary"></th>
-                <th class="table-primary">5.SELURUH MR DITANDATANGANI EM</th>
-                <th class="table-primary"></th>
-                <th class="table-primary">6.KEBERSIHAN DAN KERAPIHAN GUDANG </th>
-            </tr>
-            <tr>
-                <td class="table-active">HASIL</td>
-                <td class="table-active">FOTO</td>
-                <td class="table-active">HASIL</td>
-                <td class="table-active">FOTO</td>
-                <td class="table-active">HASIL</td>
-                <td class="table-active">FOTO</td>
-            </tr>
-            <tr>
-                <td rowspan="2">sesuai</td>
-                <td> <img
+                <td class="my-cell" rowspan="2">
+                    {{ $data->kesesuaian_bincard == 25 ? 'Tidak ditemukan selisih'
+                    : ($data->kesesuaian_bincard == 22 ? 'Ditemukan Selisih >0 s.d ≤0,5% dari total
+                    sample'
+                    : ($data->kesesuaian_bincard == 17 ? 'Ditemukan Selisih >0,5 s.d ≤1% dari total
+                    sample'
+                    : ($data->kesesuaian_bincard == 12 ? 'Ditemukan Selisih >0,5 s.d ≤1% dari total
+                    sample'
+                    : ($data->kesesuaian_bincard == 7 ? 'Ditemukan Selisih >2 s.d ≤3% dari total
+                    sample'
+                    : ($data->kesesuaian_bincard == 0 ? 'Ditemukan Selisih >3% dari total sample' :
+                    ''))))) }}
+                </td>
+
+                <td class="my-cell " style="width:150px"><span><img
+                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}"
+                            class="img-fluid modal-image"></span></td>
+
+                <td class="my-cell" rowspan="2">
+                    {{ $data->kesesuaian_ppro == 25 ? 'Tidak ditemukan selisih'
+                    : ($data->kesesuaian_ppro == 22 ? 'Ditemukan Selisih >0 s.d ≤0,5% dari total
+                    sample'
+                    : ($data->kesesuaian_ppro == 17 ? 'Ditemukan Selisih >0,5 s.d ≤1% dari total
+                    sample'
+                    : ($data->kesesuaian_ppro == 12 ? 'Ditemukan Selisih >0,5 s.d ≤1% dari total
+                    sample'
+                    : ($data->kesesuaian_ppro == 7 ? 'Ditemukan Selisih >2 s.d ≤3% dari total
+                    sample'
+                    : ($data->kesesuaian_ppro == 0 ? 'Ditemukan Selisih >3% dari total sample' :
+                    ''))))) }}
+                </td>
+                <td class="my-cell" style="width:150px"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}"
+                        class="img-fluid  modal-image"></td>
+
+                <td class="my-cell" rowspan="2">
+                    {{ $data->barang_nonstok == 5 ? 'Tidak ada barang non-stock'
+                    : ($data->barang_nonstok == 0 ? 'Ada barang non-stock' : '') }}
+                </td>
+                <td class="my-cell" style="width:150px"><img
                         src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td rowspan="2">sesuai</td>
-                <td> <img
+                        class="img-fluid modal-image"></td>
+
+            </tr>
+
+            <tr>
+                <td class="my-cell "><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}"
+                        class="img-fluid modal-image"></td>
+
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}"
+                        class="img-fluid modal-image"></td>
+
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}"
+                        class="img-fluid modal-image"></td>
+
+            </tr>
+
+            <tr>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_kesesuaian_bincard }}
+                </td>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_kesesuaian_ppro }}
+                </td>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_barang_nonstok }}
+                </td>
+
+            </tr>
+            <tr class="">
+                {{-- <th class="my-cell" scope="col"></th> --}}
+                <th class="my-cell text-center table-primary" colspan="2">4.SELURUH MR DITANDATANGANI MANAGER CWS</th>
+                {{-- <th class="my-cell" scope="col"></th> --}}
+                <th class="my-cell text-center table-primary" colspan="2">5.KEBERSIHAN DAN KERAPIHAN GUDANG</th>
+                {{-- <th class="my-cell" scope="col"></th> --}}
+                <th class="my-cell text-center table-primary" colspan="2">6.BUKU INSPEKSI KTU (LOGBOOK KTU)</th>
+
+            </tr>
+            <tr>
+                <td class="my-cell text-center">HASIL</td>
+                <td class="my-cell text-center">FOTO</td>
+                <td class="my-cell text-center">HASIL</td>
+                <td class="my-cell text-center">FOTO</td>
+                <td class="my-cell text-center">HASIL</td>
+                <td class="my-cell text-center">FOTO</td>
+
+            </tr>
+            <tr>
+                <td class="my-cell" rowspan="2">
+                    {{
+                    $data->mr_ditandatangani == 15 ? 'MR Ditandatangani oleh EM Seluruhnya' :
+                    ($data->mr_ditandatangani == 10 ? 'Ditemukan MR (H+2) yang tidak ditandatangani
+                    EM' :
+                    ($data->mr_ditandatangani == 5 ? 'Ditemukan MR (H+3) yang tidak ditandatangani
+                    EM' :
+                    ($data->mr_ditandatangani == 0 ? 'Ditemukan MR (>H+3) yang tidak ditandatangani
+                    EM' : '')))
+                    }}
+                </td>
+                @if ($data->foto_mr_ditandatangani_1)
+                <td class="my-cell"><img
                         src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td rowspan="2">sesuai</td>
-                <td> <img
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                <td class="my-cell" rowspan="2">
+                    {{$data->kebersihan_gudang + $data->bincard_terbungkus +
+                    $data->peletakan_bincard + $data->rak_ditutup + $data->cat_sesuai}}
+                </td>
+                @if ($data->foto_kebersihan_gudang_1)
+                <td class="my-cell"><img
+                        data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
                         src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
-                        style="weight:75pt;height:150pt"></td>
-            </tr>
-            <tr>
-                <td><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td> <img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}"
-                        style="weight:75pt;height:150pt"></td>
-            </tr>
-            <tr>
-                <td class="text-center" colspan="2">{{ $data->komentar_barang_nonstok }}</td>
-                <td class="text-center" colspan="2">{{ $data->komentar_mr_ditandatangani }}</td>
-                <td class="text-center" colspan="2">{{ $data->komentar_kebersihan_gudang }}</td>
-            </tr>
-            <tr>
-                <th class="table-primary"></th>
-                <th class="table-primary">7.BARANG NON-STOCK</th>
-                <th style="border: 1px solid white"></th>
-                <th style="border: 1px solid white"></th>
-                <th style="border: 1px solid white"></th>
-                <th style="border: 1px solid white"></th>
-            <tr>
-                <td class="table-active">HASIL</td>
-                <td class="table-active">FOTO</td>
-                <td style="border: 1px solid white"></td>
-            </tr>
-            <tr>
-                <td rowspan="2">SELESAI</td>
-                <td> <img
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                <td class="my-cell" rowspan="2">
+                    {{ $data->inspeksi_ktu == 5 ? ' Logbook todate & lengkap'
+                    : ($data->inspeksi_ktu == 0 ? ') Logbook tidak todate ' : '') }}
+                </td>
+                @if ($data->foto_inspeksi_ktu_1)
+                <td class="my-cell"><img
                         src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td style="border: 1px solid rgb(255, 255, 255)"></td>
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+
             </tr>
             <tr>
-                <td> <img
+                @if ($data->foto_mr_ditandatangani_2)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                @if ($data->foto_kebersihan_gudang_2)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                @if ($data->foto_inspeksi_ktu_2)
+                <td class="my-cell"><img
                         src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}"
-                        style="weight:75pt;height:150pt"></td>
-                <td class="border-bottom-0"></td>
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
 
             </tr>
             <tr>
-
-                <td class="text-center" colspan="2" style="border: 1px solid black">
-                    {{ $data->komentar_inspeksi_ktu }} 0</td>
-                <td colspan="2" style="border: 1px solid rgb(255, 255, 255)"> </td>
-
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_mr_ditandatangani }}
+                </td>
+                <td colspan="2" class="text-center my-cell" style="border-bottom:1px solid black">{{
+                    $data->komentar_kebersihan_gudang }}
+                </td>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_inspeksi_ktu }}
+                </td>
 
             </tr>
-            </tr>
+
+
         </tbody>
     </table>
+    @else
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class=" text-center table-primary" style="border: 2px solid black" colspan="2">
+                    1.KESESUAIAN FISIK VS
+                    BINCARD
+                </th>
+                <th class=" text-center table-primary" style="border: 2px solid black" colspan="2">
+                    2.KESESUAIAN FISIK VS
+                    PPRO
+                </th>
+                <th class=" text-center table-primary" style="border: 2px solid black" colspan="2">3.BARANG
+                    CHEMICAL
+                    EXPIRED
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="my-cell text-center" style="width:130px">HASIL</td>
+                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width:130px">HASIL</td>
+                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width:130px">HASIL</td>
+                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+            </tr>
+            <tr>
+                <td class="my-cell" rowspan="2">
+                    {{$data->kesesuaian_bincard == 15 ? 'Sesuai'
+                    :($data->kesesuaian_bincard == 10 ? 'Selisih 1 Item Barang'
+                    : ($data->kesesuaian_bincard == 5 ? 'Tidak Sesuai / Selisih >1 item barang'
+                    :''))}}
+                </td>
+
+                <td class="my-cell " style="width:150px"><span><img
+                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}"
+                            class="img-fluid modal-image"></span></td>
+
+                <td class="my-cell" rowspan="2">
+                    {{$data->kesesuaian_ppro == 20 ? 'Sesuai'
+                    :($data->kesesuaian_ppro == 15 ? 'Selisih 1 Item Barang'
+                    : ($data->kesesuaian_ppro == 5 ? 'Tidak Sesuai / Selisih >1 item barang'
+                    :''))}}
+                </td>
+                <td class="my-cell" style="width:150px"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}"
+                        class="img-fluid  modal-image"></td>
+
+                <td class="my-cell" rowspan="2">{{$data->chemical_expired == 15 ? 'Tidak ada
+                    chemical expired'
+                    :($data->chemical_expired == 10 ? '< 10% jenis chemical expired '
+                                            : ($data->chemical_expired == 5 ? '>= 10% jenis chemical expired' :''))}}
+                </td>
+                <td class="my-cell" style="width:150px"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_1}}"
+                        class="img-fluid modal-image"></td>
+
+            </tr>
+
+            <tr>
+                <td class="my-cell "><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}"
+                        class="img-fluid modal-image"></td>
+
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}"
+                        class="img-fluid modal-image"></td>
+
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_2}}"
+                        class="img-fluid modal-image"></td>
+
+            </tr>
+
+            <tr>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_kesesuaian_bincard }}
+                </td>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_kesesuaian_ppro }}
+                </td>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_chemical_expired }}
+                </td>
+
+            </tr>
+            <tr class="">
+                {{-- <th class="my-cell" scope="col"></th> --}}
+                <th class="my-cell text-center table-primary" colspan="2">4.TIDAK TERDAPAT BARANG NON-STOCK</th>
+                {{-- <th class="my-cell" scope="col"></th> --}}
+                <th class="my-cell text-center table-primary" colspan="2">5.SELURUH MR DITANDATANGANI EM</th>
+                {{-- <th class="my-cell" scope="col"></th> --}}
+                <th class="my-cell text-center table-primary" colspan="2">6.KEBERSIHAN DAN KERAPIHAN GUDANG</th>
+
+            </tr>
+            <tr>
+                <td class="my-cell text-center">HASIL</td>
+                <td class="my-cell text-center">FOTO</td>
+                <td class="my-cell text-center">HASIL</td>
+                <td class="my-cell text-center">FOTO</td>
+                <td class="my-cell text-center">HASIL</td>
+                <td class="my-cell text-center">FOTO</td>
+
+            </tr>
+            <tr>
+                <td class="my-cell" rowspan="2">
+                    {{
+                    $data->barang_nonstok == 5 ? 'Ya' :
+                    ($data->barang_nonstok == 0 ? 'Tidak Ada' : '')
+                    }}
+                </td>
+                @if ($data->foto_barang_nonstok_1)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                <td class="my-cell" rowspan="2">
+                    {{($data->mr_ditandatangani == 10) ? 'MR Ditandatangani oleh EM Seluruhnya ' :
+                    (($data->mr_ditandatangani ==
+                    7) ?
+                    ' Ditemukan MR (H+2) yang tidak ditandatangani EM' : (($data->mr_ditandatangani
+                    == 4) ? ' Ditemukan MR (>H+2) yang tidak ditandatangani EM' :
+                    ''))}}
+                </td>
+                @if ($data->foto_mr_ditandatangani_1)
+                <td class="my-cell"><img
+                        data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                <td class="my-cell" rowspan="2">
+                    {{$data->kebersihan_gudang + $data->gudang_pupuk + $data->bincard_terbungkus +
+                    $data->peletakan_bincard + $data->rak_ditutup + $data->cat_sesuai}}
+                </td>
+                @if ($data->foto_kebersihan_gudang_1)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+
+            </tr>
+            <tr>
+                @if ($data->foto_barang_nonstok_2)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                @if ($data->foto_mr_ditandatangani_2)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                @if ($data->foto_kebersihan_gudang_2)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_barang_nonstok }}
+                </td>
+                <td colspan="2" class="text-center my-cell" style="border-bottom:1px solid black">{{
+                    $data->komentar_mr_ditandatangani }}
+                </td>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_kebersihan_gudang }}
+                </td>
+
+            </tr>
+            <tr class="">
+
+                <th class="my-cell table-primary text-center" colspan="2">7. BUKU INSPEKSI KTU</th>
+                <th style="border-left: 1px solid black;border-top:1px solid black"></th>
+                <th style="border-bottom:1px solid black"></th>
+                <th style="border-bottom:1px solid black;border-top:1px solid black"></th>
+                <th style="border-top:1px solid black"></th>
+
+            </tr>
+            <tr>
+                <td class="my-cell text-center">HASIL</td>
+                <td class="my-cell text-center">FOTO</td>
+                <td style="border-left: 1px solid black"></td>
+
+            </tr>
+            <tr>
+                <td class="my-cell" rowspan="2">
+                    {{($data->inspeksi_ktu == 5) ? 'Logbook todate & lengkap ' :
+                    (($data->inspeksi_ktu == 0) ? ' Logbook tidak todate' : '')}}
+                </td>
+                @if ($data->foto_inspeksi_ktu_1)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                <td style="border-left: 1px solid black"></td>
+            </tr>
+            <tr>
+                @if ($data->foto_inspeksi_ktu_2)
+                <td class="my-cell"><img
+                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}"
+                        class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+                <td style="border-left: 1px solid black"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_inspeksi_ktu }}
+                </td>
+                <td style="border-left: 1px solid black"></td>
+
+            </tr>
+
+        </tbody>
+    </table>
+    @endif
+
 </body>
 
 </html>

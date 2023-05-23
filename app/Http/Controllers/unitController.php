@@ -354,7 +354,6 @@ class unitController extends Controller
                         ->orWhere('unit', '=', $value['est']);
                 })
                 ->whereYear('tanggal', $year)
-                ->orderBy('tanggal')
                 ->get();
 
 
@@ -1479,13 +1478,15 @@ class unitController extends Controller
             $query->foto_inspeksi_ktu_2 = 0;
         }
 
+
+        // dd($query);
         $pdf = pdf::loadview('cetak', ['data' => $query]);
-        $customPaper = array(360, 360, 360, 360);
-        $pdf->set_paper('A2', 'potrait');
+        $customPaper = array(0, 0, 1300, 2200);
+        $pdf->set_paper($customPaper, 'potrait');
 
         $filename = 'QC-gudang-' . $query->name_format . '-' . $query->est . '.pdf';
-        // return $pdf->stream($filename);
-        return $pdf->download($filename);
+        return $pdf->stream($filename, array("Attachment" => false));
+        // return $pdf->download($filename);
     }
 
     public function hapusRecord($id)
@@ -1641,21 +1642,60 @@ class unitController extends Controller
             ->select('pekerja.*')
             ->get();
 
-        $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->get();
+        $queryWil = DB::connection('mysql2')->table('wil')->pluck('id');
+        $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', $queryWil)->get();
         $queryAfd = DB::connection('mysql2')->table('afdeling')->select('nama')->groupBy('nama')->get();
         // dd($query, $queryEst);
         $ktu = array();
+
         foreach ($query as $key => $value) {
             foreach ($queryEst as $key1 => $value1) if ($value->unit == $value1->id) {
                 $ktu[$key]['id'] = $value->id;
                 $ktu[$key]['nama'] = $value->nama;
                 $ktu[$key]['jabatan'] = $value->jabatan;
-                $ktu[$key]['unit'] = $value1->nama;
+                $ktu[$key]['unit'] = $value1->est;
+
+                $getWil = $value1->wil;
+
+                $idWil = DB::connection('mysql2')->table('wil')->where('id', $getWil)->first()->regional;
+
+                $reg = DB::connection('mysql2')->table('reg')->where('id', $idWil)->first();
+
+                $ktu[$key]['reg'] = $reg->id;
+                $ktu[$key]['reg-nama'] = $reg->nama;
             }
         }
-        // dd($ktu, $query);
 
-        return view('listktu', ['pekerja' => $ktu, 'estate' => $queryEst, 'afdeling' => $queryAfd]);
+        $queryReg = DB::connection('mysql2')->table('reg')->pluck('nama', 'id');
+
+        // dd($queryEst);
+        return view('listktu', ['pekerja' => $ktu, 'estate' => $queryEst, 'afdeling' => $queryAfd, 'regional' => $queryReg]);
+    }
+
+
+    public function getEstateListKtu(Request $request)
+    {
+
+        $regional =  $request->get('regional');
+
+        $estates = DB::connection('mysql2')->table('estate')
+            ->where(function ($query) use ($regional) {
+                $query->when($regional == 1, function ($query) {
+                    return $query->whereIn('wil', [1, 2, 3]);
+                })
+                    ->when($regional == 2, function ($query) {
+                        return $query->whereIn('wil', [4, 5, 6]);
+                    })
+                    ->when($regional == 3, function ($query) {
+                        return $query->whereIn('wil', [6, 7, 8]);
+                    });
+            })
+            ->pluck('est');
+
+
+        echo json_encode($estates);
+        exit();
+        // dd($estates);
     }
 
     public function tambahKTU(Request $request)
@@ -1663,8 +1703,20 @@ class unitController extends Controller
 
         $Reg = $request->input('est');
 
-        $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->get();
-
+        // $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->get();
+        $queryEst = DB::connection('mysql2')->table('estate')
+            ->where(function ($query) use ($Reg) {
+                $query->when($Reg == 1, function ($query) {
+                    return $query->whereIn('wil', [1, 2, 3]);
+                })
+                    ->when($Reg == 2, function ($query) {
+                        return $query->whereIn('wil', [4, 5, 6]);
+                    })
+                    ->when($Reg == 3, function ($query) {
+                        return $query->whereIn('wil', [6, 7, 8]);
+                    });
+            })
+            ->get();
         $rog = [];
         foreach ($queryEst as $key => $value) {
             if ($Reg == $value->est) {
@@ -1702,8 +1754,20 @@ class unitController extends Controller
 
         $Reg = $request->input('est');
 
-        $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->get();
-
+        // $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->get();
+        $queryEst = DB::connection('mysql2')->table('estate')
+            ->where(function ($query) use ($Reg) {
+                $query->when($Reg == 1, function ($query) {
+                    return $query->whereIn('wil', [1, 2, 3]);
+                })
+                    ->when($Reg == 2, function ($query) {
+                        return $query->whereIn('wil', [4, 5, 6]);
+                    })
+                    ->when($Reg == 3, function ($query) {
+                        return $query->whereIn('wil', [6, 7, 8]);
+                    });
+            })
+            ->get();
         $rog = [];
         foreach ($queryEst as $key => $value) {
             if ($Reg == $value->est) {
