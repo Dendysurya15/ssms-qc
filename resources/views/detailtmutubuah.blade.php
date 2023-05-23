@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
+
 @include('layout/header')
 
 
@@ -399,13 +400,11 @@
 
         </form>
     </div>
-
-
-    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark ">
-        <div class="Wraping">
-            <h1 class="text-center">Tabel Sidak Mutu Buah</h1>
-            <table border="1" id="mutu_ancak">
-                <thead>
+    <div class="d-flex flex-column align-items-center mt-3 mb-2 ml-3 mr-3">
+        <h1 class="text-center">Tabel Sidak Mutu Buah</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="mutu_ancak">
+                <thead class="thead-dark">
                     <tr>
                         <th>No</th>
                         <th>Estate</th>
@@ -427,21 +426,95 @@
                         @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada')
                         <th colspan="2">Aksi</th>
                         @endif
-
                     </tr>
                 </thead>
                 <tbody id="tab1">
                 </tbody>
             </table>
-            <!-- Add this after the </table> tag -->
-            <div class="pagination-container text-center">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination" id="pagination">
-                    </ul>
-                </nav>
-            </div>
+        </div>
+        <!-- Add this after the </table> tag -->
+        <div class="pagination-container d-flex justify-content-center mt-3">
+            <nav aria-label="Page navigation">
+                <ul class="pagination" id="pagination">
+                </ul>
+            </nav>
         </div>
     </div>
+
+    <style>
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+    <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm text-center">
+                <thead>
+                    <tr>
+                        <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Estate</th>
+                        <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Blok</th>
+                        <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Petugas</th>
+                        <th colspan="27" style="background-color: #ffc404; color: white;" class="text-center">MUTU BUAH</th>
+                        <th rowspan="4" style="background-color: #b0a4a4; color: white;" class="text-center">All Skor</th>
+                        <th rowspan="4" style="background-color: #b0a4a4; color: white;" class="text-center">Kategori</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="3" style="background-color: #ffc404; color: white;" class="text-center">Total Janjang Sample</th>
+                        <th colspan="7" style="background-color: #ffc404; color: white;" class="text-center">Mentah</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Matang</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Lewat Matang (O)</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Janjang Kosong (E)</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Tidak Standar Vcut</th>
+                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Abnormal</th>
+                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Rat Damage</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Penggunaan Karung Brondolan</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Tanpa Brondol</th>
+                        <th colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Kurang Brondol</th>
+                        <th colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Total</th>
+                    </tr>
+                    <tr>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Total</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Total</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Total</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Total</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Total</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>Jjg</th>
+                        <th>%</th>
+                        <th>TPH</th>
+                        <th>%</th>
+                        <th>Skor</th>
+                    </tr>
+
+                </thead>
+                <tbody id="data_tahunTab">
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+
 
 
 
@@ -545,7 +618,7 @@
 
 
 </div>
-</div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1072,5 +1145,197 @@
 
         // Redirect to the target page
         window.location.href = "http://qc-web.test/dashboard_mutubuah";
+    }
+
+    document.getElementById("show-button").disabled = true;
+
+    document.getElementById("inputDate").addEventListener("change", function() {
+        document.getElementById("show-button").disabled = false;
+    });
+
+
+    $("#show-button").click(function() {
+        $('#data_tahunTab').empty()
+        getDataTphYear()
+    });
+
+    function getDataTphYear() {
+
+        var _token = $('input[name="_token"]').val();
+        var est = document.getElementById('est').value
+        var afd = document.getElementById('afd').value
+        var tanggal = document.getElementById('inputDate').value
+
+
+
+        $.ajax({
+            url: "{{ route('getDataRekap') }}",
+            method: "GET",
+            data: {
+                est,
+                afd,
+                tanggal,
+                _token: _token
+            },
+            success: function(result) {
+                //parsing result ke json untuk dalam estate
+                var parseResult = JSON.parse(result)
+                var afdResult = Object.entries(parseResult['sidak_buah'])
+                var EstTotal = Object.entries(parseResult['total_buah'])
+
+                // console.log(arrEst1);
+                var arrEst1 = afdResult
+                var tbody1 = document.getElementById('data_tahunTab');
+
+                // console.log(arrEst1);
+                // Assuming `arrEst1` is your array of data
+
+                arrEst1.forEach((element) => {
+                    const tr = document.createElement('tr');
+                    let item1 = element[1]['estate']
+                    let item2 = element[1]['est']
+                    let item3 = element[1]['petugas']
+                    let item4 = element[1]['Jumlah_janjang']
+                    // mentah
+                    let item5 = element[1]['tnp_brd']
+                    let item6 = element[1]['persenTNP_brd']
+                    let item7 = element[1]['krg_brd']
+                    let item8 = element[1]['persenKRG_brd']
+                    let item9 = element[1]['total_jjg']
+                    let item10 = element[1]['persen_totalJjg']
+                    let item11 = element[1]['skor_total']
+                    // masak 
+                    let item12 = element[1]['jjg_matang']
+                    let item13 = element[1]['persen_jjgMtang']
+                    let item14 = element[1]['skor_jjgMatang']
+                    // lewat matang 
+                    let item15 = element[1]['lewat_matang']
+                    let item16 = element[1]['persen_lwtMtng']
+                    let item17 = element[1]['skor_lewatMTng']
+                    //janjang kosong
+                    let item18 = element[1]['janjang_kosong']
+                    let item19 = element[1]['persen_kosong']
+                    let item20 = element[1]['skor_kosong']
+                    // tidak standar vcut 
+                    let item21 = element[1]['vcut']
+                    let item22 = element[1]['vcut_persen']
+                    let item23 = element[1]['vcut_skor']
+                    // abnormal 
+                    let item24 = element[1]['abnormal']
+                    let item25 = element[1]['abnormal_persen']
+                    // rat dmg
+                    let item26 = element[1]['rat_dmg']
+                    let item27 = element[1]['rd_persen']
+                    // penggunaan  karung
+                    let item28 = element[1]['TPH']
+                    let item29 = element[1]['persen_krg']
+                    let item30 = element[1]['skor_kr']
+                    // all skor 
+                    let item31 = element[1]['All_skor']
+                    let item32 = element[1]['kategori']
+                    const items = [];
+                    for (let i = 1; i <= 32; i++) {
+                        items.push(eval(`item${i}`));
+                    }
+
+
+                    items.forEach((item, index) => {
+                        const itemElement = document.createElement('td');
+                        itemElement.classList.add('text-center');
+                        itemElement.innerText = item;
+
+                        if (index === 31) {
+                            // Apply background color based on the value of item32
+                            if (item === 'SATISFACTORY') {
+                                itemElement.style.backgroundColor = '#fffc04';
+                            } else if (item === 'EXCELLENT') {
+                                itemElement.style.backgroundColor = '#5874c4';
+                            } else if (item === 'GOOD') {
+                                itemElement.style.backgroundColor = '#10fc2c';
+                            } else if (item === 'POOR') {
+                                itemElement.style.backgroundColor = '#ff0404';
+                            } else if (item === 'FAIR') {
+                                itemElement.style.backgroundColor = '#ffa404';
+                            }
+                        }
+
+                        tr.appendChild(itemElement);
+                    });
+
+                    tbody1.appendChild(tr);
+                });
+                // console.log(EstTotal);
+
+                const tr = document.createElement('tr');
+                let item1 = EstTotal[2][1];
+                let item2 = EstTotal[3][1];
+                let item3 = EstTotal[0][1];
+                let item4 = EstTotal[4][1];
+                let item5 = EstTotal[6][1];
+                let item6 = EstTotal[5][1];
+                let item7 = EstTotal[7][1];
+                let item8 = EstTotal[8][1];
+                let item9 = EstTotal[9][1];
+                let item10 = EstTotal[10][1];
+
+                let item11 = EstTotal[11][1];
+                let item12 = EstTotal[12][1];
+                let item13 = EstTotal[13][1];
+                let item14 = EstTotal[14][1];
+                let item15 = EstTotal[15][1];
+                let item16 = EstTotal[16][1];
+                let item17 = EstTotal[17][1];
+                let item18 = EstTotal[18][1];
+                let item19 = EstTotal[19][1];
+                let item20 = EstTotal[20][1];
+                let item21 = EstTotal[21][1];
+                let item22 = EstTotal[22][1];
+                let item23 = EstTotal[23][1];
+                let item24 = EstTotal[25][1];
+                let item25 = EstTotal[26][1];
+                let item26 = EstTotal[27][1];
+                let item27 = EstTotal[28][1];
+                let item28 = EstTotal[29][1];
+                let item29 = EstTotal[30][1];
+                let item30 = EstTotal[31][1];
+                let item31 = EstTotal[32][1];
+
+
+                const items = [];
+                for (let i = 1; i <= 31; i++) {
+                    items.push(eval(`item${i}`));
+                }
+
+                items.forEach((item, index) => {
+                    const itemElement = document.createElement('td');
+                    itemElement.classList.add('text-center');
+                    itemElement.innerText = item;
+                    if (index === 0) {
+                        itemElement.setAttribute('colspan', '2'); // Add colspan attribute for item1
+                    }
+                    if (index < 30) {
+                        // Apply background color for indices 0 to 29
+                        itemElement.style.backgroundColor = '#b8d48c'; // Set your desired background color here
+                    }
+                    if (index === 30) {
+                        // Apply background color based on the value of item32
+                        if (item === 'SATISFACTORY') {
+                            itemElement.style.backgroundColor = '#fffc04';
+                        } else if (item === 'EXCELLENT') {
+                            itemElement.style.backgroundColor = '#5874c4';
+                        } else if (item === 'GOOD') {
+                            itemElement.style.backgroundColor = '#10fc2c';
+                        } else if (item === 'POOR') {
+                            itemElement.style.backgroundColor = '#ff0404';
+                        } else if (item === 'FAIR') {
+                            itemElement.style.backgroundColor = '#ffa404';
+                        }
+                    }
+                    tr.appendChild(itemElement);
+                });
+
+                tbody1.appendChild(tr);
+            }
+        })
     }
 </script>

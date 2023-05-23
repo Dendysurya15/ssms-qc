@@ -157,3 +157,4 @@ Route::post('/store/{lokasi_kerja}', [UserQCController::class, 'store'])->name('
 Route::get('/edit/{id}', [UserQCController::class, 'edit'])->name('edit');
 Route::post('/update/{id}/{lokasi_kerja}', [UserQCController::class, 'update'])->name('update');
 Route::post('/delete/{id}', [UserQCController::class, 'destroy'])->name('delete');
+Route::get('/getDataRekap', [MutubuahController::class, 'getDataRekap'])->name('getDataRekap');

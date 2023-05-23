@@ -14,6 +14,7 @@ use function PHPUnit\Framework\isEmpty;
 require '../app/helpers.php';
 class mutubuahController extends Controller
 {
+    //
     public function dashboard_mutubuah(Request $request)
     {
 
@@ -6018,7 +6019,8 @@ class mutubuahController extends Controller
 
     }
 
-    public function findIssueSmb(Request $request) {
+    public function findIssueSmb(Request $request)
+    {
         $queryEstate = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->join('wil', 'wil.id', '=', 'estate.wil')
@@ -6053,7 +6055,7 @@ class mutubuahController extends Controller
                 $dataFinding[$value1['wil']][$key]['total_temuan'] = $tot_temuan;
             }
         }
-        
+
         $arrView = array();
         $arrView['dataFinding'] = $dataFinding;
         echo json_encode($arrView);
@@ -6112,5 +6114,193 @@ class mutubuahController extends Controller
 
         $filename = 'Finding Issue SMB - ' . $est . ' - ' . $tgl . '.pdf';
         return $pdf->stream($filename);
+    }
+
+    public function getDataRekap(Request $request)
+    {
+        $est = $request->input('est');
+        $afd = $request->input('afd');
+        $date = $request->input('tanggal');
+        // dd($est, $afd, $date);
+        $mutuAncak = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select("sidak_mutu_buah.*", DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->where('sidak_mutu_buah.estate', $est)
+            ->where('sidak_mutu_buah.afdeling', $afd)
+
+            ->get();
+        $mutuAncak = $mutuAncak->groupBy(['blok']);
+        $mutuAncak = json_decode($mutuAncak, true);
+
+        // dd($mutuAncak);
+
+        // dd($defPerbulanWil);
+        $sidak_buah = array();
+        $bloks = 0;
+        foreach ($mutuAncak as $key => $value) {
+            $jjg_sample = 0;
+            $tnpBRD = 0;
+            $krgBRD = 0;
+            $abr = 0;
+            $skor_total = 0;
+            $overripe = 0;
+            $empty = 0;
+            $vcut = 0;
+            $rd = 0;
+            $sum_kr = 0;
+            $allSkor = 0;
+
+            $combination_counts = array();
+            $bloks = count($value);
+            foreach ($value as $key1 => $value1) {
+                // dd($key1);
+
+                $jjg_sample += $value1['jumlah_jjg'];
+                $tnpBRD += $value1['bmt'];
+                $krgBRD += $value1['bmk'];
+                $abr += $value1['abnormal'];
+                $overripe += $value1['overripe'];
+                $empty += $value1['empty_bunch'];
+                $vcut += $value1['vcut'];
+                $rd += $value1['rd'];
+                $sum_kr += $value1['alas_br'];
+            }
+
+            $dataBLok = $bloks;
+            if ($sum_kr != 0) {
+                $total_kr = round($sum_kr / $dataBLok, 2);
+            } else {
+                $total_kr = 0;
+            }
+            $per_kr = round($total_kr * 100, 2);
+            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
+            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
+            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
+            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
+            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+            $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
+
+            $sidak_buah[$key]['Jumlah_janjang'] = $jjg_sample;
+            $sidak_buah[$key]['blok'] = $dataBLok;
+            $sidak_buah[$key]['est'] = $key;
+            $sidak_buah[$key]['estate'] = $value1['estate'];
+            $sidak_buah[$key]['afd'] = $value1['afdeling'];
+            $sidak_buah[$key]['tnp_brd'] = $tnpBRD;
+            $sidak_buah[$key]['petugas'] = $value1['petugas'];
+            $sidak_buah[$key]['krg_brd'] = $krgBRD;
+            $sidak_buah[$key]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
+            $sidak_buah[$key]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+            $sidak_buah[$key]['total_jjg'] = $tnpBRD + $krgBRD;
+            $sidak_buah[$key]['persen_totalJjg'] = $skor_total;
+            $sidak_buah[$key]['skor_total'] = sidak_brdTotal($skor_total);
+            $sidak_buah[$key]['jjg_matang'] = $jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr);
+            $sidak_buah[$key]['persen_jjgMtang'] = $skor_jjgMSk;
+            $sidak_buah[$key]['skor_jjgMatang'] = sidak_matangSKOR($skor_jjgMSk);
+            $sidak_buah[$key]['lewat_matang'] = $overripe;
+            $sidak_buah[$key]['persen_lwtMtng'] =  $skor_lewatMTng;
+            $sidak_buah[$key]['skor_lewatMTng'] = sidak_lwtMatang($skor_lewatMTng);
+            $sidak_buah[$key]['janjang_kosong'] = $empty;
+            $sidak_buah[$key]['persen_kosong'] = $skor_jjgKosong;
+            $sidak_buah[$key]['skor_kosong'] = sidak_jjgKosong($skor_jjgKosong);
+            $sidak_buah[$key]['vcut'] = $vcut;
+            $sidak_buah[$key]['karung'] = $sum_kr;
+            $sidak_buah[$key]['vcut_persen'] = $skor_vcut;
+            $sidak_buah[$key]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
+            $sidak_buah[$key]['abnormal'] = $abr;
+            $sidak_buah[$key]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+            $sidak_buah[$key]['rat_dmg'] = $rd;
+            $sidak_buah[$key]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+            $sidak_buah[$key]['TPH'] = $total_kr;
+            $sidak_buah[$key]['persen_krg'] = $per_kr;
+            $sidak_buah[$key]['skor_kr'] = sidak_PengBRD($per_kr);
+            $sidak_buah[$key]['All_skor'] = $allSkor;
+            $sidak_buah[$key]['kategori'] = sidak_akhir($allSkor);
+        }
+        // dd($sidak_buah);
+
+        $total_buah = array();
+        $blok = 0;
+        $jjg_sample = 0;
+        $tnpBRD = 0;
+        $krgBRD = 0;
+        $abr = 0;
+        $overripe = 0;
+        $empty = 0;
+        $vcut = 0;
+        $rd = 0;
+        $sum_kr = 0;
+        foreach ($sidak_buah as $key => $value) {
+            $jjg_sample += $value['Jumlah_janjang'];
+            $tnpBRD += $value['tnp_brd'];
+            $krgBRD += $value['krg_brd'];
+            $abr += $value['abnormal'];
+            $overripe += $value['lewat_matang'];
+            $empty += $value['janjang_kosong'];
+            $vcut += $value['vcut'];
+            $rd += $value['rat_dmg'];
+            $sum_kr += $value['karung'];
+            $blok += $value['blok'];
+        }
+        $dataBLok = $blok;
+        if ($sum_kr != 0) {
+            $total_kr = round($sum_kr / $dataBLok, 2);
+        } else {
+            $total_kr = 0;
+        }
+        $per_kr = round($total_kr * 100, 2);
+        $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
+        $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
+        $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
+        $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
+        $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+        $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
+
+        $total_buah['Jumlah_janjang'] = $jjg_sample;
+        $total_buah['blok'] = $dataBLok;
+        $total_buah['est'] = $value1['estate'];
+        $total_buah['afd'] = $value1['afdeling'];
+        $total_buah['tnp_brd'] = $tnpBRD;
+        $total_buah['krg_brd'] = $krgBRD;
+        $total_buah['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
+        $total_buah['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+        $total_buah['total_jjg'] = $tnpBRD + $krgBRD;
+        $total_buah['persen_totalJjg'] = $skor_total;
+        $total_buah['skor_total'] = sidak_brdTotal($skor_total);
+        $total_buah['jjg_matang'] = $jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr);
+        $total_buah['persen_jjgMtang'] = $skor_jjgMSk;
+        $total_buah['skor_jjgMatang'] = sidak_matangSKOR($skor_jjgMSk);
+        $total_buah['lewat_matang'] = $overripe;
+        $total_buah['persen_lwtMtng'] =  $skor_lewatMTng;
+        $total_buah['skor_lewatMTng'] = sidak_lwtMatang($skor_lewatMTng);
+        $total_buah['janjang_kosong'] = $empty;
+        $total_buah['persen_kosong'] = $skor_jjgKosong;
+        $total_buah['skor_kosong'] = sidak_jjgKosong($skor_jjgKosong);
+        $total_buah['vcut'] = $vcut;
+        $total_buah['karung'] = $sum_kr;
+        $total_buah['vcut_persen'] = $skor_vcut;
+        $total_buah['vcut_skor'] = sidak_tangkaiP($skor_vcut);
+        $total_buah['abnormal'] = $abr;
+        $total_buah['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+        $total_buah['rat_dmg'] = $rd;
+        $total_buah['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+        $total_buah['TPH'] = $total_kr;
+        $total_buah['persen_krg'] = $per_kr;
+        $total_buah['skor_kr'] = sidak_PengBRD($per_kr);
+        $total_buah['All_skor'] = $allSkor;
+        $total_buah['kategori'] = sidak_akhir($allSkor);
+        // dd($sidak_buah, $total_buah);
+
+
+        // dd($sidak_buah, $total_buah);
+        $arrView = array();
+
+        $arrView['est'] =  $est;
+        $arrView['afd'] =  $afd;
+        $arrView['tanggal'] =  $date;
+        $arrView['sidak_buah'] =  $sidak_buah;
+        $arrView['total_buah'] =  $total_buah;
+
+        echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
+        exit();
     }
 }

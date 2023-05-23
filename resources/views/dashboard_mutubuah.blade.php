@@ -421,7 +421,10 @@
                                         </div>
                                         <button class="btn btn-primary mb-3 ml-2" id="showTahung">Show</button>
                                     </div>
-
+                                    <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
+                                        <button id="sort-est-btnWek">Sort by Est</button>
+                                        <button id="sort-rank-btnWek">Sort by Rank</button>
+                                    </div>
 
                                     <div id="tablesContainer">
                                         <div class="tabContainer">
@@ -797,9 +800,9 @@
                                                 <thead bgcolor="gainsboro">
                                                     <tr>
                                                         <thclass="align-middle">ESTATE</thclass=>
-                                                        <th colspan="5">Temuan Pemeriksaan Panen</th>
-                                                        <th rowspan="3" class="align-middle">Foto Temuan</th>
-                                                        <!-- <th rowspan="3" class="align-middle">Visit 2</th>
+                                                            <th colspan="5">Temuan Pemeriksaan Panen</th>
+                                                            <th rowspan="3" class="align-middle">Foto Temuan</th>
+                                                            <!-- <th rowspan="3" class="align-middle">Visit 2</th>
                                                         <th rowspan="3" class="align-middle">Visit 3</th> -->
                                                     </tr>
                                                     <tr>
@@ -1020,7 +1023,11 @@
                                         </select>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary mb-3" style="float: right" id="show_sbithn">Show TO</button>
+                                <button class="btn btn-primary mb-3" style="float: right" id="show_sbithn">Show</button>
+                            </div>
+                            <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
+                                <button id="sort-est-btnSBI">Sort by Est</button>
+                                <button id="sort-rank-btnSBI">Sort by Rank</button>
                             </div>
 
                             <div id="tablesContainer">
@@ -1322,20 +1329,59 @@
 
 
     var currentMode = 'all';
-
+    var lokasiKerja = "{{ session('lok') }}";
+    var isTableHeaderModified = false;
     $(document).ready(function() {
 
-
-        var lokasiKerja = "{{ session('lok') }}";
-        // console.log(lokasiKerja);
-        if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
+        if (lokasiKerja == 'Regional II' && !isTableHeaderModified) {
             $('#regionalPanen').val('2');
+            $('#regionalDataweek').val('2');
             $('#regionalData').val('2');
-            $('#regDataTahun').val('2');
-            $('#regFindingYear').val('2');
-            $('#regional_data').val('2');
+            $('#regDataIns').val('2');
+            $('#regFind').val('2');
+            $('#regGrafik').val('2');
             $('#reg_sbiThun').val('2');
+            $('#regional_data').val('2');
 
+            const thElement1 = document.getElementById('thead1');
+            const thElement2 = document.getElementById('thead2');
+            const thElement3 = document.getElementById('thead3');
+            const thElement4 = document.getElementById('theadx3');
+            const thElement1x = document.getElementById('theadsx1');
+            const thElement2x = document.getElementById('theadsx2');
+            const thElement3x = document.getElementById('theadsx3');
+            const thElement4x = document.getElementById('theadsx4');
+            const thElement1xx = document.getElementById('theads1');
+            const thElement2xx = document.getElementById('theads2');
+            const thElement3xx = document.getElementById('theads3');
+            const thElement4xx = document.getElementById('theads4');
+            thElement1.textContent = 'WILAYAH IV';
+            thElement2.textContent = 'WILAYAH V';
+            thElement3.textContent = 'WILAYAH VI';
+            thElement4.textContent = 'PLASMA II';
+            thElement1x.textContent = 'WILAYAH IV';
+            thElement2x.textContent = 'WILAYAH V';
+            thElement3x.textContent = 'WILAYAH VI';
+            thElement4x.textContent = 'PLASMA II';
+            thElement1xx.textContent = 'WILAYAH IV';
+            thElement2xx.textContent = 'WILAYAH V';
+            thElement3xx.textContent = 'WILAYAH VI';
+            thElement4xx.textContent = 'PLASMA II';
+
+            thElement1.classList.add("text-center");
+            thElement2.classList.add("text-center");
+            thElement3.classList.add("text-center");
+            thElement4.classList.add("text-center");
+            thElement1x.classList.add("text-center");
+            thElement2x.classList.add("text-center");
+            thElement3x.classList.add("text-center");
+            thElement4x.classList.add("text-center");
+            thElement1xx.classList.add("text-center");
+            thElement2xx.classList.add("text-center");
+            thElement3xx.classList.add("text-center");
+            thElement4xx.classList.add("text-center");
+
+            isTableHeaderModified = true;
         }
         getweek()
         dashboard_tahun()
@@ -5381,35 +5427,277 @@
                 var parseResult = JSON.parse(result)
                 var dataFinding = Object.entries(parseResult['dataFinding'])
 
-                dataFinding.forEach(function (value, key) {
-                dataFinding[key].forEach(function (value1, key1) {
-                    Object.entries(value1).forEach(function (value2, key2) {
-                        if (value2[0] != 0) {
-                            // console.log(value2)
-                            var tbody1 = document.getElementById('bodyIssue');
+                dataFinding.forEach(function(value, key) {
+                    dataFinding[key].forEach(function(value1, key1) {
+                        Object.entries(value1).forEach(function(value2, key2) {
+                            if (value2[0] != 0) {
+                                // console.log(value2)
+                                var tbody1 = document.getElementById('bodyIssue');
 
-                            tr = document.createElement('tr')
+                                tr = document.createElement('tr')
 
-                            let item1 = value2[0]
-                            let item2 = value2[1]['total_temuan']
+                                let item1 = value2[0]
+                                let item2 = value2[1]['total_temuan']
 
-                            let itemElement1 = document.createElement('td')
-                            let itemElement2 = document.createElement('td')
-                            let itemElement3 = document.createElement('td')
+                                let itemElement1 = document.createElement('td')
+                                let itemElement2 = document.createElement('td')
+                                let itemElement3 = document.createElement('td')
 
-                            itemElement1.innerText  = item1
-                            itemElement2.innerText  = item2
-                            itemElement3.innerHTML  =  '<a href="/cetakFiSmb/' + value2[0] + '/'+ date + '" class="btn btn-primary" target="_blank"><i class="nav-icon fa fa-download"></i></a>'
-                            
-                            tr.appendChild(itemElement1)
-                            tr.appendChild(itemElement2)
-                            tr.appendChild(itemElement3)
-                            tbody1.appendChild(tr)
-                        }
+                                itemElement1.innerText = item1
+                                itemElement2.innerText = item2
+                                itemElement3.innerHTML = '<a href="/cetakFiSmb/' + value2[0] + '/' + date + '" class="btn btn-primary" target="_blank"><i class="nav-icon fa fa-download"></i></a>'
+
+                                tr.appendChild(itemElement1)
+                                tr.appendChild(itemElement2)
+                                tr.appendChild(itemElement3)
+                                tbody1.appendChild(tr)
+                            }
+                        });
                     });
                 });
-              });
             }
         });
     }
+
+    function sortTable(tableId, columnIndex, compareFunction, numRowsToSort, useSecondColumn = false) {
+        const tbody = document.getElementById(tableId);
+        const allRows = Array.from(tbody.rows);
+        const rows = allRows.slice(0, numRowsToSort);
+        const excludedRows = allRows.slice(numRowsToSort);
+
+        rows.sort((a, b) => {
+            let aValue = a.cells[columnIndex].innerText.toLowerCase();
+            let bValue = b.cells[columnIndex].innerText.toLowerCase();
+
+            if (useSecondColumn) {
+                aValue += '|' + a.cells[columnIndex + 1].innerText.toLowerCase();
+                bValue += '|' + b.cells[columnIndex + 1].innerText.toLowerCase();
+            }
+
+            let result = compareFunction(aValue, bValue);
+
+            // If the values are equal, sort based on the name in column 2 (index 1)
+            if (result === 0 && !useSecondColumn) {
+                let nameA = a.cells[1].innerText.trim().toLowerCase();
+                let nameB = b.cells[1].innerText.trim().toLowerCase();
+                return nameA.localeCompare(nameB);
+            }
+
+            return result;
+        });
+
+        // Remove existing rows from the tbody
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
+
+        // Append sorted rows to the tbody
+        rows.forEach(row => tbody.appendChild(row));
+
+        // Append excluded rows to the tbody without sorting
+        excludedRows.forEach(row => tbody.appendChild(row));
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const estBtn = document.getElementById('sort-est-btn');
+        const rankBtn = document.getElementById('sort-rank-btn');
+        const showBtn = document.getElementById('btnShow');
+        const regionalSelect = document.getElementById('regionalPanen');
+
+        let currentRegion = regionalSelect.value;
+
+        let firstClick = true; // Add a flag to indicate the first click
+
+        estBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('est');
+        });
+        rankBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('rank');
+        });
+        showBtn.addEventListener('click', handleShow);
+
+        // Define the new handleShow function
+        function handleShow() {
+            currentRegion = regionalSelect.value;
+            handleFilterShow(currentRegion);
+        }
+
+        function handleSort(sortType) {
+            const sortMap = {
+                '1': {
+                    est: [16, 18, 17, 3],
+                    rank: [16, 18, 17, 3]
+                },
+                '2': {
+                    est: [16, 13, 10, 5],
+                    rank: [16, 13, 10, 5]
+                },
+                '3': {
+                    est: [20, 11, 2, 2],
+                    rank: [20, 11, 2, 2]
+                }
+            };
+
+            const tbodies = ['week1', 'week2', 'week3', 'plasma1'];
+
+            const columnIndex = sortType === 'est' ? 0 : 4;
+            const useSecondColumn = sortType === 'est';
+
+            tbodies.forEach((tableId, index) => {
+                if (sortType === 'rank') {
+                    sortTable(tableId, columnIndex, (a, b) => parseInt(a) - parseInt(b), sortMap[currentRegion][sortType][index], useSecondColumn);
+                } else {
+                    sortTable(tableId, columnIndex, (a, b) => a.localeCompare(b), sortMap[currentRegion][sortType][index], useSecondColumn);
+                }
+            });
+
+        }
+
+        function handleFilterShow(filterShowValue) {
+            // Implement your filtering logic here, if necessary
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const estBtn = document.getElementById('sort-est-btnWek');
+        const rankBtn = document.getElementById('sort-rank-btnWek');
+        const showBtn = document.getElementById('showTahung');
+        const regionalSelect = document.getElementById('regionalData');
+
+        let currentRegion = regionalSelect.value;
+
+        let firstClick = true; // Add a flag to indicate the first click
+
+        estBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('est');
+        });
+        rankBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('rank');
+        });
+        showBtn.addEventListener('click', handleShow);
+
+        // Define the new handleShow function
+        function handleShow() {
+            currentRegion = regionalSelect.value;
+            handleFilterShow(currentRegion);
+        }
+
+        function handleSort(sortType) {
+            const sortMap = {
+                '1': {
+                    est: [16, 18, 17, 3],
+                    rank: [16, 18, 17, 3]
+                },
+                '2': {
+                    est: [16, 13, 10, 5],
+                    rank: [16, 13, 10, 5]
+                },
+                '3': {
+                    est: [20, 11, 2, 2],
+                    rank: [20, 11, 2, 2]
+                }
+            };
+
+
+            const tbodies2 = ['weeks1', 'weeks2', 'weeks3', 'plasmas1'];
+            const columnIndex = sortType === 'est' ? 0 : 4;
+            const useSecondColumn = sortType === 'est';
+
+            tbodies2.forEach((tableId, index) => {
+                if (sortType === 'rank') {
+                    sortTable(tableId, columnIndex, (a, b) => parseInt(a) - parseInt(b), sortMap[currentRegion][sortType][index], useSecondColumn);
+                } else {
+                    sortTable(tableId, columnIndex, (a, b) => a.localeCompare(b), sortMap[currentRegion][sortType][index], useSecondColumn);
+                }
+            });
+        }
+
+        function handleFilterShow(filterShowValue) {
+            // Implement your filtering logic here, if necessary
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const estBtn = document.getElementById('sort-est-btnSBI');
+        const rankBtn = document.getElementById('sort-rank-btnSBI');
+        const showBtn = document.getElementById('show_sbithn');
+        const regionalSelect = document.getElementById('reg_sbiThun');
+
+        let currentRegion = regionalSelect.value;
+
+        let firstClick = true; // Add a flag to indicate the first click
+
+        estBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('est');
+        });
+        rankBtn.addEventListener('click', () => {
+            if (firstClick) {
+                showBtn.click();
+                firstClick = false; // Set the flag to false after the first click
+            }
+            handleSort('rank');
+        });
+        showBtn.addEventListener('click', handleShow);
+
+        // Define the new handleShow function
+        function handleShow() {
+            currentRegion = regionalSelect.value;
+            handleFilterShow(currentRegion);
+        }
+
+        function handleSort(sortType) {
+            const sortMap = {
+                '1': {
+                    est: [16, 18, 17, 3],
+                    rank: [16, 18, 17, 3]
+                },
+                '2': {
+                    est: [16, 13, 10, 5],
+                    rank: [16, 13, 10, 5]
+                },
+                '3': {
+                    est: [20, 11, 2, 2],
+                    rank: [20, 11, 2, 2]
+                }
+            };
+
+
+            const tbodies2 = ['tahun1', 'tahun2', 'tahun3', 'tahun4'];
+            const columnIndex = sortType === 'est' ? 0 : 4;
+            const useSecondColumn = sortType === 'est';
+
+            tbodies2.forEach((tableId, index) => {
+                if (sortType === 'rank') {
+                    sortTable(tableId, columnIndex, (a, b) => parseInt(a) - parseInt(b), sortMap[currentRegion][sortType][index], useSecondColumn);
+                } else {
+                    sortTable(tableId, columnIndex, (a, b) => a.localeCompare(b), sortMap[currentRegion][sortType][index], useSecondColumn);
+                }
+            });
+        }
+
+        function handleFilterShow(filterShowValue) {
+            // Implement your filtering logic here, if necessary
+        }
+    });
 </script>
