@@ -5112,4 +5112,21 @@
       // Implement your filtering logic here, if necessary
     }
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const selectedTab = localStorage.getItem('selectedTab');
+
+    if (selectedTab) {
+      // Get the tab element
+      const tabElement = document.getElementById(selectedTab);
+
+      if (tabElement) {
+        // Click the tab to activate it
+        tabElement.click();
+      }
+
+      // Clear the selectedTab value from local storage
+      localStorage.removeItem('selectedTab');
+    }
+  });
 </script>

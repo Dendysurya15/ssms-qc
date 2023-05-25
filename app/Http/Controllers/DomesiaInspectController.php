@@ -1035,7 +1035,9 @@ class inspectController extends Controller
         
         
                     $ancak[$key][$key1][$key2]['luas_blok'] = $first;
-                    $ancak[$key][$key1][$key2]['persenSamp'] = ($first != '-') ? round(($luas_ha / $first) * 100, 2) : '-';
+                    // dd($ancak);
+                   $ancak[$key][$key1][$key2]['persenSamp'] = ($first != '-') ? round((floatval($luas_ha) / floatval($first)) * 100, 2) : '-';
+
         
                     if ($regs === '2') {
                     $status_panen = explode(",", $value4['status_panen']);
@@ -1092,6 +1094,7 @@ class inspectController extends Controller
             }
         }
 
+        // dd($ancak);
         $transNewdata = array();
         foreach ($dataMTTrans as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -1124,7 +1127,7 @@ class inspectController extends Controller
                             $tph_sample = $value3[0]['tph_baris']; 
                             $sum_bt = $value3[0]['bt'];  
                         }else{
-                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($LuasKey * 1.3);
+                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round(floatval($LuasKey) * 1.3);
                         }
                     } else {
                         $transNewdata[$key][$key1][$key2]['tph_sample'] = $tph_sample;
@@ -1140,21 +1143,14 @@ class inspectController extends Controller
                     $transNewdata[$key][$key1][$key2]['skor'] = ($tph_sample != 0) ? round($sum_bt / $tph_sample, 2) : 0;
                     $transNewdata[$key][$key1][$key2]['skor_restan'] = ($tph_sample != 0) ? round($sum_Restan / $tph_sample, 2) : 0;
                     $transNewdata[$key][$key1][$key2]['estate'] = $value3['estate'];
-
-                   
-                    
-                   
-                    
-
-                    
-                   
+       
                 }
               
                
             }
         }
-
         // dd($transNewdata);
+        // dd($transNewdata['SCE']);
         foreach ($ancak as $key => $value) {
             foreach ($value as $key1 => $value1) {
              
@@ -1163,7 +1159,8 @@ class inspectController extends Controller
                         $transNewdata[$key][$key1][$key2] = $value2;
                         
                         if ($value2['status_panen'] <= 3) {
-                            $transNewdata[$key][$key1][$key2]['tph_sample'] = round($value2['luas_blok'] * 1.3, 2);
+                         $transNewdata[$key][$key1][$key2]['tph_sample'] = round(floatval($value2['luas_blok'] * 1.3), 2);
+
                         } else {
                             $transNewdata[$key][$key1][$key2]['tph_sample'] = 0;
                         }
@@ -1194,7 +1191,8 @@ class inspectController extends Controller
         }
         unset($value); // unset the reference
         unset($value1); // unset the reference
-
+        
+        // dd($transNewdata);
     
         $dataSkor = array();
         
@@ -1523,9 +1521,93 @@ class inspectController extends Controller
                 $dataSkor[$value1['wil']][$key]['jjg_tph_total'] = round($sum_jjg / $sum_tph_sample, 2);
             }
         }
-
         // dd($dataSkor);
+        $testing = [];
 
+        foreach ($dataSkor as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    foreach ($transNewdata as $keys => $val) {
+                        if ($keys == $key2) {
+                            foreach ($val as $keys2 => $val2) {
+                                if ($keys2 == $key3) {
+                                    $testing[$key][$key2][$key3] = $value3;
+                                    // dd($key2['OD']);
+                                    // if (!isset($value3['tph_sample'])) {
+                                    //     $testing[$key][$key2][$key3]['tph_sample'] = $val2['total_tph'];
+                                    // }
+                                    $testing[$key][$key2][$key3]['tph_sample'] = $val2['total_tph'];
+
+
+                                    if (!isset($value3['bt_total'])) {
+                                        $testing[$key][$key2][$key3]['bt_total'] = 0;
+                                    }
+
+                                    if (!isset($value3['restan_total'])) {
+                                        $testing[$key][$key2][$key3]['restan_total'] = 0;
+                                    }
+
+                                    if (!isset($value3['skor'])) {
+                                        $testing[$key][$key2][$key3]['skor'] = 0;
+                                    }
+
+                                    if (!isset($value3['skor_restan'])) {
+                                        $testing[$key][$key2][$key3]['skor_restan'] = 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach ($testing as $key => $value) {
+            $bt_est =0;
+            $rst_est =0;
+            $sample= 0;
+            foreach ($value as $key1 => $value1) {
+                $todSam = 0;
+                $totalbt = 0;
+                $restantod =0;
+                foreach ($value1 as $key2 => $value2) {
+                //    dd($value2);
+                    $todSam += $value2['tph_sample'];
+                    $totalbt += $value2['bt_total'];
+                    $restantod += $value2['restan_total'];
+                }# code...
+
+                $bt_tph = round( $totalbt / $todSam ,2);
+                $rst_tph = round( $restantod / $todSam ,2);
+
+                $testing[$key][$key1]['tph_tod'] = $todSam;
+                $testing[$key][$key1]['total_bt'] = $totalbt;
+                $testing[$key][$key1]['bt_tph'] = $bt_tph;
+                $testing[$key][$key1]['scorre_bt'] = skor_brd_tinggal($bt_tph);
+                $testing[$key][$key1]['total_rst'] = $restantod;
+                $testing[$key][$key1]['rst_tph'] = $rst_tph;         
+                $testing[$key][$key1]['scorre_rst']  = skor_buah_tinggal($rst_tph);
+
+                $bt_est += $totalbt;
+                $rst_est += $restantod;
+                $sample += $todSam;
+            }
+            $bt_esttph = round( $bt_est / $sample ,2);
+            $rst_esttph = round( $rst_est / $sample ,2);
+
+            $testing[$key]['tph_tod'] = $sample;
+            $testing[$key]['total_bt'] = $bt_est;
+            $testing[$key]['bt_tph'] = $bt_esttph;
+            $testing[$key]['scorre_bt'] = skor_brd_tinggal($bt_esttph);
+            $testing[$key]['total_rst'] = $rst_est;
+            $testing[$key]['rst_tph'] = $rst_esttph;         
+            $testing[$key]['score_rst']  = skor_buah_tinggal($rst_esttph);
+
+        }
+        // dd($testing['5']);
+        // $mergedArray = array_merge_recursive($dataSkor, $testing);
+
+        // dd($testing[5]['BTE']['OB'],$transNewdata['BTE']['OB']);
         $dataSkor_trans = array();
         foreach ($queryEstate as $value1) {
             $queryTrans = DB::connection('mysql2')->table('mutu_transport')
@@ -1541,7 +1623,7 @@ class inspectController extends Controller
 
 
 
-            // dd($DataEstate);
+            // dd($transNewdata);
             foreach ($DataEstate as $key => $value) {
                 $skor_butir = 0;
                 $skor_restant = 0;
@@ -1564,15 +1646,45 @@ class inspectController extends Controller
                     $sum_tph_sample += $tph_sample;
                     $sum_skor_bt += $sum_bt;
                     $sum_jjg += $sum_Restan;
+                    if ($regs === '2') {
+                        foreach ($transNewdata as $transportKey => $transportValue) {
+                            if ($transportKey == $key) {                        
+                                foreach ($transportValue as $innerTransportKey => $innerTransportValue) {
+                                    if ($innerTransportKey == $key2) {
+                                        // dd($innerTransportKey ,$key2);
+                                        if ($sum_Restan == 0  && $sum_bt == 0) {
+                                            $dataSkor_trans[$value1['wil']][$key][$key2]['tph_sample'] = 0;
+                                        }else {
+                                            $dataSkor_trans[$value1['wil']][$key][$key2]['tph_sample'] = $innerTransportValue['total_tph'];
+                                            
+                                        }
+                                        $sum_tph_sample += $innerTransportValue['total_tph'];
+                                        $btr_tph = round($sum_bt / $innerTransportValue['total_tph'], 2);
+                                        $jjg_tph = round($sum_Restan / $innerTransportValue['total_tph'], 2);
+                                        $tph_reg2 += $innerTransportValue['total_tph'];
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        $dataSkor_trans[$value1['wil']][$key][$key2]['tph_sample'] = $tph_sample;
+                        $sum_tph_sample += $tph_sample;
+                        $btr_tph = round($sum_bt / $tph_sample, 2);
+                        $jjg_tph = round($sum_Restan / $tph_sample, 2);
+                    }
+                    
+                    if(count($value2) == 1 && $value2[0]['blok'] == '0'){
+                        $tph_sample = $value2[0]['tph_baris']; 
+                        $sum_bt = $value2[0]['bt'];  
+                    }
 
 
                     $dataSkor_trans[$value1['wil']][$key][$key2]['bt_total'] = $sum_bt;
                     $dataSkor_trans[$value1['wil']][$key][$key2]['restan_total'] = $sum_Restan;
-                    $dataSkor_trans[$value1['wil']][$key][$key2]['tph_sample'] = $tph_sample;
-                    $dataSkor_trans[$value1['wil']][$key][$key2]['bt_tph'] = round($sum_bt / $tph_sample, 2);
-                    $dataSkor_trans[$value1['wil']][$key][$key2]['restan_tph'] = round($sum_Restan / $tph_sample, 2);
-                    $dataSkor_trans[$value1['wil']][$key][$key2]['Skor_bt'] = skor_brd_tinggal(round($sum_bt / $tph_sample, 2));
-                    $dataSkor_trans[$value1['wil']][$key][$key2]['Skor_tph'] = skor_buah_tinggal(round($sum_Restan / $tph_sample, 2));
+                    $dataSkor_trans[$value1['wil']][$key][$key2]['bt_tph'] = $btr_tph;
+                    $dataSkor_trans[$value1['wil']][$key][$key2]['restan_tph'] = $jjg_tph;
+                    $dataSkor_trans[$value1['wil']][$key][$key2]['Skor_bt'] = skor_brd_tinggal($btr_tph);
+                    $dataSkor_trans[$value1['wil']][$key][$key2]['Skor_tph'] = skor_buah_tinggal($jjg_tph);
                 }
                 $dataSkor_trans[$value1['wil']][$key]['bt_total'] = $sum_skor_bt;
                 $dataSkor_trans[$value1['wil']][$key]['tph_sample_total'] = $sum_tph_sample;
@@ -1819,18 +1931,87 @@ class inspectController extends Controller
             }
         }        
         // dd($dataSkor[5]['BTE'],$transport);  
-        // dd($dataSkor);
+        // dd($dataSkor_ancak);
+
+        $testingPlasma = [];
+
+        foreach ($dataSkor_trans as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    foreach ($transNewdata as $keys => $val) {
+                        if ($keys == $key2) {                      
+                            foreach ($val as $keys2 => $val2) {                          
+                                if ($keys2 == $key3) {
+                                    $testingPlasma[$key][$key2][$key3] = $value3;
+                                    // dd($key2['OD']);
+                                    // if (!isset($value3['tph_sample'])) {
+                                    //     $testingPlasma[$key][$key2][$key3]['tph_sample'] = $val2['total_tph'];
+                                    // }
+                                    $testingPlasma[$key][$key2][$key3]['tph_sample'] = $val2['total_tph'];
+
+
+                                    if (!isset($value3['bt_total'])) {
+                                        $testingPlasma[$key][$key2][$key3]['bt_total'] = 0;
+                                    }
+
+                                    if (!isset($value3['restan_total'])) {
+                                        $testingPlasma[$key][$key2][$key3]['restan_total'] = 0;
+                                    }
+
+                                    if (!isset($value3['skor'])) {
+                                        $testingPlasma[$key][$key2][$key3]['skor'] = 0;
+                                    }
+
+                                    if (!isset($value3['skor_restan'])) {
+                                        $testingPlasma[$key][$key2][$key3]['skor_restan'] = 0;
+                                    }
+                                    
+                                }
+                            }
+                           
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach ($testingPlasma as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $todSam = 0;
+                $totalbt = 0;
+                $restantod =0;
+                foreach ($value1 as $key2 => $value2) {
+                //    dd($value2);
+                    $todSam += $value2['tph_sample'];
+                    $totalbt += $value2['bt_total'];
+                    $restantod += $value2['restan_total'];
+                }# code...
+
+                $bt_tph = round( $totalbt / $todSam ,2);
+                $rst_tph = round( $restantod / $todSam ,2);
+
+                $testingPlasma[$key][$key1]['tph_tod'] = $todSam;
+                $testingPlasma[$key][$key1]['total_bt'] = $totalbt;
+                $testingPlasma[$key][$key1]['bt_tph'] = $bt_tph;
+                $testingPlasma[$key][$key1]['scorre_bt'] = skor_brd_tinggal($bt_tph);
+                $testingPlasma[$key][$key1]['total_rst'] = $restantod;
+                $testingPlasma[$key][$key1]['rst_tph'] = $rst_tph;         
+                $testingPlasma[$key][$key1]['scorre_rst']  = skor_buah_tinggal($rst_tph);
+            }# code...
+        }
+        // dd($testingPlasma[]);
         return view('dataInspeksi', [
             'dataSkor' => $dataSkor,
             'dataSkor_ancak' => $dataSkor_ancak,
             'dataSkor_buah' => $dataSkor_buah,
             'dataSkor_transport' => $dataSkor_trans,
             'tanggal' => $tanggal,
-              'regional' => $regs
+              'regional' => $regs,
+              'tph_trans' => $testing,
+              'tph_tr' => $transNewdata,
+              'plasma_tph' => $testingPlasma,
         ]);
     }
-
-
 
     public function dashboard_inspeksi(Request $request)
     {
@@ -4152,7 +4333,6 @@ class inspectController extends Controller
     }
 
 
-  
     public function filter(Request $request)
     {
 

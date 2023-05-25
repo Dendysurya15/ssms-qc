@@ -6303,4 +6303,42 @@ class mutubuahController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
+
+    public function weeklypdf(Request $request)
+    {
+        $reg = $request->input('regPDF');
+        $date = $request->input('tglPDF');
+
+        // dd($date
+        $startOfWeek = strtotime($date);
+        $endOfWeek = strtotime('+6 days', $startOfWeek);
+
+        // Format the dates
+        $formattedStartDate = date('d-m-y', $startOfWeek);
+        $formattedEndDate = date('d-m-y', $endOfWeek);
+
+        // Create the final formatted string
+        $starDate = $formattedStartDate;
+        $endDate =  $formattedEndDate;
+
+        dd($starDate,$endDate);
+
+        $arrView = array();
+
+        $arrView['est'] =  $reg;
+        // $arrView['afd'] =  $afd;
+        $arrView['tanggal'] =  $date;
+        // $arrView['sidak_buah'] =  $sidak_buah;
+        // $arrView['total_buah'] =  $total_buah;
+
+        $pdf = PDF::loadView('mutubuahpdfWeekly', ['data' => $arrView]);
+
+        $customPaper = array(360, 360, 360, 360);
+        $pdf->set_paper('A2', 'landscape');
+        // $pdf->set_paper('A2', 'potrait');
+
+        $filename = 'Weekly report-' . $arrView['tanggal']  . $arrView['est']  . '.pdf';
+
+        return $pdf->stream($filename);
+    }
 }

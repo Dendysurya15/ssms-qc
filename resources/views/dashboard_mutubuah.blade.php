@@ -419,7 +419,16 @@
 
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary mb-3 ml-2" id="showTahung">Show</button>
+                                        <button class="btn btn-primary mb-3 ml-2" id="showTahung">Show ICH</button>
+
+                                        <form action="{{ route('WeeklyReport') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="tglPDF" id="tglPDF" value="">
+                                            <input type="hidden" name="regPDF" id="regPDF" value="">
+                                            <button type="submit" class="download-btn ml-2" id="download-button">
+                                                <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA
+                                            </button>
+                                        </form>
                                     </div>
                                     <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
                                         <button id="sort-est-btnWek">Sort by Est</button>
@@ -5700,4 +5709,19 @@
             // Implement your filtering logic here, if necessary
         }
     });
+
+    // Retrieve the selected regional value
+    var regionalDataSelect = document.getElementById("regionalData");
+    var selectedRegionalValue = regionalDataSelect.value;
+
+    // Retrieve the value from the dateWeek input field
+    var dateWeekInput = document.getElementById("dateWeek");
+    var dateWeekValue = dateWeekInput.value;
+
+    // Set the retrieved values to the hidden input fields
+    document.getElementById("regPDF").value = selectedRegionalValue;
+    document.getElementById("tglPDF").value = dateWeekValue;
+
+    // Submit the form
+    document.getElementById("download-button").click();
 </script>

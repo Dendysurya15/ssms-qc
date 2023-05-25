@@ -410,7 +410,7 @@
                         <td data-b-a-s="thin" data-a-h="center" data-a-v="middle" id="blok_luas">aw</td>
                         <td data-b-a-s="thin" data-a-h="center" data-a-v="middle">{{$items['tot_jml_jjg_panen_ma']}}</td>
                         <td data-b-a-s="thin" data-a-h="center" data-a-v="middle">{{$items['akp_real_est']}}</td>
-                        <!-- <td data-b-a-s="thin" data-a-h="center" data-a-v="middle" id="blok_luas">-</td> -->
+                        <td data-b-a-s="thin" data-a-h="center" data-a-v="middle">-</td>
                         <td data-b-a-s="thin" data-a-h="center" data-a-v="middle">{{$items['p_ma_est']}}</td>
                         <td data-b-a-s="thin" data-a-h="center" data-a-v="middle">{{$items['k_ma_est']}}</td>
                         <td data-b-a-s="thin" data-a-h="center" data-a-v="middle">{{$items['gl_ma_est']}}</td>
@@ -502,6 +502,7 @@
             </table>
         </div>
     </div>
+
     @else
 
     <div class="ml-3 mr-3 mb-3">

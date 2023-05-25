@@ -375,6 +375,23 @@
 
 
 <div class="content-wrapper">
+    <style>
+        #back-to-data-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 80px;
+            opacity: 0.7;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 9999;
+            /* Set a higher z-index value */
+        }
+
+        #back-to-data-btn:hover {
+            opacity: 1;
+        }
+    </style>
+
+    <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
     <div class="card table_wrapper">
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <h2>REKAP HARIAN SIDAK TPH </h2>
@@ -382,7 +399,7 @@
 
         <div class="header d-flex justify-content-center mt-3 mb-2 ml-3 mr-3">
             <div class="logo-container">
-                <img src="{{ asset('img/logo-SSS.png') }}" alt="Logo" class="logo">
+                <img src="{{ asset('img/Logo-SSS.png') }}" alt="Logo" class="logo">
                 <div class="text-container">
                     <div class="pt-name">PT. SAWIT SUMBERMAS SARANA, TBK</div>
                     <div class="qc-name">QUALITY CONTROL</div>
@@ -455,7 +472,7 @@
                         <th>Restan Unreported</th>
                         <th>TPH Semak</th>
 
-                        @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada')
+                        @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim')
                         <th>Aksi</th>
                         @endif
 
@@ -630,7 +647,7 @@
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
 
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada') {
+                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim') {
                         // Create the update button
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
@@ -845,5 +862,14 @@
                 }
             }
         });
+    }
+
+
+    function goBack() {
+        // Save the selected tab to local storage
+        localStorage.setItem('selectedTab', 'nav-data-tab');
+
+        // Redirect to the target page
+        window.location.href = "http://ssms-qc.test/dashboardtph";
     }
 </script>

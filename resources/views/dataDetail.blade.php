@@ -288,6 +288,23 @@
 
 
 <div class="content-wrapper">
+    <style>
+        #back-to-data-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 80px;
+            opacity: 0.7;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 9999;
+            /* Set a higher z-index value */
+        }
+
+        #back-to-data-btn:hover {
+            opacity: 1;
+        }
+    </style>
+
+    <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
     <div class="card table_wrapper">
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <h2>REKAP HARIAN SIDAK INPEKSI </h2>
@@ -360,9 +377,7 @@
 
         <!-- end animasi -->
     </div>
-    <div class="d-flex justify-content-between mt-3 mb-2 ml-3 mr-3">
-        <button id="back-to-data-btn" class="btn btn-primary">Back to Data</button>
-
+    <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
         <div class="d-flex align-items-center">
             <!-- Your existing PDF and Excel buttons and their respective forms -->
             <style>
@@ -417,6 +432,7 @@
             </form>
         </div>
     </div>
+
 
 
     <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark ">
@@ -2463,14 +2479,22 @@
 
     document.querySelector('button[type="button"]').addEventListener('click', Show);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const backToDataButton = document.getElementById('back-to-data-btn');
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const backToDataButton = document.getElementById('back-to-data-btn');
 
-        backToDataButton.addEventListener('click', function() {
-            // Set the desired tab in the local storage
-            localStorage.setItem('selectedTab', 'nav-data-tab');
-            // Navigate back to the dashboard_inspeksi page
-            window.location.href = 'https://qc-apps.srs-ssms.com/dashboard_inspeksi';
-        });
-    });
+    //     backToDataButton.addEventListener('click', function() {
+    //         // Set the desired tab in the local storage
+    //         localStorage.setItem('selectedTab', 'nav-data-tab');
+    //         // Navigate back to the dashboard_inspeksi page
+    //         window.location.href = 'https://qc-apps.srs-ssms.com/dashboard_inspeksi';
+    //     });
+    // });
+
+    function goBack() {
+        // Save the selected tab to local storage
+        localStorage.setItem('selectedTab', 'nav-data-tab');
+
+        // Redirect to the target page
+        window.location.href = "http://ssms-qc.test/dashboard_inspeksi";
+    }
 </script>
