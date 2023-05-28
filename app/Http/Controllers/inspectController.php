@@ -10830,6 +10830,7 @@ class inspectController extends Controller
        
         //perhitungan data untuk mutu transport
         //menghitung afd perbulan
+        $allBlokPerMonthTrans = array();
         $mutuTransAFD = array();
         foreach ($defaultTrans as $key => $value) {
             foreach ($value as $key1 => $value2) {
@@ -10844,6 +10845,7 @@ class inspectController extends Controller
                         $listBlokPerAfd = array();
                         foreach ($value3 as $key3 => $value4) {
                             // dd($value4);
+                            $allBlokPerMonthTrans[$key][$key1][$key2][$value4['id']] = $value4['blok'];
                             // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $value4['estate'] . ' ' . $value4['afdeling'] . ' ' . $value4['blok'];
                             // }
@@ -10899,6 +10901,189 @@ class inspectController extends Controller
                     }
             }
         }
+
+        $allBlokPerMonthAncak = array();
+        foreach ($allBlokPerMonthTrans as $key => &$value1) {
+            foreach ($value1 as $key1 => &$value2) {
+                foreach ($value2 as $key2 =>  &$value3) { 
+                    $value3 = array_unique($value3);
+                }
+            }
+        }
+
+        $test = array();
+        $newTPHSampleReg2 = array();
+
+        // dd($allBlokPerMonthTrans);
+        foreach ($allBlokPerMonthTrans  as $key => $value1) {
+            foreach ($value1 as $key1 =>$value2) {
+                foreach ($value2  as $key2 =>  $value3) {
+                    
+                    // $blokExist  = array();
+                    
+                    foreach ($value3 as $key3 => $value4) {
+                        $tphSample = 0;
+                        if ($value4 != '0') {
+
+                            //cek semua mutu transport 
+                            $trans = DB::connection('mysql2')->table('mutu_transport')->where('id', $key3)->first();
+                            $getDate = Carbon::createFromFormat('Y-m-d H:i:s', $trans->datetime);
+                            $day = $getDate->format('d');
+                            $month = $getDate->format('m');
+                            $year = $getDate->format('Y');
+        
+                            //query untuk cek mutu  ancak bersamaan dengan  mutu transport
+                            $ancak = DB::connection('mysql2')->table('mutu_ancak_new')
+                                ->select(
+                                    "mutu_ancak_new.*"
+                                )
+                                ->where('estate', $trans->estate)
+                                ->where('afdeling', $trans->afdeling)
+                                ->where('blok', $trans->blok)
+                                ->whereMonth('datetime', $month)
+                                ->whereYear('datetime', $year)
+                                ->orderBy('datetime', 'DESC')
+                                ->first();
+
+                                //jika ada mutu ancak bersamaan dengan mutu transport
+                                if($ancak){
+                                    //jika mutu ancak dibawah < 3 hari
+                                    if($ancak->status_panen <= 3 ){
+                                        // $newTPHSampleReg2[$key][$key1][$key2][$value4] = round($ancak->luas_blok * 1.3, 2);
+                                        $newTPHSampleReg2[$key][$key1][$key2][$year.'-'.$month.'-'.$day][] = $ancak->blok;
+                                    }
+                                    //lebih dari 3 hari
+                                    else{
+                                        // $newTPHSampleReg2[$key][$key1][$key2][$value4] = DB::connection('mysql2')->table('mutu_transport')->where('estate',$trans->estate)->where('afdeling',$trans->afdeling)->where('blok', $trans->blok)->count();
+                                        $newTPHSampleReg2[$key][$key1][$key2][$year.'-'.$month.'-'.$day][] = $ancak->blok;
+                                    }
+                                }else{
+                                    //query mendapatkan jumlah semua tph jika hanya melakukan mutu transport tanpa mutu ancak
+                                    // $newTPHSampleReg2[$key][$key1][$key2][$value4] = DB::connection('mysql2')->table('mutu_transport')->where('estate',$trans->estate)->where('afdeling',$trans->afdeling)->where('blok', $trans->blok)->count();
+                                    $cobalagigan = DB::connection('mysql2')->table('mutu_transport')->where('estate',$trans->estate)->where('afdeling',$trans->afdeling)->where('blok', $trans->blok)->first();
+                                    $newTPHSampleReg2[$key][$key1][$key2][$year.'-'.$month.'-'.$day][] = $cobalagigan->blok;
+
+                                }
+
+                                if($ancak !== null){
+                                    
+                                    // $blokExist = [$ancak->blok];
+
+                                    // query cek mutu ancak jika tidak ada mutu transport dengan cara cek tanggal hari tersebut
+                                    // $hanyaAncak = DB::connection('mysql2')->table('mutu_ancak_new')
+                                    // ->select(
+                                    //     "mutu_ancak_new.*"
+                                    // )
+                                    // ->where('estate', $trans->estate)
+                                    // ->where('afdeling', $trans->afdeling)
+                                    // ->whereDay('datetime',$day)
+                                    // ->whereMonth('datetime', $month)
+                                    // ->whereYear('datetime', $year)
+                                    // ->whereNotIn('blok', $blokExist)
+                                    // ->orderBy('datetime', 'DESC')
+                                    // ->get();
+
+
+            
+                                    // foreach($hanyaAncak as $coba){
+                                        // $test[$key][$key1][$key2][] = $ancak->blok;
+                                    // }
+
+                                    // // $test[$key][$key1][$key2][$ancak->blok] = $blokExist;
+                                  
+                                        // if($hanyaAncak[0]->status_panen <= 3 ){
+                                        //     $newTPHSampleReg2[$key][$key1][$key2][$hanyaAncak[0]->blok] = round($hanyaAncak[0]->luas_blok * 1.3, 2);
+                                        // }
+                                        // else{
+                                        //     $newTPHSampleReg2[$key][$key1][$key2][$value4] = count($hanyaAncak);
+                                        // }
+
+                                       
+                                }
+
+                                
+                                
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach($newTPHSampleReg2 as $key => $value){
+            foreach($value as $key2 =>$value2){
+                foreach($value2 as $key3 => $value3){
+                    foreach($value3 as $key4 =>$value4){
+                        foreach($value4 as $key5 =>$value5){
+                            foreach($value5 as $key6 =>$value6){
+                                dd('asldkf');
+                        }
+                    }
+                    }
+                }
+            }
+        }
+
+
+        // dd($newTPHSampleReg2);
+        // dd($test);   
+
+        $cobaterus = array();
+        foreach($test as $key => $value){
+            foreach($value as $key2 =>$value2){
+                foreach($value2 as $key3 => $value3){
+                    $blokExist = array();
+                    foreach($value3 as $key4 =>$value4){
+                        $blokExist[$key][$key2][$key3][] = $value4;
+                    }
+                    // dd($key, $key3, $blokExist[0],$year, $key2);
+                    
+                    // $getLatestDate = DB::connection('mysql2')->table('mutu_ancak_new')
+                    // ->select(
+                    //     "mutu_ancak_new.*"
+                    // )
+                    // ->where('estate', $key)
+                    // ->where('afdeling', $key3)
+                    // ->where('blok',$blokExist[0])
+                    // ->whereMonth('datetime', $key2)
+                    // ->whereYear('datetime', $year)
+                    // ->orderBy('datetime', 'DESC')
+                    // ->get();
+
+                    // dd($getLatestDate);
+                }
+            }
+        }
+
+        // dd($blokExist);
+        
+        $tphSampleReg2 = array();
+        foreach($newTPHSampleReg2 as $key => $value){
+            foreach($value as $key2 =>$value2){
+                foreach($value2 as $key3 => $value3){
+                    $count = 0;
+                    foreach($value3 as $key4 =>$value4){
+                        $count += $value4;
+                    }
+                    $tphSampleReg2[$key][$key2][$key3]['tph_sample'] = $count;
+                }
+            }
+        }
+
+        // dd($tphSampleReg2);
+        
+        if($RegData == '2' || $RegData ==2){
+            foreach ($mutuTransAFD as $key1 => &$value1) {
+                foreach ($value1 as $key2 => &$value2) {
+                    foreach ($value2 as $key3 => &$value3) {
+                        if (isset($tphSampleReg2[$key1][$key2][$key3])) {
+                            $value3['tph_sample'] = $tphSampleReg2[$key1][$key2][$key3]['tph_sample'];
+                        }
+                    }
+                }
+            }
+        }
+
+        dd($mutuTransAFD['MRE']);
 
         // dd($mutuTransAFD['BTE']['May']);
         // hitungan per est per bulan

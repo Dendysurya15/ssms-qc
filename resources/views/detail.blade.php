@@ -86,11 +86,13 @@
 <div class="content-wrapper">
     <section class="content">
         <div class="container-fluid pt-3">
-            <a href="{{ route('dashboard_gudang') }}" class="btn btn-dark"> <i class="nav-icon fa-solid fa-arrow-left "></i></a>
+            <a href="{{ route('dashboard_gudang') }}" class="btn btn-dark"> <i
+                    class="nav-icon fa-solid fa-arrow-left "></i></a>
             <a href="/cetakpdf/{{ $data->id }}" class=" btn btn-primary mb-3 mt-3"><i class="fa-solid fa-file-pdf"></i>
                 Unduh File</a>
 
             <?php
+<<<<<<< HEAD
 
             if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim') {
             ?>
@@ -99,6 +101,17 @@
             <?php
             }
             ?>
+=======
+    
+                if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada') {
+                ?>
+            <a onclick="return confirm('Anda yakin untuk mengahpus record ini?')" href="/hapusRecord/{{ $data->id }}"
+                class=" btn btn-danger mb-3 mt-3"><i class="fa-solid fa-trash"></i>
+                Hapus Record</a>
+            <?php
+                }
+                ?>
+>>>>>>> master
 
             <div class="card">
                 <div class="card-body">
@@ -157,11 +170,15 @@
                                     <tr>
                                         @if ($data->skor_total >= 95)
                                         <th class="table-primary text-center">EXCELLENT</th>
-                                        @elseif($data->skor_total >= 85 && $data->skor_total <95) <th class="table-success text-center">Good</th>
-                                            @elseif($data->skor_total >= 75 && $data->skor_total <85) <th class="table text-center" style="background-color: yellow">Satisfactory
+                                        @elseif($data->skor_total >= 85 && $data->skor_total <95) <th
+                                            class="table-success text-center">Good</th>
+                                            @elseif($data->skor_total >= 75 && $data->skor_total <85) <th
+                                                class="table text-center" style="background-color: yellow">Satisfactory
                                                 </th>
-                                                @elseif($data->skor_total >= 65 && $data->skor_total <75) <th class="table-warning text-center">Fair</th>
-                                                    @elseif($data->skor_total <75) <th class="table text-center" style="background-color: red;color:white">Poor
+                                                @elseif($data->skor_total >= 65 && $data->skor_total <75) <th
+                                                    class="table-warning text-center">Fair</th>
+                                                    @elseif($data->skor_total <75) <th class="table text-center"
+                                                        style="background-color: red;color:white">Poor
                                                         </th>
                                                         @endif
                                     </tr>
@@ -169,7 +186,11 @@
                             </table>
                         </div>
 
+<<<<<<< HEAD
                         @if ($data->unit == 'CWS1' || $data->unit == 'CWS2' || $data->unit == 'CWS3')
+=======
+                        @if ($data->unit == 'CWS1')
+>>>>>>> master
                         <table class="table">
 
 
@@ -223,7 +244,13 @@
                                         ''))))) }}
                                     </td>
 
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4 "><span><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}" class="img-fluid modal-image"></span></td>
+=======
+                                    <td class="my-cell col-md-4 "><span><img
+                                                src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}"
+                                                class="img-fluid modal-image"></span></td>
+>>>>>>> master
 
                                     <td class="my-cell" rowspan="2">
                                         {{ $data->kesesuaian_ppro == 25 ? 'Tidak ditemukan selisih'
@@ -238,12 +265,19 @@
                                         : ($data->kesesuaian_ppro == 0 ? 'Ditemukan Selisih >3% dari total sample' :
                                         ''))))) }}
                                     </td>
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}" class="img-fluid  modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}"
+                                            class="img-fluid  modal-image"></td>
+>>>>>>> master
 
                                     <td class="my-cell" rowspan="2">
                                         {{ $data->barang_nonstok == 5 ? 'Tidak ada barang non-stock'
                                         : ($data->barang_nonstok == 0 ? 'Ada barang non-stock' : '') }}
                                     </td>
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}" class="img-fluid modal-image"></td>
                                 </tr>
 
@@ -253,6 +287,25 @@
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}" class="img-fluid modal-image"></td>
 
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}"
+                                            class="img-fluid modal-image"></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}"
+                                            class="img-fluid modal-image"></td>
+
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}"
+                                            class="img-fluid modal-image"></td>
+
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                 </tr>
 
                                 <tr>
@@ -297,7 +350,13 @@
 
 
                                     @if ($data->foto_mr_ditandatangani_1)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
@@ -315,8 +374,15 @@
 
 
                                     @if ($data->foto_kebersihan_gudang_1)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
 
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
@@ -328,24 +394,48 @@
                                         : ($data->inspeksi_ktu == 0 ? ') Logbook tidak todate ' : '') }}
                                     </td>
                                     @if ($data->foto_inspeksi_ktu_1)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
                                     @if ($data->foto_mr_ditandatangani_2)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     @if ($data->foto_kebersihan_gudang_2)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     @if ($data->foto_inspeksi_ktu_2)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
@@ -407,7 +497,13 @@
                                         :''))}}
                                     </td>
 
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4 "><span><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}" class="img-fluid modal-image"></span></td>
+=======
+                                    <td class="my-cell col-md-4 "><span><img
+                                                src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}"
+                                                class="img-fluid modal-image"></span></td>
+>>>>>>> master
 
                                     <td class="my-cell" rowspan="2">
                                         {{$data->kesesuaian_ppro == 20 ? 'Sesuai'
@@ -415,13 +511,20 @@
                                         : ($data->kesesuaian_ppro == 5 ? 'Tidak Sesuai / Selisih >1 item barang'
                                         :''))}}
                                     </td>
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}" class="img-fluid  modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}"
+                                            class="img-fluid  modal-image"></td>
+>>>>>>> master
 
                                     <td class="my-cell" rowspan="2">{{$data->chemical_expired == 15 ? 'Tidak ada
                                         chemical expired'
                                         :($data->chemical_expired == 10 ? '< 10% jenis chemical expired '
                                             : ($data->chemical_expired == 5 ? '>= 10% jenis chemical expired' :''))}}
                                     </td>
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_1}}" class="img-fluid modal-image"></td>
                                 </tr>
 
@@ -431,6 +534,25 @@
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}" class="img-fluid modal-image"></td>
 
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_1}}"
+                                            class="img-fluid modal-image"></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}"
+                                            class="img-fluid modal-image"></td>
+
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}"
+                                            class="img-fluid modal-image"></td>
+
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                 </tr>
 
                                 <tr>
@@ -466,7 +588,13 @@
                                         }}
                                     </td>
                                     @if ($data->foto_barang_nonstok_1)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
@@ -479,7 +607,14 @@
                                         ''))}}
                                     </td>
                                     @if ($data->foto_mr_ditandatangani_1)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
@@ -488,18 +623,31 @@
                                         $data->peletakan_bincard + $data->rak_ditutup + $data->cat_sesuai}}
                                     </td>
                                     @if ($data->foto_kebersihan_gudang_1)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
                                     @if ($data->foto_barang_nonstok_2)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     @if ($data->foto_mr_ditandatangani_2)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4">
                                         <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}" style="width: 150pt; height: 75pt; transform: rotate(270deg);">
                                     </td>
@@ -511,6 +659,18 @@
 
                                     @if ($data->foto_kebersihan_gudang_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}"
+                                            class="img-fluid modal-image"></td>
+                                    @else
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                                    @endif
+                                    @if ($data->foto_kebersihan_gudang_2)
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
@@ -539,14 +699,26 @@
                                         (($data->inspeksi_ktu == 0) ? ' Logbook tidak todate' : '')}}
                                     </td>
                                     @if ($data->foto_inspeksi_ktu_1)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
                                     @if ($data->foto_inspeksi_ktu_2)
+<<<<<<< HEAD
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}" class="img-fluid modal-image"></td>
+=======
+                                    <td class="my-cell col-md-4"><img
+                                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}"
+                                            class="img-fluid modal-image"></td>
+>>>>>>> master
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
@@ -572,18 +744,30 @@
 
 <script>
     // Example JavaScript for opening and closing modal
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> master
     // // Get the modal container, modal content, and close button
     // var modal = document.getElementById("myModal");
     // var modalContent = document.getElementById("modal-image");
     // var closeBtn = document.getElementsByClassName("close")[0];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> master
     // // Function to open the modal and display the clicked image
     // function openModal(img) {
     //   modal.style.display = "block";
     //   if (img.style.transform !== "") {
     //     modalContent.style.transform ="rotate(-90deg)";
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> master
     //     modalContent.style.maxWidth = "600px";
     //     modalContent.style.maxHeight = "100%";
     //   } else{
@@ -591,15 +775,26 @@
     //     modalContent.style.maxWidth = "";
     //     modalContent.style.maxHeight = "";
     //   }
+<<<<<<< HEAD
 
     //   modalContent.src = img.src;
     // }
 
+=======
+    
+    //   modalContent.src = img.src;
+    // }
+    
+>>>>>>> master
     // // Bind click event to the close button to close the modal
     // closeBtn.onclick = function() {
     //   modal.style.display = "none";
     // }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> master
     // // Bind click event to the modal to close it when clicked outside the image
     // modal.onclick = function(event) {
     //   if (event.target == modal) {
@@ -615,7 +810,11 @@
     // // add click event listeners to the buttons
     // rotateBtn.addEventListener("click", rotateImage);
     //     const images = document.querySelectorAll("table img");
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> master
     // // Loop through each image and check if it's in portrait mode
     // images.forEach((img) => {
     //   if (img.naturalWidth < img.naturalHeight) {
@@ -626,12 +825,17 @@
     //       const temp = img.width;
     //       img.width = img.height;
     //       img.height = temp;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> master
     //       // Set the maximum width and height of the image to 100% of its container element
     //       img.style.maxWidth = "200px";
     //       img.style.maxHeight = "200px";
     //     });
     //   }
+<<<<<<< HEAD
 
 
     // });
@@ -751,4 +955,124 @@
     saveButton.addEventListener('click', sendRequest, {
         once: true
     });
+=======
+    
+      
+    // });
+   // Get all the images
+const images = document.querySelectorAll('.modal-image');
+
+// Get the modal element
+const modal = document.querySelector('.modal');
+
+// Get the modal content element
+const modalContent = document.querySelector('.modal-content');
+
+
+// Loop through each image
+images.forEach((image) => {
+  // Add a click event listener to the image
+  image.addEventListener('click', () => {
+    // Get the clicked image source and alt attributes
+    const src = image.getAttribute('src');
+    const alt = image.getAttribute('alt');
+
+    // Update the modal image source and alt attributes
+    const modalImage = modal.querySelector('.modal-image');
+    modalImage.setAttribute('src', src);
+    modalImage.setAttribute('alt', alt);
+    resetRotation();
+    // Show the modal
+    modal.style.display = 'block';
+  });
+});
+
+// Get the close button
+const closeButton = modal.querySelector('.close');
+
+// Add a click event listener to the close button
+closeButton.addEventListener('click', () => {
+  // Hide the modal
+  modal.style.display = 'none';
+  resetRotation();
+});
+
+// Add a click event listener to the modal content element
+modalContent.addEventListener('click', (event) => {
+  // If the clicked element is the modal content itself
+  if (event.target === modalContent) {
+    // Hide the modal
+    modal.style.display = 'none';
+  }
+});
+
+function resetRotation() {
+  // Reset the total rotation angle
+  totalRotation = 0;
+  
+  // Get the modal image and reset the rotation angle and style
+  const modalImage = modal.querySelector('.modal-image');
+  modalImage.style.transform = 'rotate(0deg)';
+  modalImage.removeAttribute('data-rotation');
+}
+// Get the rotate button
+const rotateButton = modal.querySelector('.rotate');
+let totalRotation = 0;
+// Add a click event listener to the rotate button
+rotateButton.addEventListener('click', () => {
+  // Get the modal image
+  const modalImage = modal.querySelector('.modal-image');
+  
+  // Calculate the new rotation angle
+  const newRotation = totalRotation + 90;
+  
+  // Update the rotation angle and style
+  modalImage.style.transform = `rotate(${newRotation}deg)`;
+  
+  // Update the total rotation angle
+  totalRotation = newRotation;
+});
+// Get the save button
+const saveButton = modal.querySelector('#save-btn');
+
+function sendRequest() {
+  // Get the modal image source, file name, and degree of rotation
+  const modalImage = modal.querySelector('.modal-image');
+  const src = modalImage.getAttribute('src');
+  const fileName = src.substring(src.lastIndexOf('/') + 1);
+
+  // Get the degree of rotation
+  let rotation = totalRotation;
+  if (rotation === undefined) {
+    rotation = 0;
+  }
+
+  // Send the data to the server using Ajax
+  const xhr = new XMLHttpRequest();
+  const url = 'https://srs-ssms.com/gudang/rotateImage.php';
+  const params = `fileName=${fileName}&rotation=${rotation}`;
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      console.log(xhr.responseText);
+      // Hide the modal and reset the rotation
+      modal.style.display = 'none';
+      resetRotation();
+
+      // Remove the event listener to prevent multiple requests
+      saveButton.removeEventListener('click', sendRequest);
+      alert('Foto baru sudah tersimpan');
+      location.reload();
+    } else if (xhr.readyState === 4 && xhr.status !== 200) {
+      console.log('Error:', xhr.statusText);
+    }
+  };
+  xhr.send(params);
+}
+
+// Add a click event listener to the save button
+saveButton.addEventListener('click', sendRequest, { once: true });
+
+>>>>>>> master
 </script>
