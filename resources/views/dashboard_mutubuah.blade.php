@@ -5710,18 +5710,61 @@
         }
     });
 
-    // Retrieve the selected regional value
-    var regionalDataSelect = document.getElementById("regionalData");
-    var selectedRegionalValue = regionalDataSelect.value;
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the value of the lokasiKerja variable from the session
+        var lokasiKerja = "{{ session('lok') }}";
 
-    // Retrieve the value from the dateWeek input field
-    var dateWeekInput = document.getElementById("dateWeek");
-    var dateWeekValue = dateWeekInput.value;
+        // Set the default value for regionalData select field based on lokasiKerja
+        var regionalDataSelect = document.getElementById("regionalData");
+        regionalDataSelect.value = getRegionalValue(lokasiKerja);
 
-    // Set the retrieved values to the hidden input fields
-    document.getElementById("regPDF").value = selectedRegionalValue;
-    document.getElementById("tglPDF").value = dateWeekValue;
+        // Add event listener for the regionalData select field change
+        regionalDataSelect.addEventListener("change", function() {
+            // Retrieve the selected regional value
+            var selectedRegionalValue = regionalDataSelect.value;
 
-    // Submit the form
-    document.getElementById("download-button").click();
+            // Update the value of the hidden input field
+            document.getElementById("regPDF").value = selectedRegionalValue;
+        });
+
+        // Retrieve the value from the dateWeek input field
+        var dateWeekInput = document.getElementById("dateWeek");
+        var dateWeekValue = dateWeekInput.value;
+
+        // Set the retrieved value to the hidden input field
+        document.getElementById("tglPDF").value = dateWeekValue;
+
+        // Submit the form when the page is first loaded
+        submitForm();
+    });
+
+    // Function to submit the form
+    function submitForm() {
+        // Retrieve the selected regional value
+        var selectedRegionalValue = document.getElementById("regionalData").value;
+
+        // Update the value of the hidden input field
+        document.getElementById("regPDF").value = selectedRegionalValue;
+
+        // Retrieve the value from the dateWeek input field
+        var dateWeekValue = document.getElementById("dateWeek").value;
+
+        // Set the retrieved value to the hidden input field
+        document.getElementById("tglPDF").value = dateWeekValue;
+
+        // Submit the form
+        document.getElementById("download-button").click();
+    }
+
+    function getRegionalValue(lokasiKerja) {
+        // Define the mapping of lokasiKerja to regional values
+        var regionalMapping = {
+            "Regional I": "1",
+            "Regional II": "2",
+            "Regional III": "3"
+        };
+
+        // Return the regional value based on lokasiKerja
+        return regionalMapping[lokasiKerja] || "1"; // Default to "1" if lokasiKerja is not found
+    }
 </script>

@@ -1539,7 +1539,7 @@
     var isTableHeaderModified = false;
 
     $(document).ready(function() {
-        if (lokasiKerja == 'Regional II' && !isTableHeaderModified) {
+        if ((lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') && !isTableHeaderModified) {
             $('#regionalPanen').val('2');
             $('#regionalDataweek').val('2');
             $('#regionalData').val('2');
@@ -7090,8 +7090,8 @@
                     rank: [16, 18, 20, 3]
                 },
                 '2': {
-                    est: [17, 13, 10, 5],
-                    rank: [17, 13, 10, 5]
+                    est: [16, 13, 10, 5],
+                    rank: [16, 13, 10, 5]
                 },
                 '3': {
                     est: [20, 11, 10, 3],
@@ -7161,8 +7161,8 @@
                     rank: [16, 18, 20, 3]
                 },
                 '2': {
-                    est: [17, 13, 10, 5],
-                    rank: [17, 13, 10, 5]
+                    est: [16, 13, 10, 5],
+                    rank: [16, 13, 10, 5]
                 },
                 '3': {
                     est: [20, 11, 10, 3],
