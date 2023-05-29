@@ -107,9 +107,9 @@
                                     <div class="col-md-2 offset-md-8">
                                         {{csrf_field()}}
                                         <select class="form-control" id="regionalPanen">
-                                            <option value="1" selected>Regional 1</option>
-                                            <option value="2">Regional 2</option>
-                                            <option value="3">Regional 3</option>
+                                            @foreach($option_reg as $key => $item)
+                                            <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -405,9 +405,9 @@
                                             <div class="col-md-2 offset-md-8">
                                                 {{csrf_field()}}
                                                 <select class="form-control" id="regionalData">
-                                                    <option value="1" selected>Regional 1</option>
-                                                    <option value="2">Regional 2</option>
-                                                    <option value="3">Regional 3</option>
+                                                    @foreach($option_reg as $key => $item)
+                                                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
 
@@ -419,15 +419,16 @@
 
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary mb-3 ml-2" id="showTahung">Show ICH</button>
+                                        <button class="btn btn-primary mb-3 ml-2" id="showTahung">Show</button>
 
                                         <form action="{{ route('WeeklyReport') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
                                             {{ csrf_field() }}
                                             <input type="hidden" name="tglPDF" id="tglPDF" value="">
                                             <input type="hidden" name="regPDF" id="regPDF" value="">
-                                            <button type="submit" class="download-btn ml-2" id="download-button">
+                                            <!-- <button type="submit" class="download-btn ml-2" id="download-button">
                                                 <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA
-                                            </button>
+                                            </button> -->
+                                            <button type="submit" class="btn btn-secondary" id="pdfButton" disabled>PDF</button>
                                         </form>
                                     </div>
                                     <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
@@ -690,9 +691,9 @@
                                             <div class="mr-2">
                                                 {{csrf_field()}}
                                                 <select class="form-control" id="regDataTahun">
-                                                    <option value="1" selected>Regional 1</option>
-                                                    <option value="2">Regional 2</option>
-                                                    <option value="3">Regional 3</option>
+                                                    @foreach($option_reg as $key => $item)
+                                                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div>
@@ -784,9 +785,9 @@
                                         <div class="mb-3 mb-md-0 mr-md-2">
                                             {{csrf_field()}}
                                             <select class="form-control" id="regFindingYear">
-                                                <option value="1" selected>Regional 1</option>
-                                                <option value="2">Regional 2</option>
-                                                <option value="3">Regional 3</option>
+                                                @foreach($option_reg as $key => $item)
+                                                <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="mr-md-2">
@@ -841,9 +842,9 @@
                                 <div class="col-md-2 offset-md-8">
                                     {{csrf_field()}}
                                     <select class="form-control" id="regional_data">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -1016,9 +1017,9 @@
                                     <div class="col-md-2 offset-md-8">
                                         {{csrf_field()}}
                                         <select class="form-control" id="reg_sbiThun">
-                                            <option value="1" selected>Regional 1</option>
-                                            <option value="2">Regional 2</option>
-                                            <option value="3">Regional 3</option>
+                                            @foreach($option_reg as $key => $item)
+                                            <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -1256,9 +1257,9 @@
                                 <div class="col-md-2 offset-md-8">
                                     {{csrf_field()}}
                                     <select class="form-control" id="regFind">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
@@ -1439,7 +1440,7 @@
             thElement1.textContent = 'WILAYAH I';
             thElement2.textContent = 'WILAYAH II';
             thElement3.textContent = 'WILAYAH III';
-            thElement4.textContent = 'Plasma1';
+            thElement4.textContent = 'PLASMA I';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
@@ -1461,10 +1462,11 @@
             resetClassList(l);
             resetClassList(n);
 
+
             thElement1.textContent = 'WILAYAH IV';
             thElement2.textContent = 'WILAYAH V';
             thElement3.textContent = 'WILAYAH VI';
-            thElement4.textContent = 'PLASMA 2';
+            thElement4.textContent = 'PLASMA II';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
@@ -1484,11 +1486,11 @@
 
             resetClassList(s);
             resetClassList(m);
-            resetClassList(n);
+            resetClassList(l);
 
             thElement1.textContent = 'WILAYAH VII';
             thElement2.textContent = 'WILAYAH VIII';
-            thElement3.textContent = 'PLASMA 3';
+            thElement3.textContent = 'PLASMA III';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
@@ -1496,7 +1498,27 @@
 
             s.classList.add("col-lg-4");
             m.classList.add("col-lg-4");
-            n.classList.add("col-lg-4");
+            l.classList.add("col-lg-4");
+        } else if (c === '4') {
+            s.style.display = "";
+            m.style.display = "";
+            l.style.display = "none";
+            n.style.display = "none";
+
+            resetClassList(s);
+            resetClassList(m);
+
+
+            thElement1.textContent = 'WILAYAH Inti';
+            thElement2.textContent = 'WILAYAH Plasma';
+
+            thElement1.classList.add("text-center");
+            thElement2.classList.add("text-center");
+
+
+            s.classList.add("col-lg-6");
+            m.classList.add("col-lg-6");
+
         }
     });
 
@@ -1571,19 +1593,39 @@
 
             resetClassList(ss);
             resetClassList(ms);
+            resetClassList(ls);
 
             thElement1s.textContent = 'WILAYAH VII';
             thElement2s.textContent = 'WILAYAH VIII';
-            thElement3s.textContent = 'Plasma3';
+            thElement3s.textContent = 'PLASMA III';
 
             thElement1s.classList.add("text-center");
             thElement2s.classList.add("text-center");
             thElement3s.classList.add("text-center");
 
-
             ss.classList.add("col-lg-4");
             ms.classList.add("col-lg-4");
             ls.classList.add("col-lg-4");
+        } else if (cs === '4') {
+            ss.style.display = "";
+            ms.style.display = "";
+            ls.style.display = "none";
+            ns.style.display = "none";
+
+            resetClassList(ss);
+            resetClassList(ms);
+
+
+            thElement1s.textContent = 'WILAYAH Inti';
+            thElement2s.textContent = 'WILAYAH Plasma';
+
+            thElement1s.classList.add("text-center");
+            thElement2s.classList.add("text-center");
+
+
+            ss.classList.add("col-lg-6");
+            ms.classList.add("col-lg-6");
+
         }
     });
 
@@ -1664,11 +1706,11 @@
 
             resetClassList(sk);
             resetClassList(mk);
-            resetClassList(nk);
+            resetClassList(lk);
 
             thElement1k.textContent = 'WILAYAH VII';
             thElement2k.textContent = 'WILAYAH VIII';
-            thElement3k.textContent = 'PLASMA 3';
+            thElement3k.textContent = 'PLASMA III';
 
             thElement1k.classList.add("text-center");
             thElement2k.classList.add("text-center");
@@ -1676,7 +1718,27 @@
 
             sk.classList.add("col-lg-4");
             mk.classList.add("col-lg-4");
-            nk.classList.add("col-lg-4");
+            lk.classList.add("col-lg-4");
+        } else if (ck === '4') {
+            sk.style.display = "";
+            mk.style.display = "";
+            lk.style.display = "none";
+            nk.style.display = "none";
+
+            resetClassList(sk);
+            resetClassList(mk);
+
+
+            thElement1k.textContent = 'WILAYAH Inti';
+            thElement2k.textContent = 'WILAYAH Plasma';
+
+            thElement1k.classList.add("text-center");
+            thElement2k.classList.add("text-center");
+
+
+            sk.classList.add("col-lg-6");
+            mk.classList.add("col-lg-6");
+
         }
     });
     //tampilakn filter perweek
@@ -1843,6 +1905,7 @@
                 var mutubuah_est = Object.entries(parseResult['mutubuah_est'])
                 var mutuBuah_wil = Object.entries(parseResult['mutuBuah_wil'])
                 var regIonal = Object.entries(parseResult['regional'])
+                var regionaltab = Object.entries(parseResult['regionaltab'])
                 var queryAsisten = Object.entries(parseResult['queryAsisten'])
 
                 var chart_matang = Object.entries(parseResult['chart_matang'])
@@ -1858,6 +1921,7 @@
                 var chart_janjangkosongwil = Object.entries(parseResult['chart_janjangkosongwil'])
                 var chart_vcutwil = Object.entries(parseResult['chart_vcutwil'])
                 var chart_karungwil = Object.entries(parseResult['chart_karungwil'])
+                var optionREg = Object.entries(parseResult['optionREg'])
                 // console.log(chart_matang);
                 var matang_Wil = '['
                 if (chart_matangwil.length > 0) {
@@ -2044,6 +2108,14 @@
                         '#3063EC',
                         '#3063EC',
                     ]
+                } else if (regInpt === '4') {
+                    colors = ['#00FF00',
+                        '#00FF00',
+                        '#00FF00',
+                        '#3063EC',
+                        '#3063EC',
+
+                    ]
                 }
 
                 // console.log(matang_chart);
@@ -2132,8 +2204,13 @@
                         '#FF8D1A',
                         '#00ffff'
                     ]
-                } else {
+                } else if (regInpt === '3') {
                     wil_est = ['VII', 'VIII']
+                    warna = ['#00FF00',
+                        '#00ffff'
+                    ]
+                } else {
+                    wil_est = ['IX', 'X']
                     warna = ['#00FF00',
                         '#00ffff'
                     ]
@@ -2333,9 +2410,14 @@
                     wil2 = 'WIL-V';
                     wil3 = 'WIL-VI';
                     wil4 = '-'
-                } else {
+                } else if (regInpt === '3') {
                     wil1 = 'WIL-VII';
                     wil2 = 'WIL-VIII';
+                    wil3 = '-';
+                    wil4 = '-'
+                } else {
+                    wil1 = 'IX';
+                    wil2 = 'X';
                     wil3 = '-';
                     wil4 = '-'
                 }
@@ -2743,14 +2825,17 @@
 
 
                 var regionals = regIonal;
-                // console.log(regionals);
+                // console.log(regionaltab);
                 var headregional = document.getElementById('theadreg');
                 const trreg = document.createElement('tr');
 
                 const dataReg = {
-                    item1: regIonal[0] && regIonal[0][1] && regIonal[0][1].regional !== undefined ? regIonal[0][1].regional : '-',
-                    item2: regIonal[0] && regIonal[0][1] && regIonal[0][1].jabatan !== undefined ? regIonal[0][1].jabatan : '-',
-                    item3: regIonal[0] && regIonal[0][1] && regIonal[0][1].nama_asisten !== undefined ? regIonal[0][1].nama_asisten : '-',
+                    // item1: regIonal[0] && regIonal[0][1] && regIonal[0][1].regional !== undefined ? regIonal[0][1].regional : '-',
+                    item1: regionaltab[0][1]['nama'],
+                    // item2: regIonal[0] && regIonal[0][1] && regIonal[0][1].jabatan !== undefined ? regIonal[0][1].jabatan : '-',
+                    item2: regionaltab[0][1]['jabatan'],
+                    // item3: regIonal[0] && regIonal[0][1] && regIonal[0][1].nama_asisten !== undefined ? regIonal[0][1].nama_asisten : '-',
+                    item3: regionaltab[0][1]['nama_rh'],
                     item4: regIonal[0] && regIonal[0][1] && regIonal[0][1].all_skorYear !== undefined ? regIonal[0][1].all_skorYear : '-',
                 };
 
@@ -2864,6 +2949,7 @@
                 var chart_janjangkosongwil = Object.entries(parseResult['chart_janjangkosongwil'])
                 var chart_vcutwil = Object.entries(parseResult['chart_vcutwil'])
                 var chart_karungwil = Object.entries(parseResult['chart_karungwil'])
+                var regionaltab = Object.entries(parseResult['regionaltab'])
                 // console.log(chart_matang);
                 var matang_Wil = '['
                 if (chart_matangwil.length > 0) {
@@ -3050,6 +3136,14 @@
                         '#3063EC',
                         '#3063EC',
                     ]
+                } else if (regInpt === '4') {
+                    colors = ['#00FF00',
+                        '#00FF00',
+                        '#00FF00',
+                        '#3063EC',
+                        '#3063EC',
+
+                    ]
                 }
 
                 // console.log(matang_chart);
@@ -3138,8 +3232,13 @@
                         '#FF8D1A',
                         '#00ffff'
                     ]
-                } else {
+                } else if (regInpt === '3') {
                     wil_est = ['VII', 'VIII']
+                    warna = ['#00FF00',
+                        '#00ffff'
+                    ]
+                } else {
+                    wil_est = ['IX', 'X']
                     warna = ['#00FF00',
                         '#00ffff'
                     ]
@@ -3741,12 +3840,14 @@
                 const trreg = document.createElement('tr');
 
                 const dataReg = {
-                    item1: regIonal[0] && regIonal[0][1] && regIonal[0][1].regional !== undefined ? regIonal[0][1].regional : '-',
-                    item2: regIonal[0] && regIonal[0][1] && regIonal[0][1].jabatan !== undefined ? regIonal[0][1].jabatan : '-',
-                    item3: regIonal[0] && regIonal[0][1] && regIonal[0][1].nama_asisten !== undefined ? regIonal[0][1].nama_asisten : '-',
+                    // item1: regIonal[0] && regIonal[0][1] && regIonal[0][1].regional !== undefined ? regIonal[0][1].regional : '-',
+                    item1: regionaltab[0][1]['nama'],
+                    // item2: regIonal[0] && regIonal[0][1] && regIonal[0][1].jabatan !== undefined ? regIonal[0][1].jabatan : '-',
+                    item2: regionaltab[0][1]['jabatan'],
+                    // item3: regIonal[0] && regIonal[0][1] && regIonal[0][1].nama_asisten !== undefined ? regIonal[0][1].nama_asisten : '-',
+                    item3: regionaltab[0][1]['nama_rh'],
                     item4: regIonal[0] && regIonal[0][1] && regIonal[0][1].all_skorYear !== undefined ? regIonal[0][1].all_skorYear : '-',
                 };
-
                 const rowREG = Object.values(dataReg);
                 rowREG.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
@@ -4527,6 +4628,7 @@
                 var regIonal = Object.entries(parseResult['regional'])
                 var queryAsisten = Object.entries(parseResult['queryAsisten'])
 
+                var regionaltab = Object.entries(parseResult['regionaltab'])
                 var list_esate = Object.entries(parseResult['list_est'])
                 // console.log(chart_matang);
                 const estSidakYear = document.getElementById('estSidakYear');
@@ -5087,11 +5189,15 @@
                 const trreg = document.createElement('tr');
 
                 const dataReg = {
-                    item1: regIonal[0] && regIonal[0][1] && regIonal[0][1].regional !== undefined ? regIonal[0][1].regional : '-',
-                    item2: regIonal[0] && regIonal[0][1] && regIonal[0][1].jabatan !== undefined ? regIonal[0][1].jabatan : '-',
-                    item3: regIonal[0] && regIonal[0][1] && regIonal[0][1].nama_asisten !== undefined ? regIonal[0][1].nama_asisten : '-',
+                    // item1: regIonal[0] && regIonal[0][1] && regIonal[0][1].regional !== undefined ? regIonal[0][1].regional : '-',
+                    item1: regionaltab[0][1]['nama'],
+                    // item2: regIonal[0] && regIonal[0][1] && regIonal[0][1].jabatan !== undefined ? regIonal[0][1].jabatan : '-',
+                    item2: regionaltab[0][1]['jabatan'],
+                    // item3: regIonal[0] && regIonal[0][1] && regIonal[0][1].nama_asisten !== undefined ? regIonal[0][1].nama_asisten : '-',
+                    item3: regionaltab[0][1]['nama_rh'],
                     item4: regIonal[0] && regIonal[0][1] && regIonal[0][1].all_skorYear !== undefined ? regIonal[0][1].all_skorYear : '-',
                 };
+
 
                 const rowREG = Object.values(dataReg);
                 rowREG.forEach((item, cellIndex) => {

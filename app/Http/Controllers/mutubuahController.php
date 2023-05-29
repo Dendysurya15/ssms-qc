@@ -176,6 +176,21 @@ class mutubuahController extends Controller
             }
         }
 
+        $mtancakWIltab1 = array();
+        foreach ($queryEste as $key => $value) {
+            foreach ($defPerbulanWilv2 as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtancakWIltab1[$value['wil']][$key2] = array_merge($mtancakWIltab1[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+
+        $RegsTRy = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->get();
+        $RegsTRy = json_decode($RegsTRy, true);
+        // dd($RegsTRy);
 
 
         foreach ($defPerbulanWilv2 as $estateKey => $afdelingArray) {
@@ -669,8 +684,15 @@ class mutubuahController extends Controller
         ];
 
 
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->whereNotIn('reg.id', [5])
+            // ->where('wil.regional', 1)
+            ->get();
 
-        // dd($regional_arrays);
+
+        $optionREg = json_decode($optionREg, true);
+        // dd($optionREg);
 
         // dd($mutu_buahs, $sidak_buah);
         // $arrView['list_bulan'] =  $bulan;
@@ -680,7 +702,8 @@ class mutubuahController extends Controller
             'arrHeaderTrd' => $arrHeaderTrd,
             'arrHeaderReg' => $arrHeaderReg,
             'list_bulan' => $bulan,
-            'list_tahun' => $years
+            'list_tahun' => $years,
+            'option_reg' => $optionREg,
         ]);
     }
 
@@ -1699,6 +1722,10 @@ class mutubuahController extends Controller
             $regArr[$key]['skor_kr'] = sidak_PengBRD($per_krEST);
             $regArr[$key]['all_skorYear'] = $allSkorEST;
             $regArr[$key]['kategori'] = sidak_akhir($allSkorEST);
+
+            // foreach ($variable as $key => $value) {
+            //     # code...
+            // }
         }
         // dd($regArr);
 
@@ -1780,8 +1807,59 @@ class mutubuahController extends Controller
         }
         // dd($persen_jjgMtang_values, $persen_lwtMtng_values);
 
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->where('reg.id', $regional)
+            // ->where('wil.regional', 1)
+            ->get();
 
-        // dd($mutu_buah);
+
+        $optionReg = json_decode($optionREg, true);
+
+        // $regional = array();
+        // foreach ($optionReg as $key => $value) {
+        //     $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+        //     $value['nama'] = str_replace(' ', '', $value['nama']);
+        //     $value['nama'] = strtoupper($value['nama']);
+        //     $regional[] = $value;
+        //     $regional[$key]['jabatan'] = 'RH';
+        //     $regional['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        // }
+
+
+
+        // foreach ($regional as $key => $value) {
+        //     $regional[$key]['nama_rh'] = '-';
+        //     foreach ($queryAsisten as $ast => $asisten) {
+        //         if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+        //             $regional[$key]['nama_rh'] = $asisten['nama'];
+        //             break; // exit the inner loop since a match is found
+        //         }
+        //     }
+        // }
+
+        $regional = array();
+        foreach ($optionReg as $key => $value) {
+            $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+            $value['nama'] = str_replace(' ', '', $value['nama']);
+            $value['nama'] = strtoupper($value['nama']);
+            $regional[$key] = $value;
+            $regional[$key]['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        }
+
+        foreach ($regional as $key => $value) {
+            $regional[$key]['nama_rh'] = '-';
+            foreach ($queryAsisten as $ast => $asisten) {
+                // dd($value['nama']);
+                if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+                    $regional[$key]['nama_rh'] = $asisten['nama'];
+                    break; // exit the inner loop since a match is found
+                }
+            }
+        }
+
+        // dd($regional, $regArr);
+
         $arrView = array();
 
         $arrView['listregion'] =  $estev2;
@@ -1803,6 +1881,8 @@ class mutubuahController extends Controller
         $arrView['chart_janjangkosongwil'] =  $persen_kosong_values;
         $arrView['chart_vcutwil'] =  $vcut_persen_values;
         $arrView['chart_karungwil'] =  $TPH_values;
+        $arrView['optionREg'] =  $optionREg;
+        $arrView['regionaltab'] =  $regional;
 
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
@@ -1812,6 +1892,8 @@ class mutubuahController extends Controller
 
     public function getYear(Request $request)
     {
+
+
         $week = $request->input('week');
         // Convert the week format to start and end dates
         $weekDateTime = new DateTime($week);
@@ -1823,7 +1905,14 @@ class mutubuahController extends Controller
 
         // dd($startDate, $endDate);
         $RegData = $request->input('regData');
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->where('reg.id', $RegData)
+            // ->where('wil.regional', 1)
+            ->get();
 
+
+        $optionReg = json_decode($optionREg, true);
         $queryAsisten = DB::connection('mysql2')->table('asisten_qc')
             ->select('asisten_qc.*')
             ->get();
@@ -2912,6 +3001,30 @@ class mutubuahController extends Controller
         }
         // dd($persen_jjgMtang_values, $persen_lwtMtng_values);
 
+        $regional = array();
+        foreach ($optionReg as $key => $value) {
+            $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+            $value['nama'] = str_replace(' ', '', $value['nama']);
+            $value['nama'] = strtoupper($value['nama']);
+            $regional[$key] = $value;
+            $regional[$key]['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        }
+
+        foreach ($regional as $key => $value) {
+            $regional[$key]['nama_rh'] = '-';
+            foreach ($queryAsisten as $ast => $asisten) {
+                // dd($value['nama']);
+                if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+                    $regional[$key]['nama_rh'] = $asisten['nama'];
+                    break; // exit the inner loop since a match is found
+                }
+            }
+        }
+
+
+
+
+
         $arrView = array();
 
         $arrView['listregion'] =  $estev2;
@@ -2933,6 +3046,7 @@ class mutubuahController extends Controller
         $arrView['chart_janjangkosongwil'] =  $persen_kosong_values;
         $arrView['chart_vcutwil'] =  $vcut_persen_values;
         $arrView['chart_karungwil'] =  $TPH_values;
+        $arrView['regionaltab'] =  $regional;
 
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
@@ -5277,6 +5391,35 @@ class mutubuahController extends Controller
 
         $sbi_est = $request->input('selectedEstateText');
 
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->where('reg.id', $regional)
+            // ->where('wil.regional', 1)
+            ->get();
+
+
+        $optionReg = json_decode($optionREg, true);
+        $regional = array();
+        foreach ($optionReg as $key => $value) {
+            $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+            $value['nama'] = str_replace(' ', '', $value['nama']);
+            $value['nama'] = strtoupper($value['nama']);
+            $regional[$key] = $value;
+            $regional[$key]['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        }
+
+        foreach ($regional as $key => $value) {
+            $regional[$key]['nama_rh'] = '-';
+            foreach ($queryAsisten as $ast => $asisten) {
+                // dd($value['nama']);
+                if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+                    $regional[$key]['nama_rh'] = $asisten['nama'];
+                    break; // exit the inner loop since a match is found
+                }
+            }
+        }
+
+
 
         $arrView = array();
 
@@ -5287,6 +5430,7 @@ class mutubuahController extends Controller
         $arrView['mutuBuah_wil'] =  $mutuBuah_wil;
         $arrView['regional'] =  $regArr;
         $arrView['queryAsisten'] =  $queryAsisten;
+        $arrView['regionaltab'] =  $regional;
 
 
 
