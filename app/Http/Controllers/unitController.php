@@ -333,22 +333,28 @@ class unitController extends Controller
         $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         $queryEstate = DB::connection('mysql2')->table('estate')
-            ->select('estate.*')
+            ->select('estate.*', 'wil.nama as nama_wil')
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->where('estate.nama', '!=', 'PLASMA')
+            ->where('wil.nama', '!=', 'Plasma')
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
 
         $queryEstate = json_decode($queryEstate, true);
 
+        // dd($queryEstate);
         $dataRaw = array();
+
 
         foreach ($queryEstate as $value) {
 
             // dd($year);
             $queryPerEstate = DB::connection('mysql2')->table('qc_gudang')
                 ->select("qc_gudang.*", DB::raw('DATE_FORMAT(qc_gudang.tanggal, "%M") as bulan'))
+                ->join('estate', 'estate.est', '=', 'qc_gudang.unit')
+
+                // ->where('wil.regional', $regional)
                 ->where(function ($query) use ($value) {
                     $query->where('unit', '=', $value['id'])
                         ->orWhere('unit', '=', $value['est']);
@@ -383,7 +389,6 @@ class unitController extends Controller
             }
         }
 
-        // dd($dataRaw);
 
         $dataResult = array();
         $countDataPerEstate = array();
@@ -443,6 +448,7 @@ class unitController extends Controller
                 $estateQuery = DB::connection('mysql2')->table('estate')
                     ->select('estate.*')
                     ->join('wil', 'wil.id', '=', 'estate.wil')
+                    ->where('wil.regional', $regional)
                     ->where('estate.est', $key)
                     ->first();
 
@@ -457,6 +463,8 @@ class unitController extends Controller
                 else if ($wilayah == 6)  $dataResult[$key]['wil'] = 'VI';
                 else if ($wilayah == 7)  $dataResult[$key]['wil'] = 'VII';
                 else if ($wilayah == 8)  $dataResult[$key]['wil'] = 'VIII';
+                else if ($wilayah == 10)  $dataResult[$key]['wil'] = 'Inti';
+                else if ($wilayah == 11)  $dataResult[$key]['wil'] = 'Plasma';
                 $dataResult[$key]['est'] = $estateQuery->est;
             } else {
                 foreach ($bulan as $key4 => $value) {
@@ -480,11 +488,12 @@ class unitController extends Controller
                 else if ($wilayah == 6)  $dataResult[$key]['wil'] = 'VI';
                 else if ($wilayah == 7)  $dataResult[$key]['wil'] = 'VII';
                 else if ($wilayah == 8)  $dataResult[$key]['wil'] = 'VIII';
+                else if ($wilayah == 10)  $dataResult[$key]['wil'] = 'Inti';
+                else if ($wilayah == 11)  $dataResult[$key]['wil'] = 'Plasma';
                 $dataResult[$key]['skor_tahunan'] = 0;
                 $dataResult[$key]['status'] = 'Poor';
             }
         }
-
 
 
         $bulanKey = $bulanKe - 1;
@@ -665,7 +674,7 @@ class unitController extends Controller
             $arrId[$key][] = '-';
         }
 
-        // dd($arrId);
+        // dd($arrId); 
         // dd($arrView);
         $arrHeader = array();
         $arrHeader = ['WILAYAH', 'ESTATE', 'KODE'];

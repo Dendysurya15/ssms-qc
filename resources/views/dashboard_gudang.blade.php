@@ -129,6 +129,7 @@
                     <option value="1" selected>Regional I</option>
                     <option value="2">Regional II</option>
                     <option value="3">Regional III</option>
+                    <option value="4">Regional IV</option>
                 </select>
             </div>
             <div class="col-md-2 col-12">
@@ -273,6 +274,9 @@
                         reg = 'II'
                     } else if (parserowReg[0] == 3) {
                         reg = 'III'
+                    }
+                    else if (parserowReg[0] == 4) {
+                        reg = 'IV'
                     }
                     cell3.innerHTML = "<b>SUMMARY SCORE GUDANG REGIONAL - " + reg + "</b>";
                     cell3.colSpan = parserowHeader.length;
