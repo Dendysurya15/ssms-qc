@@ -142,10 +142,11 @@
                                 <div class="col-md-2 offset-md-8">
                                     {{csrf_field()}}
                                     <select class="form-control" id="regionalPanen">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
+
                                 </div>
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
@@ -561,9 +562,9 @@
                                     <div class="col-md-2 offset-md-8">
                                         {{csrf_field()}}
                                         <select class="form-control" id="regionalDataweek">
-                                            <option value="1" selected>Regional 1</option>
-                                            <option value="2">Regional 2</option>
-                                            <option value="3">Regional 3</option>
+                                            @foreach($option_reg as $key => $item)
+                                            <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
@@ -942,9 +943,9 @@
                                 <div class="regional-filter">
                                     {{csrf_field()}}
                                     <select class="form-control" id="regionalData">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="show-button">
@@ -1079,9 +1080,9 @@
                                 <div class="col-md-2 offset-md-8">
                                     {{csrf_field()}}
                                     <select class="form-control" id="regDataIns">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -1220,9 +1221,9 @@
                                 <div class="col-md-2 offset-md-8">
                                     {{csrf_field()}}
                                     <select class="form-control" id="regFind">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -1284,6 +1285,7 @@
                                         <option value="1,2,3" selected>Region 1</option>
                                         <option value="4,5,6">Region 2</option>
                                         <option value="7,8">Region 3</option>
+                                        <option value="10,11">Region 4</option>
                                     </select>
                                 </div>
 
@@ -1325,9 +1327,9 @@
                                 <div class="col-md-4">
                                     {{csrf_field()}}
                                     <select class="form-control" id="regGrafik">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -2144,6 +2146,26 @@
             s.classList.add("col-lg-4");
             m.classList.add("col-lg-4");
             n.classList.add("col-lg-4");
+        } else if (c === '4') {
+            s.style.display = "";
+            m.style.display = "";
+            l.style.display = "none";
+            n.style.display = "none";
+
+            resetClassList(s);
+            resetClassList(m);
+
+
+            thElement1.textContent = 'WILAYAH Inti';
+            thElement2.textContent = 'WILAYAH Plasma';
+
+            thElement1.classList.add("text-center");
+            thElement2.classList.add("text-center");
+
+
+            s.classList.add("col-lg-6");
+            m.classList.add("col-lg-6");
+
         }
     });
     //untuk chart
@@ -3541,44 +3563,44 @@
                     // }
                 });
 
-                // jika di regional 2 dan 3 hapus pt_mua nya untuk mut ancak
-                const arrays = [chart_btt,
-                    chart_buah,
-                    mtbuah_mentah,
-                    mtbuah_masak,
-                    mtbuah_over,
-                    mtbuah_abnr,
-                    mtbuah_ksong,
-                    mtbuah_vcut,
-                ];
-                const elementIds = [
-                    'pt_muabrd',
-                    'pt_muabuah',
-                    'pt_mua',
-                    'pt_mua',
-                    'pt_mua',
-                    'pt_mua',
-                    'pt_mua',
-                    'pt_mua'
-                ];
+                // // jika di regional 2 dan 3 hapus pt_mua nya untuk mut ancak
+                // const arrays = [chart_btt,
+                //     chart_buah,
+                //     mtbuah_mentah,
+                //     mtbuah_masak,
+                //     mtbuah_over,
+                //     mtbuah_abnr,
+                //     mtbuah_ksong,
+                //     mtbuah_vcut,
+                // ];
+                // const elementIds = [
+                //     'pt_muabrd',
+                //     'pt_muabuah',
+                //     'pt_mua',
+                //     'pt_mua',
+                //     'pt_mua',
+                //     'pt_mua',
+                //     'pt_mua',
+                //     'pt_mua'
+                // ];
 
-                if (regInpt === '2' || regInpt === '3') {
-                    arrays.forEach((arr, index) => {
-                        const elementIndex = arr.findIndex(element => element[0] === elementIds[index]);
-                        if (elementIndex !== -1) {
-                            arr.splice(elementIndex, 1);
-                        }
-                    });
-                } else {
-                    chart_btt;
-                    chart_buah;
-                    mtbuah_mentah;
-                    mtbuah_masak;
-                    mtbuah_over;
-                    mtbuah_abnr;
-                    mtbuah_ksong;
-                    mtbuah_vcut;
-                }
+                // if (regInpt === '2' || regInpt === '3') {
+                //     arrays.forEach((arr, index) => {
+                //         const elementIndex = arr.findIndex(element => element[0] === elementIds[index]);
+                //         if (elementIndex !== -1) {
+                //             arr.splice(elementIndex, 1);
+                //         }
+                //     });
+                // } else {
+                //     chart_btt;
+                //     chart_buah;
+                //     mtbuah_mentah;
+                //     mtbuah_masak;
+                //     mtbuah_over;
+                //     mtbuah_abnr;
+                //     mtbuah_ksong;
+                //     mtbuah_vcut;
+                // }
 
 
                 //chart
@@ -3764,31 +3786,46 @@
 
 
 
-                const arr = estate
-                const formatEst = arr
-                    .map((item, index) => {
-                        const value = item.split(',')[1];
-                        return {
-                            index,
-                            value
-                        };
-                    })
-                    .filter((item) => item.index < 13 || item.index > 15)
-                    .map((item) => item.value);
 
-                formatEst.push("PT.MUA");
+                const arr = estate;
+                let formatEst;
 
-                if (regInpt === '2' || regInpt === '3') {
+                if (regInpt === '1') {
+                    formatEst = Array.from(arr, (item, index) => {
+                            const value = item.split(',')[1];
+                            return {
+                                index,
+                                value
+                            };
+                        })
+                        .filter((item) => item.index < 13 || item.index > 15)
+                        .map((item) => item.value);
 
-
-                    const index = formatEst.indexOf('PT.MUA');
-                    if (index > -1) { // only splice formatEst when item is found
-                        formatEst.splice(index, 1); // 2nd parameter means remove one item only
-                    }
-
+                    formatEst.push("PT.MUA");
                 } else {
-                    formatEst;
+
+                    formatEst = Array.from(arr, (item, index) => {
+                            const value = item.split(',')[1];
+                            return {
+                                index,
+                                value
+                            };
+                        })
+                        .map((item) => item.value);
                 }
+
+
+                // if (regInpt === '2' || regInpt === '3' || regInpt === '4') {
+
+
+                //     const index = formatEst.indexOf('PT.MUA');
+                //     if (index > -1) { // only splice formatEst when item is found
+                //         formatEst.splice(index, 1); // 2nd parameter means remove one item only
+                //     }
+
+                // } else {
+                //     formatEst;
+                // }
 
                 // console.log(formatEst);
 
@@ -3805,6 +3842,9 @@
 
                 } else if (regInpt === '3') {
                     wilayahReg = ['WIL VII', 'WIL VIII']
+
+                } else if (regInpt === '4') {
+                    wilayahReg = ['WIL IX', 'WIL X']
 
                 }
 
@@ -3851,6 +3891,14 @@
                         '#3063EC',
                         '#3063EC',
                     ]
+                } else if (regInpt === '4') {
+                    colors = ['#00FF00',
+                        '#00FF00',
+                        '#00FF00',
+                        '#3063EC',
+                        '#3063EC',
+
+                    ]
                 }
 
                 chartGrain.updateSeries([{
@@ -3858,6 +3906,7 @@
                     data: brd_jjgJson,
 
                 }])
+
                 chartGrain.updateOptions({
                     xaxis: {
                         categories: formatEst
@@ -5351,6 +5400,26 @@
             sx.classList.add("col-lg-4");
             mx.classList.add("col-lg-4");
             nx.classList.add("col-lg-4");
+        } else if (cx === '4') {
+            sx.style.display = "";
+            mx.style.display = "";
+            lx.style.display = "none";
+            nx.style.display = "none";
+
+            resetClassList(sx);
+            resetClassList(mx);
+
+
+            thElement1x.textContent = 'WILAYAH Inti';
+            thElement2x.textContent = 'WILAYAH Plasma';
+
+            thElement1x.classList.add("text-center");
+            thElement2x.classList.add("text-center");
+
+
+            sx.classList.add("col-lg-6");
+            mx.classList.add("col-lg-6");
+
         }
     });
 
@@ -5386,6 +5455,11 @@
                 //list estate
                 var list_will = Object.entries(parseResult['list_estate']);
 
+                var text_values = list_will.map(function(entry) {
+                    return entry[1];
+                });
+
+                // console.log(text_values);
                 // //untuk chart
                 var chart_btt = Object.entries(parseResult['chart_brd'])
                 var chart_buah = Object.entries(parseResult['chart_buah'])
@@ -6466,29 +6540,31 @@
                     // }
                 });
 
-                if (regInpt === '2' || regInpt === '3') {
+                // if (regInpt === '2' || regInpt === '3') {
 
-                    const indexToDelete = chart_btt.findIndex(element => element[0] === 'pt_muabrd');
+                //     const indexToDelete = chart_btt.findIndex(element => element[0] === 'pt_muabrd');
 
-                    if (indexToDelete !== -1) {
-                        chart_btt.splice(indexToDelete, 1);
-                    }
-                    const indexToDeletes = chart_buah.findIndex(element => element[0] === 'pt_muabuah');
+                //     if (indexToDelete !== -1) {
+                //         chart_btt.splice(indexToDelete, 1);
+                //     }
+                //     const indexToDeletes = chart_buah.findIndex(element => element[0] === 'pt_muabuah');
 
-                    if (indexToDeletes !== -1) {
-                        chart_buah.splice(indexToDeletes, 1);
-                    }
+                //     if (indexToDeletes !== -1) {
+                //         chart_buah.splice(indexToDeletes, 1);
+                //     }
 
 
-                } else {
-                    chart_btt;
-                    chart_buah;
-                }
+                // } else {
+                //     chart_btt;
+                //     chart_buah;
+                // }
                 //chart
+
                 var wilayah = '['
                 list_will.forEach(element => {
                     wilayah += '"' + element + '",'
                 });
+
                 wilayah = wilayah.substring(0, wilayah.length - 1);
                 wilayah += ']'
 
@@ -6531,33 +6607,37 @@
                 var brd_wilJson = JSON.parse(bttWil)
                 var buah_wilJson = JSON.parse(bhWil)
 
-                const arr = estate
-                const formatEst = arr
-                    .map((item, index) => {
-                        const value = item.split(',')[1];
-                        return {
-                            index,
-                            value
-                        };
-                    })
-                    .filter((item) => item.index < 13 || item.index > 15)
-                    .map((item) => item.value);
 
-                formatEst.push("PT.MUA");
+                const arr = estate;
+                let formatEst;
 
-                if (regInpt === '2' || regInpt === '3') {
+                if (regInpt === '1') {
+                    formatEst = Array.from(arr, (item, index) => {
+                            const value = item.split(',')[1];
+                            return {
+                                index,
+                                value
+                            };
+                        })
+                        .filter((item) => item.index < 13 || item.index > 15)
+                        .map((item) => item.value);
 
-
-                    const index = formatEst.indexOf('PT.MUA');
-                    if (index > -1) { // only splice formatEst when item is found
-                        formatEst.splice(index, 1); // 2nd parameter means remove one item only
-                    }
-
+                    formatEst.push("PT.MUA");
                 } else {
-                    formatEst;
+
+                    formatEst = Array.from(arr, (item, index) => {
+                            const value = item.split(',')[1];
+                            return {
+                                index,
+                                value
+                            };
+                        })
+                        .map((item) => item.value);
                 }
 
                 // console.log(formatEst);
+
+
 
 
                 // let regInpt = reg;
@@ -6572,6 +6652,9 @@
 
                 } else if (regInpt === '3') {
                     wilayahReg = ['WIL VII', 'WIL VIII']
+
+                } else if (regInpt === '4') {
+                    wilayahReg = ['WIL IX', 'WIL X']
 
                 }
 
@@ -6616,6 +6699,14 @@
                         '#3063EC',
                         '#3063EC',
                         '#3063EC',
+                    ]
+                } else if (regInpt === '4') {
+                    colors = ['#00FF00',
+                        '#00FF00',
+                        '#00FF00',
+                        '#3063EC',
+                        '#3063EC',
+
                     ]
                 }
 
@@ -7245,6 +7336,9 @@
         } else if (regionalValue == 3) {
             minWilayah = 7;
             maxWilayah = 8;
+        } else if (regionalValue == 4) {
+            minWilayah = 10;
+            maxWilayah = 11;
         }
 
         // Populate the options for the wilayah preset filter

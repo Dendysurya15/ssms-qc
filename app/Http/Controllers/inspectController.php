@@ -2072,7 +2072,6 @@ class inspectController extends Controller
     {
 
         
-
         // end latihan 
         $queryEst = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
@@ -2194,7 +2193,7 @@ class inspectController extends Controller
         $querySidak = DB::connection('mysql2')->table('mutu_transport')
             ->select("mutu_transport.*")
             // ->where('datetime', 'like', '%' . $getDate . '%')
-            ->where('datetime', 'like', '%' .  '2023-02' . '%')
+            ->where('datetime', 'like', '%' .  '2023-05' . '%')
             ->get();
         $DataEstate = $querySidak->groupBy(['estate', 'afdeling']);
         // dd($DataEstate);
@@ -2222,7 +2221,13 @@ class inspectController extends Controller
             ->get();
 
         $queryAfd = json_decode($queryAfd, true);
-        $queryEste = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->get();
+        $queryEste = DB::connection('mysql2')->table('estate')
+        ->select('estate.*')
+        ->join('wil', 'wil.id', '=', 'estate.wil')
+        ->where('wil.regional', 4)
+        ->get();
+
+        // ->whereIn('wil', [1, 2, 3])->get();
         $queryEste = json_decode($queryEste, true);
 
         $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -2302,7 +2307,7 @@ class inspectController extends Controller
         ///perhitungan untuk table ngitung perhwilayah
         //membuat table wilayah untuk mutu ancak
 
-        // dd($bulanMTancak);
+        // dd($defaultNew);
         // dd($defaultDataPerBulan, $defaultNew);
 
         $dataTahunEst = array();
@@ -3798,8 +3803,15 @@ class inspectController extends Controller
             $groupedArray[$wil][] = $item['est'];
         }
     
+        $optionREg = DB::connection('mysql2')->table('reg')
+        ->select('reg.*')
+        ->whereNotIn('reg.id', [5])
+        // ->where('wil.regional', 1)
+        ->get();
     
-        //  dd($groupedArray);
+
+        $optionREg = json_decode($optionREg, true);
+        //  dd($optionREg);
         // dd($dataSkor_ancak, $dataSkor_trans, $dataSkor_ancak);
         return view('dashboard_inspeksi', [
             'dataRaw' => $dataRaw,
@@ -3823,7 +3835,8 @@ class inspectController extends Controller
             'dataTahunEst' => $dataTahunEst,
             'FinalTahun' => $FinalTahun,
             'datefilter' => $years,
-            'groupedArray' => $groupedArray
+            'groupedArray' => $groupedArray,
+            'option_reg' => $optionREg
         ]);
     }
 
@@ -7962,9 +7975,12 @@ class inspectController extends Controller
 
         //membagi tiap tiap wilayah ke 1 2 dan 3
 
-        $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7];;
-        $Wil2 = $RankingFinal[2] ?? $RankingFinal[5] ?? $RankingFinal[8];;
-        $Wil3 = $RankingFinal[3] ?? $RankingFinal[6] ?? $RankingFinal[8];;
+        $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7] ?? $RankingFinal[10] ;
+        $Wil2 = $RankingFinal[2] ?? $RankingFinal[5] ?? $RankingFinal[8] ?? $RankingFinal[11];
+        $Wil3 = $RankingFinal[3] ?? $RankingFinal[6] ?? $RankingFinal[8] ?? $RankingFinal[11];
+
+  
+        // dd($Wil1);
 
         //buat tabel plasma 
 
@@ -9414,15 +9430,19 @@ class inspectController extends Controller
 
         $PlsamaGMEM = array_values($PlsamaGMEM);
 
+        // dd($rankingPlasma);
         $plasmaGM = array();
         $namaGM = '-';
+        $GM = 'GM';
+        $skor = 0;
+        $est = '';
+
         foreach ($rankingPlasma as $key => $value) {
-            if (is_array($value)) {
+            if (is_array($value) && isset($value['Plasma'])) {
                 $inc = 0;
                 $est = $key;
                 $skor = $value['Plasma'];
-                $GM = 'GM';
-                // dd($value);
+
                 foreach ($queryAsisten as $key4 => $value4) {
                     if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $GM) {
                         $namaGM = $value4['nama'];
@@ -9437,10 +9457,10 @@ class inspectController extends Controller
             'afd' => $GM,
             'namaEM' => $namaGM,
             'Skor' => $skor,
-
         );
 
         $plasmaGM = array_values($plasmaGM);
+
 
 
 
@@ -9803,9 +9823,17 @@ class inspectController extends Controller
          }
  
          
-        // dd($mtTranstab1Wil_reg,$chrTransbuahv2);
+  
+       // Check if $Reg is not equal to 1 or '1'
+        if ($Reg != 1 && $Reg != '1') {
+            unset($result_brd['pt_muabrd']);
+            unset($result_buah['pt_muabuah']);
+        }
+        
+
+
         $arrView = array();
-        // dd($result_brd);
+        // dd($result_buah,$result_brd);
         $arrView['chart_brd'] = $result_brd;
         $arrView['chart_buah'] = $result_buah;
         $arrView['chart_brdwil'] =  $chartPerwil;
@@ -24012,10 +24040,9 @@ class inspectController extends Controller
 
 
         //membagi tiap tiap wilayah ke 1 2 dan 3
-
-        $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7];;
-        $Wil2 = $RankingFinal[2] ?? $RankingFinal[5] ?? $RankingFinal[8];;
-        $Wil3 = $RankingFinal[3] ?? $RankingFinal[6] ?? $RankingFinal[8];;
+        $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7] ?? $RankingFinal[10] ;
+        $Wil2 = $RankingFinal[2] ?? $RankingFinal[5] ?? $RankingFinal[8] ?? $RankingFinal[11];
+        $Wil3 = $RankingFinal[3] ?? $RankingFinal[6] ?? $RankingFinal[8] ?? $RankingFinal[11];
 
         //buat tabel plasma 
 
@@ -25480,15 +25507,18 @@ class inspectController extends Controller
 
         $PlsamaGMEM = array_values($PlsamaGMEM);
 
-        $plasmaGM = array();
+        $plasmaGM = array();$plasmaGM = array();
         $namaGM = '-';
+        $GM = 'GM';
+        $skor = 0;
+        $est = '';
+
         foreach ($rankingPlasma as $key => $value) {
-            if (is_array($value)) {
+            if (is_array($value) && isset($value['Plasma'])) {
                 $inc = 0;
                 $est = $key;
                 $skor = $value['Plasma'];
-                $GM = 'GM';
-                // dd($value);
+
                 foreach ($queryAsisten as $key4 => $value4) {
                     if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $GM) {
                         $namaGM = $value4['nama'];
@@ -25503,7 +25533,6 @@ class inspectController extends Controller
             'afd' => $GM,
             'namaEM' => $namaGM,
             'Skor' => $skor,
-
         );
 
         $plasmaGM = array_values($plasmaGM);
@@ -25841,7 +25870,10 @@ class inspectController extends Controller
             $WilTransBuah[$key] = $value['total_buahPerTPH'];
         }
 
-        
+        if ($RegData != 1 && $RegData != '1') {
+            unset($result_brd['pt_muabrd']);
+            unset($result_buah['pt_muabuah']);
+        }
        // dd($mtTranstab1Wil_reg,$chrTransbuahv2);
        $arrView = array();
        // dd($result_brd);
