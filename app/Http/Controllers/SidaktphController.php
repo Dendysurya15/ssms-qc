@@ -204,9 +204,24 @@ class SidaktphController extends Controller
             }
         }
         // dd($dataSkorPlas);
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->whereNotIn('reg.id', [5])
+            // ->where('wil.regional', 1)
+            ->get();
 
-        return view('dashboardtph', ['list_estate' => $queryEst, 'list_wilayah' => $queryWill, 'optYear' => $optYear, 'list_month' => $listMonth]);
+
+        $optionREg = json_decode($optionREg, true);
+        return view('dashboardtph', [
+            'list_estate' => $queryEst,
+            'list_wilayah' => $queryWill,
+            'optYear' => $optYear,
+            'list_month' => $listMonth,
+            'option_reg' => $optionREg
+        ]);
     }
+
+
 
     public function changeDataTph(Request $request)
     {
@@ -559,7 +574,6 @@ class SidaktphController extends Controller
         exit();
     }
 
-    // chart ajax brondolan tinggal dan pencarian berdasarkan minggu
     public function getBtTph(Request $request)
     {
         $regSidak = $request->get('reg');
@@ -1052,6 +1066,10 @@ class SidaktphController extends Controller
                         $estWil = 'WIL-VII';
                     } elseif ($key == 8) {
                         $estWil = 'WIL-VIII';
+                    } elseif ($key == 10) {
+                        $estWil = 'WIL-IX';
+                    } elseif ($key == 11) {
+                        $estWil = 'WIL-X';
                     }
 
                     // get nama value from queryAsisten1
@@ -1649,10 +1667,18 @@ class SidaktphController extends Controller
                 ->table('wil')
                 ->whereIn('regional', [$regSidak])
                 ->pluck('nama');
+            $list_all_will = changeKTE4ToKTE($list_all_will);
+            // dd($result);
 
+
+            $list_all_est = BpthKTE($list_all_est);
+            // dd($result);
+
+
+            $queryWill = list_wil($queryWill);
             $arrView = [];
 
-            // $arrView['list_estate'] = $queryEst;y
+            // $arrView['list_estate'] = $queryEst;
             $arrView['list_wilayah'] = $queryWill;
             $arrView['list_wilayah2'] = $queryWilChart;
             // $arrView['restant'] = $dataSkorAwalRestant;
@@ -1709,6 +1735,7 @@ class SidaktphController extends Controller
                 }
             }
             $keys = array_keys($arrRSest);
+            $keys = updateKeyRecursive2($keys);
             // masukan ke array data penjumlahan dari estate
             // dd($arrBtTPHperEst, $arrKRest, $arrBHest, $arrRSest, $keys);
             $arrView['estate_new'] = $keys;
@@ -2232,6 +2259,10 @@ class SidaktphController extends Controller
                         $estWil = 'WIL-VII';
                     } elseif ($key == 8) {
                         $estWil = 'WIL-VIII';
+                    } elseif ($key == 10) {
+                        $estWil = 'WIL-IX';
+                    } elseif ($key == 11) {
+                        $estWil = 'WIL-X';
                     }
 
                     // get nama value from queryAsisten1
@@ -2807,6 +2838,15 @@ class SidaktphController extends Controller
 
             $arrView = [];
 
+            $list_all_will = changeKTE4ToKTE($list_all_will);
+            // dd($result);
+
+
+            $list_all_est = BpthKTE($list_all_est);
+            // dd($result);
+
+
+            $queryWill = list_wil($queryWill);
 
             $arrView['list_wilayah'] = $queryWill;
             $arrView['list_wilayah2'] = $queryWilChart;
@@ -2863,6 +2903,9 @@ class SidaktphController extends Controller
                 }
             }
             $keys = array_keys($arrRSest);
+
+            $keys = updateKeyRecursive2($keys);
+            // dd($keys);
             // masukan ke array data penjumlahan dari estate
             // dd($arrBtTPHperEst, $arrKRest, $arrBHest, $arrRSest, $keys);
             $arrView['estate_new'] = $keys;
@@ -2880,7 +2923,6 @@ class SidaktphController extends Controller
             exit();
         }
     }
-
     public function getBtTphYear(Request $request)
     {
         $regSidak = $request->get('reg');
@@ -3371,8 +3413,11 @@ class SidaktphController extends Controller
                         $estWil = 'WIL-VII';
                     } elseif ($key == 8) {
                         $estWil = 'WIL-VIII';
+                    } elseif ($key == 10) {
+                        $estWil = 'WIL-IX';
+                    } elseif ($key == 11) {
+                        $estWil = 'WIL-X';
                     }
-
                     // get nama value from queryAsisten1
                     $namaGM = '-';
                     foreach ($queryAsisten1 as $asisten) {
@@ -3970,7 +4015,17 @@ class SidaktphController extends Controller
                 ->pluck('nama');
 
             $arrView = [];
+            $list_all_will = changeKTE4ToKTE($list_all_will);
+            // dd($result);
 
+
+            $list_all_est = BpthKTE($list_all_est);
+            // dd($result);
+
+
+            $queryWill = list_wil($queryWill);
+
+            // dd($list_all_will);
             $arrView['list_estate'] = $queryEst;
             $arrView['list_wilayah'] = $queryWill;
             $arrView['list_wilayah2'] = $queryWilChart;
@@ -4709,6 +4764,8 @@ class SidaktphController extends Controller
         exit();
     }
 
+
+
     public function updateBASidakTPH(Request $request)
     {
 
@@ -4892,7 +4949,7 @@ class SidaktphController extends Controller
         $pdf['restan_unreported'] = $totalunr;
         $pdf['blok_restan'] = $totalblok != 0 ? round($totalunr / $totalblok, 2) : 0;
 
-        dd($pdf);
+        // dd($pdf);
         $arrView = array();
         $arrView['hitung'] =  $pdf;
 

@@ -155,9 +155,9 @@
                 <div class="col-md-2 offset-md-8">
                   {{csrf_field()}}
                   <select class="form-control" name="regionalSidakMonth" id="regionalSidakMonth">
-                    <option value="1" selected>Regional 1</option>
-                    <option value="2">Regional 2</option>
-                    <option value="3">Regional 3</option>
+                    @foreach($option_reg as $key => $item)
+                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                    @endforeach
                   </select>
                 </div>
 
@@ -445,9 +445,9 @@
                   <div class="col-lg-2 col-md-4 col-sm-6 col-6 offset-lg-8 offset-md-4 offset-sm-0 offset-3 form-container">
                     {{csrf_field()}}
                     <select class="form-control" name="regionalSidak" id="regionalSidak">
-                      <option value="1" selected>Regional 1</option>
-                      <option value="2">Regional 2</option>
-                      <option value="3">Regional 3</option>
+                      @foreach($option_reg as $key => $item)
+                      <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                      @endforeach
                     </select>
                   </div>
 
@@ -711,9 +711,9 @@
                 <div class="col-md-2 offset-md-8">
                   {{csrf_field()}}
                   <select class="form-control" id="regDataTph">
-                    <option value="1" selected>Regional 1</option>
-                    <option value="2">Regional 2</option>
-                    <option value="3">Regional 3</option>
+                    @foreach($option_reg as $key => $item)
+                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                    @endforeach
                   </select>
                 </div>
 
@@ -802,9 +802,9 @@
                 <div class="col-md-2 offset-md-8">
                   {{csrf_field()}}
                   <select class="form-control" name="regionalSidakYear" id="regionalSidakYear">
-                    <option value="1" selected>Regional 1</option>
-                    <option value="2">Regional 2</option>
-                    <option value="3">Regional 3</option>
+                    @foreach($option_reg as $key => $item)
+                    <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                    @endforeach
                   </select>
                 </div>
 
@@ -1378,6 +1378,24 @@
         element3.classList.add("col-md-6", "col-lg-3");
         element4.classList.remove("col-md-6", "col-lg-4");
         element4.classList.add("col-md-6", "col-lg-3");
+      } else if (regSidak === '4') {
+        element1.style.display = "";
+        element2.style.display = "";
+        element3.style.display = "none";
+        element4.style.display = "none";
+        thElement1.textContent = 'WILAYAH Inti';
+        thElement2.textContent = 'WILAYAH Plasma';
+        // thElement3.textContent = 'WILAYAH VI';
+        // thElement4.textContent = 'Plasma2';
+        thElement1.classList.add("text-center");
+        thElement2.classList.add("text-center");
+        // thElement3.classList.add("text-center");
+        // thElement4.classList.add("text-center");
+        element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element1.classList.add("col-md-6", "col-lg-6");
+        element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element2.classList.add("col-md-6", "col-lg-6");
+
       }
     }
 
@@ -1452,6 +1470,24 @@
         element3.classList.add("col-md-6", "col-lg-3");
         element4.classList.remove("col-md-6", "col-lg-4");
         element4.classList.add("col-md-6", "col-lg-3");
+      } else if (regSidak === '4') {
+        element1.style.display = "";
+        element2.style.display = "";
+        element3.style.display = "none";
+        element4.style.display = "none";
+        thElement1.textContent = 'WILAYAH Inti';
+        thElement2.textContent = 'WILAYAH Plasma';
+        // thElement3.textContent = 'WILAYAH VI';
+        // thElement4.textContent = 'Plasma2';
+        thElement1.classList.add("text-center");
+        thElement2.classList.add("text-center");
+        // thElement3.classList.add("text-center");
+        // thElement4.classList.add("text-center");
+        element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element1.classList.add("col-md-6", "col-lg-6");
+        element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element2.classList.add("col-md-6", "col-lg-6");
+
       }
     }
 
@@ -1510,6 +1546,24 @@
         element2.classList.add("col-md-6", "col-lg-4");
         element3.classList.remove("col-md-6", "col-lg-3");
         element3.classList.add("col-md-6", "col-lg-4");
+      } else if (regSidak === '4') {
+        element1.style.display = "";
+        element2.style.display = "";
+        element3.style.display = "none";
+        element4.style.display = "none";
+        thElement1.textContent = 'WILAYAH Inti';
+        thElement2.textContent = 'WILAYAH Plasma';
+        // thElement3.textContent = 'WILAYAH VI';
+        // thElement4.textContent = 'Plasma2';
+        thElement1.classList.add("text-center");
+        thElement2.classList.add("text-center");
+        // thElement3.classList.add("text-center");
+        // thElement4.classList.add("text-center");
+        element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element1.classList.add("col-md-6", "col-lg-6");
+        element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element2.classList.add("col-md-6", "col-lg-6");
+
       }
     }
 
@@ -5110,6 +5164,23 @@
 
     function handleFilterShow(filterShowValue) {
       // Implement your filtering logic here, if necessary
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const selectedTab = localStorage.getItem('selectedTab');
+
+    if (selectedTab) {
+      // Get the tab element
+      const tabElement = document.getElementById(selectedTab);
+
+      if (tabElement) {
+        // Click the tab to activate it
+        tabElement.click();
+      }
+
+      // Clear the selectedTab value from local storage
+      localStorage.removeItem('selectedTab');
     }
   });
 </script>

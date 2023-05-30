@@ -112,6 +112,69 @@
         <td>{{check_array('PerPSMA', $value)}}</td>
         <td>{{skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
         <td>{{skor_brd_ma(check_array('btr_jjg_ma', $value)) + skor_buah_Ma(check_array('jjg_tgl_ma', $value)) + skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
+
+        @if($regional == 2 || $regional == '2')
+        @foreach ($tph_trans as $keys => $value)
+        @if($key3 == $keys)
+        @foreach ($value as $keys1 => $value1)
+        @if($keys1 == $key)
+        @foreach ($value1 as $keys2 => $value2)
+        @if($keys2 == $key2)
+        <td>{{$value2['tph_sample']}}</td>
+        <td>{{$value2['bt_total']}}</td>
+        <td>{{$value2['skor']}}</td>
+        <td>{{skor_brd_tinggal($value2['skor'])}}</td>
+        <td>{{$value2['restan_total']}}</td>
+        <td>{{$value2['skor_restan']}}</td>
+        <td>{{skor_buah_tinggal($value2['skor_restan'])}}</td>
+        <td>{{skor_buah_tinggal($value2['skor_restan']) + skor_brd_tinggal($value2['skor'])}}</td>
+
+        <td>{{$value2['blok_mb']}}</td>
+        <td>{{$value2['jml_janjang']}}</td>
+        <td>{{$value2['jml_mentah']}}</td>
+        <td>{{$value2['PersenBuahMentah']}}</td>
+        <td>{{skor_buah_mentah_mb($value2['PersenBuahMentah'])}}</td>
+
+        <td>{{$value2['jml_masak']}}</td>
+        <td>{{$value2['PersenBuahMasak']}}</td>
+        <td>{{skor_buah_masak_mb($value2['PersenBuahMasak'])}}</td>
+
+        <td>{{$value2['jml_over']}}</td>
+        <td>{{$value2['PersenBuahOver']}}</td>
+        <td>{{skor_buah_over_mb($value2['PersenBuahOver'])}}</td>
+
+        <td>{{$value2['jml_empty']}}</td>
+        <td>{{$value2['PersenPerJanjang']}}</td>
+        <td>{{skor_jangkos_mb($value2['PersenPerJanjang'])}}</td>
+
+        <td>{{$value2['jml_vcut']}}</td>
+        <td>{{$value2['PersenVcut']}}</td>
+        <td>{{skor_buah_over_mb($value2['PersenVcut'])}}</td>
+
+        <td>{{$value2['jml_abnormal']}}</td>
+        <td>{{$value2['PersenAbr']}}</td>
+
+        <td>{{$value2['alas_mb']}} / {{$value2['blok_mb']}}</td>
+        <td>{{$value2['PersenKrgBrd']}}</td>
+        <td>{{skor_abr_mb($value2['PersenKrgBrd'])}}</td>
+
+        <td>{{
+            skor_buah_mentah_mb($value2['PersenBuahMentah']) +
+            skor_buah_masak_mb($value2['PersenBuahMasak']) +
+            skor_buah_over_mb($value2['PersenBuahOver']) +
+            skor_jangkos_mb($value2['PersenPerJanjang']) +
+            skor_buah_over_mb($value2['PersenVcut']) +
+            skor_abr_mb($value2['PersenKrgBrd']) 
+        }}</td>
+
+
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @else
         <td>{{check_array('tph_sample', $value)}}</td>
         <td>{{check_array('bt_total', $value)}}</td>
         <td>{{check_array('skor', $value)}}</td>
@@ -119,8 +182,8 @@
         <td>{{check_array('restan_total', $value)}}</td>
         <td>{{check_array('skor_restan', $value)}}</td>
         <td>{{skor_buah_tinggal(check_array('skor_restan', $value))}}</td>
-        <td>{{ skor_brd_tinggal(check_array('skor', $value)) +
-            skor_buah_tinggal(check_array('skor_restan', $value)) }}</td>
+        <td>{{ skor_brd_tinggal(check_array('skor', $value)) + skor_buah_tinggal(check_array('skor_restan', $value)) }}</td>
+
         {{-- Bagian Mutu Buah - Buah Mentah --}}
         <td>{{check_array('blok_mb', $value)}}</td>
         <td>{{check_array('jml_janjang', $value)}}</td>
@@ -156,7 +219,43 @@
             skor_jangkos_mb(check_array('PersenPerJanjang', $value)) +
             skor_buah_over_mb(check_array('PersenVcut', $value)) +
             skor_abr_mb(check_array('PersenKrgBrd', $value))}}</td>
+        @endif
+
+
+
+
+        @if($regional == 2 || $regional == '2')
+        @foreach ($tph_trans as $keys => $value)
+        @if($key3 == $keys)
+        @foreach ($value as $keys1 => $value1)
+        @if($keys1 == $key)
+        @foreach ($value1 as $keys2 => $value2)
+        @if($keys2 == $key2)
+
+        <td bgcolor="{{ $skor_kategori_akhir[0] }}">
+            {{skor_brd_ma($value2['btr_jjg_ma']) + skor_buah_Ma($value2['jjg_tgl_ma']) +  skor_palepah_ma($value2['PerPSMA']) 
+            +
+          skor_buah_tinggal($value2['skor_restan']) + skor_brd_tinggal($value2['skor']) 
+            +
+           skor_buah_mentah_mb($value2['PersenBuahMentah']) +
+            skor_buah_masak_mb($value2['PersenBuahMasak']) +
+            skor_buah_over_mb($value2['PersenBuahOver']) +
+            skor_jangkos_mb($value2['PersenPerJanjang']) +
+            skor_buah_over_mb($value2['PersenVcut']) +
+            skor_abr_mb($value2['PersenKrgBrd']) }}
+
+
+        </td>
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @else
         <td bgcolor="{{ $skor_kategori_akhir[0] }}">{{ $totalSkorAkhir }}</td>
+        @endif
+
         <td bgcolor="{{ $skor_kategori_akhir[0] }}">{{ $skor_kategori_akhir[1] }}</td>
     </tr>
     @endif
@@ -199,6 +298,28 @@
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('PerPSMA_est', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{skor_brd_ma(check_array('btr_jjg_ma_est', $item)) + skor_buah_Ma(check_array('jjg_tgl_ma_est', $item)) + skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
+
+        @if($regional == 2 || $regional == '2')
+        @foreach ($tph_trans as $keys => $value)
+        @if($key3 == $keys)
+        @foreach ($value as $keys1 => $value1)
+        @if($keys1 == $key)
+
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['tph_tod']}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['total_bt']}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['bt_tph']}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['scorre_bt']}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['total_rst']}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['rst_tph']}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['scorre_rst']}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{$value1['scorre_rst'] + $value1['scorre_bt'] }} </td>
+
+
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @else
         <td style="background-color : #b0d48c; color: #000000;">
             {{check_array('tph_sample_total', $item)}}
         </td>
@@ -226,6 +347,15 @@
             $item))+skor_buah_tinggal(check_array('jjg_tph_total', $item))
             }}
         </td>
+        @endif
+
+
+
+
+
+
+
+
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('tot_blok', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">
             {{check_array('tot_jjg', $item)}}
@@ -360,6 +490,22 @@
         <td style="background-color : yellow; color: #000000;">{{ $PerPSMA_wil }}</td>
         <td style="background-color : yellow; color: #000000;">{{skor_palepah_ma($PerPSMA_wil)}}</td>
         <td style="background-color : yellow; color: #000000;">{{skor_brd_ma($btr_jjg_ma_wil) + skor_buah_Ma($bt_jjg_ma_wil) + skor_palepah_ma($PerPSMA_wil)}}</td>
+
+        @if($regional == 2 || $regional == '2')
+        @foreach ($tph_trans as $keys => $value)
+        @if($key3 == $keys)
+
+        <td style="background-color : yellow; color: #000000;">{{$value['tph_tod']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$value['total_bt']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$value['bt_tph']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$value['scorre_bt']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$value['total_rst']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$value['rst_tph']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$value['score_rst']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$value['score_rst'] + $value['scorre_bt'] }} </td>
+        @endif
+        @endforeach
+        @else
         <td style="background-color : yellow; color: #000000;">{{ $tph_total_wil }}
         </td>
         <td style="background-color : yellow; color: #000000;">{{ $bt_total_wil }}
@@ -381,6 +527,12 @@
         <td style="background-color : yellow; color: #000000;">{{
             skor_brd_tinggal($bt_tph_total_wil)+skor_buah_tinggal($jjg_tph_total_wil)}}
         </td>
+        @endif
+
+
+
+
+
         <td style="background-color : yellow; color: #000000;">{{$blok_mb}}</td>
         <td style="background-color : yellow; color: #000000;">{{
             $tot_jjg_wil}}
@@ -461,14 +613,59 @@
     @endif
     @endforeach
 
-    <!-- //plasma  -->
+
+
+    @if($regional == 2 || $regional == '2')
+
+    <tr style="border: none;">
+        <td colspan="32" style="background-color : #fff;">&nbsp;</td>
+    </tr>
+
+    @foreach ($dataSkor_ancak as $key => $ancak)
+    @foreach ($ancak as $key2 => $ancak1)
+
+    @foreach ($ancak1 as $key3 => $ancak2)
+    <tr>
+        <td>{{ $key2 }}</td>
+        <td><a href="dataDetail/{{$key2}}/{{$key3}}/{{$tanggal}}/{{$regional}}">{{$key3}}</a></td>
+        <td>{{ $ancak2['jml_pokok_sampel'] }}</td>
+        <td>{{ $ancak2['luas_ha'] }}</td>
+        <td>{{ $ancak2['jml_jjg_panen'] }}</td>
+        <td>{{ $ancak2['akp_real'] }}</td>
+        <td>{{ $ancak2['p_ma'] }}</td>
+        <td>{{ $ancak2['k_ma'] }}</td>
+        <td>{{ $ancak2['gl_ma'] }}</td>
+        <td>{{ $ancak2['total_brd_ma'] }}</td>
+        <td>{{ $ancak2['btr_jjg_ma'] }}</td>
+        <td>{{ $ancak2['Skor_brd'] }}</td>
+        <td>{{ $ancak2['bhts_ma'] }}</td>
+        <td>{{ $ancak2['bhtm1_ma'] }}</td>
+        <td>{{ $ancak2['bhtm2_ma'] }}</td>
+        <td>{{ $ancak2['bhtm3_ma'] }}</td>
+        <td>{{ $ancak2['tot_jjg_ma'] }}</td>
+        <td>{{ $ancak2['jjg_tgl_ma'] }}</td>
+        <td>{{ $ancak2['Skor_buah'] }}</td>
+        <td>{{ $ancak2['ps_ma'] }}</td>
+        <td>{{ $ancak2['PerPSMA'] }}</td>
+        <td>{{ $ancak2['Skor_ps'] }}</td>
+
+    </tr>
+    @endforeach
+
+    @endforeach
+    @endforeach
+
+
+
+    @else
+
     <tr style="border: none;">
         <td colspan="32" style="background-color : #fff;">&nbsp;</td>
     </tr>
     @foreach ($dataSkor_ancak as $key => $itemx)
     @foreach ($itemx as $key2 => $plasma)
     @foreach ($plasma as $key3 => $item2)
-    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III")
+    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III" || $key3 == "WIL-IV" || $key3 == "WIL-V")
     @php
     $skor_kategori_akhirx = skor_kategori_akhir(check_array('allSkor', $item2));
     $total_skorAncak = $item2['Skor_brd'] + $item2['Skor_buah'] + $item2['Skor_ps'];
@@ -507,7 +704,25 @@
 
         $total_skortrans = $itemx3['Skor_bt'] + $itemx3['Skor_tph'];
         @endphp
+        @if($regional == 2 || $regional == '2')
+        @foreach ($plasma_tph as $keys => $value)
+        @if($trans == $keys)
+        @foreach ($value as $keys1 => $value1)
+        @if($keys1 == $trans1)
+        @foreach ($value1 as $keys2 => $value2)
+        @if($keys2 == $trans2)
+        <td id="trans_tph">{{$value2['tph_sample']}}</td>
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @else
         <td>{{ $itemx3['tph_sample'] }}</td>
+        @endif
+
+
         <td>{{ $itemx3['bt_total'] }}</td>
         <td>{{ $itemx3['bt_tph'] }}</td>
         <td>{{ $itemx3['Skor_bt'] }}</td>
@@ -608,6 +823,26 @@
         @php
         $skor_totaltrans = skor_brd_tinggal($itemx2['bt_tph_total']) + skor_buah_tinggal($itemx2['jjg_tph_total']) ;
         @endphp
+
+        @if($regional == 2 || $regional == '2')
+        @foreach ($plasma_tph as $keys => $value)
+        @if($trans == $keys)
+        @foreach ($value as $keys1 => $value1)
+        @if($keys1 == $trans1)
+
+        <td style="background-color : yellow; color: #000000;">{{ $value1['tph_tod'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['total_bt'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['bt_tph'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_bt'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['total_rst'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['rst_tph'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] }}</td>
+
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @else
         <td style="background-color : yellow; color: #000000;">{{ $itemx2['tph_sample_total'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $itemx2['bt_total'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $itemx2['bt_tph_total'] }}</td>
@@ -617,6 +852,12 @@
         <td style="background-color : yellow; color: #000000;">{{ $itemx2['jjg_tph_total'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ skor_buah_tinggal($itemx2['jjg_tph_total']) }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $skor_totaltrans }}</td>
+        @endif
+
+
+
+
+
         @endif
 
         @endforeach
@@ -659,11 +900,14 @@
         <td style="background-color: {{ $grand_total_skor_kategori[0] }};">{{ $grand_total_skor }}</td>
         <td style="background-color: {{ $skor_kategori_akhirx[0] }};">{{ $skor_kategori_akhirx[1] }}</td>
         @endif
-
         @endforeach
         @endforeach
 
     </tr>
     @endforeach
     @endforeach
+
+
+
+    @endif
 </body>

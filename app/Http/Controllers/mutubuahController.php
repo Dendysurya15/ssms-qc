@@ -176,6 +176,21 @@ class mutubuahController extends Controller
             }
         }
 
+        $mtancakWIltab1 = array();
+        foreach ($queryEste as $key => $value) {
+            foreach ($defPerbulanWilv2 as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtancakWIltab1[$value['wil']][$key2] = array_merge($mtancakWIltab1[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+
+        $RegsTRy = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->get();
+        $RegsTRy = json_decode($RegsTRy, true);
+        // dd($RegsTRy);
 
 
         foreach ($defPerbulanWilv2 as $estateKey => $afdelingArray) {
@@ -669,8 +684,15 @@ class mutubuahController extends Controller
         ];
 
 
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->whereNotIn('reg.id', [5])
+            // ->where('wil.regional', 1)
+            ->get();
 
-        // dd($regional_arrays);
+
+        $optionREg = json_decode($optionREg, true);
+        // dd($optionREg);
 
         // dd($mutu_buahs, $sidak_buah);
         // $arrView['list_bulan'] =  $bulan;
@@ -680,7 +702,8 @@ class mutubuahController extends Controller
             'arrHeaderTrd' => $arrHeaderTrd,
             'arrHeaderReg' => $arrHeaderReg,
             'list_bulan' => $bulan,
-            'list_tahun' => $years
+            'list_tahun' => $years,
+            'option_reg' => $optionREg,
         ]);
     }
 
@@ -697,7 +720,7 @@ class mutubuahController extends Controller
 
         $queryAsisten = json_decode($queryAsisten, true);
 
-        // dd($startDate, $endDate);
+        // dd($value2['datetime'], $endDate);
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->join('wil', 'wil.id', '=', 'estate.wil')
@@ -1699,6 +1722,10 @@ class mutubuahController extends Controller
             $regArr[$key]['skor_kr'] = sidak_PengBRD($per_krEST);
             $regArr[$key]['all_skorYear'] = $allSkorEST;
             $regArr[$key]['kategori'] = sidak_akhir($allSkorEST);
+
+            // foreach ($variable as $key => $value) {
+            //     # code...
+            // }
         }
         // dd($regArr);
 
@@ -1780,8 +1807,65 @@ class mutubuahController extends Controller
         }
         // dd($persen_jjgMtang_values, $persen_lwtMtng_values);
 
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->where('reg.id', $regional)
+            // ->where('wil.regional', 1)
+            ->get();
 
-        // dd($mutu_buah);
+
+        $optionReg = json_decode($optionREg, true);
+
+        // $regional = array();
+        // foreach ($optionReg as $key => $value) {
+        //     $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+        //     $value['nama'] = str_replace(' ', '', $value['nama']);
+        //     $value['nama'] = strtoupper($value['nama']);
+        //     $regional[] = $value;
+        //     $regional[$key]['jabatan'] = 'RH';
+        //     $regional['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        // }
+
+
+
+        // foreach ($regional as $key => $value) {
+        //     $regional[$key]['nama_rh'] = '-';
+        //     foreach ($queryAsisten as $ast => $asisten) {
+        //         if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+        //             $regional[$key]['nama_rh'] = $asisten['nama'];
+        //             break; // exit the inner loop since a match is found
+        //         }
+        //     }
+        // }
+
+        $regional = array();
+        foreach ($optionReg as $key => $value) {
+            $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+            $value['nama'] = str_replace(' ', '', $value['nama']);
+            $value['nama'] = strtoupper($value['nama']);
+            $regional[$key] = $value;
+            $regional[$key]['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        }
+
+        foreach ($regional as $key => $value) {
+            $regional[$key]['nama_rh'] = '-';
+            foreach ($queryAsisten as $ast => $asisten) {
+                // dd($value['nama']);
+                if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+                    $regional[$key]['nama_rh'] = $asisten['nama'];
+                    break; // exit the inner loop since a match is found
+                }
+            }
+        }
+        updateKeyRecursive($mutu_buah, "KTE4", "KTE");
+
+
+        // Change key "KTE4" to "KTE"
+        updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+        $estev2 = updateKeyRecursive2($estev2);
+
+        // dd($estev2);
+
         $arrView = array();
 
         $arrView['listregion'] =  $estev2;
@@ -1803,6 +1887,8 @@ class mutubuahController extends Controller
         $arrView['chart_janjangkosongwil'] =  $persen_kosong_values;
         $arrView['chart_vcutwil'] =  $vcut_persen_values;
         $arrView['chart_karungwil'] =  $TPH_values;
+        $arrView['optionREg'] =  $optionREg;
+        $arrView['regionaltab'] =  $regional;
 
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
@@ -1812,6 +1898,8 @@ class mutubuahController extends Controller
 
     public function getYear(Request $request)
     {
+
+
         $week = $request->input('week');
         // Convert the week format to start and end dates
         $weekDateTime = new DateTime($week);
@@ -1823,7 +1911,14 @@ class mutubuahController extends Controller
 
         // dd($startDate, $endDate);
         $RegData = $request->input('regData');
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->where('reg.id', $RegData)
+            // ->where('wil.regional', 1)
+            ->get();
 
+
+        $optionReg = json_decode($optionREg, true);
         $queryAsisten = DB::connection('mysql2')->table('asisten_qc')
             ->select('asisten_qc.*')
             ->get();
@@ -2912,6 +3007,36 @@ class mutubuahController extends Controller
         }
         // dd($persen_jjgMtang_values, $persen_lwtMtng_values);
 
+        $regional = array();
+        foreach ($optionReg as $key => $value) {
+            $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+            $value['nama'] = str_replace(' ', '', $value['nama']);
+            $value['nama'] = strtoupper($value['nama']);
+            $regional[$key] = $value;
+            $regional[$key]['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        }
+
+        foreach ($regional as $key => $value) {
+            $regional[$key]['nama_rh'] = '-';
+            foreach ($queryAsisten as $ast => $asisten) {
+                // dd($value['nama']);
+                if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+                    $regional[$key]['nama_rh'] = $asisten['nama'];
+                    break; // exit the inner loop since a match is found
+                }
+            }
+        }
+
+
+
+        updateKeyRecursive($mutu_buah, "KTE4", "KTE");
+
+
+        // Change key "KTE4" to "KTE"
+        updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+        $estev2 = updateKeyRecursive2($estev2);
+
+
         $arrView = array();
 
         $arrView['listregion'] =  $estev2;
@@ -2933,6 +3058,7 @@ class mutubuahController extends Controller
         $arrView['chart_janjangkosongwil'] =  $persen_kosong_values;
         $arrView['chart_vcutwil'] =  $vcut_persen_values;
         $arrView['chart_karungwil'] =  $TPH_values;
+        $arrView['regionaltab'] =  $regional;
 
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
@@ -3232,7 +3358,7 @@ class mutubuahController extends Controller
         $sidak_buah = $new_sidak_buah;
 
 
-
+        // dd($sidak_buah);
         $arrView = array();
 
         $arrView['data_sidak'] =  $sidak_buah;
@@ -3869,6 +3995,10 @@ class mutubuahController extends Controller
                 $namewil = 'WIL-VII';
             } else if ($primaryKey === 8) {
                 $namewil = 'WIL-VIII';
+            } else if ($primaryKey === 10) {
+                $namewil = 'WIL-IX';
+            } else if ($primaryKey === 11) {
+                $namewil = 'WIL-X';
             }
             $wil = $namewil;
 
@@ -3927,6 +4057,7 @@ class mutubuahController extends Controller
             $nestedData['background_color'] = $bgColor;
 
             // Store the nested data array inside the $new_sidakBuah array with the key $primaryKey
+
             $new_sidakBuah[$primaryKey][$primaryKey] = $nestedData;
         }
         // dd($new_sidakBuah);
@@ -4467,8 +4598,13 @@ class mutubuahController extends Controller
             'Regional' => $new_sidakBuahv2
         ];
 
+        updateKeyRecursive($sidak_buah, "KTE4", "KTE");
+        // updateKeyRecursive($new_sidakBuah, "KTE4", "KTE");
+        // updateKeyRecursive3($new_sidakBuah, "KTE4", "KTE");
+        // $new_sidakBuah = updateKeyRecursive2($new_sidakBuah);
 
 
+        // dd($new_sidakBuah);
         $arrView = array();
 
         $arrView['data_week'] =  $sidak_buah;
@@ -5277,6 +5413,41 @@ class mutubuahController extends Controller
 
         $sbi_est = $request->input('selectedEstateText');
 
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->where('reg.id', $regional)
+            // ->where('wil.regional', 1)
+            ->get();
+
+
+        $optionReg = json_decode($optionREg, true);
+        $regional = array();
+        foreach ($optionReg as $key => $value) {
+            $value['nama'] = str_replace('Regional', 'Reg-', $value['nama']);
+            $value['nama'] = str_replace(' ', '', $value['nama']);
+            $value['nama'] = strtoupper($value['nama']);
+            $regional[$key] = $value;
+            $regional[$key]['jabatan'] = 'RH-' . substr($value['nama'], strpos($value['nama'], 'Reg-') + strlen('Reg-'));
+        }
+
+        foreach ($regional as $key => $value) {
+            $regional[$key]['nama_rh'] = '-';
+            foreach ($queryAsisten as $ast => $asisten) {
+                // dd($value['nama']);
+                if ($asisten['est'] == $value['nama'] && $asisten['afd'] == 'RH') {
+                    $regional[$key]['nama_rh'] = $asisten['nama'];
+                    break; // exit the inner loop since a match is found
+                }
+            }
+        }
+
+        updateKeyRecursive($mutu_buah, "KTE4", "KTE");
+
+
+        // Change key "KTE4" to "KTE"
+        updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+        $estev2 = updateKeyRecursive2($estev2);
+
 
         $arrView = array();
 
@@ -5287,6 +5458,7 @@ class mutubuahController extends Controller
         $arrView['mutuBuah_wil'] =  $mutuBuah_wil;
         $arrView['regional'] =  $regArr;
         $arrView['queryAsisten'] =  $queryAsisten;
+        $arrView['regionaltab'] =  $regional;
 
 
 
@@ -6302,5 +6474,601 @@ class mutubuahController extends Controller
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
+    }
+
+    public function weeklypdf(Request $request)
+    {
+        $reg = $request->input('regPDF');
+        $date = $request->input('tglPDF');
+
+        // dd($reg);
+        $startOfWeek = strtotime($date);
+        $endOfWeek = strtotime('+6 days', $startOfWeek);
+
+        // Format the dates
+        $formattedStartDate = date('d-m-y', $startOfWeek);
+        $formattedEndDate = date('d-m-y', $endOfWeek);
+
+        // Create the final formatted string
+        $starDate = $formattedStartDate;
+        $endDate =  $formattedEndDate;
+
+        $QueryMTancakWil = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select("sidak_mutu_buah.*", DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun'))
+            ->whereBetween('sidak_mutu_buah.datetime', [$starDate, $endDate])
+
+            ->get();
+        $QueryMTancakWil = $QueryMTancakWil->groupBy(['estate', 'afdeling']);
+        $QueryMTancakWil = json_decode($QueryMTancakWil, true);
+
+        $queryAfd = DB::connection('mysql2')->table('afdeling')
+            ->select(
+                'afdeling.id',
+                'afdeling.nama',
+                'estate.est'
+            ) //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
+            ->get();
+        $queryAfd = json_decode($queryAfd, true);
+        // dd($starDate, $endDate);
+        $queryEste = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $reg)
+            ->get();
+        $queryEste = json_decode($queryEste, true);
+
+        $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
+        // dd($QueryMTbuahWil);
+        //end query
+        $queryAsisten = json_decode($queryAsisten, true);
+
+
+        $dataPerBulan = array();
+        foreach ($QueryMTancakWil as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    $dataPerBulan[$key][$key2][$key3] = $value3;
+                }
+            }
+        }
+        $defaultNew = array();
+        foreach ($queryEste as $est) {
+            foreach ($queryAfd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $defaultNew[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+
+        // dd($defaultNew);/
+        $mergedData = array();
+        foreach ($defaultNew as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataPerBulan)) {
+                    if (array_key_exists($afdKey, $dataPerBulan[$estKey])) {
+                        if (!empty($dataPerBulan[$estKey][$afdKey])) {
+                            $mergedData[$estKey][$afdKey] = $dataPerBulan[$estKey][$afdKey];
+                        } else {
+                            $mergedData[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mergedData[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mergedData[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+
+        $mtancakWIltab1 = array();
+        foreach ($queryEste as $key => $value) {
+            foreach ($mergedData as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtancakWIltab1[$value['wil']][$key2] = array_merge($mtancakWIltab1[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+        // dd($mtancakWIltab1[1]['Plasma1']['WIL-III']);
+
+        $weeklyReport = array();
+        foreach ($mtancakWIltab1 as $key => $value) {
+            $blok_Wil = 0;
+            $kr_Wil = 0;
+            $jjg_sampleWil = 0;
+            $tnpBRDWil = 0;
+            $krgBRDWil = 0;
+            $overripeWil = 0;
+            $emptyWil = 0;
+            $abrWil = 0;
+            $vcutWil = 0;
+            $rdWil = 0;
+            foreach ($value as $key1 => $value1) {
+                $blok_est = 0;
+                $kr_est = 0;
+                $jjg_sampleEst = 0;
+                $tnpBRDEst = 0;
+                $krgBRDEst = 0;
+                $overripeEst = 0;
+                $emptyeST = 0;
+                $abreST = 0;
+                $vcuteST = 0;
+                $rdeST = 0;
+                foreach ($value1 as $key2 => $value2) {
+                    $jjg_sample = 0;
+                    $tnpBRD = 0;
+                    $krgBRD = 0;
+                    $abr = 0;
+                    $skor_total = 0;
+                    $overripe = 0;
+                    $empty = 0;
+                    $vcut = 0;
+                    $rd = 0;
+                    $sum_kr = 0;
+                    $allSkor = 0;
+                    $combination_counts = array();
+                    foreach ($value2 as $key3 => $value3) {
+                        if (is_array($value3)) {
+                            $combination = $value3['blok'] . ' ' . $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['tph_baris'];
+                            if (!isset($combination_counts[$combination])) {
+                                $combination_counts[$combination] = 0;
+                            }
+                            $jjg_sample += $value3['jumlah_jjg'];
+                            $tnpBRD += $value3['bmt'];
+                            $krgBRD += $value3['bmk'];
+                            $abr += $value3['abnormal'];
+                            $overripe += $value3['overripe'];
+                            $empty += $value3['empty_bunch'];
+                            $vcut += $value3['vcut'];
+                            $rd += $value3['rd'];
+                            $sum_kr += $value3['alas_br'];
+                        }
+                    }
+                    $dataBLok = count($combination_counts);
+                    if ($sum_kr != 0) {
+                        $total_kr = round($sum_kr / $dataBLok, 2);
+                    } else {
+                        $total_kr = 0;
+                    }
+                    $per_kr = round($total_kr * 100, 2);
+                    $denominator = ($jjg_sample - $abr);
+                    $skor_total = $denominator !== 0 ? round((($tnpBRD + $krgBRD) / $denominator) * 100, 2) : 0;
+                    $skor_jjgMSk = $denominator !== 0 ? round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / $denominator) * 100, 2) : 0;
+                    $skor_lewatMTng = $denominator !== 0 ? round(($overripe / $denominator) * 100, 2) : 0;
+                    $skor_jjgKosong = $denominator !== 0 ? round(($empty / $denominator) * 100, 2) : 0;
+                    $skor_vcut = $jjg_sample !== 0 ? round(($vcut / $jjg_sample) * 100, 2) : 0;
+                    $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
+
+                    $weeklyReport[$key][$key1][$key2]['Jumlah_janjang'] = $jjg_sample;
+                    $weeklyReport[$key][$key1][$key2]['blok'] = $dataBLok;
+                    $weeklyReport[$key][$key1][$key2]['est'] = $key1;
+                    $weeklyReport[$key][$key1][$key2]['afd'] = $key2;
+                    $weeklyReport[$key][$key1][$key2]['tnp_brd'] = $tnpBRD;
+                    $weeklyReport[$key][$key1][$key2]['krg_brd'] = $krgBRD;
+                    $weeklyReport[$key][$key1][$key2]['jjg_matang'] = $jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr);
+                    $weeklyReport[$key][$key1][$key2]['lewat_matang'] = $overripe;
+                    $weeklyReport[$key][$key1][$key2]['janjang_kosong'] = $empty;
+                    $weeklyReport[$key][$key1][$key2]['vcut'] = $vcut;
+                    $weeklyReport[$key][$key1][$key2]['karung'] = $sum_kr;
+                    $weeklyReport[$key][$key1][$key2]['abnormal'] = $abr;
+                    $weeklyReport[$key][$key1][$key2]['rat_dmg'] = $rd;
+                    $weeklyReport[$key][$key1][$key2]['TPH'] = $total_kr;
+                    $weeklyReport[$key][$key1][$key2]['persen_krg'] = $per_kr;
+                    foreach ($queryAsisten as $ast => $asisten) {
+                        if ($key1 === $asisten['est'] && $key2 === $asisten['afd']) {
+                            $weeklyReport[$key][$key1][$key2]['nama_asisten'] = $asisten['nama'];
+                        }
+                    }
+
+                    $blok_est += $dataBLok;
+                    $kr_est += $sum_kr;
+                    $jjg_sampleEst += $jjg_sample;
+                    $tnpBRDEst += $tnpBRD;
+                    $krgBRDEst += $krgBRD;
+                    $overripeEst += $overripe;
+                    $emptyeST += $empty;
+                    $abreST += $abr;
+                    $vcuteST += $vcut;
+                    $rdeST += $rd;
+                    if ($kr_est != 0) {
+                        $total_krEst = round($kr_est / $blok_est, 2);
+                    } else {
+                        $total_krEst = 0;
+                    }
+                    $per_krEst = round($total_krEst * 100, 2);
+                    $denominatorEst = ($jjg_sampleEst - $abreST);
+                    $skor_total = $denominatorEst !== 0 ? round((($tnpBRDEst + $krgBRDEst) / $denominatorEst) * 100, 2) : 0;
+                    $skor_jjgMSk = $denominatorEst !== 0 ? round((($jjg_sampleEst - ($tnpBRDEst + $krgBRDEst + $overripeEst + $emptyeST + $abreST)) / $denominatorEst) * 100, 2) : 0;
+                    $skor_lewatMTng = $denominatorEst !== 0 ? round(($overripeEst / $denominatorEst) * 100, 2) : 0;
+                    $skor_jjgKosong = $denominatorEst !== 0 ? round(($emptyeST / $denominatorEst) * 100, 2) : 0;
+                    $skor_vcut = $jjg_sampleEst !== 0 ? round(($vcuteST / $jjg_sampleEst) * 100, 2) : 0;
+                }
+                $ass = '-';
+                foreach ($queryAsisten as $ast => $asisten) {
+                    if ($key1 === $asisten['est'] && 'EM' === $asisten['afd']) {
+                        $ass = $asisten['nama'];
+                    }
+                }
+                $weeklyReport[$key][$key1]['nama_asistenEM'] = $ass;
+                $weeklyReport[$key][$key1]['Jumlah_janjang'] = $jjg_sampleEst;
+                $weeklyReport[$key][$key1]['blok'] = $blok_est;
+                $weeklyReport[$key][$key1]['est'] = $key;
+                $weeklyReport[$key][$key1]['afd'] = $key1;
+                $weeklyReport[$key][$key1]['tnp_brd'] = $tnpBRDEst;
+                $weeklyReport[$key][$key1]['krg_brd'] = $krgBRDEst;
+                $weeklyReport[$key][$key1]['jjg_matang'] = $jjg_sampleEst - ($tnpBRDEst + $krgBRDEst + $overripeEst + $emptyeST + $abreST);
+                $weeklyReport[$key][$key1]['lewat_matang'] = $overripeEst;
+                $weeklyReport[$key][$key1]['janjang_kosong'] = $emptyeST;
+                $weeklyReport[$key][$key1]['vcut'] = $vcuteST;
+                $weeklyReport[$key][$key1]['karung'] = $kr_est;
+                $weeklyReport[$key][$key1]['abnormal'] = $abreST;
+                $weeklyReport[$key][$key1]['rat_dmg'] = $rdeST;
+                $weeklyReport[$key][$key1]['TPH'] = $total_krEst;
+
+
+
+
+                $blok_Wil += $blok_est;
+                $kr_Wil += $kr_est;
+                $jjg_sampleWil += $jjg_sampleEst;
+                $tnpBRDWil += $tnpBRDEst;
+                $krgBRDWil += $krgBRDEst;
+                $overripeWil += $overripeEst;
+                $emptyWil += $emptyeST;
+                $abrWil += $abreST;
+                $vcutWil += $vcuteST;
+                $rdWil += $rdeST;
+                if ($kr_Wil != 0) {
+                    $total_krWil = round($kr_Wil / $blok_Wil, 2);
+                } else {
+                    $total_krWil = 0;
+                }
+            }
+            foreach ($weeklyReport as $key => $value) {
+                if ($key == 1) {
+                    $wiles = 'I';
+                } elseif ($key == 2) {
+                    $wiles = 'II';
+                } elseif ($key == 3) {
+                    $wiles = 'III';
+                } elseif ($key == 4) {
+                    $wiles = 'IV';
+                } elseif ($key == 5) {
+                    $wiles = 'V';
+                } elseif ($key == 6) {
+                    $wiles = 'VI';
+                } elseif ($key == 7) {
+                    $wiles = 'VII';
+                } elseif ($key == 8) {
+                    $wiles = 'VIII';
+                } elseif ($key == 9) {
+                    $wiles = 'IX';
+                } elseif ($key == 10) {
+                    $wiles = 'X';
+                } else {
+                    $wiles = ''; // Handle other cases as needed
+                }
+
+                $wil = 'WIL-' . $wiles;
+                $weeklyReport[$key]['est'] = $wil;
+            }
+
+            $weeklyReport[$key]['Jumlah_janjang'] = $jjg_sampleWil;
+            $weeklyReport[$key]['blok'] = $blok_Wil;
+            $weeklyReport[$key]['afd'] = $key1;
+            $weeklyReport[$key]['tnp_brd'] = $tnpBRDWil;
+            $weeklyReport[$key]['krg_brd'] = $krgBRDWil;
+            $weeklyReport[$key]['jjg_matang'] = $jjg_sampleWil - ($tnpBRDWil + $krgBRDWil + $overripeWil + $emptyWil + $abrWil);
+            $weeklyReport[$key]['lewat_matang'] = $overripeWil;
+            $weeklyReport[$key]['janjang_kosong'] = $emptyWil;
+            $weeklyReport[$key]['vcut'] = $vcutWil;
+            $weeklyReport[$key]['karung'] = $kr_Wil;
+            $weeklyReport[$key]['abnormal'] = $abrWil;
+            $weeklyReport[$key]['rat_dmg'] = $rdWil;
+            $weeklyReport[$key]['TPH'] = $total_krWil;
+
+
+            foreach ($queryAsisten as $ast => $asisten) {
+                if ($wil === $asisten['est'] && 'GM' === $asisten['afd']) {
+                    $weeklyReport[$key]['nama_asistenWil'] = $asisten['nama'];
+                }
+            }
+        }
+
+        $weeklyReportV2 = array();
+        foreach ($mtancakWIltab1 as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value2) {
+                    $jjg_sample = 0;
+                    $tnpBRD = 0;
+                    $krgBRD = 0;
+                    $abr = 0;
+                    $skor_total = 0;
+                    $overripe = 0;
+                    $empty = 0;
+                    $vcut = 0;
+                    $rd = 0;
+                    $sum_kr = 0;
+                    $allSkor = 0;
+                    $combination_counts = array();
+                    foreach ($value2 as $key3 => $value3) {
+                        if (is_array($value3)) {
+                            $combination = $value3['blok'] . ' ' . $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['tph_baris'];
+                            if (!isset($combination_counts[$combination])) {
+                                $combination_counts[$combination] = 0;
+                            }
+                            $jjg_sample += $value3['jumlah_jjg'];
+                            $tnpBRD += $value3['bmt'];
+                            $krgBRD += $value3['bmk'];
+                            $abr += $value3['abnormal'];
+                            $overripe += $value3['overripe'];
+                            $empty += $value3['empty_bunch'];
+                            $vcut += $value3['vcut'];
+                            $rd += $value3['rd'];
+                            $sum_kr += $value3['alas_br'];
+                        }
+                    }
+                    $dataBLok = count($combination_counts);
+                    if ($sum_kr != 0) {
+                        $total_kr = round($sum_kr / $dataBLok, 2);
+                    } else {
+                        $total_kr = 0;
+                    }
+                    $per_kr = round($total_kr * 100, 2);
+                    $denominator = ($jjg_sample - $abr);
+                    $skor_total = $denominator !== 0 ? round((($tnpBRD + $krgBRD) / $denominator) * 100, 2) : 0;
+                    $skor_jjgMSk = $denominator !== 0 ? round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / $denominator) * 100, 2) : 0;
+                    $skor_lewatMTng = $denominator !== 0 ? round(($overripe / $denominator) * 100, 2) : 0;
+                    $skor_jjgKosong = $denominator !== 0 ? round(($empty / $denominator) * 100, 2) : 0;
+                    $skor_vcut = $jjg_sample !== 0 ? round(($vcut / $jjg_sample) * 100, 2) : 0;
+                    $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
+
+                    $weeklyReportV2[$key][$key1][$key2]['Jumlah_janjang'] = $jjg_sample;
+                    $weeklyReportV2[$key][$key1][$key2]['blok'] = $dataBLok;
+                    $weeklyReportV2[$key][$key1][$key2]['est'] = $key1;
+                    $weeklyReportV2[$key][$key1][$key2]['afd'] = $key2;
+                    $weeklyReportV2[$key][$key1][$key2]['tnp_brd'] = $tnpBRD;
+                    $weeklyReportV2[$key][$key1][$key2]['krg_brd'] = $krgBRD;
+                    $weeklyReportV2[$key][$key1][$key2]['jjg_matang'] = $jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr);
+                    $weeklyReportV2[$key][$key1][$key2]['lewat_matang'] = $overripe;
+                    $weeklyReportV2[$key][$key1][$key2]['janjang_kosong'] = $empty;
+                    $weeklyReportV2[$key][$key1][$key2]['vcut'] = $vcut;
+                    $weeklyReportV2[$key][$key1][$key2]['karung'] = $sum_kr;
+                    $weeklyReportV2[$key][$key1][$key2]['abnormal'] = $abr;
+                    $weeklyReportV2[$key][$key1][$key2]['rat_dmg'] = $rd;
+                    $weeklyReportV2[$key][$key1][$key2]['TPH'] = $total_kr;
+                    $weeklyReportV2[$key][$key1][$key2]['persen_krg'] = $per_kr;
+                    foreach ($queryAsisten as $ast => $asisten) {
+                        if ($key1 === $asisten['est'] && $key2 === $asisten['afd']) {
+                            $weeklyReportV2[$key][$key1][$key2]['nama_asisten'] = $asisten['nama'];
+                        }
+                    }
+                }
+            }
+        }
+        // $highestCrot now contains the highest "tnp_brd" value for each nested array
+
+
+        $highestCrot = array();
+
+        foreach ($weeklyReportV2 as $key => $value) {
+            $highestKeys = array();
+            $maxValues = array(
+                'tnp_brd' => -INF,
+                'krg_brd' => -INF,
+                'jjg_matang' => -INF,
+                'lewat_matang' => -INF,
+                'janjang_kosong' => -INF,
+                'vcut' => -INF,
+                'karung' => -INF,
+                'abnormal' => -INF,
+                'rat_dmg' => -INF,
+            );
+
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value2) {
+                    foreach ($maxValues as $field => &$maxValue) {
+                        if (isset($value2[$field])) {
+                            if ($value2[$field] > $maxValue) {
+                                $maxValue = $value2[$field];
+                                $highestKeys[$field] = array($key1 . '_' . $key2);
+                            } elseif ($value2[$field] === $maxValue) {
+                                $highestKeys[$field][] = $key1 . '_' . $key2;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $highestCrot[$key] = array(
+                'Highest_tnp' => $highestKeys['tnp_brd'],
+                'value_Highest_tnp' => $maxValues['tnp_brd'],
+                'Highest_krg' => $highestKeys['krg_brd'],
+                'value_Highest_krg' => $maxValues['krg_brd'],
+                'Highest_masak' => $highestKeys['jjg_matang'],
+                'value_Highest_masak' => $maxValues['jjg_matang'],
+                'Highest_lwtmtang' => $highestKeys['lewat_matang'],
+                'value_Highest_lwtmtang' => $maxValues['lewat_matang'],
+                'Highest_jjgkosng' => $highestKeys['janjang_kosong'],
+                'value_Highest_jjgkosng' => $maxValues['janjang_kosong'],
+                'Highest_vcut' => $highestKeys['vcut'],
+                'value_Highest_vcut' => $maxValues['vcut'],
+                'Highest_karung' => $highestKeys['karung'],
+                'value_Highest_karung' => $maxValues['karung'],
+                'Highest_abnormal' => $highestKeys['abnormal'],
+                'value_Highest_abnormal' => $maxValues['abnormal'],
+                'Highest_rat_dmg' => $highestKeys['rat_dmg'],
+                'value_Highest_rat_dmg' => $maxValues['rat_dmg'],
+            );
+
+            // Merge the highestCrot array with the original array
+            $weeklyReport[$key] = array_merge($weeklyReport[$key], $highestCrot[$key]);
+        }
+
+
+        // dd($highestCrot, $weeklyReport);
+        // dd($weeklyReport);
+        //untuk perhitungan perblok
+        $QueryAncaksx = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select(
+                "sidak_mutu_buah.*",
+                DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun')
+            )
+            ->whereBetween('sidak_mutu_buah.datetime', [$starDate, $endDate])
+
+            // ->whereYear('datetime', $year)
+            ->get();
+        $QueryAncaksx = $QueryAncaksx->groupBy(['estate', 'afdeling', 'blok']);
+        $QueryAncaksx = json_decode($QueryAncaksx, true);
+        $queryEstatesss = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $reg)
+            ->get();
+
+        $queryEstatesss = json_decode($queryEstatesss, true);
+
+        $queryblok = DB::connection('mysql2')->table('blok')
+            ->select('blok.*')
+            ->get();
+
+
+        // $queryblok = $queryblok->groupBy(['afdeling', 'nama']);
+        $queryblok = json_decode($queryblok, true);
+        // dd($queryblok);
+        $dataAncaks = array();
+        foreach ($QueryAncaksx as $key => $value) {
+            foreach ($queryEstatesss as $est => $estval)
+                if ($estval['est'] === $key) {
+                    foreach ($value as $key2 => $value2) {
+                        foreach ($queryAfd as $afd => $afdval)
+                            if ($afdval['est'] === $key && $afdval['nama'] === $key2) {
+                                foreach ($value2 as $key3 => $value3) {
+                                    $dataAncaks[$afdval['est']][$afdval['nama']][$key3] = $value3;
+                                }
+                            }
+                    }
+                }
+        }
+
+        $bloks = array();
+        foreach ($queryEste as $est) {
+            foreach ($queryAfd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    foreach ($queryblok as  $value) if ($afd['id'] == $value['afdeling']) {
+                        // dd($value);
+                        $bloks[$est['est']][$afd['nama']][$value['nama']] = 0;
+                    }
+                }
+            }
+        }
+        // dd($bloks);
+
+        // $testing = array();
+        // foreach ($queryEste as $key => $value) {
+        //     foreach ($dataAncaks as $key2 => $value2) {
+        //         if ($value['est'] == $key2) {
+        //             // dd($key2);
+        //             $testing[$value['wil']][$key2] = array_merge($testing[$value['wil']][$key2] ?? [], $value2);
+        //         }
+        //     }
+        // }
+
+        $blokWeekly = array();
+        foreach ($dataAncaks as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $bloks = 0;
+                foreach ($value1 as $key2 => $value2) {
+                    // dd($key2);
+                    $bloks = count($value2);
+                    foreach ($value2 as $key3 => $value3) {
+                        $jjg_sample += $value3['jumlah_jjg'];
+                        $tnpBRD += $value3['bmt'];
+                        $krgBRD += $value3['bmk'];
+                        $abr += $value3['abnormal'];
+                        $overripe += $value3['overripe'];
+                        $empty += $value3['empty_bunch'];
+                        $vcut += $value3['vcut'];
+                        $rd += $value3['rd'];
+                        $sum_kr += $value3['alas_br'];
+                    }
+                    $dataBLok = $bloks;
+                    if ($sum_kr != 0) {
+                        $total_kr = round($sum_kr / $dataBLok, 2);
+                    } else {
+                        $total_kr = 0;
+                    }
+                    $per_kr = round($total_kr * 100, 2);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
+
+                    $blokWeekly[$key][$key1][$key2]['Jumlah_janjang'] = $jjg_sample;
+                    $blokWeekly[$key][$key1][$key2]['blok'] = $dataBLok;
+                    $blokWeekly[$key][$key1][$key2]['est'] = $key;
+                    $blokWeekly[$key][$key1][$key2]['afd'] = $value3['afdeling'];
+                    $blokWeekly[$key][$key1][$key2]['tnp_brd'] = $tnpBRD;
+                    $blokWeekly[$key][$key1][$key2]['krg_brd'] = $krgBRD;
+                    $blokWeekly[$key][$key1][$key2]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $blokWeekly[$key][$key1][$key2]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $blokWeekly[$key][$key1][$key2]['total_jjg'] = $tnpBRD + $krgBRD;
+                    $blokWeekly[$key][$key1][$key2]['persen_totalJjg'] = $skor_total;
+                    $blokWeekly[$key][$key1][$key2]['skor_total'] = sidak_brdTotal($skor_total);
+                    $blokWeekly[$key][$key1][$key2]['jjg_matang'] = $jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr);
+                    $blokWeekly[$key][$key1][$key2]['persen_jjgMtang'] = $skor_jjgMSk;
+                    $blokWeekly[$key][$key1][$key2]['skor_jjgMatang'] = sidak_matangSKOR($skor_jjgMSk);
+                    $blokWeekly[$key][$key1][$key2]['lewat_matang'] = $overripe;
+                    $blokWeekly[$key][$key1][$key2]['persen_lwtMtng'] =  $skor_lewatMTng;
+                    $blokWeekly[$key][$key1][$key2]['skor_lewatMTng'] = sidak_lwtMatang($skor_lewatMTng);
+                    $blokWeekly[$key][$key1][$key2]['janjang_kosong'] = $empty;
+                    $blokWeekly[$key][$key1][$key2]['persen_kosong'] = $skor_jjgKosong;
+                    $blokWeekly[$key][$key1][$key2]['skor_kosong'] = sidak_jjgKosong($skor_jjgKosong);
+                    $blokWeekly[$key][$key1][$key2]['vcut'] = $vcut;
+                    $blokWeekly[$key][$key1][$key2]['karung'] = $sum_kr;
+                    $blokWeekly[$key][$key1][$key2]['vcut_persen'] = $skor_vcut;
+                    $blokWeekly[$key][$key1][$key2]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
+                    $blokWeekly[$key][$key1][$key2]['abnormal'] = $abr;
+                    $blokWeekly[$key][$key1][$key2]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $blokWeekly[$key][$key1][$key2]['rat_dmg'] = $rd;
+                    $blokWeekly[$key][$key1][$key2]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $blokWeekly[$key][$key1][$key2]['TPH'] = $total_kr;
+                    $blokWeekly[$key][$key1][$key2]['persen_krg'] = $per_kr;
+                    $blokWeekly[$key][$key1][$key2]['skor_kr'] = sidak_PengBRD($per_kr);
+                    $blokWeekly[$key][$key1][$key2]['All_skor'] = $allSkor;
+                    $blokWeekly[$key][$key1][$key2]['kategori'] = sidak_akhir($allSkor);
+                }
+                // Set the start date and end date within the sub-array
+
+            }
+            // // Set the start date and end date within the sub-array
+            $blokWeekly[$key][$key1]['startDate'] = $value3['datetime'];
+            // $blokWeekly[$key][$key1]['endDate'] = end($value3)['datetime'];
+        }
+        //perblok ending
+
+        // dd($blokWeekly);
+        $arrView = array();
+
+        $arrView['est'] =  $reg;
+        // $arrView['afd'] =  $afd;
+        $arrView['tanggal'] =  $date;
+        $arrView['WeekReport1'] =  $weeklyReport;
+        $arrView['highest'] =  $weeklyReportV2;
+        // $arrView['total_buah'] =  $total_buah;
+
+        $pdf = PDF::loadView('mutubuahpdfWeekly', ['data' => $arrView]);
+
+        $customPaper = array(360, 360, 360, 360);
+        // $pdf->set_paper('A2', 'landscape');
+        $pdf->set_paper('A2', 'potrait');
+
+        $filename = 'Weekly report-' . $arrView['tanggal']  . $arrView['est']  . '.pdf';
+
+        return $pdf->stream($filename);
     }
 }
