@@ -118,16 +118,22 @@
             <div class="card table_wrapper">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-utama-tab" data-toggle="tab" href="#nav-utama" role="tab" aria-controls="nav-utama" aria-selected="true">Halaman Utama</a>
-                        <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Data</a>
-                        <a class="nav-item nav-link" id="nav-issue-tab" data-toggle="tab" href="#nav-issue" role="tab" aria-controls="nav-issue" aria-selected="false">Finding Issue</a>
-                        <a class="nav-item nav-link" id="nav-score-tab" data-toggle="tab" href="#nav-score" role="tab" aria-controls="nav-score" aria-selected="false">Score By Map</a>
-                        <a class="nav-item nav-link" id="nav-grafik-tab" data-toggle="tab" href="#nav-grafik" role="tab" aria-controls="nav-grafik" aria-selected="false">Grafik</a>
+                        <a class="nav-item nav-link active" id="nav-utama-tab" data-toggle="tab" href="#nav-utama"
+                            role="tab" aria-controls="nav-utama" aria-selected="true">Halaman Utama</a>
+                        <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab"
+                            aria-controls="nav-data" aria-selected="false">Data</a>
+                        <a class="nav-item nav-link" id="nav-issue-tab" data-toggle="tab" href="#nav-issue" role="tab"
+                            aria-controls="nav-issue" aria-selected="false">Finding Issue</a>
+                        <a class="nav-item nav-link" id="nav-score-tab" data-toggle="tab" href="#nav-score" role="tab"
+                            aria-controls="nav-score" aria-selected="false">Score By Map</a>
+                        <a class="nav-item nav-link" id="nav-grafik-tab" data-toggle="tab" href="#nav-grafik" role="tab"
+                            aria-controls="nav-grafik" aria-selected="false">Grafik</a>
                     </div>
                 </nav>
 
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-utama" role="tabpanel" aria-labelledby="nav-utama-tab">
+                    <div class="tab-pane fade show active" id="nav-utama" role="tabpanel"
+                        aria-labelledby="nav-utama-tab">
 
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
                             <h5><b>REKAPITULASI RANKING NILAI KUALITAS PANEN</b></h5>
@@ -151,7 +157,8 @@
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                     {{ csrf_field() }}
-                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="date" id="inputDate">
+                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="date"
+                                        id="inputDate">
 
                                 </div>
                             </div>
@@ -193,12 +200,16 @@
                                                 <table class="table table-bordered" style="font-size: 13px" id="table1">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
-                                                            <th colspan="5" id="thead1" style="text-align:center">WILAYAH I</th>
+                                                            <th colspan="5" id="thead1" style="text-align:center">
+                                                                WILAYAH I</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                            <th rowspan="2"
+                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
 
@@ -217,12 +228,16 @@
                                                 <table class="table table-bordered" style="font-size: 13px" id="table2">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
-                                                            <th colspan="5" id="thead2" style="text-align:center">WILAYAH II</th>
+                                                            <th colspan="5" id="thead2" style="text-align:center">
+                                                                WILAYAH II</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                            <th rowspan="2"
+                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
@@ -240,7 +255,7 @@
                                                             <td>{{ $key2 }}</td>
                                                             <td>no data </td>
                                                             <td id="skor" bgcolor="red" style="color: white">{{
-                            $value3['skor_akhir'] }}</td>
+                                                                $value3['skor_akhir'] }}</td>
                                                             <td>{{ $value2['rank'] }}</td>
                                                         </tr>
                                                         @endif
@@ -251,12 +266,15 @@
                                                         @foreach ($TotalperEstate[2] as $key4 => $value4)
 
                                                         <tr>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">{{ $key4 }}</td>
+                                                            <td bgcolor="#e0dcec" style="color: #000000">{{ $key4 }}
+                                                            </td>
                                                             <td bgcolor="#e0dcec" style="color: #000000">EM</td>
                                                             <td bgcolor="#e0dcec" style="color: #000000">no data</td>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">{{ $value4['skor_akhir'] }}
+                                                            <td bgcolor="#e0dcec" style="color: #000000">{{
+                                                                $value4['skor_akhir'] }}
                                                             </td>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">{{ $value4['rank'] }}</td>
+                                                            <td bgcolor="#e0dcec" style="color: #000000">{{
+                                                                $value4['rank'] }}</td>
                                                         </tr>
 
                                                         @endforeach
@@ -269,12 +287,16 @@
                                                 <table class="table table-bordered" style="font-size: 13px" id="Reg3">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
-                                                            <th colspan="5" id="thead3" style="text-align:center">WILAYAH III</th>
+                                                            <th colspan="5" id="thead3" style="text-align:center">
+                                                                WILAYAH III</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                            <th rowspan="2"
+                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
@@ -289,15 +311,20 @@
                                         </div>
                                         <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab4">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
+                                                <table class="table table-bordered" style="font-size: 13px"
+                                                    id="plasmaID">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
-                                                            <th colspan="5" id="thead3x" style="text-align:center">PLASMA</th>
+                                                            <th colspan="5" id="thead3x" style="text-align:center">
+                                                                PLASMA</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                            <th rowspan="2"
+                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
@@ -352,7 +379,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN TINGGAL</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN
+                                                                TINGGAL</u></b></p>
                                                     <div id="brondolanGraph"></div>
                                                 </div>
                                             </div>
@@ -360,7 +388,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH
+                                                                TINGGAL</u></b></p>
                                                     <div id="buahGraph"></div>
                                                 </div>
                                             </div>
@@ -370,7 +399,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN TINGGAL</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN
+                                                                TINGGAL</u></b></p>
                                                     <div id="brondolanGraphWil"></div>
                                                 </div>
                                             </div>
@@ -378,7 +408,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH
+                                                                TINGGAL</u></b></p>
                                                     <div id="buahGraphWil"></div>
                                                 </div>
                                             </div>
@@ -391,7 +422,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRD DI TPH</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRD DI
+                                                                TPH</u></b></p>
                                                     <div id="transport_brd"></div>
                                                 </div>
                                             </div>
@@ -399,7 +431,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI TPH</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI
+                                                                TPH</u></b></p>
                                                     <div id="transport_tph"></div>
                                                 </div>
                                             </div>
@@ -409,7 +442,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRD DI TPH</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BRD DI
+                                                                TPH</u></b></p>
                                                     <div id="transportwil_brd"></div>
                                                 </div>
                                             </div>
@@ -417,7 +451,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI TPH</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI
+                                                                TPH</u></b></p>
                                                     <div id="transportwil_buah"></div>
                                                 </div>
                                             </div>
@@ -429,7 +464,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MENTAH</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                MENTAH</u></b></p>
                                                     <div id="mtb_mentah"></div>
                                                 </div>
                                             </div>
@@ -437,7 +473,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MASAK</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                MASAK</u></b></p>
                                                     <div id="mtb_masak"></div>
                                                 </div>
                                             </div>
@@ -447,7 +484,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG OVERRIPE</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                OVERRIPE</u></b></p>
                                                     <div id="mtb_over"></div>
                                                 </div>
                                             </div>
@@ -455,7 +493,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH ABNORMAL</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>BUAH
+                                                                ABNORMAL</u></b></p>
                                                     <div id="mtb_abnr"></div>
                                                 </div>
                                             </div>
@@ -465,7 +504,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG EMPTY</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                EMPTY</u></b></p>
                                                     <div id="mtb_kosong"></div>
                                                 </div>
                                             </div>
@@ -473,7 +513,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>TIDAK STANDAR VCUT</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>TIDAK STANDAR
+                                                                VCUT</u></b></p>
                                                     <div id="mtb_vcuts"></div>
                                                 </div>
                                             </div>
@@ -484,7 +525,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MENTAH</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                MENTAH</u></b></p>
                                                     <div id="mtb_mentahwil"></div>
                                                 </div>
                                             </div>
@@ -492,7 +534,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MASAK</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                MASAK</u></b></p>
                                                     <div id="mtb_masakwil"></div>
                                                 </div>
                                             </div>
@@ -502,7 +545,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG OVERRIPE</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                OVERRIPE</u></b></p>
                                                     <div id="mtb_overwil"></div>
                                                 </div>
                                             </div>
@@ -510,7 +554,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG ABNORMAL</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                ABNORMAL</u></b></p>
                                                     <div id="mtb_abnrwil"></div>
                                                 </div>
                                             </div>
@@ -520,7 +565,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG EMPTY</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                EMPTY</u></b></p>
                                                     <div id="mtb_kosongwil"></div>
                                                 </div>
                                             </div>
@@ -528,7 +574,8 @@
                                         <div class="col-sm-6">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <p style="font-size: 15px; text-align: center;"><b><u>TIDAK STANDAR VCUT</u></b></p>
+                                                    <p style="font-size: 15px; text-align: center;"><b><u>TIDAK STANDAR
+                                                                VCUT</u></b></p>
                                                     <div id="mtb_vcutswil"></div>
                                                 </div>
                                             </div>
@@ -547,7 +594,8 @@
 
 
                         <p class="ml-3 mb-3 mr-3">
-                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#ShowbyWeek" aria-expanded="false" aria-controls="ShowbyWeek">
+                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse"
+                                data-target="#ShowbyWeek" aria-expanded="false" aria-controls="ShowbyWeek">
                                 TAMPILKAN PER MINGGU
                             </button>
                         </p>
@@ -572,7 +620,8 @@
                                         {{ csrf_field() }}
                                         <input type="hidden" id="startWeek" name="start" value="">
                                         <input type="hidden" id="lastWeek" name="last" value="">
-                                        <input type="week" name="dateWeek" id="dateWeek" value="{{ date('Y').'-W'.date('W') }}" aria-describedby="dateWeekHelp">
+                                        <input type="week" name="dateWeek" id="dateWeek"
+                                            value="{{ date('Y').'-W'.date('W') }}" aria-describedby="dateWeekHelp">
 
                                     </div>
                                 </div>
@@ -589,15 +638,20 @@
                                         <div class="row justify-content-center">
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs1">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="table1">
+                                                    <table class="table table-bordered" style="font-size: 13px"
+                                                        id="table1">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
-                                                                <th colspan="5" id="theads1" style="text-align:center">WILAYAH I</th>
+                                                                <th colspan="5" id="theads1" style="text-align:center">
+                                                                    WILAYAH I</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center"
+                                                                    style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                                <th rowspan="2"
+                                                                    style="text-align:center; vertical-align: middle;">
+                                                                    Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
@@ -612,15 +666,20 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs2">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="table2">
+                                                    <table class="table table-bordered" style="font-size: 13px"
+                                                        id="table2">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
-                                                                <th colspan="5" id="theads2" style="text-align:center">WILAYAH II</th>
+                                                                <th colspan="5" id="theads2" style="text-align:center">
+                                                                    WILAYAH II</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center"
+                                                                    style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                                <th rowspan="2"
+                                                                    style="text-align:center; vertical-align: middle;">
+                                                                    Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
@@ -636,15 +695,20 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs3">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="Reg3">
+                                                    <table class="table table-bordered" style="font-size: 13px"
+                                                        id="Reg3">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
-                                                                <th colspan="5" id="theads3" style="text-align:center">WILAYAH III</th>
+                                                                <th colspan="5" id="theads3" style="text-align:center">
+                                                                    WILAYAH III</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center"
+                                                                    style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                                <th rowspan="2"
+                                                                    style="text-align:center; vertical-align: middle;">
+                                                                    Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
@@ -659,15 +723,20 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs4">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
+                                                    <table class="table table-bordered" style="font-size: 13px"
+                                                        id="plasmaID">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
-                                                                <th colspan="5" id="theads3x" style="text-align:center">PLASMA</th>
+                                                                <th colspan="5" id="theads3x" style="text-align:center">
+                                                                    PLASMA</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center"
+                                                                    style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                                                                <th rowspan="2"
+                                                                    style="text-align:center; vertical-align: middle;">
+                                                                    Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
@@ -708,10 +777,12 @@
                             <div class="container-fluid">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#mutuAncakWeek">Mutu Ancak</a>
+                                        <a class="nav-link active" data-toggle="tab" href="#mutuAncakWeek">Mutu
+                                            Ancak</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#mutuTransportWeek">Mutu Transport</a>
+                                        <a class="nav-link" data-toggle="tab" href="#mutuTransportWeek">Mutu
+                                            Transport</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#mutuBuahWeek">Mutu Buah</a>
@@ -724,7 +795,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN TINGGAL</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN
+                                                                    TINGGAL</u></b></p>
                                                         <div id="brondolanGraphs"></div>
                                                     </div>
                                                 </div>
@@ -732,7 +804,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH
+                                                                    TINGGAL</u></b></p>
                                                         <div id="buahGraphs"></div>
                                                     </div>
                                                 </div>
@@ -742,7 +815,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN TINGGAL</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN
+                                                                    TINGGAL</u></b></p>
                                                         <div id="brondolanGraphWils"></div>
                                                     </div>
                                                 </div>
@@ -750,7 +824,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH
+                                                                    TINGGAL</u></b></p>
                                                         <div id="buahGraphWils"></div>
                                                     </div>
                                                 </div>
@@ -763,7 +838,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRD DI TPH</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRD DI
+                                                                    TPH</u></b></p>
                                                         <div id="weekly_transBRD"></div>
                                                     </div>
                                                 </div>
@@ -771,7 +847,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI TPH</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI
+                                                                    TPH</u></b></p>
                                                         <div id="weekly_transBRDWIL"></div>
                                                     </div>
                                                 </div>
@@ -782,7 +859,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRD DI TPH</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BRD DI
+                                                                    TPH</u></b></p>
                                                         <div id="weekly_transBuah"></div>
                                                     </div>
                                                 </div>
@@ -790,7 +868,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI TPH</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>BUAH DI
+                                                                    TPH</u></b></p>
                                                         <div id="weekly_transBuahWIL"></div>
                                                     </div>
                                                 </div>
@@ -803,7 +882,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MENTAH</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    MENTAH</u></b></p>
                                                         <div id="weekly_mtb_mentah"></div>
                                                     </div>
                                                 </div>
@@ -811,7 +891,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MASAK</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    MASAK</u></b></p>
                                                         <div id="weekly_mtb_masak"></div>
                                                     </div>
                                                 </div>
@@ -821,7 +902,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG OVERRIPE</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    OVERRIPE</u></b></p>
                                                         <div id="weekly_mtb_over"></div>
                                                     </div>
                                                 </div>
@@ -829,7 +911,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG ABNORMAL</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    ABNORMAL</u></b></p>
                                                         <div id="weekly_mtb_abnormal"></div>
                                                     </div>
                                                 </div>
@@ -839,7 +922,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG KOSONG</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    KOSONG</u></b></p>
                                                         <div id="weekly_mtb_kosong"></div>
                                                     </div>
                                                 </div>
@@ -847,7 +931,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>TIDAK STANDAR VCUT</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>TIDAK
+                                                                    STANDAR VCUT</u></b></p>
                                                         <div id="weekly_mtb_vcut"></div>
                                                     </div>
                                                 </div>
@@ -858,7 +943,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MENTAH</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    MENTAH</u></b></p>
                                                         <div id="weekly_mtbwil_mentah"></div>
                                                     </div>
                                                 </div>
@@ -866,7 +952,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG MASAK</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    MASAK</u></b></p>
                                                         <div id="weekly_mtbwil_masak"></div>
                                                     </div>
                                                 </div>
@@ -876,7 +963,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG OVERRIPE</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    OVERRIPE</u></b></p>
                                                         <div id="weekly_mtbwil_over"></div>
                                                     </div>
                                                 </div>
@@ -884,7 +972,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG ABNORMAL</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    ABNORMAL</u></b></p>
                                                         <div id="weekly_mtbwil_abnormal"></div>
                                                     </div>
                                                 </div>
@@ -894,7 +983,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG EMPTY</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>JANJANG
+                                                                    EMPTY</u></b></p>
                                                         <div id="weekly_mtbwil_kosong"></div>
                                                     </div>
                                                 </div>
@@ -902,7 +992,8 @@
                                             <div class="col-sm-6">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p style="font-size: 15px; text-align: center;"><b><u>TIDAK STANDAR VCUT</u></b></p>
+                                                        <p style="font-size: 15px; text-align: center;"><b><u>TIDAK
+                                                                    STANDAR VCUT</u></b></p>
                                                         <div id="weekly_mtbwil_vcut"></div>
                                                     </div>
                                                 </div>
@@ -919,7 +1010,8 @@
 
 
                         <p class="ml-3 mb-3 mr-3">
-                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#showByYear" aria-expanded="false" aria-controls="showByYear">
+                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse"
+                                data-target="#showByYear" aria-expanded="false" aria-controls="showByYear">
                                 TAMPILKAN PER TAHUN
                             </button>
                         </p>
@@ -1032,7 +1124,8 @@
                                 <div class="col-sm-6">
                                     <div class="card">
                                         <div class="card-body">
-                                            <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN TINGGAL</u></b></p>
+                                            <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN
+                                                        TINGGAL</u></b></p>
                                             <div id="brondolanGraphYear"></div>
                                         </div>
                                     </div>
@@ -1040,7 +1133,8 @@
                                 <div class="col-sm-6">
                                     <div class="card">
                                         <div class="card-body">
-                                            <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b></p>
+                                            <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b>
+                                            </p>
                                             <div id="buahGraphYear"></div>
                                         </div>
                                     </div>
@@ -1050,7 +1144,8 @@
                                 <div class="col-sm-6">
                                     <div class="card">
                                         <div class="card-body">
-                                            <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN TINGGAL</u></b></p>
+                                            <p style="font-size: 15px; text-align: center;"><b><u>BRONDOLAN
+                                                        TINGGAL</u></b></p>
                                             <div id="brondolanGraphWilYear"></div>
                                         </div>
                                     </div>
@@ -1058,7 +1153,8 @@
                                 <div class="col-sm-6">
                                     <div class="card">
                                         <div class="card-body">
-                                            <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b></p>
+                                            <p style="font-size: 15px; text-align: center;"><b><u>BUAH TINGGAL</u></b>
+                                            </p>
                                             <div id="buahGraphWilYear"></div>
                                         </div>
                                     </div>
@@ -1088,7 +1184,8 @@
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                     {{ csrf_field() }}
-                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl" id="dateDataIns">
+                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl"
+                                        id="dateDataIns">
 
                                 </div>
                             </div>
@@ -1106,17 +1203,22 @@
                                             <th rowspan="3" bgcolor="darkblue">Afd.</th> --}}
                                             <th class="freeze-col align-middle" rowspan="3" bgcolor="#1c5870">Est.</th>
                                             <th class="freeze-col align-middle" rowspan="3" bgcolor="#1c5870">Afd.</th>
-                                            <th class="align-middle" colspan="4" rowspan="2" bgcolor="#588434">DATA BLOK SAMPEL</th>
+                                            <th class="align-middle" colspan="4" rowspan="2" bgcolor="#588434">DATA BLOK
+                                                SAMPEL</th>
                                             <th class="align-middle" colspan="17" bgcolor="#588434">Mutu Ancak (MA)</th>
                                             <th class="align-middle" colspan="8" bgcolor="blue">Mutu Transport (MT)</th>
-                                            <th class="align-middle" colspan="23" bgcolor="#ffc404" style="color: #000000;">Mutu Buah (MB)
-                                            <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">All Skor</th>
-                                            <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">Kategori</th>
+                                            <th class="align-middle" colspan="23" bgcolor="#ffc404"
+                                                style="color: #000000;">Mutu Buah (MB)
+                                            <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">All
+                                                Skor</th>
+                                            <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">
+                                                Kategori</th>
                                             </th>
                                         </tr>
                                         <tr>
                                             {{-- Table Mutu Ancak --}}
-                                            <th class="align-middle" colspan="6" bgcolor="#588434">Brondolan Tinggal</th>
+                                            <th class="align-middle" colspan="6" bgcolor="#588434">Brondolan Tinggal
+                                            </th>
                                             <th class="align-middle" colspan="7" bgcolor="#588434">Buah Tinggal</th>
                                             <th class="align-middle" colspan="3" bgcolor="#588434">Pelepah Sengkleh</th>
                                             <th class="align-middle" rowspan="2" bgcolor="#588434">Total Skor</th>
@@ -1127,21 +1229,31 @@
                                             <th class="align-middle" rowspan="2" bgcolor="blue">Total Skor</th>
 
                                             {{-- Table Mutu Buah --}}
-                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
-                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang
+                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404"
+                                                style="color: #000000;">TPH Sampel</th>
+                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404"
+                                                style="color: #000000;">Total Janjang
                                                 Sampel</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
+                                                style="color: #000000;">Mentah (A)</th>
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
+                                                style="color: #000000;">Matang (N)</th>
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
+                                                style="color: #000000;">Lewat Matang
                                                 (O)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
+                                                style="color: #000000;">Janjang Kosong
                                                 (E)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
+                                                style="color: #000000;">Tidak Standar
                                                 V-Cut</th>
-                                            <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan
+                                            <th class="align-middle" colspan="2" bgcolor="#ffc404"
+                                                style="color: #000000;">Abnormal</th>
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
+                                                style="color: #000000;">Penggunaan
                                                 Karung Brondolan</th>
-                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
+                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404"
+                                                style="color: #000000;">Total Skor</th>
                                         </tr>
                                         <tr>
                                             {{-- Table Mutu Ancak --}}
@@ -1229,7 +1341,8 @@
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                     {{ csrf_field() }}
-                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl" id="dateFind">
+                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl"
+                                        id="dateFind">
 
                                 </div>
                             </div>
@@ -1392,7 +1505,8 @@
                                     <div class="row text-center">
                                         <div class="col">
                                             <div class="card-body">
-                                                <p style="font-size: 15px"><b><u>HISTORIS BRONDOLAN TINGGAL DI ANCAK</u></b></p>
+                                                <p style="font-size: 15px"><b><u>HISTORIS BRONDOLAN TINGGAL DI
+                                                            ANCAK</u></b></p>
                                                 <div id="skorBronGraph"></div>
                                             </div>
                                         </div>
@@ -1400,7 +1514,8 @@
                                     <div class="row text-center">
                                         <div class="col">
                                             <div class="card-body">
-                                                <p style="font-size: 15px"><b><u>HISTORIS JANJANG TINGGAL DI ANCAK</u></b></p>
+                                                <p style="font-size: 15px"><b><u>HISTORIS JANJANG TINGGAL DI
+                                                            ANCAK</u></b></p>
                                                 <div id="skorJanGraph"></div>
                                             </div>
                                         </div>
@@ -1419,7 +1534,8 @@
                                     <div class="row text-center">
                                         <div class="col">
                                             <div class="card-body">
-                                                <p style="font-size: 15px"><b><u>HISTORIS BUAH MUTU Transport</u></b></p>
+                                                <p style="font-size: 15px"><b><u>HISTORIS BUAH MUTU Transport</u></b>
+                                                </p>
                                                 <div id="tr_buah_Graph"></div>
                                             </div>
                                         </div>
@@ -1461,7 +1577,8 @@
                                     <div class="row text-center">
                                         <div class="col">
                                             <div class="card-body">
-                                                <p style="font-size: 15px"><b><u>HISTORIS TIDAK S-VCUT MUTU BUAH</u></b></p>
+                                                <p style="font-size: 15px"><b><u>HISTORIS TIDAK S-VCUT MUTU BUAH</u></b>
+                                                </p>
                                                 <div id="bh_svcut_Graph"></div>
                                             </div>
                                         </div>
@@ -1469,7 +1586,8 @@
                                     <div class="row text-center">
                                         <div class="col">
                                             <div class="card-body">
-                                                <p style="font-size: 15px"><b><u>HISTORIS TIDAK ABNORMAL MUTU BUAH</u></b></p>
+                                                <p style="font-size: 15px"><b><u>HISTORIS TIDAK ABNORMAL MUTU
+                                                            BUAH</u></b></p>
                                                 <div id="bh_abnor_Graph"></div>
                                             </div>
                                         </div>
@@ -1483,12 +1601,14 @@
             </div>
     </section>
 </div>
-<div id="lottie-container" style="display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 9999; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
+<div id="lottie-container"
+    style="display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 9999; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
     <div id="lottie-animation" style="width: 200px; height: 200px;"></div>
 </div>
 @include('layout/footer')
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
@@ -4395,13 +4515,12 @@
                     }
                     let item4;
 
-                    // console.log(item2);
                     filteredAssistants.forEach((element, index) => {
                         const assistantEstate = element['est'];
                         const assistantAfd = element['afd'];
                         // console.log(assistantEstate)
 
-                        if (assistantEstate === item3) {
+                        if (assistantEstate === item3 && assistantAfd == 'EM') {
                             item4 = element['nama'];
                         }
                     });
@@ -4491,19 +4610,25 @@
                     } else if (angka === '3') {
                         angka = 'III';
                     }
-
-                    let namaGM = {
-                        "1": "Kinan Efran Harahap",
-                        "2": "Sucipto",
-                        "3": "Achmad Kursani"
+                    else if (angka === '4') {
+                        angka = 'IV';
+                    }
+                    else if (angka === '5') {
+                        angka = 'V';
+                    }
+                    else if (angka === '6') {
+                        angka = 'VI';
                     }
 
-                    let item1 = element[0];
-
-                    let item2 = namaGM[item1];
-                    if (item2 === undefined) {
-                        item2 = '-';
-                    }
+                    let item2 = '-';
+                    let item1 = angka;
+                    let wilKe = 'WIL-' + angka;
+                    filteredAssistants.forEach((data, j) => {
+                        if(wilKe == data['est'] && data['afd'] == 'GM'){
+                            item2 = data['nama']
+                        }
+                    });
+                    
                     let item3 = element[1].January.skor_bulanTotal;
                     let item4 = element[1].February.skor_bulanTotal;
                     let item5 = element[1].March.skor_bulanTotal;
@@ -4576,7 +4701,13 @@
                     tr = document.createElement('tr')
 
                     let item1 = element[0];
-                    let item2 = element[1].namaGM;
+                    let item2  = '-';
+                    filteredAssistants.forEach((data, j) => {
+                        if(item1 == data['est'] && data['afd'] == 'GM'){
+                            item2 = data['nama']
+                        }
+                    });
+        
                     let item3 = element[1].January.Bulan;
                     let item4 = element[1].February.Bulan;
                     let item5 = element[1].March.Bulan;
@@ -4644,20 +4775,30 @@
 
 
                 if (regInpt === '1') {
-                    regWil = 'Akhmad Faisyal';
                     regW = 'I'
-
                 } else if (regInpt === '2') {
-                    regWil = '-'
                     regW = 'II'
                 } else if (regInpt === '3') {
-                    regWil = '-'
                     regW = 'III'
+                }
+                else if (regInpt === '4') {
+                    regW = 'IV'
+                } else if (regInpt === '5') {
+                    regW = 'V'
+                }
+                else if (regInpt === '6') {
+                    regW = 'VI'
                 }
                 tr = document.createElement('tr');
 
                 let item1 = regW
-                let item2 = regWil
+                let regKe = 'REG-' + regW
+                let item2 = '-';
+                filteredAssistants.forEach((data, j) => {
+                        if(regKe == data['est'] && data['afd'] == 'RH'){
+                            item2 = data['nama']
+                        }
+                    });
                 let item3 = regbln[0][1].skor_bulanTotal;
                 let item4 = regbln[1][1].skor_bulanTotal;
                 let item5 = regbln[2][1].skor_bulanTotal;
