@@ -615,57 +615,13 @@
 
 
 
-    @if($regional == 2 || $regional == '2')
-
-    <tr style="border: none;">
-        <td colspan="32" style="background-color : #fff;">&nbsp;</td>
-    </tr>
-
-    @foreach ($dataSkor_ancak as $key => $ancak)
-    @foreach ($ancak as $key2 => $ancak1)
-
-    @foreach ($ancak1 as $key3 => $ancak2)
-    <tr>
-        <td>{{ $key2 }}</td>
-        <td><a href="dataDetail/{{$key2}}/{{$key3}}/{{$tanggal}}/{{$regional}}">{{$key3}}</a></td>
-        <td>{{ $ancak2['jml_pokok_sampel'] }}</td>
-        <td>{{ $ancak2['luas_ha'] }}</td>
-        <td>{{ $ancak2['jml_jjg_panen'] }}</td>
-        <td>{{ $ancak2['akp_real'] }}</td>
-        <td>{{ $ancak2['p_ma'] }}</td>
-        <td>{{ $ancak2['k_ma'] }}</td>
-        <td>{{ $ancak2['gl_ma'] }}</td>
-        <td>{{ $ancak2['total_brd_ma'] }}</td>
-        <td>{{ $ancak2['btr_jjg_ma'] }}</td>
-        <td>{{ $ancak2['Skor_brd'] }}</td>
-        <td>{{ $ancak2['bhts_ma'] }}</td>
-        <td>{{ $ancak2['bhtm1_ma'] }}</td>
-        <td>{{ $ancak2['bhtm2_ma'] }}</td>
-        <td>{{ $ancak2['bhtm3_ma'] }}</td>
-        <td>{{ $ancak2['tot_jjg_ma'] }}</td>
-        <td>{{ $ancak2['jjg_tgl_ma'] }}</td>
-        <td>{{ $ancak2['Skor_buah'] }}</td>
-        <td>{{ $ancak2['ps_ma'] }}</td>
-        <td>{{ $ancak2['PerPSMA'] }}</td>
-        <td>{{ $ancak2['Skor_ps'] }}</td>
-
-    </tr>
-    @endforeach
-
-    @endforeach
-    @endforeach
-
-
-
-    @else
-
     <tr style="border: none;">
         <td colspan="32" style="background-color : #fff;">&nbsp;</td>
     </tr>
     @foreach ($dataSkor_ancak as $key => $itemx)
     @foreach ($itemx as $key2 => $plasma)
     @foreach ($plasma as $key3 => $item2)
-    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III" || $key3 == "WIL-IV" || $key3 == "WIL-V")
+    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III" || $key3 == "WIL-IV" || $key3 == "WIL-V" || $key3 == "WIL I" || $key3 == "WIL II" || $key3 == "WIL III" || $key3 == "WIL IV" || $key3 == "WIL V" || $key3 == "WIL VI")
     @php
     $skor_kategori_akhirx = skor_kategori_akhir(check_array('allSkor', $item2));
     $total_skorAncak = $item2['Skor_brd'] + $item2['Skor_buah'] + $item2['Skor_ps'];
@@ -837,6 +793,7 @@
         <td style="background-color : yellow; color: #000000;">{{ $value1['total_rst'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $value1['rst_tph'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] + $value1['scorre_bt']  }}</td>
 
         @endif
         @endforeach
@@ -852,6 +809,7 @@
         <td style="background-color : yellow; color: #000000;">{{ $itemx2['jjg_tph_total'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ skor_buah_tinggal($itemx2['jjg_tph_total']) }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $skor_totaltrans }}</td>
+
         @endif
 
 
@@ -906,8 +864,4 @@
     </tr>
     @endforeach
     @endforeach
-
-
-
-    @endif
 </body>

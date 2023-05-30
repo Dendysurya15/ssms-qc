@@ -943,7 +943,7 @@ class inspectController extends Controller
 
         $groupedDataTrans = json_decode(json_encode($groupedDataTrans), true);
     
-
+        // dd($groupedDataTrans);
 
 
         $QueryAncaks = DB::connection('mysql2')->table('mutu_ancak_new')
@@ -983,7 +983,7 @@ class inspectController extends Controller
 
     
      
-        // dd($groupedDataTrans);
+        // dd($groupedDataTrans['Plasma2']);
         $dataMTTrans = array();
         foreach ($groupedDataTrans as $key => $value) {
             foreach ($queryEstate as $est => $estval)
@@ -1023,7 +1023,7 @@ class inspectController extends Controller
 
      
 
-        // dd($dataMTTrans);
+        // dd($dataMTTrans['Plasma2']);
         
 
         $ancak = array();
@@ -1984,8 +1984,9 @@ class inspectController extends Controller
             }
         }        
         // dd($dataSkor[5]['BTE'],$transport);  
-        // dd($dataSkor_ancak);
+        // dd($transNewdata)['Plasma2'];
 
+        // dd($dataSkor_trans ,$transNewdata);
         $testingPlasma = [];
 
         foreach ($dataSkor_trans as $key => $value) {
@@ -1996,10 +1997,7 @@ class inspectController extends Controller
                             foreach ($val as $keys2 => $val2) {                          
                                 if ($keys2 == $key3) {
                                     $testingPlasma[$key][$key2][$key3] = $value3;
-                                    // dd($key2['OD']);
-                                    // if (!isset($value3['tph_sample'])) {
-                                    //     $testingPlasma[$key][$key2][$key3]['tph_sample'] = $val2['total_tph'];
-                                    // }
+                                  
                                     $testingPlasma[$key][$key2][$key3]['tph_sample'] = $val2['total_tph'];
 
 
@@ -2028,6 +2026,7 @@ class inspectController extends Controller
             }
         }
 
+        // dd($testing);
         foreach ($testingPlasma as $key => $value) {
             foreach ($value as $key1 => $value1) {
                 $todSam = 0;
@@ -2056,9 +2055,7 @@ class inspectController extends Controller
         updateKeyRecursive($dataSkor, "KTE4", "KTE");
 
         // $result = array_merge_recursive($dataSkor_ancak[4]['Plasma2'], $dataSkor_buah[4]['Plasma2'], $dataSkor_trans[4]['Plasma2']);
-
-        dd($testingPlasma);
-
+        // dd($dataSkor_buah);
         // dd($dataSkor_ancak,$dataSkor_buah,$dataSkor_trans);
         return view('dataInspeksi', [
             'dataSkor' => $dataSkor,
