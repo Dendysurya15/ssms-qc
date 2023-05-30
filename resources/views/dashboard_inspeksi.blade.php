@@ -4466,7 +4466,6 @@
                     }
                     let item4;
 
-                    console.log(filteredAssistants);
                     filteredAssistants.forEach((element, index) => {
                         const assistantEstate = element['est'];
                         const assistantAfd = element['afd'];
@@ -4562,19 +4561,25 @@
                     } else if (angka === '3') {
                         angka = 'III';
                     }
-
-                    let namaGM = {
-                        "1": "Kinan Efran Harahap",
-                        "2": "Sucipto",
-                        "3": "Achmad Kursani"
+                    else if (angka === '4') {
+                        angka = 'IV';
+                    }
+                    else if (angka === '5') {
+                        angka = 'V';
+                    }
+                    else if (angka === '6') {
+                        angka = 'VI';
                     }
 
-                    let item1 = element[0];
-
-                    let item2 = namaGM[item1];
-                    if (item2 === undefined) {
-                        item2 = '-';
-                    }
+                    let item2 = '-';
+                    let item1 = angka;
+                    let wilKe = 'WIL-' + angka;
+                    filteredAssistants.forEach((data, j) => {
+                        if(wilKe == data['est'] && data['afd'] == 'GM'){
+                            item2 = data['nama']
+                        }
+                    });
+                    
                     let item3 = element[1].January.skor_bulanTotal;
                     let item4 = element[1].February.skor_bulanTotal;
                     let item5 = element[1].March.skor_bulanTotal;
@@ -4647,7 +4652,13 @@
                     tr = document.createElement('tr')
 
                     let item1 = element[0];
-                    let item2 = element[1].namaGM;
+                    let item2  = '-';
+                    filteredAssistants.forEach((data, j) => {
+                        if(item1 == data['est'] && data['afd'] == 'GM'){
+                            item2 = data['nama']
+                        }
+                    });
+        
                     let item3 = element[1].January.Bulan;
                     let item4 = element[1].February.Bulan;
                     let item5 = element[1].March.Bulan;
@@ -4715,20 +4726,30 @@
 
 
                 if (regInpt === '1') {
-                    regWil = 'Akhmad Faisyal';
                     regW = 'I'
-
                 } else if (regInpt === '2') {
-                    regWil = '-'
                     regW = 'II'
                 } else if (regInpt === '3') {
-                    regWil = '-'
                     regW = 'III'
+                }
+                else if (regInpt === '4') {
+                    regW = 'IV'
+                } else if (regInpt === '5') {
+                    regW = 'V'
+                }
+                else if (regInpt === '6') {
+                    regW = 'VI'
                 }
                 tr = document.createElement('tr');
 
                 let item1 = regW
-                let item2 = regWil
+                let regKe = 'REG-' + regW
+                let item2 = '-';
+                filteredAssistants.forEach((data, j) => {
+                        if(regKe == data['est'] && data['afd'] == 'RH'){
+                            item2 = data['nama']
+                        }
+                    });
                 let item3 = regbln[0][1].skor_bulanTotal;
                 let item4 = regbln[1][1].skor_bulanTotal;
                 let item5 = regbln[2][1].skor_bulanTotal;
