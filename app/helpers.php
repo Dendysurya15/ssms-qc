@@ -714,3 +714,55 @@ if (!function_exists('sidak_akhir')) {
         }
     }
 }
+
+
+if (!function_exists('updateKeyRecursive')) {
+
+    function updateKeyRecursive(&$array, $oldKey, $newKey)
+    {
+        foreach ($array as $key => &$value) {
+            if ($key === $oldKey) {
+                $array[$newKey] = $value;
+                unset($array[$oldKey]);
+            }
+            if (is_array($value)) {
+                updateKeyRecursive($value, $oldKey, $newKey);
+            }
+        }
+    }
+}
+
+// helpers.php
+
+if (!function_exists('updateKeyRecursive2')) {
+    function updateKeyRecursive2($array)
+    {
+        return array_map(function ($value) {
+            return ($value === "KTE4") ? "KTE" : $value;
+        }, $array);
+    }
+}
+
+if (!function_exists('updateKeyRecursive3')) {
+    function updateKeyRecursive3(&$array, $oldKey, $newKey)
+    {
+        if (array_key_exists($oldKey, $array)) {
+            $array[$newKey] = $array[$oldKey];
+            unset($array[$oldKey]);
+        }
+    }
+}
+if (!function_exists('changeKey')) {
+    function changeKey(&$array, $oldKey, $newKey)
+    {
+        if (array_key_exists($oldKey, $array)) {
+            $array[$newKey] = $array[$oldKey];
+            unset($array[$oldKey]);
+        }
+    }
+}
+
+// CONTOH PEMAKAIAN 
+// updateKeyRecursive($mutu_buah, "KTE4", "KTE");
+// updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+// $estev2 = updateKeyRecursive2($estev2);

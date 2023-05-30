@@ -1401,7 +1401,12 @@
         sbi_tahun()
         getFindData()
 
-
+        $('#data_weekTab2 tbody tr').each(function() {
+            var secondCell = $(this).find('td:eq(1)');
+            if (secondCell.text().trim() === 'KTE4') {
+                secondCell.text('KTE');
+            }
+        });
     });
 
     $("#showFinding").click(function() {
@@ -4562,9 +4567,6 @@
                     });
                     tbody1.appendChild(tr);
                 });
-
-
-
 
 
 

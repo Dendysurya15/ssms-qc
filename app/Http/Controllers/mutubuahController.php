@@ -1857,8 +1857,14 @@ class mutubuahController extends Controller
                 }
             }
         }
+        updateKeyRecursive($mutu_buah, "KTE4", "KTE");
 
-        // dd($regional, $regArr);
+
+        // Change key "KTE4" to "KTE"
+        updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+        $estev2 = updateKeyRecursive2($estev2);
+
+        // dd($estev2);
 
         $arrView = array();
 
@@ -3023,6 +3029,12 @@ class mutubuahController extends Controller
 
 
 
+        updateKeyRecursive($mutu_buah, "KTE4", "KTE");
+
+
+        // Change key "KTE4" to "KTE"
+        updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+        $estev2 = updateKeyRecursive2($estev2);
 
 
         $arrView = array();
@@ -3346,7 +3358,7 @@ class mutubuahController extends Controller
         $sidak_buah = $new_sidak_buah;
 
 
-
+        // dd($sidak_buah);
         $arrView = array();
 
         $arrView['data_sidak'] =  $sidak_buah;
@@ -3983,6 +3995,10 @@ class mutubuahController extends Controller
                 $namewil = 'WIL-VII';
             } else if ($primaryKey === 8) {
                 $namewil = 'WIL-VIII';
+            } else if ($primaryKey === 10) {
+                $namewil = 'WIL-IX';
+            } else if ($primaryKey === 11) {
+                $namewil = 'WIL-X';
             }
             $wil = $namewil;
 
@@ -4041,6 +4057,7 @@ class mutubuahController extends Controller
             $nestedData['background_color'] = $bgColor;
 
             // Store the nested data array inside the $new_sidakBuah array with the key $primaryKey
+
             $new_sidakBuah[$primaryKey][$primaryKey] = $nestedData;
         }
         // dd($new_sidakBuah);
@@ -4581,8 +4598,13 @@ class mutubuahController extends Controller
             'Regional' => $new_sidakBuahv2
         ];
 
+        updateKeyRecursive($sidak_buah, "KTE4", "KTE");
+        // updateKeyRecursive($new_sidakBuah, "KTE4", "KTE");
+        // updateKeyRecursive3($new_sidakBuah, "KTE4", "KTE");
+        // $new_sidakBuah = updateKeyRecursive2($new_sidakBuah);
 
 
+        // dd($new_sidakBuah);
         $arrView = array();
 
         $arrView['data_week'] =  $sidak_buah;
@@ -5419,6 +5441,12 @@ class mutubuahController extends Controller
             }
         }
 
+        updateKeyRecursive($mutu_buah, "KTE4", "KTE");
+
+
+        // Change key "KTE4" to "KTE"
+        updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+        $estev2 = updateKeyRecursive2($estev2);
 
 
         $arrView = array();

@@ -7352,12 +7352,23 @@
     }
 
     // Function to populate the options for the estate filter
+
+
     function populateEstateOptions(wilayahValue) {
         var estateSelect = $('#estateGrafik');
         estateSelect.empty();
 
         // Get the corresponding estate array based on the selected wilayah preset value
         var estateArray = groupData[wilayahValue];
+        // console.log(estateArray);
+
+        for (var i = 0; i < estateArray.length; i++) {
+            if (estateArray[i] === 'KTE4') {
+                estateArray[i] = 'KTE';
+            }
+        }
+
+        // console.log(estateArray);
 
         // Populate the options for the estate filter
         $.each(estateArray, function(index, value) {

@@ -1627,8 +1627,9 @@ class inspectController extends Controller
                     $restantod += $value2['restan_total'];
                 }# code...
 
-                $bt_tph = round( $totalbt / $todSam ,2);
-                $rst_tph = round( $restantod / $todSam ,2);
+                $bt_tph = ($todSam != 0) ? round($totalbt / $todSam, 2) : 0;
+                $rst_tph = ($todSam != 0) ? round($restantod / $todSam, 2) : 0;
+                
 
                 $testing[$key][$key1]['tph_tod'] = $todSam;
                 $testing[$key][$key1]['total_bt'] = $totalbt;
@@ -2052,8 +2053,8 @@ class inspectController extends Controller
             }# code...
         }
 
-    
-        // dd($testing);
+        updateKeyRecursive($dataSkor, "KTE4", "KTE");
+        // dd($dataSkor);
         return view('dataInspeksi', [
             'dataSkor' => $dataSkor,
             'dataSkor_ancak' => $dataSkor_ancak,
@@ -7971,10 +7972,18 @@ class inspectController extends Controller
             $RankingFinal[$key]['rankWil'] = $rank++;
         }
 
+        
+        
+    
+        
+        // Update key name from "KTE4" to "KTE" recursively
+        updateKeyRecursive($RankingFinal, "KTE4", "KTE");
+        
+        // Output the updated array
         // dd($RankingFinal);
-
-
-        //membagi tiap tiap wilayah ke 1 2 dan 3
+        
+        // dd($newRankingFinal);
+        
 
         $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7] ?? $RankingFinal[10] ;
         $Wil2 = $RankingFinal[2] ?? $RankingFinal[5] ?? $RankingFinal[8] ?? $RankingFinal[11];
@@ -9830,8 +9839,12 @@ class inspectController extends Controller
             unset($result_brd['pt_muabrd']);
             unset($result_buah['pt_muabuah']);
         }
-        
 
+        
+        $queryEsta = updateKeyRecursive2($queryEsta);
+        
+        // dd($queryEsta);
+ 
 
         $arrView = array();
         // dd($result_buah,$result_brd);
@@ -9884,8 +9897,6 @@ class inspectController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
-
-
 
 
     public function filterTahun(Request $request)
@@ -19629,8 +19640,7 @@ class inspectController extends Controller
         ]);
     }
 
-
-    public function getWeekInpeksi(Request $request)
+   public function getWeekInpeksi(Request $request)
     {
         $week = $request->input('week');
         // Convert the week format to start and end dates
@@ -23751,7 +23761,7 @@ class inspectController extends Controller
         }
 
         // dd($RankingFinal);
-
+        updateKeyRecursive($RankingFinal, "KTE4", "KTE");
 
         //membagi tiap tiap wilayah ke 1 2 dan 3
         $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7] ?? $RankingFinal[10] ;
@@ -25588,6 +25598,8 @@ class inspectController extends Controller
             unset($result_brd['pt_muabrd']);
             unset($result_buah['pt_muabuah']);
         }
+
+        $queryEsta = updateKeyRecursive2($queryEsta);
        // dd($mtTranstab1Wil_reg,$chrTransbuahv2);
        $arrView = array();
        // dd($result_brd);
