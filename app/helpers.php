@@ -761,8 +761,57 @@ if (!function_exists('changeKey')) {
         }
     }
 }
+if (!function_exists('changeKTE4ToKTE')) {
+    function changeKTE4ToKTE($array)
+    {
+        foreach ($array as &$subArray) {
+            foreach ($subArray as &$item) {
+                if (isset($item['est']) && $item['est'] === 'KTE4') {
+                    $item['est'] = 'KTE';
+                    if (isset($item['est_afd'])) {
+                        $item['est_afd'] = str_replace('KTE4_', 'KTE_', $item['est_afd']);
+                    }
+                }
+            }
+        }
+
+        return $array;
+    }
+}
+if (!function_exists('BpthKTE')) {
+    function BpthKTE($array)
+    {
+        foreach ($array as &$subArray) {
+            foreach ($subArray as &$item) {
+                if (isset($item['est']) && $item['est'] === 'KTE4') {
+                    $item['est'] = 'KTE';
+                }
+            }
+        }
+
+        return $array;
+    }
+}
+if (!function_exists('list_wil')) {
+    function list_wil($collection)
+    {
+        $collection->transform(function ($innerCollection) {
+            $innerCollection->transform(function ($item) {
+                if (isset($item->est) && $item->est === 'KTE4') {
+                    $item->est = 'KTE';
+                }
+                return $item;
+            });
+
+            return $innerCollection;
+        });
+
+        return $collection;
+    }
+}
 
 // CONTOH PEMAKAIAN 
 // updateKeyRecursive($mutu_buah, "KTE4", "KTE");
 // updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
 // $estev2 = updateKeyRecursive2($estev2);
+// $list_all_will = changeKTE4ToKTE($list_all_will);

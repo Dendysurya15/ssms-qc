@@ -1667,7 +1667,15 @@ class SidaktphController extends Controller
                 ->table('wil')
                 ->whereIn('regional', [$regSidak])
                 ->pluck('nama');
+            $list_all_will = changeKTE4ToKTE($list_all_will);
+            // dd($result);
 
+
+            $list_all_est = BpthKTE($list_all_est);
+            // dd($result);
+
+
+            $queryWill = list_wil($queryWill);
             $arrView = [];
 
             // $arrView['list_estate'] = $queryEst;
@@ -1727,6 +1735,7 @@ class SidaktphController extends Controller
                 }
             }
             $keys = array_keys($arrRSest);
+            $keys = updateKeyRecursive2($keys);
             // masukan ke array data penjumlahan dari estate
             // dd($arrBtTPHperEst, $arrKRest, $arrBHest, $arrRSest, $keys);
             $arrView['estate_new'] = $keys;
@@ -2829,6 +2838,15 @@ class SidaktphController extends Controller
 
             $arrView = [];
 
+            $list_all_will = changeKTE4ToKTE($list_all_will);
+            // dd($result);
+
+
+            $list_all_est = BpthKTE($list_all_est);
+            // dd($result);
+
+
+            $queryWill = list_wil($queryWill);
 
             $arrView['list_wilayah'] = $queryWill;
             $arrView['list_wilayah2'] = $queryWilChart;
@@ -2885,6 +2903,9 @@ class SidaktphController extends Controller
                 }
             }
             $keys = array_keys($arrRSest);
+
+            $keys = updateKeyRecursive2($keys);
+            // dd($keys);
             // masukan ke array data penjumlahan dari estate
             // dd($arrBtTPHperEst, $arrKRest, $arrBHest, $arrRSest, $keys);
             $arrView['estate_new'] = $keys;
@@ -3994,7 +4015,17 @@ class SidaktphController extends Controller
                 ->pluck('nama');
 
             $arrView = [];
+            $list_all_will = changeKTE4ToKTE($list_all_will);
+            // dd($result);
 
+
+            $list_all_est = BpthKTE($list_all_est);
+            // dd($result);
+
+
+            $queryWill = list_wil($queryWill);
+
+            // dd($list_all_will);
             $arrView['list_estate'] = $queryEst;
             $arrView['list_wilayah'] = $queryWill;
             $arrView['list_wilayah2'] = $queryWilChart;

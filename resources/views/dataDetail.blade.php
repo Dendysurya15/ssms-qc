@@ -928,6 +928,113 @@
             /* Adjust the height to make the icons smaller */
         }
     </style>
+    <br>
+    <br>
+    <div class="ml-3 mr-3 mb-3">
+        <div class="row text-center tbl-fixed">
+            <table class="table-responsive">
+                <thead style="color: white;">
+                    <tr>
+                        <th class="freeze-col align-middle" rowspan="3" bgcolor="#1c5870">No</th>
+                        <th class="freeze-col align-middle" rowspan="3" bgcolor="#1c5870">BLOK</th>
+                        <th class="align-middle" colspan="4" rowspan="2" bgcolor="#588434">DATA BLOK SAMPEL</th>
+                        <th class="align-middle" colspan="17" bgcolor="#588434">Mutu Ancak (MA)</th>
+                        <th class="align-middle" colspan="8" bgcolor="blue">Mutu Transport (MT)</th>
+                        <th class="align-middle" colspan="23" bgcolor="#ffc404" style="color: #000000;">Mutu Buah (MB)
+                        <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">All Skor</th>
+                        <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">Kategori</th>
+                        </th>
+                    </tr>
+                    <tr>
+                        <!-- Table Mutu Ancak -->
+                        <th class="align-middle" colspan="6" bgcolor="#588434">Brondolan Tinggal</th>
+                        <th class="align-middle" colspan="7" bgcolor="#588434">Buah Tinggal</th>
+                        <th class="align-middle" colspan="3" bgcolor="#588434">Pelepah Sengkleh</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#588434">Total Skor</th>
+
+                        <th class="align-middle" rowspan="2" bgcolor="blue">TPH Sampel</th>
+                        <th class="align-middle" colspan="3" bgcolor="blue">Brd Tinggal</th>
+                        <th class="align-middle" colspan="3" bgcolor="blue">Buah Tinggal</th>
+                        <th class="align-middle" rowspan="2" bgcolor="blue">Total Skor</th>
+
+                        <!-- Table Mutu Buah -->
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang Sampel</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong (E)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar V-Cut</th>
+                        <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung Brondolan</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
+                    </tr>
+                    <tr>
+                        <!-- Table Mutu Ancak -->
+                        <th class="align-middle" bgcolor="#588434">Jumlah Pokok Sampel</th>
+                        <th class="align-middle" bgcolor="#588434">Luas Ha Sampel</th>
+                        <th class="align-middle" bgcolor="#588434">Jumlah Jjg Panen</th>
+                        <th class="align-middle" bgcolor="#588434">AKP Realisasi</th>
+                        <th class="align-middle" bgcolor="#588434">P</th>
+                        <th class="align-middle" bgcolor="#588434">K</th>
+                        <th class="align-middle" bgcolor="#588434">GL</th>
+                        <th class="align-middle" bgcolor="#588434">Total Brd</th>
+                        <th class="align-middle" bgcolor="#588434">Brd/JJG</th>
+                        <th class="align-middle" bgcolor="#588434">Skor</th>
+                        <th class="align-middle" bgcolor="#588434">S</th>
+                        <th class="align-middle" bgcolor="#588434">M1</th>
+                        <th class="align-middle" bgcolor="#588434">M2</th>
+                        <th class="align-middle" bgcolor="#588434">M3</th>
+                        <th class="align-middle" bgcolor="#588434">Total JJG</th>
+                        <th class="align-middle" bgcolor="#588434">%</th>
+                        <th class="align-middle" bgcolor="#588434">Skor</th>
+                        <th class="align-middle" bgcolor="#588434">Pokok</th>
+                        <th class="align-middle" bgcolor="#588434">%</th>
+                        <th class="align-middle" bgcolor="#588434">Skor</th>
+
+                        <th class="align-middle" bgcolor="blue">Butir</th>
+                        <th class="align-middle" bgcolor="blue">Butir/TPH</th>
+                        <th class="align-middle" bgcolor="blue">Skor</th>
+                        <th class="align-middle" bgcolor="blue">Jjg</th>
+                        <th class="align-middle" bgcolor="blue">Jjg/TPH</th>
+                        <th class="align-middle" bgcolor="blue">Skor</th>
+                        <!-- Table Mutu Buah -->
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Ya</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dataInspeksi">
+                    <!-- <td>PLE</td>
+                                    <td>OG</td> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <div class="card p-4">
         <h4 class="text-center mt-2" style="font-weight: bold">Tracking Plot Inpeksi - {{$est}} {{$afd}} </h4>
@@ -2475,20 +2582,12 @@
     function Show() {
         fetchAndUpdateData();
         getmaps();
+        getDataDay();
     }
 
     document.querySelector('button[type="button"]').addEventListener('click', Show);
 
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     const backToDataButton = document.getElementById('back-to-data-btn');
 
-    //     backToDataButton.addEventListener('click', function() {
-    //         // Set the desired tab in the local storage
-    //         localStorage.setItem('selectedTab', 'nav-data-tab');
-    //         // Navigate back to the dashboard_inspeksi page
-    //         window.location.href = 'https://qc-apps.srs-ssms.com/dashboard_inspeksi';
-    //     });
-    // });
 
     function goBack() {
         // Save the selected tab to local storage
@@ -2496,5 +2595,105 @@
 
         // Redirect to the target page
         window.location.href = "http://ssms-qc.test/dashboard_inspeksi";
+    }
+    var regional = '{{$reg}}';
+
+    function getDataDay() {
+        var Tanggal = document.getElementById('inputDate').value;
+        var est = document.getElementById('est').value;
+        var afd = document.getElementById('afd').value;
+        var reg = regional; // Assign the "regional" variable to "reg"
+        var _token = $('input[name="_token"]').val();
+
+        $.ajax({
+            url: "{{ route('getDataDay') }}",
+            method: "GET",
+            data: {
+                Tanggal: Tanggal,
+                est: est,
+                afd: afd,
+                reg: reg, // Pass the "reg" value in the data object
+                _token: _token
+            },
+            success: function(result) {
+                var parseResult = JSON.parse(result)
+                var mutuAncak = Object.entries(parseResult['mutuAncak'])
+                var mutuBuah = Object.entries(parseResult['mutuBuah'])
+                var mutuTransport = Object.entries(parseResult['mutuTransport'])
+                var all_data = Object.entries(parseResult['data_chuack'])
+
+
+                var tbody1 = document.getElementById('dataInspeksi');
+
+                console.log(all_data);
+                var arrTbody1 = all_data
+
+
+                let inc = 1;
+                arrTbody1.forEach(element => {
+                    tr = document.createElement('tr');
+                    let item1 = inc++;
+                    let item2 = element[0];
+                    let item3 = element[1]['pokok_sample'] ?? '-';
+                    let item4 = element[1]['luas_ha'] ?? '-'
+                    let item5 = element[1]['jml_jjg_panen'] ?? '-';
+                    let item6 = element[1]['akp_real'] ?? '-';
+                    let item7 = element[1]['p_ma'] ?? '-';
+                    let item8 = element[1]['k_ma'] ?? '-';
+                    let item9 = element[1]['gl_ma'] ?? '-';
+                    let item10 = element[1]['total_brd_ma'] ?? '-';
+                    let item11 = element[1]['btr_jjg_ma'] ?? '-';
+                    let item12 = element[1]['skor_brd'] ?? '-';
+
+                    let item13 = element[1]['bhts_ma'] ?? '-';
+                    let item14 = element[1]['bhtm1_ma'] ?? '-';
+                    let item15 = element[1]['bhtm2_ma'] ?? '-';
+                    let item16 = element[1]['bhtm3_ma'] ?? '-';
+                    let item17 = element[1]['tot_jjg_ma'] ?? '-';
+                    let item18 = element[1]['jjg_tgl_ma'] ?? '-';
+                    let item19 = element[1]['skor_buah'] ?? '-';
+                    let item20 = element[1]['ps_ma'] ?? '-';
+                    let item21 = element[1]['PerPSMA'] ?? '-';
+                    let item22 = element[1]['skor_pale'] ?? '-';
+                    let item23 = (element[1]['skor_pale'] ?? '-') + (element[1]['skor_brd'] ?? '-') + (element[1]['skor_buah'] ?? '-');
+
+
+                    const items = [];
+                    for (let i = 1; i <= 23; i++) {
+                        items.push(eval(`item${i}`));
+                    }
+
+                    items.forEach((item, index) => {
+                        const itemElement = document.createElement('td');
+                        itemElement.classList.add('text-center');
+                        itemElement.innerText = item;
+
+                        // if (index === 31) {
+                        //     // Apply background color based on the value of item32
+                        //     if (item === 'SATISFACTORY') {
+                        //         itemElement.style.backgroundColor = '#fffc04';
+                        //     } else if (item === 'EXCELLENT') {
+                        //         itemElement.style.backgroundColor = '#5874c4';
+                        //     } else if (item === 'GOOD') {
+                        //         itemElement.style.backgroundColor = '#10fc2c';
+                        //     } else if (item === 'POOR') {
+                        //         itemElement.style.backgroundColor = '#ff0404';
+                        //     } else if (item === 'FAIR') {
+                        //         itemElement.style.backgroundColor = '#ffa404';
+                        //     }
+                        // }
+
+                        tr.appendChild(itemElement);
+                    });
+
+                    tbody1.appendChild(tr)
+                    // }
+                });
+
+
+
+
+            }
+        });
     }
 </script>
