@@ -129,42 +129,42 @@
         <td>{{skor_buah_tinggal($value2['skor_restan'])}}</td>
         <td>{{skor_buah_tinggal($value2['skor_restan']) + skor_brd_tinggal($value2['skor'])}}</td>
 
-        <td>{{$value2['blok_mb']}}</td>
-        <td>{{$value2['jml_janjang']}}</td>
-        <td>{{$value2['jml_mentah']}}</td>
-        <td>{{$value2['PersenBuahMentah']}}</td>
-        <td>{{skor_buah_mentah_mb($value2['PersenBuahMentah'])}}</td>
+        <td>{{$value2['blok_mb'] ?? 0}}</td>
+        <td>{{$value2['jml_janjang'] ?? 0}}</td>
+        <td>{{$value2['jml_mentah']?? 0}}</td>
+        <td>{{$value2['PersenBuahMentah']?? 0}}</td>
+        <td>{{skor_buah_mentah_mb($value2['PersenBuahMentah']?? 0 )}}</td>
 
-        <td>{{$value2['jml_masak']}}</td>
-        <td>{{$value2['PersenBuahMasak']}}</td>
-        <td>{{skor_buah_masak_mb($value2['PersenBuahMasak'])}}</td>
+        <td>{{$value2['jml_masak']?? 0}}</td>
+        <td>{{$value2['PersenBuahMasak']?? 0}}</td>
+        <td>{{skor_buah_masak_mb($value2['PersenBuahMasak']?? 0)}}</td>
 
-        <td>{{$value2['jml_over']}}</td>
-        <td>{{$value2['PersenBuahOver']}}</td>
-        <td>{{skor_buah_over_mb($value2['PersenBuahOver'])}}</td>
+        <td>{{$value2['jml_over']?? 0}}</td>
+        <td>{{$value2['PersenBuahOver']?? 0}}</td>
+        <td>{{skor_buah_over_mb($value2['PersenBuahOver']?? 0)}}</td>
 
-        <td>{{$value2['jml_empty']}}</td>
-        <td>{{$value2['PersenPerJanjang']}}</td>
-        <td>{{skor_jangkos_mb($value2['PersenPerJanjang'])}}</td>
+        <td>{{$value2['jml_empty']?? 0}}</td>
+        <td>{{$value2['PersenPerJanjang']?? 0}}</td>
+        <td>{{skor_jangkos_mb($value2['PersenPerJanjang']?? 0)}}</td>
 
-        <td>{{$value2['jml_vcut']}}</td>
-        <td>{{$value2['PersenVcut']}}</td>
-        <td>{{skor_buah_over_mb($value2['PersenVcut'])}}</td>
+        <td>{{$value2['jml_vcut']?? 0}}</td>
+        <td>{{$value2['PersenVcut']?? 0}}</td>
+        <td>{{skor_buah_over_mb($value2['PersenVcut']?? 0)}}</td>
 
-        <td>{{$value2['jml_abnormal']}}</td>
-        <td>{{$value2['PersenAbr']}}</td>
+        <td>{{$value2['jml_abnormal']?? 0}}</td>
+        <td>{{$value2['PersenAbr']?? 0}}</td>
 
-        <td>{{$value2['alas_mb']}} / {{$value2['blok_mb']}}</td>
-        <td>{{$value2['PersenKrgBrd']}}</td>
-        <td>{{skor_abr_mb($value2['PersenKrgBrd'])}}</td>
+        <td>{{$value2['alas_mb']?? 0}} / {{$value2['blok_mb']?? 0}}</td>
+        <td>{{$value2['PersenKrgBrd']?? 0}}</td>
+        <td>{{skor_abr_mb($value2['PersenKrgBrd']?? 0)}}</td>
 
         <td>{{
-            skor_buah_mentah_mb($value2['PersenBuahMentah']) +
-            skor_buah_masak_mb($value2['PersenBuahMasak']) +
-            skor_buah_over_mb($value2['PersenBuahOver']) +
-            skor_jangkos_mb($value2['PersenPerJanjang']) +
-            skor_buah_over_mb($value2['PersenVcut']) +
-            skor_abr_mb($value2['PersenKrgBrd']) 
+            skor_buah_mentah_mb($value2['PersenBuahMentah']?? 0) +
+            skor_buah_masak_mb($value2['PersenBuahMasak']?? 0) +
+            skor_buah_over_mb($value2['PersenBuahOver']?? 0) +
+            skor_jangkos_mb($value2['PersenPerJanjang']?? 0) +
+            skor_buah_over_mb($value2['PersenVcut']?? 0) +
+            skor_abr_mb($value2['PersenKrgBrd']?? 0) 
         }}</td>
 
 
@@ -233,16 +233,16 @@
         @if($keys2 == $key2)
 
         <td bgcolor="{{ $skor_kategori_akhir[0] }}">
-            {{skor_brd_ma($value2['btr_jjg_ma']) + skor_buah_Ma($value2['jjg_tgl_ma']) +  skor_palepah_ma($value2['PerPSMA']) 
+            {{skor_brd_ma($value2['btr_jjg_ma']?? 0) + skor_buah_Ma($value2['jjg_tgl_ma']?? 0) +  skor_palepah_ma($value2['PerPSMA']?? 0) 
             +
-          skor_buah_tinggal($value2['skor_restan']) + skor_brd_tinggal($value2['skor']) 
+          skor_buah_tinggal($value2['skor_restan']?? 0) + skor_brd_tinggal($value2['skor']?? 0) 
             +
-           skor_buah_mentah_mb($value2['PersenBuahMentah']) +
-            skor_buah_masak_mb($value2['PersenBuahMasak']) +
-            skor_buah_over_mb($value2['PersenBuahOver']) +
-            skor_jangkos_mb($value2['PersenPerJanjang']) +
-            skor_buah_over_mb($value2['PersenVcut']) +
-            skor_abr_mb($value2['PersenKrgBrd']) }}
+           skor_buah_mentah_mb($value2['PersenBuahMentah']?? 0) +
+            skor_buah_masak_mb($value2['PersenBuahMasak']?? 0) +
+            skor_buah_over_mb($value2['PersenBuahOver']?? 0) +
+            skor_jangkos_mb($value2['PersenPerJanjang']?? 0) +
+            skor_buah_over_mb($value2['PersenVcut']?? 0) +
+            skor_abr_mb($value2['PersenKrgBrd']?? 0) }}
 
 
         </td>
@@ -621,7 +621,7 @@
     @foreach ($dataSkor_ancak as $key => $itemx)
     @foreach ($itemx as $key2 => $plasma)
     @foreach ($plasma as $key3 => $item2)
-    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III" || $key3 == "WIL-IV" || $key3 == "WIL-V" || $key3 == "WIL I" || $key3 == "WIL II" || $key3 == "WIL III" || $key3 == "WIL IV" || $key3 == "WIL V" || $key3 == "WIL VI")
+    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III" || $key3 == "WIL-IV" || $key3 == "WIL-V" || $key3 == "WIL-VI" || $key3 == "WIL-VII" )
     @php
     $skor_kategori_akhirx = skor_kategori_akhir(check_array('allSkor', $item2));
     $total_skorAncak = $item2['Skor_brd'] + $item2['Skor_buah'] + $item2['Skor_ps'];

@@ -2055,8 +2055,8 @@ class inspectController extends Controller
         updateKeyRecursive($dataSkor, "KTE4", "KTE");
 
         // $result = array_merge_recursive($dataSkor_ancak[4]['Plasma2'], $dataSkor_buah[4]['Plasma2'], $dataSkor_trans[4]['Plasma2']);
-        // dd($dataSkor_buah);
-        // dd($dataSkor_ancak,$dataSkor_buah,$dataSkor_trans);
+        // dd($testing);
+        // dd($dataSkor_ancak,$dataSkor_trans,$dataSkor_buah);
         return view('dataInspeksi', [
             'dataSkor' => $dataSkor,
             'dataSkor_ancak' => $dataSkor_ancak,
@@ -2929,162 +2929,7 @@ class inspectController extends Controller
         $DataMtAncak = json_decode($DataMtAncak, true);
         // dd($DataMtAncak);
 
-        $MutuAncak = array();
-        foreach ($DataMtAncak as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                $akp = 0;
-                $skor_bTinggal = 0;
-                $brdPerjjg = 0;
-                $pokok_panen = 0;
-                $janjang_panen = 0;
-                $p_panen = 0;
-                $k_panen = 0;
-                $listBlokPerAfd = array();
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
-                            $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['estate'] . ' ' . $value3['blok'];
-                        }
-                        $jum_ha = count($listBlokPerAfd);
-                        // $pokok_panen = json_decode($value3["pokok_dipanen"], true);
-                        // $jajang_panen = json_decode($value3["jjg_dipanen"], true);
-                        // $brtp = json_decode($value3["brtp"], true);
-                        // $brtk = json_decode($value3["brtk"], true);
-                        // $brtgl = json_decode($value3["brtgl"], true);
-
-                        // $pokok_panen  = count($pokok_panen);
-                        // $janjang_panen = array_sum($jajang_panen);
-                        // $p_panen = array_sum($brtp);
-                        // $k_panen = array_sum($brtk);
-                        // $brtgl_panen = array_sum($brtgl);
-
-                        $pokok_panen  += $value3["sample"];
-                        $janjang_panen += $value3["jjg"];
-                        $p_panen += $value3["brtp"];
-                        $k_panen += $value3["brtk"];
-                        $brtgl_panen += $value3["brtgl"];
-
-                        $bhts_panen += $value3["bhts"];
-                        $bhtm1_panen += $value3["bhtm1"];
-                        $bhtm2_panen += $value3["bhtm2"];
-                        $bhtm3_oanen += $value3["bhtm3"];
-                        $pelepah_s += $value3["ps"];
-
-                        // $akp = ($janjang_panen / $pokok_panen) %
-                        $akp = ($janjang_panen / $pokok_panen) * 100;
-                        $skor_bTinggal = $p_panen + $k_panen + $brtgl_panen;
-                        $brdPerjjg = $skor_bTinggal / $pokok_panen;
-
-                        //skore PEnggunnan Brondolan
-                        $skor_brdPerjjg = 0;
-                        if ($brdPerjjg <= 1.0) {
-                            $skor_brdPerjjg = 20;
-                        } else if ($brdPerjjg >= 1.5 && $brdPerjjg <= 2.0) {
-                            $skor_brdPerjjg = 12;
-                        } else if ($brdPerjjg >= 2.0 && $brdPerjjg <= 2.5) {
-                            $skor_brdPerjjg = 8;
-                        } else if ($brdPerjjg >= 2.5 && $brdPerjjg <= 3.0) {
-                            $skor_brdPerjjg = 4;
-                        } else if ($brdPerjjg >= 3.0 && $brdPerjjg <= 3.5) {
-                            $skor_brdPerjjg = 0;
-                        } else if ($brdPerjjg >= 4.0 && $brdPerjjg <= 4.5) {
-                            $skor_brdPerjjg = 8;
-                        } else if ($brdPerjjg >=  4.5 && $brdPerjjg <= 5.0) {
-                            $skor_brdPerjjg = 12;
-                        } else if ($brdPerjjg >=  5.0) {
-                            $skor_brdPerjjg = 16;
-                        }
-
-                        // $bhts = json_decode($value3["bhts"], true);
-                        // $bhtm1 = json_decode($value3["bhtm1"], true);
-                        // $bhtm2 = json_decode($value3["bhtm2"], true);
-                        // $bhtm3 = json_decode($value3["bhtm3"], true);
-
-
-                        // $bhts_panen = array_sum($bhts);
-                        // $bhtm1_panen = array_sum($bhtm1);
-                        // $bhtm2_panen = array_sum($bhtm2);
-                        // $bhtm3_oanen = array_sum($bhtm3);
-
-                        $sumBH = $bhts_panen +  $bhtm1_panen +  $bhtm2_panen +  $bhtm3_oanen;
-
-                        $sumPerBH = $sumBH / ($janjang_panen + $sumBH) * 100;
-
-                        $skor_bh = 0;
-                        if ($sumPerBH <=  0.0) {
-                            $skor_bh = 20;
-                        } else if ($sumPerBH >=  0.0 && $sumPerBH <= 1.0) {
-                            $skor_bh = 18;
-                        } else if ($sumPerBH >= 1 && $sumPerBH <= 1.5) {
-                            $skor_bh = 16;
-                        } else if ($sumPerBH >= 1.5 && $sumPerBH <= 2.0) {
-                            $skor_bh = 12;
-                        } else if ($sumPerBH >= 2.0 && $sumPerBH <= 2.5) {
-                            $skor_bh = 8;
-                        } else if ($sumPerBH >= 2.5 && $sumPerBH <= 3.0) {
-                            $skor_bh = 4;
-                        } else if ($sumPerBH >= 3.0 && $sumPerBH <= 3.5) {
-                            $skor_bh = 0;
-                        } else if ($sumPerBH >=  3.5 && $sumPerBH <= 3.5) {
-                            $skor_bh = 0;
-                        } else if ($sumPerBH >= 3.5 && $sumPerBH <= 4.0) {
-                            $skor_bh = 4;
-                        } else if ($sumPerBH >= 4.0 && $sumPerBH <= 4.5) {
-                            $skor_bh = 8;
-                        } else if ($sumPerBH >= 4.5 && $sumPerBH <= 5.0) {
-                            $skor_bh = 12;
-                        } else if ($sumPerBH >= 5.0) {
-                            $skor_bh = 10;
-                        }
-                    }
-                    // data untuk pelepah sengklek
-                    // $ps = json_decode($value3["ps"], true);
-                    // $pelepah_s = array_sum($ps);
-                    if ($pelepah_s != 0) {
-                        $perPl = ($pokok_panen / $pelepah_s) * 100;
-                    } else {
-                        $perPl = 0;
-                    }
-                    $skor_perPl = 0;
-                    if ($perPl <=  0.5) {
-                        $skor_perPl = 5;
-                    } else if ($perPl >=  0.5 && $perPl <= 1.0) {
-                        $skor_perPl = 4;
-                    } else if ($perPl >= 1.0 && $perPl <= 1.5) {
-                        $skor_perPl = 3;
-                    } else if ($perPl >= 1.5 && $perPl <= 2.0) {
-                        $skor_perPl = 2;
-                    } else if ($perPl >= 2.0 && $perPl <= 2.5) {
-                        $skor_perPl = 1;
-                    } else if ($perPl >= 2.5) {
-                        $skor_perPl = 0;
-                    }
-                }
-
-                $MutuAncak[$key][$key2][$key3]['pokok_sample'] = $pokok_panen;
-                $MutuAncak[$key][$key2][$key3]['jum_ha'] = $jum_ha;
-                $MutuAncak[$key][$key2][$key3]['jumlah_panen'] = $janjang_panen;
-                $MutuAncak[$key][$key2][$key3]['akp_rl'] =  number_format($akp, 2);
-                $MutuAncak[$key][$key2][$key3]['p'] = $p_panen;
-                $MutuAncak[$key][$key2][$key3]['k'] = $k_panen;
-                $MutuAncak[$key][$key2][$key3]['tgl'] = $brtgl_panen;
-                $MutuAncak[$key][$key2][$key3]['total_brd'] = $skor_bTinggal;
-                $MutuAncak[$key][$key2][$key3]['brd/jjg'] = number_format($brdPerjjg, 2);
-                $MutuAncak[$key][$key2][$key3]['skor_brd'] = number_format($skor_brdPerjjg, 2);
-
-                $MutuAncak[$key][$key2][$key3]['s'] = $bhts_panen;
-                $MutuAncak[$key][$key2][$key3]['m1'] = $bhtm1_panen;
-                $MutuAncak[$key][$key2][$key3]['m2'] = $bhtm2_panen;
-                $MutuAncak[$key][$key2][$key3]['m3'] = $bhtm3_oanen;
-                $MutuAncak[$key][$key2][$key3]['total_jjg'] = $sumBH;
-                $MutuAncak[$key][$key2][$key3]['jjg/ji'] = number_format($sumPerBH, 2);
-                $MutuAncak[$key][$key2][$key3]['skor_bhTgl'] = $skor_bh;
-
-                $MutuAncak[$key][$key2][$key3]['jjgPS'] = $pelepah_s;
-                $MutuAncak[$key][$key2][$key3]['perPl'] =  number_format($perPl, 2);
-                $MutuAncak[$key][$key2][$key3]['skor_perPl'] = $skor_perPl;
-            }
-        }
+     
 
         // dd($MutuAncak);
 
@@ -3826,7 +3671,7 @@ class inspectController extends Controller
             'estate' => $queryEst,
             'dataSkor' => $dataSkor,
             'Mutubuah' => $Mutubuah,
-            'MutuAncak' => $MutuAncak,
+         
             'dataPerWil' => $dataPerWil,
             'TotalperEstate' => $TotalperEstate,
             'wil_1' => $wil_1,
@@ -10547,9 +10392,7 @@ class inspectController extends Controller
                 }
             }
         }
-// dd($test);
-        // dd($newTPHSampleReg2);
-        // dd($test);   
+
 
         $tphSampleReg2 = array();
         foreach($newTPHSampleReg2 as $key => $value){
@@ -12620,7 +12463,7 @@ class inspectController extends Controller
         // dd($RegMTanckTHn);
 
         //end perhitungan MT ancak
-// dd($queryMTtrans);
+
         $dataTransportBulan = array();
         foreach ($queryMTtrans as $key => $value) {
             foreach ($value as $key2 => $value2) {
@@ -26792,11 +26635,11 @@ class inspectController extends Controller
         $CalculateStack['bmt'] = $bmt;
         $CalculateStack['pokok_sample'] = $jjg;
         // dd($transReg2,$transport);
-        // dd($transReg2);
+        // dd($transport);
         // Session::put('transReg2', $transReg2);
         $result = array_merge_recursive($ancak, $transport, $mutuBuah);
-
         // dd($result);
+        //     dd($transport);
         // dd($ancak,$transport,$mutuBuah);
         $arrView = array();
         $arrView['hitung'] =  $CalculateStack;
