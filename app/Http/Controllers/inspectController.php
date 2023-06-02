@@ -312,6 +312,7 @@ class inspectController extends Controller
         echo json_encode($plot);
     }
 
+ 
     public function cetakPDFFI($id, $est, $tgl)
     {
 
@@ -552,7 +553,7 @@ class inspectController extends Controller
         });
 
 
-        dd($all_mutu);
+        // dd($all_mutu);
         function getGroupLetter($key)
         {
             return substr($key, 4, 2);
@@ -571,7 +572,7 @@ class inspectController extends Controller
 
    
         ////
-        dd($all_mutu);
+        // dd($all_mutu);
         
         
         // print_r($all_mutu);
@@ -1222,7 +1223,7 @@ class inspectController extends Controller
                             $tph_sample = $value4[0]['tph_baris']; 
                             $sum_bt = $value4[0]['bt'];  
                         }else{
-                            $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3);
+                            $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3,2);
                         }
                     } else {
                         $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = $tph_sample;
@@ -2117,7 +2118,6 @@ class inspectController extends Controller
               'plasma_tph' => $testingPlasma,
         ]);
     }
-
 
     public function dashboard_inspeksi(Request $request)
     {
@@ -3737,6 +3737,7 @@ class inspectController extends Controller
     }
 
 
+   
     public function filter(Request $request)
     {
 
@@ -4305,7 +4306,7 @@ class inspectController extends Controller
                             $tph_sample = $value4[0]['tph_baris']; 
                             $sum_bt = $value4[0]['bt'];  
                         }else{
-                            $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3);
+                            $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3, 2);
                         }
                     } else {
                         $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = $tph_sample;
@@ -9793,7 +9794,6 @@ class inspectController extends Controller
     }
 
 
-  
     public function filterTahun(Request $request)
     {
         $year = $request->input('year');
@@ -16981,15 +16981,13 @@ class inspectController extends Controller
         $filteredBTT["pt_muabuah"] = $arrChartbhMua["pt_muabuah"];
         $filteredBRD["pt_muabrd"] = $arrChartbhBRD["pt_muabrd"];
 
-
-     
         // Check if $Reg is not equal to 1 or '1'
-            if ($RegData != 1 && $RegData != '1') {
-                unset($filteredBTT['pt_muabuah']);
-                unset($filteredBRD['pt_muabrd']);
-            }
+        if ($RegData != 1 && $RegData != '1') {
+            unset($filteredBTT['pt_muabuah']);
+            unset($filteredBRD['pt_muabrd']);
+        }
+        // dd($filteredBTT);
 
-            // dd($filteredBTT);
         $arrView = array();
 
         $arrView['RekapBulan'] =  $RekapBulan;
@@ -17020,7 +17018,6 @@ class inspectController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
-
 
     public function graphfilter(Request $request)
     {
@@ -18546,7 +18543,6 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
-
     public function updateBA(Request $request)
     {
 
@@ -18750,7 +18746,6 @@ class inspectController extends Controller
             ->delete();
         return response()->json(['status' => 'success']);
     }
-
     public function pdfBA(Request $request)
     {
         $est = $request->input('estBA');
@@ -18996,7 +18991,7 @@ class inspectController extends Controller
                 }
                 
                 if (isset($panenKey) && $panenKey <= 3 && isset($ancak[$key]['luas_blok'])) {
-                    $transport[$key]['tph_sample'] = round($LuasKey * 1.3);
+                    $transport[$key]['tph_sample'] = round($LuasKey * 1.3,2);
                 } else {
                     $transport[$key]['tph_sample'] = $tph_sample;
                 }
@@ -19253,14 +19248,13 @@ class inspectController extends Controller
             ->whereIn('wil', $regArray)->pluck('est');
         $EstMapVal = json_decode($EstMapVal, true);
 
-        // $EstMapVal = updateKeyRecursive2($EstMapVal);
+
         // dd($reg, $EstMapVal);
         // Return the estates as JSON data
         return response()->json([
             'estates' => $EstMapVal
         ]);
     }
-
     public function getMapsdetail(Request $request)
     {
         $est = $request->input('est');
@@ -19547,8 +19541,7 @@ class inspectController extends Controller
         ]);
     }
 
-
-    public function getWeekInpeksi(Request $request)
+     public function getWeekInpeksi(Request $request)
     {
         $week = $request->input('week');
         // Convert the week format to start and end dates
@@ -20125,7 +20118,7 @@ class inspectController extends Controller
                             $tph_sample = $value4[0]['tph_baris']; 
                             $sum_bt = $value4[0]['bt'];  
                         }else{
-                            $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3);
+                            $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3,2);
                         }
                     } else {
                         $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = $tph_sample;
@@ -24261,13 +24254,13 @@ class inspectController extends Controller
 
                     if ($RegData == '2' || $RegData == 2) {
                         if ($dataBLok != 0) {
-                            $brdPertph = round($sum_bt / $tot_sample, 2);
+                        $brdPertph = $tot_sample != 0 ? round($sum_bt / $tot_sample, 2) : 0;
                         } else {
                             $brdPertph = 0;
                         }
                     }else {
                         if ($dataBLok != 0) {
-                            $brdPertph = round($sum_bt / $dataBLok, 2);
+                            $brdPertph = $dataBLok != 0 ? round($sum_bt / $dataBLok, 2) : 0;
                         } else {
                             $brdPertph = 0;
                         }
@@ -24275,13 +24268,13 @@ class inspectController extends Controller
 
                     if ($RegData == '2' || $RegData == 2) {
                         if ($dataBLok != 0) {
-                            $buahPerTPH = round($sum_rst / $tot_sample, 2);
+                          $buahPerTPH = $tot_sample != 0 ? round($sum_rst / $tot_sample, 2) : 0;
                         } else {
                             $buahPerTPH = 0;
                         }
                     }else {
                         if ($dataBLok != 0) {
-                            $buahPerTPH = round($sum_rst / $dataBLok, 2);
+                          $buahPerTPH = $dataBLok != 0 ? round($sum_rst / $dataBLok, 2) : 0;
                         } else {
                             $buahPerTPH = 0;
                         }
@@ -25561,7 +25554,8 @@ class inspectController extends Controller
         exit();
     }
 
-    
+   
+  
     public function pdfBA_excel(Request $request)
     {
         $est = $request->input('estBA_excel');
@@ -26414,5 +26408,6 @@ class inspectController extends Controller
         exit();
     
     }
+
 
 }
