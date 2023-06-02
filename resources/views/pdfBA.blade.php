@@ -202,8 +202,8 @@
                                 <th colspan="6">Buah Tinggal</th>
                                 <th colspan="2">Pelepah Sengkleh</th>
                                 <th rowspan="2">TPH Sample</th>
-                                <th colspan="2">Brondolan Tingal</th>
-                                <th colspan="2">Buah TInggal</th>
+                                <th colspan="2">Brondolan Tinggal</th>
+                                <th colspan="2">Buah Tinggal</th>
 
                             </tr>
                             <tr>
@@ -589,7 +589,7 @@
 
         @endif
 
-        @if ($data['reg'] === '2')
+        @if ($data['reg'] === '2' || $data['reg'] === '4')
 
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <div class="table-responsive">
@@ -621,8 +621,8 @@
                                 <th colspan="6">Buah Tinggal</th>
                                 <th colspan="2">Palepah Sengkleh</th>
                                 <th rowspan="2">TPH Sample</th>
-                                <th colspan="2">Brondolan Tingal</th>
-                                <th colspan="2">Buah TInggal</th>
+                                <th colspan="2">Brondolan Tinggal</th>
+                                <th colspan="2">Buah Tinggal</th>
 
                             </tr>
                             <tr>
@@ -833,7 +833,7 @@
                                 <tr>
                                     <td colspan="4">Total</td>
                                     <td>{{ $TotLuasBlok }}</td>
-                                    <td></td>
+                                    <td>{{$data['sph_avg']}}</td>
 
                                     <td>{{ $totalPokokSample }}</td>
                                     <td>{{$TotLuasSam}}</td>

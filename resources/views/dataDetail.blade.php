@@ -471,7 +471,7 @@
                         <th>Pokok_panen</th>
                         <th>Komentar</th>
                         <th>Status</th>
-                        @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim' || session('user_name') == 'Eko Nor Sawaludin')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
                         <th>Aksi</th>
                         @endif
 
@@ -494,6 +494,7 @@
                         <th>Afdeling</th>
                         <th>Tph Baris</th>
                         <th>Blok</th>
+                        <th>Status Panen</th>
                         <th>Petugas</th>
                         <th>Ancak Pemanen</th>
                         <th>Bmk</th>
@@ -505,7 +506,7 @@
                         <th>Vcut</th>
                         <th>Alas_br</th>
                         <th>Komentar</th>
-                        @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim' || session('user_name') == 'Eko Nor Sawaludin')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
                         <th>Aksi</th>
                         @endif
 
@@ -529,12 +530,13 @@
                         <th>Estate</th>
                         <th>Afdeling</th>
                         <th>Blok</th>
+                        <th>Status Panen</th>
                         <th>Tph_baris</th>
                         <th>Petugas</th>
                         <th>Rst</th>
                         <th>Bt</th>
                         <th>Komentar</th>
-                        @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim' || session('user_name') == 'Eko Nor Sawaludin')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
                         <th>Aksi</th>
                         @endif
 
@@ -607,6 +609,10 @@
                 <div class="mb-3">
                     <label for="update-blokCak" class="col-form-label">Blok</label>
                     <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="" required>
+                </div>
+                <div class="mb-3">
+                    <label for="update-StatusPnen" class="col-form-label">Status Panen</label>
+                    <input type="text" class="form-control" id="update-StatusPnen" name="StatusPnen" value="" required>
                 </div>
                 <div class="mb-3">
                     <label for="update-sph" class="col-form-label">SPH</label>
@@ -718,6 +724,10 @@
                     <input type="text" class="form-control" id="update-blok_bh" name="blok_bh" value="">
                 </div>
                 <div class="mb-3">
+                    <label for="update-StatusBhpnen" class="col-form-label">Status Panen</label>
+                    <input type="text" class="form-control" id="update-StatusBhpnen" name="StatusBhpnen" value="">
+                </div>
+                <div class="mb-3">
                     <label for="update-petugasBH" class="col-form-label">Petugas</label>
                     <input type="text" class="form-control" id="update-petugasBH" name="petugasBH" value="">
                 </div>
@@ -791,8 +801,12 @@
                     <input type="text" class="form-control" id="update-afd_trans" name="afd_trans" value="">
                 </div>
                 <div class="mb-3">
-                    <label for="update-blok_trans" class="col-form-label">BLOk</label>
+                    <label for="update-blok_trans" class="col-form-label">Blok</label>
                     <input type="text" class="form-control" id="update-blok_trans" name="blok_trans" value="" required>
+                </div>
+                <div class="mb-3">
+                    <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
+                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value="" required>
                 </div>
                 <div class="mb-3">
                     <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
@@ -931,7 +945,7 @@
     <br>
     <br>
 
-    @if ($reg == 2 ||$reg == 4 )
+    @if ($reg == 2 || $reg == 4 )
     <div class="ml-3 mr-3 mb-3">
         <div class="row text-center tbl-fixed">
             <table class="table-responsive">
@@ -1685,7 +1699,7 @@
 
 
     // end bagian untuk map 
-    var currentUserName = "{{ session('user_name') }}";
+    var currentUserName = "{{ session('jabatan') }}";
     //untuk mengirim parameter tanggal ke download pdf BA
     document.addEventListener('DOMContentLoaded', function() {
         const showButton = document.getElementById('show-button');
@@ -1862,6 +1876,7 @@
                 //modal untuk mnerima data untuk mutu ancak
                 function openUpdateModal(id,
                     blok_ancak,
+                    status_cak,
                     sph_ancak,
                     br1_cak,
                     br2_cak,
@@ -1885,6 +1900,7 @@
                     const updateForm = document.getElementById('update-form');
                     const updateId = document.getElementById('update-id');
                     const bloks = document.getElementById('update-blokCak');
+                    const PanensStat = document.getElementById('update-StatusPnen');
                     const updateSph = document.getElementById('update-sph');
                     const updateBr1 = document.getElementById('update-br1');
                     const updateBr2 = document.getElementById('update-br2');
@@ -1909,6 +1925,7 @@
 
                     updateId.value = id;
                     bloks.value = blok_ancak;
+                    PanensStat.value = status_cak;
                     updateSph.value = sph_ancak;
                     updateBr1.value = br1_cak;
                     updateBr2.value = br2_cak;
@@ -1941,6 +1958,7 @@
                 function createAksiButtons(row,
                     id,
                     blok_ancak,
+                    status_cak,
                     sph_ancak,
                     br1_cak,
                     br2_cak,
@@ -1962,13 +1980,14 @@
                     pokok_panen_cak) {
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim' || currentUserName === 'Eko Nor Sawaludin') {
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
                         updateBtn.onclick = function() {
                             openUpdateModal(id,
                                 blok_ancak,
+                                status_cak,
                                 sph_ancak,
                                 br1_cak,
                                 br2_cak,
@@ -2069,6 +2088,7 @@
                     afdelingBH,
                     tph_barisBH,
                     blokBH,
+                    status_bhpanen,
                     petugasBH,
                     ancak_pemanenBH,
                     bmkBH,
@@ -2086,6 +2106,7 @@
 
                     const updateId = document.getElementById('update-ids');
                     const updateBlok = document.getElementById('update-blok_bh');
+                    const updtate_statusbh = document.getElementById('update-StatusBhpnen');
                     const updateBmt = document.getElementById('update-bmt');
                     const updateBmk = document.getElementById('update-bmk');
                     const updatePemanen = document.getElementById('update-pemanen_bh');
@@ -2105,6 +2126,7 @@
 
                     updateId.value = ids;
                     updateBlok.value = blokBH;
+                    updtate_statusbh.value = status_bhpanen;
                     updateBmt.value = bmtBH;
                     updateBmk.value = bmkBH;
                     updatePemanen.value = ancak_pemanenBH;
@@ -2136,6 +2158,7 @@
                     afdelingBH,
                     tph_barisBH,
                     blokBH,
+                    status_bhpanen,
                     petugasBH,
                     ancak_pemanenBH,
                     bmkBH,
@@ -2151,7 +2174,7 @@
 
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim' || currentUserName === 'Eko Nor Sawaludin') {
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -2161,6 +2184,7 @@
                                 afdelingBH,
                                 tph_barisBH,
                                 blokBH,
+                                status_bhpanen,
                                 petugasBH,
                                 ancak_pemanenBH,
                                 bmkBH,
@@ -2250,6 +2274,7 @@
                     estate_trans,
                     afd_trans,
                     blok_trans,
+                    panen_trStatus,
                     tphbrs_trans,
                     petugas_trans,
                     rst_trans,
@@ -2262,6 +2287,7 @@
                     const est = document.getElementById('update-estTrans');
                     const afd = document.getElementById('update-afd_trans');
                     const blok = document.getElementById('update-blok_trans');
+                    const sttus_trPanen = document.getElementById('update-Status_trPanen');
                     const tphTrans = document.getElementById('update-tphbrTrans');
                     const petugas = document.getElementById('update-petugasTrans');
                     const bt_transs = document.getElementById('update-bt_trans');
@@ -2272,6 +2298,7 @@
                     est.value = estate_trans;
                     afd.value = afd_trans;
                     blok.value = blok_trans;
+                    sttus_trPanen.value = panen_trStatus;
                     tphTrans.value = tphbrs_trans;
                     petugas.value = petugas_trans;
                     bt_transs.value = bt_trans;
@@ -2291,6 +2318,7 @@
                     estate_trans,
                     afd_trans,
                     blok_trans,
+                    panen_trStatus,
                     tphbrs_trans,
                     petugas_trans,
                     rst_trans,
@@ -2303,8 +2331,7 @@
                     td.style.alignItems = 'center';
                     td.style.justifyContent = 'center';
 
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim' || currentUserName === 'Eko Nor Sawaludin') {
-
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
                         const updateButton = document.createElement('button');
                         updateButton.className = 'btn btn-success mr-2';
                         updateButton.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -2313,6 +2340,7 @@
                                 estate_trans,
                                 afd_trans,
                                 blok_trans,
+                                panen_trStatus,
                                 tphbrs_trans,
                                 petugas_trans,
                                 rst_trans,
@@ -2464,6 +2492,7 @@
 
                     createAksiButtons(row, element[1].id,
                         element[1].blok,
+                        element[1].status_panen,
                         element[1].sph,
                         element[1].br1,
                         element[1].br2,
@@ -2502,6 +2531,7 @@
                         element[1].afdeling,
                         element[1].tph_baris,
                         element[1].blok,
+                        element[1].status_panen,
                         element[1].petugas,
                         element[1].ancak_pemanen,
                         element[1].bmk,
@@ -2522,6 +2552,7 @@
                         element[1].afdeling,
                         element[1].tph_baris,
                         element[1].blok,
+                        element[1].status_panen,
                         element[1].petugas,
                         element[1].ancak_pemanen,
                         element[1].bmk,
@@ -2546,6 +2577,7 @@
                         element[1].estate,
                         element[1].afdeling,
                         element[1].blok,
+                        element[1].status_panen,
                         element[1].tph_baris,
                         element[1].petugas,
                         element[1].rst,
@@ -2559,6 +2591,7 @@
                         element[1].estate,
                         element[1].afdeling,
                         element[1].blok,
+                        element[1].status_panen,
                         element[1].tph_baris,
                         element[1].petugas,
                         element[1].rst,
@@ -3207,11 +3240,6 @@
                         // }
                     });
                 }
-
-
-
-
-
 
             }
         });

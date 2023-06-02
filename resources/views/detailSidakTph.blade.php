@@ -30,6 +30,9 @@
                 <h4 class="text-center mt-2" style="font-weight: bold">Tabel Sidak TPH - {{ $est }}
                     {{ $afd }}
                 </h4>
+                <h4 class="text-center mt-2" style="font-weight: bold">Tabel Sidak TPH - {{ $start }}
+                    {{ $last }}
+                </h4>
                 <hr>
                 <!--<select class="col-2 mb-3" id="dropBlok">
                     <option value="">All</option>
@@ -37,7 +40,7 @@
                         <option value="{{ $item->blok }}">{{ $item->blok }}</option>
                     @endforeach
                 </select>-->
-                @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim')
+                @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
                 <table id="listSidakTPH" class="text-center" style="width:100%">
                     {{ csrf_field() }}
                     <thead>
@@ -183,7 +186,8 @@
 
 <script type="text/javascript" src="http://w2ui.com/src/w2ui-1.4.2.min.js"></script>
 
-@if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim')
+@if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+
 <script>
     document.getElementById("hapusDetailSidakForm").addEventListener("submit", function() {
         var ids = [];

@@ -113,7 +113,7 @@
         <td>{{skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
         <td>{{skor_brd_ma(check_array('btr_jjg_ma', $value)) + skor_buah_Ma(check_array('jjg_tgl_ma', $value)) + skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
 
-        @if($regional == 2 || $regional == '2')
+        @if($regional == 2 || $regional == '2' || $regional == 4 || $regional == '4')
         @foreach ($tph_trans as $keys => $value)
         @if($key3 == $keys)
         @foreach ($value as $keys1 => $value1)
@@ -224,7 +224,7 @@
 
 
 
-        @if($regional == 2 || $regional == '2')
+        @if($regional == 2 || $regional == '2' || $regional == 4 || $regional == '4')
         @foreach ($tph_trans as $keys => $value)
         @if($key3 == $keys)
         @foreach ($value as $keys1 => $value1)
@@ -299,7 +299,7 @@
         <td style="background-color : #b0d48c; color: #000000;">{{skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{skor_brd_ma(check_array('btr_jjg_ma_est', $item)) + skor_buah_Ma(check_array('jjg_tgl_ma_est', $item)) + skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
 
-        @if($regional == 2 || $regional == '2')
+        @if($regional == 2 || $regional == '2' || $regional == 4 || $regional == '4')
         @foreach ($tph_trans as $keys => $value)
         @if($key3 == $keys)
         @foreach ($value as $keys1 => $value1)
@@ -491,7 +491,7 @@
         <td style="background-color : yellow; color: #000000;">{{skor_palepah_ma($PerPSMA_wil)}}</td>
         <td style="background-color : yellow; color: #000000;">{{skor_brd_ma($btr_jjg_ma_wil) + skor_buah_Ma($bt_jjg_ma_wil) + skor_palepah_ma($PerPSMA_wil)}}</td>
 
-        @if($regional == 2 || $regional == '2')
+        @if($regional == 2 || $regional == '2' || $regional == 4 || $regional == '4')
         @foreach ($tph_trans as $keys => $value)
         @if($key3 == $keys)
 
@@ -660,7 +660,7 @@
 
         $total_skortrans = $itemx3['Skor_bt'] + $itemx3['Skor_tph'];
         @endphp
-        @if($regional == 2 || $regional == '2')
+        @if($regional == 2 || $regional == '2' || $regional == 4 || $regional == '4')
         @foreach ($plasma_tph as $keys => $value)
         @if($trans == $keys)
         @foreach ($value as $keys1 => $value1)
@@ -780,7 +780,7 @@
         $skor_totaltrans = skor_brd_tinggal($itemx2['bt_tph_total']) + skor_buah_tinggal($itemx2['jjg_tph_total']) ;
         @endphp
 
-        @if($regional == 2 || $regional == '2')
+        @if($regional == 2 || $regional == '2' || $regional == 4 || $regional == '4')
         @foreach ($plasma_tph as $keys => $value)
         @if($trans == $keys)
         @foreach ($value as $keys1 => $value1)

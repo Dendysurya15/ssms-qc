@@ -118,22 +118,16 @@
             <div class="card table_wrapper">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-utama-tab" data-toggle="tab" href="#nav-utama"
-                            role="tab" aria-controls="nav-utama" aria-selected="true">Halaman Utama</a>
-                        <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab"
-                            aria-controls="nav-data" aria-selected="false">Data</a>
-                        <a class="nav-item nav-link" id="nav-issue-tab" data-toggle="tab" href="#nav-issue" role="tab"
-                            aria-controls="nav-issue" aria-selected="false">Finding Issue</a>
-                        <a class="nav-item nav-link" id="nav-score-tab" data-toggle="tab" href="#nav-score" role="tab"
-                            aria-controls="nav-score" aria-selected="false">Score By Map</a>
-                        <a class="nav-item nav-link" id="nav-grafik-tab" data-toggle="tab" href="#nav-grafik" role="tab"
-                            aria-controls="nav-grafik" aria-selected="false">Grafik</a>
+                        <a class="nav-item nav-link active" id="nav-utama-tab" data-toggle="tab" href="#nav-utama" role="tab" aria-controls="nav-utama" aria-selected="true">Halaman Utama</a>
+                        <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Data</a>
+                        <a class="nav-item nav-link" id="nav-issue-tab" data-toggle="tab" href="#nav-issue" role="tab" aria-controls="nav-issue" aria-selected="false">Finding Issue</a>
+                        <a class="nav-item nav-link" id="nav-score-tab" data-toggle="tab" href="#nav-score" role="tab" aria-controls="nav-score" aria-selected="false">Score By Map</a>
+                        <a class="nav-item nav-link" id="nav-grafik-tab" data-toggle="tab" href="#nav-grafik" role="tab" aria-controls="nav-grafik" aria-selected="false">Grafik</a>
                     </div>
                 </nav>
 
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-utama" role="tabpanel"
-                        aria-labelledby="nav-utama-tab">
+                    <div class="tab-pane fade show active" id="nav-utama" role="tabpanel" aria-labelledby="nav-utama-tab">
 
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
                             <h5><b>REKAPITULASI RANKING NILAI KUALITAS PANEN</b></h5>
@@ -157,8 +151,7 @@
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                     {{ csrf_field() }}
-                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="date"
-                                        id="inputDate">
+                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="date" id="inputDate">
 
                                 </div>
                             </div>
@@ -204,11 +197,9 @@
                                                                 WILAYAH I</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center"
-                                                                style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2"
-                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama
                                                             </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
@@ -232,11 +223,9 @@
                                                                 WILAYAH II</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center"
-                                                                style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2"
-                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama
                                                             </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
@@ -291,11 +280,9 @@
                                                                 WILAYAH III</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center"
-                                                                style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2"
-                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama
                                                             </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
@@ -311,19 +298,16 @@
                                         </div>
                                         <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab4">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" style="font-size: 13px"
-                                                    id="plasmaID">
+                                                <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
                                                             <th colspan="5" id="thead3x" style="text-align:center">
                                                                 PLASMA</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
-                                                            <th rowspan="2" class="text-center"
-                                                                style="vertical-align: middle;">KEBUN</th>
+                                                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                             <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                            <th rowspan="2"
-                                                                style="text-align:center; vertical-align: middle;">Nama
+                                                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama
                                                             </th>
                                                             <th colspan="2" class="text-center">Todate</th>
                                                         </tr>
@@ -594,8 +578,7 @@
 
 
                         <p class="ml-3 mb-3 mr-3">
-                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse"
-                                data-target="#ShowbyWeek" aria-expanded="false" aria-controls="ShowbyWeek">
+                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#ShowbyWeek" aria-expanded="false" aria-controls="ShowbyWeek">
                                 TAMPILKAN PER MINGGU
                             </button>
                         </p>
@@ -620,8 +603,7 @@
                                         {{ csrf_field() }}
                                         <input type="hidden" id="startWeek" name="start" value="">
                                         <input type="hidden" id="lastWeek" name="last" value="">
-                                        <input type="week" name="dateWeek" id="dateWeek"
-                                            value="{{ date('Y').'-W'.date('W') }}" aria-describedby="dateWeekHelp">
+                                        <input type="week" name="dateWeek" id="dateWeek" value="{{ date('Y').'-W'.date('W') }}" aria-describedby="dateWeekHelp">
 
                                     </div>
                                 </div>
@@ -638,19 +620,16 @@
                                         <div class="row justify-content-center">
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs1">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px"
-                                                        id="table1">
+                                                    <table class="table table-bordered" style="font-size: 13px" id="table1">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads1" style="text-align:center">
                                                                     WILAYAH I</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center"
-                                                                    style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2"
-                                                                    style="text-align:center; vertical-align: middle;">
+                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">
                                                                     Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
@@ -666,19 +645,16 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs2">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px"
-                                                        id="table2">
+                                                    <table class="table table-bordered" style="font-size: 13px" id="table2">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads2" style="text-align:center">
                                                                     WILAYAH II</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center"
-                                                                    style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2"
-                                                                    style="text-align:center; vertical-align: middle;">
+                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">
                                                                     Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
@@ -695,19 +671,16 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs3">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px"
-                                                        id="Reg3">
+                                                    <table class="table table-bordered" style="font-size: 13px" id="Reg3">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads3" style="text-align:center">
                                                                     WILAYAH III</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center"
-                                                                    style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2"
-                                                                    style="text-align:center; vertical-align: middle;">
+                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">
                                                                     Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
@@ -723,19 +696,16 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs4">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px"
-                                                        id="plasmaID">
+                                                    <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads3x" style="text-align:center">
                                                                     PLASMA</th>
                                                             </tr>
                                                             <tr bgcolor="#2044a4" style="color: white">
-                                                                <th rowspan="2" class="text-center"
-                                                                    style="vertical-align: middle;">KEBUN</th>
+                                                                <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
                                                                 <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                                                                <th rowspan="2"
-                                                                    style="text-align:center; vertical-align: middle;">
+                                                                <th rowspan="2" style="text-align:center; vertical-align: middle;">
                                                                     Nama</th>
                                                                 <th colspan="2" class="text-center">Todate</th>
                                                             </tr>
@@ -1010,8 +980,7 @@
 
 
                         <p class="ml-3 mb-3 mr-3">
-                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse"
-                                data-target="#showByYear" aria-expanded="false" aria-controls="showByYear">
+                            <button style="width: 100%" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#showByYear" aria-expanded="false" aria-controls="showByYear">
                                 TAMPILKAN PER TAHUN
                             </button>
                         </p>
@@ -1184,8 +1153,7 @@
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                     {{ csrf_field() }}
-                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl"
-                                        id="dateDataIns">
+                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl" id="dateDataIns">
 
                                 </div>
                             </div>
@@ -1207,8 +1175,7 @@
                                                 SAMPEL</th>
                                             <th class="align-middle" colspan="17" bgcolor="#588434">Mutu Ancak (MA)</th>
                                             <th class="align-middle" colspan="8" bgcolor="blue">Mutu Transport (MT)</th>
-                                            <th class="align-middle" colspan="23" bgcolor="#ffc404"
-                                                style="color: #000000;">Mutu Buah (MB)
+                                            <th class="align-middle" colspan="23" bgcolor="#ffc404" style="color: #000000;">Mutu Buah (MB)
                                             <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">All
                                                 Skor</th>
                                             <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">
@@ -1229,31 +1196,21 @@
                                             <th class="align-middle" rowspan="2" bgcolor="blue">Total Skor</th>
 
                                             {{-- Table Mutu Buah --}}
-                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404"
-                                                style="color: #000000;">TPH Sampel</th>
-                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404"
-                                                style="color: #000000;">Total Janjang
+                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
+                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang
                                                 Sampel</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
-                                                style="color: #000000;">Mentah (A)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
-                                                style="color: #000000;">Matang (N)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
-                                                style="color: #000000;">Lewat Matang
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang
                                                 (O)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
-                                                style="color: #000000;">Janjang Kosong
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong
                                                 (E)</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
-                                                style="color: #000000;">Tidak Standar
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar
                                                 V-Cut</th>
-                                            <th class="align-middle" colspan="2" bgcolor="#ffc404"
-                                                style="color: #000000;">Abnormal</th>
-                                            <th class="align-middle" colspan="3" bgcolor="#ffc404"
-                                                style="color: #000000;">Penggunaan
+                                            <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
+                                            <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan
                                                 Karung Brondolan</th>
-                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404"
-                                                style="color: #000000;">Total Skor</th>
+                                            <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
                                         </tr>
                                         <tr>
                                             {{-- Table Mutu Ancak --}}
@@ -1341,8 +1298,7 @@
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                     {{ csrf_field() }}
-                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl"
-                                        id="dateFind">
+                                    <input class="form-control" value="{{ date('Y-m') }}" type="month" name="tgl" id="dateFind">
 
                                 </div>
                             </div>
@@ -1601,14 +1557,12 @@
             </div>
     </section>
 </div>
-<div id="lottie-container"
-    style="display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 9999; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
+<div id="lottie-container" style="display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 9999; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
     <div id="lottie-animation" style="width: 200px; height: 200px;"></div>
 </div>
 @include('layout/footer')
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
@@ -4364,24 +4318,24 @@
 
                 // console.log(chart_bhTH);
 
-                if (regInpt === '2' || regInpt === '3') {
+                // if (regInpt === '2' || regInpt === '3') {
 
-                    const indexToDelete = chart_brdTH.findIndex(element => element[0] === 'pt_muabuah');
+                //     const indexToDelete = chart_brdTH.findIndex(element => element[0] === 'pt_muabuah');
 
-                    if (indexToDelete !== -1) {
-                        chart_brdTH.splice(indexToDelete, 1);
-                    }
-                    const indexToDeletes = chart_bhTH.findIndex(element => element[0] === 'pt_muabrd');
+                //     if (indexToDelete !== -1) {
+                //         chart_brdTH.splice(indexToDelete, 1);
+                //     }
+                //     const indexToDeletes = chart_bhTH.findIndex(element => element[0] === 'pt_muabrd');
 
-                    if (indexToDeletes !== -1) {
-                        chart_bhTH.splice(indexToDeletes, 1);
-                    }
+                //     if (indexToDeletes !== -1) {
+                //         chart_bhTH.splice(indexToDeletes, 1);
+                //     }
 
 
-                } else {
-                    chart_brdTH;
-                    chart_bhTH;
-                }
+                // } else {
+                //     chart_brdTH;
+                //     chart_bhTH;
+                // }
 
                 // console.log(chart_bhTH);
 
@@ -4441,29 +4395,54 @@
 
                 // const EstTahun = arr.map((item) => item.split(',')[1]);
 
-                const EstTahun = arr
-                    .map((item, index) => {
-                        const value = item.split(',')[1];
-                        return {
-                            index,
-                            value
-                        };
-                    })
-                    .filter((item) => item.index < 13 || item.index > 15)
-                    .map((item) => item.value);
+                // const EstTahun = arr
+                //     .map((item, index) => {
+                //         const value = item.split(',')[1];
+                //         return {
+                //             index,
+                //             value
+                //         };
+                //     })
+                //     .filter((item) => item.index < 13 || item.index > 15)
+                //     .map((item) => item.value);
 
-                EstTahun.push("PT.MUA");
+                // EstTahun.push("PT.MUA");
 
-                if (regInpt === '2' || regInpt === '3') {
+                // if (regInpt === '2' || regInpt === '3') {
 
 
-                    const index = EstTahun.indexOf('PT.MUA');
-                    if (index > -1) { // only splice EstTahun when item is found
-                        EstTahun.splice(index, 1); // 2nd parameter means remove one item only
-                    }
+                //     const index = EstTahun.indexOf('PT.MUA');
+                //     if (index > -1) { // only splice EstTahun when item is found
+                //         EstTahun.splice(index, 1); // 2nd parameter means remove one item only
+                //     }
 
+                // } else {
+                //     EstTahun;
+                // }
+                let formatEst;
+
+                if (regInpt === '1') {
+                    formatEst = Array.from(arr, (item, index) => {
+                            const value = item.split(',')[1];
+                            return {
+                                index,
+                                value
+                            };
+                        })
+                        .filter((item) => item.index < 13 || item.index > 15)
+                        .map((item) => item.value);
+
+                    formatEst.push("PT.MUA");
                 } else {
-                    EstTahun;
+
+                    formatEst = Array.from(arr, (item, index) => {
+                            const value = item.split(',')[1];
+                            return {
+                                index,
+                                value
+                            };
+                        })
+                        .map((item) => item.value);
                 }
 
                 const arrEst = estateEST;
@@ -4609,14 +4588,11 @@
                         angka = 'II';
                     } else if (angka === '3') {
                         angka = 'III';
-                    }
-                    else if (angka === '4') {
+                    } else if (angka === '4') {
                         angka = 'IV';
-                    }
-                    else if (angka === '5') {
+                    } else if (angka === '5') {
                         angka = 'V';
-                    }
-                    else if (angka === '6') {
+                    } else if (angka === '6') {
                         angka = 'VI';
                     }
 
@@ -4624,11 +4600,11 @@
                     let item1 = angka;
                     let wilKe = 'WIL-' + angka;
                     filteredAssistants.forEach((data, j) => {
-                        if(wilKe == data['est'] && data['afd'] == 'GM'){
+                        if (wilKe == data['est'] && data['afd'] == 'GM') {
                             item2 = data['nama']
                         }
                     });
-                    
+
                     let item3 = element[1].January.skor_bulanTotal;
                     let item4 = element[1].February.skor_bulanTotal;
                     let item5 = element[1].March.skor_bulanTotal;
@@ -4701,13 +4677,13 @@
                     tr = document.createElement('tr')
 
                     let item1 = element[0];
-                    let item2  = '-';
+                    let item2 = '-';
                     filteredAssistants.forEach((data, j) => {
-                        if(item1 == data['est'] && data['afd'] == 'GM'){
+                        if (item1 == data['est'] && data['afd'] == 'GM') {
                             item2 = data['nama']
                         }
                     });
-        
+
                     let item3 = element[1].January.Bulan;
                     let item4 = element[1].February.Bulan;
                     let item5 = element[1].March.Bulan;
@@ -4780,14 +4756,20 @@
                     regW = 'II'
                 } else if (regInpt === '3') {
                     regW = 'III'
-                }
-                else if (regInpt === '4') {
+                } else if (regInpt === '4') {
                     regW = 'IV'
                 } else if (regInpt === '5') {
                     regW = 'V'
-                }
-                else if (regInpt === '6') {
+                } else if (regInpt === '6') {
                     regW = 'VI'
+                } else if (regInpt === '7') {
+                    regW = 'VIII'
+                } else if (regInpt === '8') {
+                    regW = 'VIII'
+                } else if (regInpt === '10') {
+                    regW = 'IX'
+                } else if (regInpt === '11') {
+                    regW = 'X'
                 }
                 tr = document.createElement('tr');
 
@@ -4795,10 +4777,10 @@
                 let regKe = 'REG-' + regW
                 let item2 = '-';
                 filteredAssistants.forEach((data, j) => {
-                        if(regKe == data['est'] && data['afd'] == 'RH'){
-                            item2 = data['nama']
-                        }
-                    });
+                    if (regKe == data['est'] && data['afd'] == 'RH') {
+                        item2 = data['nama']
+                    }
+                });
                 let item3 = regbln[0][1].skor_bulanTotal;
                 let item4 = regbln[1][1].skor_bulanTotal;
                 let item5 = regbln[2][1].skor_bulanTotal;
@@ -5016,6 +4998,14 @@
                         '#3063EC',
                         '#3063EC',
                     ]
+                } else if (regInpt === '4') {
+                    colors = ['#00FF00',
+                        '#00FF00',
+                        '#00FF00',
+                        '#3063EC',
+                        '#3063EC',
+
+                    ]
                 }
 
 
@@ -5027,7 +5017,7 @@
                 }])
                 chartGrainYear.updateOptions({
                     xaxis: {
-                        categories: EstTahun
+                        categories: formatEst
                     },
                     colors: colors // Set the colors directly, no need for an object
                 })
@@ -5038,7 +5028,7 @@
                 }])
                 chartFruitYear.updateOptions({
                     xaxis: {
-                        categories: EstTahun
+                        categories: formatEst
                     },
                     colors: colors // Set the colors directly, no need for an object
                 })
@@ -5055,6 +5045,9 @@
 
                 } else if (regInpt === '3') {
                     wilayahReg = ['WIL VII', 'WIL VIII']
+
+                } else if (regInpt === '4') {
+                    wilayahReg = ['WIL IX', 'WIL X']
 
                 }
                 chartGrainWilYear.updateSeries([{
@@ -7503,11 +7496,11 @@
         var estateArray = groupData[wilayahValue];
         // console.log(estateArray);
 
-        for (var i = 0; i < estateArray.length; i++) {
-            if (estateArray[i] === 'KTE4') {
-                estateArray[i] = 'KTE';
-            }
-        }
+        // for (var i = 0; i < estateArray.length; i++) {
+        //     if (estateArray[i] === 'KTE4') {
+        //         estateArray[i] = 'KTE';
+        //     }
+        // }
 
         // console.log(estateArray);
 

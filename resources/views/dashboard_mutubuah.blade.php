@@ -425,10 +425,10 @@
                                             {{ csrf_field() }}
                                             <input type="hidden" name="tglPDF" id="tglPDF" value="">
                                             <input type="hidden" name="regPDF" id="regPDF" value="">
-                                            <!-- <button type="submit" class="download-btn ml-2" id="download-button">
-                                                <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA
-                                            </button> -->
-                                            <button type="submit" class="btn btn-secondary" id="pdfButton" disabled>PDF</button>
+                                            <button type="submit" class="download-btn ml-2" id="download-button">
+                                                PDF
+                                            </button>
+                                            <!-- <button type="submit" class="btn btn-secondary" id="pdfButton" disabled>PDF</button> -->
                                         </form>
                                     </div>
                                     <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
@@ -1928,6 +1928,7 @@
                 var chart_karungwil = Object.entries(parseResult['chart_karungwil'])
                 var optionREg = Object.entries(parseResult['optionREg'])
                 // console.log(chart_matang);
+                console.log(mutu_buah);
                 var matang_Wil = '['
                 if (chart_matangwil.length > 0) {
                     chart_matangwil.forEach(element => {

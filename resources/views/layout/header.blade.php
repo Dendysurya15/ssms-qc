@@ -85,6 +85,9 @@ session_start();
                 <li class="nav-item d-none d-sm-inline-block">
                     <a class="nav-link">Selamat datang, {{ session('user_name') }} </a>
                 </li>
+                <!-- <li class="nav-item d-none d-sm-inline-block">
+                    <a class="nav-link">Jabatan, {{ session('jabatan') }} </a>
+                </li> -->
             </ul>
 
             <ul class="navbar-nav ml-auto">

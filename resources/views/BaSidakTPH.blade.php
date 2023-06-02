@@ -472,7 +472,7 @@
                         <th>Restan Unreported</th>
                         <th>TPH Semak</th>
 
-                        @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
                         <th>Aksi</th>
                         @endif
 
@@ -601,7 +601,7 @@
 
 
 
-    var currentUserName = "{{ session('user_name') }}";
+    var currentUserName = "{{ session('jabatan') }}";
     window.onload = function() {
         // Add the event listener for the "Save changes" button when the DOM is ready
         document.getElementById('save-changes-button').addEventListener('click', updateFunction);
@@ -647,7 +647,7 @@
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
 
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada' || currentUserName === 'Andri Mursalim') {
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
                         // Create the update button
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';

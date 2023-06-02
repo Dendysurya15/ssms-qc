@@ -423,7 +423,7 @@
                         <th>Tidak Standar Vcut</th>
                         <th>Alas BR</th>
 
-                        @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
                         <th colspan="2">Aksi</th>
                         @endif
                     </tr>
@@ -641,7 +641,7 @@
         fetchAndUpdateData();
     });
 
-    var currentUserName = "{{ session('user_name') }}";
+    var currentUserName = "{{ session('jabatan') }}";
 
     //untuk mengirim parameter tanggal ke download pdf BA
     document.addEventListener('DOMContentLoaded', function() {
@@ -840,7 +840,7 @@
                 ) {
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Dennis Irawan' || currentUserName === 'Ferry Suhada') {
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';

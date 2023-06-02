@@ -41,6 +41,7 @@ class LoginController extends Controller
             'user_name' => $user->nama_lengkap,
             'departemen' => $user->departemen,
             'lok' => $user->lokasi_kerja,
+            'jabatan' => $user->jabatan,
         ]);
 
         return redirect()->intended('dashboard_gudang');
