@@ -2055,8 +2055,10 @@ class inspectController extends Controller
         updateKeyRecursive($dataSkor, "KTE4", "KTE");
 
         // $result = array_merge_recursive($dataSkor_ancak[4]['Plasma2'], $dataSkor_buah[4]['Plasma2'], $dataSkor_trans[4]['Plasma2']);
-        // dd($testing);
-        // dd($dataSkor_ancak,$dataSkor_trans,$dataSkor_buah);
+
+        // dd($testingPlasma);
+
+        // dd($dataSkor_ancak,$dataSkor_buah,$dataSkor_trans);
         return view('dataInspeksi', [
             'dataSkor' => $dataSkor,
             'dataSkor_ancak' => $dataSkor_ancak,
@@ -10057,6 +10059,7 @@ class inspectController extends Controller
 
         //perhitungan data untuk mutu transport
         //menghitung afd perbulan
+        $allBlokPerMonthTrans = array();
         $mutuTransAFD = array();
         // dd($defaultTrans);
         foreach ($defaultTrans as $key => $value) {
@@ -10072,6 +10075,7 @@ class inspectController extends Controller
                         $listBlokPerAfd = array();
                         foreach ($value3 as $key3 => $value4) {
                             // dd($value4);
+                            $allBlokPerMonthTrans[$key][$key1][$key2][$value4['id']] = $value4['blok'];
                             // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $value4['estate'] . ' ' . $value4['afdeling'] . ' ' . $value4['blok'];
                             // }
@@ -10129,7 +10133,6 @@ class inspectController extends Controller
             }
         }
 
-        // dd($allBlokPerMonthTrans);
 
         $allBlokPerMonthAncak = array();
         foreach ($allBlokPerMonthTrans as $key => &$value1) {
@@ -10147,8 +10150,6 @@ class inspectController extends Controller
         foreach ($allBlokPerMonthTrans  as $key => &$value1) {
             foreach ($value1 as $key1 =>&$value2) {
                 foreach ($value2  as $key2 =>  &$value3) {
-                    
-                    // $blokExist  = array();
                     
                     foreach ($value3 as $key3 => $value4) {
                         $tphSample = 0;
@@ -10169,6 +10170,7 @@ class inspectController extends Controller
                                 ->where('estate', $trans->estate)
                                 ->where('afdeling', $trans->afdeling)
                                 ->where('blok', $trans->blok)
+                                ->whereDay('datetime', $day)
                                 ->whereMonth('datetime', $month)
                                 ->whereYear('datetime', $year)
                                 ->orderBy('datetime', 'DESC')
@@ -10196,8 +10198,10 @@ class inspectController extends Controller
                                 }else{
                                     //query mendapatkan jumlah semua tph jika hanya melakukan mutu transport tanpa mutu ancak
                                     // $newTPHSampleReg2[$key][$key1][$key2][$value4] = DB::connection('mysql2')->table('mutu_transport')->where('estate',$trans->estate)->where('afdeling',$trans->afdeling)->where('blok', $trans->blok)->count();
-                                    $cobalagigan = DB::connection('mysql2')->table('mutu_transport')->where('estate',$trans->estate)->where('afdeling',$trans->afdeling)->where('blok', $trans->blok)->first();
-                                    $newTPHSampleReg2[$key][$key1][$key2][$year.'-'.$month.'-'.$day][$cobalagigan->blok] = DB::connection('mysql2')->table('mutu_transport')->where('estate',$trans->estate)->where('afdeling',$trans->afdeling)->where('blok', $trans->blok)->count();
+                                    $cobalagigan = DB::connection('mysql2')->table('mutu_transport')->select('mutu_transport.*','mutu_transport.blok as nama_blok')->where('estate',$trans->estate)->whereDay('datetime', $day)->whereMonth('datetime', $month)->whereYear('datetime', $year)->where('afdeling',$trans->afdeling)->groupBy('nama_blok')->get();
+                                    foreach($cobalagigan as $val){     
+                                        $newTPHSampleReg2[$key][$key1][$key2][$year.'-'.$month.'-'.$day][$val->blok] = DB::connection('mysql2')->table('mutu_transport')->where('estate',$val->estate)->whereDay('datetime', $day)->whereMonth('datetime', $month)->whereYear('datetime', $year)->where('afdeling',$val->afdeling)->where('blok',$val->blok)->count();
+                                    }
 
                                 }
 
@@ -10305,8 +10309,8 @@ class inspectController extends Controller
                 }
             }
         }
-
-        // dd($test);
+// dd($test);
+        // dd($newTPHSampleReg2);
         
         $test = array();
         foreach($newTPHSampleReg2 as $key => $value){
@@ -10387,6 +10391,8 @@ class inspectController extends Controller
                                             }
                                         }
 
+                                
+
                                     
                     }
                 }
@@ -10411,8 +10417,8 @@ class inspectController extends Controller
                 }
             }
         }
+
         // dd($tphSampleReg2);
-        
         if($RegData == '2' || $RegData ==2){
             foreach ($mutuTransAFD as $key1 => &$value1) {
                 foreach ($value1 as $key2 => &$value2) {
@@ -10424,6 +10430,8 @@ class inspectController extends Controller
                 }
             }
         }
+
+      
 
         // dd($mutuTransAFD['SCE']);
         // dd($mutuTransAFD['MRE']);
@@ -12581,9 +12589,24 @@ class inspectController extends Controller
                 }
             }
         }
-        // dd($mtTransAFDblan);
-        // dd($mtTransAFDblan['1']['April']);
-        //perhitungan mutu transport bulan per > estate
+
+        if($RegData == '2' || $RegData == 2){
+            foreach ($mtTransAFDblan as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value2) {
+                    foreach ($value2 as $key3 => $value3) {
+                        foreach ($value3 as $key4 => $value) {
+
+                            if (isset($tphSampleReg2[$key3][$key2][$key4])) {
+                                
+                                $mtTransAFDblan[$key1][$key2][$key3][$key4]['tph_sample'] = $tphSampleReg2[$key3][$key2][$key4]['tph_sample'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        dd($mtTransAFDblan);
         $mtTransESTblan = array();
         foreach ($mtTransAFDblan as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -12639,9 +12662,10 @@ class inspectController extends Controller
                 }
             }
         }
-        // dd($mtTransESTblan);
+       
         // dd($mtTransESTblan['1']['April']);
-        // menghitung mututransprt unutk data perbulan dari semua estate
+       
+        // dd($mtTransESTblan);
         $mtTranstAllbln = array();
         foreach ($mtTransESTblan as $key => $value) {
             foreach ($value as $key1 => $value1) if (!empty($value1)) {
@@ -14990,7 +15014,7 @@ class inspectController extends Controller
         // dd($bulanAllEST['2']['February'], $mtBuahAllEst['2']['February'], $mtTranstAllbln['2']['February']);
         // dd( $mtTranstAllbln['1']['April']);
 
-        // dd($mtTranstAllbln);
+        dd($mtTranstAllbln);
         // dd($mtBuahAllEst);
         // dd($bulanAllEST);
         //pentotalan skor mt ancak mt transprt mt buah
