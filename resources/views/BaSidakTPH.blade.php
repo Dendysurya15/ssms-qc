@@ -432,11 +432,12 @@
 
         <!-- end animasi -->
     </div>
-
+    <div class="afd"> ESTATE : {{$est}} / {{$afd}}</div>
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
         <form action="{{ route('pdfBAsidak') }}" method="GET" class="form-inline" style="display: inline;" target="_blank">
             {{ csrf_field() }}
             <input type="hidden" name="est" id="est" value="{{$est}}">
+            <input type="hidden" name="afdling" id="afdling" value="{{$afd}}">
             <input type="hidden" name="start" id="start" value="{{$tanggal}}">
 
             <button type="submit" class="ml-2" id="download-button">
@@ -557,7 +558,8 @@
             </div>
         </div>
     </div>
-
+    <input type="hidden" id="estate" value="{{$est}}">
+    <input type="hidden" id="afd" value="{{$afd}}">
 </div>
 </div>
 
@@ -618,6 +620,9 @@
         var tanggal = document.getElementById('inputDate').value
         var est = document.getElementById('est').value
 
+        var estate = document.getElementById('estate').value;
+        var afd = document.getElementById('afd').value;
+
         // console.log(tanggal);
         // console.log(est);
         $.ajax({
@@ -625,6 +630,8 @@
             method: "GET",
             data: {
                 est,
+                estate,
+                afd,
                 tanggal,
                 page,
                 _token: _token

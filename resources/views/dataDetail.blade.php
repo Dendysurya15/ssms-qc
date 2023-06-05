@@ -1279,36 +1279,57 @@
                 var map = L.map('map').fitBounds(polygonCoords.concat(plot_blok), 13);
 
 
-                var googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+                var googleStreet = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
                     maxZoom: 20,
                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                 }).addTo(map);
 
+                var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 20,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                });
+
+                var baseMaps = {
+                    "Google Street": googleStreet,
+                    "Google Satellite": googleSatellite
+                };
+                L.control.layers(baseMaps).addTo(map);
+
+
                 var estatePolygon = L.polygon(polygonCoords, {
                     color: 'blue'
                 }).addTo(map).bindPopup('<strong>Estate:</strong>' + est);
+                // console.log(plot_blok);
 
-                var plotBlokPolygon = L.polygon(plot_blok, {
-                    color: 'yellow'
-                }).addTo(map).bindPopup('<strong>Afdeling:</strong>' + afd);
+                // Iterate over the keys of plot_blok
+                for (var blockName in plot_blok) {
+                    // Get the coordinates array for the current block
+                    var coordinates = plot_blok[blockName];
+
+                    // Create a polygon for the current block
+                    var plotBlokPolygon = L.polygon(coordinates, {
+                        color: 'yellow'
+                    }).addTo(map).bindPopup('<strong>Afdeling:</strong>' + blockName);
+                }
+
+
+
 
                 var yellowIcon = L.icon({
-                    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
+                    iconSize: [38, 95], // size of the icon
+                    shadowSize: [50, 64], // size of the shadow
+                    iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [4, 62], // the same for the shadow
+                    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
                 });
 
                 // Red marker icon
                 var redIcon = L.icon({
-                    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
+                    iconSize: [38, 95], // size of the icon
+                    shadowSize: [50, 64], // size of the shadow
+                    iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [4, 62], // the same for the shadow
+                    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
                 });
 
                 // Create Layer Groups for each layer type
@@ -1316,163 +1337,210 @@
                 var buahGroup = L.layerGroup();
                 var ancakGroup = L.layerGroup();
 
-                // Add markers to the corresponding Layer Groups
-                //             function trans() {
-                //                 for (var i = 0; i < trans_plot.length; i++) {
-                //                     var lat = parseFloat(trans_plot[i].lat);
-                //                     var lon = parseFloat(trans_plot[i].lon);
-                //                     var blok = trans_plot[i].blok;
 
-                //                     // Assuming foto_temuan, foto_fu, and komentar properties exist in your data
-                //                     var foto_temuan = trans_plot[i].foto_temuan;
-                //                     var foto_fu = trans_plot[i].foto_fu;
-                //                     var komentar = trans_plot[i].komentar;
-
-                //                     // Create a marker
-                //                     var marker = L.marker([lat, lon]);
-
-                //                     // Bind a popup with the blok name, images and comments
-                //                     marker.bindPopup(
-                //                         `<strong>Mutu Trans Blok: </strong> ${blok} <br/>
-                // <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"> <br/>
-                // <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"> <br/>
-                // <strong>Komentar: </strong> ${komentar}`
-                //                     );
-
-                //                     // Add the marker to the Layer Group
-                //                     transGroup.addLayer(marker);
-                //                 }
-                //             }
-
-                //             options: {
-                //     shadowUrl: 'leaf-shadow.png',
-                //     iconSize:     [38, 95],
-                //     shadowSize:   [50, 64],
-                //     iconAnchor:   [22, 94],
-                //     shadowAnchor: [4, 62],
-                //     popupAnchor:  [-3, -76]
-                // }
-                var transIconUrl = '{{ asset("img/dump-truck.png") }}';
+                var transIconUrl = '{{ asset("img/placeholder.png") }}';
                 var transicon = L.icon({
                     iconUrl: transIconUrl,
-                    iconSize: [30, 45], // Adjust the size of the main icon
-                    iconAnchor: [15, 45], // Adjust the anchor point of the main icon
-                    popupAnchor: [0, -30], // Adjust the anchor point for the popup
-                    shadowUrl: transIconUrl,
-                    shadowSize: [0, 0], // Set the shadow size to [0, 0] if you don't want a shadow
-                    shadowAnchor: [0, 0], // Set the shadow anchor to [0, 0] if you don't want a shadow
+                    iconSize: [20, 35],
+                    iconAnchor: [15, 20],
+                    popupAnchor: [0, -20],
+
                 });
 
-                var transTmuanUrl = '{{ asset("img/carrier.png") }}';
+                var transTmuanUrl = '{{ asset("img/placeholder2.png") }}';
                 var transtemuan = L.icon({
                     iconUrl: transTmuanUrl,
-                    iconSize: [30, 45], // Adjust the size of the main icon
-                    iconAnchor: [15, 45], // Adjust the anchor point of the main icon
-                    popupAnchor: [0, -30], // Adjust the anchor point for the popup
-                    shadowUrl: transTmuanUrl,
-                    shadowSize: [0, 0], // Set the shadow size to [0, 0] if you don't want a shadow
-                    shadowAnchor: [0, 0], // Set the shadow anchor to [0, 0] if you don't want a shadow
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
                 });
-                var transFollowUrl = '{{ asset("img/batch-picking.png") }}';
+                var transFollowUrl = '{{ asset("img/placeholder3.png") }}';
                 var transFollowup = L.icon({
                     iconUrl: transFollowUrl,
-                    iconSize: [30, 45], // Adjust the size of the main icon
-                    iconAnchor: [15, 45], // Adjust the anchor point of the main icon
-                    popupAnchor: [0, -30], // Adjust the anchor point for the popup
-                    shadowUrl: transFollowUrl,
-                    shadowSize: [0, 0], // Set the shadow size to [0, 0] if you don't want a shadow
-                    shadowAnchor: [0, 0], // Set the shadow anchor to [0, 0] if you don't want a shadow
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, -30],
+
                 });
+                console.log(trans_plot);
+
+                // function trans() {
+                //     for (var i = 0; i < trans_plot.length; i++) {
+                //         var lat = parseFloat(trans_plot[i].lat);
+                //         var lon = parseFloat(trans_plot[i].lon);
+                //         var blok = trans_plot[i].blok;
+                //         var foto_temuan = trans_plot[i].foto_temuan;
+                //         var foto_fu = trans_plot[i].foto_fu;
+                //         var komentar = trans_plot[i].komentar;
+
+                //         var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
+
+
+                //         var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
+
+                //         if (foto_temuan) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         if (foto_fu) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+
+                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                //         var marker = L.marker([lat, lon], {
+                //             icon: markerIcon
+                //         });
+
+                //         marker.bindPopup(popupContent);
+
+                //         transGroup.addLayer(marker);
+                //     }
+                // }
+                console.log(trans_plot);
 
                 function trans() {
-                    for (var i = 0; i < trans_plot.length; i++) {
-                        var lat = parseFloat(trans_plot[i].lat);
-                        var lon = parseFloat(trans_plot[i].lon);
-                        var blok = trans_plot[i].blok;
-                        var foto_temuan = trans_plot[i].foto_temuan;
-                        var foto_fu = trans_plot[i].foto_fu;
-                        var komentar = trans_plot[i].komentar;
+                    for (var key in trans_plot) {
+                        if (trans_plot.hasOwnProperty(key)) {
+                            var plots = trans_plot[key];
+                            var latLngs = []; // Array to store latitudes and longitudes for drawing lines
 
-                        var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
+                            for (var i = 0; i < plots.length; i++) {
+                                var plot = plots[i];
+                                var lat = parseFloat(plot.lat);
+                                var lon = parseFloat(plot.lon);
+                                var blok = plot.blok;
+                                var foto_temuan = plot.foto_temuan;
+                                var foto_fu = plot.foto_fu;
+                                var komentar = plot.komentar;
 
+                                var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
 
-                        var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
+                                var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
 
-                        if (foto_temuan) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                if (foto_temuan) {
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                }
+
+                                if (foto_fu) {
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                }
+
+                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
+                                    var marker = L.marker([lat, lon], {
+                                        icon: markerIcon
+                                    });
+
+                                    marker.bindPopup(popupContent);
+
+                                    transGroup.addLayer(marker);
+
+                                    latLngs.push([lat, lon]); // Add latitudes and longitudes to the latLngs array
+                                }
+                            }
+
+                            // Create a polyline from latLngs array to connect the plots within each block
+                            var polyline = L.polyline(latLngs, {
+                                color: 'blue'
+                            }).addTo(map);
                         }
-
-                        if (foto_fu) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                        }
-
-
-                        popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                        var marker = L.marker([lat, lon], {
-                            icon: markerIcon
-                        });
-
-                        marker.bindPopup(popupContent);
-
-                        transGroup.addLayer(marker);
                     }
                 }
 
 
-                var myIconUrl = '{{ asset("img/harvest.png") }}';
+
+                var myIconUrl = '{{ asset("img/pin.png") }}';
                 var myIcon = L.icon({
                     iconUrl: myIconUrl,
                     iconSize: [30, 45],
                     iconAnchor: [15, 45],
                     popupAnchor: [0, -30],
-                    shadowUrl: myIconUrl,
-                    shadowSize: [0, 0],
-                    shadowAnchor: [0, 0],
+
                 });
-                var myIconUrl2 = '{{ asset("img/fruit-tree.png") }}';
+                var myIconUrl2 = '{{ asset("img/pin2.png") }}';
                 var myIcon2 = L.icon({
                     iconUrl: myIconUrl2,
                     iconSize: [30, 45],
                     iconAnchor: [15, 45],
                     popupAnchor: [0, -30],
-                    shadowUrl: myIconUrl2,
-                    shadowSize: [0, 0],
-                    shadowAnchor: [0, 0],
+
                 });
 
 
+                // console.log(buah_plot);
+
+                // function buah() {
+                //     for (var i = 0; i < buah_plot.length; i++) {
+                //         var lat = parseFloat(buah_plot[i].lat);
+                //         var lon = parseFloat(buah_plot[i].lon);
+                //         var blok = buah_plot[i].blok;
+                //         var foto_temuan = buah_plot[i].foto_temuan;
+                //         var komentar = buah_plot[i].komentar;
+
+                //         var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
+
+                //         var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
+
+                //         if (foto_temuan) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                //         var marker = L.marker([lat, lon], {
+                //             icon: markerIcon
+                //         });
+
+                //         marker.bindPopup(popupContent);
+
+                //         buahGroup.addLayer(marker);
+                //     }
+                // }
 
                 function buah() {
-                    for (var i = 0; i < buah_plot.length; i++) {
-                        var lat = parseFloat(buah_plot[i].lat);
-                        var lon = parseFloat(buah_plot[i].lon);
-                        var blok = buah_plot[i].blok;
-                        var foto_temuan = buah_plot[i].foto_temuan;
-                        var komentar = buah_plot[i].komentar;
+                    for (var key in buah_plot) {
+                        if (buah_plot.hasOwnProperty(key)) {
+                            var plots = buah_plot[key];
+                            for (var i = 0; i < plots.length; i++) {
+                                var plot = plots[i];
+                                var lat = parseFloat(plot.lat);
+                                var lon = parseFloat(plot.lon);
+                                var blok = plot.blok;
+                                var foto_temuan = plot.foto_temuan;
+                                var komentar = plot.komentar;
 
-                        var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
+                                var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
 
-                        var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
+                                var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
 
-                        if (foto_temuan) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                if (foto_temuan) {
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                }
+
+                                popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
+                                    var marker = L.marker([lat, lon], {
+                                        icon: markerIcon
+                                    });
+
+                                    marker.bindPopup(popupContent);
+
+                                    buahGroup.addLayer(marker);
+                                }
+                            }
                         }
-
-                        popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                        var marker = L.marker([lat, lon], {
-                            icon: markerIcon
-                        });
-
-                        marker.bindPopup(popupContent);
-
-                        buahGroup.addLayer(marker);
                     }
                 }
 
 
-                var ancakTemuan1 = '{{ asset("img/palm-tree.png") }}';
+
+
+
+
+
+                var ancakTemuan1 = '{{ asset("img/push-pin.png") }}';
                 var caktemuan1 = L.icon({
                     iconUrl: ancakTemuan1,
                     iconSize: [30, 45],
@@ -1483,7 +1551,7 @@
                     shadowAnchor: [0, 0],
                 });
 
-                var ancakTemuan2 = '{{ asset("img/palm-oil-free.png") }}';
+                var ancakTemuan2 = '{{ asset("img/push-pin1.png") }}';
                 var caktemuan2 = L.icon({
                     iconUrl: ancakTemuan2,
                     iconSize: [30, 45],
@@ -1493,7 +1561,7 @@
                     shadowSize: [0, 0],
                     shadowAnchor: [0, 0],
                 });
-                var ancak_fu1 = '{{ asset("img/checklist.png") }}';
+                var ancak_fu1 = '{{ asset("img/push-pin1.png") }}';
                 var cakfu1 = L.icon({
                     iconUrl: ancak_fu1,
                     iconSize: [30, 45],
@@ -1503,7 +1571,7 @@
                     shadowSize: [0, 0],
                     shadowAnchor: [0, 0],
                 });
-                var ancak_fu2 = '{{ asset("img/checklist.png") }}';
+                var ancak_fu2 = '{{ asset("img/push-pin1.png") }}';
                 var cakfu2 = L.icon({
                     iconUrl: ancak_fu2,
                     iconSize: [30, 45],
@@ -1655,6 +1723,16 @@
                                 map.addLayer(layers[index]);
                             } else {
                                 map.removeLayer(layers[index]);
+
+                                // If the layer being hidden is the plotBlokPolygon (Afdeling), hide all associated polygons
+                                if (layers[index] === plotBlokPolygon) {
+                                    for (var blockName in plot_blok) {
+                                        var blockPolygons = plot_blok[blockName];
+                                        for (var j = 0; j < blockPolygons.length; j++) {
+                                            map.removeLayer(blockPolygons[j]);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1663,9 +1741,17 @@
                     updateLayerVisibility();
 
                     return div;
+
+
                 };
 
+                // ...
                 legend.addTo(map);
+
+
+
+
+                // ...
 
 
                 // Toggle layer visibility when the eye icon is clicked

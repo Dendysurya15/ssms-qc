@@ -19297,13 +19297,36 @@ class inspectController extends Controller
             ->where('afdeling', '=', $id)
             ->get();
         $queryBlok = json_decode($queryBlok, true);
-        // dd($queryBlok);
+       
+        $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
+            $carry[$item['nama']][] = $item;
+            return $carry;
+        }, []);
 
+    
 
-        $plotBlok = [];
-        foreach ($queryBlok as $coord) {
-            $plotBlok[] = [$coord['lat'], $coord['lon']];
+        $bloks_afds = [];
+        foreach ($bloks_afd as $blok => $coords) {
+            foreach ($coords as $coord) {
+                $bloks_afds[] = [
+                    'blok' => $blok, 
+                    'lat' => $coord['lat'],
+                     'lon' => $coord['lon'],
+                    ];
+            }
         }
+    
+        $plotBlok = [];
+        foreach ($bloks_afd as $key => $coord) {
+            foreach ($coord as $key2 => $value) {
+                $plotBlok[$key][] = [$value['lat'], $value['lon']];
+            }
+        }
+        
+        // Sort the coordinates in ascending order based on the first value
+     
+        
+        //  dd($plotBlok);
 
         $queryTrans = DB::connection('mysql2')->table("mutu_transport")
             ->select("mutu_transport.*", "estate.wil")
@@ -19339,7 +19362,7 @@ class inspectController extends Controller
         $buah_plot = [];
         foreach ($groupedBuah as $blok => $coords) {
             foreach ($coords as $coord) {
-                $buah_plot[] = ['blok' => $blok,
+                $buah_plot[$blok][] = ['blok' => $blok,
                  'lat' => $coord['lat'],
                   'lon' => $coord['lon'],
                   'foto_temuan' => $coord['foto_temuan'],
@@ -19352,7 +19375,7 @@ class inspectController extends Controller
         $trans_plot = [];
         foreach ($groupedTrans as $blok => $coords) {
             foreach ($coords as $coord) {
-                $trans_plot[] = [
+                $trans_plot[$blok][] = [
                     'blok' => $blok, 
                     'lat' => $coord['lat'],
                      'lon' => $coord['lon'],
@@ -19530,7 +19553,7 @@ class inspectController extends Controller
         // }
         
         
-        // dd($ancak_new);
+        // dd($plotBlok);
 
         return response()->json([
             'coords' => $convertedCoords,

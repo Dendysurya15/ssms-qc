@@ -206,7 +206,7 @@
                             <th colspan="12">Keterangan</th>
                         </tr>
                         <tr>
-                            <th rowspan="3">Afdeling</th>
+                            <th rowspan="3">Blok</th>
                             <th rowspan="3">Luas HA Sample</th>
                             <th rowspan="3">Jumlah Blok Sample</th>
                             <th colspan="8">Brondolan Tinggal</th>
@@ -214,7 +214,7 @@
                             <th colspan="2" rowspan="2">Buah Tinggal Di Tph</th>
                             <th colspan="2" rowspan="2">Restan tidak dilaporkan</th>
 
-                            <th colspan="12" rowspan="12"></th>
+                            <th colspan="20" rowspan="20"></th>
 
 
                         </tr>
@@ -248,44 +248,42 @@
 
                     </thead>
                     <tbody id="tab2">
-                        @php
-                        function countRelevantKeys($array) {
-                        $count = 0;
-                        foreach ($array as $key => $value) {
-                        if (!in_array($key, ['totalblok', 'bt_tph', 'tph_blok', 'bt_jalan', 'jalan_blok', 'bt_bin', 'bin_blok', 'TotalBRD', 'Total_blok', 'jum_karung', 'blok_karung', 'buah_tinggal', 'blok_buah', 'restan_unreported', 'blok_restan'])) {
-                        $count++;
-                        }
-                        }
-                        return $count;
-                        }
 
-                        $rowCount = countRelevantKeys($data['hitung']);
-                        $emptyRows = 7 - $rowCount;
+
+                        @foreach($data['hitung'] as $key => $value)
+                        @foreach($value as $key1 => $value1)
+                        <tr>
+                            <td>{{$key1}}</td>
+                            <td>{{$value1['luas']}}</td>
+                            <td>{{$value1['blok']}}</td>
+                            <td>{{$value1['bt_tph']}}</td>
+                            <td>{{$value1['bt_blok']}}</td>
+                            <td>{{$value1['bt_jalan']}}</td>
+                            <td>{{$value1['jalan_blok']}}</td>
+                            <td>{{$value1['bt_bin']}}</td>
+                            <td>{{$value1['bin_blok']}}</td>
+                            <td>{{$value1['TotalBRD']}}</td>
+                            <td>{{$value1['total_blok']}}</td>
+                            <td>{{$value1['jum_karung']}}</td>
+                            <td>{{$value1['blok_karung']}}</td>
+                            <td>{{$value1['buah_tinggal']}}</td>
+                            <td>{{$value1['blok_buah']}}</td>
+                            <td>{{$value1['restan_unreported']}}</td>
+                            <td>{{$value1['blok_restanx']}}</td>
+                        </tr>
+                        @endforeach
+                        @endforeach
+
+
+                        @php
+                        $totalItems = 0;
+                        foreach ($data['hitung'] as $key => $items) {
+                        $totalItems += count($items);
+                        }
+                        $emptyRows = 15 - $totalItems;
                         @endphp
 
-                        @foreach ($data['hitung'] as $key => $item)
-                        @if (!in_array($key, ['totalblok', 'bt_tph', 'tph_blok', 'bt_jalan', 'jalan_blok', 'bt_bin', 'bin_blok', 'TotalBRD', 'Total_blok', 'jum_karung', 'blok_karung', 'buah_tinggal', 'blok_buah', 'restan_unreported', 'blok_restan']))
-                        <tr>
-                            <td>{{ $key }}</td>
-                            <td>{{$item['luas_blok']}}</td>
-                            <td>{{ $item['jum_blok'] }}</td>
-                            <td>{{ $item['bt_tph'] }}</td>
-                            <td>{{ $item['tph_blok'] }}</td>
-                            <td>{{ $item['bt_jalan'] }}</td>
-                            <td>{{ $item['jalan_blok'] }}</td>
-                            <td>{{ $item['bt_bin'] }}</td>
-                            <td>{{ $item['bin_blok'] }}</td>
-                            <td>{{ $item['TotalBRD'] }}</td>
-                            <td>{{ $item['Total_blok'] }}</td>
-                            <td>{{ $item['jum_karung'] }}</td>
-                            <td>{{ $item['blok_karung'] }}</td>
-                            <td>{{ $item['buah_tinggal'] }}</td>
-                            <td>{{ $item['blok_buah'] }}</td>
-                            <td>{{ $item['restan_unreported'] }}</td>
-                            <td>{{ $item['blok_restanx'] }}</td>
-                        </tr>
-                        @endif
-                        @endforeach
+
                         @for ($i = 0; $i < $emptyRows; $i++) <tr>
                             <td>&nbsp;</td>
                             <td></td>
@@ -307,25 +305,31 @@
 
                             </tr>
                             @endfor
+
+
+
+                            @foreach($data['total_hitung'] as $key => $value)
                             <tr>
-                                <td>Total</td>
-                                <td>-</td>
-                                <td>{{ $data['hitung']['totalblok'] }}</td>
-                                <td>{{ $data['hitung']['bt_tph'] }}</td>
-                                <td>{{ $data['hitung']['tph_blok'] }}</td>
-                                <td>{{ $data['hitung']['bt_jalan'] }}</td>
-                                <td>{{ $data['hitung']['jalan_blok'] }}</td>
-                                <td>{{ $data['hitung']['bt_bin'] }}</td>
-                                <td>{{ $data['hitung']['bin_blok'] }}</td>
-                                <td>{{ $data['hitung']['TotalBRD'] }}</td>
-                                <td>{{ $data['hitung']['Total_blok'] }}</td>
-                                <td>{{ $data['hitung']['jum_karung'] }}</td>
-                                <td>{{ $data['hitung']['blok_karung'] }}</td>
-                                <td>{{ $data['hitung']['buah_tinggal'] }}</td>
-                                <td>{{ $data['hitung']['blok_buah'] }}</td>
-                                <td>{{ $data['hitung']['restan_unreported'] }}</td>
-                                <td>{{ $data['hitung']['blok_restan'] }}</td>
+                                <td>{{$data['est']}}-{{$key}}</td>
+                                <td>{{$value['luas_blok']}}</td>
+                                <td>{{$value['jum_blok']}}</td>
+                                <td>{{$value['bt_tph']}}</td>
+                                <td>{{$value['tph_blok']}}</td>
+                                <td>{{$value['bt_jalan']}}</td>
+                                <td>{{$value['jalan_blok']}}</td>
+                                <td>{{$value['bt_bin']}}</td>
+                                <td>{{$value['bin_blok']}}</td>
+                                <td>{{$value['TotalBRD']}}</td>
+                                <td>{{$value['Total_blok']}}</td>
+                                <td>{{$value['jum_karung']}}</td>
+                                <td>{{$value['blok_karung']}}</td>
+                                <td>{{$value['buah_tinggal']}}</td>
+                                <td>{{$value['blok_buah']}}</td>
+                                <td>{{$value['restan_unreported']}}</td>
+                                <td>{{$value['blok_restanx']}}</td>
                             </tr>
+                            @endforeach
+
                     </tbody>
                 </table>
             </div>

@@ -4115,8 +4115,10 @@ class mutubuahController extends Controller
             $regional = 'REG-I';
         } else if (in_array($key, [4, 5, 6])) {
             $regional = 'REG-II';
-        } else {
+        } else if (in_array($key, [7, 8])) {
             $regional = 'REG-III';
+        } else {
+            $regional = 'REG-IV';
         }
 
         $nama_rh = '-';

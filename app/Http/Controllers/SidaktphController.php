@@ -4745,21 +4745,30 @@ class SidaktphController extends Controller
     public function filtersidaktphrekap(Request $request)
     {
         $dates = $request->input('tanggal');
-        $Reg = $request->input('est');
+        // $Reg = $request->input('est');
+        $estate = $request->input('estate');
+        $afd = $request->input('afd');
+
+
+        // dd($estate, $afd);
 
         $perPage = 10;
 
         $sidak_tph = DB::connection('mysql2')->table('sidak_tph')
             ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y") as tahun'))
             ->where('datetime', 'like', '%' . $dates . '%')
-            ->where('sidak_tph.est', $Reg)
-            ->orderBy('afd', 'asc')
+            ->where('sidak_tph.est', $estate)
+            ->where('sidak_tph.afd', $afd)
+
+            ->orderBy('blok', 'asc')
             ->paginate($perPage, ['*'], 'page');
+
 
         $arrView = array();
         $arrView['sidak_tph'] =  $sidak_tph;
         $arrView['tanggal'] =  $dates;
 
+        // dd($sidak_tph);
         echo json_encode($arrView);
         exit();
     }
@@ -4824,9 +4833,10 @@ class SidaktphController extends Controller
     public function pdfBAsidak(Request $request)
     {
         $est = $request->input('est');
+        $afd = $request->input('afdling');
         $awal = $request->input('start');
 
-        // dd($est,$awal);
+        // dd($est, $afd);
         // $start = '2023-04-03';
         // $startDate = DateTime::createFromFormat('d-m-Y', $awal);
         // $endDate = clone $startDate;
@@ -4841,9 +4851,10 @@ class SidaktphController extends Controller
             ->select('sidak_tph.*', 'estate.wil')
             ->join('estate', 'estate.est', '=', 'sidak_tph.est')
             ->where('sidak_tph.est', $est)
+            ->where('sidak_tph.afd', $afd)
             // ->whereBetween('sidak_tph.datetime', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
             ->where('sidak_tph.datetime', 'like', '%' . $awal . '%')
-            ->orderBy('afd', 'asc')
+            ->orderBy('blok', 'asc')
             ->get();
 
 
@@ -4853,23 +4864,8 @@ class SidaktphController extends Controller
         // dd($query);
 
         $pdf = array();
-        $totalblok = 0;
-        $totaltph = 0;
-        $totaljalan = 0;
-        $totalbin = 0;
-        $totalkr = 0;
-        $totaltgl = 0;
-        $totalunr = 0;
         foreach ($query as $key => $value) {
-            $dtBlok = 0;
-            $dtBlok = count($value);
-            $btTPH = 0;
-            $btJlan = 0;
-            $btBin = 0;
-            $jumKR = 0;
-            $bhTGL = 0;
-            $rsUNR  = 0;
-            $sum_luas = 0; // Add
+            $bloks = 0;
             foreach ($value as $key2 => $value2) {
                 $sum_bt_tph = 0;
                 $sum_bt_jalan = 0;
@@ -4878,6 +4874,7 @@ class SidaktphController extends Controller
                 $sum_buah_tinggal = 0;
                 $sum_restan_unreported = 0;
                 $luas_blok = 0;
+                $bloks = count($value2);
                 foreach ($value2 as $key3 => $value3) {
                     $sum_bt_tph += $value3['bt_tph'];
                     $sum_bt_jalan += $value3['bt_jalan'];
@@ -4888,72 +4885,74 @@ class SidaktphController extends Controller
                     $sum_restan_unreported += $value3['restan_unreported'];
                     $luas_bk =  $value2[0]['luas'];
                 }
+                $pdf[$key][$key2]['blok'] = $bloks;
                 $pdf[$key][$key2]['bt_tph'] = $sum_bt_tph;
+                $pdf[$key][$key2]['bt_blok'] = $bloks != 0 ? round($sum_bt_tph / $bloks, 2) : 0;
                 $pdf[$key][$key2]['bt_jalan'] = $sum_bt_jalan;
+                $pdf[$key][$key2]['jalan_blok'] = $bloks != 0 ? round($sum_bt_jalan / $bloks, 2) : 0;
                 $pdf[$key][$key2]['bt_bin'] = $sum_bt_bin;
+                $pdf[$key][$key2]['bin_blok'] = $bloks != 0 ? round($sum_bt_bin / $bloks, 2) : 0;
                 $pdf[$key][$key2]['jum_karung'] = $sum_jum_karung;
+                $pdf[$key][$key2]['blok_karung'] = $bloks != 0 ? round($sum_jum_karung / $bloks, 2) : 0;
                 $pdf[$key][$key2]['buah_tinggal'] = $sum_buah_tinggal;
+                $pdf[$key][$key2]['blok_buah'] = $bloks != 0 ? round($sum_buah_tinggal / $bloks, 2) : 0;
                 $pdf[$key][$key2]['restan_unreported'] = $sum_restan_unreported;
+                $pdf[$key][$key2]['blok_restanx'] = $bloks != 0 ? round($sum_restan_unreported / $bloks, 2) : 0;
                 $pdf[$key][$key2]['TotalBRD'] = $sum_bt_bin + $sum_bt_jalan + $sum_bt_tph;
+                $pdf[$key][$key2]['total_blok'] = $bloks != 0 ? round(($sum_bt_bin + $sum_bt_jalan + $sum_bt_tph) / $bloks, 2) : 0;
                 $pdf[$key][$key2]['luas'] = $luas_bk;
-
-                $sum_luas += $value2[0]['luas']; // Add this line
-                $luas_blok += $luas_bk;
-                $btTPH += $sum_bt_tph;
-                $btJlan += $sum_bt_jalan;
-                $btBin += $sum_bt_bin;
-                $jumKR += $sum_jum_karung;
-                $bhTGL += $sum_buah_tinggal;
-                $rsUNR += $sum_restan_unreported;
             }
-            $pdf[$key]['luas_blok'] = $sum_luas; //
-            $pdf[$key]['jum_blok'] = $dtBlok;
-            $pdf[$key]['bt_tph'] = $btTPH;
-            $pdf[$key]['tph_blok'] = $dtBlok != 0 ? round($btTPH / $dtBlok, 2) : 0;
-            $pdf[$key]['bt_jalan'] = $btJlan;
-            $pdf[$key]['jalan_blok'] = $dtBlok != 0 ? round($btJlan / $dtBlok, 2) : 0;
-            $pdf[$key]['bt_bin'] = $btBin;
-            $pdf[$key]['bin_blok'] = $dtBlok != 0 ? round($btBin / $dtBlok, 2) : 0;
-            $pdf[$key]['TotalBRD'] = $btTPH + $btJlan + $btBin;
-            $pdf[$key]['Total_blok'] = $dtBlok != 0 ? round(($btTPH + $btJlan + $btBin) / $dtBlok, 2) : 0;
-            $pdf[$key]['jum_karung'] = $jumKR;
-            $pdf[$key]['blok_karung'] = $dtBlok != 0 ? round($jumKR / $dtBlok, 2) : 0;
-            $pdf[$key]['buah_tinggal'] = $bhTGL;
-            $pdf[$key]['blok_buah'] = $dtBlok != 0 ? round($bhTGL / $dtBlok, 2) : 0;
-            $pdf[$key]['restan_unreported'] = $rsUNR;
-            $pdf[$key]['blok_restanx'] = $dtBlok != 0 ? round($rsUNR / $dtBlok, 2) : 0;
-
-
-            $totalblok += $dtBlok;
-            $totaltph += $btTPH;
-            $totaljalan += $btJlan;
-            $totalbin += $btBin;
-
-            $totalkr += $jumKR;
-            $totaltgl += $bhTGL;
-            $totalunr += $rsUNR;
         }
-        $pdf['totalblok'] = $totalblok;
-        $pdf['bt_tph'] = $totaltph;
-        $pdf['tph_blok'] = $totalblok != 0 ? round($totaltph / $totalblok, 2) : 0;
-        $pdf['bt_jalan'] = $totaljalan;
-        $pdf['jalan_blok'] = $totalblok != 0 ? round($totaljalan / $totalblok, 2) : 0;
-        $pdf['bt_bin'] = $totalbin;
-        $pdf['bin_blok'] = $totalblok != 0 ? round($totalbin / $totalblok, 2) : 0;
-        $pdf['TotalBRD'] = $totaltph + $totaljalan + $totalbin;
-        $pdf['Total_blok'] = $totalblok != 0 ? round(($totaltph + $totaljalan + $totalbin) / $totalblok, 2) : 0;
-        $pdf['jum_karung'] = $totalkr;
-        $pdf['blok_karung'] = $totalblok != 0 ? round($totalkr / $totalblok, 2) : 0;
-        $pdf['buah_tinggal'] = $totaltgl;
-        $pdf['blok_buah'] = $totalblok != 0 ? round($totaltgl / $totalblok, 2) : 0;
-        $pdf['restan_unreported'] = $totalunr;
-        $pdf['blok_restan'] = $totalblok != 0 ? round($totalunr / $totalblok, 2) : 0;
 
+
+
+        $total_pdf = array();
+
+        foreach ($pdf as $key => $value1) {
+            $dtBlok = 0;
+            $btTPH = 0;
+            $btJlan = 0;
+            $btBin = 0;
+            $jumKR = 0;
+            $bhTGL = 0;
+            $rsUNR  = 0;
+            $luas_blok = 0;
+            foreach ($value1 as $key1 => $value1) {
+                $luas_blok += $value1['luas'];
+                $dtBlok += $value1['blok'];
+                $btTPH += $value1['bt_tph'];
+                $btJlan += $value1['bt_jalan'];
+                $btBin += $value1['bt_bin'];
+                $jumKR += $value1['jum_karung'];
+                $bhTGL += $value1['buah_tinggal'];
+                $rsUNR += $value1['restan_unreported'];
+            }
+            $total_pdf[$key]['luas_blok'] = $luas_blok;
+            $total_pdf[$key]['jum_blok'] = $dtBlok;
+            $total_pdf[$key]['bt_tph'] = $btTPH;
+            $total_pdf[$key]['tph_blok'] = $dtBlok != 0 ? round($btTPH / $dtBlok, 2) : 0;
+            $total_pdf[$key]['bt_jalan'] = $btJlan;
+            $total_pdf[$key]['jalan_blok'] = $dtBlok != 0 ? round($btJlan / $dtBlok, 2) : 0;
+            $total_pdf[$key]['bt_bin'] = $btBin;
+            $total_pdf[$key]['bin_blok'] = $dtBlok != 0 ? round($btBin / $dtBlok, 2) : 0;
+            $total_pdf[$key]['TotalBRD'] = $btTPH + $btJlan + $btBin;
+            $total_pdf[$key]['Total_blok'] = $dtBlok != 0 ? round(($btTPH + $btJlan + $btBin) / $dtBlok, 2) : 0;
+            $total_pdf[$key]['jum_karung'] = $jumKR;
+            $total_pdf[$key]['blok_karung'] = $dtBlok != 0 ? round($jumKR / $dtBlok, 2) : 0;
+            $total_pdf[$key]['buah_tinggal'] = $bhTGL;
+            $total_pdf[$key]['blok_buah'] = $dtBlok != 0 ? round($bhTGL / $dtBlok, 2) : 0;
+            $total_pdf[$key]['restan_unreported'] = $rsUNR;
+            $total_pdf[$key]['blok_restanx'] = $dtBlok != 0 ? round($rsUNR / $dtBlok, 2) : 0;
+        }
+
+        // dd($pdf, $total_pdf);
         // dd($pdf);
         $arrView = array();
         $arrView['hitung'] =  $pdf;
+        $arrView['total_hitung'] =  $total_pdf;
 
         $arrView['est'] =  $est;
+        $arrView['afd'] =  $afd;
         $arrView['awal'] =  $awal;
         // $arrView['akhir'] =  $formattedEndDate;
 
@@ -4964,7 +4963,7 @@ class SidaktphController extends Controller
         // $pdf->set_paper('A2', 'potrait');
 
         // $filename = 'BA Sidak TPH -' . $arrView['awal'] . '-' .  $arrView['akhir'] . '-' . $arrView['est']  . '.pdf';
-        $filename = 'BA Sidak TPH -' . $arrView['awal'] . '-' . $arrView['est']  . '.pdf';
+        $filename = 'BA Sidak TPH -' . $arrView['awal'] . '-' . $arrView['est'] . '-' . $arrView['afd'] . '.pdf';
 
         return $pdf->stream($filename);
     }

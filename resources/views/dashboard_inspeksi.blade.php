@@ -1779,7 +1779,7 @@
         getPlotStr += ']}';
 
         var blok = JSON.parse(getPlotStr)
-        // console.log(blok)
+        console.log(blok)
         var test = L.geoJSON(blok, {
                 onEachFeature: function(feature, layer) {
                     layer.myTag = 'BlokMarker'
