@@ -330,32 +330,38 @@
                             <input type="hidden" name="afd" id="afd" value="{{$afd}}">
 
                             <div class="form-group">
-                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate" onchange="updateDate();">
+                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate"
+                                    onchange="updateDate();">
                                     <option value="" disabled selected hidden>Pilih tanggal</option>
                                     <optgroup label="Mutu Ancak">
                                         @foreach($ancakDates as $ancakDate)
-                                        <option value="{{ $ancakDate->date }}" {{ $ancakDate->date === $tanggal ? 'selected' : '' }}>{{ $ancakDate->date }}</option>
+                                        <option value="{{ $ancakDate->date }}" {{ $ancakDate->date === $tanggal ?
+                                            'selected' : '' }}>{{ $ancakDate->date }}</option>
                                         @endforeach
                                     </optgroup>
                                     <optgroup label="Mutu Buah">
                                         @foreach($buahDates as $buah)
-                                        <option value="{{ $buah->date }}" {{ $buah->date === $tanggal ? 'selected' : '' }}>{{ $buah->date }}</option>
+                                        <option value="{{ $buah->date }}" {{ $buah->date === $tanggal ? 'selected' : ''
+                                            }}>{{ $buah->date }}</option>
                                         @endforeach
                                     </optgroup>
                                     <optgroup label="Mutu Transport">
                                         @foreach($TransportDates as $TransportDate)
-                                        <option value="{{ $TransportDate->date }}" {{ $TransportDate->date === $tanggal ? 'selected' : '' }}>{{ $TransportDate->date }}</option>
+                                        <option value="{{ $TransportDate->date }}" {{ $TransportDate->date === $tanggal
+                                            ? 'selected' : '' }}>{{ $TransportDate->date }}</option>
                                         @endforeach
                                     </optgroup>
                                     <optgroup label="Mutu all">
                                         @foreach($commonDates as $common)
-                                        <option value="{{ $common->date }}" {{ $common->date === $tanggal ? 'selected' : '' }}>{{ $common->date }}</option>
+                                        <option value="{{ $common->date }}" {{ $common->date === $tanggal ? 'selected' :
+                                            '' }}>{{ $common->date }}</option>
                                         @endforeach
                                     </optgroup>
                                 </select>
                             </div>
 
-                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button" onclick="updateTanggal();" disabled>Show</button>
+                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button"
+                                onclick="updateTanggal();" disabled>Show</button>
 
                         </div>
                     </form>
@@ -367,11 +373,17 @@
             </div>
         </div>
         <!-- animasi loading -->
-        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="lottie-container"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            </div>
         </div>
-        <div id="lottie-container1" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="lottie-container1"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            </div>
         </div>
 
 
@@ -406,7 +418,8 @@
                 }
             </style>
 
-            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;"
+                target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
 
@@ -415,11 +428,13 @@
                 <input type="hidden" name="tglPDF" id="tglPDF" value="{{ $tanggal }}">
                 <input type="hidden" name="regPDF" id="regPDF" value="{{ $reg }}">
                 <button type="submit" class="download-btn ml-2" id="download-button" disabled>
-                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA PDF
+                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download
+                    BA PDF
                 </button>
             </form>
 
-            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;"
+                target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
                 <input type="hidden" name="estBA_excel" id="estpdf" value="{{$est}}">
@@ -427,7 +442,8 @@
                 <input type="hidden" name="tglPDF_excel" id="tglPDF_excel" value="{{ $tanggal }}">
                 <input type="hidden" name="regExcel" id="regExcel" value="{{$reg}}">
                 <button type="submit" class="download-btn ml-2" id="download-excel-button" disabled>
-                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA Excel
+                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download
+                    BA Excel
                 </button>
             </form>
         </div>
@@ -689,7 +705,8 @@
                 </div>
                 <div class="mb-3">
                     <label for="update-pk_panenCAk" class="col-form-label">Pokok Panen</label>
-                    <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value="" required>
+                    <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value=""
+                        required>
                 </div>
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -806,7 +823,8 @@
                 </div>
                 <div class="mb-3">
                     <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
-                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value="" required>
+                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value=""
+                        required>
                 </div>
                 <div class="mb-3">
                     <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
@@ -870,7 +888,8 @@
         <div class="modal-content-custom">
             <h2>Delete Mutu Ancak</h2>
             <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
-            <form id="delete-form" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+            <form id="delete-form" action="{{ route('deleteBA') }}" method="POST"
+                onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
                 {{ csrf_field() }}
                 <input type="hidden" id="delete-id" name="id">
                 <p>Apakah anda Yakin ingin Menghapus?</p>
@@ -975,14 +994,19 @@
 
                         <!-- Table Mutu Buah -->
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
-                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang Sampel</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang
+                            Sampel</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong (E)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar V-Cut</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)
+                        </th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong
+                            (E)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar
+                            V-Cut</th>
                         <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung Brondolan</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung
+                            Brondolan</th>
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
                     </tr>
                     <tr>
@@ -1082,14 +1106,19 @@
 
                         <!-- Table Mutu Buah -->
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
-                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang Sampel</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang
+                            Sampel</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong (E)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar V-Cut</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)
+                        </th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong
+                            (E)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar
+                            V-Cut</th>
                         <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung Brondolan</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung
+                            Brondolan</th>
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
                     </tr>
                     <tr>
@@ -1214,8 +1243,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>
 
 
 @include('layout/footer')
@@ -1297,7 +1329,7 @@
 
 
                 var estatePolygon = L.polygon(polygonCoords, {
-                    color: 'blue'
+                    color: '#003B73'
                 }).addTo(map).bindPopup('<strong>Estate:</strong>' + est);
                 // console.log(plot_blok);
 
@@ -1398,7 +1430,6 @@
                 //         transGroup.addLayer(marker);
                 //     }
                 // }
-                console.log(trans_plot);
 
                 function trans() {
                     for (var key in trans_plot) {

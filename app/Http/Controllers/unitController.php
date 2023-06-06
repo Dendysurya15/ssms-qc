@@ -337,7 +337,7 @@ class unitController extends Controller
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->where('estate.nama', '!=', 'PLASMA')
-            ->where('wil.nama', '!=', 'Plasma')
+            // ->where('wil.nama', '!=', 'Plasma')
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
 

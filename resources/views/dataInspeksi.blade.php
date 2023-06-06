@@ -665,7 +665,8 @@
     @foreach ($dataSkor_ancak as $key => $itemx)
     @foreach ($itemx as $key2 => $plasma)
     @foreach ($plasma as $key3 => $item2)
-    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III" || $key3 == "WIL-IV" || $key3 == "WIL-V" || $key3 == "WIL-VI" || $key3 == "WIL-VII" )
+    @if ($key3 == "WIL-I" || $key3 == "WIL-II" || $key3 == "WIL-III" || $key3 == "WIL-IV" || $key3 == "WIL-V" || $key3
+    == "WIL-VI" || $key3 == "WIL-VII" )
     @php
     $skor_kategori_akhirx = skor_kategori_akhir(check_array('allSkor', $item2));
     $total_skorAncak = $item2['Skor_brd'] + $item2['Skor_buah'] + $item2['Skor_ps'];
@@ -837,7 +838,7 @@
         <td style="background-color : yellow; color: #000000;">{{ $value1['total_rst'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $value1['rst_tph'] }}</td>
         <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] + $value1['scorre_bt']  }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] + $value1['scorre_bt'] }}</td>
 
         @endif
         @endforeach
