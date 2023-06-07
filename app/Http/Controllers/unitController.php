@@ -167,13 +167,6 @@ class unitController extends Controller
                 $dataResult[$key]['status'] = 'Poor';
             }
         }
-
-        // dd($dataResult);
-
-        if (isset($dataResult['CWS1'])) {
-            $dataResult['CWS'] = $dataResult['CWS1'];
-            unset($dataResult['CWS1']);
-        }
         //khusus untuk menghitung record setiap bulan per estate
         // dd($countDataPerEstate);
         $resultCountMax = array();
@@ -196,7 +189,6 @@ class unitController extends Controller
                 $resultCount[$key] = $value;
             }
         }
-
 
         // dd($resultCount);
 
@@ -300,14 +292,6 @@ class unitController extends Controller
             $arrHeader[] = 'SKOR';
         }
         array_push($arrHeader, 'SKOR', 'STATUS', 'RANK');
-        if (isset($arrView['CWS1'])) {
-            $arrView['CWS'] = $arrView['CWS1'];
-            unset($arrView['CWS1']);
-        }
-        if (isset($arrId['CWS1'])) {
-            $arrId['CWS'] = $arrId['CWS1'];
-            unset($arrId['CWS1']);
-        }
 
         $arrResult['arrView'] = $arrView;
         $arrResult['arrId'] = $arrId;
@@ -337,15 +321,13 @@ class unitController extends Controller
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->where('estate.nama', '!=', 'PLASMA')
-            ->where('wil.nama', '!=', 'Plasma')
+            // ->where('wil.nama', '!=', 'Plasma')
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
 
         $queryEstate = json_decode($queryEstate, true);
 
-        // dd($queryEstate);
         $dataRaw = array();
-
 
         foreach ($queryEstate as $value) {
 
@@ -353,13 +335,12 @@ class unitController extends Controller
             $queryPerEstate = DB::connection('mysql2')->table('qc_gudang')
                 ->select("qc_gudang.*", DB::raw('DATE_FORMAT(qc_gudang.tanggal, "%M") as bulan'))
                 ->join('estate', 'estate.est', '=', 'qc_gudang.unit')
-
-                // ->where('wil.regional', $regional)
                 ->where(function ($query) use ($value) {
                     $query->where('unit', '=', $value['id'])
                         ->orWhere('unit', '=', $value['est']);
                 })
                 ->whereYear('tanggal', $year)
+                ->orderBy('tanggal')
                 ->get();
 
 
@@ -389,6 +370,7 @@ class unitController extends Controller
             }
         }
 
+        // dd($dataRaw);
 
         $dataResult = array();
         $countDataPerEstate = array();
@@ -494,6 +476,7 @@ class unitController extends Controller
                 $dataResult[$key]['status'] = 'Poor';
             }
         }
+
 
 
         $bulanKey = $bulanKe - 1;
@@ -674,7 +657,7 @@ class unitController extends Controller
             $arrId[$key][] = '-';
         }
 
-        // dd($arrId); 
+        // dd($arrId);
         // dd($arrView);
         $arrHeader = array();
         $arrHeader = ['WILAYAH', 'ESTATE', 'KODE'];
@@ -704,26 +687,6 @@ class unitController extends Controller
             $inc2++;
         }
 
-        if (array_key_exists('CWS1', $arrView)) {
-            $newArr = array('CWS' => $arrView['CWS1']);
-            unset($arrView['CWS1']);
-            $arrView = array_merge($newArr, $arrView);
-        }
-
-        if (array_key_exists('CWS1', $arrId)) {
-            $newArr = array('CWS' => $arrId['CWS1']);
-            unset($arrId['CWS1']);
-            $arrId = array_merge($newArr, $arrId);
-        }
-
-
-        // $arrView = array_map(function ($element) {
-        //     $element['CWS'] = $element['CWS1'];
-        //     unset($element['CWS1']);
-        //     return $element;
-        // }, $arrView);
-
-        // dd($regional);
         $arrResult['arrView'] = $arrView;
         $arrResult['arrId'] = $arrId;
         $arrResult['arrHeader'] = $arrHeader;
@@ -941,13 +904,42 @@ class unitController extends Controller
 
 
 
+        // foreach ($dataResult as $key => $value) {
+        //     foreach ($resultCount as $key2 => $data) {
+        //         // dd($key2);
+        //         for ($i = 1; $i <= $data; $i++) {
+        //             if (array_key_exists($key2 . '_' . $i, $value)) {
+        //                 // $dataResult[$key][$key2 . '_' . $i] = 0;
 
+        //             } else {
+        //                 if (!array_key_exists('skor_bulan_' . $key2, $value)) {
+        //                     $dataResult[$key]['skor_bulan_' . $key2] = 0;
+        //                 }
+        //                 $dataResult[$key][$key2 . '_' . $i] = 0;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // dd($dataResult);
+        // dd($dataResult['KNE']['November']);
+        // if (array_key_exists(('November'), $dataResult['KNE'])) {
+        //     if (is_array($dataResult['KNE']['November'])) {
+        //         foreach ($dataResult['KNE']['November'] as $key => $value) {
+        //             print_r($value);
+        //         }
+        //     } else {
+        //         dd('tidak');
+        //     }
+        // } else {
+        //     dd('tidak ada');
+        // }
+
+        // dd($dataResult);
         $bulanJson = json_encode($bulan);
 
-        return view('dashboard_gudang', ['dataResult' => $dataResult, 'resultCount' => $resultCount, 'bulanJson' => $bulanJson, 'bulan' => $bulan, 'total_column_bulan' => $total_column_bulan, 'resultCountJson' => $resultCountJson]);
+        return view('dashboard', ['dataResult' => $dataResult, 'resultCount' => $resultCount, 'bulanJson' => $bulanJson, 'bulan' => $bulan, 'total_column_bulan' => $total_column_bulan, 'resultCountJson' => $resultCountJson]);
     }
-
-
     public function tambah()
     {
         $query = DB::connection('mysql2')->table('qc_gudang')
@@ -1487,15 +1479,15 @@ class unitController extends Controller
             $query->foto_inspeksi_ktu_2 = 0;
         }
 
-
-        // dd($query);
         $pdf = pdf::loadview('cetak', ['data' => $query]);
+        // $customPaper = array(360, 360, 360, 360);
+        // $pdf->set_paper('A2', 'potrait');
         $customPaper = array(0, 0, 1300, 2200);
         $pdf->set_paper($customPaper, 'potrait');
 
         $filename = 'QC-gudang-' . $query->name_format . '-' . $query->est . '.pdf';
-        return $pdf->stream($filename, array("Attachment" => false));
-        // return $pdf->download($filename);
+        // return $pdf->stream($filename);
+        return $pdf->download($filename);
     }
 
     public function hapusRecord($id)
@@ -1642,7 +1634,7 @@ class unitController extends Controller
         sleep(3);
 
         DB::connection('mysql2')->table('qc_gudang')->where('id', $id)->delete();
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard_gudang');
     }
 
     public function listktu(Request $request)
@@ -1656,31 +1648,20 @@ class unitController extends Controller
         $queryAfd = DB::connection('mysql2')->table('afdeling')->select('nama')->groupBy('nama')->get();
         // dd($query, $queryEst);
         $ktu = array();
-
         foreach ($query as $key => $value) {
             foreach ($queryEst as $key1 => $value1) if ($value->unit == $value1->id) {
                 $ktu[$key]['id'] = $value->id;
                 $ktu[$key]['nama'] = $value->nama;
                 $ktu[$key]['jabatan'] = $value->jabatan;
-                $ktu[$key]['unit'] = $value1->est;
-
-                $getWil = $value1->wil;
-
-                $idWil = DB::connection('mysql2')->table('wil')->where('id', $getWil)->first()->regional;
-
-                $reg = DB::connection('mysql2')->table('reg')->where('id', $idWil)->first();
-
-                $ktu[$key]['reg'] = $reg->id;
-                $ktu[$key]['reg-nama'] = $reg->nama;
+                $ktu[$key]['unit'] = $value1->nama;
             }
         }
+        // dd($ktu, $query);
 
         $queryReg = DB::connection('mysql2')->table('reg')->pluck('nama', 'id');
 
-        // dd($queryEst);
         return view('listktu', ['pekerja' => $ktu, 'estate' => $queryEst, 'afdeling' => $queryAfd, 'regional' => $queryReg]);
     }
-
 
     public function getEstateListKtu(Request $request)
     {
@@ -1777,6 +1758,7 @@ class unitController extends Controller
                     });
             })
             ->get();
+
         $rog = [];
         foreach ($queryEst as $key => $value) {
             if ($Reg == $value->est) {

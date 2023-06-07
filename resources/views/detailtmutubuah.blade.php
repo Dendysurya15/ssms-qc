@@ -345,7 +345,7 @@
 
                 <div class="logo-container">
 
-                    <img src="{{ asset('img/logo-SSS.png') }}" alt="Logo" class="logo">
+                    <img src="{{ asset('img/Logo-SSS.png') }}" alt="Logo" class="logo">
                     <div class="text-container">
                         <div class="pt-name">PT. SAWIT SUMBERMAS SARANA, TBK</div>
                         <div class="qc-name">QUALITY CONTROL</div>
@@ -393,18 +393,17 @@
             <input type="hidden" name="afdBA" id="afdpdf" value="{{$afd}}">
             <input type="hidden" name="tglPDF" id="tglPDF" value="{{ isset($inputdate) ? $inputdate : '' }}">
 
-
-            <button type="submit" class="ml-2" id="download-button" disabled>
-                <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA
+            <button type="submit" class="btn btn-primary ml-2" id="download-button" disabled>
+                Download BA
             </button>
-
         </form>
     </div>
+
     <div class="d-flex flex-column align-items-center mt-3 mb-2 ml-3 mr-3">
         <h1 class="text-center">Tabel Sidak Mutu Buah</h1>
         <div class="table-responsive">
             <table class="table table-bordered" id="mutu_ancak">
-                <thead class="thead-dark">
+                <thead class="thead-light">
                     <tr>
                         <th>No</th>
                         <th>Estate</th>
@@ -1015,23 +1014,24 @@
                         ];
                         const row = createTableRow(items);
                         // Inside the forEach loop
+                        if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                            createAksiButtons(row, element[1].id,
+                                element[1].blok,
+                                element[1].petugas,
+                                element[1].tph_baris,
+                                element[1].ancak_pemanen,
+                                element[1].jumlah_jjg,
+                                element[1].bmt,
+                                element[1].bmk,
+                                element[1].overripe,
+                                element[1].empty,
+                                element[1].abnormal,
+                                element[1].rd,
+                                element[1].vcut,
+                                element[1].alas_br,
 
-                        createAksiButtons(row, element[1].id,
-                            element[1].blok,
-                            element[1].petugas,
-                            element[1].tph_baris,
-                            element[1].ancak_pemanen,
-                            element[1].jumlah_jjg,
-                            element[1].bmt,
-                            element[1].bmk,
-                            element[1].overripe,
-                            element[1].empty,
-                            element[1].abnormal,
-                            element[1].rd,
-                            element[1].vcut,
-                            element[1].alas_br,
-
-                        );
+                            );
+                        }
 
                         tRans.appendChild(row);
                     });
@@ -1144,7 +1144,7 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "http://qc-web.test/dashboard_mutubuah";
+        window.location.href = "https://qc-apps.srs-ssms.com/dashboard_mutubuah";
     }
 
     document.getElementById("show-button").disabled = true;

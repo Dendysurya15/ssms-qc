@@ -4748,9 +4748,11 @@ class SidaktphController extends Controller
         // $Reg = $request->input('est');
         $estate = $request->input('estate');
         $afd = $request->input('afd');
+        $reg = $request->input('regional');
 
 
-        // dd($estate, $afd);
+
+        // dd($reg, $afd);
 
         $perPage = 10;
 
@@ -4834,9 +4836,9 @@ class SidaktphController extends Controller
     {
         $est = $request->input('est');
         $afd = $request->input('afdling');
-        $awal = $request->input('start');
+        $awal = $request->input('inputDates');
 
-        // dd($est, $afd);
+        // dd($est, $afd, $awal);
         // $start = '2023-04-03';
         // $startDate = DateTime::createFromFormat('d-m-Y', $awal);
         // $endDate = clone $startDate;

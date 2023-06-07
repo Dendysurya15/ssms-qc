@@ -18746,6 +18746,8 @@ class inspectController extends Controller
             ->delete();
         return response()->json(['status' => 'success']);
     }
+
+
     public function pdfBA(Request $request)
     {
         $est = $request->input('estBA');
@@ -18753,16 +18755,34 @@ class inspectController extends Controller
         $date = $request->input('tglPDF');
         $reg = $request->input('regPDF');
 
-        $mutuAncak = DB::connection('mysql2')->table('mutu_ancak_new')
-            ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
-            ->where('datetime', 'like', '%' . $date . '%')
-            ->where('mutu_ancak_new.estate', $est)
-            ->where('mutu_ancak_new.afdeling', $afd)
+        // $mutuAncak = DB::connection('mysql2')->table('mutu_ancak_new')
+        //     ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+        //     ->where('datetime', 'like', '%' . $date . '%')
+        //     ->where('mutu_ancak_new.estate', $est)
+        //     ->where('mutu_ancak_new.afdeling', $afd)
 
-            ->get();
-        $mutuAncak = $mutuAncak->groupBy(['blok']);
-        $mutuAncak = json_decode($mutuAncak, true);
-
+        //     ->get();
+        // $mutuAncak = $mutuAncak->groupBy(['blok']);
+        // $mutuAncak = json_decode($mutuAncak, true);
+        $mutuAncak = DB::connection('mysql2')
+        ->table('mutu_ancak_new')
+        ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+        ->where('datetime', 'like', '%' . $date . '%')
+        ->where('mutu_ancak_new.estate', $est)
+        ->where('mutu_ancak_new.afdeling', $afd)
+        ->get();
+    
+        $mutuAncak = $mutuAncak->groupBy('blok')->toArray();
+        
+        $mutuAncak = array_combine(
+            array_map(function ($key) {
+                $parts = explode('-', $key);
+                return $parts[0];
+            }, array_keys($mutuAncak)),
+            array_map(function ($value) {
+                return json_decode(json_encode($value), true);
+            }, array_values($mutuAncak))
+        );
 
         $mutuBuahQuery = DB::connection('mysql2')->table('mutu_buah')
             ->select("mutu_buah.*", DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
@@ -18774,17 +18794,38 @@ class inspectController extends Controller
         $mutuBuahQuery = $mutuBuahQuery->groupBy(['blok']);
         $mutuBuahQuery = json_decode($mutuBuahQuery, true);
 
-        $mutuTransport = DB::connection('mysql2')->table('mutu_transport')
-            ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
-            ->where('datetime', 'like', '%' . $date . '%')
-            ->where('mutu_transport.estate', $est)
-            ->where('mutu_transport.afdeling', $afd)
+        // $mutuTransport = DB::connection('mysql2')->table('mutu_transport')
+        //     ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
+        //     ->where('datetime', 'like', '%' . $date . '%')
+        //     ->where('mutu_transport.estate', $est)
+        //     ->where('mutu_transport.afdeling', $afd)
 
-            ->get();
-        $mutuTransport = $mutuTransport->groupBy(['blok']);
-        $mutuTransport = json_decode($mutuTransport, true);
+        //     ->get();
+        // $mutuTransport = $mutuTransport->groupBy(['blok']);
+        // $mutuTransport = json_decode($mutuTransport, true);
+        $mutuTransport = DB::connection('mysql2')
+        ->table('mutu_transport')
+        ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
+        ->where('datetime', 'like', '%' . $date . '%')
+        ->where('mutu_transport.estate', $est)
+        ->where('mutu_transport.afdeling', $afd)
+        ->get();
+    
+        $mutuTransport = $mutuTransport->groupBy('blok')->toArray();
+        
+        $mutuTransport = array_combine(
+            array_map(function ($key) {
+                $parts = explode('-', $key);
+                return $parts[0];
+            }, array_keys($mutuTransport)),
+            array_map(function ($value) {
+                return json_decode(json_encode($value), true);
+            }, array_values($mutuTransport))
+        );
 
-        // dd($mutuAncak);
+    
+
+        // dd($mutuAncak,$mutuTransport);
 
         $ancak = array();
         $sum = 0; // Initialize sum variable
@@ -18931,7 +18972,7 @@ class inspectController extends Controller
         // Calculate the average of sph values
         $average = round($sum / count($sph_values), 0);
 
-        // dd($average, $ancak);
+    
 
         $transport = array();
 
@@ -19059,6 +19100,8 @@ class inspectController extends Controller
                 break;  // stop the loop after the first match
             }
         }
+
+        // dd($transport, $ancak);
         
         // dd($newVariable,$transport);
         $mutuBuah = array();
@@ -25587,40 +25630,123 @@ class inspectController extends Controller
         $reg = $request->input('regExcel');
 
         // dd($reg);
+        // $mutuAncak = DB::connection('mysql2')->table('mutu_ancak_new')
+        // ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+        // ->where('datetime', 'like', '%' . $date . '%')
+        // ->where('mutu_ancak_new.estate', $est)
+        // ->where('mutu_ancak_new.afdeling', $afd)
+
+        // ->get();
+        // $mutuAncak = $mutuAncak->groupBy(['estate', 'blok']);
+        // $mutuAncak = json_decode($mutuAncak, true);
+
         $mutuAncak = DB::connection('mysql2')->table('mutu_ancak_new')
-        ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
-        ->where('datetime', 'like', '%' . $date . '%')
-        ->where('mutu_ancak_new.estate', $est)
-        ->where('mutu_ancak_new.afdeling', $afd)
+            ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->where('mutu_ancak_new.estate', $est)
+            ->where('mutu_ancak_new.afdeling', $afd)
+            ->get();
+    
+        $mutuAncak = $mutuAncak->groupBy(['estate', function ($item) {
+            $blok = $item->blok;
+            $dashIndex = strpos($blok, '-');
+            if ($dashIndex !== false) {
+                return substr($blok, 0, $dashIndex);
+            }
+            return $blok;
+        }]);
+        
+        $mutuAncakResult = [];
+        
+        foreach ($mutuAncak as $estate => $blocks) {
+            $mutuAncakResult[$estate] = [];
+            foreach ($blocks as $block => $data) {
+                $mutuAncakResult[$estate][$block] = [];
+                foreach ($data as $item) {
+                    $mutuAncakResult[$estate][$block][] = json_decode(json_encode($item), true);
+                }
+            }
+        }
+    
 
-        ->get();
-        $mutuAncak = $mutuAncak->groupBy(['estate', 'blok']);
-        $mutuAncak = json_decode($mutuAncak, true);
+        // $mutuBuahQuery = DB::connection('mysql2')->table('mutu_buah')
+        // ->select("mutu_buah.*", DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
+        // ->where('datetime', 'like', '%' . $date . '%')
+        // ->where('mutu_buah.estate', $est)
+        // ->where('mutu_buah.afdeling', $afd)
 
+        // ->get();
+        // $mutuBuahQuery = $mutuBuahQuery->groupBy(['estate', 'blok']);
+        // $mutuBuahQuery = json_decode($mutuBuahQuery, true);
 
         $mutuBuahQuery = DB::connection('mysql2')->table('mutu_buah')
-        ->select("mutu_buah.*", DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
-        ->where('datetime', 'like', '%' . $date . '%')
-        ->where('mutu_buah.estate', $est)
-        ->where('mutu_buah.afdeling', $afd)
+            ->select("mutu_buah.*", DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->where('mutu_buah.estate', $est)
+            ->where('mutu_buah.afdeling', $afd)
+            ->get();
+        $mutuBuahQuery = $mutuBuahQuery->groupBy(['estate', function ($item) {
+            $blok = $item->blok;
+            $dashIndex = strpos($blok, '-');
+            if ($dashIndex !== false) {
+                return substr($blok, 0, $dashIndex);
+            }
+            return $blok;
+        }]);
+        $mutuBuahQueryResult = [];
 
-        ->get();
-        $mutuBuahQuery = $mutuBuahQuery->groupBy(['estate', 'blok']);
-        $mutuBuahQuery = json_decode($mutuBuahQuery, true);
+        foreach ($mutuBuahQuery as $estate => $blocks) {
+            $mutuBuahQueryResult[$estate] = [];
+            foreach ($blocks as $block => $data) {
+                $mutuBuahQueryResult[$estate][$block] = [];
+                foreach ($data as $item) {
+                    $mutuBuahQueryResult[$estate][$block][] = json_decode(json_encode($item), true);
+                }
+            }
+        }
+
+
+        // $mutuTransport = DB::connection('mysql2')->table('mutu_transport')
+        // ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
+        // ->where('datetime', 'like', '%' . $date . '%')
+        // ->where('mutu_transport.estate', $est)
+        // ->where('mutu_transport.afdeling', $afd)
+
+        // ->get();
+        // $mutuTransport = $mutuTransport->groupBy(['estate', 'blok']);
+        // $mutuTransport = json_decode($mutuTransport, true);
 
         $mutuTransport = DB::connection('mysql2')->table('mutu_transport')
-        ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
-        ->where('datetime', 'like', '%' . $date . '%')
-        ->where('mutu_transport.estate', $est)
-        ->where('mutu_transport.afdeling', $afd)
+            ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->where('mutu_transport.estate', $est)
+            ->where('mutu_transport.afdeling', $afd)
+            ->get();
 
-        ->get();
-        $mutuTransport = $mutuTransport->groupBy(['estate', 'blok']);
-        $mutuTransport = json_decode($mutuTransport, true);
+        $mutuTransport = $mutuTransport->groupBy(['estate', function ($item) {
+            $blok = $item->blok;
+            $dashIndex = strpos($blok, '-');
+            if ($dashIndex !== false) {
+                return substr($blok, 0, $dashIndex);
+            }
+            return $blok;
+        }]);
+
+        $mutuTransportResult = [];
+
+        foreach ($mutuTransport as $estate => $blocks) {
+            $mutuTransportResult[$estate] = [];
+            foreach ($blocks as $block => $data) {
+                $mutuTransportResult[$estate][$block] = [];
+                foreach ($data as $item) {
+                    $mutuTransportResult[$estate][$block][] = json_decode(json_encode($item), true);
+                }
+            }
+        }
 
     
-        // dd($mutuAncak);
-        foreach ($mutuAncak as $key => $value) {
+        // dd($mutuAncakResult ,$mutuTransportResult,$mutuBuahQueryResult);
+        foreach ($mutuAncakResult as $key => $value) {
         $jml_pokok_sm_est = 0;
         $luas_ha_est = 0;
         $jml_jjg_panen_est = 0;
@@ -25748,7 +25874,7 @@ class inspectController extends Controller
 
 
 
-        foreach ($mutuTransport as $key => $value) {
+        foreach ($mutuTransportResult as $key => $value) {
                     $skor_butir = 0;
                     $skor_restant = 0;
                     $sum_tph_sample = 0;
@@ -25828,7 +25954,7 @@ class inspectController extends Controller
 
    
     
-        foreach ($mutuBuahQuery as $key => $value) {
+        foreach ($mutuBuahQueryResult as $key => $value) {
                 $sum_blok = 0;
                 $sum_janjang = 0;
                 $sum_jjg_mentah = 0;

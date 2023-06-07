@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use DateTime;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
+
 
 
 use function PHPUnit\Framework\isEmpty;
@@ -6483,18 +6485,21 @@ class mutubuahController extends Controller
         $reg = $request->input('regPDF');
         $date = $request->input('tglPDF');
 
-        // dd($reg);
+
         $startOfWeek = strtotime($date);
+
+
         $endOfWeek = strtotime('+6 days', $startOfWeek);
 
         // Format the dates
-        $formattedStartDate = date('d-m-y', $startOfWeek);
-        $formattedEndDate = date('d-m-y', $endOfWeek);
+        $formattedStartDate = date('Y-m-d', $startOfWeek);
+        $formattedEndDate = date('Y-m-d', $endOfWeek);
 
         // Create the final formatted string
         $starDate = $formattedStartDate;
         $endDate =  $formattedEndDate;
 
+        // dd($reg, $starDate, $endDate);
         $QueryMTancakWil = DB::connection('mysql2')->table('sidak_mutu_buah')
             ->select("sidak_mutu_buah.*", DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun'))
             ->whereBetween('sidak_mutu_buah.datetime', [$starDate, $endDate])
@@ -6502,6 +6507,17 @@ class mutubuahController extends Controller
             ->get();
         $QueryMTancakWil = $QueryMTancakWil->groupBy(['estate', 'afdeling']);
         $QueryMTancakWil = json_decode($QueryMTancakWil, true);
+
+        // dd($starDate, $endDate);
+        $QueryPerblok = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select("sidak_mutu_buah.*", DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun'))
+            ->whereBetween('sidak_mutu_buah.datetime', [$starDate, $endDate])
+
+            ->get();
+        $QueryPerblok = $QueryPerblok->groupBy(['estate', 'afdeling', 'blok']);
+        $QueryPerblok = json_decode($QueryPerblok, true);
+
+        // dd($QueryMTancakWil);
 
         $queryAfd = DB::connection('mysql2')->table('afdeling')
             ->select(
@@ -6521,7 +6537,7 @@ class mutubuahController extends Controller
         $queryEste = json_decode($queryEste, true);
 
         $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
-        // dd($QueryMTbuahWil);
+        // dd($QueryMTancakWil);
         //end query
         $queryAsisten = json_decode($queryAsisten, true);
 
@@ -6543,7 +6559,7 @@ class mutubuahController extends Controller
             }
         }
 
-        // dd($defaultNew);/
+        // dd($dataPerBulan);
         $mergedData = array();
         foreach ($defaultNew as $estKey => $afdArray) {
             foreach ($afdArray as $afdKey => $afdValue) {
@@ -6572,7 +6588,7 @@ class mutubuahController extends Controller
             }
         }
 
-        // dd($mtancakWIltab1[1]['Plasma1']['WIL-III']);
+        // dd($mtancakWIltab1);
 
         $weeklyReport = array();
         foreach ($mtancakWIltab1 as $key => $value) {
@@ -6955,28 +6971,8 @@ class mutubuahController extends Controller
                 }
         }
 
-        $bloks = array();
-        foreach ($queryEste as $est) {
-            foreach ($queryAfd as $afd) {
-                if ($est['est'] == $afd['est']) {
-                    foreach ($queryblok as  $value) if ($afd['id'] == $value['afdeling']) {
-                        // dd($value);
-                        $bloks[$est['est']][$afd['nama']][$value['nama']] = 0;
-                    }
-                }
-            }
-        }
-        // dd($bloks);
 
-        // $testing = array();
-        // foreach ($queryEste as $key => $value) {
-        //     foreach ($dataAncaks as $key2 => $value2) {
-        //         if ($value['est'] == $key2) {
-        //             // dd($key2);
-        //             $testing[$value['wil']][$key2] = array_merge($testing[$value['wil']][$key2] ?? [], $value2);
-        //         }
-        //     }
-        // }
+        // dd($dataAncaks);
 
         $blokWeekly = array();
         foreach ($dataAncaks as $key => $value) {
@@ -6986,6 +6982,7 @@ class mutubuahController extends Controller
                     // dd($key2);
                     $bloks = count($value2);
                     foreach ($value2 as $key3 => $value3) {
+                        // dd($value3);
                         $jjg_sample += $value3['jumlah_jjg'];
                         $tnpBRD += $value3['bmt'];
                         $krgBRD += $value3['bmk'];
@@ -7011,9 +7008,8 @@ class mutubuahController extends Controller
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $blokWeekly[$key][$key1][$key2]['Jumlah_janjang'] = $jjg_sample;
-                    $blokWeekly[$key][$key1][$key2]['blok'] = $dataBLok;
-                    $blokWeekly[$key][$key1][$key2]['est'] = $key;
-                    $blokWeekly[$key][$key1][$key2]['afd'] = $value3['afdeling'];
+                    $blokWeekly[$key][$key1][$key2]['blok'] = $key2;
+                    $blokWeekly[$key][$key1][$key2]['blokss'] = $dataBLok;
                     $blokWeekly[$key][$key1][$key2]['tnp_brd'] = $tnpBRD;
                     $blokWeekly[$key][$key1][$key2]['krg_brd'] = $krgBRD;
                     $blokWeekly[$key][$key1][$key2]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
@@ -7048,12 +7044,74 @@ class mutubuahController extends Controller
 
             }
             // // Set the start date and end date within the sub-array
-            $blokWeekly[$key][$key1]['startDate'] = $value3['datetime'];
+            // $blokWeekly[$key][$key1]['startDate'] = $value3['datetime'];
             // $blokWeekly[$key][$key1]['endDate'] = end($value3)['datetime'];
         }
-        //perblok ending
 
-        // dd($blokWeekly);
+        // $temuan = array();
+        // foreach ($dataAncaks as $key => $value) {
+        //     foreach ($value as $key1 => $value1) {
+        //         $bloks = 0;
+        //         foreach ($value1 as $key2 => $value2) {
+        //             // dd($key2);
+        //             $bloks = count($value2);
+        //             foreach ($value2 as $key3 => $value3) {
+        //                 // dd($value3);
+
+        //                 $fu = $value3['foto_temuan'];
+        //                 $kmn = $value3['komentar'];
+        //                 $est = $value3['estate'];
+        //                 $afd = $value3['afdeling'];
+        //                 $blok = $value3['blok'];
+        //             }
+
+        //             $temuan[$key][$key1][$key2]['estate'] = $est;
+        //             $temuan[$key][$key1][$key2]['afd'] = $afd;
+        //             $temuan[$key][$key1][$key2]['blok'] = $blok;
+        //             $temuan[$key][$key1][$key2]['foto_temuan'] = $fu;
+        //             $temuan[$key][$key1][$key2]['komentar'] = $kmn;
+        //         }
+        //     }
+        // }
+
+        $temuan = array();
+        foreach ($dataAncaks as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value2) {
+                    foreach ($value2 as $key3 => $value3) {
+                        $fu = $value3['foto_temuan'];
+                        $kmn = $value3['komentar'];
+
+                        // Skip the iteration if both "foto_temuan" and "komentar" are empty
+                        if (empty($fu) && empty($kmn)) {
+                            continue;
+                        }
+
+                        $est = $value3['estate'];
+                        $afd = $value3['afdeling'];
+                        $blok = $value3['blok'];
+
+                        // Explode "foto_temuan" and "komentar" if they contain multiple values
+                        $fotoTemuanArray = explode('; ', $fu);
+                        $komentarArray = explode('; ', $kmn);
+
+                        // Create separate keys for each exploded value
+                        foreach ($fotoTemuanArray as $index => $foto) {
+                            $temuan[$key][$key1][$key2 . $index]['estate'] = $est;
+                            $temuan[$key][$key1][$key2 . $index]['afd'] = $afd;
+                            $temuan[$key][$key1][$key2 . $index]['blok'] = $blok;
+                            $temuan[$key][$key1][$key2 . $index]['foto_temuan'] = $foto;
+                            $temuan[$key][$key1][$key2 . $index]['komentar'] = $komentarArray[$index] ?? '';
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        // dd($weeklyReport, $temuan);
+        // dd($weeklyReport);
         $arrView = array();
 
         $arrView['est'] =  $reg;
@@ -7061,6 +7119,8 @@ class mutubuahController extends Controller
         $arrView['tanggal'] =  $date;
         $arrView['WeekReport1'] =  $weeklyReport;
         $arrView['highest'] =  $weeklyReportV2;
+        $arrView['blokReport'] =  $blokWeekly;
+        $arrView['temuan'] =  $temuan;
         // $arrView['total_buah'] =  $total_buah;
 
         $pdf = PDF::loadView('mutubuahpdfWeekly', ['data' => $arrView]);
@@ -7072,5 +7132,22 @@ class mutubuahController extends Controller
         $filename = 'Weekly report-' . $arrView['tanggal']  . $arrView['est']  . '.pdf';
 
         return $pdf->stream($filename);
+
+
+        // Instantiate Dompdf with options
+        // $options = new Options();
+        // $options->set('isRemoteEnabled', true);
+        // $dompdf = new Dompdf($options);
+
+        // // Load HTML into Dompdf
+        // $html = view('mutubuahpdfWeekly', ['data' => $arrView])->render();
+        // $dompdf->loadHtml($html);
+
+        // // Render the PDF
+        // $dompdf->render();
+
+        // // Output the PDF as a stream
+        // $filename = 'Weekly report-' . $arrView['tanggal']  . $arrView['est']  . '.pdf';
+        // $dompdf->stream($filename);
     }
 }

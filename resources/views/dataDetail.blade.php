@@ -945,7 +945,7 @@
     <br>
     <br>
 
-    @if ($reg == 2 || $reg == 4 )
+    @if ($reg == 2 ||$reg == 4 )
     <div class="ml-3 mr-3 mb-3">
         <div class="row text-center tbl-fixed">
             <table class="table-responsive">
@@ -1247,6 +1247,7 @@
 
 
 
+
     function getmaps() {
         var map = L.map('map');
         map.remove();
@@ -1362,92 +1363,41 @@
                     popupAnchor: [0, -30],
 
                 });
-                console.log(trans_plot);
-
-                // function trans() {
-                //     for (var i = 0; i < trans_plot.length; i++) {
-                //         var lat = parseFloat(trans_plot[i].lat);
-                //         var lon = parseFloat(trans_plot[i].lon);
-                //         var blok = trans_plot[i].blok;
-                //         var foto_temuan = trans_plot[i].foto_temuan;
-                //         var foto_fu = trans_plot[i].foto_fu;
-                //         var komentar = trans_plot[i].komentar;
-
-                //         var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
-
-
-                //         var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
-
-                //         if (foto_temuan) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         if (foto_fu) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-
-                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                //         var marker = L.marker([lat, lon], {
-                //             icon: markerIcon
-                //         });
-
-                //         marker.bindPopup(popupContent);
-
-                //         transGroup.addLayer(marker);
-                //     }
-                // }
-                console.log(trans_plot);
 
                 function trans() {
-                    for (var key in trans_plot) {
-                        if (trans_plot.hasOwnProperty(key)) {
-                            var plots = trans_plot[key];
-                            var latLngs = []; // Array to store latitudes and longitudes for drawing lines
+                    for (var i = 0; i < trans_plot.length; i++) {
+                        var lat = parseFloat(trans_plot[i].lat);
+                        var lon = parseFloat(trans_plot[i].lon);
+                        var blok = trans_plot[i].blok;
+                        var foto_temuan = trans_plot[i].foto_temuan;
+                        var foto_fu = trans_plot[i].foto_fu;
+                        var komentar = trans_plot[i].komentar;
 
-                            for (var i = 0; i < plots.length; i++) {
-                                var plot = plots[i];
-                                var lat = parseFloat(plot.lat);
-                                var lon = parseFloat(plot.lon);
-                                var blok = plot.blok;
-                                var foto_temuan = plot.foto_temuan;
-                                var foto_fu = plot.foto_fu;
-                                var komentar = plot.komentar;
+                        var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
 
-                                var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
 
-                                var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
+                        var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
 
-                                if (foto_temuan) {
-                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                                }
-
-                                if (foto_fu) {
-                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                                }
-
-                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
-                                    var marker = L.marker([lat, lon], {
-                                        icon: markerIcon
-                                    });
-
-                                    marker.bindPopup(popupContent);
-
-                                    transGroup.addLayer(marker);
-
-                                    latLngs.push([lat, lon]); // Add latitudes and longitudes to the latLngs array
-                                }
-                            }
-
-                            // Create a polyline from latLngs array to connect the plots within each block
-                            var polyline = L.polyline(latLngs, {
-                                color: 'blue'
-                            }).addTo(map);
+                        if (foto_temuan) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
                         }
+
+                        if (foto_fu) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        }
+
+
+                        popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                        var marker = L.marker([lat, lon], {
+                            icon: markerIcon
+                        });
+
+                        marker.bindPopup(popupContent);
+
+                        transGroup.addLayer(marker);
                     }
                 }
-
 
 
                 var myIconUrl = '{{ asset("img/pin.png") }}';
@@ -1468,76 +1418,34 @@
                 });
 
 
-                // console.log(buah_plot);
-
-                // function buah() {
-                //     for (var i = 0; i < buah_plot.length; i++) {
-                //         var lat = parseFloat(buah_plot[i].lat);
-                //         var lon = parseFloat(buah_plot[i].lon);
-                //         var blok = buah_plot[i].blok;
-                //         var foto_temuan = buah_plot[i].foto_temuan;
-                //         var komentar = buah_plot[i].komentar;
-
-                //         var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
-
-                //         var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
-
-                //         if (foto_temuan) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                //         var marker = L.marker([lat, lon], {
-                //             icon: markerIcon
-                //         });
-
-                //         marker.bindPopup(popupContent);
-
-                //         buahGroup.addLayer(marker);
-                //     }
-                // }
 
                 function buah() {
-                    for (var key in buah_plot) {
-                        if (buah_plot.hasOwnProperty(key)) {
-                            var plots = buah_plot[key];
-                            for (var i = 0; i < plots.length; i++) {
-                                var plot = plots[i];
-                                var lat = parseFloat(plot.lat);
-                                var lon = parseFloat(plot.lon);
-                                var blok = plot.blok;
-                                var foto_temuan = plot.foto_temuan;
-                                var komentar = plot.komentar;
+                    for (var i = 0; i < buah_plot.length; i++) {
+                        var lat = parseFloat(buah_plot[i].lat);
+                        var lon = parseFloat(buah_plot[i].lon);
+                        var blok = buah_plot[i].blok;
+                        var foto_temuan = buah_plot[i].foto_temuan;
+                        var komentar = buah_plot[i].komentar;
 
-                                var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
+                        var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
 
-                                var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
+                        var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
 
-                                if (foto_temuan) {
-                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                                }
-
-                                popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
-                                    var marker = L.marker([lat, lon], {
-                                        icon: markerIcon
-                                    });
-
-                                    marker.bindPopup(popupContent);
-
-                                    buahGroup.addLayer(marker);
-                                }
-                            }
+                        if (foto_temuan) {
+                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
                         }
+
+                        popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                        var marker = L.marker([lat, lon], {
+                            icon: markerIcon
+                        });
+
+                        marker.bindPopup(popupContent);
+
+                        buahGroup.addLayer(marker);
                     }
                 }
-
-
-
-
-
 
 
                 var ancakTemuan1 = '{{ asset("img/push-pin.png") }}';
@@ -1749,13 +1657,6 @@
                 legend.addTo(map);
 
 
-
-
-                // ...
-
-
-                // Toggle layer visibility when the eye icon is clicked
-                // Toggle layer visibility when the eye icon is clicked
                 eye.addEventListener('click', function() {
                     var index = parseInt(this.dataset.index);
 
@@ -2418,6 +2319,7 @@
                     td.style.justifyContent = 'center';
 
                     if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+
                         const updateButton = document.createElement('button');
                         updateButton.className = 'btn btn-success mr-2';
                         updateButton.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -2573,33 +2475,34 @@
                         element[1].komentar,
                         element[1].aksi,
                     ];
+
                     const row = createTableRow(items);
                     // Inside the forEach loop
-
-                    createAksiButtons(row, element[1].id,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].sph,
-                        element[1].br1,
-                        element[1].br2,
-                        element[1].sample,
-                        element[1].pokok_kuning,
-                        element[1].piringan_semak,
-                        element[1].underpruning,
-                        element[1].overpruning,
-                        element[1].jjg,
-                        element[1].brtp,
-                        element[1].brtk,
-                        element[1].brtgl,
-                        element[1].bhts,
-                        element[1].bhtm1,
-                        element[1].bhtm2,
-                        element[1].bhtm3,
-                        element[1].ps,
-                        element[1].sp,
-                        element[1].pokok_panen,
-                    );
-
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                        createAksiButtons(row, element[1].id,
+                            element[1].blok,
+                            element[1].status_panen,
+                            element[1].sph,
+                            element[1].br1,
+                            element[1].br2,
+                            element[1].sample,
+                            element[1].pokok_kuning,
+                            element[1].piringan_semak,
+                            element[1].underpruning,
+                            element[1].overpruning,
+                            element[1].jjg,
+                            element[1].brtp,
+                            element[1].brtk,
+                            element[1].brtgl,
+                            element[1].bhts,
+                            element[1].bhtm1,
+                            element[1].bhtm2,
+                            element[1].bhtm3,
+                            element[1].ps,
+                            element[1].sp,
+                            element[1].pokok_panen,
+                        );
+                    }
 
                     tRans.appendChild(row);
                 });
@@ -2633,24 +2536,26 @@
 
                     const row = createTableRow(items);
 
-                    buahAksibutton(row, element[1].id,
-                        element[1].estate,
-                        element[1].afdeling,
-                        element[1].tph_baris,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].petugas,
-                        element[1].ancak_pemanen,
-                        element[1].bmk,
-                        element[1].bmt,
-                        element[1].empty,
-                        element[1].jumlah_jjg,
-                        element[1].overripe,
-                        element[1].abnormal,
-                        element[1].vcut,
-                        element[1].alas_br,
-                        element[1].komentar
-                    );
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                        buahAksibutton(row, element[1].id,
+                            element[1].estate,
+                            element[1].afdeling,
+                            element[1].tph_baris,
+                            element[1].blok,
+                            element[1].status_panen,
+                            element[1].petugas,
+                            element[1].ancak_pemanen,
+                            element[1].bmk,
+                            element[1].bmt,
+                            element[1].empty,
+                            element[1].jumlah_jjg,
+                            element[1].overripe,
+                            element[1].abnormal,
+                            element[1].vcut,
+                            element[1].alas_br,
+                            element[1].komentar
+                        );
+                    }
 
                     tbuah.appendChild(row);
                 });
@@ -2672,19 +2577,19 @@
                     ];
 
                     const row = createTableRow(items);
-
-                    transportAksiButton(row, element[1].id,
-                        element[1].estate,
-                        element[1].afdeling,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].tph_baris,
-                        element[1].petugas,
-                        element[1].rst,
-                        element[1].bt,
-                        element[1].komentar,
-                    );
-
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                        transportAksiButton(row, element[1].id,
+                            element[1].estate,
+                            element[1].afdeling,
+                            element[1].blok,
+                            element[1].status_panen,
+                            element[1].tph_baris,
+                            element[1].petugas,
+                            element[1].rst,
+                            element[1].bt,
+                            element[1].komentar,
+                        );
+                    }
                     tTrans.appendChild(row);
                 });
 
@@ -2824,7 +2729,7 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "http://ssms-qc.test/dashboard_inspeksi";
+        window.location.href = "https://qc-apps.srs-ssms.com/dashboard_inspeksi";
     }
     var regional = '{{$reg}}';
 
@@ -3326,6 +3231,11 @@
                         // }
                     });
                 }
+
+
+
+
+
 
             }
         });

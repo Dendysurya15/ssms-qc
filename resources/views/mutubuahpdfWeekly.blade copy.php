@@ -333,6 +333,8 @@
             <tr>
                 <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Afd</th>
                 <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Blok</th>
+                <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">STATUS'
+                    (H+..)</th>
                 <th colspan="11" style="background-color: #ffc404; color: white;" class="text-center">MUTU BUAH</th>
             </tr>
             <tr>
@@ -367,88 +369,27 @@
         </thead>
         <tbody>
             @foreach($item as $key2 => $item2)
-            @php
-            $tod_jjg = 0;
-            $tod_bloks = 0;
-            $tod_tnp_brd = 0;
-            $tod_krg_brd = 0;
-            $tod_jjg_matang = 0;
-            $tod_lewat_matang = 0;
-            $tod_janjang_kosong = 0;
-            $tod_vcut = 0;
-            $tod_abnormal = 0;
-            $tod_rat_dmg = 0;
-            $tod_kr = 0;
-            @endphp
 
             @foreach($item2 as $key3 => $item3)
-            @php
-            $tod_jjg += $item3['Jumlah_janjang'];
-            $tod_bloks += $item3['blokss'];
-            $tod_tnp_brd += $item3['tnp_brd'];
-            $tod_krg_brd += $item3['krg_brd'];
-            $tod_jjg_matang += $item3['jjg_matang'];
-            $tod_lewat_matang += $item3['lewat_matang'];
-            $tod_janjang_kosong += $item3['janjang_kosong'];
-            $tod_vcut += $item3['vcut'];
-            $tod_abnormal += $item3['abnormal'];
-            $tod_rat_dmg += $item3['rat_dmg'];
-            $tod_kr += $item3['karung'];
-            if ($tod_kr != 0) {
-            $total_kr = round($tod_kr / $tod_bloks, 2);
-            } else {
-            $total_kr = 0;
-            }
-            @endphp
             <tr>
                 <td>{{$key2}}</td>
                 <td>{{$key3}}</td>
-                <td>{{$item3['Jumlah_janjang']}}</td>
-                <td>{{$item3['blokss']}}</td>
-                <td>{{$item3['tnp_brd']}}</td>
-                <td>{{$item3['krg_brd']}}</td>
-                <td>{{$item3['jjg_matang']}}</td>
-                <td>{{$item3['lewat_matang']}}</td>
-                <td>{{$item3['janjang_kosong']}}</td>
-                <td>{{$item3['vcut']}}</td>
-                <td>{{$item3['abnormal']}}</td>
-                <td>{{$item3['rat_dmg']}}</td>
-                <td>{{$item3['TPH']}}</td>
             </tr>
-            @endforeach
 
+            @endforeach
             <tr>
-                <td style="background-color: #ffc404; color: white;" colspan="2">Total</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_jjg}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_bloks}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_tnp_brd}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_krg_brd}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_jjg_matang}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_lewat_matang}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_janjang_kosong}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_vcut}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_abnormal}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$tod_rat_dmg}}</td>
-                <td style="background-color: #ffc404; color: white;">{{$total_kr}}</td>
+                <td colspan="2">Total</td>
             </tr>
             @endforeach
-        </tbody>
-
     </table>
 
-    <style>
-        .borderless-table {
-            border-collapse: collapse;
-        }
 
-        .borderless-table td {
-            border: none;
-            padding: 0;
-        }
-    </style>
-    <h1 style="text-align: center;">Foto Temuan</h1>
-    <table class="borderless-table">
-
+    <table>
+        <thead>
+            <tr>
+                <th colspan="4">Foto Temuan</th>
+            </tr>
+        </thead>
         <tbody>
             @php
             $counter = 0;
@@ -463,8 +404,8 @@
             <tr>
                 @endif
                 <td>
-                    <img style="margin: 0 5px 0 5px;" width="360" height="300" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/{{$itemx3['foto_temuan']}}" alt="Image 1">
-                    <p>{{$itemx3['estate']}} - {{$itemx3['afd']}} : {{$itemx3['komentar']}} </p>
+                    <img style="margin: 0 5px 0 5px;" width="300" height="300" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/{{$itemx3['foto_temuan']}}" alt="Image 1">
+                    <p>{{$itemx3['komentar']}} - {{$itemx3['estate']}} -{{$itemx3['afd']}}</p>
                 </td>
                 @php
                 $counter++;
@@ -472,6 +413,7 @@
                 @if($counter % 4 === 0)
             </tr>
             @endif
+
             @endforeach
             @endif
             @endforeach
@@ -479,15 +421,10 @@
             @endforeach
 
             @if($counter % 4 !== 0)
-            @for($i = 0; $i < (4 - ($counter % 4)); $i++) <td>
-                </td>
-                @endfor
-                </tr>
-                @endif
+            </tr>
+            @endif
         </tbody>
     </table>
-
-
 
 
     @if ($hasData) <!-- Add a condition to include the page break only if there is data -->

@@ -399,6 +399,17 @@
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tabTable" role="tabpanel">
 
+                                    <style>
+                                        .download-btn {
+                                            background-color: green;
+                                            color: white;
+                                        }
+
+                                        .download-btn.disabled {
+                                            background-color: grey;
+                                            pointer-events: none;
+                                        }
+                                    </style>
 
                                     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
                                         <div class="row w-100">
@@ -5819,61 +5830,79 @@
         }
     });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get the value of the lokasiKerja variable from the session
-        var lokasiKerja = "{{ session('lok') }}";
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     // Get the value of the lokasiKerja variable from the session
+    //     var lokasiKerja = "{{ session('lok') }}";
 
-        // Set the default value for regionalData select field based on lokasiKerja
-        var regionalDataSelect = document.getElementById("regionalData");
-        regionalDataSelect.value = getRegionalValue(lokasiKerja);
+    //     // Set the default value for regionalData select field based on lokasiKerja
+    //     var regionalDataSelect = document.getElementById("regionalData");
+    //     regionalDataSelect.value = getRegionalValue(lokasiKerja);
 
-        // Add event listener for the regionalData select field change
-        regionalDataSelect.addEventListener("change", function() {
-            // Retrieve the selected regional value
-            var selectedRegionalValue = regionalDataSelect.value;
+    //     // Add event listener for the regionalData select field change
+    //     regionalDataSelect.addEventListener("change", function() {
+    //         // Retrieve the selected regional value
+    //         var selectedRegionalValue = regionalDataSelect.value;
 
-            // Update the value of the hidden input field
-            document.getElementById("regPDF").value = selectedRegionalValue;
-        });
+    //         // Update the value of the hidden input field
+    //         document.getElementById("regPDF").value = selectedRegionalValue;
+    //     });
 
-        // Retrieve the value from the dateWeek input field
-        var dateWeekInput = document.getElementById("dateWeek");
-        var dateWeekValue = dateWeekInput.value;
+    //     // Retrieve the value from the dateWeek input field
+    //     var dateWeekInput = document.getElementById("dateWeek");
+    //     var dateWeekValue = dateWeekInput.value;
 
-        // Set the retrieved value to the hidden input field
-        document.getElementById("tglPDF").value = dateWeekValue;
+    //     // Set the retrieved value to the hidden input field
+    //     document.getElementById("tglPDF").value = dateWeekValue;
 
-        // Submit the form when the page is first loaded
-        submitForm();
-    });
+    //     // Submit the form when the page is first loaded
+    //     submitForm();
+    // });
 
     // Function to submit the form
-    function submitForm() {
-        // Retrieve the selected regional value
-        var selectedRegionalValue = document.getElementById("regionalData").value;
+    // function submitForm() {
+    //     // Retrieve the selected regional value
+    //     var selectedRegionalValue = document.getElementById("regionalData").value;
 
-        // Update the value of the hidden input field
-        document.getElementById("regPDF").value = selectedRegionalValue;
+    //     // Update the value of the hidden input field
+    //     document.getElementById("regPDF").value = selectedRegionalValue;
 
-        // Retrieve the value from the dateWeek input field
-        var dateWeekValue = document.getElementById("dateWeek").value;
+    //     // Retrieve the value from the dateWeek input field
+    //     var dateWeekValue = document.getElementById("dateWeek").value;
 
-        // Set the retrieved value to the hidden input field
-        document.getElementById("tglPDF").value = dateWeekValue;
+    //     // Set the retrieved value to the hidden input field
+    //     document.getElementById("tglPDF").value = dateWeekValue;
 
-        // Submit the form
-        document.getElementById("download-button").click();
-    }
+    //     // Submit the form
+    //     document.getElementById("download-button").click();
+    // }
 
-    function getRegionalValue(lokasiKerja) {
-        // Define the mapping of lokasiKerja to regional values
-        var regionalMapping = {
-            "Regional I": "1",
-            "Regional II": "2",
-            "Regional III": "3"
-        };
+    // function getRegionalValue(lokasiKerja) {
+    //     // Define the mapping of lokasiKerja to regional values
+    //     var regionalMapping = {
+    //         "Regional I": "1",
+    //         "Regional II": "2",
+    //         "Regional III": "3",
+    //         "Regional IV": "4"
+    //     };
 
-        // Return the regional value based on lokasiKerja
-        return regionalMapping[lokasiKerja] || "1"; // Default to "1" if lokasiKerja is not found
-    }
+    //     // Return the regional value based on lokasiKerja
+    //     return regionalMapping[lokasiKerja] || "1"; // Default to "1" if lokasiKerja is not found
+    // }
+    var downloadButton = document.getElementById("download-button");
+    downloadButton.disabled = true;
+    downloadButton.classList.add("disabled");
+
+    // Enable PDF download button when Show button is clicked
+    document.getElementById("showTahung").addEventListener("click", function() {
+        var weekDate = document.getElementById("dateWeek").value;
+        var selectedRegion = document.getElementById("regionalData").value; // Get the selected value
+
+        document.getElementById("tglPDF").value = weekDate;
+        document.getElementById("startWeek").value = weekDate;
+        document.getElementById("lastWeek").value = weekDate;
+        document.getElementById("regPDF").value = selectedRegion;
+        // Enable PDF download button
+        downloadButton.disabled = false;
+        downloadButton.classList.remove("disabled");
+    });
 </script>

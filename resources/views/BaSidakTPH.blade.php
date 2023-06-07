@@ -432,60 +432,60 @@
 
         <!-- end animasi -->
     </div>
-    <div class="afd"> ESTATE : {{$est}} / {{$afd}}</div>
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
         <form action="{{ route('pdfBAsidak') }}" method="GET" class="form-inline" style="display: inline;" target="_blank">
             {{ csrf_field() }}
             <input type="hidden" name="est" id="est" value="{{$est}}">
             <input type="hidden" name="afdling" id="afdling" value="{{$afd}}">
-            <input type="hidden" name="start" id="start" value="{{$tanggal}}">
+            <input type="hidden" name="inputDates" id="inputDates" value="">
 
-            <button type="submit" class="ml-2" id="download-button">
-
-                <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA
+            <button type="submit" class="btn btn-primary ml-2" id="download-button">
+                Download BA
             </button>
-
-
         </form>
     </div>
+
 
     <!-- animasi loading -->
     <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
         <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
     </div>
-    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark ">
+    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
         <div class="Wraping">
             <h1 class="text-center">Tabel Sidak TPH</h1>
-            <table border="1" id="mutu_ancak">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Estate</th>
-                        <th>Afdeling</th>
-                        <th>Blok</th>
-                        <th>QC</th>
-                        <th>No TPH</th>
-                        <th>BT TPH</th>
-                        <th>BT Jalan</th>
-                        <th>BT Bin</th>
-                        <th>Jum Karung</th>
-                        <th>Buah Tinggal</th>
-                        <th>Restan Unreported</th>
-                        <th>TPH Semak</th>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="mutu_ancak">
+                    <thead class="table-white">
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Estate</th>
+                            <th scope="col">Afdeling</th>
+                            <th scope="col">Blok</th>
+                            <th scope="col">QC</th>
+                            <th scope="col">No TPH</th>
+                            <th scope="col">BT TPH</th>
+                            <th scope="col">BT Jalan</th>
+                            <th scope="col">BT Bin</th>
+                            <th scope="col">Jum Karung</th>
+                            <th scope="col">Buah Tinggal</th>
+                            <th scope="col">Restan Unreported</th>
+                            <th scope="col">TPH Semak</th>
 
-                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
-                        <th>Aksi</th>
-                        @endif
+                            @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+                            <th scope="col">Aksi</th>
+                            @endif
 
-                    </tr>
-                </thead>
-                <tbody id="tab1">
-                </tbody>
-            </table>
+                        </tr>
+                    </thead>
+                    <tbody id="tab1">
+                        <!-- Table rows will be dynamically added using JavaScript -->
+                    </tbody>
+                </table>
+            </div>
             <div id="pagination" class="pagination"></div>
-
         </div>
     </div>
+    >
 
     <!-- Update Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
@@ -579,11 +579,14 @@
     function updateButtonState() {
         var inputDate = document.getElementById("inputDate");
         var showFindingYear = document.getElementById("showFindingYear");
+        var inputDates = document.getElementById("inputDates");
 
         if (inputDate.value !== "") {
             showFindingYear.disabled = false;
+            inputDates.value = inputDate.value; // Update the hidden input field value
         } else {
             showFindingYear.disabled = true;
+            inputDates.value = ""; // Reset the hidden input field value
         }
     }
 
@@ -719,8 +722,9 @@
                     var tph_semak = row.insertCell(12);
                     tph_semak.innerText = item.tph_semak;
                     // Continue adding cells for each column in your table
-
-                    createAksiButtons(row, item);
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                        createAksiButtons(row, item);
+                    }
 
                 });
 
@@ -877,6 +881,6 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "http://ssms-qc.test/dashboardtph";
+        window.location.href = "https://qc-apps.srs-ssms.com/dashboardtph";
     }
 </script>
