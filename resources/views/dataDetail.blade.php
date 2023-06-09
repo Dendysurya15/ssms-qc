@@ -21,6 +21,19 @@
         /* Remove padding */
     }
 
+    .text-icon-estate {
+        font-size: 15pt;
+        color: white;
+        text-align: center;
+        opacity: 0.6;
+    }
+
+    .text-icon-blok {
+        color: white;
+        text-align: center;
+        opacity: 0.7;
+    }
+
     table {
         border-collapse: collapse;
         width: 100%;
@@ -330,32 +343,38 @@
                             <input type="hidden" name="afd" id="afd" value="{{$afd}}">
 
                             <div class="form-group">
-                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate" onchange="updateDate();">
+                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate"
+                                    onchange="updateDate();">
                                     <option value="" disabled selected hidden>Pilih tanggal</option>
                                     <optgroup label="Mutu Ancak">
                                         @foreach($ancakDates as $ancakDate)
-                                        <option value="{{ $ancakDate->date }}" {{ $ancakDate->date === $tanggal ? 'selected' : '' }}>{{ $ancakDate->date }}</option>
+                                        <option value="{{ $ancakDate->date }}" {{ $ancakDate->date === $tanggal ?
+                                            'selected' : '' }}>{{ $ancakDate->date }}</option>
                                         @endforeach
                                     </optgroup>
                                     <optgroup label="Mutu Buah">
                                         @foreach($buahDates as $buah)
-                                        <option value="{{ $buah->date }}" {{ $buah->date === $tanggal ? 'selected' : '' }}>{{ $buah->date }}</option>
+                                        <option value="{{ $buah->date }}" {{ $buah->date === $tanggal ? 'selected' : ''
+                                            }}>{{ $buah->date }}</option>
                                         @endforeach
                                     </optgroup>
                                     <optgroup label="Mutu Transport">
                                         @foreach($TransportDates as $TransportDate)
-                                        <option value="{{ $TransportDate->date }}" {{ $TransportDate->date === $tanggal ? 'selected' : '' }}>{{ $TransportDate->date }}</option>
+                                        <option value="{{ $TransportDate->date }}" {{ $TransportDate->date === $tanggal
+                                            ? 'selected' : '' }}>{{ $TransportDate->date }}</option>
                                         @endforeach
                                     </optgroup>
                                     <optgroup label="Mutu all">
                                         @foreach($commonDates as $common)
-                                        <option value="{{ $common->date }}" {{ $common->date === $tanggal ? 'selected' : '' }}>{{ $common->date }}</option>
+                                        <option value="{{ $common->date }}" {{ $common->date === $tanggal ? 'selected' :
+                                            '' }}>{{ $common->date }}</option>
                                         @endforeach
                                     </optgroup>
                                 </select>
                             </div>
 
-                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button" onclick="updateTanggal();" disabled>Show</button>
+                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button"
+                                onclick="updateTanggal();" disabled>Show</button>
 
                         </div>
                     </form>
@@ -367,11 +386,17 @@
             </div>
         </div>
         <!-- animasi loading -->
-        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="lottie-container"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            </div>
         </div>
-        <div id="lottie-container1" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="lottie-container1"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            </div>
         </div>
 
 
@@ -406,7 +431,8 @@
                 }
             </style>
 
-            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;"
+                target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
 
@@ -415,11 +441,13 @@
                 <input type="hidden" name="tglPDF" id="tglPDF" value="{{ $tanggal }}">
                 <input type="hidden" name="regPDF" id="regPDF" value="{{ $reg }}">
                 <button type="submit" class="download-btn ml-2" id="download-button" disabled>
-                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA PDF
+                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download
+                    BA PDF
                 </button>
             </form>
 
-            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;"
+                target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
                 <input type="hidden" name="estBA_excel" id="estpdf" value="{{$est}}">
@@ -427,7 +455,8 @@
                 <input type="hidden" name="tglPDF_excel" id="tglPDF_excel" value="{{ $tanggal }}">
                 <input type="hidden" name="regExcel" id="regExcel" value="{{$reg}}">
                 <button type="submit" class="download-btn ml-2" id="download-excel-button" disabled>
-                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download BA Excel
+                    <div id="lottie-download" style="width: 24px; height: 24px; display: inline-block;"></div> Download
+                    BA Excel
                 </button>
             </form>
         </div>
@@ -689,7 +718,8 @@
                 </div>
                 <div class="mb-3">
                     <label for="update-pk_panenCAk" class="col-form-label">Pokok Panen</label>
-                    <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value="" required>
+                    <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value=""
+                        required>
                 </div>
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -806,7 +836,8 @@
                 </div>
                 <div class="mb-3">
                     <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
-                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value="" required>
+                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value=""
+                        required>
                 </div>
                 <div class="mb-3">
                     <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
@@ -870,7 +901,8 @@
         <div class="modal-content-custom">
             <h2>Delete Mutu Ancak</h2>
             <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
-            <form id="delete-form" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+            <form id="delete-form" action="{{ route('deleteBA') }}" method="POST"
+                onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
                 {{ csrf_field() }}
                 <input type="hidden" id="delete-id" name="id">
                 <p>Apakah anda Yakin ingin Menghapus?</p>
@@ -975,14 +1007,19 @@
 
                         <!-- Table Mutu Buah -->
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
-                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang Sampel</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang
+                            Sampel</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong (E)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar V-Cut</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)
+                        </th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong
+                            (E)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar
+                            V-Cut</th>
                         <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung Brondolan</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung
+                            Brondolan</th>
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
                     </tr>
                     <tr>
@@ -1082,14 +1119,19 @@
 
                         <!-- Table Mutu Buah -->
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
-                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang Sampel</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang
+                            Sampel</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
                         <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong (E)</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar V-Cut</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)
+                        </th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong
+                            (E)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar
+                            V-Cut</th>
                         <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
-                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung Brondolan</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung
+                            Brondolan</th>
                         <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
                     </tr>
                     <tr>
@@ -1214,8 +1256,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>
 
 
 @include('layout/footer')
@@ -1247,7 +1292,6 @@
 
 
 
-
     function getmaps() {
         var map = L.map('map');
         map.remove();
@@ -1269,6 +1313,7 @@
             success: function(result) {
                 var polygonCoords = result.coords;
                 var plot_blok = result.plot_blok;
+                var plot_line = result.plot_line;
                 var trans_plot = result.trans_plot;
                 var buah_plot = result.buah_plot;
                 var ancak_plot = result.ancak_plot;
@@ -1280,10 +1325,7 @@
                 var map = L.map('map').fitBounds(polygonCoords.concat(plot_blok), 13);
 
 
-                var googleStreet = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
-                    maxZoom: 20,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                }).addTo(map);
+                var googleStreet = L.tileLayer( "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
                 var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
                     maxZoom: 20,
@@ -1298,10 +1340,50 @@
 
 
                 var estatePolygon = L.polygon(polygonCoords, {
-                    color: 'blue'
+                    color: '#003B73'
                 }).addTo(map).bindPopup('<strong>Estate:</strong>' + est);
                 // console.log(plot_blok);
+                var bounds = estatePolygon.getBounds();
+                        var center = bounds.getCenter();
 
+                        // Create a custom HTML icon with centered text
+                        var textIcon = L.divIcon({
+                            className: 'text-icon-estate',
+                            html: '<strong>Rangda <br> Estate</strong>',
+                            iconSize: [100, 20],
+                            iconAnchor: [50, 10]
+                        });
+
+                        var latlngs = [];
+
+for (var i = 0; i < plot_line.length; i++) {
+var coordinates = plot_line[i].split("],[");
+var latlngGroup = [];
+
+for (var j = 0; j < coordinates.length; j++) {
+    var latlng = coordinates[j].replace("[", "").replace("]", "").split(",");
+    latlngGroup.push([parseFloat(latlng[0]), parseFloat(latlng[1])]);
+}
+
+latlngs.push(latlngGroup);
+}
+
+// console.log(latlngs)
+// var latlngs = [
+//     [45.51, -122.68],
+//     [37.77, -122.43],
+//     [34.04, -118.2]
+// ];
+
+var polyline = L.polyline(latlngs, {color: 'yellow'}).addTo(map);
+
+var decorator = L.polylineDecorator(polyline, {
+patterns: [
+{ offset: 0, repeat: 50, symbol: L.Symbol.arrowHead({ pixelSize: 8, pathOptions: { fillOpacity: 1} }) }
+]
+}).addTo(map);
+// Place the text icon in the center of the polygon
+L.marker(center, { icon: textIcon }).addTo(map);
                 // Iterate over the keys of plot_blok
                 for (var blockName in plot_blok) {
                     // Get the coordinates array for the current block
@@ -1309,8 +1391,22 @@
 
                     // Create a polygon for the current block
                     var plotBlokPolygon = L.polygon(coordinates, {
-                        color: 'yellow'
+                        color: '#278ad8',
+                        fillColor: '#278ad8'
                     }).addTo(map).bindPopup('<strong>Afdeling:</strong>' + blockName);
+                    var bounds = plotBlokPolygon.getBounds();
+                    var center = bounds.getCenter();
+
+                    // Create a custom HTML icon with text and modified class name
+                    var textIcon = L.divIcon({
+                        className: 'text-icon-blok',
+                        html: blockName,
+                        iconSize: [100, 20],
+                        iconAnchor: [50, 10]
+                    });
+
+                    // Place the text icon in the center of the polygon
+                    L.marker(center, { icon: textIcon }).addTo(map);
                 }
 
 
@@ -1341,153 +1437,252 @@
 
                 var transIconUrl = '{{ asset("img/placeholder.png") }}';
                 var transicon = L.icon({
-                    iconUrl: transIconUrl,
-                    iconSize: [20, 35],
-                    iconAnchor: [15, 20],
-                    popupAnchor: [0, -20],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
 
                 });
 
                 var transTmuanUrl = '{{ asset("img/placeholder2.png") }}';
                 var transtemuan = L.icon({
-                    iconUrl: transTmuanUrl,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
                 });
                 var transFollowUrl = '{{ asset("img/placeholder3.png") }}';
                 var transFollowup = L.icon({
-                    iconUrl: transFollowUrl,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
+
 
                 });
+                console.log(trans_plot);
+
+                // function trans() {
+                //     for (var i = 0; i < trans_plot.length; i++) {
+                //         var lat = parseFloat(trans_plot[i].lat);
+                //         var lon = parseFloat(trans_plot[i].lon);
+                //         var blok = trans_plot[i].blok;
+                //         var foto_temuan = trans_plot[i].foto_temuan;
+                //         var foto_fu = trans_plot[i].foto_fu;
+                //         var komentar = trans_plot[i].komentar;
+
+                //         var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
+
+
+                //         var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
+
+                //         if (foto_temuan) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         if (foto_fu) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+
+                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                //         var marker = L.marker([lat, lon], {
+                //             icon: markerIcon
+                //         });
+
+                //         marker.bindPopup(popupContent);
+
+                //         transGroup.addLayer(marker);
+                //     }
+                // }
 
                 function trans() {
-                    for (var i = 0; i < trans_plot.length; i++) {
-                        var lat = parseFloat(trans_plot[i].lat);
-                        var lon = parseFloat(trans_plot[i].lon);
-                        var blok = trans_plot[i].blok;
-                        var foto_temuan = trans_plot[i].foto_temuan;
-                        var foto_fu = trans_plot[i].foto_fu;
-                        var komentar = trans_plot[i].komentar;
+                    for (var key in trans_plot) {
+                        if (trans_plot.hasOwnProperty(key)) {
+                            var plots = trans_plot[key];
+                            // var latLngs = []; // Array to store latitudes and longitudes for drawing lines
 
-                        var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
+                            for (var i = 0; i < plots.length; i++) {
+                                var plot = plots[i];
+                                var lat = parseFloat(plot.lat);
+                                var lon = parseFloat(plot.lon);
+                                var blok = plot.blok;
+                                var foto_temuan = plot.foto_temuan;
+                                var foto_fu = plot.foto_fu;
+                                var komentar = plot.komentar;
 
+                                var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
 
-                        var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
+                                var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
 
-                        if (foto_temuan) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                if (foto_temuan) {
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                }
+
+                                if (foto_fu) {
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                }
+
+                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
+                                    var marker = L.marker([lat, lon], {
+                                        icon: markerIcon
+                                    });
+
+                                    marker.bindPopup(popupContent);
+
+                                    transGroup.addLayer(marker);
+
+                                    // latLngs.push([lat, lon]); // Add latitudes and longitudes to the latLngs array
+                                }
+                            }
+
+                            // Create a polyline from latLngs array to connect the plots within each block
+                            // var polyline = L.polyline(latLngs, {
+                            //     color: 'blue'
+                            // }).addTo(map);
                         }
-
-                        if (foto_fu) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                        }
-
-
-                        popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                        var marker = L.marker([lat, lon], {
-                            icon: markerIcon
-                        });
-
-                        marker.bindPopup(popupContent);
-
-                        transGroup.addLayer(marker);
                     }
                 }
+
 
 
                 var myIconUrl = '{{ asset("img/pin.png") }}';
                 var myIcon = L.icon({
-                    iconUrl: myIconUrl,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
 
                 });
                 var myIconUrl2 = '{{ asset("img/pin2.png") }}';
                 var myIcon2 = L.icon({
-                    iconUrl: myIconUrl2,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
 
                 });
 
 
+                // console.log(buah_plot);
+
+                // function buah() {
+                //     for (var i = 0; i < buah_plot.length; i++) {
+                //         var lat = parseFloat(buah_plot[i].lat);
+                //         var lon = parseFloat(buah_plot[i].lon);
+                //         var blok = buah_plot[i].blok;
+                //         var foto_temuan = buah_plot[i].foto_temuan;
+                //         var komentar = buah_plot[i].komentar;
+
+                //         var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
+
+                //         var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
+
+                //         if (foto_temuan) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                //         var marker = L.marker([lat, lon], {
+                //             icon: markerIcon
+                //         });
+
+                //         marker.bindPopup(popupContent);
+
+                //         buahGroup.addLayer(marker);
+                //     }
+                // }
 
                 function buah() {
-                    for (var i = 0; i < buah_plot.length; i++) {
-                        var lat = parseFloat(buah_plot[i].lat);
-                        var lon = parseFloat(buah_plot[i].lon);
-                        var blok = buah_plot[i].blok;
-                        var foto_temuan = buah_plot[i].foto_temuan;
-                        var komentar = buah_plot[i].komentar;
+                    for (var key in buah_plot) {
+                        if (buah_plot.hasOwnProperty(key)) {
+                            var plots = buah_plot[key];
+                            for (var i = 0; i < plots.length; i++) {
+                                var plot = plots[i];
+                                var lat = parseFloat(plot.lat);
+                                var lon = parseFloat(plot.lon);
+                                var blok = plot.blok;
+                                var foto_temuan = plot.foto_temuan;
+                                var komentar = plot.komentar;
 
-                        var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
+                                var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
 
-                        var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
+                                var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
 
-                        if (foto_temuan) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                if (foto_temuan) {
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                }
+
+                                popupContent += `<strong>Komentar: </strong>${komentar}`;
+
+                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
+                                    var marker = L.marker([lat, lon], {
+                                        icon: markerIcon
+                                    });
+
+                                    marker.bindPopup(popupContent);
+
+                                    buahGroup.addLayer(marker);
+                                }
+                            }
                         }
-
-                        popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                        var marker = L.marker([lat, lon], {
-                            icon: markerIcon
-                        });
-
-                        marker.bindPopup(popupContent);
-
-                        buahGroup.addLayer(marker);
                     }
                 }
 
 
+
+
+
+
+
                 var ancakTemuan1 = '{{ asset("img/push-pin.png") }}';
                 var caktemuan1 = L.icon({
-                    iconUrl: ancakTemuan1,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
-                    shadowUrl: ancakTemuan1,
-                    shadowSize: [0, 0],
-                    shadowAnchor: [0, 0],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
                 });
 
                 var ancakTemuan2 = '{{ asset("img/push-pin1.png") }}';
                 var caktemuan2 = L.icon({
-                    iconUrl: ancakTemuan2,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
-                    shadowUrl: ancakTemuan2,
-                    shadowSize: [0, 0],
-                    shadowAnchor: [0, 0],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
                 });
                 var ancak_fu1 = '{{ asset("img/push-pin1.png") }}';
                 var cakfu1 = L.icon({
-                    iconUrl: ancak_fu1,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
-                    shadowUrl: ancak_fu1,
-                    shadowSize: [0, 0],
-                    shadowAnchor: [0, 0],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
                 });
                 var ancak_fu2 = '{{ asset("img/push-pin1.png") }}';
                 var cakfu2 = L.icon({
-                    iconUrl: ancak_fu2,
-                    iconSize: [30, 45],
-                    iconAnchor: [15, 45],
-                    popupAnchor: [0, -30],
-                    shadowUrl: ancak_fu2,
-                    shadowSize: [0, 0],
-                    shadowAnchor: [0, 0],
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
                 });
 
                 function ancak() {
@@ -1599,7 +1794,7 @@
                             }
                         });
 
-                        checkboxes.push(checkbox); // Add checkbox to the array
+                        // checkboxes.push(checkbox); // Add checkbox to the array
 
                         var iconContainer = L.DomUtil.create('div', 'icon-container', item);
 
@@ -1617,7 +1812,7 @@
                         var label = L.DomUtil.create('span', 'label', item);
                         label.innerHTML = labels[i];
 
-                        item.appendChild(checkbox); // Add checkbox to the legend item
+                        // item.appendChild(checkbox); // Add checkbox to the legend item
                         item.appendChild(iconContainer);
                         item.appendChild(label);
                     }
@@ -1657,6 +1852,13 @@
                 legend.addTo(map);
 
 
+
+
+                // ...
+
+
+                // Toggle layer visibility when the eye icon is clicked
+                // Toggle layer visibility when the eye icon is clicked
                 eye.addEventListener('click', function() {
                     var index = parseInt(this.dataset.index);
 
@@ -2319,7 +2521,6 @@
                     td.style.justifyContent = 'center';
 
                     if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
-
                         const updateButton = document.createElement('button');
                         updateButton.className = 'btn btn-success mr-2';
                         updateButton.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -2475,34 +2676,33 @@
                         element[1].komentar,
                         element[1].aksi,
                     ];
-
                     const row = createTableRow(items);
                     // Inside the forEach loop
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
-                        createAksiButtons(row, element[1].id,
-                            element[1].blok,
-                            element[1].status_panen,
-                            element[1].sph,
-                            element[1].br1,
-                            element[1].br2,
-                            element[1].sample,
-                            element[1].pokok_kuning,
-                            element[1].piringan_semak,
-                            element[1].underpruning,
-                            element[1].overpruning,
-                            element[1].jjg,
-                            element[1].brtp,
-                            element[1].brtk,
-                            element[1].brtgl,
-                            element[1].bhts,
-                            element[1].bhtm1,
-                            element[1].bhtm2,
-                            element[1].bhtm3,
-                            element[1].ps,
-                            element[1].sp,
-                            element[1].pokok_panen,
-                        );
-                    }
+
+                    createAksiButtons(row, element[1].id,
+                        element[1].blok,
+                        element[1].status_panen,
+                        element[1].sph,
+                        element[1].br1,
+                        element[1].br2,
+                        element[1].sample,
+                        element[1].pokok_kuning,
+                        element[1].piringan_semak,
+                        element[1].underpruning,
+                        element[1].overpruning,
+                        element[1].jjg,
+                        element[1].brtp,
+                        element[1].brtk,
+                        element[1].brtgl,
+                        element[1].bhts,
+                        element[1].bhtm1,
+                        element[1].bhtm2,
+                        element[1].bhtm3,
+                        element[1].ps,
+                        element[1].sp,
+                        element[1].pokok_panen,
+                    );
+
 
                     tRans.appendChild(row);
                 });
@@ -2536,26 +2736,24 @@
 
                     const row = createTableRow(items);
 
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
-                        buahAksibutton(row, element[1].id,
-                            element[1].estate,
-                            element[1].afdeling,
-                            element[1].tph_baris,
-                            element[1].blok,
-                            element[1].status_panen,
-                            element[1].petugas,
-                            element[1].ancak_pemanen,
-                            element[1].bmk,
-                            element[1].bmt,
-                            element[1].empty,
-                            element[1].jumlah_jjg,
-                            element[1].overripe,
-                            element[1].abnormal,
-                            element[1].vcut,
-                            element[1].alas_br,
-                            element[1].komentar
-                        );
-                    }
+                    buahAksibutton(row, element[1].id,
+                        element[1].estate,
+                        element[1].afdeling,
+                        element[1].tph_baris,
+                        element[1].blok,
+                        element[1].status_panen,
+                        element[1].petugas,
+                        element[1].ancak_pemanen,
+                        element[1].bmk,
+                        element[1].bmt,
+                        element[1].empty,
+                        element[1].jumlah_jjg,
+                        element[1].overripe,
+                        element[1].abnormal,
+                        element[1].vcut,
+                        element[1].alas_br,
+                        element[1].komentar
+                    );
 
                     tbuah.appendChild(row);
                 });
@@ -2577,19 +2775,19 @@
                     ];
 
                     const row = createTableRow(items);
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
-                        transportAksiButton(row, element[1].id,
-                            element[1].estate,
-                            element[1].afdeling,
-                            element[1].blok,
-                            element[1].status_panen,
-                            element[1].tph_baris,
-                            element[1].petugas,
-                            element[1].rst,
-                            element[1].bt,
-                            element[1].komentar,
-                        );
-                    }
+
+                    transportAksiButton(row, element[1].id,
+                        element[1].estate,
+                        element[1].afdeling,
+                        element[1].blok,
+                        element[1].status_panen,
+                        element[1].tph_baris,
+                        element[1].petugas,
+                        element[1].rst,
+                        element[1].bt,
+                        element[1].komentar,
+                    );
+
                     tTrans.appendChild(row);
                 });
 
@@ -2729,7 +2927,7 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "https://qc-apps.srs-ssms.com/dashboard_inspeksi";
+        window.location.href = "http://ssms-qc.test/dashboard_inspeksi";
     }
     var regional = '{{$reg}}';
 
@@ -3231,11 +3429,6 @@
                         // }
                     });
                 }
-
-
-
-
-
 
             }
         });

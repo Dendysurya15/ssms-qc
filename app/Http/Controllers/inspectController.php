@@ -18069,7 +18069,6 @@ class inspectController extends Controller
                         $dataBLok = 0;
                         $listBlokPerAfd = array();
                         foreach ($value3 as $key3 => $value4) {
-
                             // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $value4['estate'] . ' ' . $value4['afdeling'] . ' ' . $value4['blok'];
                             // }
@@ -19841,19 +19840,70 @@ class inspectController extends Controller
 
         $id = $queryAfd[0]['id'];
 
+        $queryBlokMA = DB::connection('mysql2')->table('mutu_ancak_new')
+        ->select('mutu_ancak_new.*','mutu_ancak_new.blok as nama_blok')
+        ->whereDate('mutu_ancak_new.datetime', $date)
+        ->where('estate', $est)
+        ->where('afdeling', $afd)
+        ->orderBy('mutu_ancak_new.datetime', 'desc')
+        ->groupBy('nama_blok')
+        ->pluck('blok');
+        $queryBlokMA = json_decode($queryBlokMA, true);
 
+        
+        $queryBlokMB = DB::connection('mysql2')->table('mutu_buah')
+        ->select('mutu_buah.*','mutu_buah.blok as nama_blok')
+        ->whereDate('mutu_buah.datetime', $date)
+        ->where('estate', $est)
+        ->where('afdeling', $afd)
+        ->orderBy('mutu_buah.datetime', 'desc')
+        ->groupBy('nama_blok')
+        ->pluck('blok');
+
+        $queryBlokMB = json_decode($queryBlokMB, true);
+        $queryBlokMT = DB::connection('mysql2')->table('mutu_transport')
+        ->select('mutu_transport.*','mutu_transport.blok as nama_blok')
+        ->whereDate('mutu_transport.datetime', $date)
+        ->where('estate', $est)
+        ->where('afdeling', $afd)
+        ->orderBy('mutu_transport.datetime', 'desc')
+        ->groupBy('nama_blok')
+        ->pluck('blok');
+
+        $queryBlokMT = json_decode($queryBlokMT, true);
+
+        //merge all blok untuk mendapatkan semua blok ma mb mt visit hari tersebut
+        $allBlokRaw = array_merge($queryBlokMA, $queryBlokMB, $queryBlokMT);
+
+        //array unique mengambil eliminasi blok yg sama
+        $allBlokRaw = array_unique($allBlokRaw);
+        
+        //sisipkan 0 setelah digit pertama
+        $allBlok = array();
+        foreach($allBlokRaw as $value){
+            $length = strlen($value);
+            $modifiedStr  = substr($value, 0, $length - 2) ;
+           $allBlok[] =  substr_replace($modifiedStr, "0", 1, 0);
+        }
+
+        $allLatLonBlok = DB::connection('mysql2')
+        ->table('blok')
+       
+        ->where('afdeling',$id)
+        ->whereIn('nama',$allBlok)
+        ->get();
+        $allLatLonBlok = json_decode($allLatLonBlok, true); 
+        
         $queryBlok = DB::connection('mysql2')->table('blok')
             ->select("blok.*")
             ->where('afdeling', '=', $id)
             ->get();
-        $queryBlok = json_decode($queryBlok, true);
-       
-        $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
+        $queryBlok = json_decode($queryBlok, true); 
+        
+        $bloks_afd = array_reduce($allLatLonBlok, function ($carry, $item) {
             $carry[$item['nama']][] = $item;
             return $carry;
         }, []);
-
-    
 
         $bloks_afds = [];
         foreach ($bloks_afd as $blok => $coords) {
@@ -19887,6 +19937,8 @@ class inspectController extends Controller
             ->where('mutu_transport.afdeling', '!=', 'Pla')
             ->get();
         $queryTrans = json_decode($queryTrans, true);
+
+        // dd($queryTrans);
 
         $queryBuah = DB::connection('mysql2')->table("mutu_buah")
             ->select("mutu_buah.*", "estate.wil")
@@ -19952,6 +20004,12 @@ class inspectController extends Controller
             return $carry;
         }, []);
 
+        $plotLine = array();
+        foreach ($queryancak as $key => $value) {
+                $plotLine[] =  '[' . $value['lat_awal'] . ',' . $value['lon_awal'] . '],[' . $value['lat_akhir'] . ',' . $value['lon_akhir'] . ']';
+        }
+
+        // dd($plotLine);   
         $queryancakFL = DB::connection('mysql2')->table("follow_up_ma")
             ->select("follow_up_ma.*", "estate.wil")
             ->join('estate', 'estate.est', '=', 'follow_up_ma.estate')
@@ -20016,22 +20074,22 @@ class inspectController extends Controller
                     $komentar = $firstMatch['komentar'];
                 }
         
-                $ancak_plot[] = [
-                    'blok' => $blok,
-                    'estate' => $coord['estate'],
-                    'afdeling' => $coord['afdeling'],
-                    'br1' => $coord['br1'],
-                    'br2' => $coord['br2'],
-                    'jalur_masuk' => $coord['jalur_masuk'],
-                    'foto_temuan1' => $foto_temuan1,
-                    'foto_temuan2' => $foto_temuan2,
-                    'foto_fu1' => $foto_fu1,
-                    'foto_fu2' => $foto_fu2,
-                    'komentar' => $komentar,
-                    'ket' => 'Lokasi awal',
-                    'lat' => $coord['lat_awal'],
-                    'lon' => $coord['lon_awal']
-                ];
+                // $ancak_plot[] = [
+                //     'blok' => $blok,
+                //     'estate' => $coord['estate'],
+                //     'afdeling' => $coord['afdeling'],
+                //     'br1' => $coord['br1'],
+                //     'br2' => $coord['br2'],
+                //     'jalur_masuk' => $coord['jalur_masuk'],
+                //     'foto_temuan1' => $foto_temuan1,
+                //     'foto_temuan2' => $foto_temuan2,
+                //     'foto_fu1' => $foto_fu1,
+                //     'foto_fu2' => $foto_fu2,
+                //     'komentar' => $komentar,
+                //     'ket' => 'Lokasi awal',
+                //     'lat' => $coord['lat_awal'],
+                //     'lon' => $coord['lon_awal']
+                // ];
         
                 $ancak_plot[] = [
                     'blok' => $blok,
@@ -20103,9 +20161,10 @@ class inspectController extends Controller
         // }
         
         
-        // dd($plotBlok);
+        // dd($ancak_plot);
 
         return response()->json([
+            'plot_line'=> $plotLine        ,                 
             'coords' => $convertedCoords,
             'plot_blok' => $plotBlok,
             'trans_plot' => $trans_plot,

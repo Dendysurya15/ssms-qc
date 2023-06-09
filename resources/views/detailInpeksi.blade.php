@@ -300,7 +300,9 @@
                     </div>
                     <div class="card-body">
                         @foreach ($item['foto'] as $foto)
-                        <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/{{ $foto }}" class="img-fluid zoom popup_image" alt="" data-title="{{ $item['title'] }}" onclick="openModal('{{ $foto }}', '{{ $item['title'] }}')">
+                        <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/{{ $foto }}"
+                            class="img-fluid zoom popup_image" alt="" data-title="{{ $item['title'] }}"
+                            onclick="openModal('{{ $foto }}', '{{ $item['title'] }}')">
                         @endforeach
                         <p class="text-center mt-3" style="font-weight: bold">Mt.Ancak -{{ $item['title'] }}</p>
                     </div>
@@ -320,7 +322,9 @@
                     </div>
                     <div class="card-body">
                         @foreach ($itemx['foto'] as $foto)
-                        <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/{{ $foto }}" class="img-fluid zoom popup_image" alt="" data-title="{{ $itemx['title'] }}" onclick="modalBuah('{{ $foto }}', '{{ $itemx['title'] }}')">
+                        <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/{{ $foto }}"
+                            class="img-fluid zoom popup_image" alt="" data-title="{{ $itemx['title'] }}"
+                            onclick="modalBuah('{{ $foto }}', '{{ $itemx['title'] }}')">
                         @endforeach
                         <input type="hidden" value="{{ $itemx['title'] }}" id="titleImg">
                         <p class="text-center mt-3" style="font-weight: bold">Mt.Buah -{{ $itemx['title'] }}</p>
@@ -341,7 +345,9 @@
                     </div>
                     <div class="card-body">
                         @foreach ($items['foto'] as $foto)
-                        <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/{{ $foto }}" class="img-fluid zoom popup_image" alt="" data-title="{{ $items['title'] }}" onclick="modalTrans('{{ $foto }}', '{{ $items['title'] }}')">
+                        <img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/{{ $foto }}"
+                            class="img-fluid zoom popup_image" alt="" data-title="{{ $items['title'] }}"
+                            onclick="modalTrans('{{ $foto }}', '{{ $items['title'] }}')">
                         @endforeach
                         <input type="hidden" value="{{ $items['title'] }}" id="titleImg">
                         <p class="text-center mt-3" style="font-weight: bold">Mt.Trans -{{ $items['title'] }}</p>

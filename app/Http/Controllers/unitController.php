@@ -327,14 +327,17 @@ class unitController extends Controller
 
         $queryEstate = json_decode($queryEstate, true);
 
+
         $dataRaw = array();
 
         foreach ($queryEstate as $value) {
 
-            // dd($year);
+            // dd($value);
             $queryPerEstate = DB::connection('mysql2')->table('qc_gudang')
                 ->select("qc_gudang.*", DB::raw('DATE_FORMAT(qc_gudang.tanggal, "%M") as bulan'))
-                ->join('estate', 'estate.est', '=', 'qc_gudang.unit')
+                // ->join('estate', 'estate.est', '=', 'qc_gudang.unit')
+
+                // ->where('wil.regional', $regional)
                 ->where(function ($query) use ($value) {
                     $query->where('unit', '=', $value['id'])
                         ->orWhere('unit', '=', $value['est']);
