@@ -19256,7 +19256,7 @@ class inspectController extends Controller
 
     public function pdfBA(Request $request)
     {
-        $est = $request->input('estBA');
+        $est = $request->input('estBA'); 
         $afd = $request->input('afdBA');
         $date = $request->input('tglPDF');
         $reg = $request->input('regPDF');

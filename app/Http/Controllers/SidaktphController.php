@@ -19,6 +19,7 @@ class SidaktphController extends Controller
 {
     //
     public $search;
+
     public function index(Request $request)
     {
         $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->where('estate.est', '!=', 'CWS1')->where('estate.est', '!=', 'PLASMA')->pluck('est');
@@ -807,6 +808,7 @@ class SidaktphController extends Controller
                             $dataSkorAwal[$key][$key2]['jumlah_blok'] = $jum_blok;
 
                             $dataSkorAwal[$key][$key2]['brd_blok'] = skorBRDsidak($skor_brd);
+                            // $dataSkorAwal[$key][$key2]['brd'] = skorBRDsidak($skor_brd);
                             $dataSkorAwal[$key][$key2]['kr_blok'] = skorKRsidak($skor_kr);
                             $dataSkorAwal[$key][$key2]['buah_blok'] = skorBHsidak($skor_buahtgl);
                             $dataSkorAwal[$key][$key2]['restan_blok'] = skorRSsidak($skor_restan);
@@ -867,8 +869,20 @@ class SidaktphController extends Controller
                         $skor_restan = 0;
                     }
 
+
                     $skoreTotal = skorBRDsidak($skor_tph) + skorKRsidak($skor_karung) + skorBHsidak($skor_buah) + skorRSsidak($skor_restan);
 
+                    if (
+                        $jum_blok == 0 &&
+                        $sum_karung == 0 &&
+                        $sum_restant == 0 &&
+                        $sum_tph == 0 &&
+                        $sum_buah == 0
+                    ) {
+                        $dataSkorAwaltest[$key]['skor_akhir'] = 0;
+                    } else {
+                        $dataSkorAwaltest[$key]['skor_akhir'] = $skoreTotal;
+                    }
                     $dataSkorAwaltest[$key]['total_estate_brondol'] = $sum_all_tph;
                     $dataSkorAwaltest[$key]['total_estate_karung'] = $sum_all_karung;
                     $dataSkorAwaltest[$key]['total_estate_buah_tinggal'] = $sum_all_buah;
@@ -878,7 +892,6 @@ class SidaktphController extends Controller
                     $dataSkorAwaltest[$key]['buah_tinggal'] = skorBHsidak($skor_buah);
                     $dataSkorAwaltest[$key]['restant'] = skorRSsidak($skor_restan);
                     $dataSkorAwaltest[$key]['total_blokokok'] = $jum_all_blok;
-                    $dataSkorAwaltest[$key]['skor_akhir'] = $skoreTotal;
                 }
                 // dd($dataSkorAwaltest);
 
@@ -901,7 +914,7 @@ class SidaktphController extends Controller
                         }
                     }
                 }
-                // dd($dataSkorAkhirPerWilEst['3']);
+                // dd($dataSkorAkhirPerWil);
                 //menshort nilai masing masing
                 $sortList = [];
                 foreach ($dataSkorAkhirPerWil as $key => $value) {
@@ -941,6 +954,7 @@ class SidaktphController extends Controller
                     }
                 }
 
+                // dd($dataSkorAkhirPerWilEst);
                 //menambahkan nilai rank ketia semua total skor sudah di uritkan
                 $test = [];
                 $listRank = [];
@@ -964,6 +978,7 @@ class SidaktphController extends Controller
                     }
                 }
 
+                // dd($dataSkorAkhirPerWil);
                 // perbaiki rank saya berdasarkan skore_akhir di mana jika $value3['skore_akhir'] terkecil merupakan rank 1 dan seterusnya
                 $list_all_will = [];
                 foreach ($dataSkorAkhirPerWil as $key => $value) {
@@ -987,6 +1002,15 @@ class SidaktphController extends Controller
                     }
                 }
 
+                // dd($dataSkorAkhirPerWilEst);
+                foreach ($dataSkorAkhirPerWilEst as $key => $value) {
+                    foreach ($value as $subKey => $subValue) {
+                        if (strpos($subKey, 'Plasma') !== false) {
+                            unset($dataSkorAkhirPerWilEst[$key][$subKey]);
+                        }
+                    }
+                }
+                // dd($dataSkorAkhirPerWilEst);
                 $skor_gm_wil = [];
                 foreach ($dataSkorAkhirPerWilEst as $key => $value) {
                     $sum_est_brondol = 0;
@@ -1032,15 +1056,25 @@ class SidaktphController extends Controller
                     } else {
                         $skor_total_restan_tinggal = 0;
                     }
+                    if (
+                        $sum_est_brondol == 0 &&
+                        $sum_est_karung  == 0 &&
+                        $sum_est_buah_tinggal  == 0 &&
+                        $sum_est_restan_tinggal  == 0 &&
+                        $sum_blok  == 0
+                    ) {
+                        $skor_gm_wil[$key]['skor'] = 0;
+                    } else {
+                        $skor_gm_wil[$key]['skor'] = skorBRDsidak($skor_total_brondol) + skorKRsidak($skor_total_karung) + skorBHsidak($skor_total_buah_tinggal) + skorRSsidak($skor_total_restan_tinggal);
+                    }
 
                     $skor_gm_wil[$key]['total_brondolan'] = $sum_est_brondol;
                     $skor_gm_wil[$key]['total_karung'] = $sum_est_karung;
                     $skor_gm_wil[$key]['total_buah_tinggal'] = $sum_est_buah_tinggal;
                     $skor_gm_wil[$key]['total_restan'] = $sum_est_restan_tinggal;
                     $skor_gm_wil[$key]['blok'] = $sum_blok;
-                    $skor_gm_wil[$key]['skor'] = skorBRDsidak($skor_total_brondol) + skorKRsidak($skor_total_karung) + skorBHsidak($skor_total_buah_tinggal) + skorRSsidak($skor_total_restan_tinggal);
                 }
-
+                // dd($skor_gm_wil);
                 $GmSkorWil = [];
 
                 $queryAsisten1 = DB::connection('mysql2')
@@ -1122,8 +1156,10 @@ class SidaktphController extends Controller
                         $est = 'REG-I';
                     } elseif ($value == 2) {
                         $est = 'REG-II';
-                    } else {
+                    } elseif ($value == 3) {
                         $est = 'REG-III';
+                    } else {
+                        $est = 'REG-IV';
                     }
                     foreach ($queryAsisten as $key2 => $value2) {
                         if ($value2->est == $est && $value2->afd == 'RH') {
@@ -1133,8 +1169,20 @@ class SidaktphController extends Controller
                     if (empty($skor_rh[$value]['nama'])) {
                         $skor_rh[$value]['nama'] = '-';
                     }
-                    $skor_rh[$value]['skor'] = skorBRDsidak($skor_total_wil_brondol) + skorKRsidak($skor_total_wil_karung) + skorBHsidak($skor_total_wil_buah_tinggal) + skorRSsidak($skor_total_wil_restan);
+                    if (
+                        $sum_wil_blok == 0 &&
+                        $sum_wil_brondolan == 0 &&
+                        $sum_wil_karung == 0 &&
+                        $sum_wil_buah_tinggal == 0 &&
+                        $sum_wil_restan == 0
+                    ) {
+                        $skor_rh[$value]['skor'] = 0;
+                    } else {
+                        $skor_rh[$value]['skor'] = skorBRDsidak($skor_total_wil_brondol) + skorKRsidak($skor_total_wil_karung) + skorBHsidak($skor_total_wil_buah_tinggal) + skorRSsidak($skor_total_wil_restan);
+                    }
                 }
+
+                // dd($skor_rh);
 
                 foreach ($list_all_will as $key => $value) {
                     array_multisort(array_column($list_all_will[$key], 'skor'), SORT_DESC, $list_all_will[$key]);
@@ -1147,32 +1195,7 @@ class SidaktphController extends Controller
                     }
                     array_multisort(array_column($list_all_will[$key], 'est_afd'), SORT_ASC, $list_all_will[$key]);
                 }
-                // $list_all_will = array();
-                // foreach ($dataSkorAkhirPerWil as $key => $value) {
-                //     $inc = 0;
-                //     foreach ($value as $key2 => $value2) {
-                //         foreach ($value2 as $key3 => $value3) {
-                //             $list_all_will[$key][$inc]['est'] = $key2;
-                //             $list_all_will[$key][$inc]['afd'] = $key3;
-                //             $list_all_will[$key][$inc]['skor'] = $value3['skore_akhir'];
-                //             $list_all_will[$key][$inc]['nama'] = '-';
-                //             $list_all_will[$key][$inc]['rank'] = '-';
-                //             $inc++;
-                //         }
-                //     }
-                // }
 
-                // foreach ($list_all_will as $key1 => $value1) {
-                //     $filtered_subarray = array_filter($value1, function ($element) {
-                //         return $element['skor'] != '-';
-                //     });
-                //     $rank = 1;
-                //     foreach ($filtered_subarray as $key2 => $value2) {
-                //         $filtered_subarray[$key2]['rank'] = $rank;
-                //         $rank++;
-                //     }
-                //     $list_all_will[$key1] = $filtered_subarray;
-                // }
 
                 $list_all_est = [];
                 foreach ($dataSkorAkhirPerWilEst as $key => $value) {
@@ -1513,6 +1536,18 @@ class SidaktphController extends Controller
                     }
 
                     $skoreTotalPla = skorBRDsidak($skor_tphPla) + skorKRsidak($skor_karungPla) + skorBHsidak($skor_buahPla) + skorRSsidak($skor_restanPla);
+                    if (
+                        $jum_blokPla == 0 &&
+                        $sum_karungPla == 0 &&
+                        $sum_restantPla == 0 &&
+                        $sum_tphPla == 0 &&
+                        $sum_buahPla == 0
+                    ) {
+                        $arrPlasma[$key]['SkorPlasma'] = 0;
+                    } else {
+                        $arrPlasma[$key]['SkorPlasma'] = $skoreTotalPla;
+                    }
+
                     $arrPlasma[$key]['karung_tes'] = $sum_karungPla;
                     $arrPlasma[$key]['tph_test'] = $sum_tphPla;
                     $arrPlasma[$key]['buah_test'] = $sum_buahPla;
@@ -1524,20 +1559,6 @@ class SidaktphController extends Controller
                     $arrPlasma[$key]['kr_blok'] = skorKRsidak($skor_karungPla);
                     $arrPlasma[$key]['buah_blok'] = skorBHsidak($skor_buahPla);
                     $arrPlasma[$key]['restan_blok'] = skorRSsidak($skor_restanPla);
-                    $arrPlasma[$key]['SkorPlasma'] = $skoreTotalPla;
-                } else {
-                    $arrPlasma[$key]['karung_tes'] = 0;
-                    $arrPlasma[$key]['tph_test'] = 0;
-                    $arrPlasma[$key]['buah_test'] = 0;
-                    $arrPlasma[$key]['restant_tes'] = 0;
-
-                    $arrPlasma[$key]['jumlah_blok'] = 0;
-
-                    $arrPlasma[$key]['brd_blok'] = 0;
-                    $arrPlasma[$key]['kr_blok'] = 0;
-                    $arrPlasma[$key]['buah_blok'] = 0;
-                    $arrPlasma[$key]['restan_blok'] = 0;
-                    $arrPlasma[$key]['SkorPlasma'] = 0;
                 }
             }
             // dd($arrPlasma);
@@ -1661,6 +1682,13 @@ class SidaktphController extends Controller
             }
 
             $plasmaGM = array_values($plasmaGM);
+            //masukan semua yang sudah selese di olah di atas ke dalam vaiabel terserah kemudian masukan kedalam aray
+            //karena chart hanya bisa menerima inputan json
+            $queryWilChart = DB::connection('mysql2')
+                ->table('wil')
+                ->whereIn('regional', [$regSidak])
+                ->pluck('nama');
+
             //masukan semua yang sudah selese di olah di atas ke dalam vaiabel terserah kemudian masukan kedalam aray
             //karena chart hanya bisa menerima inputan json
             $queryWilChart = DB::connection('mysql2')
@@ -2050,8 +2078,20 @@ class SidaktphController extends Controller
                         $skor_restan = 0;
                     }
 
+
                     $skoreTotal = skorBRDsidak($skor_tph) + skorKRsidak($skor_karung) + skorBHsidak($skor_buah) + skorRSsidak($skor_restan);
 
+                    if (
+                        $jum_blok == 0 &&
+                        $sum_karung == 0 &&
+                        $sum_restant == 0 &&
+                        $sum_tph == 0 &&
+                        $sum_buah == 0
+                    ) {
+                        $dataSkorAwaltest[$key]['skor_akhir'] = 0;
+                    } else {
+                        $dataSkorAwaltest[$key]['skor_akhir'] = $skoreTotal;
+                    }
                     $dataSkorAwaltest[$key]['total_estate_brondol'] = $sum_all_tph;
                     $dataSkorAwaltest[$key]['total_estate_karung'] = $sum_all_karung;
                     $dataSkorAwaltest[$key]['total_estate_buah_tinggal'] = $sum_all_buah;
@@ -2061,9 +2101,8 @@ class SidaktphController extends Controller
                     $dataSkorAwaltest[$key]['buah_tinggal'] = skorBHsidak($skor_buah);
                     $dataSkorAwaltest[$key]['restant'] = skorRSsidak($skor_restan);
                     $dataSkorAwaltest[$key]['total_blokokok'] = $jum_all_blok;
-                    $dataSkorAwaltest[$key]['skor_akhir'] = $skoreTotal;
                 }
-                // dd($dataSkorAwal);
+                // dd($dataSkorAwaltest);
 
                 foreach ($queryEste as $key => $value) {
                     foreach ($value as $key2 => $value2) {
@@ -2124,6 +2163,7 @@ class SidaktphController extends Controller
                     }
                 }
 
+                // dd($dataSkorAkhirPerWilEst);
                 //menambahkan nilai rank ketia semua total skor sudah di uritkan
                 $test = [];
                 $listRank = [];
@@ -2225,13 +2265,23 @@ class SidaktphController extends Controller
                     } else {
                         $skor_total_restan_tinggal = 0;
                     }
+                    if (
+                        $sum_est_brondol == 0 &&
+                        $sum_est_karung  == 0 &&
+                        $sum_est_buah_tinggal  == 0 &&
+                        $sum_est_restan_tinggal  == 0 &&
+                        $sum_blok  == 0
+                    ) {
+                        $skor_gm_wil[$key]['skor'] = 0;
+                    } else {
+                        $skor_gm_wil[$key]['skor'] = skorBRDsidak($skor_total_brondol) + skorKRsidak($skor_total_karung) + skorBHsidak($skor_total_buah_tinggal) + skorRSsidak($skor_total_restan_tinggal);
+                    }
 
                     $skor_gm_wil[$key]['total_brondolan'] = $sum_est_brondol;
                     $skor_gm_wil[$key]['total_karung'] = $sum_est_karung;
                     $skor_gm_wil[$key]['total_buah_tinggal'] = $sum_est_buah_tinggal;
                     $skor_gm_wil[$key]['total_restan'] = $sum_est_restan_tinggal;
                     $skor_gm_wil[$key]['blok'] = $sum_blok;
-                    $skor_gm_wil[$key]['skor'] = skorBRDsidak($skor_total_brondol) + skorKRsidak($skor_total_karung) + skorBHsidak($skor_total_buah_tinggal) + skorRSsidak($skor_total_restan_tinggal);
                 }
                 // dd($skor_gm_wil);
                 $GmSkorWil = [];
@@ -2315,8 +2365,10 @@ class SidaktphController extends Controller
                         $est = 'REG-I';
                     } elseif ($value == 2) {
                         $est = 'REG-II';
-                    } else {
+                    } elseif ($value == 3) {
                         $est = 'REG-III';
+                    } else {
+                        $est = 'REG-IV';
                     }
                     foreach ($queryAsisten as $key2 => $value2) {
                         if ($value2->est == $est && $value2->afd == 'RH') {
@@ -2326,8 +2378,20 @@ class SidaktphController extends Controller
                     if (empty($skor_rh[$value]['nama'])) {
                         $skor_rh[$value]['nama'] = '-';
                     }
-                    $skor_rh[$value]['skor'] = skorBRDsidak($skor_total_wil_brondol) + skorKRsidak($skor_total_wil_karung) + skorBHsidak($skor_total_wil_buah_tinggal) + skorRSsidak($skor_total_wil_restan);
+                    if (
+                        $sum_wil_blok == 0 &&
+                        $sum_wil_brondolan == 0 &&
+                        $sum_wil_karung == 0 &&
+                        $sum_wil_buah_tinggal == 0 &&
+                        $sum_wil_restan == 0
+                    ) {
+                        $skor_rh[$value]['skor'] = 0;
+                    } else {
+                        $skor_rh[$value]['skor'] = skorBRDsidak($skor_total_wil_brondol) + skorKRsidak($skor_total_wil_karung) + skorBHsidak($skor_total_wil_buah_tinggal) + skorRSsidak($skor_total_wil_restan);
+                    }
                 }
+
+                // dd($skor_rh);
 
                 foreach ($list_all_will as $key => $value) {
                     array_multisort(array_column($list_all_will[$key], 'skor'), SORT_DESC, $list_all_will[$key]);
@@ -2681,6 +2745,18 @@ class SidaktphController extends Controller
                     }
 
                     $skoreTotalPla = skorBRDsidak($skor_tphPla) + skorKRsidak($skor_karungPla) + skorBHsidak($skor_buahPla) + skorRSsidak($skor_restanPla);
+                    if (
+                        $jum_blokPla == 0 &&
+                        $sum_karungPla == 0 &&
+                        $sum_restantPla == 0 &&
+                        $sum_tphPla == 0 &&
+                        $sum_buahPla == 0
+                    ) {
+                        $arrPlasma[$key]['SkorPlasma'] = 0;
+                    } else {
+                        $arrPlasma[$key]['SkorPlasma'] = $skoreTotalPla;
+                    }
+
                     $arrPlasma[$key]['karung_tes'] = $sum_karungPla;
                     $arrPlasma[$key]['tph_test'] = $sum_tphPla;
                     $arrPlasma[$key]['buah_test'] = $sum_buahPla;
@@ -2692,20 +2768,6 @@ class SidaktphController extends Controller
                     $arrPlasma[$key]['kr_blok'] = skorKRsidak($skor_karungPla);
                     $arrPlasma[$key]['buah_blok'] = skorBHsidak($skor_buahPla);
                     $arrPlasma[$key]['restan_blok'] = skorRSsidak($skor_restanPla);
-                    $arrPlasma[$key]['SkorPlasma'] = $skoreTotalPla;
-                } else {
-                    $arrPlasma[$key]['karung_tes'] = 0;
-                    $arrPlasma[$key]['tph_test'] = 0;
-                    $arrPlasma[$key]['buah_test'] = 0;
-                    $arrPlasma[$key]['restant_tes'] = 0;
-
-                    $arrPlasma[$key]['jumlah_blok'] = 0;
-
-                    $arrPlasma[$key]['brd_blok'] = 0;
-                    $arrPlasma[$key]['kr_blok'] = 0;
-                    $arrPlasma[$key]['buah_blok'] = 0;
-                    $arrPlasma[$key]['restan_blok'] = 0;
-                    $arrPlasma[$key]['SkorPlasma'] = 0;
                 }
             }
             // dd($arrPlasma);
@@ -2838,12 +2900,12 @@ class SidaktphController extends Controller
 
             $arrView = [];
 
-            $list_all_will = changeKTE4ToKTE($list_all_will);
-            // dd($result);
+            // $list_all_will = changeKTE4ToKTE($list_all_will);
+            // dd($PlasmaEM);
 
 
-            $list_all_est = BpthKTE($list_all_est);
-            // dd($result);
+            // $list_all_est = BpthKTE($list_all_est);
+            // // dd($result);
 
 
             $queryWill = list_wil($queryWill);
@@ -3859,6 +3921,18 @@ class SidaktphController extends Controller
                     }
 
                     $skoreTotalPla = skorBRDsidak($skor_tphPla) + skorKRsidak($skor_karungPla) + skorBHsidak($skor_buahPla) + skorRSsidak($skor_restanPla);
+                    if (
+                        $jum_blokPla == 0 &&
+                        $sum_karungPla == 0 &&
+                        $sum_restantPla == 0 &&
+                        $sum_tphPla == 0 &&
+                        $sum_buahPla == 0
+                    ) {
+                        $arrPlasma[$key]['SkorPlasma'] = 0;
+                    } else {
+                        $arrPlasma[$key]['SkorPlasma'] = $skoreTotalPla;
+                    }
+
                     $arrPlasma[$key]['karung_tes'] = $sum_karungPla;
                     $arrPlasma[$key]['tph_test'] = $sum_tphPla;
                     $arrPlasma[$key]['buah_test'] = $sum_buahPla;
@@ -3870,20 +3944,6 @@ class SidaktphController extends Controller
                     $arrPlasma[$key]['kr_blok'] = skorKRsidak($skor_karungPla);
                     $arrPlasma[$key]['buah_blok'] = skorBHsidak($skor_buahPla);
                     $arrPlasma[$key]['restan_blok'] = skorRSsidak($skor_restanPla);
-                    $arrPlasma[$key]['SkorPlasma'] = $skoreTotalPla;
-                } else {
-                    $arrPlasma[$key]['karung_tes'] = 0;
-                    $arrPlasma[$key]['tph_test'] = 0;
-                    $arrPlasma[$key]['buah_test'] = 0;
-                    $arrPlasma[$key]['restant_tes'] = 0;
-
-                    $arrPlasma[$key]['jumlah_blok'] = 0;
-
-                    $arrPlasma[$key]['brd_blok'] = 0;
-                    $arrPlasma[$key]['kr_blok'] = 0;
-                    $arrPlasma[$key]['buah_blok'] = 0;
-                    $arrPlasma[$key]['restan_blok'] = 0;
-                    $arrPlasma[$key]['SkorPlasma'] = 0;
                 }
             }
             // dd($arrPlasma);

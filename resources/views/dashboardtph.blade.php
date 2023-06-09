@@ -1503,6 +1503,7 @@
       const thElement1 = document.getElementById('thead1');
       const thElement2 = document.getElementById('thead2');
       const thElement3 = document.getElementById('thead3');
+      const thElement4 = document.getElementById('thhead4');
       if (regSidak == '3') {
         element1.style.display = "";
         element2.style.display = "";
@@ -1535,17 +1536,19 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "none";
+        element4.style.display = "";
         thElement1.textContent = 'WILAYAH IV';
         thElement2.textContent = 'WILAYAH V';
         thElement3.textContent = 'WILAYAH VI';
-
-        element1.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-4");
-        element2.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-4");
-        element3.classList.remove("col-md-6", "col-lg-3");
-        element3.classList.add("col-md-6", "col-lg-4");
+        thElement4.textContent = 'Plasma2';
+        element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element1.classList.add("col-md-6", "col-lg-3");
+        element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
+        element2.classList.add("col-md-6", "col-lg-3");
+        element3.classList.remove("col-md-6", "col-lg-4");
+        element3.classList.add("col-md-6", "col-lg-3");
+        element4.classList.remove("col-md-6", "col-lg-4");
+        element4.classList.add("col-md-6", "col-lg-3");
       } else if (regSidak === '4') {
         element1.style.display = "";
         element2.style.display = "";
@@ -2399,7 +2402,70 @@
               // }
             });
             // endtesting
+            tbodySkorRH = document.getElementById('tbodySkorRH')
+            var reg = ''
+            if (list_skor_rh[0][0] == 1) {
+              reg = 'REG I'
+            } else if (list_skor_rh[0][0] == 2) {
+              reg = 'REG II'
+            } else if (list_skor_rh[0][0] == 3) {
+              reg = 'REG III'
+            } else {
+              reg = 'REG IV'
+            }
+            tr = document.createElement('tr')
+            let item1 = reg
+            let item2 = 'RH - ' + list_skor_rh[0][0]
+            let item3 = list_skor_rh[0][1]['nama']
+            let item4 = list_skor_rh[0][1]['skor']
+            let itemElement1 = document.createElement('td')
+            let itemElement2 = document.createElement('td')
+            let itemElement3 = document.createElement('td')
+            let itemElement4 = document.createElement('td')
 
+            itemElement1.classList.add("text-center")
+            itemElement2.classList.add("text-center")
+            itemElement3.classList.add("text-center")
+            itemElement4.classList.add("text-center")
+            itemElement1.style.backgroundColor = "#e8ecdc";
+            itemElement2.style.backgroundColor = "#e8ecdc";
+            itemElement3.style.backgroundColor = "#e8ecdc";
+            if (item4 >= 95) {
+              itemElement4.style.backgroundColor = "#609cd4";
+            } else if (item4 >= 85 && item4 < 95) {
+              itemElement4.style.backgroundColor = "#08b454";
+            } else if (item4 >= 75 && item4 < 85) {
+              itemElement4.style.backgroundColor = "#fffc04";
+            } else if (item4 >= 65 && item4 < 75) {
+              itemElement4.style.backgroundColor = "#ffc404";
+            } else if (item4 == 0) {
+              itemElement4.style.backgroundColor = "#eaeaea";
+            } else {
+              itemElement4.style.backgroundColor = "red";
+            }
+
+            if (itemElement4.style.backgroundColor === "#609cd4") {
+              itemElement4.style.color = "white";
+            } else if (itemElement4.style.backgroundColor === "#08b454") {
+              itemElement4.style.color = "white";
+            } else if (itemElement4.style.backgroundColor === "#fffc04") {
+              itemElement4.style.color = "black";
+            } else if (itemElement4.style.backgroundColor === "#ffc404") {
+              itemElement4.style.color = "black";
+            } else if (itemElement4.style.backgroundColor === "red") {
+              itemElement4.style.color = "white";
+            } else {
+              itemElement4.style.color = "black";
+            }
+            itemElement4.innerText = item4;
+            itemElement1.innerText = item1
+            itemElement2.innerText = item2
+            itemElement3.innerText = item3
+            tr.appendChild(itemElement1)
+            tr.appendChild(itemElement2)
+            tr.appendChild(itemElement3)
+            tr.appendChild(itemElement4)
+            tbodySkorRH.appendChild(tr)
             ///table wil 2
             const originalArray2 = list_all_wil[1][1]
             const filteredArray2 = filterArrayByEst(originalArray2);
@@ -2788,68 +2854,7 @@
               tbody.appendChild(tr)
               inc++
             }
-            tbodySkorRH = document.getElementById('tbodySkorRH')
-            var reg = ''
-            if (list_skor_rh[0][0] == 1) {
-              reg = 'REG I'
-            } else if (list_skor_rh[0][0] == 2) {
-              reg = 'REG II'
-            } else {
-              reg = 'REG III'
-            }
-            tr = document.createElement('tr')
-            let item1 = reg
-            let item2 = 'RH - ' + list_skor_rh[0][0]
-            let item3 = list_skor_rh[0][1]['nama']
-            let item4 = list_skor_rh[0][1]['skor']
-            let itemElement1 = document.createElement('td')
-            let itemElement2 = document.createElement('td')
-            let itemElement3 = document.createElement('td')
-            let itemElement4 = document.createElement('td')
 
-            itemElement1.classList.add("text-center")
-            itemElement2.classList.add("text-center")
-            itemElement3.classList.add("text-center")
-            itemElement4.classList.add("text-center")
-            itemElement1.style.backgroundColor = "#e8ecdc";
-            itemElement2.style.backgroundColor = "#e8ecdc";
-            itemElement3.style.backgroundColor = "#e8ecdc";
-            if (item4 >= 95) {
-              itemElement4.style.backgroundColor = "#609cd4";
-            } else if (item4 >= 85 && item4 < 95) {
-              itemElement4.style.backgroundColor = "#08b454";
-            } else if (item4 >= 75 && item4 < 85) {
-              itemElement4.style.backgroundColor = "#fffc04";
-            } else if (item4 >= 65 && item4 < 75) {
-              itemElement4.style.backgroundColor = "#ffc404";
-            } else if (item4 == 0) {
-              itemElement4.style.backgroundColor = "#eaeaea";
-            } else {
-              itemElement4.style.backgroundColor = "red";
-            }
-
-            if (itemElement4.style.backgroundColor === "#609cd4") {
-              itemElement4.style.color = "white";
-            } else if (itemElement4.style.backgroundColor === "#08b454") {
-              itemElement4.style.color = "white";
-            } else if (itemElement4.style.backgroundColor === "#fffc04") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "#ffc404") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "red") {
-              itemElement4.style.color = "white";
-            } else {
-              itemElement4.style.color = "black";
-            }
-            itemElement4.innerText = item4;
-            itemElement1.innerText = item1
-            itemElement2.innerText = item2
-            itemElement3.innerText = item3
-            tr.appendChild(itemElement1)
-            tr.appendChild(itemElement2)
-            tr.appendChild(itemElement3)
-            tr.appendChild(itemElement4)
-            tbodySkorRH.appendChild(tr)
             // }
           }
         }
@@ -3602,6 +3607,70 @@
               tbody1.appendChild(tr)
               // }
             });
+            tbodySkorRH = document.getElementById('tbodySkorRHMonth')
+            var reg = ''
+            if (list_skor_rh[0][0] == 1) {
+              reg = 'REG I'
+            } else if (list_skor_rh[0][0] == 2) {
+              reg = 'REG II'
+            } else if (list_skor_rh[0][0] == 3) {
+              reg = 'REG III'
+            } else {
+              reg = 'REG IV'
+            }
+            tr = document.createElement('tr')
+            let item1 = reg
+            let item2 = 'RH - ' + list_skor_rh[0][0]
+            let item3 = list_skor_rh[0][1]['nama']
+            let item4 = list_skor_rh[0][1]['skor']
+            let itemElement1 = document.createElement('td')
+            let itemElement2 = document.createElement('td')
+            let itemElement3 = document.createElement('td')
+            let itemElement4 = document.createElement('td')
+
+            itemElement1.classList.add("text-center")
+            itemElement2.classList.add("text-center")
+            itemElement3.classList.add("text-center")
+            itemElement4.classList.add("text-center")
+            itemElement1.style.backgroundColor = "#e8ecdc";
+            itemElement2.style.backgroundColor = "#e8ecdc";
+            itemElement3.style.backgroundColor = "#e8ecdc";
+            if (item4 >= 95) {
+              itemElement4.style.backgroundColor = "#609cd4";
+            } else if (item4 >= 85 && item4 < 95) {
+              itemElement4.style.backgroundColor = "#08b454";
+            } else if (item4 >= 75 && item4 < 85) {
+              itemElement4.style.backgroundColor = "#fffc04";
+            } else if (item4 >= 65 && item4 < 75) {
+              itemElement4.style.backgroundColor = "#ffc404";
+            } else if (item4 == 0) {
+              itemElement4.style.backgroundColor = "#eaeaea";
+            } else {
+              itemElement4.style.backgroundColor = "red";
+            }
+
+            if (itemElement4.style.backgroundColor === "#609cd4") {
+              itemElement4.style.color = "white";
+            } else if (itemElement4.style.backgroundColor === "#08b454") {
+              itemElement4.style.color = "white";
+            } else if (itemElement4.style.backgroundColor === "#fffc04") {
+              itemElement4.style.color = "black";
+            } else if (itemElement4.style.backgroundColor === "#ffc404") {
+              itemElement4.style.color = "black";
+            } else if (itemElement4.style.backgroundColor === "red") {
+              itemElement4.style.color = "white";
+            } else {
+              itemElement4.style.color = "black";
+            }
+            itemElement1.innerText = item1
+            itemElement2.innerText = item2
+            itemElement3.innerText = item3
+            itemElement4.innerText = item4
+            tr.appendChild(itemElement1)
+            tr.appendChild(itemElement2)
+            tr.appendChild(itemElement3)
+            tr.appendChild(itemElement4)
+            tbodySkorRH.appendChild(tr)
             // endtesting
 
             ///table wil 2
@@ -3985,68 +4054,7 @@
               tbody.appendChild(tr)
               inc++
             }
-            tbodySkorRH = document.getElementById('tbodySkorRHMonth')
-            var reg = ''
-            if (list_skor_rh[0][0] == 1) {
-              reg = 'REG I'
-            } else if (list_skor_rh[0][0] == 2) {
-              reg = 'REG II'
-            } else {
-              reg = 'REG III'
-            }
-            tr = document.createElement('tr')
-            let item1 = reg
-            let item2 = 'RH - ' + list_skor_rh[0][0]
-            let item3 = list_skor_rh[0][1]['nama']
-            let item4 = list_skor_rh[0][1]['skor']
-            let itemElement1 = document.createElement('td')
-            let itemElement2 = document.createElement('td')
-            let itemElement3 = document.createElement('td')
-            let itemElement4 = document.createElement('td')
 
-            itemElement1.classList.add("text-center")
-            itemElement2.classList.add("text-center")
-            itemElement3.classList.add("text-center")
-            itemElement4.classList.add("text-center")
-            itemElement1.style.backgroundColor = "#e8ecdc";
-            itemElement2.style.backgroundColor = "#e8ecdc";
-            itemElement3.style.backgroundColor = "#e8ecdc";
-            if (item4 >= 95) {
-              itemElement4.style.backgroundColor = "#609cd4";
-            } else if (item4 >= 85 && item4 < 95) {
-              itemElement4.style.backgroundColor = "#08b454";
-            } else if (item4 >= 75 && item4 < 85) {
-              itemElement4.style.backgroundColor = "#fffc04";
-            } else if (item4 >= 65 && item4 < 75) {
-              itemElement4.style.backgroundColor = "#ffc404";
-            } else if (item4 == 0) {
-              itemElement4.style.backgroundColor = "#eaeaea";
-            } else {
-              itemElement4.style.backgroundColor = "red";
-            }
-
-            if (itemElement4.style.backgroundColor === "#609cd4") {
-              itemElement4.style.color = "white";
-            } else if (itemElement4.style.backgroundColor === "#08b454") {
-              itemElement4.style.color = "white";
-            } else if (itemElement4.style.backgroundColor === "#fffc04") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "#ffc404") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "red") {
-              itemElement4.style.color = "white";
-            } else {
-              itemElement4.style.color = "black";
-            }
-            itemElement1.innerText = item1
-            itemElement2.innerText = item2
-            itemElement3.innerText = item3
-            itemElement4.innerText = item4
-            tr.appendChild(itemElement1)
-            tr.appendChild(itemElement2)
-            tr.appendChild(itemElement3)
-            tr.appendChild(itemElement4)
-            tbodySkorRH.appendChild(tr)
             // }
           }
         }
@@ -4318,14 +4326,17 @@
             //untuk table
             //table wil 1
             function filterArrayByEst(array) {
-              return array.filter(obj => obj.est !== 'Plasma1');
+              return array.filter(obj => !obj.est.includes('Plasma'));
             }
-            const originalArray = list_all_wil[0][1]
+
+            const originalArray = list_all_wil[0][1];
             const filteredArray = filterArrayByEst(originalArray);
-            const wilarr = filterArrayByEst(list_all_est[0][1])
-            var arrTbody1 = filteredArray
+            const wilarr = filterArrayByEst(list_all_est[0][1]);
+
+            var arrTbody1 = filteredArray;
             var table1 = document.getElementById('table1Year');
             var tbody1 = document.getElementById('tbody1Year');
+
             arrTbody1.forEach(element => {
               // for (let i = 0; i < 5; i++) {
               tr = document.createElement('tr')
@@ -4476,7 +4487,70 @@
               // }
             });
             // endtesting
+            tbodySkorRH = document.getElementById('tbodySkorRHYear')
+            var reg = ''
+            if (list_skor_rh[0][0] == 1) {
+              reg = 'REG I'
+            } else if (list_skor_rh[0][0] == 2) {
+              reg = 'REG II'
+            } else if (list_skor_rh[0][0] == 3) {
+              reg = 'REG III'
+            } else {
+              reg = 'REG IV'
+            }
+            tr = document.createElement('tr')
+            let item1 = reg
+            let item2 = 'RH - ' + list_skor_rh[0][0]
+            let item3 = list_skor_rh[0][1]['nama']
+            let item4 = list_skor_rh[0][1]['skor']
+            let itemElement1 = document.createElement('td')
+            let itemElement2 = document.createElement('td')
+            let itemElement3 = document.createElement('td')
+            let itemElement4 = document.createElement('td')
 
+            itemElement1.classList.add("text-center")
+            itemElement2.classList.add("text-center")
+            itemElement3.classList.add("text-center")
+            itemElement4.classList.add("text-center")
+            itemElement1.style.backgroundColor = "#e8ecdc";
+            itemElement2.style.backgroundColor = "#e8ecdc";
+            itemElement3.style.backgroundColor = "#e8ecdc";
+            if (item4 >= 95) {
+              itemElement4.style.backgroundColor = "#609cd4";
+            } else if (item4 >= 85 && item4 < 95) {
+              itemElement4.style.backgroundColor = "#08b454";
+            } else if (item4 >= 75 && item4 < 85) {
+              itemElement4.style.backgroundColor = "#fffc04";
+            } else if (item4 >= 65 && item4 < 75) {
+              itemElement4.style.backgroundColor = "#ffc404";
+            } else if (item4 == 0) {
+              itemElement4.style.backgroundColor = "#eaeaea";
+            } else {
+              itemElement4.style.backgroundColor = "red";
+            }
+
+            if (itemElement4.style.backgroundColor === "#609cd4") {
+              itemElement4.style.color = "white";
+            } else if (itemElement4.style.backgroundColor === "#08b454") {
+              itemElement4.style.color = "white";
+            } else if (itemElement4.style.backgroundColor === "#fffc04") {
+              itemElement4.style.color = "black";
+            } else if (itemElement4.style.backgroundColor === "#ffc404") {
+              itemElement4.style.color = "black";
+            } else if (itemElement4.style.backgroundColor === "red") {
+              itemElement4.style.color = "white";
+            } else {
+              itemElement4.style.color = "black";
+            }
+            itemElement1.innerText = item1
+            itemElement2.innerText = item2
+            itemElement3.innerText = item3
+            itemElement4.innerText = item4
+            tr.appendChild(itemElement1)
+            tr.appendChild(itemElement2)
+            tr.appendChild(itemElement3)
+            tr.appendChild(itemElement4)
+            tbodySkorRH.appendChild(tr)
             ///table wil 2
             var arrTbody2 = list_all_wil[1][1]
             var tbody2 = document.getElementById('tbody2Year');
@@ -4849,68 +4923,7 @@
               tbody.appendChild(tr)
               inc++
             }
-            tbodySkorRH = document.getElementById('tbodySkorRHYear')
-            var reg = ''
-            if (list_skor_rh[0][0] == 1) {
-              reg = 'REG I'
-            } else if (list_skor_rh[0][0] == 2) {
-              reg = 'REG II'
-            } else {
-              reg = 'REG III'
-            }
-            tr = document.createElement('tr')
-            let item1 = reg
-            let item2 = 'RH - ' + list_skor_rh[0][0]
-            let item3 = list_skor_rh[0][1]['nama']
-            let item4 = list_skor_rh[0][1]['skor']
-            let itemElement1 = document.createElement('td')
-            let itemElement2 = document.createElement('td')
-            let itemElement3 = document.createElement('td')
-            let itemElement4 = document.createElement('td')
 
-            itemElement1.classList.add("text-center")
-            itemElement2.classList.add("text-center")
-            itemElement3.classList.add("text-center")
-            itemElement4.classList.add("text-center")
-            itemElement1.style.backgroundColor = "#e8ecdc";
-            itemElement2.style.backgroundColor = "#e8ecdc";
-            itemElement3.style.backgroundColor = "#e8ecdc";
-            if (item4 >= 95) {
-              itemElement4.style.backgroundColor = "#609cd4";
-            } else if (item4 >= 85 && item4 < 95) {
-              itemElement4.style.backgroundColor = "#08b454";
-            } else if (item4 >= 75 && item4 < 85) {
-              itemElement4.style.backgroundColor = "#fffc04";
-            } else if (item4 >= 65 && item4 < 75) {
-              itemElement4.style.backgroundColor = "#ffc404";
-            } else if (item4 == 0) {
-              itemElement4.style.backgroundColor = "#eaeaea";
-            } else {
-              itemElement4.style.backgroundColor = "red";
-            }
-
-            if (itemElement4.style.backgroundColor === "#609cd4") {
-              itemElement4.style.color = "white";
-            } else if (itemElement4.style.backgroundColor === "#08b454") {
-              itemElement4.style.color = "white";
-            } else if (itemElement4.style.backgroundColor === "#fffc04") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "#ffc404") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "red") {
-              itemElement4.style.color = "white";
-            } else {
-              itemElement4.style.color = "black";
-            }
-            itemElement1.innerText = item1
-            itemElement2.innerText = item2
-            itemElement3.innerText = item3
-            itemElement4.innerText = item4
-            tr.appendChild(itemElement1)
-            tr.appendChild(itemElement2)
-            tr.appendChild(itemElement3)
-            tr.appendChild(itemElement4)
-            tbodySkorRH.appendChild(tr)
             // }
           }
         }
