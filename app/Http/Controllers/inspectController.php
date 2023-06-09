@@ -2121,7 +2121,85 @@ class inspectController extends Controller
 
     public function dashboard_inspeksi(Request $request)
     {
+        // $queryTest = DB::connection('mysql2')->table('mutu_ancak_new')
+        // ->select("mutu_ancak_new.*", DB::raw("DATE_FORMAT(datetime, '%Y-%m-%d') as formatted_datetime"))
+        // ->orderBy('estate')
+        // ->orderBy('afdeling')
+        // ->orderBy('datetime')
+        // ->get()
+        // ->groupBy(['estate', 'afdeling', 'formatted_datetime'])
+        // ->toArray();
+    
+        
+    
+        function findAndRetrieveDuplicateIds($data)
+        {
+            $duplicateIds = [];
+        
+            foreach ($data as $date => $items) {
+                $temp = [];
+        
+                foreach ($items as $item) {
+                    foreach ($item as $item3) {
+                       foreach ($item3 as $item4 ) {
+                     // dd($item3);
+                                $identifier =
+                                $item4->estate .
+                                $item4->afdeling .
+                                $item4->blok .
+                                $item4->petugas .
+                                $item4->lon_awal .
+                                $item4->lat_awal .
+                                $item4->lat_akhir .
+                                $item4->lon_akhir .
+                                $item4->sph .
+                                $item4->luas_blok .
+                                $item4->br1 .
+                                $item4->br2 .
+                                $item4->jalur_masuk .
+                                $item4->status_panen .
+                                $item4->kemandoran .
+                                $item4->ancak_pemanen .
+                                $item4->sample .
+                                $item4->pokok_kuning .
+                                $item4->piringan_semak .
+                                $item4->underpruning .
+                                $item4->overpruning .
+                                $item4->jjg .
+                                $item4->brtp .
+                                $item4->brtk .
+                                $item4->brtgl .
+                                $item4->bhts .
+                                $item4->bhtm1 .
+                                $item4->bhtm2 .
+                                $item4->bhtm3 .
+                                $item4->ps .
+                                $item4->sp .
+                                $item4->pokok_panen;
+            
+                            if (isset($temp[$identifier])) {
+                                $duplicateIds[] = $item4->id;
+                            } else {
+                                $temp[$identifier] = true;
+                            }
+                       }
+                    }
+                }
+            }
+        
+            return $duplicateIds;
+        }
+        
+        // Assuming your array is stored in the $array variable
+        // $duplicateIds = findAndRetrieveDuplicateIds($queryTest);
 
+        // Delete the duplicate IDs from the database
+        // DB::connection('mysql2')->table('mutu_ancak_new')->whereIn('id', $duplicateIds)->delete();
+        
+
+        // dd($duplicateIds,$queryTest);
+        
+       
         
         // end latihan 
         $queryEst = DB::connection('mysql2')->table('estate')
@@ -4260,7 +4338,7 @@ class inspectController extends Controller
                             $count++;
                         }     
                         $ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'] = $first;
-                        if ($Reg === '2') {
+                        if ($Reg === '2' || $Reg === '4' ) {
                         $status_panen = explode(",", $value5['status_panen']);
                         $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
                         } else {
@@ -4839,7 +4917,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         if ($dataBLok != 0) {
                             $brdPertph = round($sum_bt / $tot_sample, 2);
                         } else {
@@ -4853,7 +4931,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = round($sum_rst / $tot_sample, 2);
                         } else {
@@ -4893,7 +4971,7 @@ class inspectController extends Controller
                     $mtTranstab1Wil[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                     //PERHITUNGAN PERESTATE
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         $dataBLokEst += $tot_sample;
                     }else {
                         $dataBLokEst += $dataBLok;
@@ -5040,7 +5118,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         if ($dataBLok != 0) {
                             $brdPertph = round($sum_bt / $tot_sample, 2);
                         } else {
@@ -5054,7 +5132,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = round($sum_rst / $tot_sample, 2);
                         } else {
@@ -5094,7 +5172,7 @@ class inspectController extends Controller
                     $mtTranstab1Wil_reg[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                     //PERHITUNGAN PERESTATE
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         $dataBLokEst += $tot_sample;
                     }else {
                         $dataBLokEst += $dataBLok;
@@ -8455,7 +8533,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         if ($dataBLok != 0) {
                             $brdPertph = $tot_sample !== 0 ? round($sum_bt / $tot_sample, 2) : 0;
 
@@ -8471,7 +8549,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2) {
+                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = $tot_sample !== 0 ? round($sum_rst / $tot_sample, 2) : 0;
 
@@ -8523,7 +8601,7 @@ class inspectController extends Controller
                 $mtPLA[$key][$key1]['skorWil'] = $totalSkor;
 
                 //PERHITUNGAN PERESTATE
-                if ($Reg == '2' || $Reg == 2) {
+                if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
                     $dataBLokEst += $tot_sample;
                 }else {
                     $dataBLokEst += $dataBLok;
@@ -20567,7 +20645,7 @@ class inspectController extends Controller
                             $count++;
                         }     
                         $ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'] = $first;
-                        if ($RegData === '2') {
+                        if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                         $status_panen = explode(",", $value5['status_panen']);
                         $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
                         } else {
@@ -21143,8 +21221,8 @@ class inspectController extends Controller
                           } 
                       }
                   }
-
-                  if ($RegData == '2' || $RegData == 2) {
+                  
+                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                       if ($dataBLok != 0) {
                           $brdPertph = round($sum_bt / $tot_sample, 2);
                       } else {
@@ -21158,7 +21236,7 @@ class inspectController extends Controller
                       }
                   }
 
-                  if ($RegData == '2' || $RegData == 2) {
+                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                       if ($dataBLok != 0) {
                           $buahPerTPH = round($sum_rst / $tot_sample, 2);
                       } else {
@@ -21198,7 +21276,7 @@ class inspectController extends Controller
                   $mtTranstab1Wil[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                   //PERHITUNGAN PERESTATE
-                  if ($RegData == '2' || $RegData == 2) {
+                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                       $dataBLokEst += $tot_sample;
                   }else {
                       $dataBLokEst += $dataBLok;
@@ -21345,7 +21423,7 @@ class inspectController extends Controller
                       }
                   }
 
-                  if ($RegData == '2' || $RegData == 2) {
+                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                       if ($dataBLok != 0) {
                           $brdPertph = round($sum_bt / $tot_sample, 2);
                       } else {
@@ -21359,7 +21437,7 @@ class inspectController extends Controller
                       }
                   }
 
-                  if ($RegData == '2' || $RegData == 2) {
+                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                       if ($dataBLok != 0) {
                           $buahPerTPH = round($sum_rst / $tot_sample, 2);
                       } else {
@@ -21399,7 +21477,7 @@ class inspectController extends Controller
                   $mtTranstab1Wil_reg[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                   //PERHITUNGAN PERESTATE
-                  if ($RegData == '2' || $RegData == 2) {
+                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                       $dataBLokEst += $tot_sample;
                   }else {
                       $dataBLokEst += $dataBLok;
@@ -24777,7 +24855,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($RegData == '2' || $RegData == 2) {
+                    if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                         if ($dataBLok != 0) {
                             $brdPertph = $tot_sample !== 0 ? round($sum_bt / $tot_sample, 2) : 0;
 
@@ -24793,7 +24871,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($RegData == '2' || $RegData == 2) {
+                    if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = $tot_sample !== 0 ? round($sum_rst / $tot_sample, 2) : 0;
 
@@ -24845,7 +24923,7 @@ class inspectController extends Controller
                 $mtPLA[$key][$key1]['skorWil'] = $totalSkor;
 
                 //PERHITUNGAN PERESTATE
-                if ($RegData == '2' || $RegData == 2) {
+                if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
                     $dataBLokEst += $tot_sample;
                 }else {
                     $dataBLokEst += $dataBLok;
@@ -26798,7 +26876,7 @@ class inspectController extends Controller
                 }
                 
                 if (isset($panenKey) && $panenKey <= 3 && isset($ancak[$key]['luas_blok'])) {
-                    $transport[$key]['tph_sample'] = round($LuasKey * 1.3);
+                    $transport[$key]['tph_sample'] = round($LuasKey * 1.3 ,2);
                 } else {
                     $transport[$key]['tph_sample'] = $tph_sample;
                 }

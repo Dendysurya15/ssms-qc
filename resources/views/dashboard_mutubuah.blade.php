@@ -1939,7 +1939,7 @@
                 var chart_karungwil = Object.entries(parseResult['chart_karungwil'])
                 var optionREg = Object.entries(parseResult['optionREg'])
                 // console.log(chart_matang);
-                console.log(mutu_buah);
+                // console.log(mutu_buah);
                 var matang_Wil = '['
                 if (chart_matangwil.length > 0) {
                     chart_matangwil.forEach(element => {

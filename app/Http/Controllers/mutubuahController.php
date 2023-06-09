@@ -1116,12 +1116,21 @@ class mutubuahController extends Controller
                 }
                 $jjg_mth = $tnpBRD + $krgBRD + $overripe + $empty;
 
+
+
+
                 $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 2) : 0;
 
                 $mutubuah_est[$key][$key1]['jjg_mantah'] = $jjg_mth;
                 $mutubuah_est[$key][$key1]['persen_jjgmentah'] = $skor_jjgMTh;
 
-
+                if ($jjg_sample == 0 && $tnpBRD == 0 &&   $krgBRD == 0 && $abr == 0 && $overripe == 0 && $empty == 0 &&  $vcut == 0 &&  $rd == 0 && $sum_kr == 0) {
+                    $mutubuah_est[$key][$key1]['check_arr'] = 'kosong';
+                    $mutubuah_est[$key][$key1]['All_skor'] = 0;
+                } else {
+                    $mutubuah_est[$key][$key1]['check_arr'] = 'ada';
+                    $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
+                }
                 $mutubuah_est[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
                 $mutubuah_est[$key][$key1]['blok'] = $dataBLok;
                 $mutubuah_est[$key][$key1]['EM'] = 'EM';
@@ -1158,10 +1167,12 @@ class mutubuahController extends Controller
                 $mutubuah_est[$key][$key1]['TPH'] = $total_kr;
                 $mutubuah_est[$key][$key1]['persen_krg'] = $per_kr;
                 $mutubuah_est[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
-                $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
+
                 $mutubuah_est[$key][$key1]['kategori'] = sidak_akhir($allSkor);
             }
         }
+
+        // dd(($mutubuah_est));
         $mutu_buahEst = array();
         foreach ($mutu_buahv2 as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -1561,6 +1572,13 @@ class mutubuahController extends Controller
                     $nama_em = $asisten['nama'];
                 }
             }
+            if ($jjg_sample == 0 && $tnpBRD == 0 &&   $krgBRD == 0 && $abr == 0 && $overripe == 0 && $empty == 0 &&  $vcut == 0 &&  $rd == 0 && $sum_kr == 0) {
+                $mutuBuah_wil[$key]['check_arr'] = 'kosong';
+                $mutuBuah_wil[$key]['All_skor'] = 0;
+            } else {
+                $mutuBuah_wil[$key]['check_arr'] = 'ada';
+                $mutuBuah_wil[$key]['All_skor'] = $allSkor;
+            }
             $mutuBuah_wil[$key]['TEST'] = $wil;
             $mutuBuah_wil[$key]['afd'] = $key1;
             $mutuBuah_wil[$key]['nama_staff'] = $nama_em;
@@ -1595,7 +1613,7 @@ class mutubuahController extends Controller
             $mutuBuah_wil[$key]['TPH'] = $total_kr;
             $mutuBuah_wil[$key]['persen_krg'] = $per_kr;
             $mutuBuah_wil[$key]['skor_kr'] = sidak_PengBRD($per_kr);
-            $mutuBuah_wil[$key]['All_skor'] = $allSkor;
+            // $mutuBuah_wil[$key]['All_skor'] = $allSkor;
             $mutuBuah_wil[$key]['kategori'] = sidak_akhir($allSkor);
         }
 
@@ -1859,14 +1877,14 @@ class mutubuahController extends Controller
                 }
             }
         }
-        updateKeyRecursive($mutu_buah, "KTE4", "KTE");
+        // updateKeyRecursive($mutu_buah, "KTE4", "KTE");
 
 
-        // Change key "KTE4" to "KTE"
-        updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
-        $estev2 = updateKeyRecursive2($estev2);
+        // // Change key "KTE4" to "KTE"
+        // updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
+        // $estev2 = updateKeyRecursive2($estev2);
 
-        // dd($estev2);
+        // dd($mutubuah_est);
 
         $arrView = array();
 
@@ -2325,6 +2343,13 @@ class mutubuahController extends Controller
                 $mutubuah_est[$key][$key1]['jjg_mantah'] = $jjg_mth;
                 $mutubuah_est[$key][$key1]['persen_jjgmentah'] = $skor_jjgMTh;
 
+                if ($jjg_sample == 0 && $tnpBRD == 0 &&   $krgBRD == 0 && $abr == 0 && $overripe == 0 && $empty == 0 &&  $vcut == 0 &&  $rd == 0 && $sum_kr == 0) {
+                    $mutubuah_est[$key][$key1]['check_arr'] = 'kosong';
+                    $mutubuah_est[$key][$key1]['All_skor'] = 0;
+                } else {
+                    $mutubuah_est[$key][$key1]['check_arr'] = 'ada';
+                    $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
+                }
 
                 $mutubuah_est[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
                 $mutubuah_est[$key][$key1]['blok'] = $dataBLok;
@@ -2362,7 +2387,7 @@ class mutubuahController extends Controller
                 $mutubuah_est[$key][$key1]['TPH'] = $total_kr;
                 $mutubuah_est[$key][$key1]['persen_krg'] = $per_kr;
                 $mutubuah_est[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
-                $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
+                // $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
                 $mutubuah_est[$key][$key1]['kategori'] = sidak_akhir($allSkor);
             }
         }
@@ -2765,6 +2790,13 @@ class mutubuahController extends Controller
                     $nama_em = $asisten['nama'];
                 }
             }
+            if ($jjg_sample == 0 && $tnpBRD == 0 &&   $krgBRD == 0 && $abr == 0 && $overripe == 0 && $empty == 0 &&  $vcut == 0 &&  $rd == 0 && $sum_kr == 0) {
+                $mutuBuah_wil[$key]['check_arr'] = 'kosong';
+                $mutuBuah_wil[$key]['All_skor'] = 0;
+            } else {
+                $mutuBuah_wil[$key]['check_arr'] = 'ada';
+                $mutuBuah_wil[$key]['All_skor'] = $allSkor;
+            }
             $mutuBuah_wil[$key]['TEST'] = $wil;
             $mutuBuah_wil[$key]['afd'] = $key1;
             $mutuBuah_wil[$key]['nama_staff'] = $nama_em;
@@ -2799,7 +2831,7 @@ class mutubuahController extends Controller
             $mutuBuah_wil[$key]['TPH'] = $total_kr;
             $mutuBuah_wil[$key]['persen_krg'] = $per_kr;
             $mutuBuah_wil[$key]['skor_kr'] = sidak_PengBRD($per_kr);
-            $mutuBuah_wil[$key]['All_skor'] = $allSkor;
+            // $mutuBuah_wil[$key]['All_skor'] = $allSkor;
             $mutuBuah_wil[$key]['kategori'] = sidak_akhir($allSkor);
         }
 
@@ -5022,6 +5054,13 @@ class mutubuahController extends Controller
 
                 $mutubuah_est[$key][$key1]['jjg_mantah'] = $jjg_mth;
                 $mutubuah_est[$key][$key1]['persen_jjgmentah'] = $skor_jjgMTh;
+                if ($jjg_sample == 0 && $tnpBRD == 0 &&   $krgBRD == 0 && $abr == 0 && $overripe == 0 && $empty == 0 &&  $vcut == 0 &&  $rd == 0 && $sum_kr == 0) {
+                    $mutubuah_est[$key][$key1]['check_arr'] = 'kosong';
+                    $mutubuah_est[$key][$key1]['All_skor'] = 0;
+                } else {
+                    $mutubuah_est[$key][$key1]['check_arr'] = 'ada';
+                    $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
+                }
 
 
                 $mutubuah_est[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
@@ -5060,7 +5099,7 @@ class mutubuahController extends Controller
                 $mutubuah_est[$key][$key1]['TPH'] = $total_kr;
                 $mutubuah_est[$key][$key1]['persen_krg'] = $per_kr;
                 $mutubuah_est[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
-                $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
+                // $mutubuah_est[$key][$key1]['All_skor'] = $allSkor;
                 $mutubuah_est[$key][$key1]['kategori'] = sidak_akhir($allSkor);
             }
         }
@@ -5232,6 +5271,13 @@ class mutubuahController extends Controller
                     $nama_em = $asisten['nama'];
                 }
             }
+            if ($jjg_sample == 0 && $tnpBRD == 0 &&   $krgBRD == 0 && $abr == 0 && $overripe == 0 && $empty == 0 &&  $vcut == 0 &&  $rd == 0 && $sum_kr == 0) {
+                $mutuBuah_wil[$key]['check_arr'] = 'kosong';
+                $mutuBuah_wil[$key]['All_skor'] = 0;
+            } else {
+                $mutuBuah_wil[$key]['check_arr'] = 'ada';
+                $mutuBuah_wil[$key]['All_skor'] = $allSkor;
+            }
             $mutuBuah_wil[$key]['TEST'] = $wil;
             $mutuBuah_wil[$key]['afd'] = $key1;
             $mutuBuah_wil[$key]['nama_staff'] = $nama_em;
@@ -5266,7 +5312,7 @@ class mutubuahController extends Controller
             $mutuBuah_wil[$key]['TPH'] = $total_kr;
             $mutuBuah_wil[$key]['persen_krg'] = $per_kr;
             $mutuBuah_wil[$key]['skor_kr'] = sidak_PengBRD($per_kr);
-            $mutuBuah_wil[$key]['All_skor'] = $allSkor;
+            // $mutuBuah_wil[$key]['All_skor'] = $allSkor;
             $mutuBuah_wil[$key]['kategori'] = sidak_akhir($allSkor);
         }
 

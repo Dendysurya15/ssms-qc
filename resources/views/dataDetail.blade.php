@@ -945,7 +945,7 @@
     <br>
     <br>
 
-    @if ($reg == 2 ||$reg == 4 )
+    @if ($reg == 2 || $reg == 4 )
     <div class="ml-3 mr-3 mb-3">
         <div class="row text-center tbl-fixed">
             <table class="table-responsive">
