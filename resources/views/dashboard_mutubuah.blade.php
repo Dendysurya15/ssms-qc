@@ -451,7 +451,7 @@
                                         <div class="tabContainer">
                                             <div class="ml-3 mr-3">
                                                 <div class="row justify-content-center">
-                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs1">
+                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabsx1">
                                                         <div class="table-responsive">
                                                             <table class=" table table-bordered" style="font-size: 13px" id="table1">
                                                                 <thead>
@@ -474,7 +474,7 @@
                                                             </table>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs2">
+                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabsx2">
                                                         <div class="table-responsive">
                                                             <table class=" table table-bordered" style="font-size: 13px" id="table1">
                                                                 <thead>
@@ -498,7 +498,7 @@
                                                             </table>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs3">
+                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabsx3">
                                                         <div class="table-responsive">
                                                             <table class="table table-bordered" style="font-size: 13px" id="Reg3">
                                                                 <thead>
@@ -522,7 +522,7 @@
                                                             </table>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs4">
+                                                    <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabsx4">
                                                         <div class="table-responsive">
                                                             <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
                                                                 <thead>
@@ -1402,8 +1402,124 @@
             thElement3xx.classList.add("text-center");
             thElement4xx.classList.add("text-center");
 
-            isTableHeaderModified = true;
+
+        } else if ((lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') && !isTableHeaderModified) {
+            $('#regionalPanen').val('3');
+            $('#regionalDataweek').val('3');
+            $('#regionalData').val('3');
+            $('#regDataIns').val('3');
+            $('#regFind').val('3');
+            $('#regGrafik').val('3');
+            $('#reg_sbiThun').val('3');
+            $('#regional_data').val('3');
+
+            const thElement1 = document.getElementById('thead1');
+            const thElement2 = document.getElementById('thead2');
+            const thElement3 = document.getElementById('thead3');
+            const thElement4 = document.getElementById('theadx3');
+            const thElement1x = document.getElementById('theadsx1');
+            const thElement2x = document.getElementById('theadsx2');
+            const thElement3x = document.getElementById('theadsx3');
+            const thElement4x = document.getElementById('theadsx4');
+            const thElement1xx = document.getElementById('theads1');
+            const thElement2xx = document.getElementById('theads2');
+            const thElement3xx = document.getElementById('theads3');
+            const thElement4xx = document.getElementById('theads4');
+            thElement1.textContent = 'WILAYAH IV';
+            thElement2.textContent = 'WILAYAH V';
+            thElement3.textContent = 'WILAYAH VI';
+            thElement4.textContent = 'PLASMA II';
+            thElement1x.textContent = 'WILAYAH IV';
+            thElement2x.textContent = 'WILAYAH V';
+            thElement3x.textContent = 'WILAYAH VI';
+            thElement4x.textContent = 'PLASMA II';
+            thElement1xx.textContent = 'WILAYAH IV';
+            thElement2xx.textContent = 'WILAYAH V';
+            thElement3xx.textContent = 'WILAYAH VI';
+            thElement4xx.textContent = 'PLASMA II';
+
+            thElement1.classList.add("text-center");
+            thElement2.classList.add("text-center");
+            thElement3.classList.add("text-center");
+            thElement4.classList.add("text-center");
+            thElement1x.classList.add("text-center");
+            thElement2x.classList.add("text-center");
+            thElement3x.classList.add("text-center");
+            thElement4x.classList.add("text-center");
+            thElement1xx.classList.add("text-center");
+            thElement2xx.classList.add("text-center");
+            thElement3xx.classList.add("text-center");
+            thElement4xx.classList.add("text-center");
+
+        } else if ((lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') && !isTableHeaderModified) {
+            $('#regionalPanen').val('4');
+            $('#regionalDataweek').val('4');
+            $('#regionalData').val('4');
+            $('#regDataIns').val('4');
+            $('#regFind').val('4');
+            $('#regGrafik').val('4');
+            $('#reg_sbiThun').val('4');
+            $('#regional_data').val('4');
+
+
+            const nons = document.getElementById("Tab1");
+            const nonx = document.getElementById("Tab2");
+            const llon = document.getElementById("Tab3");
+            const non = document.getElementById("Tab4");
+            const tahun1 = document.getElementById("Tabsx1");
+            const tahun2 = document.getElementById("Tabsx2");
+            const tahun3 = document.getElementById("Tabsx3");
+            const tahun4 = document.getElementById("Tabsx4");
+            const sbi1 = document.getElementById("Tabss1");
+            const sbi2 = document.getElementById("Tabss2");
+            const sbi3 = document.getElementById("Tabss3");
+            const sbi4 = document.getElementById("Tabss4");
+
+
+            function resetClassList(element) {
+                element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
+                element.classList.add("col-md-6");
+            }
+
+            llon.style.display = "none";
+            non.style.display = "none";
+            resetClassList(llon);
+            resetClassList(non);
+            nons.classList.add("col-lg-6");
+            nonx.classList.add("col-lg-6");
+
+            tahun3.style.display = "none";
+            tahun4.style.display = "none";
+            resetClassList(tahun3);
+            resetClassList(tahun4);
+            tahun1.classList.add("col-lg-6");
+            tahun2.classList.add("col-lg-6");
+
+
+            sbi3.style.display = "none";
+            sbi4.style.display = "none";
+            resetClassList(sbi3);
+            resetClassList(sbi4);
+            sbi1.classList.add("col-lg-6");
+            sbi2.classList.add("col-lg-6");
+
+            const thElement1 = document.getElementById('thead1');
+            const thElement2 = document.getElementById('thead2');
+            const thElement1x = document.getElementById('theads1');
+            const thElement2x = document.getElementById('theads2');
+
+            thElement1.textContent = 'WILAYAH Inti';
+            thElement2.textContent = 'WILAYAH Plasma';
+            thElement1x.textContent = 'WILAYAH Inti';
+            thElement2x.textContent = 'WILAYAH Plasma';
+
+            thElement1.classList.add("text-center");
+            thElement2.classList.add("text-center");
+            thElement1x.classList.add("text-center");
+            thElement2x.classList.add("text-center");
         }
+
+        isTableHeaderModified = true;
         getweek()
         dashboard_tahun()
         dashboardData_tahun()
@@ -2426,15 +2542,15 @@
                     wil1 = 'WIL-IV';
                     wil2 = 'WIL-V';
                     wil3 = 'WIL-VI';
-                    wil4 = '-'
+                    wil4 = 'Plasma2'
                 } else if (regInpt === '3') {
                     wil1 = 'WIL-VII';
                     wil2 = 'WIL-VIII';
-                    wil3 = '-';
-                    wil4 = '-'
+                    wil3 = 'Plasma3';
+                    wil4 = 'Plasma3'
                 } else {
-                    wil1 = 'IX';
-                    wil2 = 'X';
+                    wil1 = 'WIL-IX';
+                    wil2 = 'WIL-X';
                     wil3 = '-';
                     wil4 = '-'
                 }
@@ -2948,6 +3064,7 @@
                 var region = Object.entries(parseResult['listregion'])
 
                 var mutu_buah = Object.entries(parseResult['mutu_buah'])
+                // console.log(mutu_buah);
                 var mutubuah_est = Object.entries(parseResult['mutubuah_est'])
                 var mutuBuah_wil = Object.entries(parseResult['mutuBuah_wil'])
                 var regIonal = Object.entries(parseResult['regional'])
@@ -3454,10 +3571,15 @@
                     wil1 = 'WIL-IV';
                     wil2 = 'WIL-V';
                     wil3 = 'WIL-VI';
-                    wil4 = '-'
-                } else {
+                    wil4 = 'Plasma2'
+                } else if (regInpt === '3') {
                     wil1 = 'WIL-VII';
                     wil2 = 'WIL-VIII';
+                    wil3 = 'Plasma3';
+                    wil4 = 'Plasma3'
+                } else {
+                    wil1 = 'WIL-IX';
+                    wil2 = 'WIL-X';
                     wil3 = '-';
                     wil4 = '-'
                 }
@@ -4506,8 +4628,10 @@
                     regs = 'REG-I'
                 } else if (regInpt === '2') {
                     regs = 'REG-II'
-                } else {
+                } else if (regInpt === '3') {
                     regs = 'REG-III'
+                } else {
+                    regs = 'REG-IV'
                 }
 
 
@@ -4800,10 +4924,15 @@
                     wil1 = 'WIL-IV';
                     wil2 = 'WIL-V';
                     wil3 = 'WIL-VI';
-                    wil4 = '-'
-                } else {
+                    wil4 = 'Plasma2'
+                } else if (regInpt === '3') {
                     wil1 = 'WIL-VII';
                     wil2 = 'WIL-VIII';
+                    wil3 = 'Plasma3';
+                    wil4 = 'Plasma3'
+                } else {
+                    wil1 = 'WIL-IX';
+                    wil2 = 'WIL-X';
                     wil3 = '-';
                     wil4 = '-'
                 }

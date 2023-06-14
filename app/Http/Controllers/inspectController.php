@@ -1148,7 +1148,7 @@ class inspectController extends Controller
                       
 
                         $ancak[$key][$key1][$key2][$key3]['luas_blok'] = $first;
-                        if ($regs === '2' || $regs === '4') {
+                        if ($regs === '2' ) {
                         $status_panen = explode(",", $value5['status_panen']);
                         $ancak[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
                         } else {
@@ -1434,6 +1434,7 @@ class inspectController extends Controller
                     $jml_bhtm2 = 0;
                     $jml_bhtm3 = 0;
                     $jml_ps = 0;
+                    $jml_sp = 0;
                     $luas_blok =0;
                     foreach ($value2 as $key3 => $value3) {
                         if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlok)) {
@@ -1453,10 +1454,11 @@ class inspectController extends Controller
                         $jml_bhtm2 += $value3['bhtm2'];
                         $jml_bhtm3 += $value3['bhtm3'];
                         $jml_ps += $value3['ps'];
+                        $jml_sp += $value3['sp'];
                         $luas_blok += $value3['luas_blok'];
                     }
 
-                    if ($regs === '2' || $regs === '4') {
+                    if ($regs === '2' ) {
                         $status_panen = explode(",", $value3['status_panen']);
                         // $ancak[$key]['status_panen'] = $status_panen[0];
                         $dataSkor[$value1['wil']][$key][$key2]['status_panen'] = $status_panen[0];
@@ -1508,7 +1510,7 @@ class inspectController extends Controller
                     }
 
                     $dataSkor[$value1['wil']][$key][$key2]['ps_ma'] = $jml_ps;
-                    $dataSkor[$value1['wil']][$key][$key2]['PerPSMA'] = count_percent($jml_ps, $jml_pokok_sm);
+                    $dataSkor[$value1['wil']][$key][$key2]['PerPSMA'] =count_percent($jml_ps, $jml_pokok_sm);
                 }
                 $tot_brd_est = ($jml_brtp_est + $jml_brtk_est + $jml_brtgl_est);
                 $tot_jjg_est = ($jml_bhts_est + $jml_bhtm1_est + $jml_bhtm2_est + $jml_bhtm3_est);
@@ -1574,7 +1576,7 @@ class inspectController extends Controller
                     // $sum_tph_sample += $tph_sample;
                     $sum_skor_bt += $sum_bt;
                     $sum_jjg += $sum_Restan;
-                    if ($regs === '2' || $regs === '4') {
+                    if ($regs === '2' ) {
                         foreach ($transNewdata as $transportKey => $transportValue) {
                             if ($transportKey === $key) {
                                 foreach ($transportValue as $innerTransportKey => $innerTransportValue) {
@@ -1748,7 +1750,7 @@ class inspectController extends Controller
                     $sum_tph_sample += $tph_sample;
                     $sum_skor_bt += $sum_bt;
                     $sum_jjg += $sum_Restan;
-                    if ($regs === '2' || $regs === '4') {
+                    if ($regs === '2' ) {
                         foreach ($transNewdata as $transportKey => $transportValue) {
                             if ($transportKey == $key) {                        
                                 foreach ($transportValue as $innerTransportKey => $innerTransportValue) {
@@ -2121,17 +2123,22 @@ class inspectController extends Controller
 
     public function dashboard_inspeksi(Request $request)
     {
-        // $queryTest = DB::connection('mysql2')->table('mutu_ancak_new')
-        // ->select("mutu_ancak_new.*", DB::raw("DATE_FORMAT(datetime, '%Y-%m-%d') as formatted_datetime"))
-        // ->orderBy('estate')
-        // ->orderBy('afdeling')
-        // ->orderBy('datetime')
-        // ->get()
-        // ->groupBy(['estate', 'afdeling', 'formatted_datetime'])
-        // ->toArray();
-    
-        
-    
+
+        $queryTest = DB::connection('mysql2')->table('mutu_ancak_new')
+        ->select("mutu_ancak_new.*", DB::raw("DATE_FORMAT(datetime, '%Y-%m-%d') as formatted_datetime"))
+        ->orderBy('estate')
+        ->orderBy('afdeling')
+        ->orderBy('datetime')
+        ->get()
+        ->groupBy(['estate', 'afdeling', 'formatted_datetime'])
+        ->toArray();
+
+        // dd($queryTest['SGE']['OC']);
+        // dd($queryTest);
+
+   
+
+            
         function findAndRetrieveDuplicateIds($data)
         {
             $duplicateIds = [];
@@ -2141,17 +2148,17 @@ class inspectController extends Controller
         
                 foreach ($items as $item) {
                     foreach ($item as $item3) {
-                       foreach ($item3 as $item4 ) {
-                     // dd($item3);
+                        foreach ($item3 as $item4 ) {
+                    // dd($item3);
                                 $identifier =
                                 $item4->estate .
                                 $item4->afdeling .
                                 $item4->blok .
                                 $item4->petugas .
-                                $item4->lon_awal .
-                                $item4->lat_awal .
-                                $item4->lat_akhir .
-                                $item4->lon_akhir .
+                                // $item4->lon_awal .
+                                // $item4->lat_awal .
+                                // $item4->lat_akhir .
+                                // $item4->lon_akhir .
                                 $item4->sph .
                                 $item4->luas_blok .
                                 $item4->br1 .
@@ -2182,25 +2189,20 @@ class inspectController extends Controller
                             } else {
                                 $temp[$identifier] = true;
                             }
-                       }
+                        }
                     }
                 }
             }
         
             return $duplicateIds;
         }
-        
+    
         // Assuming your array is stored in the $array variable
-        // $duplicateIds = findAndRetrieveDuplicateIds($queryTest);
+        $duplicateIds = findAndRetrieveDuplicateIds($queryTest);
 
-        // Delete the duplicate IDs from the database
-        // DB::connection('mysql2')->table('mutu_ancak_new')->whereIn('id', $duplicateIds)->delete();
-        
 
-        // dd($duplicateIds,$queryTest);
-        
-       
-        
+        // dd($duplicateIds);
+
         // end latihan 
         $queryEst = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
@@ -4338,7 +4340,7 @@ class inspectController extends Controller
                             $count++;
                         }     
                         $ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'] = $first;
-                        if ($Reg === '2' || $Reg === '4' ) {
+                        if ($Reg === '2') {
                         $status_panen = explode(",", $value5['status_panen']);
                         $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
                         } else {
@@ -4917,7 +4919,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
                             $brdPertph = round($sum_bt / $tot_sample, 2);
                         } else {
@@ -4931,7 +4933,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = round($sum_rst / $tot_sample, 2);
                         } else {
@@ -4971,7 +4973,7 @@ class inspectController extends Controller
                     $mtTranstab1Wil[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                     //PERHITUNGAN PERESTATE
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         $dataBLokEst += $tot_sample;
                     }else {
                         $dataBLokEst += $dataBLok;
@@ -5056,7 +5058,15 @@ class inspectController extends Controller
             $nonZeroValues = array_filter([$sum_btWil, $sum_rstWil]);
 
           
-
+            if (!empty($nonZeroValues)) {
+                $mtTranstab1Wil[$key]['check_data'] = 'ada';
+                // $mtTranstab1Wil[$key]['skor_brd'] = $skor_brd = skor_brd_ma($brdPerwil);
+                // $mtTranstab1Wil[$key]['skor_ps'] = $skor_ps = skor_palepah_ma($perPiWil);
+            } else {
+                $mtTranstab1Wil[$key]['check_data'] = 'kosong';
+                // $mtTranstab1Wil[$key]['skor_brd'] = $skor_brd = 0;
+                // $mtTranstab1Wil[$key]['skor_ps'] = $skor_ps = 0;
+            }
             $mtTranstab1Wil[$key]['tph_sample'] = $dataBLokWil;
             $mtTranstab1Wil[$key]['total_brd'] = $sum_btWil;
             $mtTranstab1Wil[$key]['total_brd/TPH'] = $brdPertphWil;
@@ -5118,7 +5128,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
                             $brdPertph = round($sum_bt / $tot_sample, 2);
                         } else {
@@ -5132,7 +5142,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = round($sum_rst / $tot_sample, 2);
                         } else {
@@ -5172,7 +5182,7 @@ class inspectController extends Controller
                     $mtTranstab1Wil_reg[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                     //PERHITUNGAN PERESTATE
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         $dataBLokEst += $tot_sample;
                     }else {
                         $dataBLokEst += $dataBLok;
@@ -7866,7 +7876,8 @@ class inspectController extends Controller
                                                     $RekapWIlTabel[$key][$key1]['dataEst'] = 'kosong';
                                                 }
 
-                                                if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                // dd($value,$buah,$trans);
+                                                if ($trans['check_data'] == 'kosong' && $buah['check_data'] === 'kosong' && $value['check_data'] === 'kosong') {
                                                     $RekapWIlTabel[$key]['TotalSkorWil'] =0;
                                                 }else{
                                                     $RekapWIlTabel[$key]['TotalSkorWil'] = $value['skor_akhir'] + $buah['TOTAL_SKOR'] + $trans['totalSkor'];
@@ -7967,7 +7978,7 @@ class inspectController extends Controller
         // Output the updated array
         // dd($RankingFinal);
         
-        // dd($newRankingFinal);
+        // dd($RankingFinal);
         
 
         $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7] ?? $RankingFinal[10] ;
@@ -8027,7 +8038,9 @@ class inspectController extends Controller
             'BTE' => 'WIL-V',
             'BHE' => 'WIL-VIII',
             'BGE' => 'WIL-III',
-            'MLE' => 'WIL-VI'
+            'MLE' => 'WIL-VI',
+            'SJE' => 'WIL-IX',
+            'LM1' => 'WIL-X',
         ];
 
         $WilGMsatu = processWil($Wil1, $estValues);
@@ -8533,7 +8546,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
                             $brdPertph = $tot_sample !== 0 ? round($sum_bt / $tot_sample, 2) : 0;
 
@@ -8549,7 +8562,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                    if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = $tot_sample !== 0 ? round($sum_rst / $tot_sample, 2) : 0;
 
@@ -8601,7 +8614,7 @@ class inspectController extends Controller
                 $mtPLA[$key][$key1]['skorWil'] = $totalSkor;
 
                 //PERHITUNGAN PERESTATE
-                if ($Reg == '2' || $Reg == 2 || $Reg == '4' || $Reg == 4) {
+                if ($Reg == '2' || $Reg == 2) {
                     $dataBLokEst += $tot_sample;
                 }else {
                     $dataBLokEst += $dataBLok;
@@ -17769,9 +17782,156 @@ class inspectController extends Controller
                 }
             }
         }
-        // dd($defaultTrans);
+       
+        // buat perhitungan regional 2... group berdasrakan blok
+        // $newArrayANcak = [];
+        // foreach ($defaultNew as $key1 => $value1) {
+        //     $newArrayANcak[$key1] = [];
+        //     foreach ($value1 as $key2 => $value2) {
+        //         $newArrayANcak[$key1][$key2] = [];
+        //         foreach ($value2 as $key3 => $value3) {
+        //             if (is_array($value3)) {
+        //                 foreach ($value3 as $item) {
+        //                     $nestedKey = $item['blok'];
+        //                     if (!isset($newArrayANcak[$key1][$key2][$key3][$nestedKey])) {
+        //                         $newArrayANcak[$key1][$key2][$key3][$nestedKey] = [];
+        //                     }
+        //                     $newArrayANcak[$key1][$key2][$key3][$nestedKey][] = $item;
+        //                 }
+        //             } else {
+        //                 $newArrayANcak[$key1][$key2][$key3] = $value3;
+        //             }
+        //         }
+        //     }
+        // }
 
+        // $newArrayTrans = [];
+        // foreach ($defaultTrans as $key1 => $value1) {
+        //     $newArrayTrans[$key1] = [];
+        //     foreach ($value1 as $key2 => $value2) {
+        //         $newArrayTrans[$key1][$key2] = [];
+        //         foreach ($value2 as $key3 => $value3) {
+        //             if (is_array($value3)) {
+        //                 foreach ($value3 as $item) {
+        //                     $nestedKey = $item['blok'];
+        //                     if (!isset($newArrayTrans[$key1][$key2][$key3][$nestedKey])) {
+        //                         $newArrayTrans[$key1][$key2][$key3][$nestedKey] = [];
+        //                     }
+        //                     $newArrayTrans[$key1][$key2][$key3][$nestedKey][] = $item;
+        //                 }
+        //             } else {
+        //                 $newArrayTrans[$key1][$key2][$key3] = $value3;
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // $mutuTrans = array_replace_recursive($newArrayTrans, $newArrayANcak);
 
+        $newArrayANcak = [];
+        foreach ($defaultNew as $key1 => $value1) {
+            $newArrayANcak[$key1] = [];
+            foreach ($value1 as $key2 => $value2) {
+                $newArrayANcak[$key1][$key2] = [];
+                foreach ($value2 as $key3 => $value3) {
+                    if (is_array($value3)) {
+                        foreach ($value3 as $item) {
+                            $nestedKey = $item['blok'];
+                            if (!isset($newArrayANcak[$key1][$key2][$key3][$nestedKey])) {
+                                $newArrayANcak[$key1][$key2][$key3][$nestedKey] = [];
+                            }
+                            $newArrayANcak[$key1][$key2][$key3][$nestedKey][] = $item;
+                        }
+                    } else {
+                        $newArrayANcak[$key1][$key2][$key3] = $value3;
+                    }
+                }
+            }
+        }
+
+        $newArrayTrans = [];
+        foreach ($defaultTrans as $key1 => $value1) {
+            $newArrayTrans[$key1] = [];
+            foreach ($value1 as $key2 => $value2) {
+                $newArrayTrans[$key1][$key2] = [];
+                foreach ($value2 as $key3 => $value3) {
+                    if (is_array($value3)) {
+                        foreach ($value3 as $item) {
+                            $nestedKey = $item['blok'];
+                            if (!isset($newArrayTrans[$key1][$key2][$key3][$nestedKey])) {
+                                $newArrayTrans[$key1][$key2][$key3][$nestedKey] = [];
+                            }
+                            $newArrayTrans[$key1][$key2][$key3][$nestedKey][] = $item;
+                        }
+                    } else {
+                        $newArrayTrans[$key1][$key2][$key3] = $value3;
+                    }
+                }
+            }
+    }
+
+        $mutuTrans = array_replace_recursive($newArrayTrans, $newArrayANcak);
+
+  
+        $newTransTPh = [];
+        foreach ($mutuTrans as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                if (is_array($value1)) {
+                    foreach ($value1 as $key2 => $value2) {
+                        $tot_blokEst = 0;
+                        $tot_blokNew = 0;
+                     
+        
+                        if (is_array($value2)) {
+                            foreach ($value2 as $key3 => $value3) {
+                                if (is_array($value3)) {
+                                    $tot_blok = count($value3);
+                                   
+                                    foreach ($value3 as $key4 => $value4) {
+                                        // $status_panen = $value4['status_panen'];
+                                        $luas_blok = $value4['luas_blok'];
+                                        $status_panen = explode(",", $value4['status_panen']);
+                                    }
+                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sample'] = $tot_blok;
+                                    $newTransTPh[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
+                                    $newTransTPh[$key][$key1][$key2][$key3]['luas_blok'] = $luas_blok;
+
+                                    if ($status_panen[0] <= 3) {
+                                       $new_blok = round($luas_blok * 1.3,2);
+                                    }else {
+                                        $new_blok = $tot_blok;
+                                    }
+                                    $tot_blokEst += $tot_blok;
+                                    $tot_blokNew += $new_blok;
+
+                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sampleNew'] = $new_blok;
+
+                                    
+                                }else {
+                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sample'] = 0;
+                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sampleNew'] = 0;
+                                }
+                            }
+                        }
+        
+                        $newTransTPh[$key][$key1][$key2]['tph_sampAFD'] = $tot_blokEst;
+                        $newTransTPh[$key][$key1][$key2]['tph_sampNEW'] = $tot_blokNew;
+                    }
+                }
+            }
+        }
+        
+
+      
+      
+                
+        // dd($newTransTPh['KNE']['May']['OA'],$mutuTrans['KNE']['May']['OA']);
+
+        dd($newArrayTrans['MRE']['June'],$newArrayANcak['MRE']['June'],$newTransTPh['MRE']['June'],$mutuTrans['MRE']['June']);
+
+    
+
+        // endperhitungan
 
         // dd($defaultMTbh);
         $bulananBh = array();
@@ -17983,6 +18143,25 @@ class inspectController extends Controller
 
                 $totalSkor = skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
 
+                
+                $nonZeroValues = array_filter([
+                $tph_blok,
+                $sampleJJG,
+                $jjgMth,
+                $jjgOver,
+                $jjgKosng,
+                $vcut,
+                $jum_kr,
+                $jjgAbn,
+                $jjgMsk
+                ]);
+                
+                if (!empty($nonZeroValues) && !in_array(0, $nonZeroValues)) {
+                   $bulananBh[$key][$key1]['totalSkor'] = $totalSkor;
+                } else {
+                   $bulananBh[$key][$key1]['totalSkor'] = 0;
+                }
+                
 
                 $bulananBh[$key][$key1]['blok'] = $tph_blok;
                 $bulananBh[$key][$key1]['sample_jjg'] = $sampleJJG;
@@ -18013,40 +18192,7 @@ class inspectController extends Controller
                 $bulananBh[$key][$key1]['skor_kosong'] = skor_jangkos_mb($Perkosongjjg);;
                 $bulananBh[$key][$key1]['skor_vcut'] = skor_vcut_mb($PerVcut);;
                 $bulananBh[$key][$key1]['skor_karung'] = skor_abr_mb($per_kr);;
-                $bulananBh[$key][$key1]['totalSkor'] = $totalSkor;
-            } else {
-                $bulananBh[$key][$key1]['blok'] = 0;
-                $bulananBh[$key][$key1]['sample_jjg'] = 0;
-
-                $bulananBh[$key][$key1]['jjg_mentah'] = 0;
-                $bulananBh[$key][$key1]['mentahPerjjg'] = 0;
-
-                $bulananBh[$key][$key1]['jjg_msk'] = 0;
-                $bulananBh[$key][$key1]['mskPerjjg'] = 0;
-
-                $bulananBh[$key][$key1]['jjg_over'] = 0;
-                $bulananBh[$key][$key1]['overPerjjg'] = 0;
-
-                $bulananBh[$key][$key1]['jjg_kosong'] = 0;
-                $bulananBh[$key][$key1]['kosongPerjjg'] = 0;
-
-                $bulananBh[$key][$key1]['v_cut'] = 0;
-                $bulananBh[$key][$key1]['vcutPerjjg'] = 0;
-
-                $bulananBh[$key][$key1]['jjg_abr'] = 0;
-                $bulananBh[$key][$key1]['krPer'] = 0;
-
-                $bulananBh[$key][$key1]['jum_kr'] = 0;
-                $bulananBh[$key][$key1]['abrPerjjg'] = 0;
-
-                $bulananBh[$key][$key1]['skor_mentah'] = 0;
-                $bulananBh[$key][$key1]['skor_msak'] =  0;
-                $bulananBh[$key][$key1]['skor_over'] = 0;
-                $bulananBh[$key][$key1]['skor_kosong'] = 0;
-                $bulananBh[$key][$key1]['skor_vcut'] = 0;
-                $bulananBh[$key][$key1]['skor_karung'] = 0;
-
-                $bulananBh[$key][$key1]['totalSkor'] = 0;
+                // $bulananBh[$key][$key1]['totalSkor'] = $totalSkor;
             }
         }
         // dd($bulananBh);
@@ -18127,6 +18273,16 @@ class inspectController extends Controller
 
                 $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
 
+                $nonZeroValues = array_filter([$total_sample, $total_brd]);
+                
+                if (!empty($nonZeroValues) && !in_array(0, $nonZeroValues)) {
+                   $mutuTransAFD[$key][$key1]['total_skor'] = $totalSkor;
+                } else {
+                   $mutuTransAFD[$key][$key1]['total_skor'] = 0;
+                }
+                
+
+
                 $mutuTransAFD[$key][$key1]['total_sampleEST'] = $total_sample;
                 $mutuTransAFD[$key][$key1]['total_brdEST'] = $total_brd;
                 $mutuTransAFD[$key][$key1]['total_brdPertphEST'] = $brdPertph;
@@ -18134,17 +18290,8 @@ class inspectController extends Controller
                 $mutuTransAFD[$key][$key1]['total_buahPertphEST'] = $buahPerTPH;
                 $mutuTransAFD[$key][$key1]['skor_brd'] =   skor_brd_tinggal($brdPertph);;
                 $mutuTransAFD[$key][$key1]['skor_buah'] = skor_buah_tinggal($buahPerTPH);;
-                $mutuTransAFD[$key][$key1]['total_skor'] = $totalSkor;
-            } else {
-                $mutuTransAFD[$key][$key1]['total_sampleEST'] = 0;
-                $mutuTransAFD[$key][$key1]['total_brdEST'] = 0;
-                $mutuTransAFD[$key][$key1]['total_brdPertphEST'] = 0;
-                $mutuTransAFD[$key][$key1]['total_buahEST'] = 0;
-                $mutuTransAFD[$key][$key1]['total_buahPertphEST'] = 0;
-                $mutuTransAFD[$key][$key1]['skor_brd'] = 0;
-                $mutuTransAFD[$key][$key1]['skor_buah'] = 0;
-                $mutuTransAFD[$key][$key1]['total_skor'] = 0;
-            }
+                // $mutuTransAFD[$key][$key1]['total_skor'] = $totalSkor;
+            } 
         }
         // dd($mutuTransAFD);
 
@@ -18336,7 +18483,16 @@ class inspectController extends Controller
 
 
                 $total_skor = skor_brd_ma($total_BrdperJJG) + skor_buah_Ma($sumPerBH) + skor_palepah_ma($perPl);
+               
 
+                $nonZeroValues = array_filter([$total_brd, $total_buah]);
+                
+                if (!empty($nonZeroValues) && !in_array(0, $nonZeroValues)) {
+                   $GraphMTancak[$key][$key1]['skor_finals'] = $total_skor;
+                } else {
+                   $GraphMTancak[$key][$key1]['skor_finals'] = 0;
+                }
+                
 
                 $GraphMTancak[$key][$key1]['total_p.k.gl'] = $total_brd;
                 $GraphMTancak[$key][$key1]['total_jumPanen'] = $sum_panen;
@@ -18355,27 +18511,8 @@ class inspectController extends Controller
                 $GraphMTancak[$key][$key1]['perPalepah'] = $perPl;
                 $GraphMTancak[$key][$key1]['skor_perPl'] = skor_palepah_ma($perPl);
                 //total skor akhir
-                $GraphMTancak[$key][$key1]['skor_finals'] = $total_skor;
-            } else {
-                $GraphMTancak[$key][$key1]['total_p.k.gl'] = 0;
-                $GraphMTancak[$key][$key1]['total_jumPanen'] = 0;
-                $GraphMTancak[$key][$key1]['total_jumPokok'] = 0;
-                $GraphMTancak[$key][$key1]['total_brd/jjg'] = 0;
-                $GraphMTancak[$key][$key1]['skor_brd'] = 0;
-                //buah tinggal
-                $GraphMTancak[$key][$key1]['s'] = 0;
-                $GraphMTancak[$key][$key1]['m1'] = 0;
-                $GraphMTancak[$key][$key1]['m2'] = 0;
-                $GraphMTancak[$key][$key1]['m3'] = 0;
-                $GraphMTancak[$key][$key1]['total_bh'] = 0;
-                $GraphMTancak[$key][$key1]['total_bh/jjg'] = 0;
-                $GraphMTancak[$key][$key1]['skor_bh'] = 0;
-                $GraphMTancak[$key][$key1]['pokok_palepah'] = 0;
-                $GraphMTancak[$key][$key1]['perPalepah'] = 0;
-                $GraphMTancak[$key][$key1]['skor_perPl'] = 0;
-                //total skor akhir
-                $GraphMTancak[$key][$key1]['skor_finals'] = 0;
-            }
+                // $GraphMTancak[$key][$key1]['skor_finals'] = $total_skor;
+            } 
         }
         // dd($mutuTransAFD['RDE']['February'], $GraphMTancak['RDE']['February'], $bulananBh['RDE']['February']);
         //hitung untuk per estate
@@ -19256,7 +19393,7 @@ class inspectController extends Controller
 
     public function pdfBA(Request $request)
     {
-        $est = $request->input('estBA'); 
+        $est = $request->input('estBA');
         $afd = $request->input('afdBA');
         $date = $request->input('tglPDF');
         $reg = $request->input('regPDF');
@@ -19279,17 +19416,32 @@ class inspectController extends Controller
         ->get();
     
         $mutuAncak = $mutuAncak->groupBy('blok')->toArray();
+    
+        if ($reg == 1 ) {
+            $mutuAncak = array_combine(
+                array_map(function ($key) {
+                    $parts = explode('-', $key);
+                    return $parts[0];
+                }, array_keys($mutuAncak)),
+                array_map(function ($value) {
+                    return json_decode(json_encode($value), true);
+                }, array_values($mutuAncak))
+            );
+        }else {
+  
+            foreach ($mutuAncak as $key => $value) {
+                $mutuAncak[$key] = array_map(function ($item) {
+                    return json_decode(json_encode($item), true);
+                }, $value);
+            }
+            
+            $mutuAncak = json_decode(json_encode($mutuAncak), true);
         
-        $mutuAncak = array_combine(
-            array_map(function ($key) {
-                $parts = explode('-', $key);
-                return $parts[0];
-            }, array_keys($mutuAncak)),
-            array_map(function ($value) {
-                return json_decode(json_encode($value), true);
-            }, array_values($mutuAncak))
-        );
-
+        }
+     
+        // dd($mutuAncak);
+     
+        // dd($mutuAncak);
         $mutuBuahQuery = DB::connection('mysql2')->table('mutu_buah')
             ->select("mutu_buah.*", DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
             ->where('datetime', 'like', '%' . $date . '%')
@@ -19319,17 +19471,29 @@ class inspectController extends Controller
     
         $mutuTransport = $mutuTransport->groupBy('blok')->toArray();
         
-        $mutuTransport = array_combine(
-            array_map(function ($key) {
-                $parts = explode('-', $key);
-                return $parts[0];
-            }, array_keys($mutuTransport)),
-            array_map(function ($value) {
-                return json_decode(json_encode($value), true);
-            }, array_values($mutuTransport))
-        );
+        
 
-    
+        if ($reg == 1 ) {
+            $mutuTransport = array_combine(
+                array_map(function ($key) {
+                    $parts = explode('-', $key);
+                    return $parts[0];
+                }, array_keys($mutuTransport)),
+                array_map(function ($value) {
+                    return json_decode(json_encode($value), true);
+                }, array_values($mutuTransport))
+            );
+        }else {
+  
+            foreach ($mutuTransport as $key => $value) {
+                $mutuTransport[$key] = array_map(function ($item) {
+                    return json_decode(json_encode($item), true);
+                }, $value);
+            }
+            
+            $mutuTransport = json_decode(json_encode($mutuTransport), true);
+        
+        }
 
         // dd($mutuAncak,$mutuTransport);
 
@@ -19401,7 +19565,7 @@ class inspectController extends Controller
             $ancak[$key]['luas_blok'] = $first;
             $ancak[$key]['persenSamp'] = ($first != '-') ? round(($luas_ha / $first) * 100, 2) : '-';
 
-            if ($reg === '2' || $reg === 2 || $reg === '4' || $reg === 4  ) {
+            if ($reg === '2' || $reg === 2 ) {
             $status_panen = explode(",", $value2['status_panen']);
             $ancak[$key]['status_panen'] = $status_panen[0];
             } else {
@@ -19412,7 +19576,7 @@ class inspectController extends Controller
             $ancak[$key]['pokok_panen'] = $pokok_panen;
             $ancak[$key]['luas_ha'] = $luas_ha;
             $ancak[$key]['jml_jjg_panen'] = $jml_jjg_panen;
-            if ($reg === '2' || $reg === 2 || $reg === '4' || $reg === 4  ) {
+            if ($reg === '2' || $reg === 2 ) {
                 $ancak[$key]['akp_real'] = round( (($jml_jjg_panen + $tot_jjg) /$jumPokok *100),2);
             }else {
                 $ancak[$key]['akp_real'] = count_percent($jml_jjg_panen, $jumPokok);
@@ -19504,7 +19668,7 @@ class inspectController extends Controller
         }
 
 
-        if ($reg === '2' || $reg === 2 || $reg === '4' || $reg === 4  ) {
+        if ($reg === '2' || $reg === 2 ) {
 
             // $ancak_status = $ancak[''];
             foreach ($mutuTransport as $key => $value) {
@@ -20173,6 +20337,7 @@ class inspectController extends Controller
         ]);
     }
 
+
      public function getWeekInpeksi(Request $request)
     {
         $week = $request->input('week');
@@ -20704,7 +20869,7 @@ class inspectController extends Controller
                             $count++;
                         }     
                         $ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'] = $first;
-                        if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                        if ($RegData === '2') {
                         $status_panen = explode(",", $value5['status_panen']);
                         $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
                         } else {
@@ -21280,8 +21445,8 @@ class inspectController extends Controller
                           } 
                       }
                   }
-                  
-                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+
+                  if ($RegData == '2' || $RegData == 2) {
                       if ($dataBLok != 0) {
                           $brdPertph = round($sum_bt / $tot_sample, 2);
                       } else {
@@ -21295,7 +21460,7 @@ class inspectController extends Controller
                       }
                   }
 
-                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                  if ($RegData == '2' || $RegData == 2) {
                       if ($dataBLok != 0) {
                           $buahPerTPH = round($sum_rst / $tot_sample, 2);
                       } else {
@@ -21335,7 +21500,7 @@ class inspectController extends Controller
                   $mtTranstab1Wil[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                   //PERHITUNGAN PERESTATE
-                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                  if ($RegData == '2' || $RegData == 2) {
                       $dataBLokEst += $tot_sample;
                   }else {
                       $dataBLokEst += $dataBLok;
@@ -21419,7 +21584,15 @@ class inspectController extends Controller
 
           $nonZeroValues = array_filter([$sum_btWil, $sum_rstWil]);
 
-        
+          if (!empty($nonZeroValues)) {
+            $mtTranstab1Wil[$key]['check_data'] = 'ada';
+            // $mtTranstab1Wil[$key]['skor_brd'] = $skor_brd = skor_brd_ma($brdPerwil);
+            // $mtTranstab1Wil[$key]['skor_ps'] = $skor_ps = skor_palepah_ma($perPiWil);
+        } else {
+            $mtTranstab1Wil[$key]['check_data'] = 'kosong';
+            // $mtTranstab1Wil[$key]['skor_brd'] = $skor_brd = 0;
+            // $mtTranstab1Wil[$key]['skor_ps'] = $skor_ps = 0;
+        }
 
           $mtTranstab1Wil[$key]['tph_sample'] = $dataBLokWil;
           $mtTranstab1Wil[$key]['total_brd'] = $sum_btWil;
@@ -21482,7 +21655,7 @@ class inspectController extends Controller
                       }
                   }
 
-                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                  if ($RegData == '2' || $RegData == 2) {
                       if ($dataBLok != 0) {
                           $brdPertph = round($sum_bt / $tot_sample, 2);
                       } else {
@@ -21496,7 +21669,7 @@ class inspectController extends Controller
                       }
                   }
 
-                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                  if ($RegData == '2' || $RegData == 2) {
                       if ($dataBLok != 0) {
                           $buahPerTPH = round($sum_rst / $tot_sample, 2);
                       } else {
@@ -21536,7 +21709,7 @@ class inspectController extends Controller
                   $mtTranstab1Wil_reg[$key][$key1][$key2]['totalSkor'] = $totalSkor;
 
                   //PERHITUNGAN PERESTATE
-                  if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                  if ($RegData == '2' || $RegData == 2) {
                       $dataBLokEst += $tot_sample;
                   }else {
                       $dataBLokEst += $dataBLok;
@@ -24231,7 +24404,8 @@ class inspectController extends Controller
                                                     $RekapWIlTabel[$key][$key1]['dataEst'] = 'kosong';
                                                 }
 
-                                                if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                // dd($value,$buah,$trans);
+                                                if ($trans['check_data'] == 'kosong' && $buah['check_data'] === 'kosong' && $value['check_data'] === 'kosong') {
                                                     $RekapWIlTabel[$key]['TotalSkorWil'] =0;
                                                 }else{
                                                     $RekapWIlTabel[$key]['TotalSkorWil'] = $value['skor_akhir'] + $buah['TOTAL_SKOR'] + $trans['totalSkor'];
@@ -24251,6 +24425,7 @@ class inspectController extends Controller
                 }
             }
         }
+
 
 
 
@@ -24381,7 +24556,9 @@ class inspectController extends Controller
             'BTE' => 'WIL-V',
             'BHE' => 'WIL-VIII',
             'BGE' => 'WIL-III',
-            'MLE' => 'WIL-VI'
+            'MLE' => 'WIL-VI',
+            'SJE' => 'WIL-IX',
+            'LM1' => 'WIL-X',
         ];
 
         $WilGMsatu = processWils($Wil1, $estValues);
@@ -24914,7 +25091,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                    if ($RegData == '2' || $RegData == 2) {
                         if ($dataBLok != 0) {
                             $brdPertph = $tot_sample !== 0 ? round($sum_bt / $tot_sample, 2) : 0;
 
@@ -24930,7 +25107,7 @@ class inspectController extends Controller
                         }
                     }
 
-                    if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                    if ($RegData == '2' || $RegData == 2) {
                         if ($dataBLok != 0) {
                             $buahPerTPH = $tot_sample !== 0 ? round($sum_rst / $tot_sample, 2) : 0;
 
@@ -24982,7 +25159,7 @@ class inspectController extends Controller
                 $mtPLA[$key][$key1]['skorWil'] = $totalSkor;
 
                 //PERHITUNGAN PERESTATE
-                if ($RegData == '2' || $RegData == 2 || $RegData == '4' || $RegData == 4) {
+                if ($RegData == '2' || $RegData == 2) {
                     $dataBLokEst += $tot_sample;
                 }else {
                     $dataBLokEst += $dataBLok;
@@ -26425,7 +26602,7 @@ class inspectController extends Controller
             $jml_bhtm3_est += $jml_bhtm3;
             $jml_ps_est += $jml_ps;
 
-            if ($reg === '2' || $reg === '4' ) {
+            if ($reg === '2') {
                 $status_panen = explode(",", $value3['status_panen']);
                 $dataSkor[$key][$key2]['status_panen'] = $status_panen[0];
                 } else {
@@ -26797,7 +26974,7 @@ class inspectController extends Controller
             $ancak[$key]['luas_blok'] = $first;
             $ancak[$key]['persenSamp'] = ($first != '-') ? round(($luas_ha / $first) * 100, 2) : '-';
 
-            if ($reg === '2' || $reg == 2 || $reg === '4' || $reg == 4) {
+            if ($reg === '2' || $reg == 2) {
             $status_panen = explode(",", $value2['status_panen']);
             $ancak[$key]['status_panen'] = $status_panen[0];
             } else {
@@ -26808,7 +26985,7 @@ class inspectController extends Controller
             $ancak[$key]['pokok_panen'] = $pokok_panen;
             $ancak[$key]['luas_ha'] = $luas_ha;
             $ancak[$key]['jml_jjg_panen'] = $jml_jjg_panen;
-            if ($reg == 2 || $reg == '2' || $reg == 4 || $reg == '4') {
+            if ($reg == 2 || $reg == '2' ) {
                 $ancak[$key]['akp_real'] = round( (($jml_jjg_panen + $tot_jjg) /$jumPokok *100),2);
             }else {
                 $ancak[$key]['akp_real'] = count_percent($jml_jjg_panen, $jumPokok);
@@ -26901,7 +27078,7 @@ class inspectController extends Controller
         }
 
 
-        if ($reg == 2 || $reg == '2' || $reg == 4 || $reg == '4'){
+        if ($reg == 2 || $reg == '2' ){
 
             // $ancak_status = $ancak[''];
             foreach ($mutuTransport as $key => $value) {
@@ -26935,7 +27112,7 @@ class inspectController extends Controller
                 }
                 
                 if (isset($panenKey) && $panenKey <= 3 && isset($ancak[$key]['luas_blok'])) {
-                    $transport[$key]['tph_sample'] = round($LuasKey * 1.3 ,2);
+                    $transport[$key]['tph_sample'] = round($LuasKey * 1.3);
                 } else {
                     $transport[$key]['tph_sample'] = $tph_sample;
                 }
