@@ -20002,6 +20002,18 @@ class inspectController extends Controller
             ->get();
         $queryAfd = json_decode($queryAfd, true);
 
+
+        $test =  DB::connection('mysql2')->table('afdeling')
+        ->select(
+            'afdeling.id',
+            'afdeling.nama',
+            'estate.est'
+        ) //buat mengambil data di estate db dan willayah db
+        ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
+        ->where('est', '=', $est)
+        ->get();
+    $testing = json_decode($test, true);
+
         $id = $queryAfd[0]['id'];
 
         $queryBlokMA = DB::connection('mysql2')->table('mutu_ancak_new')
@@ -20037,26 +20049,31 @@ class inspectController extends Controller
         $queryBlokMT = json_decode($queryBlokMT, true);
 
         //merge all blok untuk mendapatkan semua blok ma mb mt visit hari tersebut
-        $allBlokRaw = array_merge($queryBlokMA, $queryBlokMB, $queryBlokMT);
+        $allBlokSidakRaw = array_merge($queryBlokMA, $queryBlokMB, $queryBlokMT);
 
         //array unique mengambil eliminasi blok yg sama
-        $allBlokRaw = array_unique($allBlokRaw);
+        $allBlokSidakRaw = array_unique($allBlokSidakRaw);
         
         //sisipkan 0 setelah digit pertama
-        $allBlok = array();
-        foreach($allBlokRaw as $value){
+
+        
+        $blokSidak = array();
+        foreach($allBlokSidakRaw as $value){
             $length = strlen($value);
-            $modifiedStr  = substr($value, 0, $length - 2) ;
-           $allBlok[] =  substr_replace($modifiedStr, "0", 1, 0);
+            $blokSidak[] = substr($value, 0, $length - 3) ;
+            $modifiedStr2  = substr($value, 0, $length - 2) ;
+            $blokSidak[] = substr($value, 0, $length - 2) ;
+           $blokSidak[] =  substr_replace($modifiedStr2, "0", 1, 0);
         }
 
-        $allLatLonBlok = DB::connection('mysql2')
+        // dd($allBlokRaw, $allBlok);
+        $blokSidakResult = DB::connection('mysql2')
         ->table('blok')
-       
+        ->select('blok.nama as nama_blok_visit')
         ->where('afdeling',$id)
-        ->whereIn('nama',$allBlok)
-        ->get();
-        $allLatLonBlok = json_decode($allLatLonBlok, true); 
+        ->whereIn('nama',$blokSidak)
+        ->groupBy('nama_blok_visit')
+        ->pluck('nama_blok_visit');
         
         $queryBlok = DB::connection('mysql2')->table('blok')
             ->select("blok.*")
@@ -20064,7 +20081,7 @@ class inspectController extends Controller
             ->get();
         $queryBlok = json_decode($queryBlok, true); 
         
-        $bloks_afd = array_reduce($allLatLonBlok, function ($carry, $item) {
+        $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
             $carry[$item['nama']][] = $item;
             return $carry;
         }, []);
@@ -20080,17 +20097,17 @@ class inspectController extends Controller
             }
         }
     
-        $plotBlok = [];
+        $plotBlokAll = [];
         foreach ($bloks_afd as $key => $coord) {
             foreach ($coord as $key2 => $value) {
-                $plotBlok[$key][] = [$value['lat'], $value['lon']];
+                $plotBlokAll[$key][] = [$value['lat'], $value['lon']];
             }
         }
         
         // Sort the coordinates in ascending order based on the first value
      
         
-        //  dd($plotBlok);
+        //  dd($plotBlokAll);
 
         $queryTrans = DB::connection('mysql2')->table("mutu_transport")
             ->select("mutu_transport.*", "estate.wil")
@@ -20330,10 +20347,11 @@ class inspectController extends Controller
         return response()->json([
             'plot_line'=> $plotLine        ,                 
             'coords' => $convertedCoords,
-            'plot_blok' => $plotBlok,
+            'plot_blok_all' => $plotBlokAll,
             'trans_plot' => $trans_plot,
             'buah_plot' => $buah_plot,
             'ancak_plot' => $ancak_plot,
+            'blok_sidak'=> $blokSidakResult
         ]);
     }
 

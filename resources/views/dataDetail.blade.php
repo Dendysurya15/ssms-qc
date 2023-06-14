@@ -21,6 +21,42 @@
         /* Remove padding */
     }
 
+    .legend {
+        padding: 6px 8px;
+        font: 14px Arial, Helvetica, sans-serif;
+        background: white;
+        /* background: rgba(255, 255, 255, 0.8); */
+        /*box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);*/
+        /*border-radius: 5px;*/
+        line-height: 24px;
+        color: #555;
+    }
+
+    .legend h4 {
+        text-align: center;
+        font-size: 16px;
+        margin: 2px 12px 8px;
+        color: #777;
+    }
+
+    .legend span {
+        position: relative;
+        bottom: 3px;
+    }
+
+    .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin: 0 8px 0 0;
+        opacity: 0.7;
+    }
+
+    .legend i.icon {
+        background-size: 18px;
+        background-color: rgba(255, 255, 255, 1);
+    }
+
     .text-icon-estate {
         font-size: 15pt;
         color: white;
@@ -28,10 +64,17 @@
         opacity: 0.6;
     }
 
-    .text-icon-blok {
+    .blok_visit {
         color: white;
         text-align: center;
         opacity: 0.7;
+    }
+
+    .blok_all {
+        color: white;
+        font-size: 7pt;
+        text-align: center;
+        opacity: 0.5;
     }
 
     table {
@@ -1312,7 +1355,9 @@
             },
             success: function(result) {
                 var polygonCoords = result.coords;
-                var plot_blok = result.plot_blok;
+
+                var blok_sidak = result.blok_sidak;
+                var plot_blok_all = result.plot_blok_all;
                 var plot_line = result.plot_line;
                 var trans_plot = result.trans_plot;
                 var buah_plot = result.buah_plot;
@@ -1322,7 +1367,7 @@
                     mapContainer._leaflet_id = null;
                 }
                 // Initialize the new map instance
-                var map = L.map('map').fitBounds(polygonCoords.concat(plot_blok), 13);
+                var map = L.map('map').fitBounds(polygonCoords.concat(plot_blok_all), 13);
 
 
                 var googleStreet = L.tileLayer( "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
@@ -1338,21 +1383,84 @@
                 };
                 L.control.layers(baseMaps).addTo(map);
 
+                // polygonCoords.forEach(function(coordinate, index) {
+                //     // Create a custom icon for the marker
+                //     var customIcon = new L.Icon({
+                //         iconUrl: "https://raw.githubusercontent.com/sheiun/leaflet-color-number-markers/main/dist/img/blue/marker-icon-2x-blue-" + (index + 1) + ".png",
+                //         shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                //         iconSize: [25, 41],
+                //         iconAnchor: [12, 41],
+                //         popupAnchor: [1, -34],
+                //         shadowSize: [41, 41]
+                //     });
 
-                var estatePolygon = L.polygon(polygonCoords, {
-                    color: '#003B73'
-                }).addTo(map).bindPopup('<strong>Estate:</strong>' + est);
-                // console.log(plot_blok);
-                var bounds = estatePolygon.getBounds();
-                        var center = bounds.getCenter();
+                //     // Create a marker for the coordinate using the custom icon
+                //     var marker = L.marker(coordinate, { icon: customIcon }).addTo(map);
+                    
+                //     // You can customize the marker if needed
+                //     // marker.bindPopup('Marker popup content');
+                // });
+                // var estatePolygon = L.polygon(polygonCoords, {
+                //     color: '#003B73'
+                // }).addTo(map).bindPopup('<strong>Estate:</strong>' + est);
+                // // console.log(plot_blok_all);
 
-                        // Create a custom HTML icon with centered text
-                        var textIcon = L.divIcon({
-                            className: 'text-icon-estate',
-                            html: '<strong>Rangda <br> Estate</strong>',
-                            iconSize: [100, 20],
-                            iconAnchor: [50, 10]
-                        });
+                // var bounds = estatePolygon.getBounds();
+                //         var center = bounds.getCenter();
+
+                //         // Create a custom HTML icon with centered text
+                //         var textIcon = L.divIcon({
+                //             className: 'text-icon-estate',
+                //             html: '<strong>' + est + ' <br> Estate</strong>',
+                //             iconSize: [100, 20],
+                //             iconAnchor: [50, 10]
+                //         });
+
+                for (var blockName in plot_blok_all) {
+                // Get the coordinates array for the current block
+                var coordinates = plot_blok_all[blockName];
+
+                // Create a polygon for the current block
+                var polygonOptions = {
+                    color: 'rgba(39, 138, 216, 0.5)',
+                    fillColor: '#278ad8',
+                    fillOpacity: 0.5
+                };
+                var textIcon;
+
+                if (blok_sidak.includes(blockName)) {
+                    polygonOptions.color = 'green';
+                    polygonOptions.fillColor = 'green';
+                    polygonOptions.fillOpacity =  0.5;
+
+                    textIcon = L.divIcon({
+                    className: 'blok_visit',
+                    html: blockName,
+                    iconSize: [100, 20],
+                    iconAnchor: [50, 10]
+                });
+                }else{
+                    textIcon = L.divIcon({
+                    className: 'blok_all',
+                    html: blockName,
+                    iconSize: [100, 20],
+                    iconAnchor: [50, 10]
+                });
+                }
+
+                var plotBlokPolygon = L.polygon(coordinates, polygonOptions)
+                    .addTo(map)
+                    .bindPopup('<strong>Afdeling:</strong>' + blockName);
+
+                var bounds = plotBlokPolygon.getBounds();
+                var center = bounds.getCenter();
+
+                // Create a custom HTML icon with text and modified class name
+             
+
+                // Place the text icon in the center of the polygon
+                L.marker(center, { icon: textIcon }).addTo(map);
+                }
 
                         var latlngs = [];
 
@@ -1385,29 +1493,7 @@ patterns: [
 // Place the text icon in the center of the polygon
 L.marker(center, { icon: textIcon }).addTo(map);
                 // Iterate over the keys of plot_blok
-                for (var blockName in plot_blok) {
-                    // Get the coordinates array for the current block
-                    var coordinates = plot_blok[blockName];
-
-                    // Create a polygon for the current block
-                    var plotBlokPolygon = L.polygon(coordinates, {
-                        color: '#278ad8',
-                        fillColor: '#278ad8'
-                    }).addTo(map).bindPopup('<strong>Afdeling:</strong>' + blockName);
-                    var bounds = plotBlokPolygon.getBounds();
-                    var center = bounds.getCenter();
-
-                    // Create a custom HTML icon with text and modified class name
-                    var textIcon = L.divIcon({
-                        className: 'text-icon-blok',
-                        html: blockName,
-                        iconSize: [100, 20],
-                        iconAnchor: [50, 10]
-                    });
-
-                    // Place the text icon in the center of the polygon
-                    L.marker(center, { icon: textIcon }).addTo(map);
-                }
+               
 
 
 
@@ -1466,7 +1552,7 @@ L.marker(center, { icon: textIcon }).addTo(map);
 
 
                 });
-                console.log(trans_plot);
+                // console.log(trans_plot);
 
                 // function trans() {
                 //     for (var i = 0; i < trans_plot.length; i++) {
@@ -1766,90 +1852,119 @@ L.marker(center, { icon: textIcon }).addTo(map);
 
 
                 legend.onAdd = function(map) {
-                    var div = L.DomUtil.create('div', 'info legend');
-                    var labels = ["Estate (klik icon untuk filter)", "Afdeling", "Mutu Ancak-Temuan-Follow Up", "Mutu Transport-Temuan-FolowUp", "Mutu Buah-Temuan"];
-                    var icons = [Estatecon, afdCon, [caktemuan1, caktemuan2, cakfu1],
-                        [transicon, transtemuan, transFollowup],
-                        [myIcon2, myIcon]
-                    ];
-                    var layers = [estatePolygon, plotBlokPolygon, ancakGroup, transGroup, buahGroup];
-                    var checkboxes = []; // Array to store checkbox elements
 
-                    // Create legend content
-                    for (var i = 0; i < icons.length; i++) {
-                        var item = L.DomUtil.create('div', 'legend-item', div);
-
-                        var checkbox = L.DomUtil.create('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.checked = true; // Initially checked
-                        checkbox.dataset.index = i; // Store the index of the layer
-
-                        // Toggle layer visibility based on checkbox state
-                        checkbox.addEventListener('change', function() {
-                            var index = parseInt(this.dataset.index);
-                            if (this.checked) {
-                                map.addLayer(layers[index]);
-                            } else {
-                                map.removeLayer(layers[index]);
-                            }
-                        });
-
-                        // checkboxes.push(checkbox); // Add checkbox to the array
-
-                        var iconContainer = L.DomUtil.create('div', 'icon-container', item);
-
-                        // Check if icons[i] is an array of icons
-                        if (Array.isArray(icons[i])) {
-                            for (var j = 0; j < icons[i].length; j++) {
-                                var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
-                                icon.src = icons[i][j].options.iconUrl;
-                            }
-                        } else {
-                            var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
-                            icon.src = icons[i].options.iconUrl;
-                        }
-
-                        var label = L.DomUtil.create('span', 'label', item);
-                        label.innerHTML = labels[i];
-
-                        // item.appendChild(checkbox); // Add checkbox to the legend item
-                        item.appendChild(iconContainer);
-                        item.appendChild(label);
-                    }
-
-                    // Function to show/hide layers based on checkbox selection
-                    function updateLayerVisibility() {
-                        for (var i = 0; i < checkboxes.length; i++) {
-                            var checkbox = checkboxes[i];
-                            var index = parseInt(checkbox.dataset.index);
-                            if (checkbox.checked) {
-                                map.addLayer(layers[index]);
-                            } else {
-                                map.removeLayer(layers[index]);
-
-                                // If the layer being hidden is the plotBlokPolygon (Afdeling), hide all associated polygons
-                                if (layers[index] === plotBlokPolygon) {
-                                    for (var blockName in plot_blok) {
-                                        var blockPolygons = plot_blok[blockName];
-                                        for (var j = 0; j < blockPolygons.length; j++) {
-                                            map.removeLayer(blockPolygons[j]);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Initial layer visibility update
-                    updateLayerVisibility();
-
-                    return div;
-
-
+                var div = L.DomUtil.create("div", "legend");
+                div.innerHTML += "<h4>Keterangan :</h4>";
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" style="width:12pt;height:13pt" >  Mutu Ancak';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" style="width:12pt;height:13pt" >  MA Temuan';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png" style="width:12pt;height:13pt" >  MA Follow Up';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png" style="width:12pt;height:13pt" >  Mutu Transport';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png" style="width:12pt;height:13pt" >  MT Temuan';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" style="width:12pt;height:13pt" >  MT Follow Up';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png" style="width:12pt;height:13pt" >  Mutu Buah';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png" style="width:12pt;height:13pt" >  MB Temuan';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div><i style="background: #88b87a;width:15px;height:15px;margin-top:5px;border:1px solid green"></i> Blok yang dikunjungi';
+                div.innerHTML += '</div>';
+                div.innerHTML += '<div><i style="margin-top:7px;  width: 0; height: 0; border-left: 6px solid transparent;border-right: 6px solid transparent;border-bottom: 10px solid #4e86fc;"></i> Arah jalan sidak';
+                div.innerHTML += '</div>';
+             
+                return div;
                 };
 
-                // ...
                 legend.addTo(map);
+                
+                // legend.onAdd = function(map) {
+                //     var div = L.DomUtil.create('div', 'info legend');
+                //     var labels = [ "  Mutu Ancak-Temuan-Follow Up", "  Mutu Transport-Temuan-FolowUp", "  Mutu Buah-Temuan", '  Blok Sidak'];
+                //     var icons = [ [caktemuan1, caktemuan2, cakfu1],
+                //         [transicon, transtemuan, transFollowup],
+                //         [myIcon2, myIcon], caktemuan1
+                //     ];
+                //     var layers = [ plotBlokPolygon, ancakGroup, transGroup, buahGroup];
+                //     var checkboxes = []; // Array to store checkbox elements
+
+                //     // Create legend content
+                //     for (var i = 0; i < icons.length; i++) {
+                //         var item = L.DomUtil.create('div', 'legend-item', div);
+
+                //         var checkbox = L.DomUtil.create('input');
+                //         checkbox.type = 'checkbox';
+                //         checkbox.checked = true; // Initially checked
+                //         checkbox.dataset.index = i; // Store the index of the layer
+
+                //         // Toggle layer visibility based on checkbox state
+                //         checkbox.addEventListener('change', function() {
+                //             var index = parseInt(this.dataset.index);
+                //             if (this.checked) {
+                //                 map.addLayer(layers[index]);
+                //             } else {
+                //                 map.removeLayer(layers[index]);
+                //             }
+                //         });
+
+                //         // checkboxes.push(checkbox); // Add checkbox to the array
+
+                //         var iconContainer = L.DomUtil.create('div', 'icon-container', item);
+
+                //         // Check if icons[i] is an array of icons
+                //         if (Array.isArray(icons[i])) {
+                //             for (var j = 0; j < icons[i].length; j++) {
+                //                 var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
+                //                 icon.src = icons[i][j].options.iconUrl;
+                //             }
+                //         } else {
+                //             var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
+                //             icon.src = icons[i].options.iconUrl;
+                //         }
+
+                //         var label = L.DomUtil.create('span', 'label', item);
+                //         label.innerHTML = labels[i];
+
+                //         // item.appendChild(checkbox); // Add checkbox to the legend item
+                //         item.appendChild(iconContainer);
+                //         item.appendChild(label);
+                //     }
+
+                //     // Function to show/hide layers based on checkbox selection
+                //     function updateLayerVisibility() {
+                //         for (var i = 0; i < checkboxes.length; i++) {
+                //             var checkbox = checkboxes[i];
+                //             var index = parseInt(checkbox.dataset.index);
+                //             if (checkbox.checked) {
+                //                 map.addLayer(layers[index]);
+                //             } else {
+                //                 map.removeLayer(layers[index]);
+
+                //                 // If the layer being hidden is the plotBlokPolygon (Afdeling), hide all associated polygons
+                //                 if (layers[index] === plotBlokPolygon) {
+                //                     for (var blockName in plot_blok) {
+                //                         var blockPolygons = plot_blok[blockName];
+                //                         for (var j = 0; j < blockPolygons.length; j++) {
+                //                             map.removeLayer(blockPolygons[j]);
+                //                         }
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+
+                //     // Initial layer visibility update
+                //     updateLayerVisibility();
+
+                //     return div;
+
+
+                // };
+                // ...
+                // legend.addTo(map);
 
 
 
