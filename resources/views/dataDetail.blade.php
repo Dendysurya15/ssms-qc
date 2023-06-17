@@ -21,6 +21,7 @@
         /* Remove padding */
     }
 
+
     .legend {
         padding: 6px 8px;
         font: 14px Arial, Helvetica, sans-serif;
@@ -75,6 +76,12 @@
         font-size: 7pt;
         text-align: center;
         opacity: 0.5;
+    }
+
+    .text-icon-blok {
+        color: white;
+        text-align: center;
+        opacity: 0.7;
     }
 
     table {
@@ -386,8 +393,7 @@
                             <input type="hidden" name="afd" id="afd" value="{{$afd}}">
 
                             <div class="form-group">
-                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate"
-                                    onchange="updateDate();">
+                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate" onchange="updateDate();">
                                     <option value="" disabled selected hidden>Pilih tanggal</option>
                                     <optgroup label="Mutu Ancak">
                                         @foreach($ancakDates as $ancakDate)
@@ -416,8 +422,7 @@
                                 </select>
                             </div>
 
-                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button"
-                                onclick="updateTanggal();" disabled>Show</button>
+                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button" onclick="updateTanggal();" disabled>Show</button>
 
                         </div>
                     </form>
@@ -429,16 +434,12 @@
             </div>
         </div>
         <!-- animasi loading -->
-        <div id="lottie-container"
-            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation"
-                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
-        <div id="lottie-container1"
-            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation"
-                style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container1" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation" style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
 
@@ -474,8 +475,7 @@
                 }
             </style>
 
-            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;"
-                target="_blank">
+            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
 
@@ -489,8 +489,7 @@
                 </button>
             </form>
 
-            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;"
-                target="_blank">
+            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
                 <input type="hidden" name="estBA_excel" id="estpdf" value="{{$est}}">
@@ -543,7 +542,7 @@
                         <th>Pokok_panen</th>
                         <th>Komentar</th>
                         <th>Status</th>
-                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
                         <th>Aksi</th>
                         @endif
 
@@ -578,7 +577,7 @@
                         <th>Vcut</th>
                         <th>Alas_br</th>
                         <th>Komentar</th>
-                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
                         <th>Aksi</th>
                         @endif
 
@@ -608,7 +607,7 @@
                         <th>Rst</th>
                         <th>Bt</th>
                         <th>Komentar</th>
-                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
                         <th>Aksi</th>
                         @endif
 
@@ -761,8 +760,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="update-pk_panenCAk" class="col-form-label">Pokok Panen</label>
-                    <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value=""
-                        required>
+                    <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value="" required>
                 </div>
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -879,8 +877,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
-                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value=""
-                        required>
+                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value="" required>
                 </div>
                 <div class="mb-3">
                     <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
@@ -944,8 +941,7 @@
         <div class="modal-content-custom">
             <h2>Delete Mutu Ancak</h2>
             <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
-            <form id="delete-form" action="{{ route('deleteBA') }}" method="POST"
-                onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+            <form id="delete-form" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
                 {{ csrf_field() }}
                 <input type="hidden" id="delete-id" name="id">
                 <p>Apakah anda Yakin ingin Menghapus?</p>
@@ -1299,10 +1295,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
 
 
@@ -1370,7 +1364,7 @@
                 var map = L.map('map').fitBounds(polygonCoords.concat(plot_blok_all), 13);
 
 
-                var googleStreet = L.tileLayer( "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+                var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
                 var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
                     maxZoom: 20,
@@ -1396,7 +1390,7 @@
 
                 //     // Create a marker for the coordinate using the custom icon
                 //     var marker = L.marker(coordinate, { icon: customIcon }).addTo(map);
-                    
+
                 //     // You can customize the marker if needed
                 //     // marker.bindPopup('Marker popup content');
                 // });
@@ -1417,83 +1411,96 @@
                 //         });
 
                 for (var blockName in plot_blok_all) {
-                // Get the coordinates array for the current block
-                var coordinates = plot_blok_all[blockName];
+                    // Get the coordinates array for the current block
+                    var coordinates = plot_blok_all[blockName];
 
-                // Create a polygon for the current block
-                var polygonOptions = {
-                    color: 'rgba(39, 138, 216, 0.5)',
-                    fillColor: '#278ad8',
-                    fillOpacity: 0.5
-                };
-                var textIcon;
+                    // Create a polygon for the current block
+                    var polygonOptions = {
+                        color: 'rgba(39, 138, 216, 0.5)',
+                        fillColor: '#278ad8',
+                        fillOpacity: 0.5
+                    };
+                    var textIcon;
 
-                if (blok_sidak.includes(blockName)) {
-                    polygonOptions.color = 'green';
-                    polygonOptions.fillColor = 'green';
-                    polygonOptions.fillOpacity =  0.5;
+                    if (blok_sidak.includes(blockName)) {
+                        polygonOptions.color = 'green';
+                        polygonOptions.fillColor = 'green';
+                        polygonOptions.fillOpacity = 0.5;
 
-                    textIcon = L.divIcon({
-                    className: 'blok_visit',
-                    html: blockName,
-                    iconSize: [100, 20],
-                    iconAnchor: [50, 10]
-                });
-                }else{
-                    textIcon = L.divIcon({
-                    className: 'blok_all',
-                    html: blockName,
-                    iconSize: [100, 20],
-                    iconAnchor: [50, 10]
-                });
+                        textIcon = L.divIcon({
+                            className: 'blok_visit',
+                            html: blockName,
+                            iconSize: [100, 20],
+                            iconAnchor: [50, 10]
+                        });
+                    } else {
+                        textIcon = L.divIcon({
+                            className: 'blok_all',
+                            html: blockName,
+                            iconSize: [100, 20],
+                            iconAnchor: [50, 10]
+                        });
+                    }
+
+                    var plotBlokPolygon = L.polygon(coordinates, polygonOptions)
+                        .addTo(map)
+                        .bindPopup('<strong>Afdeling:</strong>' + blockName);
+
+                    var bounds = plotBlokPolygon.getBounds();
+                    var center = bounds.getCenter();
+
+                    // Create a custom HTML icon with text and modified class name
+
+
+                    // Place the text icon in the center of the polygon
+                    L.marker(center, {
+                        icon: textIcon
+                    }).addTo(map);
                 }
 
-                var plotBlokPolygon = L.polygon(coordinates, polygonOptions)
-                    .addTo(map)
-                    .bindPopup('<strong>Afdeling:</strong>' + blockName);
+                var latlngs = [];
 
-                var bounds = plotBlokPolygon.getBounds();
-                var center = bounds.getCenter();
+                for (var i = 0; i < plot_line.length; i++) {
+                    var coordinates = plot_line[i].split("],[");
+                    var latlngGroup = [];
 
-                // Create a custom HTML icon with text and modified class name
-             
+                    for (var j = 0; j < coordinates.length; j++) {
+                        var latlng = coordinates[j].replace("[", "").replace("]", "").split(",");
+                        latlngGroup.push([parseFloat(latlng[0]), parseFloat(latlng[1])]);
+                    }
 
+                    latlngs.push(latlngGroup);
+                }
+
+                // console.log(latlngs)
+                // var latlngs = [
+                //     [45.51, -122.68],
+                //     [37.77, -122.43],
+                //     [34.04, -118.2]
+                // ];
+
+                var polyline = L.polyline(latlngs, {
+                    color: 'yellow'
+                }).addTo(map);
+
+                var decorator = L.polylineDecorator(polyline, {
+                    patterns: [{
+                        offset: 0,
+                        repeat: 50,
+                        symbol: L.Symbol.arrowHead({
+                            pixelSize: 8,
+                            pathOptions: {
+                                fillOpacity: 1
+                            }
+                        })
+                    }]
+                }).addTo(map);
                 // Place the text icon in the center of the polygon
-                L.marker(center, { icon: textIcon }).addTo(map);
-                }
-
-                        var latlngs = [];
-
-for (var i = 0; i < plot_line.length; i++) {
-var coordinates = plot_line[i].split("],[");
-var latlngGroup = [];
-
-for (var j = 0; j < coordinates.length; j++) {
-    var latlng = coordinates[j].replace("[", "").replace("]", "").split(",");
-    latlngGroup.push([parseFloat(latlng[0]), parseFloat(latlng[1])]);
-}
-
-latlngs.push(latlngGroup);
-}
-
-// console.log(latlngs)
-// var latlngs = [
-//     [45.51, -122.68],
-//     [37.77, -122.43],
-//     [34.04, -118.2]
-// ];
-
-var polyline = L.polyline(latlngs, {color: 'yellow'}).addTo(map);
-
-var decorator = L.polylineDecorator(polyline, {
-patterns: [
-{ offset: 0, repeat: 50, symbol: L.Symbol.arrowHead({ pixelSize: 8, pathOptions: { fillOpacity: 1} }) }
-]
-}).addTo(map);
-// Place the text icon in the center of the polygon
-L.marker(center, { icon: textIcon }).addTo(map);
+                L.marker(center, {
+                    icon: textIcon
+                }).addTo(map);
                 // Iterate over the keys of plot_blok
-               
+
 
 
 
@@ -1853,118 +1860,33 @@ L.marker(center, { icon: textIcon }).addTo(map);
 
                 legend.onAdd = function(map) {
 
-                var div = L.DomUtil.create("div", "legend");
-                div.innerHTML += "<h4>Keterangan :</h4>";
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" style="width:12pt;height:13pt" >  Mutu Ancak';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" style="width:12pt;height:13pt" >  MA Temuan';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png" style="width:12pt;height:13pt" >  MA Follow Up';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png" style="width:12pt;height:13pt" >  Mutu Transport';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png" style="width:12pt;height:13pt" >  MT Temuan';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" style="width:12pt;height:13pt" >  MT Follow Up';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png" style="width:12pt;height:13pt" >  Mutu Buah';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png" style="width:12pt;height:13pt" >  MB Temuan';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div><i style="background: #88b87a;width:15px;height:15px;margin-top:5px;border:1px solid green"></i> Blok yang dikunjungi';
-                div.innerHTML += '</div>';
-                div.innerHTML += '<div><i style="margin-top:7px;  width: 0; height: 0; border-left: 6px solid transparent;border-right: 6px solid transparent;border-bottom: 10px solid #4e86fc;"></i> Arah jalan sidak';
-                div.innerHTML += '</div>';
-             
-                return div;
+                    var div = L.DomUtil.create("div", "legend");
+                    div.innerHTML += "<h4>Keterangan :</h4>";
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png" style="width:12pt;height:13pt" >  Mutu Ancak';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" style="width:12pt;height:13pt" >  MA Temuan';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png" style="width:12pt;height:13pt" >  MA Follow Up';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png" style="width:12pt;height:13pt" >  Mutu Transport';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png" style="width:12pt;height:13pt" >  MT Temuan';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" style="width:12pt;height:13pt" >  MT Follow Up';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png" style="width:12pt;height:13pt" >  Mutu Buah';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png" style="width:12pt;height:13pt" >  MB Temuan';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div><i style="background: #88b87a;width:15px;height:15px;margin-top:5px;border:1px solid green"></i> Blok yang dikunjungi';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div><i style="margin-top:7px;  width: 0; height: 0; border-left: 6px solid transparent;border-right: 6px solid transparent;border-bottom: 10px solid #4e86fc;"></i> Arah jalan sidak';
+                    div.innerHTML += '</div>';
+
+                    return div;
                 };
 
                 legend.addTo(map);
-                
-                // legend.onAdd = function(map) {
-                //     var div = L.DomUtil.create('div', 'info legend');
-                //     var labels = [ "  Mutu Ancak-Temuan-Follow Up", "  Mutu Transport-Temuan-FolowUp", "  Mutu Buah-Temuan", '  Blok Sidak'];
-                //     var icons = [ [caktemuan1, caktemuan2, cakfu1],
-                //         [transicon, transtemuan, transFollowup],
-                //         [myIcon2, myIcon], caktemuan1
-                //     ];
-                //     var layers = [ plotBlokPolygon, ancakGroup, transGroup, buahGroup];
-                //     var checkboxes = []; // Array to store checkbox elements
-
-                //     // Create legend content
-                //     for (var i = 0; i < icons.length; i++) {
-                //         var item = L.DomUtil.create('div', 'legend-item', div);
-
-                //         var checkbox = L.DomUtil.create('input');
-                //         checkbox.type = 'checkbox';
-                //         checkbox.checked = true; // Initially checked
-                //         checkbox.dataset.index = i; // Store the index of the layer
-
-                //         // Toggle layer visibility based on checkbox state
-                //         checkbox.addEventListener('change', function() {
-                //             var index = parseInt(this.dataset.index);
-                //             if (this.checked) {
-                //                 map.addLayer(layers[index]);
-                //             } else {
-                //                 map.removeLayer(layers[index]);
-                //             }
-                //         });
-
-                //         // checkboxes.push(checkbox); // Add checkbox to the array
-
-                //         var iconContainer = L.DomUtil.create('div', 'icon-container', item);
-
-                //         // Check if icons[i] is an array of icons
-                //         if (Array.isArray(icons[i])) {
-                //             for (var j = 0; j < icons[i].length; j++) {
-                //                 var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
-                //                 icon.src = icons[i][j].options.iconUrl;
-                //             }
-                //         } else {
-                //             var icon = L.DomUtil.create('img', 'legend-icon', iconContainer);
-                //             icon.src = icons[i].options.iconUrl;
-                //         }
-
-                //         var label = L.DomUtil.create('span', 'label', item);
-                //         label.innerHTML = labels[i];
-
-                //         // item.appendChild(checkbox); // Add checkbox to the legend item
-                //         item.appendChild(iconContainer);
-                //         item.appendChild(label);
-                //     }
-
-                //     // Function to show/hide layers based on checkbox selection
-                //     function updateLayerVisibility() {
-                //         for (var i = 0; i < checkboxes.length; i++) {
-                //             var checkbox = checkboxes[i];
-                //             var index = parseInt(checkbox.dataset.index);
-                //             if (checkbox.checked) {
-                //                 map.addLayer(layers[index]);
-                //             } else {
-                //                 map.removeLayer(layers[index]);
-
-                //                 // If the layer being hidden is the plotBlokPolygon (Afdeling), hide all associated polygons
-                //                 if (layers[index] === plotBlokPolygon) {
-                //                     for (var blockName in plot_blok) {
-                //                         var blockPolygons = plot_blok[blockName];
-                //                         for (var j = 0; j < blockPolygons.length; j++) {
-                //                             map.removeLayer(blockPolygons[j]);
-                //                         }
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-
-                //     // Initial layer visibility update
-                //     updateLayerVisibility();
-
-                //     return div;
-
-
-                // };
-                // ...
-                // legend.addTo(map);
 
 
 
@@ -2284,7 +2206,7 @@ L.marker(center, { icon: textIcon }).addTo(map);
                     pokok_panen_cak) {
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -2478,7 +2400,7 @@ L.marker(center, { icon: textIcon }).addTo(map);
 
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -2635,7 +2557,7 @@ L.marker(center, { icon: textIcon }).addTo(map);
                     td.style.alignItems = 'center';
                     td.style.justifyContent = 'center';
 
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                         const updateButton = document.createElement('button');
                         updateButton.className = 'btn btn-success mr-2';
                         updateButton.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -3042,7 +2964,7 @@ L.marker(center, { icon: textIcon }).addTo(map);
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "http://ssms-qc.test/dashboard_inspeksi";
+        window.location.href = "https://qc-apps.srs-ssms.com/dashboard_inspeksi";
     }
     var regional = '{{$reg}}';
 
@@ -3089,6 +3011,78 @@ L.marker(center, { icon: textIcon }).addTo(map);
                     } else if (skor >= 9 && skor <= 11) {
                         return 2;
                     } else if (skor >= 11) {
+                        return 0;
+                    } else if (skor == undefined) {
+                        return 0;
+                    }
+                }
+
+                function skor_brd_ma(skor) {
+                    if (skor <= 1.0) {
+                        return 20;
+                    } else if (skor >= 1 && skor <= 1.5) {
+                        return 16;
+                    } else if (skor >= 1.5 && skor <= 2.0) {
+                        return 12;
+                    } else if (skor >= 2.0 && skor <= 2.5) {
+                        return 8;
+                    } else if (skor >= 2.5 && skor <= 3.0) {
+                        return 4;
+                    } else if (skor >= 3.0 && skor <= 3.5) {
+                        return 0;
+                    } else if (skor >= 3.5 && skor <= 4.0) {
+                        return -4;
+                    } else if (skor >= 4.0 && skor <= 4.5) {
+                        return -8;
+                    } else if (skor >= 4.5 && skor <= 5.0) {
+                        return -12;
+                    } else if (skor >= 5.0) {
+                        return -16;
+                    } else if (skor == undefined) {
+                        return 0;
+                    }
+                }
+
+                function skor_buah_Ma(skor) {
+                    if (skor <= 0.0) {
+                        return 20;
+                    } else if (skor >= 0.0 && skor <= 1.0) {
+                        return 18;
+                    } else if (skor >= 1 && skor <= 1.5) {
+                        return 16;
+                    } else if (skor >= 1.5 && skor <= 2.0) {
+                        return 12;
+                    } else if (skor >= 2.0 && skor <= 2.5) {
+                        return 8;
+                    } else if (skor >= 2.5 && skor <= 3.0) {
+                        return 4;
+                    } else if (skor >= 3.0 && skor <= 3.5) {
+                        return 0;
+                    } else if (skor >= 3.5 && skor <= 4.0) {
+                        return -4;
+                    } else if (skor >= 4.0 && skor <= 4.5) {
+                        return -8;
+                    } else if (skor >= 4.5 && skor <= 5.0) {
+                        return -12;
+                    } else if (skor >= 5.0) {
+                        return -16;
+                    } else if (skor == undefined) {
+                        return 0;
+                    }
+                }
+
+                function skor_palepah_ma(skor) {
+                    if (skor <= 0.5) {
+                        return 5;
+                    } else if (skor >= 0.5 && skor <= 1.0) {
+                        return 4;
+                    } else if (skor >= 1.0 && skor <= 1.5) {
+                        return 3;
+                    } else if (skor >= 1.5 && skor <= 2.0) {
+                        return 2;
+                    } else if (skor >= 2.0 && skor <= 2.5) {
+                        return 1;
+                    } else if (skor >= 2.5) {
                         return 0;
                     } else if (skor == undefined) {
                         return 0;
@@ -3244,7 +3238,8 @@ L.marker(center, { icon: textIcon }).addTo(map);
                 }
 
 
-                if (reg == 2 || reg == 4) {
+
+                if (reg == 2) {
                     let inc = 1;
                     let tod = 0;
                     let ted = 0;
@@ -3255,7 +3250,8 @@ L.marker(center, { icon: textIcon }).addTo(map);
                         let item2 = element[0];
                         let item3 = element[1]['status_panen'] ?? 0;
                         let item4 = element[1]['pokok_sample'] ?? 0;
-                        let item5 = element[1]['luas_blok'] ?? 0
+                        let item5 = (element[1]['luas_blok'] ?? [0])[0]; // Extract the first element from the array
+
                         let item6 = element[1]['jml_jjg_panen'] ?? 0;
                         let item7 = element[1]['akp_real'] ?? 0;
                         let item8 = element[1]['p_ma'] ?? 0;
@@ -3306,7 +3302,7 @@ L.marker(center, { icon: textIcon }).addTo(map);
                         let item49 = mb_vcut(element[1]['PersenVcut']);
                         let item50 = element[1]['jml_abnormal'] ?? 0;
                         let item51 = element[1]['PersenAbr'] ?? 0;
-                        let item52 = (element[1]['blok_mb'] ?? 0) + '/' + (element[1]['alas_mb'] ?? 0);
+                        let item52 = (element[1]['alas_mb'] ?? 0);
                         let item53 = element[1]['PersenKrgBrd'] ?? 0;
                         let item54 = mbalas_br(element[1]['PersenKrgBrd']);
                         let item55 = mbalas_br(element[1]['PersenKrgBrd']) + mb_vcut(element[1]['PersenVcut']) +
@@ -3334,9 +3330,9 @@ L.marker(center, { icon: textIcon }).addTo(map);
                                 if (item === 'SATISFACTORY') {
                                     itemElement.style.backgroundColor = '#fffc04';
                                 } else if (item === 'EXCELLENT') {
-                                    itemElement.style.backgroundColor = '#5874c4';
+                                    itemElement.style.backgroundColor = '#08fc2c';
                                 } else if (item === 'GOOD') {
-                                    itemElement.style.backgroundColor = '#10fc2c';
+                                    itemElement.style.backgroundColor = '#6074c4';
                                 } else if (item === 'POOR') {
                                     itemElement.style.backgroundColor = '#ff0404';
                                 } else if (item === 'FAIR') {
@@ -3347,11 +3343,11 @@ L.marker(center, { icon: textIcon }).addTo(map);
                             if (index === 55) {
                                 // Apply background color based on the value of item32
                                 if (item >= 95) {
-                                    itemElement.style.backgroundColor = '#fffc04';
+                                    itemElement.style.backgroundColor = '#08fc2c';
                                 } else if (item >= 85) {
                                     itemElement.style.backgroundColor = '#5874c4';
                                 } else if (item >= 75) {
-                                    itemElement.style.backgroundColor = '#10fc2c';
+                                    itemElement.style.backgroundColor = '#fffc04';
                                 } else if (item >= 65) {
                                     itemElement.style.backgroundColor = '#ffa404';
                                 } else {
@@ -3400,6 +3396,237 @@ L.marker(center, { icon: textIcon }).addTo(map);
                         tbody1.appendChild(tr)
                         // }
                     });
+
+                    var cellsx = document.getElementById('dataInspeksi');
+                    let total = 0;
+                    let total2 = 0;
+                    let total3 = 0;
+                    let total4 = 0;
+                    let total5 = 0;
+                    let total6 = 0;
+                    let total7 = 0;
+                    let total8 = 0;
+                    let total9 = 0;
+                    let total10 = 0;
+                    let total11 = 0;
+                    let total12 = 0;
+                    let total13 = 0;
+                    let total14 = 0;
+                    let total15 = 0;
+                    let total16 = 0;
+                    let total17 = 0;
+                    let total18 = 0;
+                    let total19 = 0;
+                    let total20 = 0;
+                    let total21 = 0;
+                    let total22 = 0;
+                    let total23 = 0;
+                    let total24 = 0;
+                    let total25 = 0;
+                    let total26 = 0;
+                    let total27 = 0;
+                    let total28 = 0;
+                    let total29 = 0;
+
+                    for (let i = 0; i < cellsx.rows.length; i++) {
+                        if (cellsx.rows[i].cells.length > 3) {
+                            total += Number(cellsx.rows[i].cells[3].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 4) {
+                            total2 += Number(cellsx.rows[i].cells[4].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 5) {
+                            total3 += Number(cellsx.rows[i].cells[5].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 6) {
+                            total4 += Number(cellsx.rows[i].cells[6].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 7) {
+                            total5 += Number(cellsx.rows[i].cells[7].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 8) {
+                            total6 += Number(cellsx.rows[i].cells[8].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 9) {
+                            total7 += Number(cellsx.rows[i].cells[9].innerText);
+                        }
+
+                        if (cellsx.rows[i].cells.length > 10) {
+                            total8 += Number(cellsx.rows[i].cells[10].innerText);
+                        }
+
+                        if (cellsx.rows[i].cells.length > 11) {
+                            total9 = total8 / total3;
+                        }
+                        if (cellsx.rows[i].cells.length > 12) {
+                            total10 = skor_brd_ma((total8 / total3));
+                        }
+                        if (cellsx.rows[i].cells.length > 13) {
+                            total11 += Number(cellsx.rows[i].cells[13].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 14) {
+                            total12 += Number(cellsx.rows[i].cells[14].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 15) {
+                            total13 += Number(cellsx.rows[i].cells[15].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 16) {
+                            total14 += Number(cellsx.rows[i].cells[16].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 17) {
+                            total15 += Number(cellsx.rows[i].cells[17].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 18) {
+                            total16 = total15 / (total3 + total15) * 100;
+                        }
+                        if (cellsx.rows[i].cells.length > 20) {
+                            total17 += Number(cellsx.rows[i].cells[20].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 24) {
+                            total18 += Number(cellsx.rows[i].cells[24].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 25) {
+                            total19 += Number(cellsx.rows[i].cells[25].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 28) {
+                            total20 += Number(cellsx.rows[i].cells[28].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 32) {
+                            total21 += Number(cellsx.rows[i].cells[32].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 33) {
+                            total22 += Number(cellsx.rows[i].cells[33].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 34) {
+                            total23 += Number(cellsx.rows[i].cells[34].innerText);
+                        }
+                        // abnormal
+                        if (cellsx.rows[i].cells.length > 49) {
+                            total24 += Number(cellsx.rows[i].cells[49].innerText);
+                        }
+                        //
+                        if (cellsx.rows[i].cells.length > 37) {
+                            total25 += Number(cellsx.rows[i].cells[37].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 40) {
+                            total26 += Number(cellsx.rows[i].cells[40].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 43) {
+                            total27 += Number(cellsx.rows[i].cells[43].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 46) {
+                            total28 += Number(cellsx.rows[i].cells[46].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 51) {
+                            total29 += Number(cellsx.rows[i].cells[51].innerText);
+                        }
+
+                    }
+
+                    tr = document.createElement('tr');
+                    let item1 = 'Total';
+                    let item2 = total;
+                    let item3 = total2.toFixed(2);
+                    let item4 = total3;
+                    let item5 = total4.toFixed(2);
+                    let item6 = total5;
+                    let item7 = total6;
+                    let item8 = total7;
+                    let item9 = total8;
+                    let item10 = total9.toFixed(2);
+                    let item11 = skor_brd_ma(total9);
+                    let item12 = total11;
+                    let item13 = total12;
+                    let item14 = total13;
+                    let item15 = total14;
+                    let item16 = total15;
+                    let item17 = total16.toFixed(2);
+                    let item18 = skor_buah_Ma(total16.toFixed(2))
+                    let item19 = total17
+                    let item20 = (total17 / total * 100).toFixed(2)
+                    let item21 = skor_palepah_ma(total17 / total * 100)
+                    let item22 = skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(2)) + skor_brd_ma(total9);
+                    let item23 = total18.toFixed(2)
+                    let item24 = total19
+                    let item25 = (total19 / total18).toFixed(2)
+                    let item26 = brd_tph(total19 / total18)
+                    let item27 = total20
+                    let item28 = (total20 / total18).toFixed(2)
+                    let item29 = buah_tph(total20 / total18)
+                    let item30 = buah_tph(total20 / total18) + brd_tph(total19 / total18)
+                    let item31 = total21
+                    let item32 = total22
+                    let item33 = total23
+                    let item34 = (total23 / (total22 - total24) * 100).toFixed(2)
+                    let item35 = mb_mentah(total23 / (total22 - total24) * 100)
+                    let item36 = total25
+                    let item37 = (total25 / (total22 - total24) * 100).toFixed(2)
+                    let item38 = mb_masak(total25 / (total22 - total24) * 100)
+                    let item39 = total26
+                    let item40 = (total26 / (total22 - total24) * 100).toFixed(2)
+                    let item41 = mb_over(total26 / (total22 - total24) * 100)
+                    let item42 = total27
+                    let item43 = (total27 / (total22 - total24) * 100).toFixed(2)
+                    let item44 = mb_jangkos(total27 / (total22 - total24) * 100)
+                    let item45 = total28
+                    let item46 = ((total28 / total22) * 100).toFixed(2)
+                    let item47 = mb_vcut((total28 / total22) * 100)
+                    let item48 = total24
+                    let item49 = ((total24 / total22) * 100).toFixed(2)
+                    // let item50 = total21 + '/' + total29
+                    let item50 = total29 + '/' + total21
+                    // (element[1]['blok_mb'] ?? 0) + '/' + (element[1]['alas_mb'] ?? 0);
+                    let item51 = ((total29 / total21) * 100).toFixed(2)
+                    let item52 = mbalas_br((total29 / total21) * 100)
+                    let item53 = mbalas_br((total29 / total21) * 100) + mb_vcut((total28 / total22) * 100) + mb_jangkos(total27 / (total22 - total24) * 100) +
+                        mb_over(total26 / (total22 - total24) * 100) + mb_masak(total25 / (total22 - total24) * 100) + mb_mentah(total23 / (total22 - total24) * 100)
+                    let item54 = item53 + item30 + item22
+                    let item55 = kategori(item54)
+                    const items = [];
+                    for (let i = 1; i <= 55; i++) {
+                        items.push(eval(`item${i}`));
+                    }
+
+
+                    items.forEach((item, index) => {
+                        const itemElement = document.createElement('td');
+                        item
+                        itemElement.classList.add('text-center');
+                        itemElement.innerText = item;
+                        if (index === 0) {
+                            itemElement.setAttribute('colspan', '3'); // Add colspan attribute for item1
+                        }
+                        if (index === 54) {
+                            // Apply background color based on the value of item32
+                            if (item === 'SATISFACTORY') {
+                                itemElement.style.backgroundColor = '#fffc04';
+                            } else if (item === 'EXCELLENT') {
+                                itemElement.style.backgroundColor = '#5074c4';
+                            } else if (item === 'GOOD') {
+                                itemElement.style.backgroundColor = '#6074c4';
+                            } else if (item === 'POOR') {
+                                itemElement.style.backgroundColor = '#ff0404';
+                            } else if (item === 'FAIR') {
+                                itemElement.style.backgroundColor = '#ffb004';
+                            }
+                        }
+
+                        if (item54 >= 95) {
+                            tr.style.backgroundColor = '#5074c4';
+                        } else if (item54 >= 85) {
+                            tr.style.backgroundColor = '#5874c4';
+                        } else if (item54 >= 75) {
+                            tr.style.backgroundColor = '#10fc2c';
+                        } else if (item54 >= 65) {
+                            tr.style.backgroundColor = '#ffa404';
+                        } else {
+                            tr.style.backgroundColor = '#ff0404';
+                        }
+
+                        tr.appendChild(itemElement);
+                    });
+
+                    tbody1.appendChild(tr);
                 } else {
                     let inc = 1;
                     let tod = 0;
@@ -3461,7 +3688,8 @@ L.marker(center, { icon: textIcon }).addTo(map);
                         let item48 = mb_vcut(element[1]['PersenVcut']);
                         let item49 = element[1]['jml_abnormal'] ?? 0;
                         let item50 = element[1]['PersenAbr'] ?? 0;
-                        let item51 = (element[1]['blok_mb'] ?? 0) + '/' + (element[1]['alas_mb'] ?? 0);
+                        // let item51 = (element[1]['blok_mb'] ?? 0) + '/' + (element[1]['alas_mb'] ?? 0);
+                        let item51 = (element[1]['alas_mb'] ?? 0);
                         let item52 = element[1]['PersenKrgBrd'] ?? 0;
                         let item53 = mbalas_br(element[1]['PersenKrgBrd']);
                         let item54 = mbalas_br(element[1]['PersenKrgBrd']) + mb_vcut(element[1]['PersenVcut']) +
@@ -3489,7 +3717,7 @@ L.marker(center, { icon: textIcon }).addTo(map);
                                 if (item === 'SATISFACTORY') {
                                     itemElement.style.backgroundColor = '#fffc04';
                                 } else if (item === 'EXCELLENT') {
-                                    itemElement.style.backgroundColor = '#5874c4';
+                                    itemElement.style.backgroundColor = '#08fc2c';
                                 } else if (item === 'GOOD') {
                                     itemElement.style.backgroundColor = '#10fc2c';
                                 } else if (item === 'POOR') {
@@ -3502,11 +3730,11 @@ L.marker(center, { icon: textIcon }).addTo(map);
                             if (index === 54) {
                                 // Apply background color based on the value of item32
                                 if (item >= 95) {
-                                    itemElement.style.backgroundColor = '#fffc04';
+                                    itemElement.style.backgroundColor = '#08fc2c';
                                 } else if (item >= 85) {
                                     itemElement.style.backgroundColor = '#5874c4';
                                 } else if (item >= 75) {
-                                    itemElement.style.backgroundColor = '#10fc2c';
+                                    itemElement.style.backgroundColor = '#fffc04';
                                 } else if (item >= 65) {
                                     itemElement.style.backgroundColor = '#ffa404';
                                 } else {
@@ -3543,6 +3771,249 @@ L.marker(center, { icon: textIcon }).addTo(map);
                         tbody1.appendChild(tr)
                         // }
                     });
+
+
+                    var cellsx = document.getElementById('dataInspeksi');
+                    let total = 0;
+                    let total2 = 0;
+                    let total3 = 0;
+                    let total4 = 0;
+                    let total5 = 0;
+                    let total6 = 0;
+                    let total7 = 0;
+                    let total8 = 0;
+                    let total9 = 0;
+                    let total10 = 0;
+                    let total11 = 0;
+                    let total12 = 0;
+                    let total13 = 0;
+                    let total14 = 0;
+                    let total15 = 0;
+                    let total16 = 0;
+                    let total17 = 0;
+                    let total18 = 0;
+                    let total19 = 0;
+                    let total20 = 0;
+                    let total21 = 0;
+                    let total22 = 0;
+                    let total23 = 0;
+                    let total24 = 0;
+                    let total25 = 0;
+                    let total26 = 0;
+                    let total27 = 0;
+                    let total28 = 0;
+                    let total29 = 0;
+
+                    for (let i = 0; i < cellsx.rows.length; i++) {
+                        if (cellsx.rows[i].cells.length > 2) {
+                            total += Number(cellsx.rows[i].cells[2].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 3) {
+                            total2 += Number(cellsx.rows[i].cells[3].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 4) {
+                            total3 += Number(cellsx.rows[i].cells[4].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 5) {
+                            total4 += Number(cellsx.rows[i].cells[5].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 6) {
+                            total5 += Number(cellsx.rows[i].cells[6].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 7) {
+                            total6 += Number(cellsx.rows[i].cells[7].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 8) {
+                            total7 += Number(cellsx.rows[i].cells[8].innerText);
+                        }
+
+                        if (cellsx.rows[i].cells.length > 9) {
+                            total8 += Number(cellsx.rows[i].cells[9].innerText);
+                        }
+
+                        if (cellsx.rows[i].cells.length > 10) {
+                            total9 = total8 / total3;
+                        }
+                        if (cellsx.rows[i].cells.length > 11) {
+                            total10 = skor_brd_ma((total8 / total3));
+                        }
+                        if (cellsx.rows[i].cells.length > 12) {
+                            total11 += Number(cellsx.rows[i].cells[12].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 13) {
+                            total12 += Number(cellsx.rows[i].cells[13].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 14) {
+                            total13 += Number(cellsx.rows[i].cells[14].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 15) {
+                            total14 += Number(cellsx.rows[i].cells[15].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 16) {
+                            total15 += Number(cellsx.rows[i].cells[16].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 17) {
+                            total16 = total15 / (total3 + total15) * 100;
+                        }
+                        if (cellsx.rows[i].cells.length > 19) {
+                            total17 += Number(cellsx.rows[i].cells[19].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 23) {
+                            total18 += Number(cellsx.rows[i].cells[23].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 24) {
+                            total19 += Number(cellsx.rows[i].cells[24].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 27) {
+                            total20 += Number(cellsx.rows[i].cells[27].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 31) {
+                            total21 += Number(cellsx.rows[i].cells[31].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 32) {
+                            total22 += Number(cellsx.rows[i].cells[32].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 33) {
+                            total23 += Number(cellsx.rows[i].cells[33].innerText);
+                        }
+                        // abnormal
+                        if (cellsx.rows[i].cells.length > 48) {
+                            total24 += Number(cellsx.rows[i].cells[48].innerText);
+                        }
+                        //
+                        if (cellsx.rows[i].cells.length > 36) {
+                            total25 += Number(cellsx.rows[i].cells[36].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 39) {
+                            total26 += Number(cellsx.rows[i].cells[39].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 42) {
+                            total27 += Number(cellsx.rows[i].cells[42].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 45) {
+                            total28 += Number(cellsx.rows[i].cells[45].innerText);
+                        }
+                        if (cellsx.rows[i].cells.length > 50) {
+                            total29 += Number(cellsx.rows[i].cells[50].innerText);
+                        }
+
+                    }
+
+                    tr = document.createElement('tr');
+                    let item1 = 'Total';
+                    let item2 = total;
+                    let item3 = total2.toFixed(2);
+                    let item4 = total3;
+                    let item5 = total4.toFixed(2);
+                    let item6 = total5;
+                    let item7 = total6;
+                    let item8 = total7;
+                    let item9 = total8;
+                    let item10 = total9.toFixed(2);
+                    let item11 = skor_brd_ma(total9);
+                    let item12 = total11;
+                    let item13 = total12;
+                    let item14 = total13;
+                    let item15 = total14;
+                    let item16 = total15;
+                    let item17 = total16.toFixed(2);
+                    let item18 = skor_buah_Ma(total16.toFixed(2))
+                    let item19 = total17
+                    let item20 = (total17 / total * 100).toFixed(2)
+                    let item21 = skor_palepah_ma(total17 / total * 100)
+                    let item22 = skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(2)) + skor_brd_ma(total9);
+                    let item23 = total18
+                    let item24 = total19
+                    let item25 = (total19 / total18).toFixed(2)
+                    let item26 = brd_tph(total19 / total18)
+                    let item27 = total20
+                    let item28 = (total20 / total18).toFixed(2)
+                    let item29 = buah_tph(total20 / total18)
+                    let item30 = buah_tph(total20 / total18) + brd_tph(total19 / total18)
+                    let item31 = total21
+                    let item32 = total22
+                    let item33 = total23
+                    let item34 = (total23 / (total22 - total24) * 100).toFixed(2)
+                    let item35 = mb_mentah(total23 / (total22 - total24) * 100)
+                    let item36 = total25
+                    let item37 = (total25 / (total22 - total24) * 100).toFixed(2)
+                    let item38 = mb_masak(total25 / (total22 - total24) * 100)
+                    let item39 = total26
+                    let item40 = (total26 / (total22 - total24) * 100).toFixed(2)
+                    let item41 = mb_over(total26 / (total22 - total24) * 100)
+                    let item42 = total27
+                    let item43 = (total27 / (total22 - total24) * 100).toFixed(2)
+                    let item44 = mb_jangkos(total27 / (total22 - total24) * 100)
+                    let item45 = total28
+                    let item46 = ((total28 / total22) * 100).toFixed(2)
+                    let item47 = mb_vcut((total28 / total22) * 100)
+                    let item48 = total24
+                    let item49 = ((total24 / total22) * 100).toFixed(2)
+                    // let item50 = total21 + '/' + total29
+                    let item50 = total29 + '/' + total21
+                    // (element[1]['blok_mb'] ?? 0) + '/' + (element[1]['alas_mb'] ?? 0);
+                    let item51 = ((total29 / total21) * 100).toFixed(2)
+                    let item52 = mbalas_br((total29 / total21) * 100)
+                    let item53 = mbalas_br((total29 / total21) * 100) + mb_vcut((total28 / total22) * 100) + mb_jangkos(total27 / (total22 - total24) * 100) +
+                        mb_over(total26 / (total22 - total24) * 100) + mb_masak(total25 / (total22 - total24) * 100) + mb_mentah(total23 / (total22 - total24) * 100)
+                    let item54 = mbalas_br((total29 / total21) * 100) + mb_vcut((total28 / total22) * 100) + mb_jangkos(total27 / (total22 - total24) * 100) +
+                        mb_over(total26 / (total22 - total24) * 100) + mb_masak(total25 / (total22 - total24) * 100) + mb_mentah(total23 / (total22 - total24) * 100) +
+                        buah_tph(total20 / total18) + buah_tph(total20 / total18) + skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(2)) + skor_brd_ma(total9);
+                    let item55 = kategori(item54)
+                    const items = [];
+                    for (let i = 1; i <= 55; i++) {
+                        items.push(eval(`item${i}`));
+                    }
+
+
+                    items.forEach((item, index) => {
+                        const itemElement = document.createElement('td');
+                        item
+                        itemElement.classList.add('text-center');
+                        itemElement.innerText = item;
+                        if (index === 0) {
+                            itemElement.setAttribute('colspan', '2'); // Add colspan attribute for item1
+                        }
+
+
+
+
+                        if (index === 55) {
+                            // Apply background color based on the value of item32
+                            if (item === 'SATISFACTORY') {
+                                itemElement.style.backgroundColor = '#ffdc04';
+                            } else if (item === 'EXCELLENT') {
+                                itemElement.style.backgroundColor = '#5074c4';
+                            } else if (item === 'GOOD') {
+                                itemElement.style.backgroundColor = '#08fc2c';
+                            } else if (item === 'POOR') {
+                                itemElement.style.backgroundColor = '#ff0404';
+                            } else if (item === 'FAIR') {
+                                itemElement.style.backgroundColor = '#ffb004';
+                            }
+                        }
+
+                        if (item54 >= 95) {
+                            tr.style.backgroundColor = '#5074c4';
+                        } else if (item54 >= 85) {
+                            tr.style.backgroundColor = '#08fc2c';
+                        } else if (item54 >= 75) {
+                            tr.style.backgroundColor = '#ffdc04';
+                        } else if (item54 >= 65) {
+                            tr.style.backgroundColor = '#ffa404';
+                        } else {
+                            tr.style.backgroundColor = '#ff0404';
+                        }
+
+                        tr.appendChild(itemElement);
+                    });
+
+                    tbody1.appendChild(tr);
+
+
+                    // }
+
+                    // end table 
                 }
 
             }

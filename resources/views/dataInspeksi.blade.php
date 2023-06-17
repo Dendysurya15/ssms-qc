@@ -783,6 +783,9 @@
     @endforeach
     @endforeach
 
+
+    @if($regional == 2 || $regional == '2' )
+
     <!-- plasma est / will  -->
     @foreach ($dataSkor_ancak as $key => $itemx)
     @foreach ($itemx as $key2 => $plasma)
@@ -902,6 +905,7 @@
 
 
 
+
         @if($regional == 2 || $regional == '2' )
         @foreach ($plasma_tph as $keys => $value)
         @if($trans == $keys)
@@ -934,4 +938,156 @@
     </tr>
     @endforeach
     @endforeach
+
+    @else
+
+    <!-- plasma est / will  -->
+    @foreach ($dataSkor_ancak as $key => $itemx)
+    @foreach ($itemx as $key2 => $plasma)
+    @php
+    $skor_kategori_akhirm = skor_kategori_akhir(check_array('allSkor_est', $plasma));
+    $skor_totalancak = skor_brd_ma($plasma['btr_jjg_ma_est']) + skor_buah_Ma($plasma['jjg_tgl_ma_est']) + $plasma['Skor_ps_est'];
+    @endphp
+    <tr>
+        <td style="background-color : yellow; color: #000000;" colspan="2">
+            {{$key2}}
+        </td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['tot_jml_pokok_ma']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['tot_luas_ha_ma']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['tot_jml_jjg_panen_ma']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['akp_real_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['p_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['k_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['gl_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['total_brd_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['btr_jjg_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{skor_brd_ma($plasma['btr_jjg_ma_est'])}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['bhts_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['bhtm1_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['bhtm2_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['bhtm3_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['tot_jjg_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['jjg_tgl_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{skor_buah_Ma($plasma['jjg_tgl_ma_est'])}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['ps_ma_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['PerPSMA_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$plasma['Skor_ps_est']}}</td>
+        <td style="background-color : yellow; color: #000000;">{{$skor_totalancak}}</td>
+
+        @foreach($dataSkor_transport as $trans => $itemx)
+        @foreach($itemx as $trans1 => $itemx2)
+
+        @if ($trans1 == $key2)
+        @php
+        $skor_totaltrans = skor_brd_tinggal($itemx2['bt_tph_total']) + skor_buah_tinggal($itemx2['jjg_tph_total']) ;
+        @endphp
+
+        @if($regional == 2 || $regional == '2' )
+        @foreach ($plasma_tph as $keys => $value)
+        @if($trans == $keys)
+        @foreach ($value as $keys1 => $value1)
+        @if($keys1 == $trans1)
+
+        <td style="background-color : yellow; color: #000000;">{{ $value1['tph_tod'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['total_bt'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['bt_tph'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_bt'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['total_rst'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['rst_tph'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $value1['scorre_rst'] + $value1['scorre_bt']  }}</td>
+
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+        @else
+        <td style="background-color : yellow; color: #000000;">{{ $itemx2['tph_sample_total'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $itemx2['bt_total'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $itemx2['bt_tph_total'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ skor_brd_tinggal($itemx2['bt_tph_total']) }}</td>
+
+        <td style="background-color : yellow; color: #000000;">{{ $itemx2['jjg_total'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $itemx2['jjg_tph_total'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ skor_buah_tinggal($itemx2['jjg_tph_total']) }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $skor_totaltrans }}</td>
+
+        @endif
+
+
+
+
+
+        @endif
+
+        @endforeach
+        @endforeach
+
+        @foreach($dataSkor_buah as $buah => $item_buah)
+        @foreach($item_buah as $buah1 => $item_buah1)
+
+        @if ($buah1 == $key2)
+        @php
+        $total_skor_mutu_buah = skor_buah_mentah_mb($item_buah1['tot_PersenBuahMentah']) + skor_buah_masak_mb($item_buah1['tot_PersenBuahMasak']) + skor_buah_over_mb($item_buah1['tot_PersenBuahOver']) + skor_jangkos_mb($item_buah1['tot_PersenPerJanjang']) + skor_vcut_mb($item_buah1['tot_PersenVcut']) + skor_abr_mb($item_buah1['tot_PersenKrgBrd']);
+        $grand_total_skor = $skor_totalancak + $skor_totaltrans + $total_skor_mutu_buah;
+        $grand_total_skor_kategori = skor_kategori_akhir($grand_total_skor);
+        @endphp
+
+
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_blok'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_jjg'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_mentah'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_PersenBuahMentah'] }}</td>
+        <td style="background-color : yellow; color: #000000;"> {{skor_buah_mentah_mb($item_buah1['tot_PersenBuahMentah'])}}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_matang'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_PersenBuahMasak'] }}</td>
+        <td style="background-color : yellow; color: #000000;"> {{skor_buah_masak_mb($item_buah1['tot_PersenBuahMasak'])}}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_over'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_PersenBuahOver'] }}</td>
+        <td style="background-color : yellow; color: #000000;"> {{skor_buah_over_mb($item_buah1['tot_PersenBuahOver'])}}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_empty'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_PersenPerJanjang'] }}</td>
+        <td style="background-color : yellow; color: #000000;"> {{skor_jangkos_mb($item_buah1['tot_PersenPerJanjang'])}}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_vcut'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_PersenVcut'] }}</td>
+        <td style="background-color : yellow; color: #000000;"> {{skor_vcut_mb($item_buah1['tot_PersenVcut'])}}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_abr'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_PersenAbr'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_alas'] }}/{{ $item_buah1['tot_blok'] }}</td>
+        <td style="background-color : yellow; color: #000000;">{{ $item_buah1['tot_PersenKrgBrd'] }}</td>
+        <td style="background-color : yellow; color: #000000;"> {{skor_abr_mb($item_buah1['tot_PersenKrgBrd'])}}</td>
+        <td style="background-color : yellow; color: #000000;"> {{$total_skor_mutu_buah}}</td>
+        <td style="background-color: {{ $grand_total_skor_kategori[0] }};"> {{$grand_total_skor}}</td>
+        <td style="background-color: {{ $skor_kategori_akhirx[0] }};">{{ $skor_kategori_akhirx[1] }}</td>
+
+
+
+        @if($regional == 2 || $regional == '2' )
+        @foreach ($plasma_tph as $keys => $value)
+        @if($trans == $keys)
+        @foreach ($value as $keys1 => $value1)
+        @if($keys1 == $trans1)
+
+
+
+        @endif
+        @endforeach
+        @endif
+        @endforeach
+
+        @else
+
+
+        @endif
+
+
+        @endif
+        @endforeach
+        @endforeach
+
+    </tr>
+    @endforeach
+    @endforeach
+
+    @endif
 </body>

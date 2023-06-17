@@ -139,7 +139,8 @@
                 </select>
             </div>
             <div class="col-md-3 col-12">
-                @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada' || session('user_name') == 'Andri Mursalim' || session('user_name') == 'Eko Nor Sawaludin')
+                @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
+
                 <a href="{{ route('listktu') }}" class="btn btn-success mr-2">List KTU</a>
                 <a href="{{ route('user_qc', ['lokasi_kerja' => session('lok')]) }}" class="btn btn-success mr-2">List
                     All
@@ -169,6 +170,18 @@
 @include('layout/footer')
 
 <script type="text/javascript">
+    var lokasiKerja = "{{ session('lok') }}";
+    // console.log(lokasiKerja);
+    if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
+        $('#regionalData').val('2');
+
+    } else if (lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') {
+        $('#regionalData').val('3');
+
+    } else if (lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') {
+        $('#regionalData').val('4');
+
+    }
     $(document).ready(function() {
         year = $('#yearData option:selected').val();
         regional = $('#regionalData option:selected').val();

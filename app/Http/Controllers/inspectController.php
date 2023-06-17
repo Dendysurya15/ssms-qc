@@ -1052,6 +1052,7 @@ class inspectController extends Controller
             }
         }
 
+
         $dataAncaks = array();
         foreach ($groupedData as $key => $value) {
             foreach ($queryEstate as $est => $estval)
@@ -4308,7 +4309,7 @@ class inspectController extends Controller
                 }
             }
         }
-
+        // dd($dataAncaksRegs2);
         $ancakRegss2 = array();
        
         foreach ($dataAncaksRegs2 as $key => $value) {
@@ -17836,11 +17837,23 @@ class inspectController extends Controller
                 foreach ($value2 as $key3 => $value3) {
                     if (is_array($value3)) {
                         foreach ($value3 as $item) {
-                            $nestedKey = $item['blok'];
-                            if (!isset($newArrayANcak[$key1][$key2][$key3][$nestedKey])) {
-                                $newArrayANcak[$key1][$key2][$key3][$nestedKey] = [];
+                            // Change the key "status_panen" to "status_panenMA"
+                            $item['status_panenMA'] = $item['status_panen'];
+                            unset($item['status_panen']);
+
+                            $item['luas_blokMa'] = $item['luas_blok'];
+                            unset($item['luas_blok']);
+
+                            $nestedDate = date('Y-m-d', strtotime($item['datetime'])); // Format datetime as Y-m-d
+                            $nestedBlok = $item['blok']; // Group by "blok"
+
+                            if (!isset($newArrayANcak[$key1][$key2][$key3][$nestedDate])) {
+                                $newArrayANcak[$key1][$key2][$key3][$nestedDate] = [];
                             }
-                            $newArrayANcak[$key1][$key2][$key3][$nestedKey][] = $item;
+                            if (!isset($newArrayANcak[$key1][$key2][$key3][$nestedDate][$nestedBlok])) {
+                                $newArrayANcak[$key1][$key2][$key3][$nestedDate][$nestedBlok] = [];
+                            }
+                            $newArrayANcak[$key1][$key2][$key3][$nestedDate][$nestedBlok][] = $item;
                         }
                     } else {
                         $newArrayANcak[$key1][$key2][$key3] = $value3;
@@ -17848,6 +17861,10 @@ class inspectController extends Controller
                 }
             }
         }
+
+        
+
+        // dd($newArrayANcak['MRE']['June']);
 
         $newArrayTrans = [];
         foreach ($defaultTrans as $key1 => $value1) {
@@ -17857,77 +17874,161 @@ class inspectController extends Controller
                 foreach ($value2 as $key3 => $value3) {
                     if (is_array($value3)) {
                         foreach ($value3 as $item) {
-                            $nestedKey = $item['blok'];
-                            if (!isset($newArrayTrans[$key1][$key2][$key3][$nestedKey])) {
-                                $newArrayTrans[$key1][$key2][$key3][$nestedKey] = [];
+                            // Change the key "status_panen" to "status_panenMA"
+                            $item['status_panenTran'] = $item['status_panen'];
+                            unset($item['status_panen']);
+
+                            $item['luas_blokTrans'] = $item['luas_blok'];
+                            unset($item['luas_blok']);
+
+                            $nestedDate = date('Y-m-d', strtotime($item['datetime'])); // Format datetime as Y-m-d
+                            $nestedBlok = $item['blok']; // Group by "blok"
+
+                            if (!isset($newArrayTrans[$key1][$key2][$key3][$nestedDate])) {
+                                $newArrayTrans[$key1][$key2][$key3][$nestedDate] = [];
                             }
-                            $newArrayTrans[$key1][$key2][$key3][$nestedKey][] = $item;
+                            if (!isset($newArrayTrans[$key1][$key2][$key3][$nestedDate][$nestedBlok])) {
+                                $newArrayTrans[$key1][$key2][$key3][$nestedDate][$nestedBlok] = [];
+                            }
+                            $newArrayTrans[$key1][$key2][$key3][$nestedDate][$nestedBlok][] = $item;
                         }
                     } else {
                         $newArrayTrans[$key1][$key2][$key3] = $value3;
                     }
                 }
             }
-    }
+        }
 
+        // dd($newArrayTrans['MRE']['June']['OC'], $newArrayANcak['MRE']['June']['OC']);
         $mutuTrans = array_replace_recursive($newArrayTrans, $newArrayANcak);
 
-  
-        $newTransTPh = [];
-        foreach ($mutuTrans as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                if (is_array($value1)) {
-                    foreach ($value1 as $key2 => $value2) {
-                        $tot_blokEst = 0;
-                        $tot_blokNew = 0;
-                     
-        
-                        if (is_array($value2)) {
-                            foreach ($value2 as $key3 => $value3) {
-                                if (is_array($value3)) {
-                                    $tot_blok = count($value3);
-                                   
-                                    foreach ($value3 as $key4 => $value4) {
-                                        // $status_panen = $value4['status_panen'];
-                                        $luas_blok = $value4['luas_blok'];
-                                        $status_panen = explode(",", $value4['status_panen']);
+        // dd($mutuTrans['MRE']['June']['OA']);
+
+        // $newTransTPh = [];
+        // foreach ($mutuTrans as $key => $value) {
+        //     foreach ($value as $key1 => $value1) {
+        //         if (is_array($value1)) { 
+        //             foreach ($value1 as $key2 => $value2) { 
+        //                 if (is_array($value2)) {
+        //                     foreach ($value2 as $key3 => $value3) {
+        //                         if (is_array($value3)) {
+        //                             foreach ($value3 as $key4 => $value4) {
+        //                                 $tot_blok = count($value4);
+        //                                 foreach ($value4 as $key5 => $value5) {
+        //                                     $status_panen = $value5['status_panenMA'] ?? 'kosong';
+        //                                     $luas_blok = $value5['luas_blok'];
+        //                                 }
+        //                                 $newTransTPh[$key][$key1][$key2][$key3][$key4]['tph_sample'] = $tot_blok;
+        //                                 $newTransTPh[$key][$key1][$key2][$key3][$key4]['status_panen'] = $status_panen;
+        //                                 $newTransTPh[$key][$key1][$key2][$key3][$key4]['luas_blok'] = $luas_blok;
+                                        
+        //                                 if ($status_panen <= 3 && $status_panen != 'kosong') {
+        //                                     $new_blok = round($luas_blok * 1.3, 2);
+        //                                 } else {
+        //                                     $new_blok = $tot_blok;
+        //                                 }
+                                        
+        //                                 // $tot_blokEst += $tot_blok;
+        //                                 // $tot_blokNew += $new_blok;
+                                        
+        //                                 $newTransTPh[$key][$key1][$key2][$key3][$key4]['tph_sampleNew'] = $new_blok;
+
+        //                             }
+
+        //                             $newTransTPh[$key][$key1][$key2][$key3][$key4]['tph_sampleNew'] = $tot_blokNew;
+        //                         } else {
+        //                             $newTransTPh[$key][$key1][$key2][$key3][$key4]['tph_sample'] = 0;
+        //                             $newTransTPh[$key][$key1][$key2][$key3][$key4]['tph_sampleNew'] = 0;
+        //                         }
+                              
+        //                     }
+                           
+        //                 }
+                        
+                      
+        //             }
+                   
+        //         }
+        //     }
+        // }
+
+        if ($reg == 2) {
+            $newTransv2 = array();
+            foreach ($mutuTrans as $key => $value) {
+                foreach ($value as $key1 => $value1) {
+                    $reg_blok =0;
+                    if (is_array($value1)) {
+                        foreach ($value1 as $key2 => $value2) {
+                            if (is_array($value2)) {
+                                    $wil_blok =0;
+                                foreach ($value2 as $key3 => $value3) {
+                                    if (is_array($value3)) {
+                                        $est_blok = 0; // Moved outside the innermost loop
+                                        $largestLuasBlokMa = 0;
+                                        foreach ($value3 as $key4 => $value4) {
+                                            if (is_array($value4)) {
+                                                $tot_blok = count($value4);
+                                                foreach ($value4 as $key5 => $value5) {
+                                                    $status_panen = $value5['status_panenMA'] ?? 'kosong';
+                                                    $luas_blok = $value5['luas_blokMa'] ?? 0;
+    
+                                                    if ($luas_blok > $largestLuasBlokMa) {
+                                                        $largestLuasBlokMa = $luas_blok; // Update the largest luas_blokMa value
+                                                    }
+            
+                                                    if ($status_panen <= 3 && $status_panen != 'kosong') {
+                                                        $new_blok = round($luas_blok * 1.3, 2);
+                                                    } else {
+                                                        $new_blok = $tot_blok;
+                                                    }
+            
+                                                    $newTransv2[$key][$key1][$key2][$key3][$key4]['tph_sampleNew'] = $new_blok;
+                                                    $newTransv2[$key][$key1][$key2][$key3][$key4]['status_panen'] = $status_panen;
+                                                    $newTransv2[$key][$key1][$key2][$key3][$key4]['luas_blok'] = $largestLuasBlokMa;
+            
+                                                   
+                                                }
+                                                $est_blok += $new_blok;
+                                            }
+                                        }
+                                        $newTransv2[$key][$key1][$key2][$key3]['tph_sampleEst'] = $est_blok; 
+                                        $wil_blok += $est_blok;
                                     }
-                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sample'] = $tot_blok;
-                                    $newTransTPh[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
-                                    $newTransTPh[$key][$key1][$key2][$key3]['luas_blok'] = $luas_blok;
-
-                                    if ($status_panen[0] <= 3) {
-                                       $new_blok = round($luas_blok * 1.3,2);
-                                    }else {
-                                        $new_blok = $tot_blok;
-                                    }
-                                    $tot_blokEst += $tot_blok;
-                                    $tot_blokNew += $new_blok;
-
-                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sampleNew'] = $new_blok;
-
-                                    
-                                }else {
-                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sample'] = 0;
-                                    $newTransTPh[$key][$key1][$key2][$key3]['tph_sampleNew'] = 0;
                                 }
                             }
+                            $newTransv2[$key][$key1][$key2]['tph_sampleWil'] = $wil_blok;
+                            $reg_blok += $wil_blok;
                         }
-        
-                        $newTransTPh[$key][$key1][$key2]['tph_sampAFD'] = $tot_blokEst;
-                        $newTransTPh[$key][$key1][$key2]['tph_sampNEW'] = $tot_blokNew;
                     }
+                    $newTransv2[$key][$key1]['tph_sampleReg'] = $reg_blok;
                 }
             }
+            
         }
         
 
+        
+
+        // dd($newTransv2['MRE']['June'],$mutuTrans['MRE']['June']);
+        // dd($newTransTPh['MRE']['June']['OC'],$mutuTrans['MRE']['June']['OC']);
+        // $tph_est = array();
+        
+        // foreach ($newTransTPh as $key => $value) {
+        //     foreach ($value as $key1 => $value2) {
+        //             $sum_tphest = 0;
+        //         foreach ($value2 as $key2 => $value3) {
+        //         //    dd($value3);
+        //                 $sum_tphest += $value3['tph_sampNEW'];
+        //         }# code...
+        //         $tph_est[$key][$key1]['tph_est'] = $sum_tphest;
+        //     }# code...
+        // }
       
       
                 
-        // dd($newTransTPh['KNE']['May']['OA'],$mutuTrans['KNE']['May']['OA']);
+        // dd($newTransTPh,$tph_est);
 
-        dd($newArrayTrans['MRE']['June'],$newArrayANcak['MRE']['June'],$newTransTPh['MRE']['June'],$mutuTrans['MRE']['June']);
+        // dd($newArrayTrans['MRE']['June'],$newArrayANcak['MRE']['June'],$newTransTPh['MRE']['June'],$mutuTrans['MRE']['June']);
 
     
 
@@ -18095,7 +18196,7 @@ class inspectController extends Controller
                         $bulananBh[$key][$key1][$key2]['skor_kr'] = 0;
                         $bulananBh[$key][$key1][$key2]['TOTAL_SKOR'] = 0;
                     }
-
+                
                 // dd($jjgMsk);
                 if ($jum_kr != 0) {
                     $total_kr = round($jum_kr / $tph_blok, 2);
@@ -18246,7 +18347,7 @@ class inspectController extends Controller
 
                         //perhitungan untuk est
                         // dd($value3);
-                        $total_sample += $dataBLok;
+                       
                         $total_brd += $sum_bt;
                         $total_buah += $sum_rst;
                     } else {
@@ -18259,6 +18360,18 @@ class inspectController extends Controller
                         $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
                     }
+                    if ($reg == 2) {
+                        foreach ($newTransv2 as $keys => $value) if($keys == $key ) {
+                            foreach ($value as $keys1 => $value1) if($keys1 == $key1 ){
+                                foreach ($value1 as $keys2 => $value3) if($keys2 == $key2 ){
+                                    $total_sample += $dataBLok;
+                                 }# code...dd($value1);
+                            }# code...
+                        }
+                    }else {
+                        $total_sample += $dataBLok;
+                    }
+                   
                 if ($total_sample != 0) {
                     $brdPertph = round($total_brd / $total_sample, 2);
                 } else {
@@ -18273,16 +18386,6 @@ class inspectController extends Controller
 
                 $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
 
-                $nonZeroValues = array_filter([$total_sample, $total_brd]);
-                
-                if (!empty($nonZeroValues) && !in_array(0, $nonZeroValues)) {
-                   $mutuTransAFD[$key][$key1]['total_skor'] = $totalSkor;
-                } else {
-                   $mutuTransAFD[$key][$key1]['total_skor'] = 0;
-                }
-                
-
-
                 $mutuTransAFD[$key][$key1]['total_sampleEST'] = $total_sample;
                 $mutuTransAFD[$key][$key1]['total_brdEST'] = $total_brd;
                 $mutuTransAFD[$key][$key1]['total_brdPertphEST'] = $brdPertph;
@@ -18290,10 +18393,19 @@ class inspectController extends Controller
                 $mutuTransAFD[$key][$key1]['total_buahPertphEST'] = $buahPerTPH;
                 $mutuTransAFD[$key][$key1]['skor_brd'] =   skor_brd_tinggal($brdPertph);;
                 $mutuTransAFD[$key][$key1]['skor_buah'] = skor_buah_tinggal($buahPerTPH);;
-                // $mutuTransAFD[$key][$key1]['total_skor'] = $totalSkor;
-            } 
+                $mutuTransAFD[$key][$key1]['total_skor'] = $totalSkor;
+            } else {
+                $mutuTransAFD[$key][$key1]['total_sampleEST'] = 0;
+                $mutuTransAFD[$key][$key1]['total_brdEST'] = 0;
+                $mutuTransAFD[$key][$key1]['total_brdPertphEST'] = 0;
+                $mutuTransAFD[$key][$key1]['total_buahEST'] = 0;
+                $mutuTransAFD[$key][$key1]['total_buahPertphEST'] = 0;
+                $mutuTransAFD[$key][$key1]['skor_brd'] = 0;
+                $mutuTransAFD[$key][$key1]['skor_buah'] = 0;
+                $mutuTransAFD[$key][$key1]['total_skor'] = 0;
+            }
         }
-        // dd($mutuTransAFD);
+        dd($mutuTransAFD);
 
         //mt ancak 
         $GraphMTancak = array();
@@ -19420,7 +19532,7 @@ class inspectController extends Controller
         if ($reg == 1 ) {
             $mutuAncak = array_combine(
                 array_map(function ($key) {
-                    $parts = explode('-', $key);
+                    $parts = explode('-SSMS', $key);
                     return $parts[0];
                 }, array_keys($mutuAncak)),
                 array_map(function ($value) {
@@ -19439,6 +19551,13 @@ class inspectController extends Controller
         
         }
      
+        // foreach ($mutuAncak as $key => $value) {
+        //     $mutuAncak[$key] = array_map(function ($item) {
+        //         return json_decode(json_encode($item), true);
+        //     }, $value);
+        // }
+        
+        $mutuAncak = json_decode(json_encode($mutuAncak), true);
         // dd($mutuAncak);
      
         // dd($mutuAncak);
@@ -19476,7 +19595,7 @@ class inspectController extends Controller
         if ($reg == 1 ) {
             $mutuTransport = array_combine(
                 array_map(function ($key) {
-                    $parts = explode('-', $key);
+                    $parts = explode('-SSMS', $key);
                     return $parts[0];
                 }, array_keys($mutuTransport)),
                 array_map(function ($value) {
@@ -19495,6 +19614,14 @@ class inspectController extends Controller
         
         }
 
+        // foreach ($mutuTransport as $key => $value) {
+        //     $mutuTransport[$key] = array_map(function ($item) {
+        //         return json_decode(json_encode($item), true);
+        //     }, $value);
+        // }
+        
+        $mutuTransport = json_decode(json_encode($mutuTransport), true);
+    
         // dd($mutuAncak,$mutuTransport);
 
         $ancak = array();
@@ -19968,6 +20095,7 @@ class inspectController extends Controller
             'estates' => $EstMapVal
         ]);
     }
+
     public function getMapsdetail(Request $request)
     {
         $est = $request->input('est');
@@ -20012,352 +20140,352 @@ class inspectController extends Controller
         ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
         ->where('est', '=', $est)
         ->get();
-    $testing = json_decode($test, true);
+        $testing = json_decode($test, true);
 
-        $id = $queryAfd[0]['id'];
+            $id = $queryAfd[0]['id'];
 
-        $queryBlokMA = DB::connection('mysql2')->table('mutu_ancak_new')
-        ->select('mutu_ancak_new.*','mutu_ancak_new.blok as nama_blok')
-        ->whereDate('mutu_ancak_new.datetime', $date)
-        ->where('estate', $est)
-        ->where('afdeling', $afd)
-        ->orderBy('mutu_ancak_new.datetime', 'desc')
-        ->groupBy('nama_blok')
-        ->pluck('blok');
-        $queryBlokMA = json_decode($queryBlokMA, true);
+            $queryBlokMA = DB::connection('mysql2')->table('mutu_ancak_new')
+            ->select('mutu_ancak_new.*','mutu_ancak_new.blok as nama_blok')
+            ->whereDate('mutu_ancak_new.datetime', $date)
+            ->where('estate', $est)
+            ->where('afdeling', $afd)
+            ->orderBy('mutu_ancak_new.datetime', 'desc')
+            ->groupBy('nama_blok')
+            ->pluck('blok');
+            $queryBlokMA = json_decode($queryBlokMA, true);
 
-        
-        $queryBlokMB = DB::connection('mysql2')->table('mutu_buah')
-        ->select('mutu_buah.*','mutu_buah.blok as nama_blok')
-        ->whereDate('mutu_buah.datetime', $date)
-        ->where('estate', $est)
-        ->where('afdeling', $afd)
-        ->orderBy('mutu_buah.datetime', 'desc')
-        ->groupBy('nama_blok')
-        ->pluck('blok');
+            
+            $queryBlokMB = DB::connection('mysql2')->table('mutu_buah')
+            ->select('mutu_buah.*','mutu_buah.blok as nama_blok')
+            ->whereDate('mutu_buah.datetime', $date)
+            ->where('estate', $est)
+            ->where('afdeling', $afd)
+            ->orderBy('mutu_buah.datetime', 'desc')
+            ->groupBy('nama_blok')
+            ->pluck('blok');
 
-        $queryBlokMB = json_decode($queryBlokMB, true);
-        $queryBlokMT = DB::connection('mysql2')->table('mutu_transport')
-        ->select('mutu_transport.*','mutu_transport.blok as nama_blok')
-        ->whereDate('mutu_transport.datetime', $date)
-        ->where('estate', $est)
-        ->where('afdeling', $afd)
-        ->orderBy('mutu_transport.datetime', 'desc')
-        ->groupBy('nama_blok')
-        ->pluck('blok');
+            $queryBlokMB = json_decode($queryBlokMB, true);
+            $queryBlokMT = DB::connection('mysql2')->table('mutu_transport')
+            ->select('mutu_transport.*','mutu_transport.blok as nama_blok')
+            ->whereDate('mutu_transport.datetime', $date)
+            ->where('estate', $est)
+            ->where('afdeling', $afd)
+            ->orderBy('mutu_transport.datetime', 'desc')
+            ->groupBy('nama_blok')
+            ->pluck('blok');
 
-        $queryBlokMT = json_decode($queryBlokMT, true);
+            $queryBlokMT = json_decode($queryBlokMT, true);
 
-        //merge all blok untuk mendapatkan semua blok ma mb mt visit hari tersebut
-        $allBlokSidakRaw = array_merge($queryBlokMA, $queryBlokMB, $queryBlokMT);
+            //merge all blok untuk mendapatkan semua blok ma mb mt visit hari tersebut
+            $allBlokSidakRaw = array_merge($queryBlokMA, $queryBlokMB, $queryBlokMT);
 
-        //array unique mengambil eliminasi blok yg sama
-        $allBlokSidakRaw = array_unique($allBlokSidakRaw);
-        
-        //sisipkan 0 setelah digit pertama
+            //array unique mengambil eliminasi blok yg sama
+            $allBlokSidakRaw = array_unique($allBlokSidakRaw);
+            
+            //sisipkan 0 setelah digit pertama
 
-        
-        $blokSidak = array();
-        foreach($allBlokSidakRaw as $value){
-            $length = strlen($value);
-            $blokSidak[] = substr($value, 0, $length - 3) ;
-            $modifiedStr2  = substr($value, 0, $length - 2) ;
-            $blokSidak[] = substr($value, 0, $length - 2) ;
-           $blokSidak[] =  substr_replace($modifiedStr2, "0", 1, 0);
-        }
-
-        // dd($allBlokRaw, $allBlok);
-        $blokSidakResult = DB::connection('mysql2')
-        ->table('blok')
-        ->select('blok.nama as nama_blok_visit')
-        ->where('afdeling',$id)
-        ->whereIn('nama',$blokSidak)
-        ->groupBy('nama_blok_visit')
-        ->pluck('nama_blok_visit');
-        
-        $queryBlok = DB::connection('mysql2')->table('blok')
-            ->select("blok.*")
-            ->where('afdeling', '=', $id)
-            ->get();
-        $queryBlok = json_decode($queryBlok, true); 
-        
-        $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
-            $carry[$item['nama']][] = $item;
-            return $carry;
-        }, []);
-
-        $bloks_afds = [];
-        foreach ($bloks_afd as $blok => $coords) {
-            foreach ($coords as $coord) {
-                $bloks_afds[] = [
-                    'blok' => $blok, 
-                    'lat' => $coord['lat'],
-                     'lon' => $coord['lon'],
-                    ];
+            
+            $blokSidak = array();
+            foreach($allBlokSidakRaw as $value){
+                $length = strlen($value);
+                $blokSidak[] = substr($value, 0, $length - 3) ;
+                $modifiedStr2  = substr($value, 0, $length - 2) ;
+                $blokSidak[] = substr($value, 0, $length - 2) ;
+            $blokSidak[] =  substr_replace($modifiedStr2, "0", 1, 0);
             }
-        }
-    
-        $plotBlokAll = [];
-        foreach ($bloks_afd as $key => $coord) {
-            foreach ($coord as $key2 => $value) {
-                $plotBlokAll[$key][] = [$value['lat'], $value['lon']];
-            }
-        }
-        
-        // Sort the coordinates in ascending order based on the first value
-     
-        
-        //  dd($plotBlokAll);
 
-        $queryTrans = DB::connection('mysql2')->table("mutu_transport")
-            ->select("mutu_transport.*", "estate.wil")
-            ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
-            ->where('mutu_transport.estate', $est)
-            ->where('mutu_transport.afdeling', $afd)
-            ->where('datetime', 'like', '%' . $date . '%')
-            ->where('mutu_transport.afdeling', '!=', 'Pla')
-            ->get();
-        $queryTrans = json_decode($queryTrans, true);
+            // dd($allBlokRaw, $allBlok);
+            $blokSidakResult = DB::connection('mysql2')
+            ->table('blok')
+            ->select('blok.nama as nama_blok_visit')
+            ->where('afdeling',$id)
+            ->whereIn('nama',$blokSidak)
+            ->groupBy('nama_blok_visit')
+            ->pluck('nama_blok_visit');
+            
+            $queryBlok = DB::connection('mysql2')->table('blok')
+                ->select("blok.*")
+                ->where('afdeling', '=', $id)
+                ->get();
+            $queryBlok = json_decode($queryBlok, true); 
+            
+            $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
+                $carry[$item['nama']][] = $item;
+                return $carry;
+            }, []);
 
-        // dd($queryTrans);
-
-        $queryBuah = DB::connection('mysql2')->table("mutu_buah")
-            ->select("mutu_buah.*", "estate.wil")
-            ->join('estate', 'estate.est', '=', 'mutu_buah.estate')
-            ->where('mutu_buah.estate', $est)
-            ->where('mutu_buah.afdeling', $afd)
-            ->where('datetime', 'like', '%' . $date . '%')
-            ->where('mutu_buah.afdeling', '!=', 'Pla')
-            ->get();
-        $queryBuah = json_decode($queryBuah, true);
-
-        $groupedTrans = array_reduce($queryTrans, function ($carry, $item) {
-            $carry[$item['blok']][] = $item;
-            return $carry;
-        }, []);
-
-        $groupedBuah = array_reduce($queryBuah, function ($carry, $item) {
-            $carry[$item['blok']][] = $item;
-            return $carry;
-        }, []);
-
-        // dd($groupedBuah);
-        $buah_plot = [];
-        foreach ($groupedBuah as $blok => $coords) {
-            foreach ($coords as $coord) {
-                $buah_plot[$blok][] = ['blok' => $blok,
-                 'lat' => $coord['lat'],
-                  'lon' => $coord['lon'],
-                  'foto_temuan' => $coord['foto_temuan'],
-                  'komentar' => $coord['komentar']
-                ];
-            }
-        }
-
-        // dd($buah_plot);
-        $trans_plot = [];
-        foreach ($groupedTrans as $blok => $coords) {
-            foreach ($coords as $coord) {
-                $trans_plot[$blok][] = [
-                    'blok' => $blok, 
-                    'lat' => $coord['lat'],
-                     'lon' => $coord['lon'],
-                     'foto_temuan' => $coord['foto_temuan'],
-                     'foto_fu' => $coord['foto_fu'],
-                     'komentar' => $coord['komentar']
-                    ];
-            }
-        }
-
-
-        $queryancak = DB::connection('mysql2')->table("mutu_ancak_new")
-            ->select("mutu_ancak_new.*", "estate.wil")
-            ->join('estate', 'estate.est', '=', 'mutu_ancak_new.estate')
-            ->where('mutu_ancak_new.estate', $est)
-            ->where('mutu_ancak_new.afdeling', $afd)
-            ->where('datetime', 'like', '%' . $date . '%')
-            ->where('mutu_ancak_new.afdeling', '!=', 'Pla')
-            ->get();
-        $queryancak = json_decode($queryancak, true);
-
-        $groupedAncak = array_reduce($queryancak, function ($carry, $item) {
-            $carry[$item['blok']][] = $item;
-            return $carry;
-        }, []);
-
-        $plotLine = array();
-        foreach ($queryancak as $key => $value) {
-                $plotLine[] =  '[' . $value['lat_awal'] . ',' . $value['lon_awal'] . '],[' . $value['lat_akhir'] . ',' . $value['lon_akhir'] . ']';
-        }
-
-        // dd($plotLine);   
-        $queryancakFL = DB::connection('mysql2')->table("follow_up_ma")
-            ->select("follow_up_ma.*", "estate.wil")
-            ->join('estate', 'estate.est', '=', 'follow_up_ma.estate')
-            ->where('follow_up_ma.estate', $est)
-            ->where('follow_up_ma.afdeling', $afd)
-            ->where('waktu_temuan', 'like', '%' . $date . '%')
-            ->where('follow_up_ma.afdeling', '!=', 'Pla')
-            ->get();
-        $queryancakFL = json_decode($queryancakFL, true);
-
-        $groupedAncakFL = array_reduce($queryancakFL, function ($carry, $item) {
-            $carry[$item['blok']][] = $item;
-            return $carry;
-        }, []);
-        // dd($groupedAncak['T01505'],$groupedAncakFL['T01505']);
-        // dd($ancak_plot);
-        $ancak_fa = [];
-        foreach ($groupedAncakFL as $blok => $coords) {
-            foreach ($coords as $coord) {
-                $ancak_fa[] = [
-                 'blok' => $blok,
-                 'estate' => $coord['estate'], 
-                 'afdeling' => $coord['afdeling'], 
-                 'br1' => $coord['br1'],
-                 'br2' => $coord['br2'],
-                 'jalur_masuk' => $coord['jalur_masuk'],
-                 'foto_temuan1' => $coord['foto_temuan1'],
-                 'foto_temuan2' => $coord['foto_temuan2'],
-                 'foto_fu1' => $coord['foto_fu1'],
-                 'foto_fu2' => $coord['foto_fu2'],
-                 'komentar' => $coord['komentar'],
-                 'lat' => $coord['lat'], 
-                 'lon' => $coord['lon']
-                ];
-            }
-        }
-        // dd($groupedAncak);
-        $ancak_plot = [];
-        foreach ($groupedAncak as $blok => $coords) {
-            foreach ($coords as $coord) {
-                $ancak_fa_item = array();
-                $matchingAncakFa = [];
-        
-                foreach ($ancak_fa as $key => $value) {
-                    if ($coord['blok'] == $value['blok'] && $coord['br1'] == $value['br1'] && $coord['br2'] == $value['br2']  && $coord['jalur_masuk'] == $value['jalur_masuk']) {
-                        $matchingAncakFa[] = $value;
-                    }
+            $bloks_afds = [];
+            foreach ($bloks_afd as $blok => $coords) {
+                foreach ($coords as $coord) {
+                    $bloks_afds[] = [
+                        'blok' => $blok, 
+                        'lat' => $coord['lat'],
+                        'lon' => $coord['lon'],
+                        ];
                 }
+            }
         
-                $foto_temuan1 = null;
-                $foto_temuan2 = null;
-                $foto_fu1 = null;
-                $foto_fu2 = null;
-                $komentar = null;
-        
-                if (!empty($matchingAncakFa)) {
-                    $firstMatch = $matchingAncakFa[0];
-                    $foto_temuan1 = $firstMatch['foto_temuan1'];
-                    $foto_temuan2 = $firstMatch['foto_temuan2'];
-                    $foto_fu1 = $firstMatch['foto_fu1'];
-                    $foto_fu2 = $firstMatch['foto_fu2'];
-                    $komentar = $firstMatch['komentar'];
+            $plotBlokAll = [];
+            foreach ($bloks_afd as $key => $coord) {
+                foreach ($coord as $key2 => $value) {
+                    $plotBlokAll[$key][] = [$value['lat'], $value['lon']];
                 }
+            }
+            
+            // Sort the coordinates in ascending order based on the first value
         
-                // $ancak_plot[] = [
-                //     'blok' => $blok,
-                //     'estate' => $coord['estate'],
-                //     'afdeling' => $coord['afdeling'],
-                //     'br1' => $coord['br1'],
-                //     'br2' => $coord['br2'],
-                //     'jalur_masuk' => $coord['jalur_masuk'],
-                //     'foto_temuan1' => $foto_temuan1,
-                //     'foto_temuan2' => $foto_temuan2,
-                //     'foto_fu1' => $foto_fu1,
-                //     'foto_fu2' => $foto_fu2,
-                //     'komentar' => $komentar,
-                //     'ket' => 'Lokasi awal',
-                //     'lat' => $coord['lat_awal'],
-                //     'lon' => $coord['lon_awal']
-                // ];
-        
-                $ancak_plot[] = [
+            
+            //  dd($plotBlokAll);
+
+            $queryTrans = DB::connection('mysql2')->table("mutu_transport")
+                ->select("mutu_transport.*", "estate.wil")
+                ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
+                ->where('mutu_transport.estate', $est)
+                ->where('mutu_transport.afdeling', $afd)
+                ->where('datetime', 'like', '%' . $date . '%')
+                ->where('mutu_transport.afdeling', '!=', 'Pla')
+                ->get();
+            $queryTrans = json_decode($queryTrans, true);
+
+            // dd($queryTrans);
+
+            $queryBuah = DB::connection('mysql2')->table("mutu_buah")
+                ->select("mutu_buah.*", "estate.wil")
+                ->join('estate', 'estate.est', '=', 'mutu_buah.estate')
+                ->where('mutu_buah.estate', $est)
+                ->where('mutu_buah.afdeling', $afd)
+                ->where('datetime', 'like', '%' . $date . '%')
+                ->where('mutu_buah.afdeling', '!=', 'Pla')
+                ->get();
+            $queryBuah = json_decode($queryBuah, true);
+
+            $groupedTrans = array_reduce($queryTrans, function ($carry, $item) {
+                $carry[$item['blok']][] = $item;
+                return $carry;
+            }, []);
+
+            $groupedBuah = array_reduce($queryBuah, function ($carry, $item) {
+                $carry[$item['blok']][] = $item;
+                return $carry;
+            }, []);
+
+            // dd($groupedBuah);
+            $buah_plot = [];
+            foreach ($groupedBuah as $blok => $coords) {
+                foreach ($coords as $coord) {
+                    $buah_plot[$blok][] = ['blok' => $blok,
+                    'lat' => $coord['lat'],
+                    'lon' => $coord['lon'],
+                    'foto_temuan' => $coord['foto_temuan'],
+                    'komentar' => $coord['komentar']
+                    ];
+                }
+            }
+
+            // dd($buah_plot);
+            $trans_plot = [];
+            foreach ($groupedTrans as $blok => $coords) {
+                foreach ($coords as $coord) {
+                    $trans_plot[$blok][] = [
+                        'blok' => $blok, 
+                        'lat' => $coord['lat'],
+                        'lon' => $coord['lon'],
+                        'foto_temuan' => $coord['foto_temuan'],
+                        'foto_fu' => $coord['foto_fu'],
+                        'komentar' => $coord['komentar']
+                        ];
+                }
+            }
+
+
+            $queryancak = DB::connection('mysql2')->table("mutu_ancak_new")
+                ->select("mutu_ancak_new.*", "estate.wil")
+                ->join('estate', 'estate.est', '=', 'mutu_ancak_new.estate')
+                ->where('mutu_ancak_new.estate', $est)
+                ->where('mutu_ancak_new.afdeling', $afd)
+                ->where('datetime', 'like', '%' . $date . '%')
+                ->where('mutu_ancak_new.afdeling', '!=', 'Pla')
+                ->get();
+            $queryancak = json_decode($queryancak, true);
+
+            $groupedAncak = array_reduce($queryancak, function ($carry, $item) {
+                $carry[$item['blok']][] = $item;
+                return $carry;
+            }, []);
+
+            $plotLine = array();
+            foreach ($queryancak as $key => $value) {
+                    $plotLine[] =  '[' . $value['lat_awal'] . ',' . $value['lon_awal'] . '],[' . $value['lat_akhir'] . ',' . $value['lon_akhir'] . ']';
+            }
+
+            // dd($plotLine);   
+            $queryancakFL = DB::connection('mysql2')->table("follow_up_ma")
+                ->select("follow_up_ma.*", "estate.wil")
+                ->join('estate', 'estate.est', '=', 'follow_up_ma.estate')
+                ->where('follow_up_ma.estate', $est)
+                ->where('follow_up_ma.afdeling', $afd)
+                ->where('waktu_temuan', 'like', '%' . $date . '%')
+                ->where('follow_up_ma.afdeling', '!=', 'Pla')
+                ->get();
+            $queryancakFL = json_decode($queryancakFL, true);
+
+            $groupedAncakFL = array_reduce($queryancakFL, function ($carry, $item) {
+                $carry[$item['blok']][] = $item;
+                return $carry;
+            }, []);
+            // dd($groupedAncak['T01505'],$groupedAncakFL['T01505']);
+            // dd($ancak_plot);
+            $ancak_fa = [];
+            foreach ($groupedAncakFL as $blok => $coords) {
+                foreach ($coords as $coord) {
+                    $ancak_fa[] = [
                     'blok' => $blok,
-                    'estate' => $coord['estate'],
-                    'afdeling' => $coord['afdeling'],
+                    'estate' => $coord['estate'], 
+                    'afdeling' => $coord['afdeling'], 
                     'br1' => $coord['br1'],
                     'br2' => $coord['br2'],
                     'jalur_masuk' => $coord['jalur_masuk'],
-                    'foto_temuan1' => $foto_temuan1,
-                    'foto_temuan2' => $foto_temuan2,
-                    'foto_fu1' => $foto_fu1,
-                    'foto_fu2' => $foto_fu2,
-                    'komentar' => $komentar,
-                    'ket' => 'Lokasi akhir',
-                    'lat' => $coord['lat_akhir'],
-                    'lon' => $coord['lon_akhir']
-                ];
+                    'foto_temuan1' => $coord['foto_temuan1'],
+                    'foto_temuan2' => $coord['foto_temuan2'],
+                    'foto_fu1' => $coord['foto_fu1'],
+                    'foto_fu2' => $coord['foto_fu2'],
+                    'komentar' => $coord['komentar'],
+                    'lat' => $coord['lat'], 
+                    'lon' => $coord['lon']
+                    ];
+                }
             }
+            // dd($groupedAncak);
+            $ancak_plot = [];
+            foreach ($groupedAncak as $blok => $coords) {
+                foreach ($coords as $coord) {
+                    $ancak_fa_item = array();
+                    $matchingAncakFa = [];
+            
+                    foreach ($ancak_fa as $key => $value) {
+                        if ($coord['blok'] == $value['blok'] && $coord['br1'] == $value['br1'] && $coord['br2'] == $value['br2']  && $coord['jalur_masuk'] == $value['jalur_masuk']) {
+                            $matchingAncakFa[] = $value;
+                        }
+                    }
+            
+                    $foto_temuan1 = null;
+                    $foto_temuan2 = null;
+                    $foto_fu1 = null;
+                    $foto_fu2 = null;
+                    $komentar = null;
+            
+                    if (!empty($matchingAncakFa)) {
+                        $firstMatch = $matchingAncakFa[0];
+                        $foto_temuan1 = $firstMatch['foto_temuan1'];
+                        $foto_temuan2 = $firstMatch['foto_temuan2'];
+                        $foto_fu1 = $firstMatch['foto_fu1'];
+                        $foto_fu2 = $firstMatch['foto_fu2'];
+                        $komentar = $firstMatch['komentar'];
+                    }
+            
+                    // $ancak_plot[] = [
+                    //     'blok' => $blok,
+                    //     'estate' => $coord['estate'],
+                    //     'afdeling' => $coord['afdeling'],
+                    //     'br1' => $coord['br1'],
+                    //     'br2' => $coord['br2'],
+                    //     'jalur_masuk' => $coord['jalur_masuk'],
+                    //     'foto_temuan1' => $foto_temuan1,
+                    //     'foto_temuan2' => $foto_temuan2,
+                    //     'foto_fu1' => $foto_fu1,
+                    //     'foto_fu2' => $foto_fu2,
+                    //     'komentar' => $komentar,
+                    //     'ket' => 'Lokasi awal',
+                    //     'lat' => $coord['lat_awal'],
+                    //     'lon' => $coord['lon_awal']
+                    // ];
+            
+                    $ancak_plot[] = [
+                        'blok' => $blok,
+                        'estate' => $coord['estate'],
+                        'afdeling' => $coord['afdeling'],
+                        'br1' => $coord['br1'],
+                        'br2' => $coord['br2'],
+                        'jalur_masuk' => $coord['jalur_masuk'],
+                        'foto_temuan1' => $foto_temuan1,
+                        'foto_temuan2' => $foto_temuan2,
+                        'foto_fu1' => $foto_fu1,
+                        'foto_fu2' => $foto_fu2,
+                        'komentar' => $komentar,
+                        'ket' => 'Lokasi akhir',
+                        'lat' => $coord['lat_akhir'],
+                        'lon' => $coord['lon_akhir']
+                    ];
+                }
+            }
+            
+
+
+            
+        
+            // dd($ancak_plot);
+
+            // $ancak_new = [];
+            // foreach ($ancak_plot as $key => $value) {
+            //     foreach ($ancak_fa as $key2 => $value2) {
+            //         if ($key2 == $key
+            //             && $value['br1'] == $value2['br1']
+            //             && $value['br2'] == $value2['br2']
+            //             && $value['jalur_masuk'] == $value2['jalur_masuk']
+            //         ) {
+            //             $lat_awal = isset($value['lat_awal']) ? $value['lat_awal'] : null;
+            //             $lon_awal = isset($value['lon_awal']) ? $value['lon_awal'] : null;
+            //             $lat_akhir = isset($value['lat_akhir']) ? $value['lat_akhir'] : null;
+            //             $lon_akhir = isset($value['lon_akhir']) ? $value['lon_akhir'] : null;
+            
+            //             $ancak_new[] = [
+            //                 'blok' => $key,
+            //                 'estate' => $value['estate'],
+            //                 'afdeling' => $value['afdeling'],
+            //                 'br1' => $value['br1'],
+            //                 'br2' => $value['br2'],
+            //                 'jalur_masuk' => $value['jalur_masuk'],
+            //                 'foto_temuan1' => $value2['foto_temuan1'],
+            //                 'foto_temuan2' => $value2['foto_temuan2'],
+            //                 'foto_fu1' => $value2['foto_fu1'],
+            //                 'foto_fu2' => $value2['foto_fu2'],
+            //                 'komentar' => $value2['komentar'],
+            //                 'ket' => 'Lokasi awal',
+            //                 'lat' => $lat_awal,
+            //                 'lon' => $lon_awal
+            //             ];
+            //             $ancak_new[] = [
+            //                 'blok' => $key,
+            //                 'estate' => $value['estate'],
+            //                 'afdeling' => $value['afdeling'],
+            //                 'br1' => $value['br1'],
+            //                 'br2' => $value['br2'],
+            //                 'jalur_masuk' => $value['jalur_masuk'],
+            //                 'ket' => 'Lokasi akhir',
+            //                 'lat' => $lat_akhir,
+            //                 'lon' => $lon_akhir
+            //             ];
+            //         }
+            //     }
+            // }
+            
+            
+            // dd($ancak_plot);
+
+            return response()->json([
+                'plot_line'=> $plotLine        ,                 
+                'coords' => $convertedCoords,
+                'plot_blok_all' => $plotBlokAll,
+                'trans_plot' => $trans_plot,
+                'buah_plot' => $buah_plot,
+                'ancak_plot' => $ancak_plot,
+                'blok_sidak'=> $blokSidakResult
+            ]);
         }
-        
 
 
-        
-      
-        // dd($ancak_plot);
-
-        // $ancak_new = [];
-        // foreach ($ancak_plot as $key => $value) {
-        //     foreach ($ancak_fa as $key2 => $value2) {
-        //         if ($key2 == $key
-        //             && $value['br1'] == $value2['br1']
-        //             && $value['br2'] == $value2['br2']
-        //             && $value['jalur_masuk'] == $value2['jalur_masuk']
-        //         ) {
-        //             $lat_awal = isset($value['lat_awal']) ? $value['lat_awal'] : null;
-        //             $lon_awal = isset($value['lon_awal']) ? $value['lon_awal'] : null;
-        //             $lat_akhir = isset($value['lat_akhir']) ? $value['lat_akhir'] : null;
-        //             $lon_akhir = isset($value['lon_akhir']) ? $value['lon_akhir'] : null;
-        
-        //             $ancak_new[] = [
-        //                 'blok' => $key,
-        //                 'estate' => $value['estate'],
-        //                 'afdeling' => $value['afdeling'],
-        //                 'br1' => $value['br1'],
-        //                 'br2' => $value['br2'],
-        //                 'jalur_masuk' => $value['jalur_masuk'],
-        //                 'foto_temuan1' => $value2['foto_temuan1'],
-        //                 'foto_temuan2' => $value2['foto_temuan2'],
-        //                 'foto_fu1' => $value2['foto_fu1'],
-        //                 'foto_fu2' => $value2['foto_fu2'],
-        //                 'komentar' => $value2['komentar'],
-        //                 'ket' => 'Lokasi awal',
-        //                 'lat' => $lat_awal,
-        //                 'lon' => $lon_awal
-        //             ];
-        //             $ancak_new[] = [
-        //                 'blok' => $key,
-        //                 'estate' => $value['estate'],
-        //                 'afdeling' => $value['afdeling'],
-        //                 'br1' => $value['br1'],
-        //                 'br2' => $value['br2'],
-        //                 'jalur_masuk' => $value['jalur_masuk'],
-        //                 'ket' => 'Lokasi akhir',
-        //                 'lat' => $lat_akhir,
-        //                 'lon' => $lon_akhir
-        //             ];
-        //         }
-        //     }
-        // }
-        
-        
-        // dd($ancak_plot);
-
-        return response()->json([
-            'plot_line'=> $plotLine        ,                 
-            'coords' => $convertedCoords,
-            'plot_blok_all' => $plotBlokAll,
-            'trans_plot' => $trans_plot,
-            'buah_plot' => $buah_plot,
-            'ancak_plot' => $ancak_plot,
-            'blok_sidak'=> $blokSidakResult
-        ]);
-    }
-
-
-     public function getWeekInpeksi(Request $request)
-    {
+        public function getWeekInpeksi(Request $request)
+        {
         $week = $request->input('week');
         // Convert the week format to start and end dates
         $weekDateTime = new DateTime($week);

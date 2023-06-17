@@ -471,7 +471,8 @@
                             <th scope="col">Restan Unreported</th>
                             <th scope="col">TPH Semak</th>
 
-                            @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+
+                            @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
                             <th scope="col">Aksi</th>
                             @endif
 
@@ -657,7 +658,7 @@
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
 
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                         // Create the update button
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
@@ -722,7 +723,7 @@
                     var tph_semak = row.insertCell(12);
                     tph_semak.innerText = item.tph_semak;
                     // Continue adding cells for each column in your table
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                         createAksiButtons(row, item);
                     }
 

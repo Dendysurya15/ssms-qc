@@ -826,91 +826,99 @@
                 <div class="ml-3 mr-3">
                   <div class="row text-center">
                     <div class="col-12 col-md-6 col-lg-3" id="Tab1">
-                      <table class=" table table-bordered" style="font-size: 13px" id="table1">
-                        <thead>
-                          <tr bgcolor="darkorange">
-                            <th colspan="5" id="thead1">WILAYAH I</th>
-                          </tr>
-                          <tr bgcolor="#2044a4" style="color: white">
-                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
-                            <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
-                            <th colspan="2" class="text-center">Todate</th>
-                          </tr>
-                          <tr bgcolor="darkblue" style="color: white">
-                            <th>Score</th>
-                            <th>Rank</th>
-                          </tr>
-                        </thead>
-                        <tbody id="tbody1Year">
-                        </tbody>
-                      </table>
+                      <div class="table-responsive">
+                        <table class=" table table-bordered" style="font-size: 13px" id="table1">
+                          <thead>
+                            <tr bgcolor="darkorange">
+                              <th colspan="5" id="thead1">WILAYAH I</th>
+                            </tr>
+                            <tr bgcolor="#2044a4" style="color: white">
+                              <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                              <th rowspan="2" style="vertical-align: middle;">AFD</th>
+                              <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                              <th colspan="2" class="text-center">Todate</th>
+                            </tr>
+                            <tr bgcolor="darkblue" style="color: white">
+                              <th>Score</th>
+                              <th>Rank</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody1Year">
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3" id="Tab2">
-                      <table class=" table table-bordered" style="font-size: 13px" id="table1">
-                        <thead>
-                          <tr bgcolor="darkorange">
-                            <th colspan="5" id="thead2">WILAYAH II</th>
-                          </tr>
-                          <tr bgcolor="#2044a4" style="color: white">
-                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
-                            <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
-                            <th colspan="2" class="text-center">Todate</th>
-                          </tr>
-                          <tr bgcolor="darkblue" style="color: white">
-                            <th>Score</th>
-                            <th>Rank</th>
-                          </tr>
-                        </thead>
-                        <tbody id="tbody2Year">
+                      <div class="table-responsive">
+                        <table class=" table table-bordered" style="font-size: 13px" id="table1">
+                          <thead>
+                            <tr bgcolor="darkorange">
+                              <th colspan="5" id="thead2">WILAYAH II</th>
+                            </tr>
+                            <tr bgcolor="#2044a4" style="color: white">
+                              <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                              <th rowspan="2" style="vertical-align: middle;">AFD</th>
+                              <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                              <th colspan="2" class="text-center">Todate</th>
+                            </tr>
+                            <tr bgcolor="darkblue" style="color: white">
+                              <th>Score</th>
+                              <th>Rank</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody2Year">
 
-                        </tbody>
-                      </table>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3" id="Tab3">
-                      <table class="table table-bordered" style="font-size: 13px" id="Reg3">
-                        <thead>
-                          <tr bgcolor="darkorange">
-                            <th colspan="5" id="thead3">WILAYAH III</th>
-                          </tr>
-                          <tr bgcolor="#2044a4" style="color: white">
-                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
-                            <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
-                            <th colspan="2" class="text-center">Todate</th>
-                          </tr>
-                          <tr bgcolor="darkblue" style="color: white">
-                            <th>Score</th>
-                            <th>Rank</th>
-                          </tr>
-                        </thead>
-                        <tbody id="tbody3Year">
+                      <div class="table-responsive">
+                        <table class="table table-bordered" style="font-size: 13px" id="Reg3">
+                          <thead>
+                            <tr bgcolor="darkorange">
+                              <th colspan="5" id="thead3">WILAYAH III</th>
+                            </tr>
+                            <tr bgcolor="#2044a4" style="color: white">
+                              <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                              <th rowspan="2" style="vertical-align: middle;">AFD</th>
+                              <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                              <th colspan="2" class="text-center">Todate</th>
+                            </tr>
+                            <tr bgcolor="darkblue" style="color: white">
+                              <th>Score</th>
+                              <th>Rank</th>
+                            </tr>
+                          </thead>
+                          <tbody id="tbody3Year">
 
-                        </tbody>
-                      </table>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3" id="Tab4">
-                      <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
-                        <thead>
-                          <tr bgcolor="darkorange">
-                            <th colspan="5" id="thhead4">Plasma</th>
-                          </tr>
-                          <tr bgcolor="#2044a4" style="color: white">
-                            <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
-                            <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                            <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
-                            <th colspan="2" class="text-center">Todate</th>
-                          </tr>
-                          <tr bgcolor="darkblue" style="color: white">
-                            <th>Score</th>
-                            <th>Rank</th>
-                          </tr>
-                        </thead>
-                        <tbody id="plasmaYear">
+                      <div class="table-responsive">
+                        <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
+                          <thead>
+                            <tr bgcolor="darkorange">
+                              <th colspan="5" id="thhead4">Plasma</th>
+                            </tr>
+                            <tr bgcolor="#2044a4" style="color: white">
+                              <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
+                              <th rowspan="2" style="vertical-align: middle;">AFD</th>
+                              <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
+                              <th colspan="2" class="text-center">Todate</th>
+                            </tr>
+                            <tr bgcolor="darkblue" style="color: white">
+                              <th>Score</th>
+                              <th>Rank</th>
+                            </tr>
+                          </thead>
+                          <tbody id="plasmaYear">
 
-                        </tbody>
-                      </table>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -922,6 +930,7 @@
                 </table>
               </div>
             </div>
+
 
 
             <div class="d-flex justify-content-center mb-3 ml-3 mr-3 border border-dark text-uppercase">
@@ -1210,6 +1219,16 @@
       $('#regionalSidakMonth').val('2');
       $('#regionalSidakYear').val('2');
       $('#regDataTph').val('2');
+    } else if (lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') {
+      $('#regionalSidak').val('3');
+      $('#regionalSidakMonth').val('3');
+      $('#regionalSidakYear').val('3');
+      $('#regDataTph').val('3');
+    } else if (lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') {
+      $('#regionalSidak').val('4');
+      $('#regionalSidakMonth').val('4');
+      $('#regionalSidakYear').val('4');
+      $('#regDataTph').val('4');
     }
     getDataTph()
     getDataTphMonth()

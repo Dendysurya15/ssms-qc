@@ -422,7 +422,7 @@
                         <th>Tidak Standar Vcut</th>
                         <th>Alas BR</th>
 
-                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
                         <th colspan="2">Aksi</th>
                         @endif
                     </tr>
@@ -839,7 +839,7 @@
                 ) {
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -1014,7 +1014,7 @@
                         ];
                         const row = createTableRow(items);
                         // Inside the forEach loop
-                        if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
+                        if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                             createAksiButtons(row, element[1].id,
                                 element[1].blok,
                                 element[1].petugas,
