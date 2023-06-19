@@ -13,11 +13,6 @@
 
 
 <style>
-    .modal-custom-update-test {
-        width: 750px;
-        margin: auto;
-    }
-
     .Wraping {
         width: 100%;
         overflow-x: auto;
@@ -398,7 +393,8 @@
                             <input type="hidden" name="afd" id="afd" value="{{$afd}}">
 
                             <div class="form-group">
-                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate" onchange="updateDate();">
+                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate"
+                                    onchange="updateDate();">
                                     <option value="" disabled selected hidden>Pilih tanggal</option>
                                     <optgroup label="Mutu Ancak">
                                         @foreach($ancakDates as $ancakDate)
@@ -427,7 +423,8 @@
                                 </select>
                             </div>
 
-                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button" onclick="updateTanggal();" disabled>Show</button>
+                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button"
+                                onclick="updateTanggal();" disabled>Show</button>
 
                         </div>
                     </form>
@@ -439,12 +436,16 @@
             </div>
         </div>
         <!-- animasi loading -->
-        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
-        <div id="lottie-container1" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container1"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
 
@@ -480,7 +481,8 @@
                 }
             </style>
 
-            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;"
+                target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
 
@@ -494,7 +496,8 @@
                 </button>
             </form>
 
-            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;"
+                target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
                 <input type="hidden" name="estBA_excel" id="estpdf" value="{{$est}}">
@@ -661,7 +664,7 @@
         }
 
         .modal-content-custom-update h2 {
-            /* margin-top: 20px; */
+            margin-top: 0;
         }
 
         .modal-content-custom-update .form-control {
@@ -671,6 +674,10 @@
         .modal-content-custom-update .btn {
             margin-top: 10px;
         }
+
+        .modal-content-custom-update .mb-3 {
+            margin-bottom: 15px;
+        }
     </style>
     <div id="update-modal" class="modal-custom-update">
         <div class="modal-content-custom-update">
@@ -678,6 +685,10 @@
             <button id="close-modal" class="btn btn-secondary">Tutup</button>
             <form id="update-form" action="{{ route('updateBA') }}" enctype="multipart/form-data" method="POST">
                 {{ csrf_field() }}
+                <input type="hidden" id="update-id" name="id">
+                <input type="hidden" id="est" name="est" value="{{$est}}">
+                <input type="hidden" id="afd" name="afd" value="{{$afd}}">
+                <input type="hidden" id="date" name="date">
                 <div class="row m-1">
                     <div class="col"> <input type="hidden" id="update-id" name="id">
                         <input type="hidden" id="est" name="est" value="{{$est}}">
@@ -762,63 +773,6 @@
                             required>
 
                     </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="update-prSmk" class="col-form-label">Piringan Semak</label>
-                    <input type="text" class="form-control" id="update-prSmk" name="prSmk" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-undrPR" class="col-form-label">Underpruning</label>
-                    <input type="text" class="form-control" id="update-undrPR" name="undrPR" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-overPR" class="col-form-label">Overpruning</label>
-                    <input type="text" class="form-control" id="update-overPR" name="overPR" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-jjgCak" class="col-form-label">Janjang</label>
-                    <input type="text" class="form-control" id="update-jjgCak" name="jjgCak" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-brtp" class="col-form-label">BRTP</label>
-                    <input type="text" class="form-control" id="update-brtp" name="brtp" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-brtk" class="col-form-label">BRTK</label>
-                    <input type="text" class="form-control" id="update-brtk" name="brtk" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-brtgl" class="col-form-label">BRTGL</label>
-                    <input type="text" class="form-control" id="update-brtgl" name="brtgl" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-bhts" class="col-form-label">BHTS</label>
-                    <input type="text" class="form-control" id="update-bhts" name="bhts" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-bhtm1" class="col-form-label">BHTM1</label>
-                    <input type="text" class="form-control" id="update-bhtm1" name="bhtm1" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-bhtm2" class="col-form-label">BHTM2</label>
-                    <input type="text" class="form-control" id="update-bhtm2" name="bhtm2" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-bhtm3" class="col-form-label">BHTM3</label>
-                    <input type="text" class="form-control" id="update-bhtm3" name="bhtm3" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-ps" class="col-form-label">PS</label>
-                    <input type="text" class="form-control" id="update-ps" name="ps" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-sp" class="col-form-label">SP</label>
-                    <input type="text" class="form-control" id="update-sp" name="sp" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-pk_panenCAk" class="col-form-label">Pokok Panen</label>
-                    <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value="" required>
                 </div>
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -910,11 +864,6 @@
                     </div>
                 </div>
 
-
-
-
-
-
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -934,26 +883,10 @@
                 <input type="hidden" id="est" name="est" value="{{$est}}">
                 <input type="hidden" id="afd" name="afd" value="{{$afd}}">
                 <input type="hidden" id="date" name="date">
-                <div class="mb-3">
-                    <label for="update-estTrans" class="col-form-label">Estate</label>
-                    <input type="text" class="form-control" id="update-estTrans" name="estTrans" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-afd_trans" class="col-form-label">AFD</label>
-                    <input type="text" class="form-control" id="update-afd_trans" name="afd_trans" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-blok_trans" class="col-form-label">Blok</label>
-                    <input type="text" class="form-control" id="update-blok_trans" name="blok_trans" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
-                    <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
-                    <input type="text" class="form-control" id="update-tphbrTrans" name="tphbrTrans" value="">
-                </div>
+                <div class="row m-1">
+                    <div class="col">
+                        <label for="update-estTrans" class="col-form-label">Estate</label>
+                        <input type="text" class="form-control" id="update-estTrans" name="estTrans" value="">
 
 
                         <label for="update-afd_trans" class="col-form-label">AFD</label>
@@ -994,11 +927,6 @@
 
                 </div>
 
-
-
-
-
-
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -1034,32 +962,6 @@
             }
         }
     </style>
-    <!-- Button trigger modal -->
-    {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Launch demo modal
-    </button>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
     <div id="delete-modal" class="modal-custom">
         <div class="modal-content-custom">
             <h2>Delete Mutu Ancak</h2>
@@ -1081,9 +983,6 @@
                     <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
                 </div>
             </div>
-
-
-
 
         </div>
     </div>
@@ -1107,7 +1006,6 @@
 
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -1129,7 +1027,6 @@
 
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -1453,8 +1350,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
 
 
