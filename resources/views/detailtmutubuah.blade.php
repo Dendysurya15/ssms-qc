@@ -106,21 +106,30 @@
     }
 
     .modal-content {
-        background-color: #ffffff;
-        margin: 5% auto;
+        background-color: #fefefe;
+        margin-left: 12%;
+        margin-top: 8%;
         padding: 20px;
-        border: 1px solid #dee2e6;
-        width: 40%;
-        max-width: 500px;
-        max-height: 70%;
-        /* Set a maximum height */
-        overflow-y: auto;
-        /* Enable vertical scrolling if content overflows */
-        border-radius: 0.3rem;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        animation: scaleUp 0.3s;
+        border: 1px solid #888;
+        max-width: 80%;
+        /* Adjust the width as needed */
+        text-align: center;
+        /* display: flex; */
+        /* justify-content: center;
+            align-items: center; */
     }
 
+    .modal-content h2 {
+        /* margin-top: 20px; */
+    }
+
+    .modal-content .form-control {
+        width: 100%;
+    }
+
+    .modal-content-custom-update .btn {
+        margin-top: 10px;
+    }
 
     /* Add Bootstrap-like button styling */
     .btn {
@@ -375,11 +384,17 @@
             </div>
         </div>
         <!-- animasi loading -->
-        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="lottie-container"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            </div>
         </div>
-        <div id="lottie-container1" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="lottie-container1"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            </div>
         </div>
 
 
@@ -387,7 +402,8 @@
     </div>
 
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
-        <form action="{{ route('pdfBA_sidakbuah') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
+        <form action="{{ route('pdfBA_sidakbuah') }}" method="POST" class="form-inline" style="display: inline;"
+            target="_blank">
             {{ csrf_field() }}
             <input type="hidden" name="estBA" id="estpdf" value="{{$est}}">
             <input type="hidden" name="afdBA" id="afdpdf" value="{{$afd}}">
@@ -454,25 +470,39 @@
                     <tr>
                         <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Estate</th>
                         <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Blok</th>
-                        <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Petugas</th>
-                        <th colspan="27" style="background-color: #ffc404; color: white;" class="text-center">MUTU BUAH</th>
-                        <th rowspan="4" style="background-color: #b0a4a4; color: white;" class="text-center">All Skor</th>
-                        <th rowspan="4" style="background-color: #b0a4a4; color: white;" class="text-center">Kategori</th>
+                        <th rowspan="4" style="background-color: #903c0c; color: white;" class="text-center">Petugas
+                        </th>
+                        <th colspan="27" style="background-color: #ffc404; color: white;" class="text-center">MUTU BUAH
+                        </th>
+                        <th rowspan="4" style="background-color: #b0a4a4; color: white;" class="text-center">All Skor
+                        </th>
+                        <th rowspan="4" style="background-color: #b0a4a4; color: white;" class="text-center">Kategori
+                        </th>
                     </tr>
                     <tr>
-                        <th rowspan="3" style="background-color: #ffc404; color: white;" class="text-center">Total Janjang Sample</th>
+                        <th rowspan="3" style="background-color: #ffc404; color: white;" class="text-center">Total
+                            Janjang Sample</th>
                         <th colspan="7" style="background-color: #ffc404; color: white;" class="text-center">Mentah</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Matang</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Lewat Matang (O)</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Janjang Kosong (E)</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Tidak Standar Vcut</th>
-                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Abnormal</th>
-                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Rat Damage</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Penggunaan Karung Brondolan</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
+                            class="text-center">Matang</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
+                            class="text-center">Lewat Matang (O)</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
+                            class="text-center">Janjang Kosong (E)</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
+                            class="text-center">Tidak Standar Vcut</th>
+                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;"
+                            class="text-center">Abnormal</th>
+                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;"
+                            class="text-center">Rat Damage</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
+                            class="text-center">Penggunaan Karung Brondolan</th>
                     </tr>
                     <tr>
-                        <th colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Tanpa Brondol</th>
-                        <th colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Kurang Brondol</th>
+                        <th colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Tanpa
+                            Brondol</th>
+                        <th colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Kurang
+                            Brondol</th>
                         <th colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Total</th>
                     </tr>
                     <tr>
@@ -528,68 +558,71 @@
         <div class="modal-content">
             <h2>Update Sidak Mutu Buah</h2>
             <button id="close-modal" class="btn btn-secondary">Tutup</button>
-            <form id="update-form" action="{{ route('updateBA_mutubuah') }}" enctype="multipart/form-data" method="POST">
+            <form id="update-form" action="{{ route('updateBA_mutubuah') }}" enctype="multipart/form-data"
+                method="POST">
                 {{ csrf_field() }}
                 <input type="hidden" id="update-id" name="id">
                 <input type="hidden" id="est" name="est" value="{{$est}}">
                 <input type="hidden" id="afd" name="afd" value="{{$afd}}">
                 <input type="hidden" id="date" name="date" value="{{$bulan}}">
-                <div class=" mb-3">
-                    <label for="update-blokCak" class="col-form-label">Blok</label>
-                    <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-sph" class="col-form-label">Petugas</label>
-                    <input type="text" class="form-control" id="update-sph" name="sph" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-br1" class="col-form-label">TPH Baris</label>
-                    <input type="text" class="form-control" id="update-br1" name="br1" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-br2" class="col-form-label">Ancak Pemanen</label>
-                    <input type="text" class="form-control" id="update-br2" name="br2" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-sampCak" class="col-form-label">Jumlah Janjang</label>
-                    <input type="text" class="form-control" id="update-sampCak" name="sampCak" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-pkKuning" class="col-form-label">BMT</label>
-                    <input type="text" class="form-control" id="update-pkKuning" name="pkKuning" value="" required>
+                <div class="row">
+                    <div class="col">
+                        <label for="update-blokCak" class="col-form-label">Blok</label>
+                        <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="">
+                        <label for="update-sph" class="col-form-label">Petugas</label>
+                        <input type="text" class="form-control" id="update-sph" name="sph" value="">
+                        <label for="update-br1" class="col-form-label">TPH Baris</label>
+                        <input type="text" class="form-control" id="update-br1" name="br1" value="">
+                        <label for="update-br2" class="col-form-label">Ancak Pemanen</label>
+                        <input type="text" class="form-control" id="update-br2" name="br2" value="">
+                        <label for="update-sampCak" class="col-form-label">Jumlah Janjang</label>
+                        <input type="text" class="form-control" id="update-sampCak" name="sampCak" value="" required>
+                    </div>
+                    <div class="col">
+                        <label for="update-pkKuning" class="col-form-label">BMT</label>
+                        <input type="text" class="form-control" id="update-pkKuning" name="pkKuning" value="" required>
+
+
+
+                        <label for="update-prSmk" class="col-form-label">BMK</label>
+                        <input type="text" class="form-control" id="update-prSmk" name="prSmk" value="" required>
+
+
+                        <label for="update-undrPR" class="col-form-label">OverRipe</label>
+                        <input type="text" class="form-control" id="update-undrPR" name="undrPR" value="" required>
+
+
+                        <label for="update-overPR" class="col-form-label">Empty</label>
+                        <input type="text" class="form-control" id="update-overPR" name="overPR" value="" required>
+
+
+                        <label for="update-jjgCak" class="col-form-label">Abnormal</label>
+                        <input type="text" class="form-control" id="update-jjgCak" name="jjgCak" value="" required>
+                    </div>
+                    <div class="col">
+
+                        <label for="update-brtp" class="col-form-label">Rat Damage</label>
+                        <input type="text" class="form-control" id="update-brtp" name="brtp" value="" required>
+
+
+                        <label for="update-brtk" class="col-form-label">Tidak Standar Vcut</label>
+                        <input type="text" class="form-control" id="update-brtk" name="brtk" value="" required>
+
+
+                        <label for="update-brtgl" class="col-form-label">Alas BR</label>
+                        <input type="text" class="form-control" id="update-brtgl" name="brtgl" value="" required>
+
+
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="update-prSmk" class="col-form-label">BMK</label>
-                    <input type="text" class="form-control" id="update-prSmk" name="prSmk" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-undrPR" class="col-form-label">OverRipe</label>
-                    <input type="text" class="form-control" id="update-undrPR" name="undrPR" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-overPR" class="col-form-label">Empty</label>
-                    <input type="text" class="form-control" id="update-overPR" name="overPR" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-jjgCak" class="col-form-label">Abnormal</label>
-                    <input type="text" class="form-control" id="update-jjgCak" name="jjgCak" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-brtp" class="col-form-label">Rat Damage</label>
-                    <input type="text" class="form-control" id="update-brtp" name="brtp" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-brtk" class="col-form-label">Tidak Standar Vcut</label>
-                    <input type="text" class="form-control" id="update-brtk" name="brtk" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-brtgl" class="col-form-label">Alas BR</label>
-                    <input type="text" class="form-control" id="update-brtgl" name="brtgl" value="" required>
-                </div>
+
+
+
+
 
                 <!-- Add your other input fields here -->
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
             </form>
         </div>
     </div>
@@ -600,15 +633,26 @@
     <div id="delete-modal" class="modal">
         <div class="modal-content">
             <h2>Delete Sidak mutu buah</h2>
-            <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
-            <form id="delete-form" action="{{ route('deleteBA_mutubuah') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+            <p>Apakah anda Yakin ingin Menghapus?</p>
+            <div class="row">
+                <div class="col   text-right">
+                    <form id="delete-form" action="{{ route('deleteBA_mutubuah') }}" method="POST"
+                        onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="delete-id" name="id">
+
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col   text-left">
+
+                    <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
+                </div>
+            </div>
 
 
-                {{ csrf_field() }}
-                <input type="hidden" id="delete-id" name="id">
-                <p>Apakah anda Yakin ingin Menghapus?</p>
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
         </div>
     </div>
 

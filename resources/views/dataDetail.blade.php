@@ -13,6 +13,11 @@
 
 
 <style>
+    .modal-custom-update-test {
+        width: 750px;
+        margin: auto;
+    }
+
     .Wraping {
         width: 100%;
         overflow-x: auto;
@@ -643,16 +648,20 @@
 
         .modal-content-custom-update {
             background-color: #fefefe;
-            margin: 15% auto;
+            margin-left: 12%;
+            margin-top: 8%;
             padding: 20px;
             border: 1px solid #888;
-            max-width: 400px;
+            max-width: 80%;
             /* Adjust the width as needed */
             text-align: center;
+            /* display: flex; */
+            /* justify-content: center;
+            align-items: center; */
         }
 
         .modal-content-custom-update h2 {
-            margin-top: 0;
+            /* margin-top: 20px; */
         }
 
         .modal-content-custom-update .form-control {
@@ -662,10 +671,6 @@
         .modal-content-custom-update .btn {
             margin-top: 10px;
         }
-
-        .modal-content-custom-update .mb-3 {
-            margin-bottom: 15px;
-        }
     </style>
     <div id="update-modal" class="modal-custom-update">
         <div class="modal-content-custom-update">
@@ -673,37 +678,90 @@
             <button id="close-modal" class="btn btn-secondary">Tutup</button>
             <form id="update-form" action="{{ route('updateBA') }}" enctype="multipart/form-data" method="POST">
                 {{ csrf_field() }}
-                <input type="hidden" id="update-id" name="id">
-                <input type="hidden" id="est" name="est" value="{{$est}}">
-                <input type="hidden" id="afd" name="afd" value="{{$afd}}">
-                <input type="hidden" id="date" name="date">
-                <div class="mb-3">
-                    <label for="update-blokCak" class="col-form-label">Blok</label>
-                    <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-StatusPnen" class="col-form-label">Status Panen</label>
-                    <input type="text" class="form-control" id="update-StatusPnen" name="StatusPnen" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-sph" class="col-form-label">SPH</label>
-                    <input type="text" class="form-control" id="update-sph" name="sph" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-br1" class="col-form-label">BR 1</label>
-                    <input type="text" class="form-control" id="update-br1" name="br1" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-br2" class="col-form-label">BR 2</label>
-                    <input type="text" class="form-control" id="update-br2" name="br2" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-sampCak" class="col-form-label">Sample</label>
-                    <input type="text" class="form-control" id="update-sampCak" name="sampCak" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-pkKuning" class="col-form-label">Pokok Kuning</label>
-                    <input type="text" class="form-control" id="update-pkKuning" name="pkKuning" value="" required>
+                <div class="row m-1">
+                    <div class="col"> <input type="hidden" id="update-id" name="id">
+                        <input type="hidden" id="est" name="est" value="{{$est}}">
+                        <input type="hidden" id="afd" name="afd" value="{{$afd}}">
+                        <input type="hidden" id="date" name="date">
+                        <label for="update-blokCak" class="col-form-label">Blok</label>
+                        <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="" required>
+                        <label for="update-StatusPnen" class="col-form-label">Status Panen</label>
+                        <input type="text" class="form-control" id="update-StatusPnen" name="StatusPnen" value=""
+                            required>
+                        <label for="update-sph" class="col-form-label">SPH</label>
+                        <input type="text" class="form-control" id="update-sph" name="sph" value="" required>
+                        <label for="update-br1" class="col-form-label">BR 1</label>
+                        <input type="text" class="form-control" id="update-br1" name="br1" value="" required>
+                        <label for="update-br2" class="col-form-label">BR 2</label>
+                        <input type="text" class="form-control" id="update-br2" name="br2" value="" required>
+                        <label for="update-sampCak" class="col-form-label">Sample</label>
+                        <input type="text" class="form-control" id="update-sampCak" name="sampCak" value="" required>
+                        <label for="update-pkKuning" class="col-form-label">Pokok Kuning</label>
+                        <input type="text" class="form-control" id="update-pkKuning" name="pkKuning" value="" required>
+                    </div>
+                    <div class="col">
+
+
+                        <label for="update-prSmk" class="col-form-label">Piringan Semak</label>
+                        <input type="text" class="form-control" id="update-prSmk" name="prSmk" value="" required>
+
+
+                        <label for="update-undrPR" class="col-form-label">Underpruning</label>
+                        <input type="text" class="form-control" id="update-undrPR" name="undrPR" value="" required>
+
+
+                        <label for="update-overPR" class="col-form-label">Overpruning</label>
+                        <input type="text" class="form-control" id="update-overPR" name="overPR" value="" required>
+
+
+                        <label for="update-jjgCak" class="col-form-label">Janjang</label>
+                        <input type="text" class="form-control" id="update-jjgCak" name="jjgCak" value="" required>
+
+
+                        <label for="update-brtp" class="col-form-label">BRTP</label>
+                        <input type="text" class="form-control" id="update-brtp" name="brtp" value="" required>
+
+
+                        <label for="update-brtk" class="col-form-label">BRTK</label>
+                        <input type="text" class="form-control" id="update-brtk" name="brtk" value="" required>
+
+
+                        <label for="update-brtgl" class="col-form-label">BRTGL</label>
+                        <input type="text" class="form-control" id="update-brtgl" name="brtgl" value="" required>
+
+                    </div>
+                    <div class="col">
+
+
+                        <label for="update-bhts" class="col-form-label">BHTS</label>
+                        <input type="text" class="form-control" id="update-bhts" name="bhts" value="" required>
+
+
+                        <label for="update-bhtm1" class="col-form-label">BHTM1</label>
+                        <input type="text" class="form-control" id="update-bhtm1" name="bhtm1" value="" required>
+
+
+                        <label for="update-bhtm2" class="col-form-label">BHTM2</label>
+                        <input type="text" class="form-control" id="update-bhtm2" name="bhtm2" value="" required>
+
+
+                        <label for="update-bhtm3" class="col-form-label">BHTM3</label>
+                        <input type="text" class="form-control" id="update-bhtm3" name="bhtm3" value="" required>
+
+
+                        <label for="update-ps" class="col-form-label">PS</label>
+                        <input type="text" class="form-control" id="update-ps" name="ps" value="" required>
+
+
+                        <label for="update-sp" class="col-form-label">SP</label>
+                        <input type="text" class="form-control" id="update-sp" name="sp" value="" required>
+
+
+                        <label for="update-pk_panenCAk" class="col-form-label">Pokok Panen</label>
+                        <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value=""
+                            required>
+
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -778,71 +836,84 @@
                 <input type="hidden" id="est" name="est" value="{{$est}}">
                 <input type="hidden" id="afd" name="afd" value="{{$afd}}">
                 <input type="hidden" id="date" name="date">
-                <div class="mb-3">
-                    <label for="update-estBH" class="col-form-label">Estate</label>
-                    <input type="text" class="form-control" id="update-estBH" name="estBH" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-afdBH" class="col-form-label">Afdeling</label>
-                    <input type="text" class="form-control" id="update-afdBH" name="afdBH" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-tphBH" class="col-form-label">TPH Baris</label>
-                    <input type="text" class="form-control" id="update-tphBH" name="tphBH" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-blok_bh" class="col-form-label">Blok</label>
-                    <input type="text" class="form-control" id="update-blok_bh" name="blok_bh" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-StatusBhpnen" class="col-form-label">Status Panen</label>
-                    <input type="text" class="form-control" id="update-StatusBhpnen" name="StatusBhpnen" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-petugasBH" class="col-form-label">Petugas</label>
-                    <input type="text" class="form-control" id="update-petugasBH" name="petugasBH" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-pemanen_bh" class="col-form-label">Ancak Pemanen</label>
-                    <input type="text" class="form-control" id="update-pemanen_bh" name="pemanen_bh" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-bmt" class="col-form-label">BMT</label>
-                    <input type="text" class="form-control" id="update-bmt" name="bmt" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-bmk" class="col-form-label">BMK </label>
-                    <input type="text" class="form-control" id="update-bmk" name="bmk" value="" required>
+                <div class="row m-1">
+                    <div class="col">
+                        <label for="update-estBH" class="col-form-label">Estate</label>
+                        <input type="text" class="form-control" id="update-estBH" name="estBH" value="">
+
+
+                        <label for="update-afdBH" class="col-form-label">Afdeling</label>
+                        <input type="text" class="form-control" id="update-afdBH" name="afdBH" value="">
+
+
+                        <label for="update-tphBH" class="col-form-label">TPH Baris</label>
+                        <input type="text" class="form-control" id="update-tphBH" name="tphBH" value="">
+
+
+                        <label for="update-blok_bh" class="col-form-label">Blok</label>
+                        <input type="text" class="form-control" id="update-blok_bh" name="blok_bh" value="">
+
+
+                        <label for="update-StatusBhpnen" class="col-form-label">Status Panen</label>
+                        <input type="text" class="form-control" id="update-StatusBhpnen" name="StatusBhpnen" value="">
+
+                        <label for="update-petugasBH" class="col-form-label">Petugas</label>
+                        <input type="text" class="form-control" id="update-petugasBH" name="petugasBH" value="">
+
+                    </div>
+                    <div class="col">
+
+
+                        <label for="update-pemanen_bh" class="col-form-label">Ancak Pemanen</label>
+                        <input type="text" class="form-control" id="update-pemanen_bh" name="pemanen_bh" value="">
+
+
+                        <label for="update-bmt" class="col-form-label">BMT</label>
+                        <input type="text" class="form-control" id="update-bmt" name="bmt" value="" required>
+
+
+                        <label for="update-bmk" class="col-form-label">BMK </label>
+                        <input type="text" class="form-control" id="update-bmk" name="bmk" value="" required>
+
+
+
+                        <label for="update-emptyBH" class="col-form-label">Empty</label>
+                        <input type="text" class="form-control" id="update-emptyBH" name="emptyBH" value="" required>
+                        <label for="update-jjgBH" class="col-form-label">Jumlah Janjang</label>
+                        <input type="text" class="form-control" id="update-jjgBH" name="jjgBH" value="" required>
+
+                        <label for="update-overBH" class="col-form-label">OverRipe</label>
+                        <input type="text" class="form-control" id="update-overBH" name="overBH" value="" required>
+
+                    </div>
+                    <div class="col">
+
+
+
+
+
+                        <label for="update-abrBH" class="col-form-label">Abnormal</label>
+                        <input type="text" class="form-control" id="update-abrBH" name="abrBH" value="" required>
+
+
+                        <label for="update-vcutBH" class="col-form-label">V Cut</label>
+                        <input type="text" class="form-control" id="update-vcutBH" name="vcutBH" value="" required>
+
+
+                        <label for="update-alsBR" class="col-form-label">Alas BR</label>
+                        <input type="text" class="form-control" id="update-alsBR" name="alsBR" value="" required>
+
+
+                        <label for="update-kmnBH" class="col-form-label">Komentar</label>
+                        <textarea rows="4" class="form-control" id="update-kmnBH" name="kmnBH" value=""> </textarea>
+
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="update-emptyBH" class="col-form-label">Empty</label>
-                    <input type="text" class="form-control" id="update-emptyBH" name="emptyBH" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-jjgBH" class="col-form-label">Jumlah Janjang</label>
-                    <input type="text" class="form-control" id="update-jjgBH" name="jjgBH" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-overBH" class="col-form-label">OverRipe</label>
-                    <input type="text" class="form-control" id="update-overBH" name="overBH" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-abrBH" class="col-form-label">Abnormal</label>
-                    <input type="text" class="form-control" id="update-abrBH" name="abrBH" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-vcutBH" class="col-form-label">V Cut</label>
-                    <input type="text" class="form-control" id="update-vcutBH" name="vcutBH" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-alsBR" class="col-form-label">Alas BR</label>
-                    <input type="text" class="form-control" id="update-alsBR" name="alsBR" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-kmnBH" class="col-form-label">Komentar</label>
-                    <input type="text" class="form-control" id="update-kmnBH" name="kmnBH" value="">
-                </div>
+
+
+
+
 
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -884,23 +955,49 @@
                     <input type="text" class="form-control" id="update-tphbrTrans" name="tphbrTrans" value="">
                 </div>
 
-                <div class="mb-3">
-                    <label for="update-petugasTrans" class="col-form-label">Petugas</label>
-                    <input type="text" class="form-control" id="update-petugasTrans" name="petugasTrans" value="">
-                </div>
-                <div class="mb-3">
-                    <label for="update-bt_trans" class="col-form-label">BT </label>
-                    <input type="text" class="form-control" id="update-bt_trans" name="bt_trans" value="" required>
+
+                        <label for="update-afd_trans" class="col-form-label">AFD</label>
+                        <input type="text" class="form-control" id="update-afd_trans" name="afd_trans" value="">
+
+
+                        <label for="update-blok_trans" class="col-form-label">Blok</label>
+                        <input type="text" class="form-control" id="update-blok_trans" name="blok_trans" value=""
+                            required>
+                        <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
+                        <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen"
+                            value="" required>
+
+
+                        <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
+                        <input type="text" class="form-control" id="update-tphbrTrans" name="tphbrTrans" value="">
+
+
+                    </div>
+                    <div class="col">
+
+
+                        <label for="update-petugasTrans" class="col-form-label">Petugas</label>
+                        <input type="text" class="form-control" id="update-petugasTrans" name="petugasTrans" value="">
+                        <label for="update-bt_trans" class="col-form-label">BT </label>
+                        <input type="text" class="form-control" id="update-bt_trans" name="bt_trans" value="" required>
+
+
+
+                        <label for="update-rstTrans" class="col-form-label">Rst</label>
+                        <input type="text" class="form-control" id="update-rstTrans" name="rstTrans" value="" required>
+
+
+                        <label for="update-komentar_trans" class="col-form-label">Komentar</label>
+                        <textarea rows="4" class="form-control" id="update-komentar_trans" name="komentar_trans"
+                            value=""> </textarea>
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label for="update-rstTrans" class="col-form-label">Rst</label>
-                    <input type="text" class="form-control" id="update-rstTrans" name="rstTrans" value="" required>
-                </div>
-                <div class="mb-3">
-                    <label for="update-komentar_trans" class="col-form-label">Komentar</label>
-                    <input type="text" class="form-control" id="update-komentar_trans" name="komentar_trans" value="">
-                </div>
+
+
+
+
 
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -937,41 +1034,102 @@
             }
         }
     </style>
+    <!-- Button trigger modal -->
+    {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
     <div id="delete-modal" class="modal-custom">
         <div class="modal-content-custom">
             <h2>Delete Mutu Ancak</h2>
-            <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
-            <form id="delete-form" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
-                {{ csrf_field() }}
-                <input type="hidden" id="delete-id" name="id">
-                <p>Apakah anda Yakin ingin Menghapus?</p>
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
+            <p>Apakah anda Yakin ingin Menghapus?</p>
+            <div class="row">
+                <div class="col text-right">
+                    <form id="delete-form" action="{{ route('deleteBA') }}" method="POST"
+                        onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="delete-id" name="id">
+
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col  text-left">
+
+                    <button id="close-delete-modal" class="btn btn-secondary">Tutup</button>
+                </div>
+            </div>
+
+
+
+
         </div>
     </div>
-    <div id="delete-modal-buah" class="modal">
-        <div class="modal-content">
+    <div id="delete-modal-buah" class="modal-custom">
+        <div class="modal-content-custom">
             <h2>Delete Mutu Buah</h2>
-            <button id="close-delete-modals" class="btn btn-secondary">Tutup</button>
-            <form id="delete-forms" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault();">
-                {{ csrf_field() }}
-                <input type="hidden" id="delete-ids" name="ids">
-                <p>Apakah anda Yakin ingin Menghapus?</p>
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
+            <p>Apakah anda Yakin ingin Menghapus?</p>
+            <div class="row">
+                <div class="col text-right">
+
+                    <form id="delete-forms" action="{{ route('deleteBA') }}" method="POST"
+                        onsubmit="event.preventDefault();">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="delete-ids" name="ids">
+
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+                <div class="col text-left">
+                    <button id="close-delete-modals" class="btn btn-secondary">Tutup</button>
+
+                </div>
+            </div>
+
         </div>
     </div>
 
     <div id="delete-modal-transport" class="modal-custom">
         <div class="modal-content-custom">
             <h2>Delete Mutu Transport</h2>
-            <button id="close-delete-transport" class="btn btn-secondary">Tutup</button>
-            <form id="delete-form-trans" method="POST" onsubmit="event.preventDefault();">
-                {{ csrf_field() }}
-                <input type="hidden" id="delete-transport" name="id_transport">
-                <p>Apakah anda Yakin ingin Menghapus?</p>
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
+            <p>Apakah anda Yakin ingin Menghapus?</p>
+            <div class="row">
+                <div class="col text-right">
+                    <form id="delete-form-trans" method="POST" onsubmit="event.preventDefault();">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="delete-transport" name="id_transport">
+
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+                <div class="col text-left">
+                    <button id="close-delete-transport" class="btn btn-secondary">Tutup</button>
+
+                </div>
+            </div>
+
         </div>
     </div>
 

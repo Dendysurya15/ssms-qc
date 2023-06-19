@@ -426,14 +426,18 @@
         </div>
 
         <!-- animasi loading -->
-        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="lottie-container"
+            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation"
+                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            </div>
         </div>
 
         <!-- end animasi -->
     </div>
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
-        <form action="{{ route('pdfBAsidak') }}" method="GET" class="form-inline" style="display: inline;" target="_blank">
+        <form action="{{ route('pdfBAsidak') }}" method="GET" class="form-inline" style="display: inline;"
+            target="_blank">
             {{ csrf_field() }}
             <input type="hidden" name="est" id="est" value="{{$est}}">
             <input type="hidden" name="afdling" id="afdling" value="{{$afd}}">
@@ -447,8 +451,11 @@
 
 
     <!-- animasi loading -->
-    <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-        <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+    <div id="lottie-container"
+        style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+        <div id="lottie-animation"
+            style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </div>
     </div>
     <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
         <div class="Wraping">
@@ -489,7 +496,8 @@
     >
 
     <!-- Update Modal -->
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -502,65 +510,63 @@
                     <form id="update-form">
                         @csrf
                         <input type="hidden" name="id" id="update-id">
+                        {{-- <div class="row m-1">
+                            <div class="col">
 
-                        <div class="form-group">
-                            <label for="update-est">Estate</label>
-                            <input type="text" class="form-control" name="Estate" id="update-est">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-afd">Afdeling</label>
-                            <input type="text" class="form-control" name="Afdeling" id="update-afd">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-qc">QC</label>
-                            <input type="text" class="form-control" name="QC" id="update-qc">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-notph">No TPH</label>
-                            <input type="text" class="form-control" name="no_tph" id="update-notph">
-                        </div>
+                            </div>
+                            <div class="col">
 
-                        <div class="form-group">
-                            <label for="update-bttph">BT TPH</label>
-                            <input type="text" class="form-control" name="bttph" id="update-bttph">
+                            </div>
+                        </div> --}}
+                        <div class="row">
+                            <div class="col">
+                                <label for="update-est">Estate</label>
+                                <input type="text" class="form-control" name="Estate" id="update-est">
+                                <label for="update-afd">Afdeling</label>
+                                <input type="text" class="form-control" name="Afdeling" id="update-afd">
+                                <label for="update-qc">QC</label>
+                                <input type="text" class="form-control" name="QC" id="update-qc">
+                                <label for="update-notph">No TPH</label>
+                                <input type="text" class="form-control" name="no_tph" id="update-notph">
+                                <label for="update-bttph">BT TPH</label>
+                                <input type="text" class="form-control" name="bttph" id="update-bttph">
+                                <label for="update-btjalan">BT Jalan</label>
+                                <input type="text" class="form-control" name="btjalan" id="update-btjalan">
+                            </div>
+                            <div class="col">
+
+                                <label for="update-btbin">BT Bin</label>
+                                <input type="text" class="form-control" name="btbin" id="update-btbin">
+                                <label for="update-jumkrng">Jum Karung</label>
+                                <input type="text" class="form-control" name="jumkrng" id="update-jumkrng">
+                                <label for="update-buahtgl">Buah Tinggal</label>
+                                <input type="text" class="form-control" name="buahtgl" id="update-buahtgl">
+                                <label for="update-restanunr">Restan unreported</label>
+                                <input type="text" class="form-control" name="restanunr" id="update-restanunr">
+                                <label for="update-tphsemak">TPH Semak</label>
+                                <input type="text" class="form-control" name="tphsemak" id="update-tphsemak">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="update-btjalan">BT Jalan</label>
-                            <input type="text" class="form-control" name="btjalan" id="update-btjalan">
+                        <br>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="save-changes-button">Save changes</button>
+
                         </div>
-                        <div class="form-group">
-                            <label for="update-btbin">BT Bin</label>
-                            <input type="text" class="form-control" name="btbin" id="update-btbin">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-jumkrng">Jum Karung</label>
-                            <input type="text" class="form-control" name="jumkrng" id="update-jumkrng">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-buahtgl">Buah Tinggal</label>
-                            <input type="text" class="form-control" name="buahtgl" id="update-buahtgl">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-restanunr">Restan unreported</label>
-                            <input type="text" class="form-control" name="restanunr" id="update-restanunr">
-                        </div>
-                        <div class="form-group">
-                            <label for="update-tphsemak">TPH Semak</label>
-                            <input type="text" class="form-control" name="tphsemak" id="update-tphsemak">
-                        </div>
-                        <!-- Add more form fields for other properties -->
-                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-changes-button">Save changes</button>
 
-                </div>
+
+
+
+                <!-- Add more form fields for other properties -->
+                </form>
             </div>
+
         </div>
     </div>
-    <input type="hidden" id="estate" value="{{$est}}">
-    <input type="hidden" id="afd" value="{{$afd}}">
+</div>
+<input type="hidden" id="estate" value="{{$est}}">
+<input type="hidden" id="afd" value="{{$afd}}">
 </div>
 </div>
 

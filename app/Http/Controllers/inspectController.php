@@ -19541,13 +19541,13 @@ class inspectController extends Controller
             );
         }else {
   
-            foreach ($mutuAncak as $key => $value) {
-                $mutuAncak[$key] = array_map(function ($item) {
-                    return json_decode(json_encode($item), true);
-                }, $value);
-            }
+        //     foreach ($mutuAncak as $key => $value) {
+        //         $mutuAncak[$key] = array_map(function ($item) {
+        //             return json_decode(json_encode($item), true);
+        //         }, $value);
+        //     }
             
-            $mutuAncak = json_decode(json_encode($mutuAncak), true);
+        //     $mutuAncak = json_decode(json_encode($mutuAncak), true);
         
         }
      
@@ -20130,19 +20130,7 @@ class inspectController extends Controller
             ->get();
         $queryAfd = json_decode($queryAfd, true);
 
-
-        $test =  DB::connection('mysql2')->table('afdeling')
-        ->select(
-            'afdeling.id',
-            'afdeling.nama',
-            'estate.est'
-        ) //buat mengambil data di estate db dan willayah db
-        ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
-        ->where('est', '=', $est)
-        ->get();
-        $testing = json_decode($test, true);
-
-            $id = $queryAfd[0]['id'];
+        $id = $queryAfd[0]['id'];
 
             $queryBlokMA = DB::connection('mysql2')->table('mutu_ancak_new')
             ->select('mutu_ancak_new.*','mutu_ancak_new.blok as nama_blok')
