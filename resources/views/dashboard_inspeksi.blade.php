@@ -5239,6 +5239,8 @@
 
     var chartScore = new ApexCharts(document.querySelector("#skorGraph"), options);
     chartScore.render();
+    var chartScorePerwil = new ApexCharts(document.querySelector("#skorGraphWil"), options);
+    chartScorePerwil.render();
     var chartScoreBron = new ApexCharts(document.querySelector("#skorBronGraph"), options);
     chartScoreBron.render();
     var chatScoreJan = new ApexCharts(document.querySelector("#skorJanGraph"), options);
@@ -5272,292 +5274,7 @@
         graphFilter()
     }
 
-    function graphFilter() {
-        var est = ''
-        var yearGraph = ''
-        var reg = ''
-        var est = document.getElementById('estateGrafik').value
 
-        var yearGraph = document.getElementById('yearGraph').value
-        var reg = document.getElementById('regGrafik').value
-        var _token = $('input[name="_token"]').val();
-        $.ajax({
-            url: "{{ route('graphfilter') }}",
-            method: "GET",
-            data: {
-                est,
-                yearGraph,
-                reg,
-                _token: _token
-            },
-            success: function(result) {
-                // console.log(est)
-                // console.log(yearGraph)
-                var parseResult = JSON.parse(result)
-                //list estate
-
-
-                var chart_btt = Object.entries(parseResult['GraphBtt'])
-                var chart_buah = Object.entries(parseResult['GraphBuah'])
-                var chart_skor = Object.entries(parseResult['GraphSkorTotal'])
-                var list_est = Object.entries(parseResult['list_est'])
-                var mtbuah_mth = Object.entries(parseResult['mtbuah_mth'])
-                var mtbuah_masak = Object.entries(parseResult['mtbuah_masak'])
-
-
-
-                var mtbuah_over = Object.entries(parseResult['mtbuah_over'])
-                var mtbuah_ksng = Object.entries(parseResult['mtbuah_ksng'])
-                var mtbuah_vcut = Object.entries(parseResult['mtbuah_vcut'])
-                var mtbuah_abr = Object.entries(parseResult['mtbuah_abr'])
-
-
-                var mttransbrd = Object.entries(parseResult['mttransbrd'])
-                var mttransbb = Object.entries(parseResult['mttransbb'])
-
-                var est_values = list_est.map(item => item[1].est);
-                // console.log(est_values);
-
-                var regGrafik = document.getElementById("regGrafik");
-                // var estData = document.getElementById("estData");
-
-                // function populateEstData() {
-                //     estData.innerHTML = ""; // Clear existing options
-
-                //     var est_values = list_est.map(item => item[1].est);
-
-                //     est_values.forEach(function(est) {
-                //         var option = document.createElement("option");
-                //         option.value = est;
-                //         option.text = est;
-                //         estData.add(option);
-                //     });
-                // }
-
-                // regGrafik.addEventListener("change", populateEstData);
-
-                // // Populate the estData select element when the page loads
-                // populateEstData();
-
-
-                var graphBtt = '['
-                chart_btt.forEach(element => {
-                    graphBtt += '"' + element[1] + '",'
-                });
-                graphBtt = graphBtt.substring(0, graphBtt.length - 1);
-                graphBtt += ']'
-
-                var graphBuah = '['
-                chart_buah.forEach(element => {
-                    graphBuah += '"' + element[1] + '",'
-                });
-                graphBuah = graphBuah.substring(0, graphBuah.length - 1);
-                graphBuah += ']'
-
-                var graphSkor = '['
-                chart_skor.forEach(element => {
-                    graphSkor += '"' + element[1] + '",'
-                });
-                graphSkor = graphSkor.substring(0, graphSkor.length - 1);
-                graphSkor += ']'
-
-                // mutu buah
-                var buahmth = '['
-                mtbuah_mth.forEach(element => {
-                    buahmth += '"' + element[1] + '",'
-                });
-                buahmth = buahmth.substring(0, buahmth.length - 1);
-                buahmth += ']'
-
-                var buahmsk = '['
-                mtbuah_masak.forEach(element => {
-                    buahmsk += '"' + element[1] + '",'
-                });
-                buahmsk = buahmsk.substring(0, buahmsk.length - 1);
-                buahmsk += ']'
-
-
-
-
-
-                var buahovr = '['
-                mtbuah_over.forEach(element => {
-                    buahovr += '"' + element[1] + '",'
-                });
-                buahovr = buahovr.substring(0, buahovr.length - 1);
-                buahovr += ']'
-
-                var buahKsong = '['
-                mtbuah_ksng.forEach(element => {
-                    buahKsong += '"' + element[1] + '",'
-                });
-                buahKsong = buahKsong.substring(0, buahKsong.length - 1);
-                buahKsong += ']'
-
-                var buahvcuts = '['
-                mtbuah_vcut.forEach(element => {
-                    buahvcuts += '"' + element[1] + '",'
-                });
-                buahvcuts = buahvcuts.substring(0, buahvcuts.length - 1);
-                buahvcuts += ']'
-
-                var buahbrnrm = '['
-                mtbuah_abr.forEach(element => {
-                    buahbrnrm += '"' + element[1] + '",'
-                });
-                buahbrnrm = buahbrnrm.substring(0, buahbrnrm.length - 1);
-                buahbrnrm += ']'
-
-
-                var transbrd = '['
-                mttransbrd.forEach(element => {
-                    transbrd += '"' + element[1] + '",'
-                });
-                transbrd = transbrd.substring(0, transbrd.length - 1);
-                transbrd += ']'
-
-                var transbuah = '['
-                mttransbb.forEach(element => {
-                    transbuah += '"' + element[1] + '",'
-                });
-                transbuah = transbuah.substring(0, transbuah.length - 1);
-                transbuah += ']'
-
-
-                var bttJson = JSON.parse(graphBtt)
-                var bhJson = JSON.parse(graphBuah)
-                var skorJson = JSON.parse(graphSkor)
-
-                var mths = JSON.parse(buahmth)
-                var masak = JSON.parse(buahmsk)
-
-                var ovr = JSON.parse(buahovr)
-                var Ksong = JSON.parse(buahKsong)
-                var vcuts = JSON.parse(buahvcuts)
-                var brnrm = JSON.parse(buahbrnrm)
-                var trbrd = JSON.parse(transbrd)
-                var trbuah = JSON.parse(transbuah)
-
-
-
-                chartScore.updateSeries([{
-                        name: est,
-                        data: skorJson
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85]
-                    }
-                ])
-
-                chartScoreBron.updateSeries([{
-                        name: est,
-                        data: bttJson
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-                    }
-                ])
-                chatScoreJan.updateSeries([{
-                        name: est,
-                        data: bhJson
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-                GraphBhmth.updateSeries([{
-                        name: est,
-                        data: mths
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-                GraphBhMsak.updateSeries([{
-                        name: est,
-                        data: masak
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-                GraphBhOver.updateSeries([{
-                        name: est,
-                        data: ovr
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-                GraphBhEmpty.updateSeries([{
-                        name: est,
-                        data: Ksong
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-                GraphBhvcute.updateSeries([{
-                        name: est,
-                        data: vcuts
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-                GraphBhAbnrl.updateSeries([{
-                        name: est,
-                        data: brnrm
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-
-
-                GraphTranBrd.updateSeries([{
-                        name: est,
-                        data: trbrd
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-
-                GraphTranBH.updateSeries([{
-                        name: est,
-                        data: trbuah
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-
-            }
-        });
-    }
 
 
     //tampilkan perminggu filter table utama
@@ -7653,4 +7370,337 @@
     // Initial population of the wilayah preset options based on the default regional value
     var defaultRegional = $('#regGrafik').val();
     populateWilayahOptions(defaultRegional);
+
+    function graphFilter() {
+        var est = ''
+        var yearGraph = ''
+        var reg = ''
+        var wilayahGrafik = ''
+        var est = document.getElementById('estateGrafik').value
+        var wilayahGrafik = document.getElementById('wilayahGrafik').value
+
+        var yearGraph = document.getElementById('yearGraph').value
+        var reg = document.getElementById('regGrafik').value
+        var _token = $('input[name="_token"]').val();
+        $.ajax({
+            url: "{{ route('graphfilter') }}",
+            method: "GET",
+            data: {
+                est,
+                yearGraph,
+                reg,
+                wilayahGrafik,
+                _token: _token
+            },
+            success: function(result) {
+                // console.log(est)
+                // console.log(yearGraph)
+                var parseResult = JSON.parse(result)
+                //list estate
+
+
+                var chart_btt = Object.entries(parseResult['GraphBtt'])
+                var chart_buah = Object.entries(parseResult['GraphBuah'])
+                var chart_skor = Object.entries(parseResult['GraphSkorTotal'])
+                var list_est = Object.entries(parseResult['list_est'])
+                var mtbuah_mth = Object.entries(parseResult['mtbuah_mth'])
+                var mtbuah_masak = Object.entries(parseResult['mtbuah_masak'])
+
+
+
+                var mtbuah_over = Object.entries(parseResult['mtbuah_over'])
+                var mtbuah_ksng = Object.entries(parseResult['mtbuah_ksng'])
+                var mtbuah_vcut = Object.entries(parseResult['mtbuah_vcut'])
+                var mtbuah_abr = Object.entries(parseResult['mtbuah_abr'])
+
+
+                var mttransbrd = Object.entries(parseResult['mttransbrd'])
+                var mttransbb = Object.entries(parseResult['mttransbb'])
+                var rekap_wil = Object.entries(parseResult['rekap_wil'])
+
+                var est_values = list_est.map(item => item[1].est);
+                // console.log(est_values);
+                // console.log(rekap_wil);
+
+                var regGrafik = document.getElementById("regGrafik");
+
+
+
+                var graphBtt = '['
+                chart_btt.forEach(element => {
+                    graphBtt += '"' + element[1] + '",'
+                });
+                graphBtt = graphBtt.substring(0, graphBtt.length - 1);
+                graphBtt += ']'
+
+                var graphBuah = '['
+                chart_buah.forEach(element => {
+                    graphBuah += '"' + element[1] + '",'
+                });
+                graphBuah = graphBuah.substring(0, graphBuah.length - 1);
+                graphBuah += ']'
+
+                var graphSkor = '['
+                chart_skor.forEach(element => {
+                    graphSkor += '"' + element[1] + '",'
+                });
+                graphSkor = graphSkor.substring(0, graphSkor.length - 1);
+                graphSkor += ']'
+
+                // mutu buah
+                var buahmth = '['
+                mtbuah_mth.forEach(element => {
+                    buahmth += '"' + element[1] + '",'
+                });
+                buahmth = buahmth.substring(0, buahmth.length - 1);
+                buahmth += ']'
+
+                var buahmsk = '['
+                mtbuah_masak.forEach(element => {
+                    buahmsk += '"' + element[1] + '",'
+                });
+                buahmsk = buahmsk.substring(0, buahmsk.length - 1);
+                buahmsk += ']'
+
+
+
+
+
+                var buahovr = '['
+                mtbuah_over.forEach(element => {
+                    buahovr += '"' + element[1] + '",'
+                });
+                buahovr = buahovr.substring(0, buahovr.length - 1);
+                buahovr += ']'
+
+                var buahKsong = '['
+                mtbuah_ksng.forEach(element => {
+                    buahKsong += '"' + element[1] + '",'
+                });
+                buahKsong = buahKsong.substring(0, buahKsong.length - 1);
+                buahKsong += ']'
+
+                var buahvcuts = '['
+                mtbuah_vcut.forEach(element => {
+                    buahvcuts += '"' + element[1] + '",'
+                });
+                buahvcuts = buahvcuts.substring(0, buahvcuts.length - 1);
+                buahvcuts += ']'
+
+                var buahbrnrm = '['
+                mtbuah_abr.forEach(element => {
+                    buahbrnrm += '"' + element[1] + '",'
+                });
+                buahbrnrm = buahbrnrm.substring(0, buahbrnrm.length - 1);
+                buahbrnrm += ']'
+
+
+                var transbrd = '['
+                mttransbrd.forEach(element => {
+                    transbrd += '"' + element[1] + '",'
+                });
+                transbrd = transbrd.substring(0, transbrd.length - 1);
+                transbrd += ']'
+
+                var transbuah = '['
+                mttransbb.forEach(element => {
+                    transbuah += '"' + element[1] + '",'
+                });
+                transbuah = transbuah.substring(0, transbuah.length - 1);
+                transbuah += ']'
+
+
+                var bttJson = JSON.parse(graphBtt)
+                var bhJson = JSON.parse(graphBuah)
+                var skorJson = JSON.parse(graphSkor)
+
+                var mths = JSON.parse(buahmth)
+                var masak = JSON.parse(buahmsk)
+
+                var ovr = JSON.parse(buahovr)
+                var Ksong = JSON.parse(buahKsong)
+                var vcuts = JSON.parse(buahvcuts)
+                var brnrm = JSON.parse(buahbrnrm)
+                var trbrd = JSON.parse(transbrd)
+                var trbuah = JSON.parse(transbuah)
+
+
+                // console.log(ovr);
+                // <!-- var wil_rekap = rekap_wil.map(item => item[0]); -->
+                // console.log(wil_rekap);
+                chartScore.updateSeries([{
+                        name: est,
+                        data: skorJson
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85]
+                    }
+                ])
+
+
+                var seriesData = [];
+
+                for (var i = 0; i < rekap_wil.length; i++) {
+                    var item = rekap_wil[i];
+                    var name = item[0];
+                    var data = Object.values(item[1]).map(function(value) {
+                        return value || 0;
+                    });
+                    var series = {
+                        name: name,
+                        data: data
+                    };
+
+                    // Assign different colors to each series
+                    var color = getRandomColor(); // Generate a random color for each series
+                    series.color = color;
+
+                    seriesData.push(series);
+                }
+
+                seriesData.push({
+                    name: "Score Good",
+                    data: [85,
+                        85,
+                        85,
+                        85,
+                        85,
+                        85,
+                        85,
+                        85,
+                        85,
+                        85,
+                        85,
+                        85
+                    ],
+                    color: "#ff0000" // set the color to red
+                });
+
+                options.series = seriesData;
+
+                // Helper function to generate random colors
+                function getRandomColor() {
+                    var letters = "0123456789ABCDEF";
+                    var color = "#";
+                    for (var i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 16)];
+                    }
+                    return color;
+                }
+
+
+                chartScorePerwil.updateOptions(options);
+
+
+
+
+                chartScoreBron.updateSeries([{
+                        name: est,
+                        data: bttJson
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+                    }
+                ])
+                chatScoreJan.updateSeries([{
+                        name: est,
+                        data: bhJson
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+                GraphBhmth.updateSeries([{
+                        name: est,
+                        data: mths
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+                GraphBhMsak.updateSeries([{
+                        name: est,
+                        data: masak
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+                GraphBhOver.updateSeries([{
+                        name: est,
+                        data: ovr
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+                GraphBhEmpty.updateSeries([{
+                        name: est,
+                        data: Ksong
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+                GraphBhvcute.updateSeries([{
+                        name: est,
+                        data: vcuts
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+                GraphBhAbnrl.updateSeries([{
+                        name: est,
+                        data: brnrm
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+
+
+                GraphTranBrd.updateSeries([{
+                        name: est,
+                        data: trbrd
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+
+                GraphTranBH.updateSeries([{
+                        name: est,
+                        data: trbuah
+                    },
+
+                    {
+                        name: "Score Good",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ])
+
+            }
+        });
+    }
 </script>

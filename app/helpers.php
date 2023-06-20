@@ -792,21 +792,14 @@ if (!function_exists('BpthKTE')) {
         return $array;
     }
 }
-if (!function_exists('list_wil')) {
-    function list_wil($collection)
+if (!function_exists('calculateValue')) {
+    function calculateValue($sum, $total)
     {
-        $collection->transform(function ($innerCollection) {
-            $innerCollection->transform(function ($item) {
-                if (isset($item->est) && $item->est === 'KTE4') {
-                    $item->est = 'KTE';
-                }
-                return $item;
-            });
-
-            return $innerCollection;
-        });
-
-        return $collection;
+        if ($total != 0) {
+            return round($sum / $total, 2);
+        } else {
+            return 0;
+        }
     }
 }
 

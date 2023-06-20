@@ -393,8 +393,7 @@
                             <input type="hidden" name="afd" id="afd" value="{{$afd}}">
 
                             <div class="form-group">
-                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate"
-                                    onchange="updateDate();">
+                                <select class="form-control mb-2 mr-sm-2" name="date" id="inputDate" onchange="updateDate();">
                                     <option value="" disabled selected hidden>Pilih tanggal</option>
                                     <optgroup label="Mutu Ancak">
                                         @foreach($ancakDates as $ancakDate)
@@ -423,8 +422,7 @@
                                 </select>
                             </div>
 
-                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button"
-                                onclick="updateTanggal();" disabled>Show</button>
+                            <button type="button" class="ml-2 btn btn-primary mb-2" id="show-button" onclick="updateTanggal();" disabled>Show</button>
 
                         </div>
                     </form>
@@ -436,16 +434,12 @@
             </div>
         </div>
         <!-- animasi loading -->
-        <div id="lottie-container"
-            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation"
-                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
-        <div id="lottie-container1"
-            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation"
-                style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container1" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation" style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
 
@@ -481,8 +475,7 @@
                 }
             </style>
 
-            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;"
-                target="_blank">
+            <form action="{{ route('pdfBA') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
 
@@ -496,8 +489,7 @@
                 </button>
             </form>
 
-            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;"
-                target="_blank">
+            <form action="{{ route('pdfBA_excel') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
                 {{ csrf_field() }}
                 <!-- Your hidden inputs -->
                 <input type="hidden" name="estBA_excel" id="estpdf" value="{{$est}}">
@@ -532,22 +524,25 @@
                         <th>Status_panen</th>
                         <th>Kemandoran</th>
                         <th>Ancak_pemanen</th>
-                        <th>Sample</th>
+                        <th>Pokok_panen</th>
+                        <th>Pokok_sample</th>
+                        <th>Jjg_panen</th>
+                        <th>Brd_p</th>
+                        <th>Brd_k</th>
+                        <th>brd_gl</th>
+                        <th>bt_s</th>
+                        <th>bt_m1</th>
+                        <th>bt_m2</th>
+                        <th>bt_m3</th>
+                        <th>Ps</th>
+                        <th>frond_stacking</th>
                         <th>Pokok_kuning</th>
                         <th>Piringan_semak</th>
                         <th>Underpruning</th>
                         <th>Overpruning</th>
-                        <th>Jjg</th>
-                        <th>Brtp</th>
-                        <th>Brtk</th>
-                        <th>Brtgl</th>
-                        <th>Bhts</th>
-                        <th>Bhtm1</th>
-                        <th>Bhtm2</th>
-                        <th>Bhtm3</th>
-                        <th>Ps</th>
-                        <th>Sp</th>
-                        <th>Pokok_panen</th>
+
+
+
                         <th>Komentar</th>
                         <th>Status</th>
                         @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
@@ -612,8 +607,8 @@
                         <th>Status Panen</th>
                         <th>Tph_baris</th>
                         <th>Petugas</th>
-                        <th>Rst</th>
-                        <th>Bt</th>
+                        <th>Bt_tph</th>
+                        <th>Brd_tph</th>
                         <th>Komentar</th>
                         @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
                         <th>Aksi</th>
@@ -690,28 +685,37 @@
                 <input type="hidden" id="afd" name="afd" value="{{$afd}}">
                 <input type="hidden" id="date" name="date">
                 <div class="row m-1">
-                    <div class="col"> <input type="hidden" id="update-id" name="id">
-                        <input type="hidden" id="est" name="est" value="{{$est}}">
-                        <input type="hidden" id="afd" name="afd" value="{{$afd}}">
-                        <input type="hidden" id="date" name="date">
-                        <label for="update-blokCak" class="col-form-label">Blok</label>
-                        <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="" required>
-                        <label for="update-StatusPnen" class="col-form-label">Status Panen</label>
-                        <input type="text" class="form-control" id="update-StatusPnen" name="StatusPnen" value=""
-                            required>
-                        <label for="update-sph" class="col-form-label">SPH</label>
-                        <input type="text" class="form-control" id="update-sph" name="sph" value="" required>
-                        <label for="update-br1" class="col-form-label">BR 1</label>
-                        <input type="text" class="form-control" id="update-br1" name="br1" value="" required>
-                        <label for="update-br2" class="col-form-label">BR 2</label>
-                        <input type="text" class="form-control" id="update-br2" name="br2" value="" required>
-                        <label for="update-sampCak" class="col-form-label">Sample</label>
-                        <input type="text" class="form-control" id="update-sampCak" name="sampCak" value="" required>
-                        <label for="update-pkKuning" class="col-form-label">Pokok Kuning</label>
-                        <input type="text" class="form-control" id="update-pkKuning" name="pkKuning" value="" required>
-                    </div>
                     <div class="col">
 
+                        <label for="update-blokCak" class="col-form-label">Blok</label>
+                        <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="" required>
+
+
+                        <label for="update-StatusPnen" class="col-form-label">Status Panen</label>
+                        <input type="text" class="form-control" id="update-StatusPnen" name="StatusPnen" value="" required>
+
+
+                        <label for="update-sph" class="col-form-label">SPH</label>
+                        <input type="text" class="form-control" id="update-sph" name="sph" value="" required>
+
+
+                        <label for="update-br1" class="col-form-label">BR 1</label>
+                        <input type="text" class="form-control" id="update-br1" name="br1" value="" required>
+
+
+                        <label for="update-br2" class="col-form-label">BR 2</label>
+                        <input type="text" class="form-control" id="update-br2" name="br2" value="" required>
+
+
+                        <label for="update-sampCak" class="col-form-label">Sample</label>
+                        <input type="text" class="form-control" id="update-sampCak" name="sampCak" value="" required>
+
+
+                        <label for="update-pkKuning" class="col-form-label">Pokok Kuning</label>
+                        <input type="text" class="form-control" id="update-pkKuning" name="pkKuning" value="" required>
+
+                    </div>
+                    <div class="col">
 
                         <label for="update-prSmk" class="col-form-label">Piringan Semak</label>
                         <input type="text" class="form-control" id="update-prSmk" name="prSmk" value="" required>
@@ -743,7 +747,6 @@
                     </div>
                     <div class="col">
 
-
                         <label for="update-bhts" class="col-form-label">BHTS</label>
                         <input type="text" class="form-control" id="update-bhts" name="bhts" value="" required>
 
@@ -769,11 +772,14 @@
 
 
                         <label for="update-pk_panenCAk" class="col-form-label">Pokok Panen</label>
-                        <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value=""
-                            required>
+                        <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value="" required>
 
                     </div>
                 </div>
+
+
+
+
                 <!-- Add your other input fields here -->
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -894,11 +900,9 @@
 
 
                         <label for="update-blok_trans" class="col-form-label">Blok</label>
-                        <input type="text" class="form-control" id="update-blok_trans" name="blok_trans" value=""
-                            required>
+                        <input type="text" class="form-control" id="update-blok_trans" name="blok_trans" value="" required>
                         <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
-                        <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen"
-                            value="" required>
+                        <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value="" required>
 
 
                         <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
@@ -921,8 +925,7 @@
 
 
                         <label for="update-komentar_trans" class="col-form-label">Komentar</label>
-                        <textarea rows="4" class="form-control" id="update-komentar_trans" name="komentar_trans"
-                            value=""> </textarea>
+                        <textarea rows="4" class="form-control" id="update-komentar_trans" name="komentar_trans" value=""> </textarea>
                     </div>
 
                 </div>
@@ -968,8 +971,7 @@
             <p>Apakah anda Yakin ingin Menghapus?</p>
             <div class="row">
                 <div class="col text-right">
-                    <form id="delete-form" action="{{ route('deleteBA') }}" method="POST"
-                        onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+                    <form id="delete-form" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
                         {{ csrf_field() }}
                         <input type="hidden" id="delete-id" name="id">
 
@@ -993,8 +995,7 @@
             <div class="row">
                 <div class="col text-right">
 
-                    <form id="delete-forms" action="{{ route('deleteBA') }}" method="POST"
-                        onsubmit="event.preventDefault();">
+                    <form id="delete-forms" action="{{ route('deleteBA') }}" method="POST" onsubmit="event.preventDefault();">
                         {{ csrf_field() }}
                         <input type="hidden" id="delete-ids" name="ids">
 
@@ -1350,10 +1351,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
 
 
@@ -2263,7 +2262,7 @@
                     pokok_panen_cak) {
                     const td = document.createElement('td');
                     td.style.display = 'inline-flex';
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
                         const updateBtn = document.createElement('button');
                         updateBtn.className = 'btn btn-success mr-2';
                         updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
@@ -2751,11 +2750,9 @@
                         element[1].status_panen,
                         element[1].kemandoran,
                         element[1].ancak_pemanen,
+                        element[1].pokok_panen,
                         element[1].sample,
-                        element[1].pokok_kuning,
-                        element[1].piringan_semak,
-                        element[1].underpruning,
-                        element[1].overpruning,
+
                         element[1].jjg,
                         element[1].brtp,
                         element[1].brtk,
@@ -2766,7 +2763,10 @@
                         element[1].bhtm3,
                         element[1].ps,
                         element[1].sp,
-                        element[1].pokok_panen,
+                        element[1].pokok_kuning,
+                        element[1].piringan_semak,
+                        element[1].underpruning,
+                        element[1].overpruning,
                         element[1].komentar,
                         element[1].aksi,
                     ];
@@ -2800,7 +2800,6 @@
 
                     tRans.appendChild(row);
                 });
-
 
 
                 // console.log(mutuBuah);
@@ -2863,8 +2862,9 @@
                         element[1].status_panen,
                         element[1].tph_baris,
                         element[1].petugas,
-                        element[1].rst,
                         element[1].bt,
+                        element[1].rst,
+
                         element[1].komentar,
                     ];
 
@@ -2907,6 +2907,7 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}",
                 },
                 success: function(data, textStatus, xhr) {
+                    console.log(data);
                     // Check if the status code is 200 OK
                     if (xhr.status === 200) {
                         // Close the modal
@@ -3021,7 +3022,7 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "https://qc-apps.srs-ssms.com/dashboard_inspeksi";
+        window.location.href = "http://ssms-qc.test/dashboard_inspeksi";
     }
     var regional = '{{$reg}}';
 
