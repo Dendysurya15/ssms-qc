@@ -324,7 +324,9 @@ class inspectController extends Controller
             ->select("mutu_transport.*")
             ->where('estate', $est)
             ->where('datetime', 'like', '%' . $tgl . '%')
-            ->orderBy('afdeling', 'asc')
+            ->orderBy('estate', 'asc')
+            ->orderBy('afdeling', 'asc')     
+            ->orderBy('blok', 'asc')
             ->orderBy('datetime', 'asc')
             ->get();
         $dataMTFI1 = $queryMTFI->groupBy(function ($item) {
@@ -334,13 +336,13 @@ class inspectController extends Controller
 
         // dd($dataMTFI1);
 
-       
-
         $queryMBFI = DB::connection('mysql2')->table('mutu_buah')
             ->select("mutu_buah.*")
             ->where('estate', $est)
             ->where('datetime', 'like', '%' . $tgl . '%')
-            ->orderBy('afdeling', 'asc')
+            ->orderBy('estate', 'asc')
+            ->orderBy('afdeling', 'asc')     
+            ->orderBy('blok', 'asc')
             ->orderBy('datetime', 'asc')
             ->get();
         $queryMBFI = $queryMBFI->groupBy(function ($item) {
@@ -354,8 +356,10 @@ class inspectController extends Controller
             ->where('waktu_temuan', 'like', '%' . $tgl . '%')
             ->where('estate', '=', $est)
             ->where('estate', 'not like', '%Plasma%')
-            ->orderBy('afdeling', 'asc')
-            // ->orderBy('datetime', 'asc')
+            ->orderBy('estate', 'asc')
+            ->orderBy('afdeling', 'asc')     
+            ->orderBy('blok', 'asc')
+            ->orderBy('waktu_temuan', 'asc')
             ->get();
 
         $queryNew = $queryNew->groupBy(function ($item) {
@@ -364,58 +368,49 @@ class inspectController extends Controller
         $queryNew = json_decode($queryNew, true);
         // dd( $queryNew);
 
+        $dates = [];
+
+        foreach ($dataMTFI1 as $subarray) {
+            foreach ($subarray as $item) {
+                if (isset($item['datetime'])) {
+                    $date = date('Y-m-d', strtotime($item['datetime']));
+                    $dates[$date] = true;
+                }
+            }
+        }
+
+        $dateListTrans = array_keys($dates);
+
+        $datesbh = [];
+
+        foreach ($queryMBFI as $subarray) {
+            foreach ($subarray as $item) {
+                if (isset($item['datetime'])) {
+                    $date = date('Y-m-d', strtotime($item['datetime']));
+                    $datesbh[$date] = true;
+                }
+            }
+        }
+
+        $dateListBuah = array_keys($datesbh);
+
+        $datesAncak = [];
+
+        foreach ($queryNew as $subarray) {
+            foreach ($subarray as $item) {
+                if (isset($item['waktu_temuan'])) {
+                    $date = date('Y-m-d', strtotime($item['waktu_temuan']));
+                    $datesAncak[$date] = true;
+                }
+            }
+        }
+
+        $dateListAncak = array_keys($datesAncak);
+
+        // dd($dateListTrans);
+
         $all_mutu = [];
 
-        // foreach ($dataMTFI1 as $key => $items) {
-        //     if (!array_key_exists($key, $all_mutu)) {
-        //         $all_mutu[$key] = [
-        //             'mutu_transport' => [],
-        //             'mutu_ancak' => [],
-        //             'mutu_buah' => [],
-        //         ];
-        //     }
-        //     $visit_count = [];
-        
-        //     foreach ($items as $item) {
-        //         // dd($item);
-        //         $date = substr($item['datetime'], 0, 10);
-        //         // $identifier = $item['blok'] . '_' . $item['tph_baris'];
-        //         $identifier = $item['blok'] . '_' . $item['afdeling'] . '_' . $item['estate'];
-        
-        //         if (!array_key_exists($identifier, $visit_count)) {
-        //             $visit_count[$identifier] = [];
-        //         }
-        
-        //         if (!in_array($date, $visit_count[$identifier])) {
-        //             $visit_count[$identifier][] = $date;
-        //             sort($visit_count[$identifier]);
-        //         }
-        
-        //         $item['visit'] = array_search($date, $visit_count[$identifier]) + 1;
-        
-        //         // Check if foto_temuan or foto_fu is not empty and process them
-        //         if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
-        
-        //             // Remove brackets and explode the strings into arrays
-        //             $foto_temuan = explode(',', str_replace(['[', ']'], '', $item['foto_temuan']));
-        //             $komentar = explode(',', str_replace(['[', ']'], '', $item['komentar']));
-        
-        //             // Loop through each foto_temuan and komentar
-        //             for ($i = 0; $i < count($foto_temuan); $i++) {
-        //                 // Copy the item
-        //                 $new_item = $item;
-        
-        //                 // Replace foto_temuan and komentar with their respective values
-        //                 $new_item['foto_temuan'] = trim($foto_temuan[$i]); // trim is used to remove any unwanted spaces
-        //                 $new_item['komentar'] = trim($komentar[$i]); // trim is used to remove any unwanted spaces
-        
-        //                 // Add the new item to the all_mutu array
-        //                 $all_mutu[$key]['mutu_transport'][] = $new_item;
-        //             }
-        //         }
-        //     }
-        // }
-        
         foreach ($dataMTFI1 as $key => $items) {
             if (!array_key_exists($key, $all_mutu)) {
                 $all_mutu[$key] = [
@@ -424,22 +419,19 @@ class inspectController extends Controller
                     'mutu_buah' => [],
                 ];
             }
-            $visit_count = [];
         
-            foreach ($items as $item) {
+            $visit_count = 1; // Initialize visit count to 1
+        
+            foreach ($items as &$item) {
                 $date = substr($item['datetime'], 0, 10);
-                $identifier = $item['blok'] . '_' . $item['afdeling'] . '_' . $item['estate'];
         
-                if (!array_key_exists($identifier, $visit_count)) {
-                    $visit_count[$identifier] = [];
+                // Get visit count from datelisttrans array
+                $visit = array_search($date, $dateListTrans);
+                if ($visit !== false) {
+                    $visit_count = $visit + 1; // Update visit count
                 }
         
-                if (!in_array($date, $visit_count[$identifier])) {
-                    $visit_count[$identifier][] = $date;
-                    sort($visit_count[$identifier]);
-                }
-        
-                $item['visit'] = array_search($date, $visit_count[$identifier]) + 1;
+                $item['visit'] = $visit_count;
         
                 // Check if foto_temuan or foto_fu is not empty and process them
                 if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
@@ -464,6 +456,11 @@ class inspectController extends Controller
             }
         }
         
+        
+        // dd($all_mutu,$dateListTrans);
+
+
+        // dd($all_mutu);
         foreach ($queryNew as $key => $items) {
             if (!array_key_exists($key, $all_mutu)) {
                 $all_mutu[$key] = [
@@ -472,32 +469,23 @@ class inspectController extends Controller
                     'mutu_buah' => [],
                 ];
             }
-            $visit_count = [];
+            $visit_count = 1; // Initialize visit count to 1
 
             foreach ($items as $item) {
                 $date = substr($item['waktu_temuan'], 0, 10);
-                $identifier = $item['blok'] . '_' . $item['afdeling'] . '_' . $item['estate'];
-
-                if (!array_key_exists($identifier, $visit_count)) {
-                    $visit_count[$identifier] = [];
+                $visit = array_search($date, $dateListAncak);
+                if ($visit !== false) {
+                    $visit_count = $visit + 1; // Update visit count
                 }
-
-                // If the item's date is not in the visit_count array, add it and assign a visit number
-                if (!in_array($date, $visit_count[$identifier])) {
-                    $visit_count[$identifier][] = $date;
-                    // Sort the dates in ascending order
-                    sort($visit_count[$identifier]);
-                }
-
-                $item['visit'] = array_search($date, $visit_count[$identifier]) + 1;
+        
+                $item['visit'] = $visit_count;
                 if (!empty($item['foto_temuan1']) || !empty($item['foto_fu1']) || !empty($item['komentar'])) {
                     $all_mutu[$key]['mutu_ancak'][] = $item;
                 }
             }
         }
         
-        // dd($all_mutu);
-        
+       // dd($all_mutu);
         foreach ($queryMBFI as $key => $items) {
             if (!array_key_exists($key, $all_mutu)) {
                 $all_mutu[$key] = [
@@ -506,73 +494,66 @@ class inspectController extends Controller
                     'mutu_buah' => [],
                 ];
             }
-            $visit_count = [];
-        
+
+            $visit_count = 1; // Initialize visit count to 1
+
             foreach ($items as $item) {
                 $date = substr($item['datetime'], 0, 10);
-                $identifier = $item['blok'] . '_' . $item['estate'] . '_' . $item['afdeling'];
-        
-                if (!array_key_exists($identifier, $visit_count)) {
-                    $visit_count[$identifier] = [];
+                $visit = array_search($date, $dateListBuah);
+                if ($visit !== false) {
+                    $visit_count = $visit + 1; // Update visit count
                 }
         
-                if (!in_array($date, $visit_count[$identifier])) {
-                    $visit_count[$identifier][] = $date;
-                    sort($visit_count[$identifier]);
-                }
-        
-                $item['visit'] = array_search($date, $visit_count[$identifier]) + 1;
-        
+                $item['visit'] = $visit_count;
+
                 // Check if foto_temuan or foto_fu is not empty and process them
                 if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
-        
                     // Remove brackets and explode the strings into arrays
                     $foto_temuan = explode(';', str_replace(' ', '', $item['foto_temuan']));
                     $komentar = explode(';', $item['komentar']);
-        
+
                     // Loop through each foto_temuan and komentar
                     for ($i = 0; $i < count($foto_temuan); $i++) {
                         // Copy the item
                         $new_item = $item;
-        
+
                         // Replace foto_temuan and komentar with their respective values
                         $new_item['foto_temuan'] = trim($foto_temuan[$i]);
                         $new_item['komentar'] = trim($komentar[$i]);
-        
+
                         // Add the new item to the all_mutu array
                         $all_mutu[$key]['mutu_buah'][] = $new_item;
                     }
                 }
             }
         }
-        
-        
+
 
         $all_mutu = array_filter($all_mutu, function ($item) {
             return !empty($item['mutu_transport']) || !empty($item['mutu_ancak']) || !empty($item['mutu_buah']);
         });
 
 
+     
+        // function getGroupLetter($key)
+        // {
+        //     return substr($key, 4, 2);
+        // }
+        // uksort($all_mutu, function ($a, $b) {
+        //     $groupLetterA = getGroupLetter($a);
+        //     $groupLetterB = getGroupLetter($b);
+
+        //     if ($groupLetterA === $groupLetterB) {
+        //         return strcmp($a, $b); // If the group letters are the same, compare the full keys
+        //     }
+
+        //     return strcmp($groupLetterA, $groupLetterB); // Compare the group letters
+        // });
+
         // dd($all_mutu);
-        function getGroupLetter($key)
-        {
-            return substr($key, 4, 2);
-        }
-        uksort($all_mutu, function ($a, $b) {
-            $groupLetterA = getGroupLetter($a);
-            $groupLetterB = getGroupLetter($b);
-
-            if ($groupLetterA === $groupLetterB) {
-                return strcmp($a, $b); // If the group letters are the same, compare the full keys
-            }
-
-            return strcmp($groupLetterA, $groupLetterB); // Compare the group letters
-        });
-
-
    
         ////
-        // dd($all_mutu);
+     
         
         
         // print_r($all_mutu);
@@ -596,7 +577,7 @@ class inspectController extends Controller
     public function getFindData(Request $request)
     {
         // $test = $request->get('date');
-        // dd($test);
+        
         $queryEstate = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->join('wil', 'wil.id', '=', 'estate.wil')
@@ -708,11 +689,16 @@ class inspectController extends Controller
             ->where('estate.est', '!=', 'PLASMA')
             ->pluck('est');
 
+
         $queryMtTrans = DB::connection('mysql2')->table('mutu_transport')
-            ->select("mutu_transport.*")
-            ->whereIn('estate', $estatex)
-            ->where('datetime', 'like', '%' . $request->get('date') . '%')
-            ->get();
+        ->select("mutu_transport.*")
+        ->whereIn('estate', $estatex)
+        ->where('datetime', 'like', '%' . $request->get('date') . '%')
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
+        ->get();
 
         // $dataTrans = $queryMtTrans->groupBy('estate');
         $dataTrans = $queryMtTrans->groupBy(function ($item) {
@@ -720,45 +706,98 @@ class inspectController extends Controller
         });
         $dataTrans = json_decode($dataTrans, true);
 
-        $queryANcak = DB::connection('mysql2')->table('mutu_ancak_new')
-            ->select("mutu_ancak_new.*")
-            ->whereIn('estate', $estatex)
-            ->where('datetime', 'like', '%' . $request->get('date') . '%')
-            ->where('estate', 'not like', '%Plasma%')
-            ->get();
-        // $dataAncak = $queryANcak->groupBy('estate');
-        $dataAncak = $queryANcak->groupBy(function ($item) {
-            return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
-        });
-        $dataAncak = json_decode($dataAncak, true);
+        $transv2 = $queryMtTrans->groupBy(['estate', 'afdeling']);
+        $transv2 = json_decode($transv2, true);
 
-        $queryFLW = DB::connection('mysql2')->table('follow_up_ma')
+        $datestrans = [];
+
+        foreach ($transv2 as $key => $items) {
+            $nestedDates = [];
+        
+            foreach ($items as $nestedItems) {
+                $uniqueDates = array_unique(array_column($nestedItems, 'datetime'));
+                $formattedDates = array_map(function ($date) {
+                    return date('Y-m-d', strtotime($date));
+                }, $uniqueDates);
+        
+                $nestedDates = array_merge($nestedDates, $formattedDates);
+            }
+        
+            $datestrans[$key] = array_values(array_unique($nestedDates));
+        }
+    
+        $queryFLWs = DB::connection('mysql2')->table('follow_up_ma')
         ->select("follow_up_ma.*")
         ->whereIn('estate', $estatex)
         ->where('waktu_temuan', 'like', '%' . $request->get('date') . '%')
         ->where('estate', 'not like', '%Plasma%')
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('waktu_temuan', 'asc')
         ->get();
- 
-  
-        $queryFLW = $queryFLW->groupBy(function ($item) {
+
+
+        $queryFLW = $queryFLWs->groupBy(function ($item) {
             return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
         });
         $queryFLW = json_decode($queryFLW, true);
-        // dd($queryFLW);
+        $ancakv2 = $queryFLWs->groupBy(['estate', 'afdeling']);
+        $ancakv2 = json_decode($ancakv2, true);
+
+        $datesAncak = [];
+
+        foreach ($ancakv2 as $key => $items) {
+            $nestedDates = [];
+        
+            foreach ($items as $nestedItems) {
+                $uniqueDates = array_unique(array_column($nestedItems, 'waktu_temuan'));
+                $formattedDates = array_map(function ($date) {
+                    return date('Y-m-d', strtotime($date));
+                }, $uniqueDates);
+        
+                $nestedDates = array_merge($nestedDates, $formattedDates);
+            }
+        
+            $datesAncak[$key] = array_values(array_unique($nestedDates));
+        }
 
         $queryMutuBh = DB::connection('mysql2')->table('mutu_buah')
-            ->select("mutu_buah.*")
-            ->whereIn('estate', $estatex)
-            ->where('datetime', 'like', '%' . $request->get('date') . '%')
-            ->orderBy('afdeling', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
+        ->select("mutu_buah.*")
+        ->whereIn('estate', $estatex)
+        ->where('datetime', 'like', '%' . $request->get('date') . '%')
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
+        ->get();
         // $mutuBuah = $queryMutuBh->groupBy('estate');
         $mutuBuah = $queryMutuBh->groupBy(function ($item) {
             return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
         });
         $mutuBuah = json_decode($mutuBuah, true);
+        $mtbuahv2 = $queryMutuBh->groupBy(['estate', 'afdeling']);
+        $mtbuahv2 = json_decode($mtbuahv2, true);
 
+        $datesBuah = [];
+
+        foreach ($mtbuahv2 as $key => $items) {
+            $nestedDates = [];
+        
+            foreach ($items as $nestedItems) {
+                $uniqueDates = array_unique(array_column($nestedItems, 'datetime'));
+                $formattedDates = array_map(function ($date) {
+                    return date('Y-m-d', strtotime($date));
+                }, $uniqueDates);
+        
+                $nestedDates = array_merge($nestedDates, $formattedDates);
+            }
+        
+            $datesBuah[$key] = array_values(array_unique($nestedDates));
+        }
+
+
+        // dd($dataTrans ,$datestrans);
 
         $mutu_all = [];
 
@@ -770,32 +809,46 @@ class inspectController extends Controller
                     'mutu_buah' => [],
                 ];
             }
-            $visit_count = [];
-
-
-            foreach ($items as $item) {
+            $keyOnly = explode(' ', $key)[0];
+          
+            foreach ($items as &$item) {
                 $date = substr($item['datetime'], 0, 10);
-                $identifier = $item['blok'] . '_' . $item['estate'] . '_' . $item['afdeling'];
+               
+            
+                $visit_count = 0; // Initialize visit count to 0
 
-                if (!array_key_exists($identifier, $visit_count)) {
-                    $visit_count[$identifier] = [];
+                // Get visit count from datestrans array
+                if (isset($datestrans[$keyOnly])) {
+                    $visit = array_search($date, $datestrans[$keyOnly]);
+                    if ($visit !== false) {
+                        $visit_count = $visit + 1; // Update visit count
+                    }
                 }
-
-                // If the item's date is not in the visit_count array, add it and assign a visit number
-                if (!in_array($date, $visit_count[$identifier])) {
-                    $visit_count[$identifier][] = $date;
-                    // Sort the dates in ascending order
-                    sort($visit_count[$identifier]);
-                }
-
-                $item['visit'] = array_search($date, $visit_count[$identifier]) + 1;
+        
+                $item['visit'] = $visit_count;
+        
+                // Check if foto_temuan or foto_fu is not empty and process them
                 if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
-                    $mutu_all[$key]['mutu_transport'][] = $item;
+                    // Remove brackets and explode the strings into arrays
+                    $foto_temuan = explode(',', str_replace(['[', ']'], '', $item['foto_temuan']));
+                    $komentar = explode(',', str_replace(['[', ']'], '', $item['komentar']));
+        
+                    // Loop through each foto_temuan and komentar
+                    for ($i = 0; $i < count($foto_temuan); $i++) {
+                        // Copy the item
+                        $new_item = $item;
+        
+                        // Replace foto_temuan and komentar with their respective values
+                        $new_item['foto_temuan'] = trim($foto_temuan[$i]); // trim is used to remove any unwanted spaces
+                        $new_item['komentar'] = trim($komentar[$i]); // trim is used to remove any unwanted spaces
+        
+                
+                        $mutu_all[$key]['mutu_transport'][] = $new_item;
+                    }
                 }
             }
         }
 
-        
         foreach ($queryFLW as $key => $items) {
             if (!array_key_exists($key, $mutu_all)) {
                 $mutu_all[$key] = [
@@ -804,31 +857,29 @@ class inspectController extends Controller
                     'mutu_buah' => [],
                 ];
             }
-            $visit_count = [];
+            $keyOnly = explode(' ', $key)[0];
 
             foreach ($items as $item) {
                 $date = substr($item['waktu_temuan'], 0, 10);
-                $identifier = $item['blok'] . '_' . $item['afdeling'] . '_' . $item['estate'];
+               
+            
+                $visit_count = 0; // Initialize visit count to 0
 
-                if (!array_key_exists($identifier, $visit_count)) {
-                    $visit_count[$identifier] = [];
+                // Get visit count from datestrans array
+                if (isset($datestrans[$keyOnly])) {
+                    $visit = array_search($date, $datestrans[$keyOnly]);
+                    if ($visit !== false) {
+                        $visit_count = $visit + 1; // Update visit count
+                    }
                 }
-
-                // If the item's date is not in the visit_count array, add it and assign a visit number
-                if (!in_array($date, $visit_count[$identifier])) {
-                    $visit_count[$identifier][] = $date;
-                    // Sort the dates in ascending order
-                    sort($visit_count[$identifier]);
-                }
-
-                $item['visit'] = array_search($date, $visit_count[$identifier]) + 1;
+        
+                $item['visit'] = $visit_count;
                 if (!empty($item['foto_temuan1']) || !empty($item['foto_fu1']) || !empty($item['komentar'])) {
                     $mutu_all[$key]['mutu_ancak'][] = $item;
                 }
             }
         }
-
-        // dd($mutu_all);
+        
         foreach ($mutuBuah as $key => $items) {
             if (!array_key_exists($key, $mutu_all)) {
                 $mutu_all[$key] = [
@@ -837,31 +888,44 @@ class inspectController extends Controller
                     'mutu_buah' => [],
                 ];
             }
-            $visit_count = [];
+            $keyOnly = explode(' ', $key)[0];
 
 
             foreach ($items as $item) {
                 $date = substr($item['datetime'], 0, 10);
-                $identifier = $item['blok'] . '_' . $item['estate'] . '_' . $item['afdeling'];
+                $visit_count = 0; // Initialize visit count to 0
 
-                if (!array_key_exists($identifier, $visit_count)) {
-                    $visit_count[$identifier] = [];
+                // Get visit count from datestrans array
+                if (isset($datestrans[$keyOnly])) {
+                    $visit = array_search($date, $datestrans[$keyOnly]);
+                    if ($visit !== false) {
+                        $visit_count = $visit + 1; // Update visit count
+                    }
                 }
-
-                // If the item's date is not in the visit_count array, add it and assign a visit number
-                if (!in_array($date, $visit_count[$identifier])) {
-                    $visit_count[$identifier][] = $date;
-                    // Sort the dates in ascending order
-                    sort($visit_count[$identifier]);
-                }
-
-                $item['visit'] = array_search($date, $visit_count[$identifier]) + 1;
+        
+                $item['visit'] = $visit_count;
                 if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
-                    $mutu_all[$key]['mutu_buah'][] = $item;
+                    // Remove brackets and explode the strings into arrays
+                    $foto_temuan = explode(';', str_replace(['[', ']'], '', $item['foto_temuan']));
+                    $komentar = explode(';', str_replace(['[', ']'], '', $item['komentar']));
+                
+                    // Loop through each foto_temuan and komentar
+                    for ($i = 0; $i < count($foto_temuan); $i++) {
+                        // Copy the item
+                        $new_item = $item;
+                
+                        // Replace foto_temuan and komentar with their respective values
+                        $new_item['foto_temuan'] = trim($foto_temuan[$i]); // trim is used to remove any unwanted spaces
+                        $new_item['komentar'] = trim($komentar[$i]); // trim is used to remove any unwanted spaces
+                
+                        $mutu_all[$key]['mutu_buah'][] = $new_item;
+                    }
                 }
+                
             }
-        }
 
+            
+        }
 
         $mutu_all = array_filter($mutu_all, function ($item) {
             return !empty($item['mutu_transport']) || !empty($item['mutu_ancak']) || !empty($item['mutu_buah']);
@@ -878,9 +942,8 @@ class inspectController extends Controller
 
             $groupedArray[$groupKey][$key] = $value;
         }
-        // dd($groupedArray, $all_mutu);
+        // dd($mutu_all,$groupedArray);
 
-        // dd($groupedArray);
         $item_counts = [];
 
         foreach ($groupedArray as $key => $value) {
@@ -922,7 +985,10 @@ class inspectController extends Controller
             $item_counts[$key]['perNoTuntas'] = ($total_foto_temuan - $total_followUP == 0) ? 0 : round(($total_foto_temuan - $total_followUP) / $total_foto_temuan * 100, 2);
             $item_counts[$key]['visit'] = $highest_visit;
         }
-
+        
+        
+        // Example usage:
+      
         // dd($item_counts);
         $arrView = array();
 
@@ -2124,86 +2190,312 @@ class inspectController extends Controller
 
     public function dashboard_inspeksi(Request $request)
     {
+        $estatex = DB::connection('mysql2')->table('estate')
+        ->select('estate.*')
+        ->join('wil', 'wil.id', '=', 'estate.wil')
+        ->where('wil.regional', 1)
+        ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+        ->where('estate.est', '!=', 'PLASMA')
+        ->pluck('est');
 
-        $queryTest = DB::connection('mysql2')->table('mutu_ancak_new')
-        ->select("mutu_ancak_new.*", DB::raw("DATE_FORMAT(datetime, '%Y-%m-%d') as formatted_datetime"))
-        ->orderBy('estate')
-        ->orderBy('afdeling')
-        ->orderBy('datetime')
-        ->get()
-        ->groupBy(['estate', 'afdeling', 'formatted_datetime'])
-        ->toArray();
 
-        // dd($queryTest['SGE']['OC']);
-        // dd($queryTest);
+        $queryMtTrans = DB::connection('mysql2')->table('mutu_transport')
+        ->select("mutu_transport.*")
+        ->whereIn('estate', $estatex)
+        ->where('datetime', 'like', '%' . '2023-06' . '%')
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
+        ->get();
 
-   
+        // $dataTrans = $queryMtTrans->groupBy('estate');
+        $dataTrans = $queryMtTrans->groupBy(function ($item) {
+            return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
+        });
+        $dataTrans = json_decode($dataTrans, true);
+
+        $transv2 = $queryMtTrans->groupBy(['estate', 'afdeling']);
+        $transv2 = json_decode($transv2, true);
+
+        $datestrans = [];
+
+        foreach ($transv2 as $key => $items) {
+            $nestedDates = [];
+        
+            foreach ($items as $nestedItems) {
+                $uniqueDates = array_unique(array_column($nestedItems, 'datetime'));
+                $formattedDates = array_map(function ($date) {
+                    return date('Y-m-d', strtotime($date));
+                }, $uniqueDates);
+        
+                $nestedDates = array_merge($nestedDates, $formattedDates);
+            }
+        
+            $datestrans[$key] = array_values(array_unique($nestedDates));
+        }
+
+        $queryFLWs = DB::connection('mysql2')->table('follow_up_ma')
+        ->select("follow_up_ma.*")
+        ->whereIn('estate', $estatex)
+        ->where('waktu_temuan', 'like', '%' . '2023-06' . '%')
+        ->where('estate', 'not like', '%Plasma%')
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('waktu_temuan', 'asc')
+        ->get();
+
+
+        $queryFLW = $queryFLWs->groupBy(function ($item) {
+            return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
+        });
+        $queryFLW = json_decode($queryFLW, true);
+        $ancakv2 = $queryFLWs->groupBy(['estate', 'afdeling']);
+        $ancakv2 = json_decode($ancakv2, true);
+
+        $datesAncak = [];
+
+        foreach ($ancakv2 as $key => $items) {
+            $nestedDates = [];
+        
+            foreach ($items as $nestedItems) {
+                $uniqueDates = array_unique(array_column($nestedItems, 'waktu_temuan'));
+                $formattedDates = array_map(function ($date) {
+                    return date('Y-m-d', strtotime($date));
+                }, $uniqueDates);
+        
+                $nestedDates = array_merge($nestedDates, $formattedDates);
+            }
+        
+            $datesAncak[$key] = array_values(array_unique($nestedDates));
+        }
+
+        $queryMutuBh = DB::connection('mysql2')->table('mutu_buah')
+        ->select("mutu_buah.*")
+        ->whereIn('estate', $estatex)
+        ->where('datetime', 'like', '%' . '2023-06' . '%')
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
+        ->get();
+        // $mutuBuah = $queryMutuBh->groupBy('estate');
+        $mutuBuah = $queryMutuBh->groupBy(function ($item) {
+            return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
+        });
+        $mutuBuah = json_decode($mutuBuah, true);
+        $mtbuahv2 = $queryMutuBh->groupBy(['estate', 'afdeling']);
+        $mtbuahv2 = json_decode($mtbuahv2, true);
+
+        $datesBuah = [];
+
+        foreach ($mtbuahv2 as $key => $items) {
+            $nestedDates = [];
+        
+            foreach ($items as $nestedItems) {
+                $uniqueDates = array_unique(array_column($nestedItems, 'datetime'));
+                $formattedDates = array_map(function ($date) {
+                    return date('Y-m-d', strtotime($date));
+                }, $uniqueDates);
+        
+                $nestedDates = array_merge($nestedDates, $formattedDates);
+            }
+        
+            $datesBuah[$key] = array_values(array_unique($nestedDates));
+        }
+
+
+        
+
+        $mutu_all = [];
+
+        foreach ($dataTrans as $key => $items) {
+            if (!array_key_exists($key, $mutu_all)) {
+                $mutu_all[$key] = [
+                    'mutu_transport' => [],
+                    'mutu_ancak' => [],
+                    'mutu_buah' => [],
+                ];
+            }
+            $keyOnly = explode(' ', $key)[0];
+        
+            foreach ($items as &$item) {
+                $date = substr($item['datetime'], 0, 10);
+            
+            
+                $visit_count = 0; // Initialize visit count to 0
+
+                // Get visit count from datestrans array
+                if (isset($datestrans[$keyOnly])) {
+                    $visit = array_search($date, $datestrans[$keyOnly]);
+                    if ($visit !== false) {
+                        $visit_count = $visit + 1; // Update visit count
+                    }
+                }
+        
+                $item['visit'] = $visit_count;
+        
+                // Check if foto_temuan or foto_fu is not empty and process them
+                if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
+                    // Remove brackets and explode the strings into arrays
+                    $foto_temuan = explode(',', str_replace(['[', ']'], '', $item['foto_temuan']));
+                    $komentar = explode(',', str_replace(['[', ']'], '', $item['komentar']));
+        
+                    // Loop through each foto_temuan and komentar
+                    for ($i = 0; $i < count($foto_temuan); $i++) {
+                        // Copy the item
+                        $new_item = $item;
+        
+                        // Replace foto_temuan and komentar with their respective values
+                        $new_item['foto_temuan'] = trim($foto_temuan[$i]); // trim is used to remove any unwanted spaces
+                        $new_item['komentar'] = trim($komentar[$i]); // trim is used to remove any unwanted spaces
+        
+                
+                        $mutu_all[$key]['mutu_transport'][] = $new_item;
+                    }
+                }
+            }
+        }
+
+        foreach ($queryFLW as $key => $items) {
+            if (!array_key_exists($key, $mutu_all)) {
+                $mutu_all[$key] = [
+                    'mutu_transport' => [],
+                    'mutu_ancak' => [],
+                    'mutu_buah' => [],
+                ];
+            }
+            $keyOnly = explode(' ', $key)[0];
+
+            foreach ($items as $item) {
+                $date = substr($item['waktu_temuan'], 0, 10);
+            
+            
+                $visit_count = 0; // Initialize visit count to 0
+
+                // Get visit count from datestrans array
+                if (isset($datestrans[$keyOnly])) {
+                    $visit = array_search($date, $datestrans[$keyOnly]);
+                    if ($visit !== false) {
+                        $visit_count = $visit + 1; // Update visit count
+                    }
+                }
+        
+                $item['visit'] = $visit_count;
+                if (!empty($item['foto_temuan1']) || !empty($item['foto_fu1']) || !empty($item['komentar'])) {
+                    $mutu_all[$key]['mutu_ancak'][] = $item;
+                }
+            }
+        }
+        
+        foreach ($mutuBuah as $key => $items) {
+            if (!array_key_exists($key, $mutu_all)) {
+                $mutu_all[$key] = [
+                    'mutu_transport' => [],
+                    'mutu_ancak' => [],
+                    'mutu_buah' => [],
+                ];
+            }
+            $keyOnly = explode(' ', $key)[0];
+
+
+            foreach ($items as $item) {
+                $date = substr($item['datetime'], 0, 10);
+                $visit_count = 0; // Initialize visit count to 0
+
+                // Get visit count from datestrans array
+                if (isset($datestrans[$keyOnly])) {
+                    $visit = array_search($date, $datestrans[$keyOnly]);
+                    if ($visit !== false) {
+                        $visit_count = $visit + 1; // Update visit count
+                    }
+                }
+        
+                $item['visit'] = $visit_count;
+                if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
+                    // Remove brackets and explode the strings into arrays
+                    $foto_temuan = explode(';', str_replace(['[', ']'], '', $item['foto_temuan']));
+                    $komentar = explode(';', str_replace(['[', ']'], '', $item['komentar']));
+                
+                    // Loop through each foto_temuan and komentar
+                    for ($i = 0; $i < count($foto_temuan); $i++) {
+                        // Copy the item
+                        $new_item = $item;
+                
+                        // Replace foto_temuan and komentar with their respective values
+                        $new_item['foto_temuan'] = trim($foto_temuan[$i]); // trim is used to remove any unwanted spaces
+                        $new_item['komentar'] = trim($komentar[$i]); // trim is used to remove any unwanted spaces
+                
+                        $mutu_all[$key]['mutu_buah'][] = $new_item;
+                    }
+                }
+                
+            }
 
             
-        function findAndRetrieveDuplicateIds($data)
-        {
-            $duplicateIds = [];
-        
-            foreach ($data as $date => $items) {
-                $temp = [];
-        
-                foreach ($items as $item) {
-                    foreach ($item as $item3) {
-                        foreach ($item3 as $item4 ) {
-                    // dd($item3);
-                                $identifier =
-                                $item4->estate .
-                                $item4->afdeling .
-                                $item4->blok .
-                                $item4->petugas .
-                                // $item4->lon_awal .
-                                // $item4->lat_awal .
-                                // $item4->lat_akhir .
-                                // $item4->lon_akhir .
-                                $item4->sph .
-                                $item4->luas_blok .
-                                $item4->br1 .
-                                $item4->br2 .
-                                $item4->jalur_masuk .
-                                $item4->status_panen .
-                                $item4->kemandoran .
-                                $item4->ancak_pemanen .
-                                $item4->sample .
-                                $item4->pokok_kuning .
-                                $item4->piringan_semak .
-                                $item4->underpruning .
-                                $item4->overpruning .
-                                $item4->jjg .
-                                $item4->brtp .
-                                $item4->brtk .
-                                $item4->brtgl .
-                                $item4->bhts .
-                                $item4->bhtm1 .
-                                $item4->bhtm2 .
-                                $item4->bhtm3 .
-                                $item4->ps .
-                                $item4->sp .
-                                $item4->pokok_panen;
-            
-                            if (isset($temp[$identifier])) {
-                                $duplicateIds[] = $item4->id;
-                            } else {
-                                $temp[$identifier] = true;
+        }
+
+        $mutu_all = array_filter($mutu_all, function ($item) {
+            return !empty($item['mutu_transport']) || !empty($item['mutu_ancak']) || !empty($item['mutu_buah']);
+        });
+
+        $groupedArray = array();
+
+        foreach ($mutu_all as $key => $value) {
+            $groupKey = substr($key, 0, 3);
+
+            if (!array_key_exists($groupKey, $groupedArray)) {
+                $groupedArray[$groupKey] = array();
+            }
+
+            $groupedArray[$groupKey][$key] = $value;
+        }
+        // dd($mutu_all['BGE OB M3312']);
+
+        $item_counts = [];
+
+        foreach ($groupedArray as $key => $value) {
+            $count = 0;
+            $total_foto_temuan = 0;
+            $total_followUP = 0;
+            $total_visits = 0;
+            $highest_visit = 1; // Add this line to keep track of the highest number of visits
+
+            foreach ($value as $sub_key => $sub_value) {
+                foreach ($sub_value as $key2 => $value2) {
+                    $count += count($value2);
+                    foreach ($value2 as $item) {
+                        if (!empty($item["foto_temuan1"]) || !empty($item["foto_temuan"])) {
+                            $total_foto_temuan++;
+                        }
+                        if (!empty($item["foto_fu1"]) || !empty($item["foto_fu"])) {
+                            $total_followUP++;
+                        }
+                        // Increment the total_visits counter for each visit found
+                        if (!empty($item["visit"])) {
+                            $total_visits++;
+
+                            // Update the highest_visit variable if a higher visit number is found
+                            if ($item["visit"] > $highest_visit) {
+                                $highest_visit = $item["visit"];
                             }
                         }
                     }
                 }
             }
-        
-            return $duplicateIds;
+            $item_counts[$key]['est'] = $key;
+            $item_counts[$key]['total_temuan'] = $count; // Renamed this key to 'total_values'
+            $item_counts[$key]['foto_temuan'] = $total_foto_temuan;
+            $item_counts[$key]['followUp'] = $total_followUP;
+            $item_counts[$key]['tuntas'] = $total_followUP;
+            $item_counts[$key]['no_tuntas'] = $total_foto_temuan - $total_followUP;
+            $item_counts[$key]['perTuntas'] = ($total_foto_temuan - $total_followUP == 0) ? 0 : round($total_followUP / $total_foto_temuan * 100, 2);
+            $item_counts[$key]['perNoTuntas'] = ($total_foto_temuan - $total_followUP == 0) ? 0 : round(($total_foto_temuan - $total_followUP) / $total_foto_temuan * 100, 2);
+            $item_counts[$key]['visit'] = $highest_visit;
         }
-    
-        // Assuming your array is stored in the $array variable
-        $duplicateIds = findAndRetrieveDuplicateIds($queryTest);
 
-
-        // dd($duplicateIds);
-
+        // dd($groupedArray,$item_counts);
         // end latihan 
         $queryEst = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
@@ -2246,40 +2538,7 @@ class inspectController extends Controller
         $arrResult = array();
         $jm_tph = array();
         $inc = 0;
-        foreach ($query as $key => $value) {
-            $sum_bt = 0;
-            $sum_jjg = 0;
-            $arrResult[$inc]['est'] = $value[0]->estate;
-            // $arrResult[$inc]['afd'] = $value[0]->afdeling;
-            foreach ($value as $key2 => $value2) {
-                $jm_tph[$inc][$value2->tph_baris][] = $value2;
-                $sum_bt += $value2->bt;
-                $sum_jjg += $value2->rst;
-            }
-
-            foreach ($jm_tph as $key3 => $value3) {
-                $arrResult[$inc]['tph'] = count($value3);
-            }
-            $arrResult[$inc]['butir'] = $sum_bt;
-            // $arrResult[$inc]['jjg'] = $sum_jjg;
-            // $arrResult[$inc]['bt_tph'] = round($sum_bt / $arrResult[$inc]['tph'], 2);
-            // $arrResult[$inc]['jjg_tph'] = round($sum_jjg / $arrResult[$inc]['tph'], 2);
-            // if ($arrResult[$inc]['bt_tph'] <= 3) {
-            //     $arrResult[$inc]['skor'] = 10;
-            // } else if ($arrResult[$inc]['bt_tph'] <= 5) {
-            //     $arrResult[$inc]['skor'] = 8;
-            // } else if ($arrResult[$inc]['bt_tph'] <= 7) {
-            //     $arrResult[$inc]['skor'] = 6;
-            // } else if ($arrResult[$inc]['bt_tph'] <= 9) {
-            //     $arrResult[$inc]['skor'] = 4;
-            // } else if ($arrResult[$inc]['bt_tph'] <= 11) {
-            //     $arrResult[$inc]['skor'] = 2;
-            // } else {
-            //     $arrResult[$inc]['skor'] = 0;
-            // }
-            $inc++;
-        }
-        // dd($arrResult);
+     
 
         $queryEstate = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
@@ -15426,6 +15685,7 @@ class inspectController extends Controller
             }
         }
 
+        // dd($RekapBulanAFD);
         // dd($RekapBulanAFD);
         // //end
         //bagian chart untuk pertahun 

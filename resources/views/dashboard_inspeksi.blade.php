@@ -1318,7 +1318,8 @@
                                                 <th rowspan="3" class="align-middle">Visit 1</th>
                                                 <th rowspan="3" class="align-middle">Visit 2</th>
                                                 <th rowspan="3" class="align-middle">Visit 3</th>
-                                                <th rowspan="3" class="align-middle">Fusion</th>
+
+                                                <th rowspan="3" class="align-middle">Gabungan</th>
                                             </tr>
                                             <tr>
                                                 <th rowspan="2" class="align-middle">Jumlah</th>
