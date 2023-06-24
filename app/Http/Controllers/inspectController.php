@@ -1029,7 +1029,10 @@ class inspectController extends Controller
             DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y-%m-%d") as date')
         )
         ->where('datetime', 'like', '%' . $tanggal . '%')
-        // ->orderBy('datetime') // Optional: You can sort the results by datetime
+        ->orderBy('estate', 'desc')
+        ->orderBy('afdeling', 'desc')     
+        ->orderBy('blok', 'desc')
+        ->orderBy('datetime', 'desc')
         ->get();
         
         $groupedDataTrans = [];
@@ -1067,7 +1070,10 @@ class inspectController extends Controller
                 DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y-%m-%d") as date')
             )
             ->where('datetime', 'like', '%' . $tanggal . '%')
-            // ->orderBy('datetime') // Optional: You can sort the results by datetime
+            ->orderBy('estate', 'desc')
+        ->orderBy('afdeling', 'desc')     
+        ->orderBy('blok', 'desc')
+        ->orderBy('datetime', 'desc')
             ->get();
 
         $groupedData = [];
@@ -1358,7 +1364,7 @@ class inspectController extends Controller
         unset($value); // unset the reference
         unset($value1); // unset the reference
         
-        // dd($transNewdata['MRE']['OC']);
+        // dd($transNewdata['NKE']['OB']);
     
         $dataSkor = array();
         
@@ -10187,6 +10193,10 @@ class inspectController extends Controller
             ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
             // ->whereYear('datetime', '2023')
             ->whereYear('datetime', $year)
+            ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
             ->get();
         $querytahun = $querytahun->groupBy(['estate', 'afdeling']);
         $querytahun = json_decode($querytahun, true);
@@ -10211,6 +10221,10 @@ class inspectController extends Controller
                 DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun')
             )
             ->whereYear('datetime', $year)
+            ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
             ->get();
         $queryMTtrans = $queryMTtrans->groupBy(['estate', 'afdeling']);
         $queryMTtrans = json_decode($queryMTtrans, true);
@@ -10542,7 +10556,7 @@ class inspectController extends Controller
         $mutuTrans = array_replace_recursive($newArrayTrans, $newArrayANcak);
 
 
-       
+     //    dd($mutuTrans['NKE']['June']);
             $newTransv2 = array();
             foreach ($mutuTrans as $key => $value) {
                 foreach ($value as $key1 => $value1) if (!empty($value)){
@@ -10561,14 +10575,36 @@ class inspectController extends Controller
                                         foreach ($value3 as $key4 => $value4) {
                                             if (is_array($value4)) {
                                                 $tot_blok = count($value4);
+                                                $new_blok = 0;
+                                                $luasBlokHanyaMa = '';
+                                                $statusPanenHanyaMa = '';
+                                                $status_panen = '';
+                                                $luas_blok = 0;
+                                                $incHanyaMa = 0;
                                                 foreach ($value4 as $key5 => $value5) {
                                                     $status_panen = $value5['status_panenMA'] ?? 'kosong';
                                                     $luas_blok = $value5['luas_blokMa'] ?? 0;
     
-                                                    // if ($luas_blok > $largestLuasBlokMa) {
-                                                    //     $largestLuasBlokMa = $luas_blok; // Update the largest luas_blokMa value
-                                                    // }
+                                                    if(isset($value5['luas_blokMa'])){
+                                                        $luasBlokHanyaMa = $value5['luas_blokMa'];
+                                                        $statusPanenHanyaMa = $value5['status_panenMA'];
+                                                        $incHanyaMa++;
+                                                    }
             
+
+                                                }
+
+                                                if($luasBlokHanyaMa != '' && $statusPanenHanyaMa != ''){
+                                                    $newTransv2[$key][$key1][$key2][$key3][$key4]['luas_blok'] = $luasBlokHanyaMa;
+                                                    $newTransv2[$key][$key1][$key2][$key3][$key4]['status_panen'] = $statusPanenHanyaMa;
+                                                    if ($statusPanenHanyaMa <= 3) {
+                                                        $new_blok = round($luasBlokHanyaMa*1.3,2);
+                                                    } else {
+                                                        $new_blok = $incHanyaMa;
+                                                    }
+                                                    
+                                                }else{
+                                                    
                                                     if ($status_panen <= 3 && $status_panen != 'kosong') {
                                                         $new_blok = round($luas_blok * 1.3, 2);
                                                     } else {
@@ -10576,11 +10612,10 @@ class inspectController extends Controller
                                                     }
                                                     $newTransv2[$key][$key1][$key2][$key3][$key4]['luas_blok'] = $luas_blok;
                                                     $newTransv2[$key][$key1][$key2][$key3][$key4]['status_panen'] = $status_panen;                                              
-                                                    $newTransv2[$key][$key1][$key2][$key3][$key4]['tph_sampleNew'] = $new_blok;
-                                                
-            
-                                                   
                                                 }
+                                                $newTransv2[$key][$key1][$key2][$key3][$key4]['tph_sampleNew'] = $new_blok;
+                                              
+
                                                 $est_blok += $new_blok;
                                             }
                                         }
@@ -10600,12 +10635,15 @@ class inspectController extends Controller
             }
             
         
-
-        // dd($newTransv2 ,$defaultTrans);
+            for($i = 1; $i<= Carbon::now()->month;$i++){
+                $listExistDataBulan[] = Carbon::create()->month($i)->monthName;
+            }
+        // dd($newTransv2['NKE']['June']);
         //perhitungan data untuk mutu transport
         //menghitung afd perbulan
         $allBlokPerMonthTrans = array();
         $mutuTransAFD = array();
+        
         foreach ($defaultTrans as $key => $value) {
             foreach ($value as $key1 => $value2) {
                 foreach ($value2 as $key2 => $value3)
@@ -10689,11 +10727,10 @@ class inspectController extends Controller
                        
                         $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = $totalSkor;
                     } else {
-                     
-                            $mutuTransAFD[$key][$key1][$key2]['check_data'] = "reg2";
-                           
-                        
-                        $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $tot_sample;
+                        if (in_array($key1, $listExistDataBulan)) {
+                            $brdPertph = 0;
+                            $buahPerTPH = 0;
+                            $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $tot_sample;
                         $mutuTransAFD[$key][$key1][$key2]['total_brd'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['total_brd/TPH'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['total_buah'] = 0;
@@ -10701,14 +10738,31 @@ class inspectController extends Controller
                         $mutuTransAFD[$key][$key1][$key2]['skor_brdPertph'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = 0;
                         
-                        $mutuTransAFD[$key][$key1][$key2]['totalSkor'] =  skor_brd_tinggal(0) + skor_buah_tinggal($buahPerTPH);
+                        $mutuTransAFD[$key][$key1][$key2]['totalSkor'] =  skor_brd_tinggal($brdPertph) +  skor_buah_tinggal($buahPerTPH);
+                        } else {
+                            $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $tot_sample;
+                            $mutuTransAFD[$key][$key1][$key2]['total_brd'] = 0;
+                            $mutuTransAFD[$key][$key1][$key2]['total_brd/TPH'] = 0;
+                            $mutuTransAFD[$key][$key1][$key2]['total_buah'] = 0;
+                            $mutuTransAFD[$key][$key1][$key2]['total_buahPerTPH'] = 0;
+                            $mutuTransAFD[$key][$key1][$key2]['skor_brdPertph'] = 0;
+                            $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = 0;
+                            
+                            $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
+                        }
+                        $brdPertph = 0;
+                        $buahPerTPH = 0;
+                            $mutuTransAFD[$key][$key1][$key2]['check_data'] = "reg2";
+                           
+                        
+                       
                         
                       
                     }
             }
         }
       
-        dd($mutuTransAFD);
+        // dd($newTransv2['NKE']['June']);
 
         $allBlokPerMonthAncak = array();
         foreach ($allBlokPerMonthTrans as $key => &$value1) {
@@ -19984,8 +20038,10 @@ class inspectController extends Controller
         ->where('datetime', 'like', '%' . $date . '%')
         ->where('mutu_ancak_new.estate', $est)
         ->where('mutu_ancak_new.afdeling', $afd)
-        ->orderBy('datetime', 'ASC')
-        ->orderBy(DB::raw('SECOND(datetime)'), 'ASC')
+        ->orderBy('estate', 'desc')
+        ->orderBy('afdeling', 'desc')     
+        ->orderBy('blok', 'desc')
+        ->orderBy('datetime', 'desc')
         ->get();
     
         $mutuAncak = $mutuAncak->groupBy('blok')->toArray();
@@ -20049,8 +20105,10 @@ class inspectController extends Controller
         ->where('datetime', 'like', '%' . $date . '%')
         ->where('mutu_transport.estate', $est)
         ->where('mutu_transport.afdeling', $afd)
-        ->orderBy('datetime', 'ASC')
-        ->orderBy(DB::raw('SECOND(datetime)'), 'ASC')
+        ->orderBy('estate', 'desc')
+        ->orderBy('afdeling', 'desc')     
+        ->orderBy('blok', 'desc')
+        ->orderBy('datetime', 'desc')
         ->get();
     
         $mutuTransport = $mutuTransport->groupBy('blok')->toArray();
