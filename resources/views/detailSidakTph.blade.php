@@ -20,6 +20,30 @@
         border: 1px solid black;
         border-collapse: collapse;
     }
+
+    .legend {
+        background-color: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .legend h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .legend-icon {
+        width: 14px;
+        height: 21px;
+        margin-right: 5px;
+    }
 </style>
 
 
@@ -187,6 +211,10 @@
 <script type="text/javascript" src="http://w2ui.com/src/w2ui-1.4.2.min.js"></script>
 
 @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep/Asisten')
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css" rel="stylesheet">
+
+
 
 <script>
     document.getElementById("hapusDetailSidakForm").addEventListener("submit", function() {
@@ -246,9 +274,10 @@
 
     var _token = $('input[name="_token"]').val();
 
+
     $.ajax({
         url: "{{ route('getPlotLine') }}",
-        method: "post",
+        method: "get",
         data: {
             est: est,
             afd: afd,
@@ -263,166 +292,32 @@
             const plotResult = Object.entries(plot['plot']);
             const markerResult = Object.entries(plot['marker']);
             const blokResult = Object.entries(plot['blok']);
+
             // console.log(plotResult.length)
             // console.log(plotResult)
+            var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
+            var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            });
+
+            var baseMaps = {
+                "Google Street": googleStreet,
+                "Google Satellite": googleSatellite
+            };
+            L.control.layers(baseMaps).addTo(map);
             // console.log(blokResult)
-            drawPlot(plotResult)
+            // drawPlot(plotResult)
             drawBlok(blokResult)
+            drawTemuan(markerResult)
+            drawLegend(markerResult)
 
 
 
-            //  for (let i = 0; i < markerResult.length; i++) {
 
-            //     for (let j = 0; j < markerResult[i][1].length; j++) {
-            //         let numberIcon = new L.Icon({
-            //         iconUrl: "https://raw.githubusercontent.com/sheiun/leaflet-color-number-markers/main/dist/img/blue/marker-icon-2x-blue-" + j + ".png",
-            //         shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-            //         iconSize: [25, 41],
-            //         iconAnchor: [12, 41],
-            //         popupAnchor: [1, -34],
-            //         shadowSize: [41, 41],
-            //     });
-            //     L.marker(JSON.parse(markerResult[i][1][j]), {
-            //         icon: numberIcon
-            //     }).addTo(map);
-
-            //     }
-
-            // }
-
-            // console.log(markerResult)
-            for (let i = 0; i < markerResult.length; i++) {
-                let numberIcon = new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41],
-                });
-                var popupOptions = {
-                    className: "customPopup"
-                };
-                var template =
-                    "<div> <span style='font-weight:bold'>Jam Sidak : </span>" + markerResult[i][1]['jam'] +
-                    "</div>" +
-                    "<div> <span style='font-weight:bold'>Nomor TPH : </span>" + markerResult[i][1][
-                        'notph'
-                    ] + "</div>" +
-                    "<div ><span style='font-weight:bold'>Blok </span>: " + markerResult[i][1]['blok'] +
-                    "</div>";
-
-                //   if (markerResult[i][1]['brondol_tinggal'] != 0){
-                //     template +=   "<div ><span style='font-weight:bold'>Brondol Tinggal </span>: "+markerResult[i][1]['brondol_tinggal']+"</div>" ;
-                //      numberIcon = new L.Icon({
-                //                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                //                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                //             iconSize: [25, 41],
-                //             iconAnchor: [12, 41],
-                //             popupAnchor: [1, -34],
-                //             shadowSize: [41, 41],
-                //         });
-                //   } 
-                //   if (markerResult[i][1]['jum_karung'] != 0){
-                //     template +=   "<div ><span style='font-weight:bold'>Karung Tinggal </span>: "+markerResult[i][1]['jum_karung']+"</div>" ;
-                //      numberIcon = new L.Icon({
-                //                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                //                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                //             iconSize: [25, 41],
-                //             iconAnchor: [12, 41],
-                //             popupAnchor: [1, -34],
-                //             shadowSize: [41, 41],
-                //         });
-                //   }
-                //   if (markerResult[i][1]['buah_tinggal'] != 0){
-                //     template +=   "<div ><span style='font-weight:bold'>Buah Tinggal </span>: "+markerResult[i][1]['buah_tinggal']+"</div>" ;
-                //      numberIcon = new L.Icon({
-                //                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                //                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                //             iconSize: [25, 41],
-                //             iconAnchor: [12, 41],
-                //             popupAnchor: [1, -34],
-                //             shadowSize: [41, 41],
-                //         });
-                //   }
-                //   if (markerResult[i][1]['restan_unreported'] != 0){
-                //     template +=   "<div ><span style='font-weight:bold'>Restan Tidak Dilaporkan </span>: "+markerResult[i][1]['restan_unreported']+"</div>" ;
-
-                //     numberIcon = new L.Icon({
-                //                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                //                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                //             iconSize: [25, 41],
-                //             iconAnchor: [12, 41],
-                //             popupAnchor: [1, -34],
-                //             shadowSize: [41, 41],
-                //         });
-                //   }
-
-                //         L.marker(JSON.parse(markerResult[i][1]['latln']), {
-                //             icon: numberIcon
-                //         }).addTo(map).bindPopup(template, popupOptions)
-                //     .openPopup();
-
-                //     //     // }
-
-                // }
-            }
         }
     })
-
-
-    function drawPlot(plot) {
-
-        var getLineStr = '{"type"'
-        getLineStr += ":"
-        getLineStr += '"FeatureCollection",'
-        getLineStr += '"features"'
-        getLineStr += ":"
-        getLineStr += '['
-
-        for (let i = 0; i < plot.length; i++) {
-            getLineStr += '{"type"'
-            getLineStr += ":"
-            getLineStr += '"Feature",'
-            getLineStr += '"properties"'
-            getLineStr += ":"
-            getLineStr += '{},'
-            getLineStr += '"geometry"'
-            getLineStr += ":"
-            getLineStr += '{"coordinates"'
-            getLineStr += ":"
-            getLineStr += plot[i][1]
-            getLineStr += ',"type"'
-            getLineStr += ":"
-            getLineStr += '"Point"'
-            getLineStr += '}},'
-        }
-
-        getLineStr = getLineStr.substring(0, getLineStr.length - 1);
-        getLineStr += ']}'
-
-        var line2 = JSON.parse(getLineStr)
-
-        var test = L.geoJSON(line2['features'], {
-                // onEachFeature: function(feature, layer){
-                //     layer.myTag = 'LineMarker'
-                //     layer.addTo(map);
-                // },
-                style: function(feature) {
-                    return {
-                        weight: 2,
-                        opacity: 1,
-                        color: 'yellow',
-                        fillOpacity: 0.7
-                    };
-                }
-            })
-            .addTo(map);
-
-        // map.fitBounds(test.getBounds());
-
-    }
 
 
     function drawBlok(blok) {
@@ -531,4 +426,161 @@
             .addTo(map);
         map.fitBounds(test.getBounds());
     }
+
+    function drawTemuan(markerResult) {
+
+        console.log(markerResult);
+        for (let i = 0; i < markerResult.length; i++) {
+            let latlng = JSON.parse(markerResult[i][1]['latln']);
+            // Define the custom icons
+            let numberIcon = L.icon({
+                iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png",
+                shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                iconSize: [14, 21],
+                iconAnchor: [7, 22],
+                popupAnchor: [1, -34],
+                shadowSize: [28, 20],
+            });
+
+            let fotoTemuanIcon = L.icon({
+                iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+                shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                iconSize: [14, 21],
+                iconAnchor: [7, 22],
+                popupAnchor: [1, -34],
+                shadowSize: [28, 20],
+            });
+
+            let markerIcon = numberIcon; // Default icon
+
+            if (markerResult[i][1]['foto_temuan1'] || markerResult[i][1]['foto_temuan2']) {
+                markerIcon = fotoTemuanIcon; // Use fotoTemuanIcon if either foto_temuan1 or foto_temuan2 exists
+            }
+
+            let marker = L.marker(latlng, {
+                icon: markerIcon
+            });
+
+
+            let popupContent = "<div> <span style='font-weight:bold'>Jam Sidak : </span>" + markerResult[i][1]['jam'] +
+                "</div>" +
+                "<div> <span style='font-weight:bold'>Nomor TPH : </span>" + markerResult[i][1]['notph'] + "</div>" +
+                "<div ><span style='font-weight:bold'>Blok </span>: " + markerResult[i][1]['blok'] + "</div>" +
+                "<div ><span style='font-weight:bold'>Brondolan Tinggal </span>: " + markerResult[i][1]['brondol_tinggal'] + "</div>" +
+                "<div ><span style='font-weight:bold'>Jumlah Karung </span>: " + markerResult[i][1]['jum_karung'] + "</div>" +
+                "<div ><span style='font-weight:bold'>Buah Tinggal </span>: " + markerResult[i][1]['buah_tinggal'] + "</div>" +
+                "<div ><span style='font-weight:bold'>Restan Unreported </span>: " + markerResult[i][1]['restan_unreported'] + "</div>";
+
+            // Add the image and comment for temuan1
+            if (markerResult[i][1]['foto_temuan1'] && markerResult[i][1]['komentar1']) {
+                popupContent += "<div><span style='font-weight:bold'>Temuan 1: </span><br>" +
+                    "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' data-lightbox='image1'>" +
+                    "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' style='max-width: 100%; height: auto;'>" +
+                    "</a><br>" +
+                    "<div class='image-comment'>" + markerResult[i][1]['komentar1'] + "</div>" +
+                    "</div>";
+            }
+
+            // Add the image and comment for temuan2
+            if (markerResult[i][1]['foto_temuan2'] && markerResult[i][1]['komentar2']) {
+                popupContent += "<div><span style='font-weight:bold'>Temuan 2: </span><br>" +
+                    "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' data-lightbox='image2'>" +
+                    "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' style='max-width: 100%; height: auto;'>" +
+                    "</a><br>" +
+                    "<div class='image-comment'>" + markerResult[i][1]['komentar2'] + "</div>" +
+                    "</div>";
+            }
+
+            marker.bindPopup(popupContent);
+
+            // Add the marker to the map
+            marker.addTo(map);
+        }
+
+        // Adjust the map's bounds to fit all markers
+        if (markerResult.length > 0) {
+            let latlngs = markerResult.map(item => JSON.parse(item[1]['latln']));
+            let bounds = L.latLngBounds(latlngs);
+            map.fitBounds(bounds);
+        }
+    }
+
+    function drawLegend(markerResult) {
+        var legendContainer = L.control({
+            position: 'bottomright'
+        });
+
+        legendContainer.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = '<h4 style="text-align: center;">Info</h4>';
+
+            var temuanCount = 0;
+            for (let i = 0; i < markerResult.length; i++) {
+                if (markerResult[i][1]['foto_temuan1'] || markerResult[i][1]['foto_temuan2']) {
+                    temuanCount++;
+                }
+            }
+
+            var totalItemsCount = markerResult.length;
+            div.innerHTML += '<div class="legend-item">Total Sidak TPH: ' + totalItemsCount + '</div>'; // Added the legend item for total items count
+
+            div.innerHTML += '<div class="legend-item"><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" class="legend-icon"> Temuan (' + temuanCount + ')</div>';
+
+            return div;
+        };
+
+        legendContainer.addTo(map);
+    }
+
+    // function drawPlot(plot) {
+
+    //     var getLineStr = '{"type"'
+    //     getLineStr += ":"
+    //     getLineStr += '"FeatureCollection",'
+    //     getLineStr += '"features"'
+    //     getLineStr += ":"
+    //     getLineStr += '['
+
+    //     for (let i = 0; i < plot.length; i++) {
+    //         getLineStr += '{"type"'
+    //         getLineStr += ":"
+    //         getLineStr += '"Feature",'
+    //         getLineStr += '"properties"'
+    //         getLineStr += ":"
+    //         getLineStr += '{},'
+    //         getLineStr += '"geometry"'
+    //         getLineStr += ":"
+    //         getLineStr += '{"coordinates"'
+    //         getLineStr += ":"
+    //         getLineStr += plot[i][1]
+    //         getLineStr += ',"type"'
+    //         getLineStr += ":"
+    //         getLineStr += '"Point"'
+    //         getLineStr += '}},'
+    //     }
+
+    //     getLineStr = getLineStr.substring(0, getLineStr.length - 1);
+    //     getLineStr += ']}'
+
+    //     var line2 = JSON.parse(getLineStr)
+
+    //     var test = L.geoJSON(line2['features'], {
+    //             // onEachFeature: function(feature, layer){
+    //             //     layer.myTag = 'LineMarker'
+    //             //     layer.addTo(map);
+    //             // },
+    //             style: function(feature) {
+    //                 return {
+    //                     weight: 2,
+    //                     opacity: 1,
+    //                     color: 'yellow',
+    //                     fillOpacity: 0.7
+    //                 };
+    //             }
+    //         })
+    //         .addTo(map);
+
+    //     // map.fitBounds(test.getBounds());
+
+    // }
 </script>
