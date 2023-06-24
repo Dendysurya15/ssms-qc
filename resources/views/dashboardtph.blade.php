@@ -932,7 +932,6 @@
             </div>
 
 
-
             <div class="d-flex justify-content-center mb-3 ml-3 mr-3 border border-dark text-uppercase">
               <h5><b>GRAFIK REKAPITULASI SIDAK PEMERIKSAAN TPH</b></h5>
             </div>
@@ -2021,6 +2020,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -2035,6 +2036,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               itemElement1.innerText = item1
@@ -2097,6 +2100,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -2111,6 +2116,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               // if (item4 != 0) {
@@ -2173,6 +2180,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -2187,6 +2196,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               itemElement4.innerText = item4;
@@ -3236,6 +3247,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -3250,6 +3263,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               itemElement1.innerText = item1
@@ -3304,6 +3319,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -3318,6 +3335,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               /* if (item4 != 0) {
@@ -3378,6 +3397,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -3392,6 +3413,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               itemElement4.innerText = item4;
@@ -4165,6 +4188,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -4179,6 +4204,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               itemElement1.innerText = item1
@@ -4233,6 +4260,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -4247,6 +4276,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               /* if (item4 != 0) {
@@ -4307,6 +4338,8 @@
                 itemElement4.style.backgroundColor = "#fffc04";
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
+              } else if (item4 == 0) {
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }
@@ -4321,6 +4354,8 @@
                 itemElement4.style.color = "black";
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "white";
+              } else {
+                itemElement4.style.color = "black";
               }
 
               itemElement4.innerText = item4;
@@ -4385,7 +4420,7 @@
               } else if (item4 >= 65 && item4 < 75) {
                 itemElement4.style.backgroundColor = "#ffc404";
               } else if (item4 == 0) {
-                itemElement4.style.backgroundColor = "#eaeaea";
+                itemElement4.style.backgroundColor = "#e8ecdc";
               } else {
                 itemElement4.style.backgroundColor = "red";
               }

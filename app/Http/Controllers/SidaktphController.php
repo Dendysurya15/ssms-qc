@@ -19,7 +19,6 @@ class SidaktphController extends Controller
 {
     //
     public $search;
-
     public function index(Request $request)
     {
         $queryEst = DB::connection('mysql2')->table('estate')->whereIn('wil', [1, 2, 3])->where('estate.est', '!=', 'CWS1')->where('estate.est', '!=', 'PLASMA')->pluck('est');
@@ -4126,7 +4125,6 @@ class SidaktphController extends Controller
             exit();
         }
     }
-
     public function graphFilterYear(Request $request)
     {
         $regData = $request->get('reg');
@@ -4588,23 +4586,44 @@ class SidaktphController extends Controller
         $inc = 0;
 
         foreach ($datas as $key => $value) {
-
-
             if (!empty($value->lat)) {
-                $plotTitik[] =  '[' . $value->lon . ',' . $value->lat     . ']';
-                $plotMarker[$inc]['latln'] =  '[' . $value->lat   . ',' . $value->lon . ']';
+                $plotTitik[] = '[' . $value->lon . ',' . $value->lat . ']';
+                $plotMarker[$inc]['latln'] = '[' . $value->lat . ',' . $value->lon . ']';
                 $plotMarker[$inc]['notph'] = $value->no_tph;
                 $plotMarker[$inc]['blok'] = $value->blok;
                 $plotMarker[$inc]['brondol_tinggal'] = $value->bt_tph + $value->bt_jalan + $value->bt_bin;
                 $plotMarker[$inc]['jum_karung'] = $value->jum_karung;
                 $plotMarker[$inc]['buah_tinggal'] = $value->buah_tinggal;
                 $plotMarker[$inc]['restan_unreported'] = $value->restan_unreported;
-                $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                $plotMarker[$inc]['datetime'] = $value->datetime;
+
+                $fotoTemuan = explode('; ', $value->foto_temuan);
+                $komentar = explode('; ', $value->komentar);
+
+                // If the number of items is the same for both arrays
+                if (count($fotoTemuan) == count($komentar)) {
+                    for ($i = 0; $i < count($fotoTemuan); $i++) {
+                        $plotMarker[$inc]['foto_temuan' . ($i + 1)] = $fotoTemuan[$i];
+                        $plotMarker[$inc]['komentar' . ($i + 1)] = $komentar[$i];
+                        $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                    }
+                } else {
+                    // Handle the case where the number of items is different
+                    // This assumes that the number of items in `foto_temuan` and `komentar` will always match
+                    // If they don't match, you'll need to handle it accordingly
+                    // For example, you can ignore the extra items or take specific action
+                    // In this code, it simply uses the first item of each array and ignores the rest
+
+                    $plotMarker[$inc]['foto_temuan'] = $fotoTemuan[0];
+                    $plotMarker[$inc]['komentar'] = $komentar[0];
+                    $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                }
+
+                $inc++;
             }
-            $inc++;
         }
 
-        // dd($plotMarker);
+        // dd($datas);
 
         $list_blok = array();
         foreach ($datas as $key => $value) {
@@ -4709,7 +4728,7 @@ class SidaktphController extends Controller
             }
         }
 
-        // dd($plotTitik);
+        // dd($plotMarker);
         $plot['plot'] = $plotTitik;
         $plot['marker'] = $plotMarker;
         $plot['blok'] = $blokLatLn;
@@ -4808,11 +4827,9 @@ class SidaktphController extends Controller
         // $Reg = $request->input('est');
         $estate = $request->input('estate');
         $afd = $request->input('afd');
-        $reg = $request->input('regional');
 
 
-
-        // dd($reg, $afd);
+        // dd($estate, $afd);
 
         $perPage = 10;
 
@@ -4834,7 +4851,6 @@ class SidaktphController extends Controller
         echo json_encode($arrView);
         exit();
     }
-
 
 
     public function updateBASidakTPH(Request $request)
@@ -5029,6 +5045,7 @@ class SidaktphController extends Controller
 
         return $pdf->stream($filename);
     }
+
 
     public function changeRegionEst(Request $request)
     {

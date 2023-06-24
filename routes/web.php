@@ -64,7 +64,7 @@ Route::get('/hapus/{id}', [unitController::class, 'hapus']);
 Route::get('detailInspeksi/{id}', [unitController::class, 'detailInspeksi'])->name('detailInspeksi');
 Route::get('detailSidakTph/{est}/{afd}/{start}/{last}', [SidaktphController::class, 'detailSidakTph'])->name('detailSidakTph');
 Route::post('getDetailTPH', [SidaktphController::class, 'getDetailTPH'])->name('getDetailTPH');
-Route::post('getPlotLine', [SidaktphController::class, 'getPlotLine'])->name('getPlotLine');
+Route::get('getPlotLine', [SidaktphController::class, 'getPlotLine'])->name('getPlotLine');
 Route::get('/qc', [unitController::class, 'load_qc_gudang'])->name('qc');
 Route::get('/hapusRecord/{id}', [unitController::class, 'hapusRecord'])->name('hapusRecord');
 Route::get('/cetakpdf/{id}', [unitController::class, 'cetakpdf']);

@@ -6300,7 +6300,7 @@ class mutubuahController extends Controller
             $totalTemuan = array();
             foreach ($value as $key2 => $value2) {
                 if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $totalTemuan)) {
-                    $splitKomen = explode(";", str_replace(" ", "", $value2['komentar']));
+                    $splitKomen = explode(";", str_replace(" ", " ", $value2['komentar']));
                     $splitPhoto = explode(";", str_replace(" ", "", $value2['foto_temuan']));
                     foreach ($splitPhoto as $key3 => $value3) {
                         foreach ($splitKomen as $key4 => $value4) {
@@ -6325,6 +6325,8 @@ class mutubuahController extends Controller
                 }
             }
         }
+
+
         // dd($dataFinding);
 
         $pdf = pdf::loadview('cetakFiSmb', [

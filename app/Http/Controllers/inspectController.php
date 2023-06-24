@@ -19984,7 +19984,11 @@ class inspectController extends Controller
         ->where('datetime', 'like', '%' . $date . '%')
         ->where('mutu_ancak_new.estate', $est)
         ->where('mutu_ancak_new.afdeling', $afd)
-        ->orderBy('datetime', 'ASC')
+      
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
         ->orderBy(DB::raw('SECOND(datetime)'), 'ASC')
         ->get();
     
@@ -20049,7 +20053,10 @@ class inspectController extends Controller
         ->where('datetime', 'like', '%' . $date . '%')
         ->where('mutu_transport.estate', $est)
         ->where('mutu_transport.afdeling', $afd)
-        ->orderBy('datetime', 'ASC')
+        ->orderBy('estate', 'asc')
+        ->orderBy('afdeling', 'asc')     
+        ->orderBy('blok', 'asc')
+        ->orderBy('datetime', 'asc')
         ->orderBy(DB::raw('SECOND(datetime)'), 'ASC')
         ->get();
     

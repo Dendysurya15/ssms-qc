@@ -803,8 +803,21 @@ if (!function_exists('calculateValue')) {
     }
 }
 
-// CONTOH PEMAKAIAN 
-// updateKeyRecursive($mutu_buah, "KTE4", "KTE");
-// updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
-// $estev2 = updateKeyRecursive2($estev2);
-// $list_all_will = changeKTE4ToKTE($list_all_will);
+
+if (!function_exists('list_wil')) {
+    function list_wil($collection)
+    {
+        $collection->transform(function ($innerCollection) {
+            $innerCollection->transform(function ($item) {
+                if (isset($item->est) && $item->est === 'KTE4') {
+                    $item->est = 'KTE';
+                }
+                return $item;
+            });
+
+            return $innerCollection;
+        });
+
+        return $collection;
+    }
+}
