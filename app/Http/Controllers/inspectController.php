@@ -1315,6 +1315,7 @@ class inspectController extends Controller
                
             }
         }
+
         // dd($transNewdata);
         // dd($transNewdata['SCE']);
         foreach ($ancak as $key => $value) {
@@ -13786,7 +13787,8 @@ class inspectController extends Controller
                     $PerAbr = 0;
                 }
 
-                $per_kr = round($total_kr * 100, 2);
+                $per_kr = $dataBLok != 0 ? round(($sum_kr / $dataBLok) * 100, 2) : 0;
+
 
                 
             $nonZeroValues = array_filter([$sum_Samplejjg, $sum_bmt, $sum_bmk, $sum_over, $sum_abnor, $sum_kosongjjg, $sum_vcut]);
@@ -15355,7 +15357,7 @@ class inspectController extends Controller
         // dd($bulanAllEST['2']['February'], $mtBuahAllEst['2']['February'], $mtTranstAllbln['2']['February']);
         // dd( $mtTranstAllbln['1']['April']);
 
-        // dd($bulanAllEST,  $mtTranstAllbln, $mtBuahAllEst);
+        // dd($bulanAllEST[6]['June'],  $mtTranstAllbln[6]['June'], $mtBuahAllEst[6]['June']);
         // dd($mtBuahAllEst);
         // dd($bulanAllEST);
         //pentotalan skor mt ancak mt transprt mt buah
@@ -15374,7 +15376,7 @@ class inspectController extends Controller
                 }
             }
         }
-        // dd($WilMtAncakThn);
+        // dd($RekapBulanwil);
         $RekapTahunwil = array();
         foreach ($WilMtAncakThn as $key => $value) {
             foreach ($mtTransTahun as $key2 => $value2) {

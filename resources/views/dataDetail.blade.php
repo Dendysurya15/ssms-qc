@@ -2435,6 +2435,24 @@
                     }
                 }
 
+                var mutuAncakTable = $('#mutuAncakTable').DataTable({
+                    data: mutuAncakData, // Use modifiedMutuAncakData instead of mutuAncakData
+                    columns: columnDefs,
+                    scrollX: true
+                });
+
+
+                // Attach event handlers to dynamically created buttons
+                $('#mutuAncakTable').on('click', '.edit-btn', function() {
+                    var rowData = mutuAncakTable.row($(this).closest('tr')).data();
+                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
+                    editRow(rowIndex);
+                });
+
+                $('#mutuAncakTable').on('click', '.delete-btn', function() {
+                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
+                    deleteRow(rowIndex);
+                });
 
                 var parseResult = JSON.parse(result)
 
@@ -2461,7 +2479,7 @@
                     mutuAncakData.push(rowData);
                 }
 
-                console.log(mutuAncakData);
+                // console.log(mutuAncakData);
 
                 document.getElementById('closeModalBtn').addEventListener('click', function() {
                     $('#editModal').modal('hide');
@@ -2518,12 +2536,10 @@
                     });
 
                     // Submit the form when the Save Changes button is clicked
-                    $('#saveChangesBtn').click(function() {
+                    $('#saveChangesBtn').off('click').on('click', function() {
                         $('#editForm').submit();
                     });
 
-                    // Handle form submission
-                    // Handle form submission
                     $('#editForm').submit(function(e) {
                         e.preventDefault(); // Prevent the default form submission
 
@@ -2557,6 +2573,7 @@
                         });
                     });
                 });
+
 
 
 
@@ -2792,29 +2809,7 @@
                 ];
                 // Initialize DataTables for mutuAncak
 
-                var modifiedMutuAncakData = mutuAncakData.map(function(row, index) {
-                    var modifiedRow = [index + 1]; // Set the id as index + 1 (adjust according to your requirements)
-                    modifiedRow.push.apply(modifiedRow, row);
-                    return modifiedRow;
-                });
-                var mutuAncakTable = $('#mutuAncakTable').DataTable({
-                    data: mutuAncakData, // Use modifiedMutuAncakData instead of mutuAncakData
-                    columns: columnDefs,
-                    scrollX: true
-                });
 
-
-                // Attach event handlers to dynamically created buttons
-                $('#mutuAncakTable').on('click', '.edit-btn', function() {
-                    var rowData = mutuAncakTable.row($(this).closest('tr')).data();
-                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
-                    editRow(rowIndex);
-                });
-
-                $('#mutuAncakTable').on('click', '.delete-btn', function() {
-                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
-                    deleteRow(rowIndex);
-                });
 
                 //modal untuk mnerima data untuk mutu ancak
                 function openUpdateModal(id,
