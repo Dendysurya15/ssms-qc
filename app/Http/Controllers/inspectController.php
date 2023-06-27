@@ -10166,6 +10166,7 @@ class inspectController extends Controller
     }
 
 
+  
     public function filterTahun(Request $request)
     {
         $year = $request->input('year');
@@ -10678,7 +10679,7 @@ class inspectController extends Controller
 
                         $tot_sample = $dataBLok;
                         if ($RegData == 2) {
-                            $tot_sample= 0;
+                           
                            foreach ($newTransv2 as $keys => $value)if($keys == $key) {
                            
                                 foreach ($value as $keys1 => $value1) if($keys1 == $key1){
@@ -10775,6 +10776,8 @@ class inspectController extends Controller
                         $mutuTransAFD[$key][$key1][$key2]['check_data'] = "reg2";
                          
                            
+                        
+                       
                         
                        
                         
@@ -19470,18 +19473,6 @@ class inspectController extends Controller
         $Reg = $request->input('est');
         $afd = $request->input('afd');
 
-        // dd($dates);
-
-        $mutuAncak = DB::connection('mysql2')->table('mutu_ancak_new')
-            ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
-            ->where('datetime', 'like', '%' . $dates . '%')
-            ->where('mutu_ancak_new.estate', $Reg)
-            ->where('mutu_ancak_new.afdeling', $afd)
-            ->get();
-        // $mutuAncak = $mutuAncak->groupBy(['blok']);
-        $mutuAncak = json_decode($mutuAncak, true);
-
-
         $mutuBuah = DB::connection('mysql2')->table('mutu_buah')
             ->select("mutu_buah.*", DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
             ->where('datetime', 'like', '%' . $dates . '%')
@@ -19501,10 +19492,18 @@ class inspectController extends Controller
         $mutuTransport = json_decode($mutuTransport, true);
         // dd($mutuAncak, $mutuBuah, $mutuTransport);
 
-
+        $mutuAncak = DB::connection('mysql2')->table('mutu_ancak_new')
+        ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+        ->where('datetime', 'like', '%' . $dates . '%')
+        ->where('mutu_ancak_new.estate', $Reg)
+        ->where('mutu_ancak_new.afdeling', $afd)
+        ->get();
+         // $mutuAncak = $mutuAncak->groupBy(['blok']);
+         $mutuAncak = json_decode($mutuAncak, true);
         $arrView = array();
 
         $arrView['mutuAncak'] =  $mutuAncak;
+
         $arrView['mutuBuah'] =  $mutuBuah;
         $arrView['mutuTransport'] =  $mutuTransport;
         // $arrView['est'] =  $est;
@@ -19520,17 +19519,19 @@ class inspectController extends Controller
         $afd = $request->input('afd');
         $date = $request->input('date');
 
-        // dd($date, $afd, $est);
+
+      
         // mutu ancak 
+        
+        $estate = $request->input('estate');
+        $afdeling = $request->input('afdeling');
+        $id = $request->input('id');
         $blok = $request->input('blokCak');
         $status_panen = $request->input('StatusPnen');
         $sph = $request->input('sph');
-        $id = $request->input('id');
         $br1 = $request->input('br1');
         $br2 = $request->input('br2');
         $sample = $request->input('sampCak');
-
-        // dd($sample);
         $pk_kuning = $request->input('pkKuning');
         $piringan_semak = $request->input('prSmk');
         $underpruning = $request->input('undrPR');
@@ -19546,7 +19547,7 @@ class inspectController extends Controller
         $ps = $request->input('ps');
         $sp = $request->input('sp');
         $pk_panen = $request->input('pk_panenCAk');
-
+        // dd($id, $estate, $afdeling,$blok,$status_panen);
 
         // mutu buah 
         $ids = $request->input('id_bh');
