@@ -520,6 +520,22 @@
         </div>
     </div>
 
+    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
+        <div class="Wraping">
+            <h1 class="text-center">Tabel Mutu Buah</h1>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="mutuBuahable">
+                    <thead>
+                        <!-- Table header content -->
+                    </thead>
+                    <tbody>
+                        <!-- Table body content will be dynamically generated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark ">
         <div class="Wraping">
             <h1 class="text-center">Tabel Mutu Ancak</h1>
@@ -978,6 +994,7 @@
             }
         }
     </style>
+
     <div id="delete-modal" class="modal-custom">
         <div class="modal-content-custom">
             <h2>Delete Mutu Ancak</h2>
@@ -1357,138 +1374,6 @@
     </div>
 
 
-    <!-- <div id="editModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Row</h5>
-                    <button type="button" class="close" id="closeModalBtn" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editForm" action="{{ route('updateBA') }}" method="POST">
-                        {{ csrf_field() }}
-                        <div class="row m-1">
-                            <div class="col">
-
-                                <label for="estate">id</label>
-                                <input type="text" class="form-control" id="editId" name="id">
-
-
-                                <label for="estate">Estate</label>
-                                <input type="text" class="form-control" id="estate" name="estate">
-
-
-                                <label for="afdeling">Afdeling</label>
-                                <input type="text" class="form-control" id="afdeling" name="afdeling">
-
-                                <label for="update-blokCak" class="col-form-label">Blok</label>
-                                <input type="text" class="form-control" id="update-blokCak" name="blokCak" value="" required>
-
-
-                                <label for="update-StatusPnen" class="col-form-label">Status Panen</label>
-                                <input type="text" class="form-control" id="update-StatusPnen" name="StatusPnen" value="" required>
-
-                            </div>
-                            <div class="col">
-
-
-
-                                <label for="update-sph" class="col-form-label">SPH</label>
-                                <input type="text" class="form-control" id="update-sph" name="sph" value="" required>
-
-
-                                <label for="update-br1" class="col-form-label">BR 1</label>
-                                <input type="text" class="form-control" id="update-br1" name="br1" value="" required>
-
-
-                                <label for="update-br2" class="col-form-label">BR 2</label>
-                                <input type="text" class="form-control" id="update-br2" name="br2" value="" required>
-
-
-                                <label for="update-sampCak" class="col-form-label">Sample</label>
-                                <input type="text" class="form-control" id="update-sampCak" name="sampCak" value="" required>
-
-
-                                <label for="update-pkKuning" class="col-form-label">Pokok Kuning</label>
-                                <input type="text" class="form-control" id="update-pkKuning" name="pkKuning" value="" required>
-
-                            </div>
-                            <div class="col">
-
-                                <label for="update-prSmk" class="col-form-label">Piringan Semak</label>
-                                <input type="text" class="form-control" id="update-prSmk" name="prSmk" value="" required>
-
-
-                                <label for="update-undrPR" class="col-form-label">Underpruning</label>
-                                <input type="text" class="form-control" id="update-undrPR" name="undrPR" value="" required>
-
-
-                                <label for="update-overPR" class="col-form-label">Overpruning</label>
-                                <input type="text" class="form-control" id="update-overPR" name="overPR" value="" required>
-
-
-                                <label for="update-jjgCak" class="col-form-label">Janjang</label>
-                                <input type="text" class="form-control" id="update-jjgCak" name="jjgCak" value="" required>
-
-
-                                <label for="update-brtp" class="col-form-label">BRTP</label>
-                                <input type="text" class="form-control" id="update-brtp" name="brtp" value="" required>
-
-
-
-                            </div>
-                            <div class="col">
-                                <label for="update-brtk" class="col-form-label">BRTK</label>
-                                <input type="text" class="form-control" id="update-brtk" name="brtk" value="" required>
-
-
-                                <label for="update-brtgl" class="col-form-label">BRTGL</label>
-                                <input type="text" class="form-control" id="update-brtgl" name="brtgl" value="" required>
-
-
-                                <label for="update-bhts" class="col-form-label">BHTS</label>
-                                <input type="text" class="form-control" id="update-bhts" name="bhts" value="" required>
-
-
-                                <label for="update-bhtm1" class="col-form-label">BHTM1</label>
-                                <input type="text" class="form-control" id="update-bhtm1" name="bhtm1" value="" required>
-
-
-                                <label for="update-bhtm2" class="col-form-label">BHTM2</label>
-                                <input type="text" class="form-control" id="update-bhtm2" name="bhtm2" value="" required>
-
-
-
-                            </div>
-                            <div class="col">
-                                <label for="update-bhtm3" class="col-form-label">BHTM3</label>
-                                <input type="text" class="form-control" id="update-bhtm3" name="bhtm3" value="" required>
-
-
-                                <label for="update-ps" class="col-form-label">PS</label>
-                                <input type="text" class="form-control" id="update-ps" name="ps" value="" required>
-
-
-                                <label for="update-sp" class="col-form-label">SP</label>
-                                <input type="text" class="form-control" id="update-sp" name="sp" value="" required>
-
-
-                                <label for="update-pk_panenCAk" class="col-form-label">Pokok Panen</label>
-                                <input type="text" class="form-control" id="update-pk_panenCAk" name="pk_panenCAk" value="" required>
-
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <div id="editModal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-xl" role="document">
@@ -1618,6 +1503,28 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="deleteModalancak" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this data?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn">Yes</button>
                 </div>
             </div>
         </div>
@@ -2235,17 +2142,17 @@
 
                 // Toggle layer visibility when the eye icon is clicked
                 // Toggle layer visibility when the eye icon is clicked
-                eye.addEventListener('click', function() {
-                    var index = parseInt(this.dataset.index);
+                // eye.addEventListener('click', function() {
+                //     var index = parseInt(this.dataset.index);
 
-                    // Remove all layers
-                    for (var j = 0; j < layers.length; j++) {
-                        map.removeLayer(layers[j]);
-                    }
+                //     // Remove all layers
+                //     for (var j = 0; j < layers.length; j++) {
+                //         map.removeLayer(layers[j]);
+                //     }
 
-                    // Add the clicked layer
-                    map.addLayer(layers[index]);
-                });
+                //     // Add the clicked layer
+                //     map.addLayer(layers[index]);
+                // });
 
 
             },
@@ -2339,22 +2246,22 @@
         const updateModal3 = document.getElementById("update-modal-trans");
         updateModal3.style.display = "none";
     }
-    document.addEventListener("DOMContentLoaded", function() {
-        setInitialDate();
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     setInitialDate();
 
-        // Add an event listener to update the date when the selected date changes
-        const inputDate = document.getElementById("inputDate");
-        inputDate.addEventListener("change", updateDate);
+    //     // Add an event listener to update the date when the selected date changes
+    //     const inputDate = document.getElementById("inputDate");
+    //     inputDate.addEventListener("change", updateDate);
 
-        // Add event listeners to close the modals when the close buttons are clicked
-        const closeModalButton = document.getElementById("close-modal");
-        closeModalButton.addEventListener("click", closeModal);
+    //     // Add event listeners to close the modals when the close buttons are clicked
+    //     const closeModalButton = document.getElementById("close-modal");
+    //     closeModalButton.addEventListener("click", closeModal);
 
-        const closeModalButtonBuah = document.getElementById("close-modal-buah");
-        closeModalButtonBuah.addEventListener("click", closeModal);
-        const closeModalButtonTrans = document.getElementById("close-modal-trans");
-        closeModalButtonTrans.addEventListener("click", closeModal);
-    });
+    //     const closeModalButtonBuah = document.getElementById("close-modal-buah");
+    //     closeModalButtonBuah.addEventListener("click", closeModal);
+    //     const closeModalButtonTrans = document.getElementById("close-modal-trans");
+    //     closeModalButtonTrans.addEventListener("click", closeModal);
+    // });
     //buat animasi loading ketika tombol show di klik
     const lottieContainer = document.getElementById('lottie-container');
     const lottieAnimation = lottie.loadAnimation({
@@ -2435,24 +2342,6 @@
                     }
                 }
 
-                var mutuAncakTable = $('#mutuAncakTable').DataTable({
-                    data: mutuAncakData, // Use modifiedMutuAncakData instead of mutuAncakData
-                    columns: columnDefs,
-                    scrollX: true
-                });
-
-
-                // Attach event handlers to dynamically created buttons
-                $('#mutuAncakTable').on('click', '.edit-btn', function() {
-                    var rowData = mutuAncakTable.row($(this).closest('tr')).data();
-                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
-                    editRow(rowIndex);
-                });
-
-                $('#mutuAncakTable').on('click', '.delete-btn', function() {
-                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
-                    deleteRow(rowIndex);
-                });
 
                 var parseResult = JSON.parse(result)
 
@@ -2460,18 +2349,7 @@
                 var mutuTransport = Object.entries(parseResult['mutuTransport'])
                 var mutuAncak = Object.entries(parseResult['mutuAncak'])
 
-                var mutuBuahData = [];
-                for (var i = 0; i < mutuBuah.length; i++) {
-                    var rowData = Object.values(mutuBuah[i]);
-                    mutuBuahData.push(rowData);
-                }
 
-                // Convert mutuTransport array to DataTables format
-                var mutuTransportData = [];
-                for (var i = 0; i < mutuTransport.length; i++) {
-                    var rowData = Object.values(mutuTransport[i]);
-                    mutuTransportData.push(rowData);
-                }
 
                 var mutuAncakData = [];
                 for (var i = 0; i < mutuAncak.length; i++) {
@@ -2563,7 +2441,8 @@
                                 alert('Data berhasil diperbarui!');
 
                                 // Refresh the data on the page
-                                fetchAndUpdateData();
+                                // fetchAndUpdateData();
+                                location.reload()
                             },
                             error: function(xhr, status, error) {
                                 console.error(xhr.responseText);
@@ -2578,14 +2457,81 @@
 
 
 
+                var selectedRowIndex; // Variable to store the selected row index
 
                 function deleteRow(id) {
-                    // Implement the logic to delete the row with the provided id
-                    // You can use the id to delete the corresponding row from the DataTable
-                    // Example code:
-                    // Assuming you have a DataTable variable called 'mutuAncakTable'
-                    mutuAncakTable.row(id).remove().draw();
+                    // Save the selected row index
+                    selectedRowIndex = id;
+
+                    // Retrieve the ID from the first column of the selected row
+                    var rowData = mutuAncakTable.row(id).data();
+                    var rowId = rowData[0];
+
+                    // Show the delete modal
+                    $('#deleteModalancak').modal('show');
+
+                    $(document).ready(function() {
+                        // Handle delete confirmation
+                        $('#confirmDeleteBtn').click(function() {
+                            // Get the selected row index and ID
+                            var rowIndex = selectedRowIndex;
+                            var id = rowId;
+
+                            // Create a form data object
+                            var formData = new FormData();
+                            formData.append('delete_id', id);
+
+                            // Get the CSRF token from the meta tag
+                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                            // Set the CSRF token in the request headers
+                            $.ajaxSetup({
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                }
+                            });
+
+                            // Send the AJAX request to the controller
+                            $.ajax({
+                                url: '{{ route("deleteBA") }}',
+                                method: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    // Handle the response from the controller if needed
+                                    console.log(response);
+
+                                    // Implement the logic to delete the row with the provided ID
+                                    // You can use the rowIndex to delete the corresponding row from the DataTable
+                                    // Example code:
+                                    // Assuming you have a DataTable variable called 'mutuAncakTable'
+                                    mutuAncakTable.row(rowIndex).remove().draw();
+
+                                    // Close the delete modal
+                                    $('#deleteModalancak').modal('hide');
+
+                                    location.reload()
+                                },
+                                error: function(xhr, status, error) {
+                                    // Handle the error if needed
+                                    console.error(error);
+
+                                    // Close the delete modal
+                                    $('#deleteModalancak').modal('hide');
+                                }
+                            });
+                        });
+                    });
                 }
+
+
+
+
+
+
+
+
 
                 // Example function to save changes
                 document.getElementById('saveChangesBtn').addEventListener('click', function() {
@@ -2600,6 +2546,7 @@
                 var columnDefs = [{
                         targets: 0,
                         title: 'id'
+
                     },
                     {
                         targets: 1,
@@ -2809,7 +2756,24 @@
                 ];
                 // Initialize DataTables for mutuAncak
 
+                var mutuAncakTable = $('#mutuAncakTable').DataTable({
+                    data: mutuAncakData, // Use modifiedMutuAncakData instead of mutuAncakData
+                    columns: columnDefs,
+                    scrollX: true
+                });
 
+
+                // Attach event handlers to dynamically created buttons
+                $('#mutuAncakTable').on('click', '.edit-btn', function() {
+                    var rowData = mutuAncakTable.row($(this).closest('tr')).data();
+                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
+                    editRow(rowIndex);
+                });
+
+                $('#mutuAncakTable').on('click', '.delete-btn', function() {
+                    var rowIndex = mutuAncakTable.row($(this).closest('tr')).index();
+                    deleteRow(rowIndex);
+                });
 
                 //modal untuk mnerima data untuk mutu ancak
                 function openUpdateModal(id,

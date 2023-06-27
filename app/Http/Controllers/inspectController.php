@@ -19645,11 +19645,15 @@ class inspectController extends Controller
     {
 
         $idBuah = $request->input('ids');
-        $ancak = $request->input('id');
+        // $ancak = $request->input('id');
+        $ancaks = $request->input('delete_id');
+
+        // dd($ancaks);
 
    
         $ancakFA = DB::connection('mysql2')->table('mutu_ancak_new')
-        ->where('id', $request->input('id'))
+        // ->where('id', $request->input('id'))
+        ->where('id', $request->input('delete_id'))
         ->get();
         $ancakFA = $ancakFA->groupBy(['estate', 'afdeling']);
         $ancakFA = json_decode($ancakFA, true);
@@ -19703,7 +19707,7 @@ class inspectController extends Controller
         
         
      
-        DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $request->input('id'))->delete();
+        DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $request->input('delete_id'))->delete();
      
           
         //mutu buah
