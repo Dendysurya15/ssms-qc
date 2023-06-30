@@ -536,6 +536,22 @@
         </div>
     </div>
 
+    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
+        <div class="Wraping">
+            <h1 class="text-center">Tabel Mutu Transport</h1>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="mutuTransportable">
+                    <thead>
+                        <!-- Table header content -->
+                    </thead>
+                    <tbody>
+                        <!-- Table body content will be dynamically generated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- 
     <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark ">
         <div class="Wraping">
             <h1 class="text-center">Tabel Mutu Ancak</h1>
@@ -653,7 +669,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div> -->
 
     <!-- Modal -->
     <div id="imageModal" class="modal">
@@ -815,7 +831,7 @@
         </div>
     </div> -->
 
-    <div id="update-modal-buah" class="modal-custom-update">
+    <!-- <div id="update-modal-buah" class="modal-custom-update">
         <div class="modal-content-custom-update">
             <h2>Update Mutu Buah</h2>
             <button id="close-modal-buah" class="btn btn-secondary">Tutup</button>
@@ -899,16 +915,16 @@
                     </div>
                 </div>
 
-                <!-- Add your other input fields here -->
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-    </div>
+              
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</div> -->
 
 
 
 
-    <div id="update-modal-trans" class="modal-custom-update">
+    <!-- <div id="update-modal-trans" class="modal-custom-update">
         <div class="modal-content-custom-update">
             <h2>Update Mutu Trans</h2>
             <button id="close-modal-trans" class="btn btn-secondary">Tutup</button>
@@ -955,15 +971,16 @@
 
                         <label for="update-komentar_trans" class="col-form-label">Komentar</label>
                         <textarea rows="4" class="form-control" id="update-komentar_trans" name="komentar_trans" value=""> </textarea>
+
                     </div>
 
                 </div>
 
-                <!-- Add your other input fields here -->
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-    </div>
+             
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</div> -->
 
 
     <style>
@@ -1502,7 +1519,173 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" id="closeModalBtn_Ancak" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModalBuah" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="text-align: center; font-weight: bold;">Update Mutu Buah</h5>
+                    <button type="button" class="close" id="closeModalBtn" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm_buah" action="{{ route('updateBA') }}" method="POST">
+                        {{ csrf_field() }}
+                        <div class="row m-1">
+                            <div class="col">
+
+
+                                <input type="hidden" class="form-control" id="editId_buah" name="editId_buah">
+
+
+                                <input type="hidden" class="form-control" id="update-estBH" name="estBH" value="">
+
+
+
+                                <input type="hidden" class="form-control" id="update-afdBH" name="afdBH" value="">
+
+
+                                <label for="update-tphBH" class="col-form-label">TPH Baris</label>
+                                <input type="text" class="form-control" id="update-tphBH" name="tphBH" value="">
+
+
+                                <label for="update-blok_bh" class="col-form-label">Blok</label>
+                                <input type="text" class="form-control" id="update-blok_bh" name="blok_bh" value="">
+
+
+                                <label for="update-StatusBhpnen" class="col-form-label">Status Panen</label>
+                                <input type="text" class="form-control" id="update-StatusBhpnen" name="StatusBhpnen" value="">
+
+                                <label for="update-petugasBH" class="col-form-label">Petugas</label>
+                                <input type="text" class="form-control" id="update-petugasBH" name="petugasBH" value="">
+
+
+
+                                <label for="update-pemanen_bh" class="col-form-label">Ancak Pemanen</label>
+                                <input type="text" class="form-control" id="update-pemanen_bh" name="pemanen_bh" value="">
+
+                            </div>
+                            <div class="col">
+
+
+                                <label for="update-bmt" class="col-form-label">BMT</label>
+                                <input type="text" class="form-control" id="update-bmt" name="bmt" value="" required>
+
+
+                                <label for="update-bmk" class="col-form-label">BMK </label>
+                                <input type="text" class="form-control" id="update-bmk" name="bmk" value="" required>
+
+
+
+                                <label for="update-emptyBH" class="col-form-label">Empty</label>
+                                <input type="text" class="form-control" id="update-emptyBH" name="emptyBH" value="" required>
+
+                                <label for="update-jjgBH" class="col-form-label">Jumlah Janjang</label>
+                                <input type="text" class="form-control" id="update-jjgBH" name="jjgBH" value="" required>
+
+                                <label for="update-overBH" class="col-form-label">OverRipe</label>
+                                <input type="text" class="form-control" id="update-overBH" name="overBH" value="" required>
+
+                            </div>
+                            <div class="col">
+
+
+                                <label for="update-abrBH" class="col-form-label">Abnormal</label>
+                                <input type="text" class="form-control" id="update-abrBH" name="abrBH" value="" required>
+
+
+                                <label for="update-vcutBH" class="col-form-label">V Cut</label>
+                                <input type="text" class="form-control" id="update-vcutBH" name="vcutBH" value="" required>
+
+
+                                <label for="update-alsBR" class="col-form-label">Alas BR</label>
+                                <input type="text" class="form-control" id="update-alsBR" name="alsBR" value="" required>
+
+
+
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn_buah">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" id="closeModalBtn_buah" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editModalTrans" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="text-align: center; font-weight: bold;">Update Mutu Trans</h5>
+                    <button type="button" class="close" id="closeModalBtn" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm_Trans" action="{{ route('updateBA') }}" method="POST">
+                        {{ csrf_field() }}
+                        <div class="row m-1">
+                            <div class="col">
+
+
+                                <input type="hidden" class="form-control" id="id_trans" name="id_trans">
+
+
+
+                                <input type="hidden" class="form-control" id="update-estTrans" name="estTrans" value="">
+
+
+
+                                <input type="hidden" class="form-control" id="update-afd_trans" name="afd_trans" value="">
+
+
+                                <label for="update-blok_trans" class="col-form-label">Blok</label>
+                                <input type="text" class="form-control" id="update-blok_trans" name="blok_trans" value="" required>
+
+                                <label for="update-Status_trPanen" class="col-form-label">Status Panen</label>
+                                <input type="text" class="form-control" id="update-Status_trPanen" name="Status_trPanen" value="" required>
+
+
+                                <label for="update-tphbrTrans" class="col-form-label">TPH Baris</label>
+                                <input type="text" class="form-control" id="update-tphbrTrans" name="tphbrTrans" value="">
+
+                            </div>
+                            <div class="col">
+
+
+
+
+                                <label for="update-petugasTrans" class="col-form-label">Petugas</label>
+                                <input type="text" class="form-control" id="update-petugasTrans" name="petugasTrans" value="">
+
+                                <label for="update-bt_trans" class="col-form-label">BT </label>
+                                <input type="text" class="form-control" id="update-bt_trans" name="bt_trans" value="" required>
+
+
+
+                                <label for="update-rstTrans" class="col-form-label">Rst</label>
+                                <input type="text" class="form-control" id="update-rstTrans" name="rstTrans" value="" required>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn_trans">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" id="closeModalBtn_Trans" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -1520,11 +1703,50 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete this data?</p>
+                    <p>Anda yakin ingin menghapus data??</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <button class="btn btn-danger" id="confirmDeleteBtn">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalBuah" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Anda yakin ingin menghapus data??</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn_buah">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteModalTrans" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Anda yakin ingin menghapus data??</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn_trans">Yes</button>
                 </div>
             </div>
         </div>
@@ -2287,13 +2509,19 @@
         lottieAnimation.play(); // Start the Lottie animation
         lottieContainer.style.display = 'block'; // Display the Lottie container
 
-        $('#tab1').empty()
-        $('#tab2').empty()
-        $('#tab3').empty()
+        // $('#tab1').empty()
+        // $('#tab2').empty()
+        // $('#tab3').empty()
 
 
         if ($.fn.DataTable.isDataTable('#mutuAncakTable')) {
             $('#mutuAncakTable').DataTable().destroy();
+        }
+        if ($.fn.DataTable.isDataTable('#mutuBuahable')) {
+            $('#mutuBuahable').DataTable().destroy();
+        }
+        if ($.fn.DataTable.isDataTable('#mutuTransportable')) {
+            $('#mutuTransportable').DataTable().destroy();
         }
         var Tanggal = document.getElementById('inputDate').value;
         var est = document.getElementById('est').value;
@@ -2357,7 +2585,8 @@
                     mutuAncakData.push(rowData);
                 }
 
-                // console.log(mutuAncakData);
+
+                // console.log(mutuBuahData);
 
                 document.getElementById('closeModalBtn').addEventListener('click', function() {
                     $('#editModal').modal('hide');
@@ -2409,7 +2638,7 @@
 
                 $(document).ready(function() {
                     // Close modal when the close button is clicked
-                    $('#closeModalBtn').click(function() {
+                    $('#closeModalBtn_Ancak').click(function() {
                         $('#editModal').modal('hide');
                     });
 
@@ -2425,6 +2654,49 @@
                         var formData = new FormData(this);
                         formData.append('id', $('#editId').val()); // Append the id field to the form data
 
+
+                        var sampCak = $('#update-sampCak').val();
+                        var pkKuning = $('#update-pkKuning').val();
+                        var prSmk = $('#update-prSmk').val();
+                        var undrPR = $('#update-undrPR').val();
+                        var overPR = $('#update-overPR').val();
+                        var jjgCak = $('#update-jjgCak').val();
+                        var brtp = $('#update-brtp').val();
+                        var brtk = $('#update-brtk').val();
+                        var brtgl = $('#update-brtgl').val();
+                        var bhts = $('#update-bhts').val();
+                        var bhtm1 = $('#update-bhtm1').val();
+                        var bhtm2 = $('#update-bhtm2').val();
+                        var bhtm3 = $('#update-bhtm3').val();
+                        var ps = $('#update-ps').val();
+                        var sp = $('#update-sp').val();
+                        var pk_panenCAk = $('#update-pk_panenCAk').val();
+
+                        if (!isNumber(sampCak) ||
+                            !isNumber(pkKuning) ||
+                            !isNumber(prSmk) ||
+                            !isNumber(undrPR) ||
+                            !isNumber(overPR) ||
+                            !isNumber(jjgCak) ||
+                            !isNumber(brtp) ||
+                            !isNumber(brtk) ||
+                            !isNumber(brtgl) ||
+                            !isNumber(bhts) ||
+                            !isNumber(bhtm1) ||
+                            !isNumber(bhtm2) ||
+                            !isNumber(bhtm3) ||
+                            !isNumber(ps) ||
+                            !isNumber(sp) ||
+                            !isNumber(pk_panenCAk)
+                        ) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Masukan Error',
+                                text: 'Hanya bisa di masukan angka Saja!'
+                            });
+                            return;
+                        }
+
                         // Send the AJAX request
                         $.ajax({
                             type: 'POST',
@@ -2438,16 +2710,23 @@
                                 $('#editModal').modal('hide');
 
                                 // Show a success message or perform any other actions
-                                alert('Data berhasil diperbarui!');
-
-                                // Refresh the data on the page
-                                // fetchAndUpdateData();
-                                location.reload()
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Data berhasil diperbarui!'
+                                }).then(function() {
+                                    // Refresh the data on the page
+                                    // fetchAndUpdateData();
+                                    location.reload();
+                                });
                             },
                             error: function(xhr, status, error) {
                                 console.error(xhr.responseText);
-                                // Show an error message or perform any other actions
-                                alert('Gagal memperbarui data!');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Gagal memperbarui data!'
+                                });
                             }
                         });
                     });
@@ -2500,7 +2779,7 @@
                                 contentType: false,
                                 success: function(response) {
                                     // Handle the response from the controller if needed
-                                    console.log(response);
+                                    // console.log(response);
 
                                     // Implement the logic to delete the row with the provided ID
                                     // You can use the rowIndex to delete the corresponding row from the DataTable
@@ -2511,7 +2790,8 @@
                                     // Close the delete modal
                                     $('#deleteModalancak').modal('hide');
 
-                                    location.reload()
+                                    // location.reload()
+                                    fetchAndUpdateData()
                                 },
                                 error: function(xhr, status, error) {
                                     // Handle the error if needed
@@ -2519,30 +2799,20 @@
 
                                     // Close the delete modal
                                     $('#deleteModalancak').modal('hide');
+                                    // fetchAndUpdateData()
                                 }
                             });
                         });
                     });
                 }
 
-
-
-
-
-
-
-
-
                 // Example function to save changes
                 document.getElementById('saveChangesBtn').addEventListener('click', function() {
-                    // Code to save the changes made in the modal
-                    // ...
 
-                    // Close the modal
                     $('#editModal').modal('hide');
                 });
 
-
+                // mutu ancak 
                 var columnDefs = [{
                         targets: 0,
                         title: 'id'
@@ -2746,6 +3016,7 @@
                     {
                         targets: -1, // -1 targets the last column
                         title: 'Actions',
+                        visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),
                         render: function(data, type, row, meta) {
                             var buttons =
                                 '<button class="edit-btn">Edit</button>' +
@@ -2775,736 +3046,671 @@
                     deleteRow(rowIndex);
                 });
 
-                //modal untuk mnerima data untuk mutu ancak
-                function openUpdateModal(id,
-                    blok_ancak,
-                    status_cak,
-                    sph_ancak,
-                    br1_cak,
-                    br2_cak,
-                    sample_cak,
-                    pokok_kuning_cak,
-                    piringan_semak_cak,
-                    underpruning_cak,
-                    overpruning_cak,
-                    jjg_cak,
-                    brtp_cak,
-                    brtk_cak,
-                    brtgl_cak,
-                    bhts_cak,
-                    bhtm1_cak,
-                    bhtm2_cak,
-                    bhtm3_cak,
-                    ps_cak,
-                    sp_cak,
-                    pokok_panen_cak) {
-                    const updateModal = document.getElementById('update-modal');
-                    const updateForm = document.getElementById('update-form');
-                    const updateId = document.getElementById('update-id');
-                    const bloks = document.getElementById('update-blokCak');
-                    const PanensStat = document.getElementById('update-StatusPnen');
-                    const updateSph = document.getElementById('update-sph');
-                    const updateBr1 = document.getElementById('update-br1');
-                    const updateBr2 = document.getElementById('update-br2');
-                    const sample = document.getElementById('update-sampCak');
-                    const pokok_kuning = document.getElementById('update-pkKuning');
+                // end table ajax mutu ancak 
 
-                    const piringan_semak = document.getElementById('update-prSmk');
-                    const underpruning = document.getElementById('update-undrPR');
-                    const overpruning = document.getElementById('update-overPR');
-                    const janjang = document.getElementById('update-jjgCak');
-                    const brtp = document.getElementById('update-brtp');
-                    const brtk = document.getElementById('update-brtk');
-                    const brtgl = document.getElementById('update-brtgl');
-                    const bhts = document.getElementById('update-bhts');
-                    const bhtm1 = document.getElementById('update-bhtm1');
-                    const bhtm2 = document.getElementById('update-bhtm2');
-                    const bhtm3 = document.getElementById('update-bhtm3');
-                    const ps = document.getElementById('update-ps');
-                    const sp = document.getElementById('update-sp');
-                    const pk_panen = document.getElementById('update-pk_panenCAk');
-
-
-                    updateId.value = id;
-                    bloks.value = blok_ancak;
-                    PanensStat.value = status_cak;
-                    updateSph.value = sph_ancak;
-                    updateBr1.value = br1_cak;
-                    updateBr2.value = br2_cak;
-                    sample.value = sample_cak;
-                    pokok_kuning.value = pokok_kuning_cak;
-
-                    piringan_semak.value = piringan_semak_cak;
-                    underpruning.value = underpruning_cak;
-                    overpruning.value = overpruning_cak;
-                    janjang.value = jjg_cak;
-                    brtp.value = brtp_cak;
-                    brtk.value = brtk_cak;
-                    brtgl.value = brtgl_cak;
-                    bhts.value = bhts_cak;
-                    bhtm1.value = bhtm1_cak;
-                    bhtm2.value = bhtm2_cak;
-                    bhtm3.value = bhtm3_cak;
-                    ps.value = ps_cak;
-                    sp.value = sp_cak;
-                    pk_panen.value = pokok_panen_cak;
-
-                    updateModal.style.display = 'block';
-
-                    updateForm.onsubmit = function(event) {
-                        event.preventDefault();
-                        updateMutuAncak(event.target);
-                    };
+                // table mutu buah 
+                var mutuBuahData = [];
+                for (var i = 0; i < mutuBuah.length; i++) {
+                    var rowData = Object.values(mutuBuah[i][1]);
+                    mutuBuahData.push(rowData);
                 }
 
-                function createAksiButtons(row,
-                    id,
-                    blok_ancak,
-                    status_cak,
-                    sph_ancak,
-                    br1_cak,
-                    br2_cak,
-                    sample_cak,
-                    pokok_kuning_cak,
-                    piringan_semak_cak,
-                    underpruning_cak,
-                    overpruning_cak,
-                    jjg_cak,
-                    brtp_cak,
-                    brtk_cak,
-                    brtgl_cak,
-                    bhts_cak,
-                    bhtm1_cak,
-                    bhtm2_cak,
-                    bhtm3_cak,
-                    ps_cak,
-                    sp_cak,
-                    pokok_panen_cak) {
-                    const td = document.createElement('td');
-                    td.style.display = 'inline-flex';
-                    if (currentUserName === 'Askep/Asisten' || currentUserName === 'Manager') {
-                        const updateBtn = document.createElement('button');
-                        updateBtn.className = 'btn btn-success mr-2';
-                        updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
-                        updateBtn.onclick = function() {
-                            openUpdateModal(id,
-                                blok_ancak,
-                                status_cak,
-                                sph_ancak,
-                                br1_cak,
-                                br2_cak,
-                                sample_cak,
-                                pokok_kuning_cak,
-                                piringan_semak_cak,
-                                underpruning_cak,
-                                overpruning_cak,
-                                jjg_cak,
-                                brtp_cak,
-                                brtk_cak,
-                                brtgl_cak,
-                                bhts_cak,
-                                bhtm1_cak,
-                                bhtm2_cak,
-                                bhtm3_cak,
-                                ps_cak,
-                                sp_cak,
-                                pokok_panen_cak);
-                        };
+                function editRowBuah(id) {
+                    // Save the selected row index
+                    selectedRowIndex = id;
 
-                        td.appendChild(updateBtn);
+                    // Retrieve the id from the first column of the selected row
+                    var rowData = mutuBuahable.row(id).data();
+                    var rowId = rowData[0];
 
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.id = 'deleteBtn-' + id;
-                        deleteBtn.className = 'btn btn-danger';
-                        deleteBtn.innerHTML = '<i class="nav-icon fa-solid fa-trash"></i>';
-                        deleteBtn.onclick = function() {
-                            const deleteModal = document.getElementById('delete-modal');
-                            deleteModal.style.display = 'block';
-                            currentRowToDelete = row;
-                            currentIdToDelete = id;
-                            document.getElementById('delete-id').value = id;
-                        };
-                        td.appendChild(deleteBtn);
-                    }
-                    row.appendChild(td);
+                    // Populate the form with the data of the selected row
+                    $('#editId_buah').val(rowData[0]);
+
+                    $('#update-estBH').val(rowData[1]);
+                    $('#update-afdBH').val(rowData[2]);
+                    $('#update-tphBH').val(rowData[8]);
+                    $('#update-blok_bh').val(rowData[3]);
+                    $('#update-StatusBhpnen').val(rowData[9]);
+                    $('#update-petugasBH').val(rowData[4]);
+                    $('#update-pemanen_bh').val(rowData[10]);
+                    $('#update-bmt').val(rowData[12]);
+                    $('#update-bmk').val(rowData[13]);
+                    $('#update-emptyBH').val(rowData[15]);
+                    $('#update-jjgBH').val(rowData[11]);
+                    $('#update-overBH').val(rowData[14]);
+                    $('#update-abrBH').val(rowData[16]);
+                    $('#update-vcutBH').val(rowData[17]);
+                    $('#update-alsBR').val(rowData[18]);
+
+
+                    $('#editModalBuah').modal('show');
                 }
 
-                document.getElementById('close-delete-modal').addEventListener('click', function() {
-                    const deleteModal = document.getElementById('delete-modal');
-                    deleteModal.style.display = 'none';
-                });
-
-                document.getElementById('delete-form').addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    // Perform the deletion using the global variables
-                    deleteData(currentIdToDelete, currentRowToDelete);
-
-                    // Reset the global variables
-                    currentRowToDelete = null;
-                    currentIdToDelete = null;
-
-                    // Close the delete modal
-                    const deleteModal = document.getElementById('delete-modal');
-                    deleteModal.style.display = 'none';
-                });
-
-                function handleDeleteFormSubmit() {
-                    const deleteId = document.getElementById('delete-id').value;
-                    const row = document.querySelector(`tr[data-id="${deleteId}"]`);
-                    deleteData(deleteId, row);
-                }
-
-
-                function deleteData(id, row) {
-                    // Create an AJAX request to delete the data
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/deleteBA', true);
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === 4 && xhr.status === 200) {
-                            // Successfully deleted, remove the row from the table
-                            row.remove();
-
-                            // Show the Lottie animation
-                            lottieContainer1.style.display = 'block';
-                            lottieAnimation1.play();
-
-                            // Hide the Lottie animation after 3 seconds
-                            setTimeout(() => {
-                                lottieContainer1.style.display = 'none';
-                                lottieAnimation1.stop();
-                            }, 2000);
-                        } else if (xhr.readyState === 4) {
-                            // Error occurred, show an error message
-                            alert('Error: Unable to delete data.');
-                        }
-                    };
-                    xhr.send('id=' + encodeURIComponent(id));
-                }
-
-                //fungsi delete dan update mutu buah
-                function mutuBuahUpdate(ids,
-                    estateBH,
-                    afdelingBH,
-                    tph_barisBH,
-                    blokBH,
-                    status_bhpanen,
-                    petugasBH,
-                    ancak_pemanenBH,
-                    bmkBH,
-                    bmtBH,
-                    emptyBH,
-                    jumlah_jjgBH,
-                    overripeBH,
-                    abnormalBH,
-                    vcutBH,
-                    alas_brBH,
-                    komentarBH) {
-                    // console.log(ids, blokBH, bmk, bmt, ancak_pemanenBH);
-                    const updateModal = document.getElementById('update-modal-buah');
-                    const updateForm = document.getElementById('update-formBuah');
-
-                    const updateId = document.getElementById('update-ids');
-                    const updateBlok = document.getElementById('update-blok_bh');
-                    const updtate_statusbh = document.getElementById('update-StatusBhpnen');
-                    const updateBmt = document.getElementById('update-bmt');
-                    const updateBmk = document.getElementById('update-bmk');
-                    const updatePemanen = document.getElementById('update-pemanen_bh');
-
-                    const estBH = document.getElementById('update-estBH');
-                    const afdBH = document.getElementById('update-afdBH');
-
-                    const tphBH = document.getElementById('update-tphBH');
-                    const petugasBHs = document.getElementById('update-petugasBH');
-                    const emptyBHS = document.getElementById('update-emptyBH');
-                    const jjgBH = document.getElementById('update-jjgBH');
-                    const overBH = document.getElementById('update-overBH');
-                    const abrBH = document.getElementById('update-abrBH');
-                    const vcutBHs = document.getElementById('update-vcutBH');
-                    const alsBR = document.getElementById('update-alsBR');
-                    const kmnBH = document.getElementById('update-kmnBH');
-
-                    updateId.value = ids;
-                    updateBlok.value = blokBH;
-                    updtate_statusbh.value = status_bhpanen;
-                    updateBmt.value = bmtBH;
-                    updateBmk.value = bmkBH;
-                    updatePemanen.value = ancak_pemanenBH;
-
-                    estBH.value = estateBH;
-                    afdBH.value = afdelingBH;
-                    tphBH.value = tph_barisBH;
-
-                    petugasBHs.value = petugasBH;
-                    emptyBHS.value = emptyBH;
-                    jjgBH.value = jumlah_jjgBH;
-                    overBH.value = overripeBH;
-                    abrBH.value = abnormalBH;
-                    vcutBHs.value = vcutBH;
-                    alsBR.value = alas_brBH;
-                    kmnBH.value = komentarBH;
-
-                    updateModal.style.display = 'block';
-
-                    updateForm.onsubmit = function(event) {
-                        event.preventDefault();
-                        updateMutuBuah(event.target);
-                    };
-                }
-
-                function buahAksibutton(row,
-                    ids,
-                    estateBH,
-                    afdelingBH,
-                    tph_barisBH,
-                    blokBH,
-                    status_bhpanen,
-                    petugasBH,
-                    ancak_pemanenBH,
-                    bmkBH,
-                    bmtBH,
-                    emptyBH,
-                    jumlah_jjgBH,
-                    overripeBH,
-                    abnormalBH,
-                    vcutBH,
-                    alas_brBH,
-                    komentarBH
-                ) {
-
-                    const td = document.createElement('td');
-                    td.style.display = 'inline-flex';
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                        const updateBtn = document.createElement('button');
-                        updateBtn.className = 'btn btn-success mr-2';
-                        updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
-                        updateBtn.onclick = function() {
-                            mutuBuahUpdate(ids,
-                                estateBH,
-                                afdelingBH,
-                                tph_barisBH,
-                                blokBH,
-                                status_bhpanen,
-                                petugasBH,
-                                ancak_pemanenBH,
-                                bmkBH,
-                                bmtBH,
-                                emptyBH,
-                                jumlah_jjgBH,
-                                overripeBH,
-                                abnormalBH,
-                                vcutBH,
-                                alas_brBH,
-                                komentarBH)
-                        };
-                        td.appendChild(updateBtn);
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.id = 'deleteBtn-' + ids;
-                        deleteBtn.className = 'btn btn-danger';
-                        deleteBtn.innerHTML = '<i class="nav-icon fa-solid fa-trash"></i>';
-                        deleteBtn.onclick = function() {
-                            // Open the delete modal
-                            const deleteModal = document.getElementById('delete-modal-buah');
-                            deleteModal.style.display = 'block';
-
-                            // Store the current row and id in the global variables
-                            currentRowToDelete = row;
-                            currentIdToDelete = ids;
-
-                            // Set the value of the delete-id input field
-                            document.getElementById('delete-ids').value = ids;
-                        };
-
-                        td.appendChild(deleteBtn);
-                    }
-                    row.appendChild(td);
-                }
-                document.getElementById('close-delete-modals').addEventListener('click', function() {
-                    const deleteModal = document.getElementById('delete-modal-buah');
-                    deleteModal.style.display = 'none';
-                });
-
-                document.getElementById('delete-forms').addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    // Perform the deletion using the global variables
-                    deleteBuah(currentIdToDelete, currentRowToDelete);
-
-                    // Reset the global variables
-                    currentRowToDelete = null;
-                    currentIdToDelete = null;
-
-                    // Close the delete modal
-                    const deleteModal = document.getElementById('delete-modal-buah');
-                    deleteModal.style.display = 'none';
-                });
-
-                function deleteBuah(id, row) {
-                    // Create an AJAX request to delete the data
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/deleteBA', true);
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === 4 && xhr.status === 200) {
-                            // Successfully deleted, remove the row from the table
-                            row.remove();
-
-                            // Show the Lottie animation
-                            lottieContainer1.style.display = 'block';
-                            lottieAnimation1.play();
-
-                            // Hide the Lottie animation after 3 seconds
-                            setTimeout(() => {
-                                lottieContainer1.style.display = 'none';
-                                lottieAnimation1.stop();
-                            }, 2000);
-                        } else if (xhr.readyState === 4) {
-                            // Error occurred, show an error message
-                            alert('Error: Unable to delete data.');
-                        }
-                    };
-                    xhr.send('ids=' + encodeURIComponent(id));
-
-                }
-                //fungsi delete dan update mutu transport
-
-                function mutuTransUp(id_trans,
-                    estate_trans,
-                    afd_trans,
-                    blok_trans,
-                    panen_trStatus,
-                    tphbrs_trans,
-                    petugas_trans,
-                    rst_trans,
-                    bt_trans,
-                    komentar_trans) {
-                    // console.log(id_trans, afd_trans, blok_trans);
-                    const updateModal = document.getElementById('update-modal-trans');
-                    const updateForm = document.getElementById('update-formTrans');
-                    const updateId = document.getElementById('update-id_trans');
-                    const est = document.getElementById('update-estTrans');
-                    const afd = document.getElementById('update-afd_trans');
-                    const blok = document.getElementById('update-blok_trans');
-                    const sttus_trPanen = document.getElementById('update-Status_trPanen');
-                    const tphTrans = document.getElementById('update-tphbrTrans');
-                    const petugas = document.getElementById('update-petugasTrans');
-                    const bt_transs = document.getElementById('update-bt_trans');
-                    const rst = document.getElementById('update-rstTrans');
-                    const komen = document.getElementById('update-komentar_trans');
-
-                    updateId.value = id_trans;
-                    est.value = estate_trans;
-                    afd.value = afd_trans;
-                    blok.value = blok_trans;
-                    sttus_trPanen.value = panen_trStatus;
-                    tphTrans.value = tphbrs_trans;
-                    petugas.value = petugas_trans;
-                    bt_transs.value = bt_trans;
-                    rst.value = rst_trans;
-                    komen.value = komentar_trans;
-
-                    updateModal.style.display = 'block';
-
-                    updateForm.onsubmit = function(event) {
-                        event.preventDefault();
-                        updateMutuTrans(event.target);
-                    };
-                }
-
-                function transportAksiButton(row,
-                    id_trans,
-                    estate_trans,
-                    afd_trans,
-                    blok_trans,
-                    panen_trStatus,
-                    tphbrs_trans,
-                    petugas_trans,
-                    rst_trans,
-                    bt_trans,
-                    komentar_trans
-                ) {
-
-                    const td = document.createElement('td');
-                    td.style.display = 'flex'; // Change from 'inline-flex' to 'flex'
-                    td.style.alignItems = 'center';
-                    td.style.justifyContent = 'center';
-
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                        const updateButton = document.createElement('button');
-                        updateButton.className = 'btn btn-success mr-2';
-                        updateButton.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
-                        updateButton.addEventListener('click', function() {
-                            mutuTransUp(id_trans,
-                                estate_trans,
-                                afd_trans,
-                                blok_trans,
-                                panen_trStatus,
-                                tphbrs_trans,
-                                petugas_trans,
-                                rst_trans,
-                                bt_trans,
-                                komentar_trans);
-                        });
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.id = 'deleteBtn-' + id_trans;
-                        deleteBtn.className = 'btn btn-danger';
-                        deleteBtn.innerHTML = '<i class="nav-icon fa-solid fa-trash"></i>';
-                        deleteBtn.onclick = function() {
-                            // Open the delete modal
-                            const deleteModal = document.getElementById('delete-modal-transport');
-                            deleteModal.style.display = 'block';
-
-                            // Store the current row and id in the global variables
-                            currentRowToDelete = row;
-                            currentIdToDelete = id_trans;
-
-                            // Set the value of the delete-id input field
-                            document.getElementById('delete-transport').value = id_trans;
-                        };
-
-                        td.appendChild(updateButton);
-                        td.appendChild(deleteBtn);
-                    }
-                    row.appendChild(td);
-                }
-
-
-                document.getElementById('close-delete-transport').addEventListener('click', function() {
-                    const deleteModal = document.getElementById('delete-modal-transport');
-                    deleteModal.style.display = 'none';
-                });
-
-                document.getElementById('delete-form-trans').addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    // Perform the deletion using the global variables
-                    deleteTrans(currentIdToDelete, currentRowToDelete);
-
-                    // Reset the global variables
-                    currentRowToDelete = null;
-                    currentIdToDelete = null;
-
-                    // Close the delete modal
-                    const deleteModal = document.getElementById('delete-modal-transport');
-                    deleteModal.style.display = 'none';
-                });
-
-
-                function deleteTrans(id, row) {
-                    // Create an AJAX request to delete the data
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('DELETE', `/deleteTrans/${encodeURIComponent(id)}`, true);
-                    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === 4 && xhr.status === 200) {
-                            // Successfully deleted, remove the row from the table
-                            row.remove();
-
-                            // Show the Lottie animation
-                            lottieContainer1.style.display = 'block';
-                            lottieAnimation1.play();
-
-                            // Hide the Lottie animation after 3 seconds
-                            setTimeout(() => {
-                                lottieContainer1.style.display = 'none';
-                                lottieAnimation1.stop();
-                            }, 2000);
-                        } else if (xhr.readyState === 4) {
-                            // Error occurred, show an error message
-                            alert('Error: Unable to delete data.');
-                        }
-                    };
-                    xhr.send();
-                }
-
-
-                //bagian menampilkan tabel semua mutu buah ancak dsb
-                function createTableCell(value) {
-                    const cell = document.createElement('td');
-                    cell.innerText = value;
-                    return cell;
-                }
-
-                function createTableRow(items) {
-                    const tr = document.createElement('tr');
-                    items.forEach(item => {
-                        const td = document.createElement('td');
-                        if (item instanceof HTMLElement) {
-                            td.appendChild(item);
-                        } else {
-                            td.textContent = item;
-                        }
-                        tr.appendChild(td);
+                $(document).ready(function() {
+                    // Close modal when the close button is clicked
+                    $('#closeModalBtn_buah').click(function() {
+                        $('#editModalBuah').modal('hide');
                     });
-                    return tr;
+
+                    // Submit the form when the Save Changes button is clicked
+                    $('#saveChangesBtn_buah').off('click').on('click', function() {
+                        $('#editForm_buah').submit();
+                    });
+
+                    $('#editForm_buah').submit(function(e) {
+                        e.preventDefault(); // Prevent the default form submission
+
+                        // Get the form data
+                        var formData = new FormData(this);
+                        formData.append('id', $('#editId_buah').val()); // Append the id field to the form data
+
+                        var bmt = $('#update-bmt').val();
+                        var bmk = $('#update-bmk').val();
+                        var emptyBH = $('#update-emptyBH').val();
+                        var jjgBH = $('#update-jjgBH').val();
+                        var overBH = $('#update-overBH').val();
+                        var abrBH = $('#update-abrBH').val();
+                        var vcutBH = $('#update-vcutBH').val();
+                        var alsBR = $('#update-alsBR').val();
+
+                        if (!isNumber(bmt) ||
+                            !isNumber(bmk) ||
+                            !isNumber(emptyBH) ||
+                            !isNumber(jjgBH) ||
+                            !isNumber(overBH) ||
+                            !isNumber(abrBH) ||
+                            !isNumber(vcutBH) ||
+                            !isNumber(alsBR)
+                        ) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Masukan Error',
+                                text: 'Hanya bisa di masukan angka Saja!'
+                            });
+                            return;
+                        }
+                        // Send the AJAX request
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route("updateBA") }}',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                console.log(response);
+                                // Close the modal
+                                $('#editModalBuah').modal('hide');
+
+                                // Show a success message
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Data berhasil diperbarui!'
+                                }).then(function() {
+                                    // Refresh the data on the page
+                                    // fetchAndUpdateData();
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr.responseText);
+                                // Show an error message or perform any other actions
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Gagal memperbarui data!'
+                                });
+                            }
+                        });
+                    });
+                });
+
+
+
+
+
+                var selectedRowIndex; // Variable to store the selected row index
+
+                function deleteRowBuah(id) {
+                    // Save the selected row index
+                    selectedRowIndex = id;
+
+                    // Retrieve the ID from the first column of the selected row
+                    var rowData = mutuBuahable.row(id).data();
+                    var rowId = rowData[0];
+
+                    // Show the delete modal
+                    $('#deleteModalBuah').modal('show');
+
+                    $(document).ready(function() {
+                        // Handle delete confirmation
+                        $('#confirmDeleteBtn_buah').click(function() {
+                            // Get the selected row index and ID
+                            var rowIndex = selectedRowIndex;
+                            var id = rowId;
+
+                            // Create a form data object
+                            var formData = new FormData();
+                            formData.append('delete_idBuah', id);
+
+                            // Get the CSRF token from the meta tag
+                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                            // Set the CSRF token in the request headers
+                            $.ajaxSetup({
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                }
+                            });
+
+                            // Send the AJAX request to the controller
+                            $.ajax({
+                                url: '{{ route("deleteBA") }}',
+                                method: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    // Handle the response from the controller if needed
+                                    console.log(response);
+
+                                    // Implement the logic to delete the row with the provided ID
+                                    // You can use the rowIndex to delete the corresponding row from the DataTable
+                                    // Example code:
+                                    // Assuming you have a DataTable variable called 'mutuAncakTable'
+                                    mutuAncakTable.row(rowIndex).remove().draw();
+
+                                    // Close the delete modal
+                                    $('#deleteModalBuah').modal('hide');
+
+                                    location.reload()
+                                },
+                                error: function(xhr, status, error) {
+                                    // Handle the error if needed
+                                    console.error(error);
+
+                                    // Close the delete modal
+                                    $('#deleteModalBuah').modal('hide');
+                                }
+                            });
+                        });
+                    });
                 }
 
-                function createImageElement(src) {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.style.width = '100px';
-                    img.addEventListener('click', () => showModal(src));
-                    return img;
+                // Example function to save changes
+                document.getElementById('saveChangesBtn').addEventListener('click', function() {
+
+                    $('#editModal').modal('hide');
+                });
+
+
+                var columnBuah = [{
+                        targets: 0,
+                        title: 'id',
+                        render: function(data, type, row, meta) {
+                            return row[0];
+                        }
+                    },
+
+                    {
+                        targets: 1,
+                        title: 'estate'
+                    },
+                    {
+                        targets: 2,
+                        title: 'afdeling'
+                    },
+                    {
+                        targets: 8,
+                        title: 'TPH Baris',
+                        render: function(data, type, row, meta) {
+                            return row[8];
+                        }
+                    },
+                    {
+                        targets: 3,
+                        title: 'Blok',
+                        render: function(data, type, row, meta) {
+                            return row[3];
+                        }
+                    },
+                    {
+                        targets: 9,
+                        title: 'Status Panen',
+                        render: function(data, type, row, meta) {
+                            return row[9];
+                        }
+                    },
+                    {
+                        targets: 4,
+                        title: 'Petugas',
+                        render: function(data, type, row, meta) {
+                            return row[4];
+                        }
+                    },
+                    {
+                        targets: 10,
+                        title: 'Ancak Pemanen',
+                        render: function(data, type, row, meta) {
+                            return row[10];
+                        }
+                    },
+                    {
+                        targets: 13,
+                        title: 'BMK',
+                        render: function(data, type, row, meta) {
+                            return row[13];
+                        }
+                    },
+                    {
+                        targets: 12,
+                        title: 'BMT',
+                        render: function(data, type, row, meta) {
+                            return row[12];
+                        }
+                    },
+                    {
+                        targets: 15,
+                        title: 'Empty',
+                        render: function(data, type, row, meta) {
+                            return row[15];
+                        }
+                    },
+                    {
+                        targets: 11,
+                        title: 'Jumlah Janjang',
+                        render: function(data, type, row, meta) {
+                            return row[11];
+                        }
+                    },
+                    {
+                        targets: 14,
+                        title: 'Overripe',
+                        render: function(data, type, row, meta) {
+                            return row[14];
+                        }
+                    },
+                    {
+                        targets: 16,
+                        title: 'Abnormal',
+                        render: function(data, type, row, meta) {
+                            return row[16];
+                        }
+                    },
+                    {
+                        targets: 17,
+                        title: 'Vcut',
+                        render: function(data, type, row, meta) {
+                            return row[17];
+                        }
+                    },
+                    {
+                        targets: 18,
+                        title: 'Alas_br',
+                        render: function(data, type, row, meta) {
+                            return row[18];
+                        }
+                    },
+
+                    {
+                        targets: -1, // -1 targets the last column
+                        title: 'Actions',
+                        visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),
+                        render: function(data, type, row, meta) {
+                            var buttons =
+                                '<button class="edit-btn">Edit</button>' +
+                                '<button class="delete-btn">Delete</button>';
+                            return buttons;
+                        }
+                    }
+                ];
+                // Initialize DataTables for mutuAncak
+                // console.log(mutuBuahData);
+
+                var mutuBuahable = $('#mutuBuahable').DataTable({
+                    data: mutuBuahData, // Use modifiedMutuAncakData instead of mutuAncakData
+                    columns: columnBuah,
+                    scrollX: true
+                });
+
+
+                // Attach event handlers to dynamically created buttons
+                $('#mutuBuahable').on('click', '.edit-btn', function() {
+                    var rowData = mutuBuahable.row($(this).closest('tr')).data();
+                    var rowIndex = mutuBuahable.row($(this).closest('tr')).index();
+                    editRowBuah(rowIndex);
+                });
+
+                $('#mutuBuahable').on('click', '.delete-btn', function() {
+                    var rowIndex = mutuBuahable.row($(this).closest('tr')).index();
+                    deleteRowBuah(rowIndex);
+                });
+
+
+                // end table mutu buah 
+
+                // table mutu Transport 
+                var mutuTransData = [];
+                for (var i = 0; i < mutuTransport.length; i++) {
+                    var rowData = Object.values(mutuTransport[i][1]);
+                    mutuTransData.push(rowData);
                 }
 
-                var mutuAncak1 = mutuAncak
-                var tRans = document.getElementById('tab1');
-                mutuAncak1.forEach((element, index) => {
+                function editRowTrans(id) {
+                    // Save the selected row index
+                    selectedRowIndex = id;
 
-                    const items = [
-                        index + 1,
-                        element[1].estate,
-                        element[1].afdeling,
-                        element[1].blok,
-                        element[1].petugas,
-                        element[1].sph,
-                        element[1].br1,
-                        element[1].br2,
-                        element[1].jalur_masuk,
-                        element[1].status_panen,
-                        element[1].kemandoran,
-                        element[1].ancak_pemanen,
-                        element[1].pokok_panen,
-                        element[1].sample,
+                    // Retrieve the id from the first column of the selected row
+                    var rowData = mutuTransTable.row(id).data();
+                    var rowId = rowData[0];
 
-                        element[1].jjg,
-                        element[1].brtp,
-                        element[1].brtk,
-                        element[1].brtgl,
-                        element[1].bhts,
-                        element[1].bhtm1,
-                        element[1].bhtm2,
-                        element[1].bhtm3,
-                        element[1].ps,
-                        element[1].sp,
-                        element[1].pokok_kuning,
-                        element[1].piringan_semak,
-                        element[1].underpruning,
-                        element[1].overpruning,
-                        element[1].komentar,
-                        element[1].aksi,
-                    ];
-                    const row = createTableRow(items);
-                    // Inside the forEach loop
+                    // Populate the form with the data of the selected row
+                    $('#id_trans').val(rowData[0]);
 
-                    createAksiButtons(row, element[1].id,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].sph,
-                        element[1].br1,
-                        element[1].br2,
-                        element[1].sample,
-                        element[1].pokok_kuning,
-                        element[1].piringan_semak,
-                        element[1].underpruning,
-                        element[1].overpruning,
-                        element[1].jjg,
-                        element[1].brtp,
-                        element[1].brtk,
-                        element[1].brtgl,
-                        element[1].bhts,
-                        element[1].bhtm1,
-                        element[1].bhtm2,
-                        element[1].bhtm3,
-                        element[1].ps,
-                        element[1].sp,
-                        element[1].pokok_panen,
-                    );
+                    $('#update-estTrans').val(rowData[1]);
+                    $('#update-afd_trans').val(rowData[2]);
+                    $('#update-tphbrTrans').val(rowData[8]);
+                    $('#update-blok_trans').val(rowData[3]);
+                    $('#update-Status_trPanen').val(rowData[9]);
+                    $('#update-petugasTrans').val(rowData[4]);
+                    $('#update-bt_trans').val(rowData[11]);
+                    $('#update-rstTrans').val(rowData[12]);
 
+                    $('#editModalTrans').modal('show');
+                }
 
-                    tRans.appendChild(row);
+                $(document).ready(function() {
+                    // Close modal when the close button is clicked
+                    $('#closeModalBtn_Trans').click(function() {
+                        $('#editModalTrans').modal('hide');
+                    });
+
+                    // Submit the form when the Save Changes button is clicked
+                    $('#saveChangesBtn_trans').off('click').on('click', function() {
+                        $('#editForm_Trans').submit();
+                    });
+
+                    $('#editForm_Trans').submit(function(e) {
+                        e.preventDefault(); // Prevent the default form submission
+
+                        // Get the form data
+                        var formData = new FormData(this);
+                        formData.append('id', $('#id_trans').val()); // Append the id field to the form data
+
+                        // Validate the bt_trans and rstTrans fields
+                        var btTransValue = $('#update-bt_trans').val();
+                        var rstTransValue = $('#update-rstTrans').val();
+                        if (!isNumber(btTransValue) || !isNumber(rstTransValue)) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Masukan Error',
+                                text: 'Hanya bisa di masukan angka Saja!'
+                            });
+                            return;
+                        }
+
+                        // Send the AJAX request
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route("updateBA") }}',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                console.log(response);
+                                // Close the modal
+                                $('#editModalTrans').modal('hide');
+
+                                // Show a success message
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Data berhasil diperbarui!'
+                                }).then(function() {
+                                    // Refresh the data on the page
+                                    // fetchAndUpdateData();
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr.responseText);
+                                // Show an error message
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Gagal memperbarui data!'
+                                });
+                            }
+                        });
+                    });
                 });
 
 
 
-                // console.log(mutuBuah);
 
-                var mutuBuahtb = mutuBuah
-                var tbuah = document.getElementById('tab2');
-                mutuBuahtb.forEach((element, index) => {
-                    const items = [
-                        index + 1,
-                        element[1].estate,
-                        element[1].afdeling,
-                        element[1].tph_baris,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].petugas,
-                        element[1].ancak_pemanen,
-                        element[1].bmk,
-                        element[1].bmt,
-                        element[1].empty_bunch,
-                        element[1].jumlah_jjg,
-                        element[1].overripe,
-                        element[1].abnormal,
-                        element[1].vcut,
-                        element[1].alas_br,
-                        element[1].komentar,
-                    ];
 
-                    const row = createTableRow(items);
 
-                    buahAksibutton(row, element[1].id,
-                        element[1].estate,
-                        element[1].afdeling,
-                        element[1].tph_baris,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].petugas,
-                        element[1].ancak_pemanen,
-                        element[1].bmk,
-                        element[1].bmt,
-                        element[1].empty_bunch,
-                        element[1].jumlah_jjg,
-                        element[1].overripe,
-                        element[1].abnormal,
-                        element[1].vcut,
-                        element[1].alas_br,
-                        element[1].komentar
-                    );
+                var selectedRowIndex; // Variable to store the selected row index
 
-                    tbuah.appendChild(row);
+                function deleteRowTrans(id) {
+                    // Save the selected row index
+                    selectedRowIndex = id;
+
+                    // Retrieve the ID from the first column of the selected row
+                    var rowData = mutuTransTable.row(id).data();
+                    var rowId = rowData[0];
+
+                    // Show the delete modal
+                    $('#deleteModalTrans').modal('show');
+
+                    $(document).ready(function() {
+                        // Handle delete confirmation
+                        $('#confirmDeleteBtn_trans').click(function() {
+                            // Get the selected row index and ID
+                            var rowIndex = selectedRowIndex;
+                            var id = rowId;
+
+                            // Create a form data object
+                            var formData = new FormData();
+                            formData.append('id_trans', id);
+
+                            // Get the CSRF token from the meta tag
+                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                            // Set the CSRF token in the request headers
+                            $.ajaxSetup({
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                }
+                            });
+
+                            // Send the AJAX request to the controller
+                            $.ajax({
+                                url: '{{ route("deleteBA") }}',
+                                method: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    // Handle the response from the controller if needed
+                                    console.log(response);
+
+                                    // Implement the logic to delete the row with the provided ID
+                                    // You can use the rowIndex to delete the corresponding row from the DataTable
+                                    // Example code:
+                                    // Assuming you have a DataTable variable called 'mutuAncakTable'
+                                    mutuTransTable.row(rowIndex).remove().draw();
+
+                                    // Close the delete modal
+                                    $('#deleteModalTrans').modal('hide');
+
+                                    location.reload()
+                                },
+                                error: function(xhr, status, error) {
+                                    // Handle the error if needed
+                                    console.error(error);
+
+                                    // Close the delete modal
+                                    $('#deleteModalTrans').modal('hide');
+                                }
+                            });
+                        });
+                    });
+                }
+
+                function isNumber(value) {
+                    return !isNaN(parseFloat(value)) && isFinite(value);
+                }
+                // Example function to save changes
+                document.getElementById('saveChangesBtn').addEventListener('click', function() {
+
+                    $('#editModal').modal('hide');
                 });
-                // console.log(mutuTransport);
-                var mutuTrans = mutuTransport
-                var tTrans = document.getElementById('tab3');
-                mutuTrans.forEach((element, index) => {
-                    const items = [
-                        index + 1,
-                        element[1].estate,
-                        element[1].afdeling,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].tph_baris,
-                        element[1].petugas,
-                        element[1].bt,
-                        element[1].rst,
 
-                        element[1].komentar,
-                    ];
 
-                    const row = createTableRow(items);
+                var columnTrans = [{
+                        targets: 0,
+                        title: 'id',
+                        render: function(data, type, row, meta) {
+                            return row[0];
+                        }
+                    },
 
-                    transportAksiButton(row, element[1].id,
-                        element[1].estate,
-                        element[1].afdeling,
-                        element[1].blok,
-                        element[1].status_panen,
-                        element[1].tph_baris,
-                        element[1].petugas,
-                        element[1].rst,
-                        element[1].bt,
-                        element[1].komentar,
-                    );
+                    {
+                        targets: 1,
+                        title: 'estate',
+                        render: function(data, type, row, meta) {
+                            return row[1];
+                        }
+                    },
+                    {
+                        targets: 2,
+                        title: 'afdeling',
+                        render: function(data, type, row, meta) {
+                            return row[2];
+                        }
+                    },
+                    {
+                        targets: 3,
+                        title: 'Blok',
+                        render: function(data, type, row, meta) {
+                            return row[3];
+                        }
+                    },
+                    {
+                        targets: 4,
+                        title: 'Petugas',
+                        render: function(data, type, row, meta) {
+                            return row[4];
+                        }
+                    },
+                    {
 
-                    tTrans.appendChild(row);
+                        title: 'datetime',
+                        render: function(data, type, row, meta) {
+                            return row[5];
+                        }
+                    },
+                    {
+
+                        title: 'lat',
+                        render: function(data, type, row, meta) {
+                            return row[6];
+                        }
+                    },
+                    {
+
+                        title: 'lon',
+                        render: function(data, type, row, meta) {
+                            return row[7];
+                        }
+                    },
+                    {
+
+                        title: 'TPH Baris',
+                        render: function(data, type, row, meta) {
+                            return row[8];
+                        }
+                    },
+                    {
+                        targets: 9,
+                        title: 'Status Panen',
+                        render: function(data, type, row, meta) {
+                            return row[9];
+                        }
+                    },
+                    {
+
+                        title: 'Luas Blok',
+                        render: function(data, type, row, meta) {
+                            return row[10];
+                        }
+                    },
+
+                    {
+                        targets: 11,
+                        title: 'Bt_tph',
+                        render: function(data, type, row, meta) {
+                            return row[11];
+                        }
+                    },
+                    {
+                        targets: 12,
+                        title: 'Brd_tph',
+                        render: function(data, type, row, meta) {
+                            return row[12];
+                        }
+                    },
+                    {
+                        targets: 15,
+                        title: 'Komentar',
+                        render: function(data, type, row, meta) {
+                            return row[15];
+                        }
+                    },
+                    {
+                        targets: 16,
+                        title: 'App',
+                        render: function(data, type, row, meta) {
+                            return row[16];
+                        }
+                    },
+
+                    {
+                        targets: -1, // -1 targets the last column
+                        title: 'Actions',
+                        visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),
+                        render: function(data, type, row, meta) {
+                            var buttons =
+                                '<button class="edit-btn">Edit</button>' +
+                                '<button class="delete-btn">Delete</button>';
+                            return buttons;
+                        }
+                    }
+                ];
+                // Initialize DataTables for mutuAncak
+                console.log(mutuTransData);
+
+                var mutuTransTable = $('#mutuTransportable').DataTable({
+                    data: mutuTransData,
+                    columns: columnTrans,
+                    scrollX: true
                 });
+
+
+                // Attach event handlers to dynamically created buttons
+                $('#mutuTransportable').on('click', '.edit-btn', function() {
+                    var rowData = mutuTransTable.row($(this).closest('tr')).data();
+                    var rowIndex = mutuTransTable.row($(this).closest('tr')).index();
+                    editRowTrans(rowIndex);
+                });
+
+                $('#mutuTransportable').on('click', '.delete-btn', function() {
+                    var rowIndex = mutuTransTable.row($(this).closest('tr')).index();
+                    deleteRowTrans(rowIndex);
+                });
+
+
 
             },
             error: function() {
@@ -3515,117 +3721,7 @@
 
 
 
-        function updateMutuAncak(form) {
-            const formData = new FormData(form);
 
-            $.ajax({
-                type: "POST",
-                url: "{{ route('updateBA') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                },
-                success: function(data, textStatus, xhr) {
-                    console.log(data);
-                    // Check if the status code is 200 OK
-                    if (xhr.status === 200) {
-                        // Close the modal
-                        const updateModal = document.getElementById('update-modal');
-                        updateModal.style.display = 'none';
-
-                        // Show a success animation for 3 seconds
-                        alert('Data berhasil di Perbaharui!')
-
-                        // Refresh the data on the page
-                        fetchAndUpdateData();
-                    } else {
-                        alert('Mutu ancak gagal diperbarui');
-                        // Refresh the data on the page
-                        fetchAndUpdateData();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log("Error data:", xhr.responseJSON);
-                    console.error("There was a problem with the fetch operation:", error);
-                },
-            });
-        }
-
-        function updateMutuBuah(form) {
-            const formData = new FormData(form);
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('updateBA') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                },
-                success: function(data, textStatus, xhr) {
-                    // Check if the status code is 200 OK
-                    if (xhr.status === 200) {
-                        // Close the modal
-                        const updateModal = document.getElementById('update-modal-buah');
-                        updateModal.style.display = 'none';
-
-                        // Show a success animation for 3 seconds
-                        alert('Data berhasil di Perbaharui!')
-
-                        // Refresh the data on the page
-                        fetchAndUpdateData();
-                    } else {
-                        alert('Mutu ancak gagal diperbarui');
-                        // Refresh the data on the page
-                        fetchAndUpdateData();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log("Error data:", xhr.responseJSON);
-                    console.error("There was a problem with the fetch operation:", error);
-                },
-            });
-        }
-
-        function updateMutuTrans(form) {
-            const formData = new FormData(form);
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('updateBA') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                },
-                success: function(data, textStatus, xhr) {
-                    // Check if the status code is 200 OK
-                    if (xhr.status === 200) {
-                        // Close the modal
-                        const updateModal = document.getElementById('update-modal-trans');
-                        updateModal.style.display = 'none';
-
-                        // Show a success animation for 3 seconds
-                        alert('Data berhasil di Perbaharui!')
-
-                        // Refresh the data on the page
-                        fetchAndUpdateData();
-                    } else {
-                        alert('Mutu ancak gagal diperbarui');
-                        // Refresh the data on the page
-                        fetchAndUpdateData();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log("Error data:", xhr.responseJSON);
-                    console.error("There was a problem with the fetch operation:", error);
-                },
-            });
-        }
     }
 
     function Show() {

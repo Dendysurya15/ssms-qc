@@ -19517,13 +19517,17 @@ class inspectController extends Controller
     public function updateBA(Request $request)
     {
 
+      
+        $id_buah = $request->input('editId_buah');
+        $est_buah = $request->input('estBH');
+        $afdBH = $request->input('afdBH');
+        $tphBH = $request->input('tphBH');
+
+        // dd($id_buah,$est_buah,$afdBH,$tphBH);
+        // mutu ancak 
         $est = $request->input('est');
         $afd = $request->input('afd');
         $date = $request->input('date');
-
-
-      
-        // mutu ancak 
         
         $estate = $request->input('estate');
         $afdeling = $request->input('afdeling');
@@ -19552,7 +19556,7 @@ class inspectController extends Controller
         // dd($id, $estate, $afdeling,$blok,$status_panen);
 
         // mutu buah 
-        $ids = $request->input('id_bh');
+        $ids = $request->input('editId_buah');
         $blok_bh = $request->input('blok_bh');
         $status_bhpanen = $request->input('StatusBhpnen');
         $bmt = $request->input('bmt');
@@ -19569,7 +19573,7 @@ class inspectController extends Controller
         $abrBH = $request->input('abrBH');
         $vcutBHs = $request->input('vcutBH');
         $alsBR = $request->input('alsBR');
-        $kmnBH = $request->input('kmnBH');
+        // $kmnBH = $request->input('kmnBH');
         // mutu transport
 
 
@@ -19626,7 +19630,7 @@ class inspectController extends Controller
             'abnormal' => $abrBH,
             'vcut' => $vcutBHs,
             'alas_br' => $alsBR,
-            'komentar' => $kmnBH,
+            // 'komentar' => $kmnBH,
         ]);
         DB::connection('mysql2')->table('mutu_transport')->where('id', $id_trans)->update([
             'afdeling' => $afd_trans,
@@ -19644,11 +19648,12 @@ class inspectController extends Controller
     public function deleteBA(Request $request)
     {
 
-        $idBuah = $request->input('ids');
+        $idBuah = $request->input('delete_idBuah');
         // $ancak = $request->input('id');
         $ancaks = $request->input('delete_id');
+        $id_trans = $request->input('id_trans');
 
-        // dd($ancaks);
+        dd($id_trans);
 
    
         $ancakFA = DB::connection('mysql2')->table('mutu_ancak_new')
@@ -19714,7 +19719,10 @@ class inspectController extends Controller
         DB::connection('mysql2')->table('mutu_buah')
             ->where('id', $idBuah)
             ->delete();
-
+            DB::connection('mysql2')->table('mutu_transport')
+            ->where('id', $id_trans)
+            ->delete();
+        
         return response()->json(['status' => 'success']);
     }
 
