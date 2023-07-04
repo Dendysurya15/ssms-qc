@@ -111,6 +111,24 @@
             margin-left: 5px;
         }
     }
+
+    @keyframes fadeInOut {
+        0% {
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    .loading-text {
+        animation: fadeInOut 2s ease-in-out infinite;
+    }
 </style>
 <div class="content-wrapper">
     <section class="content"><br>
@@ -1801,8 +1819,9 @@
     $("#showDataIns").click(function() {
         Swal.fire({
             title: 'Loading',
-            text: 'Please wait...',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
+            showConfirmButton: false,
             onBeforeOpen: () => {
                 Swal.showLoading();
             }
@@ -1813,8 +1832,9 @@
     $("#showFinding").click(function() {
         Swal.fire({
             title: 'Loading',
-            text: 'Please wait...',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
+            showConfirmButton: false,
             onBeforeOpen: () => {
                 Swal.showLoading();
             }
@@ -2609,8 +2629,9 @@
     document.getElementById('btnShow').onclick = function() {
         Swal.fire({
             title: 'Loading',
-            text: 'Please wait...',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
+            showConfirmButton: false,
             onBeforeOpen: () => {
                 Swal.showLoading();
             }
@@ -2853,8 +2874,9 @@
 
 
 
-                // console.log(filteredArray);
+
                 var arrTbody1 = filteredArray
+                console.log(arrTbody1);
 
                 var tbody1 = document.getElementById('tbody1');
                 //         $('#thead1').empty()
@@ -4404,8 +4426,9 @@
         // Show loading screen
         Swal.fire({
             title: 'Loading',
-            text: 'Mohon tunggu...',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
+            showConfirmButton: false,
             onBeforeOpen: () => {
                 Swal.showLoading();
             }
@@ -4426,14 +4449,7 @@
         var _token = $('input[name="_token"]').val();
         var year = document.getElementById('yearDate').value
         var regData = document.getElementById('regionalData').value
-        // Swal.fire({
-        //     title: 'Loading',
-        //     text: 'Please wait...',
-        //     allowOutsideClick: false,
-        //     onBeforeOpen: () => {
-        //         Swal.showLoading();
-        //     }
-        // });
+
 
 
         $.ajax({
@@ -4484,7 +4500,7 @@
 
 
 
-                // console.log(chart_bhTH);
+                console.log(RekapTahunReg);
 
 
                 var bttEST = '[';
@@ -4696,7 +4712,7 @@
 
                 // var yearStr = year.toString();
                 var arrwil = rekap_bulanwil;
-                console.log(rekap_tahunwil);
+                // console.log(rekap_tahunwil);
                 var totalBodywil = rekap_tahunwil;
 
                 var tbody2 = document.getElementById('tablewil');
@@ -4716,6 +4732,14 @@
                         angka = 'V';
                     } else if (angka === '6') {
                         angka = 'VI';
+                    } else if (angka === '7') {
+                        angka = 'VII';
+                    } else if (angka === '8') {
+                        angka = 'VIII';
+                    } else if (angka === '10') {
+                        angka = 'IX';
+                    } else if (angka === '11') {
+                        angka = 'X';
                     }
 
                     let item2 = '-';
@@ -4742,7 +4766,7 @@
 
                     let tahunskor = [];
                     for (var i = 0; i < totalBodywil.length; i++) {
-                        if (totalBodywil[i][0] == item1) {
+                        if (totalBodywil[i][0] == element[0]) {
                             tahunskor.push(totalBodywil[i][1]['tahun_skorwil']);
                             break;
                         }
@@ -5272,8 +5296,9 @@
     document.getElementById('GraphFilter').onclick = function() {
         Swal.fire({
             title: 'Loading',
-            text: 'Please wait...',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
+            showConfirmButton: false,
             onBeforeOpen: () => {
                 Swal.showLoading();
             }
@@ -5407,8 +5432,9 @@
     document.getElementById('showWeek').onclick = function() {
         Swal.fire({
             title: 'Loading',
-            text: 'Mohon tunggu...',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
+            showConfirmButton: false,
             onBeforeOpen: () => {
                 Swal.showLoading();
             }
