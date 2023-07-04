@@ -3986,15 +3986,15 @@ class inspectController extends Controller
         // dd($queryMTBuahTab1);
         $querySidaks = DB::connection('mysql2')->table('mutu_buah')
             ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->get();
         $querySidak_ancak = DB::connection('mysql2')->table('mutu_ancak')
             ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->get();
         $querySidaks_transport = DB::connection('mysql2')->table('mutu_transport')
             ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->get();
 
         $years = [];
@@ -4013,9 +4013,10 @@ class inspectController extends Controller
 
         // Remove duplicates and sort the array
         $years = array_unique($years);
-        sort($years);
+        // sort($years);
 
 
+        // dd($years);
 
         $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
 
@@ -4683,7 +4684,8 @@ class inspectController extends Controller
                                 $transNewdata[$key][$key1][$key2][$key3] = $value3;
                                 
                                 if ($value3['status_panen'] <= 3) {
-                                 $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($value3['luas_blok'] * 1.3), 2);
+                                    $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($value3['luas_blok']) * 1.3, 2);
+
         
                                 } else {
                                     $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = 0;
@@ -10167,7 +10169,7 @@ class inspectController extends Controller
     }
 
 
-  
+   
     public function filterTahun(Request $request)
     {
         $year = $request->input('year');
@@ -10656,6 +10658,137 @@ class inspectController extends Controller
         $allBlokPerMonthTrans = array();
         $mutuTransAFD = array();
         
+        // foreach ($defaultTrans as $key => $value) {
+        //     foreach ($value as $key1 => $value2) {
+        //         foreach ($value2 as $key2 => $value3)
+        //             if (is_array($value3)) {
+        //                 $sum_bt = 0;
+        //                 $sum_rst = 0;
+        //                 $brdPertph = 0;
+        //                 $buahPerTPH = 0;
+        //                 $totalSkor = 0;
+        //                 $dataBLok = 0;
+        //                 $listBlokPerAfd = array();
+        //                 foreach ($value3 as $key3 => $value4) {
+        //                     // dd($value4);
+        //                     $allBlokPerMonthTrans[$key][$key1][$key2][$value4['id']] = $value4['blok'];
+        //                     // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
+        //                     $listBlokPerAfd[] = $value4['estate'] . ' ' . $value4['afdeling'] . ' ' . $value4['blok'];
+        //                     // }
+        //                     $dataBLok = count($listBlokPerAfd);
+        //                     $sum_bt += $value4['bt'];
+        //                     $sum_rst += $value4['rst'];
+        //                 }
+
+        //                 $tot_sample = $dataBLok;
+        //                 if ($RegData == 2) {
+                           
+        //                    foreach ($newTransv2 as $keys => $value)if($keys == $key) {
+                           
+        //                         foreach ($value as $keys1 => $value1) if($keys1 == $key1){
+                                  
+        //                             foreach ($value1 as $keys2 => $value2) if($keys2 == $key2){
+                                        
+                                       
+                                           
+        //                                 //    dd($value3);
+                                              
+        //                                      $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $value2['tph_sampleWil'];
+        //                                      $tot_sample = $value2['tph_sampleWil'];
+                                                
+                                            
+                                        
+        //                             } 
+        //                         } 
+        //                    } 
+        //                 }else {
+        //                     $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $dataBLok;
+        //                 }
+                     
+
+        //                 if ($RegData == '2' || $RegData == 2) {
+        //                     $brdPertph = calculateValue($sum_bt, $tot_sample);
+        //                     $buahPerTPH = calculateValue($sum_rst, $tot_sample);
+        //                 } else {
+        //                     $brdPertph = calculateValue($sum_bt, $dataBLok);
+        //                     $buahPerTPH = calculateValue($sum_rst, $dataBLok);
+        //                 }
+                        
+                       
+                        
+                       
+                      
+        //                 $nonZeroValues = array_filter([$sum_bt, $sum_rst]);
+    
+        //                 if (!empty($nonZeroValues)) {
+        //                     $mutuTransAFD[$key][$key1][$key2]['check_data'] = 'ada';
+                         
+        //                 } else {
+        //                     $mutuTransAFD[$key][$key1][$key2]['check_data'] = "kosong";
+                           
+        //                 }
+        //                 // dd($transNewdata);
+                    
+                      
+                       
+    
+        //                 $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+        //                 // $totalSkor =  skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+
+                        
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_brd'] = $sum_bt;
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_brd/TPH'] = $brdPertph;
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_buah'] = $sum_rst;
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_buahPerTPH'] = $buahPerTPH;
+                       
+        //                 $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = $totalSkor;
+        //             } else {
+        //                 $tot_sample = 0;
+        //                 if($RegData == 2){
+        //                     foreach ($newTransv2 as $keys => $value)if($keys == $key) {
+                           
+        //                         foreach ($value as $keys1 => $value1) if($keys1 == $key1){
+                                  
+        //                             foreach ($value1 as $keys2 => $value2) if($keys2 == $key2){
+        //                                 $tot_sample = $value2['tph_sampleWil'];
+        //                             }
+        //                         }
+        //                     }
+                            
+        //                     if (in_array($key1, $listExistDataBulan)) {
+        //                         $brdPertph = 0;
+        //                         $buahPerTPH = 0;
+        //                         $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $tot_sample;
+                         
+                            
+        //                         $mutuTransAFD[$key][$key1][$key2]['totalSkor'] =  skor_brd_tinggal($brdPertph) +  skor_buah_tinggal($buahPerTPH);
+        //                     }else{
+        //                         $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = 0;
+        //                         $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
+        //                     }
+        //                 } else {
+        //                     $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $tot_sample;
+        //                     $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
+        //                 }
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_brd'] = 0;
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_brd/TPH'] = 0;
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_buah'] = 0;
+        //                 $mutuTransAFD[$key][$key1][$key2]['total_buahPerTPH'] = 0;
+        //                 $mutuTransAFD[$key][$key1][$key2]['skor_brdPertph'] = 0;
+        //                 $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = 0;
+        //                 $mutuTransAFD[$key][$key1][$key2]['check_data'] = "reg2";
+                         
+                           
+                        
+                       
+                        
+                       
+                        
+                      
+        //             }
+        //     }
+        // }
+
         foreach ($defaultTrans as $key => $value) {
             foreach ($value as $key1 => $value2) {
                 foreach ($value2 as $key2 => $value3)
@@ -10669,7 +10802,6 @@ class inspectController extends Controller
                         $listBlokPerAfd = array();
                         foreach ($value3 as $key3 => $value4) {
                             // dd($value4);
-                            $allBlokPerMonthTrans[$key][$key1][$key2][$value4['id']] = $value4['blok'];
                             // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $value4['estate'] . ' ' . $value4['afdeling'] . ' ' . $value4['blok'];
                             // }
@@ -10678,116 +10810,107 @@ class inspectController extends Controller
                             $sum_rst += $value4['rst'];
                         }
 
-                        $tot_sample = $dataBLok;
                         if ($RegData == 2) {
                            
-                           foreach ($newTransv2 as $keys => $value)if($keys == $key) {
-                           
-                                foreach ($value as $keys1 => $value1) if($keys1 == $key1){
-                                  
-                                    foreach ($value1 as $keys2 => $value2) if($keys2 == $key2){
-                                        
-                                       
-                                           
-                                        //    dd($value3);
-                                              
-                                             $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $value2['tph_sampleWil'];
-                                             $tot_sample = $value2['tph_sampleWil'];
-                                                
-                                            
-                                        
-                                    } 
-                                } 
-                           } 
-                        }else {
-                            $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $dataBLok;
-                        }
-                     
+                                               foreach ($newTransv2 as $keys => $value)if($keys == $key) {
+                                               
+                                                    foreach ($value as $keys1 => $value1) if($keys1 == $key1){
+                                                      
+                                                        foreach ($value1 as $keys2 => $value2) if($keys2 == $key2){
+                                                            
+                                                           
+                                                               
+                                                            //    dd($value3);
+                                                                  
+                                                                 $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $value2['tph_sampleWil'];
+                                                                 $dataBLok = $value2['tph_sampleWil'];
+                                                                    
+                                                                
+                                                            
+                                                        } 
+                                                    } 
+                                               } 
+                                            }else {
+                                                $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $dataBLok;
+                                            }
 
-                        if ($RegData == '2' || $RegData == 2) {
-                            $brdPertph = calculateValue($sum_bt, $tot_sample);
-                            $buahPerTPH = calculateValue($sum_rst, $tot_sample);
+
+                        if ($dataBLok != 0) {
+                            $brdPertph = round($sum_bt / $dataBLok, 2);
                         } else {
-                            $brdPertph = calculateValue($sum_bt, $dataBLok);
-                            $buahPerTPH = calculateValue($sum_rst, $dataBLok);
+                            $brdPertph = 0;
                         }
-                        
-                       
-                        
-                       
-                      
-                        $nonZeroValues = array_filter([$sum_bt, $sum_rst]);
-    
-                        if (!empty($nonZeroValues)) {
-                            $mutuTransAFD[$key][$key1][$key2]['check_data'] = 'ada';
-                         
+                        if ($dataBLok != 0) {
+                            $buahPerTPH = round($sum_rst / $dataBLok, 2);
                         } else {
-                            $mutuTransAFD[$key][$key1][$key2]['check_data'] = "kosong";
-                           
+                            $buahPerTPH = 0;
                         }
-                        // dd($transNewdata);
-                    
-                      
-                       
-    
-                        $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+
+                        // skor_brd_tinggal($brdPertph);
+                        // skor_buah_tinggal($buahPerTPH);
+                        $nonZeroValues = array_filter([$brdPertph, $buahPerTPH]);
+
+                if (!empty($nonZeroValues)) {
+                    $mutuTransAFD[$key][$key1][$key2]['skor_brdPertph'] = $skor_brd =  skor_brd_tinggal($brdPertph);
+                    $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = $skor_buah =  skor_buah_tinggal($buahPerTPH);
+                } else {
+                    $mutuTransAFD[$key][$key1][$key2]['skor_brdPertph'] = $skor_brd = 0;
+                    $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = $skor_buah = 0;
+                }
+                
+                $totalSkor = $skor_brd + $skor_buah ;
+
                         // $totalSkor =  skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
 
-                        
+                        // $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $dataBLok;
                         $mutuTransAFD[$key][$key1][$key2]['total_brd'] = $sum_bt;
                         $mutuTransAFD[$key][$key1][$key2]['total_brd/TPH'] = $brdPertph;
                         $mutuTransAFD[$key][$key1][$key2]['total_buah'] = $sum_rst;
                         $mutuTransAFD[$key][$key1][$key2]['total_buahPerTPH'] = $buahPerTPH;
-                       
+                        // $mutuTransAFD[$key][$key1][$key2]['skor_brdPertph'] =  skor_brd_tinggal($brdPertph);
+                        // $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPH);
                         $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = $totalSkor;
                     } else {
-
-                        if($RegData == 2){
-                            foreach ($newTransv2 as $keys => $value)if($keys == $key) {
+                        if ($RegData == 2) {
                            
-                                foreach ($value as $keys1 => $value1) if($keys1 == $key1){
-                                  
-                                    foreach ($value1 as $keys2 => $value2) if($keys2 == $key2){
-                                        $tot_sample = $value2['tph_sampleWil'];
-                                    }
-                                }
-                            }
+                            foreach ($newTransv2 as $keys => $value)if($keys == $key) {
                             
-                            if (in_array($key1, $listExistDataBulan)) {
-                                $brdPertph = 0;
-                                $buahPerTPH = 0;
-                                $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $tot_sample;
-                         
-                            
-                                $mutuTransAFD[$key][$key1][$key2]['totalSkor'] =  skor_brd_tinggal($brdPertph) +  skor_buah_tinggal($buahPerTPH);
-                            }else{
-                                $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = 0;
-                                $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
-                            }
-                        } else {
-                            $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $tot_sample;
-                            $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
-                        }
+                                 foreach ($value as $keys1 => $value1) if($keys1 == $key1){
+                                   $total_skor = 0;
+                                     foreach ($value1 as $keys2 => $value2) if($keys2 == $key2){
+                                         
+                                        
+                                            
+                                         //    dd($value3);
+                                               
+                                              $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = $value2['tph_sampleWil'];
+                                              $dataBLok = $value2['tph_sampleWil'];
+                                                 
+                                            if ($dataBLok != 0) {
+                                                $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 20;
+                                            } else {
+                                                $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
+                                            }
+                                          
+                                     } 
+                                 } 
+                            } 
+                         }else {
+                             $mutuTransAFD[$key][$key1][$key2]['tph_sample'] = 0;
+                             $mutuTransAFD[$key][$key1][$key2]['totalSkor'] = 0;
+                         }
                         $mutuTransAFD[$key][$key1][$key2]['total_brd'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['total_brd/TPH'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['total_buah'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['total_buahPerTPH'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['skor_brdPertph'] = 0;
                         $mutuTransAFD[$key][$key1][$key2]['skor_buahPerTPH'] = 0;
-                        $mutuTransAFD[$key][$key1][$key2]['check_data'] = "reg2";
-                         
-                           
-                        
                        
-                        
-                       
-                        
-                      
                     }
             }
         }
       
-        // dd($mutuTransAFD['SBE']);
+        // dd($mutuTransAFD['NNE']['July']);
         // dd($newTransv2['NKE']['June']);
 
         // hitungan per est per bulan
@@ -15431,9 +15554,9 @@ class inspectController extends Controller
                                             foreach ($bbValue1 as $bbKey2 => $bbValue2) {
                                                 foreach ($dteValue1 as $dteKey2 => $dteValue2) {
                                                     if ($mtKey2 == $bbKey2 && $bbKey2 == $dteKey2) {
-                                                        if ($mtValue2['check_data'] == 'reg2') {
-                                                            # code...
-                                                        }
+                                                        // if ($mtValue2['check_data'] == 'reg2') {
+                                                        //     # code...
+                                                        // }
                                                         $RekapBulanAFD[$mtKey][$mtKey1][$mtKey2]['bulan_afd'] = intval($mtValue2['totalSkor'] + $bbValue2['TOTAL_SKOR'] + $dteValue2['skor_akhir']);
                                                     }
                                                 }
@@ -17735,6 +17858,7 @@ class inspectController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
+
 
     public function graphfilter(Request $request)
     {

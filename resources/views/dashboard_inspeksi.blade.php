@@ -1799,10 +1799,26 @@
     }
 
     $("#showDataIns").click(function() {
+        Swal.fire({
+            title: 'Loading',
+            text: 'Please wait...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         changeData()
     });
 
     $("#showFinding").click(function() {
+        Swal.fire({
+            title: 'Loading',
+            text: 'Please wait...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         getFindData()
     });
 
@@ -2112,7 +2128,7 @@
                 date: dateIns
             },
             success: function(result) {
-
+                Swal.close();
                 $("#dataInspeksi").html(result);
 
                 // Select all rows in the table except for the first one
@@ -2139,6 +2155,7 @@
                 _token: _token
             },
             success: function(result) {
+                Swal.close();
                 var parseResult = JSON.parse(result)
                 var dataResFind = Object.entries(parseResult['dataResFind']) //parsing data brondolan ke dalam var list
                 // var dataResFindes = Object.entries(parseResult['dataResFindes']) //parsing data brondolan ke dalam var list
@@ -2590,6 +2607,14 @@
 
 
     document.getElementById('btnShow').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            text: 'Please wait...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         dataDashboard()
     }
 
@@ -2617,7 +2642,7 @@
                 _token: _token
             },
             success: function(result) {
-
+                Swal.close();
                 // console.log(reg);
                 var parseResult = JSON.parse(result)
                 //list estate
@@ -4375,13 +4400,22 @@
     }
 
 
-    //tampilkan pertahun filter table utama
     document.getElementById('showTahung').onclick = function() {
-        dashboard_tahun()
+        // Show loading screen
+        Swal.fire({
+            title: 'Loading',
+            text: 'Mohon tunggu...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        dashboard_tahun();
     }
 
-
     function dashboard_tahun() {
+
         $('#tb_tahun').empty()
         $('#tablewil').empty()
         $('#reg').empty()
@@ -4392,6 +4426,14 @@
         var _token = $('input[name="_token"]').val();
         var year = document.getElementById('yearDate').value
         var regData = document.getElementById('regionalData').value
+        // Swal.fire({
+        //     title: 'Loading',
+        //     text: 'Please wait...',
+        //     allowOutsideClick: false,
+        //     onBeforeOpen: () => {
+        //         Swal.showLoading();
+        //     }
+        // });
 
 
         $.ajax({
@@ -4403,6 +4445,7 @@
                 _token: _token
             },
             success: function(result) {
+                Swal.close();
 
                 var parseResult = JSON.parse(result)
                 //list estate
@@ -4440,26 +4483,6 @@
                 }));
 
 
-                // console.log(chart_bhTH);
-
-                // if (regInpt === '2' || regInpt === '3') {
-
-                //     const indexToDelete = chart_brdTH.findIndex(element => element[0] === 'pt_muabuah');
-
-                //     if (indexToDelete !== -1) {
-                //         chart_brdTH.splice(indexToDelete, 1);
-                //     }
-                //     const indexToDeletes = chart_bhTH.findIndex(element => element[0] === 'pt_muabrd');
-
-                //     if (indexToDeletes !== -1) {
-                //         chart_bhTH.splice(indexToDeletes, 1);
-                //     }
-
-
-                // } else {
-                //     chart_brdTH;
-                //     chart_bhTH;
-                // }
 
                 // console.log(chart_bhTH);
 
@@ -4517,32 +4540,7 @@
 
                 const arr = estate
 
-                // const EstTahun = arr.map((item) => item.split(',')[1]);
 
-                // const EstTahun = arr
-                //     .map((item, index) => {
-                //         const value = item.split(',')[1];
-                //         return {
-                //             index,
-                //             value
-                //         };
-                //     })
-                //     .filter((item) => item.index < 13 || item.index > 15)
-                //     .map((item) => item.value);
-
-                // EstTahun.push("PT.MUA");
-
-                // if (regInpt === '2' || regInpt === '3') {
-
-
-                //     const index = EstTahun.indexOf('PT.MUA');
-                //     if (index > -1) { // only splice EstTahun when item is found
-                //         EstTahun.splice(index, 1); // 2nd parameter means remove one item only
-                //     }
-
-                // } else {
-                //     EstTahun;
-                // }
                 let formatEst;
 
                 if (regInpt === '1') {
@@ -4698,7 +4696,7 @@
 
                 // var yearStr = year.toString();
                 var arrwil = rekap_bulanwil;
-                // console.log(arrwil);
+                console.log(rekap_tahunwil);
                 var totalBodywil = rekap_tahunwil;
 
                 var tbody2 = document.getElementById('tablewil');
@@ -5272,6 +5270,14 @@
     GraphTranBH.render();
 
     document.getElementById('GraphFilter').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            text: 'Please wait...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         graphFilter()
     }
 
@@ -5399,6 +5405,15 @@
     });
 
     document.getElementById('showWeek').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            text: 'Mohon tunggu...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         dashboard_week()
     }
 
@@ -5424,7 +5439,7 @@
                 _token: _token
             },
             success: function(result) {
-
+                Swal.close()
                 // console.log(reg);
                 var parseResult = JSON.parse(result)
                 //list estate
@@ -7394,6 +7409,7 @@
                 _token: _token
             },
             success: function(result) {
+                Swal.close();
                 // console.log(est)
                 // console.log(yearGraph)
                 var parseResult = JSON.parse(result)
