@@ -2586,7 +2586,7 @@
                 }
 
 
-                // console.log(mutuBuahData);
+                // console.log(mutuAncakData);
 
                 document.getElementById('closeModalBtn').addEventListener('click', function() {
                     $('#editModal').modal('hide');
@@ -2839,22 +2839,6 @@
                         title: 'datetime'
                     },
                     {
-                        targets: 6,
-                        title: 'lat awal;'
-                    },
-                    {
-                        targets: 7,
-                        title: 'lon awal'
-                    },
-                    {
-                        targets: 8,
-                        title: 'lat akhir'
-                    },
-                    {
-                        targets: 9,
-                        title: 'lon akhir'
-                    },
-                    {
                         targets: 11,
                         title: 'luas blok',
                         render: function(data, type, row, meta) {
@@ -2871,32 +2855,48 @@
                     },
                     {
                         targets: 12,
-                        title: 'Br 1'
+                        title: 'Br 1',
+                        render: function(data, type, row, meta) {
+                            return row[12]; // Access the value from index 3 of the data array
+                        }
                     },
                     {
                         targets: 13,
-                        title: 'Br 2'
+                        title: 'Br 2',
+                        render: function(data, type, row, meta) {
+                            return row[13]; // Access the value from index 3 of the data array
+                        }
                     },
                     {
                         targets: 14,
-                        title: 'Jalur masuk'
+                        title: 'Jalur masuk',
+                        render: function(data, type, row, meta) {
+                            return row[15]; // Access the value from index 3 of the data array
+                        }
                     },
                     {
                         targets: 15,
-                        title: 'Status Panen'
+                        title: 'Status Panen',
+                        render: function(data, type, row, meta) {
+                            return row[15]; // Access the value from index 3 of the data array
+                        }
                     },
                     {
                         targets: 16,
-                        title: 'Kemandoran'
+                        title: 'Kemandoran',
+                        render: function(data, type, row, meta) {
+                            return row[16]; // Access the value from index 3 of the data array
+                        }
                     },
                     {
                         targets: 17,
-                        title: 'Ancak Pemanen'
+                        title: 'Ancak Pemanen',
+                        render: function(data, type, row, meta) {
+                            return row[17]; // Access the value from index 3 of the data array
+                        }
                     },
-                    // {
-                    //     targets: 18,
-                    //     title: 'Pokok Panen'
-                    // },
+
+
                     {
 
                         title: 'Pokok Panen',
@@ -2910,14 +2910,11 @@
                             return row[18]; // Access the value from index 3 of the data array
                         }
                     },
-                    // {
-                    //     targets: 19,
-                    //     title: 'Pokok Sample'
-                    // },
+
 
                     {
                         targets: 23,
-                        title: 'Jjg_panen',
+                        title: 'Janjang Panen',
                         render: function(data, type, row, meta) {
                             return row[23]; // Access the value from index 3 of the data array
                         }
@@ -2973,14 +2970,14 @@
                     },
                     {
                         targets: 31,
-                        title: 'Ps',
+                        title: 'Pelepah Sengkleh',
                         render: function(data, type, row, meta) {
                             return row[31]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 32,
-                        title: 'frond_stacking',
+                        title: 'Frond Stacking',
                         render: function(data, type, row, meta) {
                             return row[32]; // Access the value from index 3 of the data array
                         }
@@ -3054,6 +3051,8 @@
                     var rowData = Object.values(mutuBuah[i][1]);
                     mutuBuahData.push(rowData);
                 }
+
+                // console.log(mutuBuahData);
 
                 function editRowBuah(id) {
                     // Save the selected row index
@@ -3389,12 +3388,36 @@
 
                 // end table mutu buah 
 
-                // table mutu Transport 
+                function removeLatLon(array) {
+                    array.forEach((item) => {
+                        if (Array.isArray(item)) {
+                            removeLatLon(item); // Recursively remove "lat" and "lon" from nested arrays
+                        } else {
+                            delete item.lat;
+                            delete item.lon;
+                            delete item.bulan;
+                            delete item.tahun;
+                            delete item.app_version;
+                            delete item.foto_fu;
+                            delete item.foto_temuan;
+                            delete item.foto_komentar;
+                            delete item.komentar;
+                        }
+                    });
+                }
+
+
+                // Call the function to remove "lat" and "lon" properties
+                removeLatLon(mutuTransport);
+
+                console.log(mutuTransport);
                 var mutuTransData = [];
                 for (var i = 0; i < mutuTransport.length; i++) {
                     var rowData = Object.values(mutuTransport[i][1]);
                     mutuTransData.push(rowData);
                 }
+
+                console.log(mutuTransData);
 
                 function editRowTrans(id) {
                     // Save the selected row index
@@ -3409,12 +3432,12 @@
 
                     $('#update-estTrans').val(rowData[1]);
                     $('#update-afd_trans').val(rowData[2]);
-                    $('#update-tphbrTrans').val(rowData[8]);
+                    $('#update-tphbrTrans').val(rowData[6]);
                     $('#update-blok_trans').val(rowData[3]);
-                    $('#update-Status_trPanen').val(rowData[9]);
+                    $('#update-Status_trPanen').val(rowData[7]);
                     $('#update-petugasTrans').val(rowData[4]);
-                    $('#update-bt_trans').val(rowData[11]);
-                    $('#update-rstTrans').val(rowData[12]);
+                    $('#update-bt_trans').val(rowData[9]);
+                    $('#update-rstTrans').val(rowData[10]);
 
                     $('#editModalTrans').modal('show');
                 }
@@ -3611,70 +3634,44 @@
                             return row[5];
                         }
                     },
+
                     {
 
-                        title: 'lat',
+                        title: 'Luas Blok',
                         render: function(data, type, row, meta) {
-                            return row[6];
-                        }
-                    },
-                    {
-
-                        title: 'lon',
-                        render: function(data, type, row, meta) {
-                            return row[7];
+                            return row[8];
                         }
                     },
                     {
 
                         title: 'TPH Baris',
                         render: function(data, type, row, meta) {
-                            return row[8];
+                            return row[6];
                         }
                     },
                     {
                         targets: 9,
                         title: 'Status Panen',
                         render: function(data, type, row, meta) {
+                            return row[7];
+                        }
+                    },
+                    {
+                        targets: 11,
+                        title: 'Brondolah di TPH',
+                        render: function(data, type, row, meta) {
                             return row[9];
                         }
                     },
                     {
-
-                        title: 'Luas Blok',
+                        targets: 12,
+                        title: 'Buah di TPH',
                         render: function(data, type, row, meta) {
                             return row[10];
                         }
                     },
 
-                    {
-                        targets: 11,
-                        title: 'Bt_tph',
-                        render: function(data, type, row, meta) {
-                            return row[11];
-                        }
-                    },
-                    {
-                        targets: 12,
-                        title: 'Brd_tph',
-                        render: function(data, type, row, meta) {
-                            return row[12];
-                        }
-                    },
-                    {
-                        targets: 15,
-                        title: 'Komentar',
-                        render: function(data, type, row, meta) {
-                            return row[15];
-                        }
-                    },
-                    {
-                        targets: 16,
-                        title: 'App',
-                        render: function(data, type, row, meta) {
-                            return row[16];
-                        }
-                    },
+
 
                     {
                         targets: -1, // -1 targets the last column
@@ -3689,7 +3686,7 @@
                     }
                 ];
                 // Initialize DataTables for mutuAncak
-                console.log(mutuTransData);
+                // console.log(mutuTransData);
 
                 var mutuTransTable = $('#mutuTransportable').DataTable({
                     data: mutuTransData,

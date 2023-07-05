@@ -75,7 +75,7 @@ Route::get('/cetakPDFFI/{id}/{est}/{tgl}', [inspectController::class, 'cetakPDFF
 Route::post('/getFindData', [inspectController::class, 'getFindData'])->name('getFindData');
 Route::post('/changeDataInspeksi', [inspectController::class, 'changeDataInspeksi'])->name('changeDataInspeksi');
 Route::post('/plotEstate', [inspectController::class, 'plotEstate'])->name('plotEstate');
-Route::post('/plotBlok', [inspectController::class, 'plotBlok'])->name('plotBlok');
+Route::get('/plotBlok', [inspectController::class, 'plotBlok'])->name('plotBlok');
 // Route::post('/filter', [inspectController::class, 'filter']);
 
 

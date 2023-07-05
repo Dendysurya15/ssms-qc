@@ -197,7 +197,7 @@
                             }
                         </style>
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
-                            <button id="sort-est-btn">Sort by Est</button>
+                            <button id="sort-est-btn">Sort by Afd</button>
                             <button id="sort-rank-btn">Sort by Rank</button>
                         </div>
 
@@ -629,7 +629,7 @@
                             </div>
 
                             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
-                                <button id="sort-afd-btnWeek">Sort by Est</button>
+                                <button id="sort-afd-btnWeek">Sort by Afd</button>
                                 <button id="sort-est-btnWeek">Sort by Rank</button>
                             </div>
                             <div id="tablesContainer">
@@ -1361,8 +1361,9 @@
 
                     <div class="tab-pane fade" id="nav-score" role="tabpanel" aria-labelledby="nav-score-tab">
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
-                            <h5><b>SCORE KUALITAS PANEN BERDASARKAN BLOK</b></h5>
+                            <h5><b>SCORE KUALITAS PANEN BERDASARKAN BLOK : {{ \Carbon\Carbon::now()->format('Y') }}</b></h5>
                         </div>
+
 
                         <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
                             <div class="row w-100">
@@ -1939,7 +1940,7 @@
         getPlotStr += ']}';
 
         var blok = JSON.parse(getPlotStr)
-        console.log(blok)
+        // console.log(blok)
         var test = L.geoJSON(blok, {
                 onEachFeature: function(feature, layer) {
                     layer.myTag = 'BlokMarker'
@@ -2107,7 +2108,7 @@
 
         $.ajax({
             url: "{{ route('plotBlok') }}",
-            method: "POST",
+            method: "get",
             data: {
                 est: estData,
                 _token: _token
@@ -2116,6 +2117,10 @@
                 var plot = JSON.parse(result);
                 const blokResult = Object.entries(plot['blok']);
                 const lgd = Object.entries(plot['legend']);
+                const lowest = Object.entries(plot['lowest']);
+                const highest = Object.entries(plot['highest']);
+
+                console.log(highest[2][1]);
                 drawBlokPlot(blokResult)
 
                 var legend = L.control({
@@ -2123,7 +2128,7 @@
                 });
                 legend.onAdd = function(map) {
                     var div = L.DomUtil.create("div", "legend");
-                    div.innerHTML += '<table class="table table-bordered text center" style="height:fit-content; font-size: 12px;"> <thead> <tr bgcolor="lightgrey"> <th rowspan="2" class="align-middle">Score</th><th colspan="2">Blok</th> </tr> <tr bgcolor="lightgrey"> <th>Jumlah</th> <th>%</th> </tr> </thead> <tbody><tr><td bgcolor="#4874c4">Excellent</td><td>' + lgd[0][1] + '</td><td>' + lgd[6][1] + '</td></tr><tr><td bgcolor="#00ff2e">Good</td><td>' + lgd[1][1] + '</td><td>' + lgd[7][1] + '</td></tr><tr><td bgcolor="yellow">Satisfactory</td><td>' + lgd[2][1] + '</td><td>' + lgd[8][1] + '</td></tr><tr><td bgcolor="orange">Fair</td><td>' + lgd[3][1] + '</td><td>' + lgd[9][1] + '</td></tr><tr><td bgcolor="red">Poor</td><td>' + lgd[4][1] + '</td><td>' + lgd[10][1] + '</td></tr><tr bgcolor="lightgrey"><td>TOTAL</td><td colspan="2">' + lgd[5][1] + '</td></tr></tbody></table>';
+                    div.innerHTML += '<table class="table table-bordered text center" style="height:fit-content; font-size: 12px;"> <thead> <tr bgcolor="lightgrey"> <th rowspan="2" class="align-middle">Score</th><th colspan="2">Blok</th> </tr> <tr bgcolor="lightgrey"> <th>Jumlah</th> <th>%</th> </tr> </thead> <tbody><tr><td bgcolor="#4874c4">Excellent > 95</td><td>' + lgd[0][1] + '</td><td>' + lgd[6][1] + '</td></tr><tr><td bgcolor="#00ff2e">Good > 85</td><td>' + lgd[1][1] + '</td><td>' + lgd[7][1] + '</td></tr><tr><td bgcolor="yellow">Satisfactory > 75</td><td>' + lgd[2][1] + '</td><td>' + lgd[8][1] + '</td></tr><tr><td bgcolor="orange">Fair > 65</td><td>' + lgd[3][1] + '</td><td>' + lgd[9][1] + '</td></tr><tr><td bgcolor="red">Poor < 65</td><td>' + lgd[4][1] + '</td><td>' + lgd[10][1] + '</td></tr><tr bgcolor="lightgrey"><td>TOTAL</td><td colspan="2">' + lgd[5][1] + '</td></tr><tr bgcolor="lightgrey"><td>Highest</td><td colspan="2">' + highest[2][1] + '</td></tr><tr bgcolor="lightgrey"><td>Lowest</td><td colspan="2">' + lowest[2][1] + '</td></tr></tbody></table>';
                     return div;
                 };
                 legend.addTo(map);
