@@ -351,23 +351,9 @@
 
 
 <div class="content-wrapper">
-    <style>
-        #back-to-data-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 80px;
-            opacity: 0.7;
-            transition: opacity 0.5s ease-in-out;
-            z-index: 9999;
-            /* Set a higher z-index value */
-        }
 
-        #back-to-data-btn:hover {
-            opacity: 1;
-        }
-    </style>
 
-    <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
+
     <div class="card table_wrapper">
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <h2>REKAP HARIAN SIDAK INPEKSI </h2>
@@ -447,6 +433,7 @@
         <!-- end animasi -->
     </div>
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
+        <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
         <div class="d-flex align-items-center">
             <!-- Your existing PDF and Excel buttons and their respective forms -->
             <style>
@@ -504,53 +491,67 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
-        <div class="Wraping">
-            <h1 class="text-center">Tabel Mutu Ancak</h1>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="mutuAncakTable">
-                    <thead>
-                        <!-- Table header content -->
-                    </thead>
-                    <tbody>
-                        <!-- Table body content will be dynamically generated -->
-                    </tbody>
-                </table>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <h1 style="text-align: center;">Tabel Mutu Ancak</h1>
+                        <table class="table table-striped table-bordered" id="mutuAncakTable">
+                            <thead>
+                                <!-- Table header content -->
+                            </thead>
+                            <tbody>
+                                <!-- Table body content will be dynamically generated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <h1 style="text-align: center;">Tabel Mutu Buah</h1>
+                        <table class="table table-striped table-bordered" id="mutuBuahable">
+                            <thead>
+                                <!-- Table header content -->
+                            </thead>
+                            <tbody>
+                                <!-- Table body content will be dynamically generated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h1 style="text-align: center;">Tabel Mutu Transport</h1>
+                    <table class="table table-striped" id="mutuTransportable">
+                        <thead>
+                            <!-- Table header content -->
+                        </thead>
+                        <tbody>
+                            <!-- Table body content will be dynamically generated -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
-        <div class="Wraping">
-            <h1 class="text-center">Tabel Mutu Buah</h1>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="mutuBuahable">
-                    <thead>
-                        <!-- Table header content -->
-                    </thead>
-                    <tbody>
-                        <!-- Table body content will be dynamically generated -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
-    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
-        <div class="Wraping">
-            <h1 class="text-center">Tabel Mutu Transport</h1>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="mutuTransportable">
-                    <thead>
-                        <!-- Table header content -->
-                    </thead>
-                    <tbody>
-                        <!-- Table body content will be dynamically generated -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+
+
+
+
+
+
+
     <!-- 
     <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark ">
         <div class="Wraping">
@@ -1667,12 +1668,12 @@
                                 <label for="update-petugasTrans" class="col-form-label">Petugas</label>
                                 <input type="text" class="form-control" id="update-petugasTrans" name="petugasTrans" value="">
 
-                                <label for="update-bt_trans" class="col-form-label">BT </label>
+                                <label for="update-bt_trans" class="col-form-label">Brondolan di TPH </label>
                                 <input type="text" class="form-control" id="update-bt_trans" name="bt_trans" value="" required>
 
 
 
-                                <label for="update-rstTrans" class="col-form-label">Rst</label>
+                                <label for="update-rstTrans" class="col-form-label">Buah di TPH</label>
                                 <input type="text" class="form-control" id="update-rstTrans" name="rstTrans" value="" required>
 
 
@@ -3594,84 +3595,49 @@
                 var columnTrans = [{
                         targets: 0,
                         title: 'id',
-                        render: function(data, type, row, meta) {
-                            return row[0];
-                        }
+
                     },
 
                     {
                         targets: 1,
-                        title: 'estate',
-                        render: function(data, type, row, meta) {
-                            return row[1];
-                        }
+                        title: 'estate'
                     },
                     {
                         targets: 2,
-                        title: 'afdeling',
-                        render: function(data, type, row, meta) {
-                            return row[2];
-                        }
+                        title: 'afdeling'
                     },
                     {
                         targets: 3,
-                        title: 'Blok',
-                        render: function(data, type, row, meta) {
-                            return row[3];
-                        }
+                        title: 'Blok'
                     },
                     {
                         targets: 4,
-                        title: 'Petugas',
-                        render: function(data, type, row, meta) {
-                            return row[4];
-                        }
+                        title: 'Petugas'
                     },
                     {
-
-                        title: 'datetime',
-                        render: function(data, type, row, meta) {
-                            return row[5];
-                        }
-                    },
-
-                    {
-
-                        title: 'Luas Blok',
-                        render: function(data, type, row, meta) {
-                            return row[8];
-                        }
+                        targets: 5,
+                        title: 'Datetime'
                     },
                     {
-
-                        title: 'TPH Baris',
-                        render: function(data, type, row, meta) {
-                            return row[6];
-                        }
+                        targets: 6,
+                        title: 'TPH Baris'
+                    },
+                    {
+                        targets: 7,
+                        title: 'Status Panen'
+                    },
+                    {
+                        targets: 8,
+                        title: 'Luas Blok'
                     },
                     {
                         targets: 9,
-                        title: 'Status Panen',
-                        render: function(data, type, row, meta) {
-                            return row[7];
-                        }
+                        title: 'Brondol di TPH'
                     },
                     {
-                        targets: 11,
-                        title: 'Brondolah di TPH',
-                        render: function(data, type, row, meta) {
-                            return row[9];
-                        }
+                        targets: 10,
+                        title: 'Buah di TPH'
                     },
-                    {
-                        targets: 12,
-                        title: 'Buah di TPH',
-                        render: function(data, type, row, meta) {
-                            return row[10];
-                        }
-                    },
-
-
 
                     {
                         targets: -1, // -1 targets the last column
@@ -3686,7 +3652,7 @@
                     }
                 ];
                 // Initialize DataTables for mutuAncak
-                // console.log(mutuTransData);
+                console.log(mutuTransData);
 
                 var mutuTransTable = $('#mutuTransportable').DataTable({
                     data: mutuTransData,
@@ -3736,7 +3702,7 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "http://ssms-qc.test/dashboard_inspeksi";
+        window.location.href = "https://qc-apps.srs-ssms.com/dashboard_inspeksi";
     }
     var regional = '{{$reg}}';
 

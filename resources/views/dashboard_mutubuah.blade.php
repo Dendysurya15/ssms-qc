@@ -72,6 +72,24 @@
         width: 100%;
         overflow-x: scroll;
     }
+
+    @keyframes fadeInOut {
+        0% {
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    .loading-text {
+        animation: fadeInOut 2s ease-in-out infinite;
+    }
 </style>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -142,7 +160,7 @@
                                 }
                             </style>
                             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
-                                <button id="sort-est-btn">Sort by Est</button>
+                                <button id="sort-est-btn">Sort by Afd</button>
                                 <button id="sort-rank-btn">Sort by Rank</button>
                             </div>
                             <div id="tablesContainer">
@@ -443,7 +461,7 @@
                                         </form>
                                     </div>
                                     <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
-                                        <button id="sort-est-btnWek">Sort by Est</button>
+                                        <button id="sort-est-btnWek">Sort by Afd</button>
                                         <button id="sort-rank-btnWek">Sort by Rank</button>
                                     </div>
 
@@ -1047,7 +1065,7 @@
                                 <button class="btn btn-primary mb-3" style="float: right" id="show_sbithn">Show</button>
                             </div>
                             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
-                                <button id="sort-est-btnSBI">Sort by Est</button>
+                                <button id="sort-est-btnSBI">Sort by Afd</button>
                                 <button id="sort-rank-btnSBI">Sort by Rank</button>
                             </div>
 
@@ -1537,6 +1555,15 @@
     });
 
     $("#showFinding").click(function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         getFindData()
     });
 
@@ -1875,6 +1902,15 @@
     });
     //tampilakn filter perweek
     document.getElementById('btnShow').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         getweek();
     }
 
@@ -2029,7 +2065,7 @@
             },
             success: function(result) {
 
-
+                Swal.close();
                 var parseResult = JSON.parse(result)
                 var region = Object.entries(parseResult['listregion'])
 
@@ -3001,6 +3037,15 @@
 
     //tampilkan pertahun filter table utama
     document.getElementById('showTahung').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         dashboard_tahun()
     }
 
@@ -3059,7 +3104,7 @@
             },
             success: function(result) {
 
-
+                Swal.close();
                 var parseResult = JSON.parse(result)
                 var region = Object.entries(parseResult['listregion'])
 
@@ -4008,6 +4053,15 @@
 
 
     document.getElementById('showDataIns').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         dashboardData_tahun()
     }
 
@@ -4034,6 +4088,7 @@
                 _token: _token
             },
             success: function(result) {
+                Swal.close();
                 var parseResult = JSON.parse(result)
                 var data_Sidak = Object.entries(parseResult['data_sidak'])
                 // console.log(data_Sidak);
@@ -4147,7 +4202,20 @@
             }
         });
     }
+
+
+
     document.getElementById('showFindingYear').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         dashboardFindingYear()
     }
 
@@ -4174,6 +4242,7 @@
                 _token: _token
             },
             success: function(result) {
+                Swal.close();
                 var parseResult = JSON.parse(result)
                 var findingIsue = Object.entries(parseResult['finding_nemo'])
 
@@ -4242,6 +4311,15 @@
 
 
     document.getElementById('btnShoWeekdata').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         getweekData();
     }
 
@@ -4265,6 +4343,8 @@
                 _token: _token
             },
             success: function(result) {
+
+                Swal.close();
                 var parseResult = JSON.parse(result)
                 var data_Sidak = Object.entries(parseResult['data_week'])
                 var data_Sidakv2 = Object.entries(parseResult['data_weekv2'])
@@ -4709,12 +4789,32 @@
 
 
 
+            },
+            error: function(xhr, status, error) {
+                Swal.close();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Data Kosong.'
+                });
+                // Handle the error here
+                console.log("An error occurred:", error);
             }
+
 
         });
     }
 
     document.getElementById('show_sbithn').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         sbi_tahun()
     }
 
@@ -4757,6 +4857,7 @@
             },
             success: function(result) {
 
+                Swal.close();
 
                 var parseResult = JSON.parse(result)
                 var region = Object.entries(parseResult['listregion'])
@@ -5428,6 +5529,15 @@
 
 
     document.getElementById('sbiGraphYear').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        });
         sbi_chart()
     }
 
@@ -5458,6 +5568,8 @@
                 'X-CSRF-TOKEN': _token,
             },
             success: function(result) {
+
+                Swal.close();
                 var parseResult = JSON.parse(result)
 
 
@@ -5682,6 +5794,8 @@
                 _token: _token
             },
             success: function(result) {
+
+                Swal.close();
                 var parseResult = JSON.parse(result)
                 var dataFinding = Object.entries(parseResult['dataFinding'])
 
@@ -5713,6 +5827,16 @@
                         });
                     });
                 });
+            },
+            error: function(xhr, status, error) {
+                Swal.close();
+                // Handle the error here
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No data found.'
+                });
+                console.log("An error occurred:", error);
             }
         });
     }

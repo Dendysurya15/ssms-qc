@@ -131,6 +131,24 @@
       margin-left: 10px;
     }
   }
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .loading-text {
+    animation: fadeInOut 2s ease-in-out infinite;
+  }
 </style>
 <div class="content-wrapper">
   <section class="content"><br>
@@ -192,7 +210,7 @@
               }
             </style>
             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
-              <button id="sort-est-btn">Sort by Est</button>
+              <button id="sort-est-btn">sort by Afd</button>
               <button id="sort-rank-btn">Sort by Rank</button>
             </div>
             <div id="tablesContainer">
@@ -476,7 +494,7 @@
                 }
               </style>
               <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
-                <button id="sort-afd-btnWeek">Sort by Est</button>
+                <button id="sort-afd-btnWeek">sort by Afd</button>
                 <button id="sort-est-btnWeek">Sort by Rank</button>
               </div>
               <div id="tablesContainer">
@@ -1243,6 +1261,15 @@
       $('#tbody3').empty()
       $('#plasma').empty()
       $('#tbodySkorRH').empty()
+      Swal.fire({
+        title: 'Loading',
+        html: '<span class="loading-text">Mohon Tunggu...</span>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        }
+      });
       getDataTph()
     });
 
@@ -1252,6 +1279,15 @@
       $('#tbody3Month').empty()
       $('#plasmaMonth').empty()
       $('#tbodySkorRHMonth').empty()
+      Swal.fire({
+        title: 'Loading',
+        html: '<span class="loading-text">Mohon Tunggu...</span>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        }
+      });
       getDataTphMonth()
     });
 
@@ -1262,18 +1298,54 @@
       $('#tbody3Year').empty()
       $('#plasmaYear').empty()
       $('#tbodySkorRHYear').empty()
+      Swal.fire({
+        title: 'Loading',
+        html: '<span class="loading-text">Mohon Tunggu...</span>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        }
+      });
       getDataTphYear()
     });
 
     $("#showDataTph").click(function() {
+      Swal.fire({
+        title: 'Loading',
+        html: '<span class="loading-text">Mohon Tunggu...</span>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        }
+      });
       changeData()
     });
 
     $("#showGraphYear").click(function() {
+      Swal.fire({
+        title: 'Loading',
+        html: '<span class="loading-text">Mohon Tunggu...</span>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        }
+      });
       graphFilterYear()
     });
 
     setTimeout(function() {
+      Swal.fire({
+        title: 'Loading',
+        html: '<span class="loading-text">Mohon Tunggu...</span>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        }
+      });
       $("#showGraphYear").click();
     }, 1000);
 
@@ -1320,6 +1392,7 @@
           date: dateTph
         },
         success: function(result) {
+          Swal.close();
           $("#dataRekapTph").html(result);
         }
       });
@@ -1640,6 +1713,7 @@
 
 
     function getDataTph() {
+
       changeClass()
       var firstWeek = ''
       var lastWeek = ''
@@ -1679,6 +1753,7 @@
           _token: _token
         },
         success: function(result) {
+          Swal.close();
           //parsing result ke json untuk dalam estate
           var parseResult = JSON.parse(result)
           // ubah json ke array agar bisa di for atau foreach
@@ -2905,6 +2980,7 @@
           _token: _token
         },
         success: function(result) {
+          Swal.close();
           //parsing result ke json untuk dalam estate
           var parseResult = JSON.parse(result)
           // ubah json ke array agar bisa di for atau foreach
@@ -4117,6 +4193,7 @@
           _token: _token
         },
         success: function(result) {
+          Swal.close();
           //parsing result ke json untuk dalam estate
           var parseResult = JSON.parse(result)
           var list_all_wil = Object.entries(parseResult['list_all_wil'])
@@ -4999,6 +5076,7 @@
           _token: _token
         },
         success: function(result) {
+          Swal.close();
           var parseResult = JSON.parse(result)
           var chart_brd = Object.entries(parseResult['brdGraph'])
           var chart_krg = Object.entries(parseResult['krgGraph'])
