@@ -1809,7 +1809,7 @@
 
         $.ajax({
             url: "{{ route('getMapsdetail') }}",
-            method: "POST",
+            method: "get",
             data: {
                 Tanggal,
                 est,
@@ -2079,10 +2079,30 @@
                                 var foto_temuan = plot.foto_temuan;
                                 var foto_fu = plot.foto_fu;
                                 var komentar = plot.komentar;
+                                var status_panen = plot.status_panen;
+                                var luas_blok = plot.luas_blok;
+                                var bt = plot.bt;
+                                var rst = plot.Rst;
+                                var time = plot.time;
 
                                 var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
 
                                 var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
+                                if (status_panen) {
+                                    popupContent += `<strong>Status Panen: </strong>${status_panen}<br/>`;
+                                }
+
+                                popupContent += `<strong>Luas Blok: </strong>${luas_blok}<br/>`;
+
+
+                                popupContent += `<strong>BT: </strong>${bt}<br/>`;
+
+
+                                popupContent += `<strong>RST: </strong>${rst}<br/>`;
+
+
+                                popupContent += `<strong>Sidak: </strong>${time}<br/>`;
+
 
                                 if (foto_temuan) {
                                     popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
@@ -2104,6 +2124,7 @@
                                     // latLngs.push([lat, lon]); // Add latitudes and longitudes to the latLngs array
                                 }
                             }
+
 
                             // Create a polyline from latLngs array to connect the plots within each block
                             // var polyline = L.polyline(latLngs, {
@@ -2179,9 +2200,32 @@
                                 var foto_temuan = plot.foto_temuan;
                                 var komentar = plot.komentar;
 
+                                var tph_baris = plot.tph_baris;
+                                var status_panen = plot.status_panen;
+                                var jumlah_jjg = plot.jumlah_jjg;
+                                var bmt = plot.bmt;
+                                var bmk = plot.bmk;
+                                var overripe = plot.overripe;
+                                var empty_bunch = plot.empty_bunch;
+                                var abnormal = plot.abnormal;
+                                var vcut = plot.vcut;
+                                var alas_br = plot.alas_br;
+
                                 var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
 
                                 var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
+
+                                popupContent += `<strong>Tph Baris: </strong>${tph_baris}<br/>`;
+                                popupContent += `<strong>Status Panen: </strong>${status_panen}<br/>`;
+                                popupContent += `<strong>bmt: </strong>${bmt}<br/>`;
+                                popupContent += `<strong>bmk: </strong>${bmk}<br/>`;
+                                popupContent += `<strong>overripe: </strong>${overripe}<br/>`;
+                                popupContent += `<strong>Janjang Kosong: </strong>${empty_bunch}<br/>`;
+                                popupContent += `<strong>abnormal: </strong>${abnormal}<br/>`;
+                                popupContent += `<strong>Tidak Standar vcut: </strong>${vcut}<br/>`;
+                                popupContent += `<strong>Alas Karung: </strong>${alas_br}<br/>`;
+
+
 
                                 if (foto_temuan) {
                                     popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
@@ -2259,9 +2303,45 @@
                         var foto_fu2 = ancak_plot[i].foto_fu2;
                         var komentar = ancak_plot[i].komentar;
 
+                        var luas_blok = ancak_plot[i].luas_blok;
+                        var sph = ancak_plot[i].sph;
+                        var sample = ancak_plot[i].sample;
+                        var pokok_kuning = ancak_plot[i].pokok_kuning;
+                        var piringan_semak = ancak_plot[i].piringan_semak;
+                        var underpruning = ancak_plot[i].underpruning;
+                        var overpruning = ancak_plot[i].overpruning;
+                        var jjg = ancak_plot[i].jjg;
+                        var brtp = ancak_plot[i].brtp;
+                        var brtk = ancak_plot[i].brtk;
+                        var brtgl = ancak_plot[i].brtgl;
+                        var bhts = ancak_plot[i].bhts;
+                        var bhtm1 = ancak_plot[i].bhtm1;
+                        var bhtm2 = ancak_plot[i].bhtm2;
+                        var bhtm3 = ancak_plot[i].bhtm3;
+                        var ps = ancak_plot[i].ps;
+                        var sp = ancak_plot[i].sp;
+
                         var markerIcon = (foto_fu1 || foto_fu2) ? cakfu2 : (foto_temuan1 || foto_temuan2) ? caktemuan2 : caktemuan1;
 
                         var popupContent = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
+
+                        popupContent += `<strong>luas_blok: </strong>${luas_blok}<br/>`;
+                        popupContent += `<strong>sph: </strong>${sph}<br/>`;
+                        popupContent += `<strong>sample: </strong>${sample}<br/>`;
+                        popupContent += `<strong>pokok_kuning: </strong>${pokok_kuning}<br/>`;
+                        popupContent += `<strong>piringan_semak: </strong>${piringan_semak}<br/>`;
+                        popupContent += `<strong>underpruning: </strong>${underpruning}<br/>`;
+                        popupContent += `<strong>overpruning: </strong>${overpruning}<br/>`;
+                        popupContent += `<strong>jjg: </strong>${jjg}<br/>`;
+                        popupContent += `<strong>brtp: </strong>${brtp}<br/>`;
+                        popupContent += `<strong>brtk: </strong>${brtk}<br/>`;
+                        popupContent += `<strong>brtgl: </strong>${brtgl}<br/>`;
+                        popupContent += `<strong>bhts: </strong>${bhts}<br/>`;
+                        popupContent += `<strong>bhtm1: </strong>${bhtm1}<br/>`;
+                        popupContent += `<strong>bhtm2: </strong>${bhtm2}<br/>`;
+                        popupContent += `<strong>bhtm3: </strong>${bhtm3}<br/>`;
+                        popupContent += `<strong>ps: </strong>${ps}<br/>`;
+                        popupContent += `<strong>sp: </strong>${sp}<br/>`;
 
                         if (foto_temuan1) {
                             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan1}" alt="Foto Temuan 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
@@ -2279,8 +2359,9 @@
                             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu2}" alt="Foto FU 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
                         }
 
-                        popupContent += `<strong>Komentar: </strong>${komentar}`;
-
+                        if (komentar) {
+                            popupContent += `<strong>Komentar: </strong>${komentar}`;
+                        }
                         var marker = L.marker([lat, lon], {
                             icon: markerIcon
                         });
@@ -3212,7 +3293,7 @@
                                 contentType: false,
                                 success: function(response) {
                                     // Handle the response from the controller if needed
-                                    console.log(response);
+                                    // console.log(response);
 
                                     // Implement the logic to delete the row with the provided ID
                                     // You can use the rowIndex to delete the corresponding row from the DataTable
@@ -3411,14 +3492,14 @@
                 // Call the function to remove "lat" and "lon" properties
                 removeLatLon(mutuTransport);
 
-                console.log(mutuTransport);
+                // console.log(mutuTransport);
                 var mutuTransData = [];
                 for (var i = 0; i < mutuTransport.length; i++) {
                     var rowData = Object.values(mutuTransport[i][1]);
                     mutuTransData.push(rowData);
                 }
 
-                console.log(mutuTransData);
+                // console.log(mutuTransData);
 
                 function editRowTrans(id) {
                     // Save the selected row index
@@ -3652,7 +3733,7 @@
                     }
                 ];
                 // Initialize DataTables for mutuAncak
-                console.log(mutuTransData);
+                // console.log(mutuTransData);
 
                 var mutuTransTable = $('#mutuTransportable').DataTable({
                     data: mutuTransData,

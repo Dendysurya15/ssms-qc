@@ -2416,6 +2416,7 @@
               } else {
                 itemElement4.innerText = item4
               }
+
               itemElement5.innerText = item5
 
               tr.appendChild(itemElement1)

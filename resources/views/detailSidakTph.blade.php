@@ -196,13 +196,13 @@
                 </div>
             </div>
 
-            <div class="card p-4">
+            <!-- <div class="card p-4">
                 <h4 class="text-center mt-2" style="font-weight: bold">Tracking Plot Sidak TPH - {{ $est }}
                     {{ $afd }}
                 </h4>
                 <hr>
                 <div id="map" style="height:800px"></div>
-            </div>
+            </div> -->
         </div>
     </section>
 </div>
@@ -249,12 +249,12 @@
 
     date = new Date().toISOString().slice(0, 10)
 
-    var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
+    // var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
 
-    googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(map);
+    // googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+    //     maxZoom: 20,
+    //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    // }).addTo(map);
 
     // const googleSat = L.tileLayer(
     //     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -295,23 +295,23 @@
 
             // console.log(plotResult.length)
             // console.log(plotResult)
-            var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+            // var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-            var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            });
+            // var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+            //     maxZoom: 20,
+            //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            // });
 
-            var baseMaps = {
-                "Google Street": googleStreet,
-                "Google Satellite": googleSatellite
-            };
-            L.control.layers(baseMaps).addTo(map);
-            // console.log(blokResult)
-            // drawPlot(plotResult)
-            drawBlok(blokResult)
-            drawTemuan(markerResult)
-            drawLegend(markerResult)
+            // var baseMaps = {
+            //     "Google Street": googleStreet,
+            //     "Google Satellite": googleSatellite
+            // };
+            // L.control.layers(baseMaps).addTo(map);
+            // // console.log(blokResult)
+            // // drawPlot(plotResult)
+            // drawBlok(blokResult)
+            // drawTemuan(markerResult)
+            // drawLegend(markerResult)
 
 
 

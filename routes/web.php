@@ -133,7 +133,7 @@ Route::post('/findIssueSmb', [MutubuahController::class, 'findIssueSmb'])->name(
 Route::get('/cetakFiSmb/{est}/{tgl}', [MutubuahController::class, 'cetakFiSmb'])->name('cetakFiSmb');
 
 
-Route::post('/getMapsdetail', [inspectController::class, 'getMapsdetail'])->name('getMapsdetail');
+Route::get('/getMapsdetail', [inspectController::class, 'getMapsdetail'])->name('getMapsdetail');
 
 
 Route::get('/dashboard_perum', [perumController::class, 'dashboard_perum'])->name('dashboard_perum');
@@ -161,3 +161,6 @@ Route::get('/getDataRekap', [MutubuahController::class, 'getDataRekap'])->name('
 Route::post('/WeeklyReport', [MutubuahController::class, 'weeklypdf'])->name('WeeklyReport');
 
 Route::get('/getDataDay', [inspectController::class, 'getDataDay'])->name('getDataDay');
+
+
+Route::get('getMapsTph', [SidaktphController::class, 'getMapsTph'])->name('getMapsTph');

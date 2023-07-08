@@ -20715,11 +20715,23 @@ class inspectController extends Controller
             $buah_plot = [];
             foreach ($groupedBuah as $blok => $coords) {
                 foreach ($coords as $coord) {
+                    $datetime = $coord['datetime'];
+                    $time = date('H:i:s', strtotime($datetime));
                     $buah_plot[$blok][] = ['blok' => $blok,
                     'lat' => $coord['lat'],
                     'lon' => $coord['lon'],
                     'foto_temuan' => $coord['foto_temuan'],
-                    'komentar' => $coord['komentar']
+                    'komentar' => $coord['komentar'],
+                    'tph_baris' => $coord['tph_baris'],
+                    'status_panen' => $coord['status_panen'],
+                    'jumlah_jjg' => $coord['jumlah_jjg'],
+                    'bmt' => $coord['bmt'],
+                    'bmk' => $coord['bmk'],
+                    'overripe' => $coord['overripe'],
+                    'empty_bunch' => $coord['empty_bunch'],
+                    'abnormal' => $coord['abnormal'],
+                    'vcut' => $coord['vcut'],
+                    'alas_br' => $coord['alas_br'],
                     ];
                 }
             }
@@ -20728,17 +20740,27 @@ class inspectController extends Controller
             $trans_plot = [];
             foreach ($groupedTrans as $blok => $coords) {
                 foreach ($coords as $coord) {
+                    $datetime = $coord['datetime'];
+                    $time = date('H:i:s', strtotime($datetime));
+            
                     $trans_plot[$blok][] = [
                         'blok' => $blok, 
                         'lat' => $coord['lat'],
                         'lon' => $coord['lon'],
                         'foto_temuan' => $coord['foto_temuan'],
                         'foto_fu' => $coord['foto_fu'],
-                        'komentar' => $coord['komentar']
-                        ];
+                        'komentar' => $coord['komentar'],
+                        'status_panen' => $coord['status_panen'],
+                        'luas_blok' => $coord['luas_blok'],
+                        'bt' => $coord['bt'],
+                        'Rst' => $coord['rst'],
+                       
+                        'time' => $time,
+                    ];
                 }
             }
-
+            
+            
 
             $queryancak = DB::connection('mysql2')->table("mutu_ancak_new")
                 ->select("mutu_ancak_new.*", "estate.wil")
@@ -20825,23 +20847,7 @@ class inspectController extends Controller
                         $komentar = $firstMatch['komentar'];
                     }
             
-                    // $ancak_plot[] = [
-                    //     'blok' => $blok,
-                    //     'estate' => $coord['estate'],
-                    //     'afdeling' => $coord['afdeling'],
-                    //     'br1' => $coord['br1'],
-                    //     'br2' => $coord['br2'],
-                    //     'jalur_masuk' => $coord['jalur_masuk'],
-                    //     'foto_temuan1' => $foto_temuan1,
-                    //     'foto_temuan2' => $foto_temuan2,
-                    //     'foto_fu1' => $foto_fu1,
-                    //     'foto_fu2' => $foto_fu2,
-                    //     'komentar' => $komentar,
-                    //     'ket' => 'Lokasi awal',
-                    //     'lat' => $coord['lat_awal'],
-                    //     'lon' => $coord['lon_awal']
-                    // ];
-            
+                
                     $ancak_plot[] = [
                         'blok' => $blok,
                         'estate' => $coord['estate'],
@@ -20856,61 +20862,30 @@ class inspectController extends Controller
                         'komentar' => $komentar,
                         'ket' => 'Lokasi akhir',
                         'lat' => $coord['lat_akhir'],
-                        'lon' => $coord['lon_akhir']
+                        'lon' => $coord['lon_akhir'],
+
+                        'luas_blok' => $coord['luas_blok'],
+                        'sph' => $coord['sph'],
+                        'sample' => $coord['sample'],
+                        'pokok_kuning' => $coord['pokok_kuning'],
+                        'piringan_semak' => $coord['piringan_semak'],
+                        'underpruning' => $coord['underpruning'],
+                        'overpruning' => $coord['overpruning'],
+                        'jjg' => $coord['jjg'],
+                        'brtp' => $coord['brtp'],
+                        'brtk' => $coord['brtk'],
+                        'brtgl' => $coord['brtgl'],
+                        'bhts' => $coord['bhts'],
+                        'bhtm1' => $coord['bhtm1'],
+                        'bhtm2' => $coord['bhtm2'],
+                        'bhtm3' => $coord['bhtm3'],
+                        'ps' => $coord['ps'],
+                        'sp' => $coord['sp'],
                     ];
                 }
             }
             
-
-
-            
-        
-            // dd($ancak_plot);
-
-            // $ancak_new = [];
-            // foreach ($ancak_plot as $key => $value) {
-            //     foreach ($ancak_fa as $key2 => $value2) {
-            //         if ($key2 == $key
-            //             && $value['br1'] == $value2['br1']
-            //             && $value['br2'] == $value2['br2']
-            //             && $value['jalur_masuk'] == $value2['jalur_masuk']
-            //         ) {
-            //             $lat_awal = isset($value['lat_awal']) ? $value['lat_awal'] : null;
-            //             $lon_awal = isset($value['lon_awal']) ? $value['lon_awal'] : null;
-            //             $lat_akhir = isset($value['lat_akhir']) ? $value['lat_akhir'] : null;
-            //             $lon_akhir = isset($value['lon_akhir']) ? $value['lon_akhir'] : null;
-            
-            //             $ancak_new[] = [
-            //                 'blok' => $key,
-            //                 'estate' => $value['estate'],
-            //                 'afdeling' => $value['afdeling'],
-            //                 'br1' => $value['br1'],
-            //                 'br2' => $value['br2'],
-            //                 'jalur_masuk' => $value['jalur_masuk'],
-            //                 'foto_temuan1' => $value2['foto_temuan1'],
-            //                 'foto_temuan2' => $value2['foto_temuan2'],
-            //                 'foto_fu1' => $value2['foto_fu1'],
-            //                 'foto_fu2' => $value2['foto_fu2'],
-            //                 'komentar' => $value2['komentar'],
-            //                 'ket' => 'Lokasi awal',
-            //                 'lat' => $lat_awal,
-            //                 'lon' => $lon_awal
-            //             ];
-            //             $ancak_new[] = [
-            //                 'blok' => $key,
-            //                 'estate' => $value['estate'],
-            //                 'afdeling' => $value['afdeling'],
-            //                 'br1' => $value['br1'],
-            //                 'br2' => $value['br2'],
-            //                 'jalur_masuk' => $value['jalur_masuk'],
-            //                 'ket' => 'Lokasi akhir',
-            //                 'lat' => $lat_akhir,
-            //                 'lon' => $lon_akhir
-            //             ];
-            //         }
-            //     }
-            // }
-            
+ 
             
             // dd($ancak_plot);
 

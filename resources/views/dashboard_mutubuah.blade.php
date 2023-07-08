@@ -1431,43 +1431,104 @@
             $('#reg_sbiThun').val('3');
             $('#regional_data').val('3');
 
-            const thElement1 = document.getElementById('thead1');
-            const thElement2 = document.getElementById('thead2');
-            const thElement3 = document.getElementById('thead3');
-            const thElement4 = document.getElementById('theadx3');
-            const thElement1x = document.getElementById('theadsx1');
-            const thElement2x = document.getElementById('theadsx2');
+            // const thElement1 = document.getElementById('thead1');
+            // const thElement2 = document.getElementById('thead2');
+            // const thElement3 = document.getElementById('thead3');
+            // const thElement4 = document.getElementById('theadx3');
+            // const thElement1x = document.getElementById('theadsx1');
+            // const thElement2x = document.getElementById('theadsx2');
             const thElement3x = document.getElementById('theadsx3');
             const thElement4x = document.getElementById('theadsx4');
             const thElement1xx = document.getElementById('theads1');
             const thElement2xx = document.getElementById('theads2');
             const thElement3xx = document.getElementById('theads3');
             const thElement4xx = document.getElementById('theads4');
-            thElement1.textContent = 'WILAYAH IV';
-            thElement2.textContent = 'WILAYAH V';
-            thElement3.textContent = 'WILAYAH VI';
-            thElement4.textContent = 'PLASMA II';
-            thElement1x.textContent = 'WILAYAH IV';
-            thElement2x.textContent = 'WILAYAH V';
-            thElement3x.textContent = 'WILAYAH VI';
-            thElement4x.textContent = 'PLASMA II';
-            thElement1xx.textContent = 'WILAYAH IV';
-            thElement2xx.textContent = 'WILAYAH V';
-            thElement3xx.textContent = 'WILAYAH VI';
-            thElement4xx.textContent = 'PLASMA II';
+
+            const nons = document.getElementById("Tab1");
+            const nonx = document.getElementById("Tab2");
+            const llon = document.getElementById("Tab3");
+            const non = document.getElementById("Tab4");
+            const tahun1 = document.getElementById("Tabsx1");
+            const tahun2 = document.getElementById("Tabsx2");
+            const tahun3 = document.getElementById("Tabsx3");
+            const tahun4 = document.getElementById("Tabsx4");
+            const sbi1 = document.getElementById("Tabss1");
+            const sbi2 = document.getElementById("Tabss2");
+            const sbi3 = document.getElementById("Tabss3");
+            const sbi4 = document.getElementById("Tabss4");
+
+            function resetClassList(element) {
+                element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
+                element.classList.add("col-md-6");
+            }
+
+
+            non.style.display = "none";
+            // resetClassList(llon);
+            resetClassList(non);
+            llon.classList.add("col-lg-4");
+            nons.classList.add("col-lg-4");
+            nonx.classList.add("col-lg-4");
+
+
+            tahun4.style.display = "none";
+            // resetClassList(tahun3);
+            resetClassList(tahun4);
+            tahun3.classList.add("col-lg-4");
+            tahun1.classList.add("col-lg-4");
+            tahun2.classList.add("col-lg-4");
+
+
+
+            sbi4.style.display = "none";
+            // resetClassList(sbi3);
+            resetClassList(sbi4);
+            sbi3.classList.add("col-lg-4");
+            sbi1.classList.add("col-lg-4");
+            sbi2.classList.add("col-lg-4");
+
+            const thElement1 = document.getElementById('thead1');
+            const thElement2 = document.getElementById('thead2');
+            const thElement1x = document.getElementById('thead3');
+            const thElement2x = document.getElementById('theadx3');
+            const theads1 = document.getElementById('theads1');
+            const theads2 = document.getElementById('theads2');
+            const theads3 = document.getElementById('theads3');
+            const theads4 = document.getElementById('theads4');
+            const theadsx1 = document.getElementById('theadsx1');
+            const theadsx2 = document.getElementById('theadsx2');
+            const theadsx3 = document.getElementById('theadsx3');
+            const theadsx4 = document.getElementById('theadsx4');
+
+            thElement1.textContent = 'WILAYAH VII';
+            thElement2.textContent = 'WILAYAH VII';
+            thElement1x.textContent = 'Plasma III';
+            thElement2x.textContent = 'Plasma III';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
-            thElement3.classList.add("text-center");
-            thElement4.classList.add("text-center");
             thElement1x.classList.add("text-center");
             thElement2x.classList.add("text-center");
-            thElement3x.classList.add("text-center");
-            thElement4x.classList.add("text-center");
-            thElement1xx.classList.add("text-center");
-            thElement2xx.classList.add("text-center");
-            thElement3xx.classList.add("text-center");
-            thElement4xx.classList.add("text-center");
+
+            theads1.textContent = 'WILAYAH VII';
+            theads2.textContent = 'WILAYAH VII';
+            theads3.textContent = 'Plasma III';
+            theads3.textContent = 'Plasma III';
+
+            theads1.classList.add("text-center");
+            theads2.classList.add("text-center");
+            theads3.classList.add("text-center");
+            theads3.classList.add("text-center");
+
+            theadsx1.textContent = 'WILAYAH VII';
+            theadsx2.textContent = 'WILAYAH VII';
+            theadsx3.textContent = 'Plasma III';
+            theadsx3.textContent = 'Plasma III';
+
+            theadsx1.classList.add("text-center");
+            theadsx2.classList.add("text-center");
+            theadsx3.classList.add("text-center");
+            theadsx3.classList.add("text-center");
 
         } else if ((lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') && !isTableHeaderModified) {
             $('#regionalPanen').val('4');
@@ -1546,12 +1607,12 @@
         sbi_tahun()
         getFindData()
 
-        $('#data_weekTab2 tbody tr').each(function() {
-            var secondCell = $(this).find('td:eq(1)');
-            if (secondCell.text().trim() === 'KTE4') {
-                secondCell.text('KTE');
-            }
-        });
+        // $('#data_weekTab2 tbody tr').each(function() {
+        //     var secondCell = $(this).find('td:eq(1)');
+        //     if (secondCell.text().trim() === 'KTE4') {
+        //         secondCell.text('KTE');
+        //     }
+        // });
     });
 
     $("#showFinding").click(function() {

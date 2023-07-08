@@ -44,7 +44,7 @@ class LoginController extends Controller
             'jabatan' => $user->jabatan,
         ]);
 
-        return redirect()->intended('dashboard_gudang');
+        return redirect()->intended('dashboard_inspeksi');
     }
 
 

@@ -107,7 +107,6 @@ session_start();
                 <span class="brand-text font-weight-light">Dashboard</span>
             </a>
             <div class="sidebar">
-
                 <nav class="" style="height: 100%">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="height: 100%">
                         <!-- USER LAB -->
@@ -133,13 +132,10 @@ session_start();
                                 vertical-align: middle;
                             }
                         </style>
-
                         <li class="nav-item">
-                            <a href="{{ asset('/dashboard_gudang') }}" class="nav-link">
-                                <div class="nav-icon lottie-animation" data-animation-path="https://assets9.lottiefiles.com/temp/lf20_vBnbOW.json"></div>
-                                <p>
-                                    QC Gudang
-                                </p>
+                            <a href="{{ asset('/dashboard_inspeksi') }}" class="nav-link">
+                                <div class="nav-icon lottie-animation" data-animation-path="https://assets10.lottiefiles.com/packages/lf20_w4hwxwuq.json"></div>
+                                <p>QC Inspeksi</p>
                             </a>
                         </li>
 
@@ -150,19 +146,7 @@ session_start();
                                 </div>
 
                                 <p>
-                                    QC Sidak TPH
-                                </p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <!-- uses solid style -->
-                            <a href="{{ asset('/dashboard_inspeksi') }}" class="nav-link">
-                                <div class="nav-icon lottie-animation" data-animation-path="https://assets10.lottiefiles.com/packages/lf20_w4hwxwuq.json">
-                                </div>
-
-                                <p>
-                                    QC Inspeksi
+                                    QC Mutu Transport
                                 </p>
                             </a>
                         </li>
@@ -176,6 +160,19 @@ session_start();
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ asset('/dashboard_gudang') }}" class="nav-link">
+                                <div class="nav-icon lottie-animation" data-animation-path="https://assets9.lottiefiles.com/temp/lf20_vBnbOW.json"></div>
+                                <p>
+                                    QC Gudang
+                                </p>
+                            </a>
+                        </li>
+
+
+
+
+
                         <li class="nav-item">
                             <a href="{{ asset('/dashboard_perum') }}" class="nav-link">
                                 <div class="nav-icon lottie-animation" data-animation-path="https://assets1.lottiefiles.com/packages/lf20_bENSfZ37DY.json">
@@ -201,15 +198,6 @@ session_start();
                                 });
                             });
                         </script>
-                        {{--
-                        <li class="nav-item">
-                            <a href="{{ asset('/vm') }}" class="nav-link">
-                        <i class="nav-icon fa fa-car"></i>
-                        <p>
-                            Vehicle Management
-                        </p>
-                        </a>
-                        </li> --}}
 
 
                         <div class="fixed-bottom mb-3" style="position: absolute;">
@@ -241,5 +229,18 @@ session_start();
 
                     </ul>
                 </nav>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var currentUrl = window.location.href;
+                        var navLinks = document.querySelectorAll('.nav-link');
+
+                        navLinks.forEach(function(link) {
+                            if (link.href === currentUrl) {
+                                link.classList.add('active');
+                            }
+                        });
+                    });
+                </script>
+
             </div>
         </aside>

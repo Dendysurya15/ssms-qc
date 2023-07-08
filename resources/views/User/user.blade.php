@@ -73,7 +73,7 @@
 
 
 
-                    @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada')
+                    @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editProfileModal">
                         Edit Profile
                     </button>
