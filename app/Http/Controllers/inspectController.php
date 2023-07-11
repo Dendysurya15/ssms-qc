@@ -17,6 +17,9 @@ class inspectController extends Controller
     public function plotBlok(Request $request)
     {
         $est = $request->get('est');
+        $regData = $request->get('regData');
+
+        // dd($regData);
 
         $queryTrans = DB::connection('mysql2')->table("mutu_transport")
             ->select("mutu_transport.*", "estate.wil")
@@ -154,42 +157,92 @@ class inspectController extends Controller
 
             $dataSkor[$key][0]['skorAncak'] = $skorAncak;
         }
-
+        // dd($regData);
+        
         $dataSkorResult = array();
         $newData = '';
+
+        // dd($regData,$est);
         foreach ($dataSkor as $key => $value) {
             foreach ($value as $key1 => $value1) {
-                if (strlen($key) == 5) {
-                    $sliced = substr($key, 0, -2);
-                    $newData = substr_replace($sliced, '0', 1, 0);
-                } else if (strlen($key) == 6) {
-                    $replace = substr_replace($key, '', 1, 1);
-                    $sliced = substr($replace, 0, -2);
-                    $newData = substr_replace($sliced, '0', 1, 0);
-                } else if (strlen($key) == 3) {
-                    $sliced = $key;
-                    $newData = substr_replace($sliced, '0', 1, 0);
-                } else if (strpos($key, 'CBI') !== false) {
-                    $sliced = substr($key, 0, -4);
-                    $newData = substr_replace($sliced, '0', 1, 0);
-                } else if (strpos($key, 'CB') !== false) {
-                    $replace = substr_replace($key, '', 1, 1);
-                    $sliced = substr($replace, 0, -3);
-                    $newData = substr_replace($sliced, '0', 1, 0);
+                // dd($key);
+                if ($est == "NBE") {
+                    if (strlen($key) == 5) {
+                        $newData = substr($key, 0, -2);
+                    } else if (strlen($key) == 4) {
+                        $newData = substr($key, 0, 1) . substr($key, 2);
+                    }
+                } else {
+                    if (strlen($key) == 5) {
+                        $sliced = substr($key, 0, -2);
+                        $newData = substr_replace($sliced, '0', 1, 0);
+                    } else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
+                        if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
+                            $sliced = substr($key, 0, -2);
+                            $newData = substr($sliced, 0, 1) . substr($sliced, 2);
+                        }elseif (strlen($key) == 6) {
+                            $newData = substr($key, 0, -3);
+                        }
+                    }else if (strlen($key) == 8 ) {
+                        $replace = substr_replace($key, '', 1, 1);
+                        $sliced = substr($replace, 0, -2);
+                        $newData = substr($key, 0, -3);
+                    }else if (strlen($key) == 7) {
+                        $replace = substr_replace($key, '', 1, 1);
+                        $sliced = substr($replace, 0, -2);
+                        $newData = substr($key, 0, -3);
+                    } else if (strlen($key) == 6) {
+                        $replace = substr_replace($key, '', 1, 1);
+                        $sliced = substr($replace, 0, -2);
+                        $newData = substr_replace($sliced, '0', 1, 0);
+                    } else if (strlen($key) == 3) {
+                        $sliced = $key;
+                        $newData = substr_replace($sliced, '0', 1, 0);
+                    } else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
+                        $sliced = substr($key, 0, -6);
+                        $newData = substr_replace($sliced, '0', 1, 0);
+                    } else if (strpos($key, 'CBI') !== false) {
+                        $newData = substr($key, 0, -4);
+                    } else if (strpos($key, 'CB') !== false) {
+                        $replace = substr_replace($key, '', 1, 1);
+                        $sliced = substr($replace, 0, -3);
+                        $newData = substr_replace($sliced, '0', 1, 0);
+                    } else if ($regData == [7, 8]) {
+                        $newData = substr($key, 0, 3);
+                    } else if ($regData == [10, 11]) {
+                        $newData = substr($key, 0, 4);
+                    }
                 }
+                
+
+
                 $skorTrans = check_array('skorTrans', $value1);
                 $skorBuah = check_array('skorBuah', $value1);
                 $skorAncak = check_array('skorAncak', $value1);
                 // $skorAkhir = $skorTrans + $skorBuah + $skorAncak;
-              
-                if ($skorTrans != 0 && $skorAncak !=0) {
+                if ($skorTrans != 0 && $skorAncak != 0) {
                     $skorAkhir = $skorTrans + $skorAncak + 34;
-                }else {
+                } else if ($skorTrans != 0 ){
+                    $skorAkhir = $skorTrans + 34;
+                }else if ($skorAncak != 0 ){
+                    $skorAkhir = $skorAncak + 34;
+                }else{
                     $skorAkhir = 0;
                 }
 
+                if ($skorTrans == 0 && $skorAncak == 0) {
+                    $check = 'empty';
+                } else {
+                    $check = 'data';
+                }
+                
+                if ($check == 'data') {
+                    $skor_kategori_akhir_est = skor_kategori_akhir($skorAkhir);
+                }else {
+                    $skor_kategori_akhir_est = 'xxx';
+                }
                
-                $skor_kategori_akhir_est = skor_kategori_akhir($skorAkhir);
+                
 
                 $dataSkorResult[$newData][0]['estate'] = $est;
                 $dataSkorResult[$newData][0]['skorTrans'] = $skorTrans;
@@ -198,10 +251,15 @@ class inspectController extends Controller
                 $dataSkorResult[$newData][0]['blok'] = $newData;
                 $dataSkorResult[$newData][0]['text'] = $skor_kategori_akhir_est[1];
                 $dataSkorResult[$newData][0]['skorAkhir'] = $skorAkhir;
+                $dataSkorResult[$newData][0]['check_data'] = $check;
             }
         }
-        // dd($dataSkorResult);
 
+        // dd($dataSkorResult);
+        
+
+        
+        
         $datas = array();
         foreach ($dataSkorResult as $key => $value) {
             foreach ($value as $key2 => $value2) {
@@ -213,6 +271,7 @@ class inspectController extends Controller
         foreach ($datas as $key => $value) {
             $list_blok[$est][] = $value['blok'];
         }
+      
 
         $estateQuery = DB::connection('mysql2')->Table('estate')
             ->join('afdeling', 'afdeling.estate', 'estate.id')
@@ -225,95 +284,183 @@ class inspectController extends Controller
         }
         $blokEstate =  DB::connection('mysql2')->Table('blok')->whereIn('afdeling', $listIdAfd)->groupBy('nama')->pluck('nama', 'id');
         $blokEstateFix[$est] = json_decode($blokEstate, true);
-        // dd($blokPerEstate);
+        // dd($blokEstateFix);
+       
+     
+        
+        // foreach ($blokEstateFix as $key => $nestedArray) {
+        //     if ($key == 'NBE') {
+        //         foreach ($nestedArray as $nestedKey => $value) {
+        //             // dd($value);
+        //             if (strlen($value) == 4) {
+        //                 $sliced = substr($value, 0, -2);
+                      
+        //                 $value = substr($value, 0, 1) . substr($value, 2);
+        //                 $blokEstateFix[$key][$nestedKey] = $value;
+        //             }
+        //         }
+        //     }
+        // }
+        
+        // dd($blokEstateFix);
+        // dd($dataSkorResult);
+        // $dataLegend = array();
+        // $tot_exc = 0;
+        // $tot_good = 0;
+        // $tot_satis = 0;
+        // $tot_fair = 0;
+        // $tot_poor = 0;
+        // $tot_empty = 0;
+        // foreach ($dataSkorResult as $key => $value) {
+        //     $excellent = array();
+        //     $good = array();
+        //     $satis = array();
+        //     $fair = array();
+        //     $poor = array();
+        //     $empty = array();
+        //     foreach ($value as $key1 => $value1) {
+        //         $skor = $value1['skorAkhir'];
+        //         $data = $value1['check_data'];
+        //         if ($skor >= 95.0 && $skor <= 100.0) {
+        //             $excellent[] = $value1['skorAkhir'];
+        //         } else if ($skor >= 85.0 && $skor < 95.0) {
+        //             $good[] = $value1['skorAkhir'];
+        //         } else if ($skor >= 75.0 && $skor < 85.0) {
+        //             $satis[] = $value1['skorAkhir'];
+        //         } else if ($skor >= 65.0 && $skor < 75.0) {
+        //             $fair[] = $value1['skorAkhir'];
+        //         } else if ($skor < 65.0  && $data == 'data') {
+        //             $poor[] = $value1['skorAkhir'];
+        //         }else if ($skor < 65.0 && $data == 'empty') {
+        //             $empty[] = $value1['skorAkhir'];
+        //         }
+        //         $tot_exc += count($excellent);
+        //         $tot_good += count($good);
+        //         $tot_satis += count($satis);
+        //         $tot_fair += count($fair);
+        //         $tot_poor += count($poor);
+        //         $tot_empty += count($empty);
+        //     }
+        //     $totalSkor = $tot_exc + $tot_good + $tot_satis + $tot_fair + $tot_poor + $tot_empty;
 
-
+        //     $dataLegend['excellent'] = $tot_exc;
+        //     $dataLegend['good'] = $tot_good;
+        //     $dataLegend['satis'] = $tot_satis;
+        //     $dataLegend['fair'] = $tot_fair;
+        //     $dataLegend['poor'] = $tot_poor;
+        //     $dataLegend['epmty'] = $tot_empty;
+        //     $dataLegend['total'] = $totalSkor;
+        //     $dataLegend['perExc'] = count_percent($tot_exc, $totalSkor);
+        //     $dataLegend['perGood'] = count_percent($tot_good, $totalSkor);
+        //     $dataLegend['perSatis'] = count_percent($tot_satis, $totalSkor);
+        //     $dataLegend['perFair'] = count_percent($tot_fair, $totalSkor);
+        //     $dataLegend['perPoor'] = count_percent($tot_poor, $totalSkor);
+        //     $dataLegend['perEmpty'] = count_percent($tot_empty, $totalSkor);
+        // }
+    
+        // dd($dataSkorResult,$blokEstateFix);
         $blokLatLn = array();
         foreach ($blokEstateFix as $key => $value) {
             $inc = 0;
             foreach ($value as $key2 => $data) {
                 $nilai = 0;
-                foreach ($dataSkorResult as $key3 => $value3) {
-                    foreach ($value3 as $key4 => $value4) {
-                        if ($data == $key3) {
-                            $nilai = $value4['skorAkhir'];
-                        }
-                        if (!in_array($key3, $value)) {
-                            unset($dataSkorResult[$key3]);
-                        }
-                    }
+                $kategori = 'x';
+                
+                if (isset($dataSkorResult[$data])) {
+                    $value4 = $dataSkorResult[$data][0];
+                    $nilai = $value4['skorAkhir'];
+                    $kategori = $value4['text'];
                 }
-
-                $query = '';
+        
                 $query = DB::connection('mysql2')->table('blok')
                     ->select('blok.*')
                     ->whereIn('blok.afdeling', $listIdAfd)
                     ->get();
-
+        
                 $latln = '';
+                $queryAfd  = '';
                 foreach ($query as $key3 => $val) {
                     if ($val->nama == $data) {
                         $latln .= '[' . $val->lon . ',' . $val->lat . '],';
+                        $afd =  $val->afdeling;
+                        $queryAfd = DB::connection('mysql2')->table('afdeling')
+                        ->select('afdeling.*')
+                        ->where('id', $afd)
+                        ->first();
+                        
+                        // $queryEst = DB::connection('mysql2')->table('afdeling')
+                        // ->select('afdeling.*')
+                        // ->whereIn('afdeling.id', $afd)
+                        // ->pluck('nama');
+                        
+            
                     }
                 }
-
+        
                 $blokLatLn[$inc]['blok'] = $data;
                 $blokLatLn[$inc]['estate'] = $est;
                 $blokLatLn[$inc]['latln'] = rtrim($latln, ',');
                 $blokLatLn[$inc]['nilai'] = $nilai;
-
+                $blokLatLn[$inc]['afdeling'] = $queryAfd->nama;
+                $blokLatLn[$inc]['kategori'] = $kategori;
+        
                 $inc++;
             }
         }
+        
+        
 
         $dataLegend = array();
-        $tot_exc = 0;
-        $tot_good = 0;
-        $tot_satis = 0;
-        $tot_fair = 0;
-        $tot_poor = 0;
-        foreach ($dataSkorResult as $key => $value) {
-            $excellent = array();
-            $good = array();
-            $satis = array();
-            $fair = array();
-            $poor = array();
-            foreach ($value as $key1 => $value1) {
-                $skor = $value1['skorAkhir'];
-                if ($skor >= 95.0 && $skor <= 100.0) {
-                    $excellent[] = $value1['skorAkhir'];
-                } else if ($skor >= 85.0 && $skor < 95.0) {
-                    $good[] = $value1['skorAkhir'];
-                } else if ($skor >= 75.0 && $skor < 85.0) {
-                    $satis[] = $value1['skorAkhir'];
-                } else if ($skor >= 65.0 && $skor < 75.0) {
-                    $fair[] = $value1['skorAkhir'];
-                } else if ($skor < 65.0) {
-                    $poor[] = $value1['skorAkhir'];
-                }
-                $tot_exc += count($excellent);
-                $tot_good += count($good);
-                $tot_satis += count($satis);
-                $tot_fair += count($fair);
-                $tot_poor += count($poor);
+        $excellent = array();
+        $good = array();
+        $satis = array();
+        $fair = array();
+        $poor = array();
+        $empty = array();
+        $dataLegend = array();
+        foreach ($blokLatLn as $key => $value) {
+            $skor = $value['nilai'];
+            $data = $value['kategori'];
+            if ($data == 'EXCELLENT') {
+                $excellent[] = $value['nilai'];
+            } else if ($data == 'GOOD') {
+                $good[] = $value['nilai'];
+            } else if ($data == 'SATISFACTORY') {
+                $satis[] = $value['nilai'];
+            } else if ($data == 'FAIR') {
+                $fair[] = $value['nilai'];
+            } else if ($data == 'POOR') {
+                $poor[] = $value['nilai'];
+            } else if ($data == 'x') {
+                $empty[] = $value['nilai'];
             }
-            $totalSkor = $tot_exc + $tot_good + $tot_satis + $tot_fair + $tot_poor;
-
-            $dataLegend['excellent'] = $tot_exc;
-            $dataLegend['good'] = $tot_good;
-            $dataLegend['satis'] = $tot_satis;
-            $dataLegend['fair'] = $tot_fair;
-            $dataLegend['poor'] = $tot_poor;
-            $dataLegend['total'] = $totalSkor;
-            $dataLegend['perExc'] = count_percent($tot_exc, $totalSkor);
-            $dataLegend['perGood'] = count_percent($tot_good, $totalSkor);
-            $dataLegend['perSatis'] = count_percent($tot_satis, $totalSkor);
-            $dataLegend['perFair'] = count_percent($tot_fair, $totalSkor);
-            $dataLegend['perPoor'] = count_percent($tot_poor, $totalSkor);
         }
-        // dd($blokLatLn, $dataLegend);
 
-     
+        $tot_exc = count($excellent);
+        $tot_good = count($good);
+        $tot_satis = count($satis);
+        $tot_fair = count($fair);
+        $tot_poor = count($poor);
+        $tot_empty = count($empty);
+
+        $totalSkor = $tot_exc + $tot_good + $tot_satis + $tot_fair + $tot_poor + $tot_empty;
+
+        $dataLegend['excellent'] = $tot_exc;
+        $dataLegend['good'] = $tot_good;
+        $dataLegend['satis'] = $tot_satis;
+        $dataLegend['fair'] = $tot_fair;
+        $dataLegend['poor'] = $tot_poor;
+        $dataLegend['empty'] = $tot_empty;
+        $dataLegend['total'] = $totalSkor;
+        $dataLegend['perExc'] = count_percent($tot_exc, $totalSkor);
+        $dataLegend['perGood'] = count_percent($tot_good, $totalSkor);
+        $dataLegend['perSatis'] = count_percent($tot_satis, $totalSkor);
+        $dataLegend['perFair'] = count_percent($tot_fair, $totalSkor);
+        $dataLegend['perPoor'] = count_percent($tot_poor, $totalSkor);
+        $dataLegend['perEmpty'] = count_percent($tot_empty, $totalSkor);
+
+        // dd($blokEstateFix, $dataSkorResult,$dataSkor);
+        // dd($blokLatLn,$dataLegend);
         $highestValue = null;
         $estatesWithHighestNilai = [];
         $bloksWithHighestNilai = [];
@@ -368,12 +515,8 @@ class inspectController extends Controller
             'nilai' => $lowestValue,
         ];
         
-        
-        
-
-
-        
-        // dd($resultsLow);
+     
+        // dd($blokLatLn,$dataLegend);
         
 
         $plot['blok'] = $blokLatLn;
@@ -386,7 +529,7 @@ class inspectController extends Controller
         echo json_encode($plot);
     }
 
- 
+    
     public function cetakPDFFI($id, $est, $tgl)
     {
 
@@ -20732,6 +20875,7 @@ class inspectController extends Controller
                     'abnormal' => $coord['abnormal'],
                     'vcut' => $coord['vcut'],
                     'alas_br' => $coord['alas_br'],
+                    'time' => $time,
                     ];
                 }
             }
@@ -20802,6 +20946,9 @@ class inspectController extends Controller
             $ancak_fa = [];
             foreach ($groupedAncakFL as $blok => $coords) {
                 foreach ($coords as $coord) {
+                    // dd($coord);
+                    $datetime = $coord['waktu_temuan'];
+                    $time = date('H:i:s', strtotime($datetime));
                     $ancak_fa[] = [
                     'blok' => $blok,
                     'estate' => $coord['estate'], 
@@ -20815,11 +20962,12 @@ class inspectController extends Controller
                     'foto_fu2' => $coord['foto_fu2'],
                     'komentar' => $coord['komentar'],
                     'lat' => $coord['lat'], 
-                    'lon' => $coord['lon']
+                    'lon' => $coord['lon'],
+                    'time' => $time,
                     ];
                 }
             }
-            // dd($groupedAncak);
+            // dd($ancak_fa);
             $ancak_plot = [];
             foreach ($groupedAncak as $blok => $coords) {
                 foreach ($coords as $coord) {
@@ -20847,7 +20995,8 @@ class inspectController extends Controller
                         $komentar = $firstMatch['komentar'];
                     }
             
-                
+                    $datetime = $coord['datetime'];
+                    $time = date('H:i:s', strtotime($datetime));
                     $ancak_plot[] = [
                         'blok' => $blok,
                         'estate' => $coord['estate'],
@@ -20881,6 +21030,7 @@ class inspectController extends Controller
                         'bhtm3' => $coord['bhtm3'],
                         'ps' => $coord['ps'],
                         'sp' => $coord['sp'],
+                        'time' => $time,
                     ];
                 }
             }

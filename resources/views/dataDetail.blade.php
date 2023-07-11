@@ -2095,10 +2095,10 @@
                                 popupContent += `<strong>Luas Blok: </strong>${luas_blok}<br/>`;
 
 
-                                popupContent += `<strong>BT: </strong>${bt}<br/>`;
+                                popupContent += `<strong>Brondolan tinggal: </strong>${bt}<br/>`;
 
 
-                                popupContent += `<strong>RST: </strong>${rst}<br/>`;
+                                popupContent += `<strong>Buah Tinggal: </strong>${rst}<br/>`;
 
 
                                 popupContent += `<strong>Sidak: </strong>${time}<br/>`;
@@ -2210,21 +2210,21 @@
                                 var abnormal = plot.abnormal;
                                 var vcut = plot.vcut;
                                 var alas_br = plot.alas_br;
-
+                                var time = plot.time;
                                 var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
 
                                 var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
 
                                 popupContent += `<strong>Tph Baris: </strong>${tph_baris}<br/>`;
                                 popupContent += `<strong>Status Panen: </strong>${status_panen}<br/>`;
-                                popupContent += `<strong>bmt: </strong>${bmt}<br/>`;
-                                popupContent += `<strong>bmk: </strong>${bmk}<br/>`;
+                                popupContent += `<strong>Buah Mentah Kurang Brondol: </strong>${bmt}<br/>`;
+                                popupContent += `<strong>Buah Masak Kurang Brondol: </strong>${bmk}<br/>`;
                                 popupContent += `<strong>overripe: </strong>${overripe}<br/>`;
                                 popupContent += `<strong>Janjang Kosong: </strong>${empty_bunch}<br/>`;
                                 popupContent += `<strong>abnormal: </strong>${abnormal}<br/>`;
                                 popupContent += `<strong>Tidak Standar vcut: </strong>${vcut}<br/>`;
                                 popupContent += `<strong>Alas Karung: </strong>${alas_br}<br/>`;
-
+                                popupContent += `<strong>Sidak: </strong>${time}<br/>`;
 
 
                                 if (foto_temuan) {
@@ -2320,7 +2320,7 @@
                         var bhtm3 = ancak_plot[i].bhtm3;
                         var ps = ancak_plot[i].ps;
                         var sp = ancak_plot[i].sp;
-
+                        var time = ancak_plot[i].time;
                         var markerIcon = (foto_fu1 || foto_fu2) ? cakfu2 : (foto_temuan1 || foto_temuan2) ? caktemuan2 : caktemuan1;
 
                         var popupContent = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
@@ -2328,21 +2328,21 @@
                         popupContent += `<strong>luas_blok: </strong>${luas_blok}<br/>`;
                         popupContent += `<strong>sph: </strong>${sph}<br/>`;
                         popupContent += `<strong>sample: </strong>${sample}<br/>`;
-                        popupContent += `<strong>pokok_kuning: </strong>${pokok_kuning}<br/>`;
-                        popupContent += `<strong>piringan_semak: </strong>${piringan_semak}<br/>`;
-                        popupContent += `<strong>underpruning: </strong>${underpruning}<br/>`;
-                        popupContent += `<strong>overpruning: </strong>${overpruning}<br/>`;
-                        popupContent += `<strong>jjg: </strong>${jjg}<br/>`;
-                        popupContent += `<strong>brtp: </strong>${brtp}<br/>`;
-                        popupContent += `<strong>brtk: </strong>${brtk}<br/>`;
-                        popupContent += `<strong>brtgl: </strong>${brtgl}<br/>`;
-                        popupContent += `<strong>bhts: </strong>${bhts}<br/>`;
-                        popupContent += `<strong>bhtm1: </strong>${bhtm1}<br/>`;
-                        popupContent += `<strong>bhtm2: </strong>${bhtm2}<br/>`;
-                        popupContent += `<strong>bhtm3: </strong>${bhtm3}<br/>`;
-                        popupContent += `<strong>ps: </strong>${ps}<br/>`;
-                        popupContent += `<strong>sp: </strong>${sp}<br/>`;
-
+                        popupContent += `<strong>Pokok Kuning: </strong>${pokok_kuning}<br/>`;
+                        popupContent += `<strong>Piringan Semak: </strong>${piringan_semak}<br/>`;
+                        popupContent += `<strong>Underpruning: </strong>${underpruning}<br/>`;
+                        popupContent += `<strong>Overpruning: </strong>${overpruning}<br/>`;
+                        popupContent += `<strong>Janjang: </strong>${jjg}<br/>`;
+                        popupContent += `<strong>Brondolan (P): </strong>${brtp}<br/>`;
+                        popupContent += `<strong>Brondolan (K): </strong>${brtk}<br/>`;
+                        popupContent += `<strong>Brondolan (TGL): </strong>${brtgl}<br/>`;
+                        popupContent += `<strong>Buah Tinggal (S): </strong>${bhts}<br/>`;
+                        popupContent += `<strong>Buah Tinggal (M1): </strong>${bhtm1}<br/>`;
+                        popupContent += `<strong>Buah Tinggal (M2): </strong>${bhtm2}<br/>`;
+                        popupContent += `<strong>Buah Tinggal (M3): </strong>${bhtm3}<br/>`;
+                        popupContent += `<strong>Palepah Sengklek: </strong>${ps}<br/>`;
+                        popupContent += `<strong>Frond Stacking: </strong>${sp}<br/>`;
+                        popupContent += `<strong>Sidak: </strong>${time}<br/>`;
                         if (foto_temuan1) {
                             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan1}" alt="Foto Temuan 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
                         }
@@ -2668,7 +2668,8 @@
                 }
 
 
-                // console.log(mutuAncakData);
+                console.log(mutuAncak);
+                console.log(mutuAncakData);
 
                 document.getElementById('closeModalBtn').addEventListener('click', function() {
                     $('#editModal').modal('hide');
@@ -2937,14 +2938,14 @@
                     },
                     {
                         targets: 12,
-                        title: 'Br 1',
+                        title: 'Baris 1',
                         render: function(data, type, row, meta) {
                             return row[12]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 13,
-                        title: 'Br 2',
+                        title: 'Baris 2',
                         render: function(data, type, row, meta) {
                             return row[13]; // Access the value from index 3 of the data array
                         }
@@ -2953,7 +2954,7 @@
                         targets: 14,
                         title: 'Jalur masuk',
                         render: function(data, type, row, meta) {
-                            return row[15]; // Access the value from index 3 of the data array
+                            return row[14]; // Access the value from index 3 of the data array
                         }
                     },
                     {
@@ -3003,49 +3004,49 @@
                     },
                     {
                         targets: 24,
-                        title: 'Brd_p',
+                        title: 'Brondolan (P)',
                         render: function(data, type, row, meta) {
                             return row[24]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 25,
-                        title: 'Brd_k',
+                        title: 'Brondolan (K)',
                         render: function(data, type, row, meta) {
                             return row[25]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 26,
-                        title: 'brd_gl',
+                        title: 'Brondolan (GL)',
                         render: function(data, type, row, meta) {
                             return row[26]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 27,
-                        title: 'bt_s',
+                        title: 'Buah Tinggal (S)',
                         render: function(data, type, row, meta) {
                             return row[27]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 28,
-                        title: 'bt_m1',
+                        title: 'Buah Tinggal (M1)',
                         render: function(data, type, row, meta) {
                             return row[28]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 29,
-                        title: 'bt_m2',
+                        title: 'Buah Tinggal (M2)',
                         render: function(data, type, row, meta) {
                             return row[29]; // Access the value from index 3 of the data array
                         }
                     },
                     {
                         targets: 30,
-                        title: 'bt_m3',
+                        title: 'Buah Tinggal (M3)',
                         render: function(data, type, row, meta) {
                             return row[30]; // Access the value from index 3 of the data array
                         }
@@ -3378,21 +3379,21 @@
                     },
                     {
                         targets: 13,
-                        title: 'BMK',
+                        title: 'Buah Mentah Tanpa  Brondol',
                         render: function(data, type, row, meta) {
                             return row[13];
                         }
                     },
                     {
                         targets: 12,
-                        title: 'BMT',
+                        title: 'Buah Mentah Kurang Brondol',
                         render: function(data, type, row, meta) {
                             return row[12];
                         }
                     },
                     {
                         targets: 15,
-                        title: 'Empty',
+                        title: 'Empty Bunch',
                         render: function(data, type, row, meta) {
                             return row[15];
                         }
@@ -3420,14 +3421,14 @@
                     },
                     {
                         targets: 17,
-                        title: 'Vcut',
+                        title: 'Tidak Standar V-cut',
                         render: function(data, type, row, meta) {
                             return row[17];
                         }
                     },
                     {
                         targets: 18,
-                        title: 'Alas_br',
+                        title: 'Alas Brondolan',
                         render: function(data, type, row, meta) {
                             return row[18];
                         }

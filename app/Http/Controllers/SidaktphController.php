@@ -5145,7 +5145,7 @@ class SidaktphController extends Controller
             }
         }
 
-        // dd($datas);
+        // dd($plotMarker);
 
         $list_blok = array();
         foreach ($datas as $key => $value) {
@@ -5201,6 +5201,7 @@ class SidaktphController extends Controller
                 }
             }
         }
+        dd($result_list_all_blok, $result_list_blok);
 
         // //bandingkan list blok query dan list all blok dan get hanya blok yang cocok
         $result_blok = array();
@@ -5250,7 +5251,7 @@ class SidaktphController extends Controller
             }
         }
 
-        // dd($plotMarker);
+        dd($plotMarker);
         $plot['plot'] = $plotTitik;
         $plot['marker'] = $plotMarker;
         $plot['blok'] = $blokLatLn;
