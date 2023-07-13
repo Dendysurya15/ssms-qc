@@ -1623,6 +1623,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+
 
 <script>
     const estDataMapSelect = document.querySelector('#estDataMap');
@@ -1813,7 +1816,7 @@
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
-
+        map.addControl(new L.Control.Fullscreen());
         return map;
     }
 
@@ -1865,7 +1868,6 @@
                 Swal.showLoading();
             }
         });
-
         removeMarkers();
         getPlotBlok();
     });
@@ -1926,20 +1928,99 @@
 
     var titleBlok = new Array();
 
+
     function drawBlokPlot(blok) {
         if (blok.length === 0) {
             const errorAnimationPath = 'https://assets1.lottiefiles.com/packages/lf20_no386ede.json';
             showLottieAlert(errorAnimationPath);
             return;
         }
-        // ...
-        // console.log(blok)
-        // Show the success animation after the map is updated
+        var afdelingColors = {
+            // Define the colors for each "afdeling" value
+            OA: 'red',
+            OB: 'blue',
+            OC: 'green',
+            OD: 'yellow',
+            OE: 'purple',
+            OF: 'orange',
+            OG: 'cyan',
+            OH: 'magenta',
+        };
+
+        var test;
+        var checkboxes = [];
+        var legendContainer = null;
+
+        function handleCheckboxChange() {
+            var checkedAfdeling = this.value;
+
+            // Uncheck all checkboxes except the clicked one
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox !== this) {
+                    checkbox.checked = false;
+                }
+            }, this);
+
+            // Reset the style of all features
+            test.eachLayer(function(layer) {
+                layer.setStyle({
+                    fillOpacity: 0.7,
+                });
+            });
+
+            // Find all the features with the selected "afdeling"
+            var features = test.getLayers().filter(function(layer) {
+                return (
+                    layer.myTag === 'BlokMarker' &&
+                    layer.feature.properties.afdeling === checkedAfdeling
+                );
+            });
+
+            if (features.length > 0) {
+                // Highlight the features with the selected "afdeling" by updating their styles
+                features.forEach(function(feature) {
+                    feature.setStyle({
+                        fillOpacity: 1,
+                    });
+                });
+            }
+        }
+
+        function handleFeatureClick(e) {
+            var clickedFeature = e.target;
+
+            // Get the "afdeling" value of the clicked feature
+            var clickedAfdeling = clickedFeature.feature.properties.afdeling;
+
+            // Check the corresponding checkbox
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.value === clickedAfdeling) {
+                    checkbox.checked = true;
+                    handleCheckboxChange.call(checkbox); // Highlight the "afdeling"
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+
+            // Prevent event propagation to avoid triggering the map's click event
+            L.DomEvent.stopPropagation(e);
+        }
 
         var getPlotStr = '{"type":"FeatureCollection","features":[';
 
         for (let i = 0; i < blok.length; i++) {
-            getPlotStr += '{"type":"Feature","properties":{"blok":"' + blok[i][1]['blok'] + '","estate":"' + blok[i][1]['estate'] + '","afdeling":"' + blok[i][1]['afdeling'] + '","nilai":"' + blok[i][1]['nilai'] + '"},"geometry":{"coordinates":[[' + blok[i][1]['latln'] + ']],"type":"Polygon"}}';
+            getPlotStr +=
+                '{"type":"Feature","properties":{"blok":"' +
+                blok[i][1]['blok'] +
+                '","estate":"' +
+                blok[i][1]['estate'] +
+                '","afdeling":"' +
+                blok[i][1]['afdeling'] +
+                '","nilai":"' +
+                blok[i][1]['nilai'] +
+                '"},"geometry":{"coordinates":[[' +
+                blok[i][1]['latln'] +
+                ']],"type":"Polygon"}}';
 
             if (i < blok.length - 1) {
                 getPlotStr += ',';
@@ -1948,255 +2029,124 @@
 
         getPlotStr += ']}';
 
-        // var blok = JSON.parse(getPlotStr)
-        // // console.log(blok)
-        // var test = L.geoJSON(blok, {
-        //         onEachFeature: function(feature, layer) {
-        //             layer.myTag = 'BlokMarker'
-
-        //             var popupContent = "<p><b>Blok</b>: " + feature.properties.blok + "</p> " + "<p><b>Afdeling</b>: " + feature.properties.afdeling + "</p>";;
-
-
-
-        //             var label = L.marker(layer.getBounds().getCenter(), {
-        //                 icon: L.divIcon({
-        //                     className: 'label-blok',
-        //                     html: feature.properties.nilai,
-        //                     iconSize: [50, 10]
-        //                 })
-        //             }).addTo(map);
-        //             label.bindPopup(popupContent);
-
-        //             titleBlok.push(label)
-        //             layer.addTo(map);
-        //             layer.bindPopup(popupContent);
-        //         },
-        //         style: function(feature) {
-        //             var nilai = feature.properties.nilai;
-        //             if (nilai >= 95.0 && nilai <= 100.0) {
-        //                 return {
-        //                     fillColor: "#4874c4",
-        //                     color: 'black',
-        //                     fillOpacity: 0.7,
-        //                     opacity: 0.3,
-        //                 };
-        //             } else if (nilai >= 85.0 && nilai < 95.0) {
-        //                 return {
-        //                     fillColor: "#00ff2e",
-        //                     color: 'black',
-        //                     fillOpacity: 0.7,
-        //                     opacity: 0.3,
-        //                 };
-        //             } else if (nilai >= 75.0 && nilai < 85.0) {
-        //                 return {
-        //                     fillColor: "yellow",
-        //                     color: 'black',
-        //                     fillOpacity: 0.7,
-        //                     opacity: 0.3,
-        //                 };
-        //             } else if (nilai >= 65.0 && nilai < 75.0) {
-        //                 return {
-        //                     fillColor: "orange",
-        //                     color: 'black',
-        //                     fillOpacity: 0.7,
-        //                     opacity: 0.3,
-        //                 };
-        //             } else if (nilai == 0) {
-        //                 return {
-        //                     fillColor: "white",
-        //                     color: 'black',
-        //                     fillOpacity: 0.7,
-        //                     opacity: 0.3,
-        //                 };
-        //             } else if (nilai < 65.0) {
-        //                 return {
-        //                     fillColor: "red",
-        //                     color: 'black',
-        //                     fillOpacity: 0.7,
-        //                     opacity: 0.3,
-        //                 };
-        //             }
-        //         }
-        //     })
-
-
-        //     .addTo(map);
-
-        // var blok = JSON.parse(getPlotStr);
-
-        // var afdelingColors = {}; // Object to store unique "afdeling" values and their corresponding colors
-
-        // var test = L.geoJSON(blok, {
-        //     onEachFeature: function(feature, layer) {
-        //         layer.myTag = 'BlokMarker';
-
-        //         var popupContent = "<p><b>Blok</b>: " + feature.properties.blok + "</p> " + "<p><b>Afdeling</b>: " + feature.properties.afdeling + "</p>";
-
-        //         var label = L.marker(layer.getBounds().getCenter(), {
-        //             icon: L.divIcon({
-        //                 className: 'label-blok',
-        //                 html: feature.properties.nilai,
-        //                 iconSize: [50, 10]
-        //             })
-        //         }).addTo(map);
-        //         label.bindPopup(popupContent);
-
-        //         titleBlok.push(label);
-        //         layer.addTo(map);
-        //         layer.bindPopup(popupContent);
-        //     },
-        //     style: function(feature) {
-        //         var afdeling = feature.properties.afdeling;
-
-        //         // Check if the "afdeling" is already assigned a color
-        //         if (!(afdeling in afdelingColors)) {
-        //             // Generate a random color for the new "afdeling"
-        //             var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-        //             afdelingColors[afdeling] = randomColor;
-        //         }
-
-        //         var nilai = feature.properties.nilai;
-        //         var afdelingColor = afdelingColors[afdeling];
-
-        //         // Adjust the opacity or brightness of the "afdeling" color
-        //         var afdelingOpacity = 20; // Adjust the opacity value as desired
-        //         var afdelingColorWithOpacity = adjustColorOpacity(afdelingColor, afdelingOpacity);
-
-        //         // Assign color based on "nilai" value
-        //         var fillColor;
-        //         if (nilai >= 95.0 && nilai <= 100.0) {
-        //             fillColor = "#4874c4";
-        //         } else if (nilai >= 85.0 && nilai < 95.0) {
-        //             fillColor = "#00ff2e";
-        //         } else if (nilai >= 75.0 && nilai < 85.0) {
-        //             fillColor = "yellow";
-        //         } else if (nilai >= 65.0 && nilai < 75.0) {
-        //             fillColor = "orange";
-        //         } else if (nilai == 0) {
-        //             fillColor = "white";
-        //         } else if (nilai < 65.0) {
-        //             fillColor = "red";
-        //         }
-
-        //         return {
-        //             fillColor: fillColor,
-        //             color: afdelingColorWithOpacity,
-        //             fillOpacity: 0.7,
-        //             opacity: 5
-        //         };
-        //     }
-
-        // }).addTo(map);
-
-
-        // function adjustColorOpacity(color, opacity) {
-        //     var r = parseInt(color.substr(1, 2), 16);
-        //     var g = parseInt(color.substr(3, 2), 16);
-        //     var b = parseInt(color.substr(5, 2), 16);
-        //     return "rgba(" + r + "," + g + "," + b + "," + opacity + ")";
-        // }
-
         var blok = JSON.parse(getPlotStr);
 
-        var afdelingColors = {}; // Object to store unique "afdeling" values and their corresponding colors
+        // Remove the previous legend if it exists
 
-        var test = L.geoJSON(blok, {
+        legendContainer = L.control({
+            position: 'topright',
+        });
+
+        legendContainer.onAdd = function() {
+            var div = L.DomUtil.create('div', 'legend');
+            var legendHTML = '<h3>Afdeling</h3>';
+
+            var uniqueAfdelingValues = new Set(
+                blok.features.map(function(feature) {
+                    return feature.properties.afdeling;
+                })
+            );
+
+            uniqueAfdelingValues.forEach(function(afdeling) {
+                var color = afdelingColors[afdeling];
+                var checkboxId = 'checkbox-' + afdeling;
+
+                legendHTML +=
+                    '<div><input type="checkbox" id="' +
+                    checkboxId +
+                    '" name="afdeling" value="' +
+                    afdeling +
+                    '">';
+                legendHTML +=
+                    '<label for="' +
+                    checkboxId +
+                    '" style="background-color:' +
+                    color +
+                    '"></label>' +
+                    afdeling +
+                    '</div>';
+            });
+
+            div.innerHTML = legendHTML;
+
+            // Attach event listeners to the checkboxes
+            checkboxes = div.querySelectorAll('input[name="afdeling"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', handleCheckboxChange);
+            });
+
+            return div;
+        };
+        if (document.getElementsByClassName('legend')[0]) {
+            document.getElementsByClassName('legend')[0].remove();
+        }
+
+        test = L.geoJSON(blok, {
+            style: function(feature) {
+                const afdeling = feature.properties.afdeling;
+                var fillColor;
+
+                if (!afdelingColors[afdeling]) {
+                    // Assign a default color if the "afdeling" value is not defined in the colors object
+                    fillColor = 'gray';
+                } else {
+                    // Assign the color to the fill based on the "nilai" property
+                    var nilai = feature.properties.nilai;
+
+                    if (nilai >= 95.0 && nilai <= 100.0) {
+                        fillColor = '#4874c4';
+                    } else if (nilai >= 85.0 && nilai < 95.0) {
+                        fillColor = '#00ff2e';
+                    } else if (nilai >= 75.0 && nilai < 85.0) {
+                        fillColor = 'yellow';
+                    } else if (nilai >= 65.0 && nilai < 75.0) {
+                        fillColor = 'orange';
+                    } else if (nilai == 0) {
+                        fillColor = 'white';
+                    } else if (nilai < 65.0) {
+                        fillColor = 'red';
+                    }
+                }
+
+                // Assign the color to the outline of the current feature based on its "afdeling" property
+                var outlineColor = afdelingColors[afdeling] || 'gray';
+
+                return {
+                    color: outlineColor,
+                    fillColor: fillColor,
+                    fillOpacity: 0.7,
+                    opacity: 1,
+                };
+            },
             onEachFeature: function(feature, layer) {
                 layer.myTag = 'BlokMarker';
-
-                var popupContent = "<p><b>Blok</b>: " + feature.properties.blok + "</p> " + "<p><b>Afdeling</b>: " + feature.properties.afdeling + "</p>";
+                layer.bindPopup(
+                    "<p><b>Blok</b>: " +
+                    feature.properties.blok +
+                    '</p> ' +
+                    "<p><b>Afdeling</b>: " +
+                    feature.properties.afdeling +
+                    '</p>'
+                );
 
                 var label = L.marker(layer.getBounds().getCenter(), {
                     icon: L.divIcon({
                         className: 'label-blok',
                         html: feature.properties.nilai,
-                        iconSize: [50, 10]
-                    })
+                        iconSize: [50, 10],
+                    }),
                 }).addTo(map);
-                label.bindPopup(popupContent);
 
                 titleBlok.push(label);
-                layer.addTo(map);
-                layer.bindPopup(popupContent);
+
+                layer.on('click', function(e) {
+                    handleFeatureClick(e);
+                    layer.openPopup();
+                });
             },
-            style: function(feature) {
-                var afdeling = feature.properties.afdeling;
-
-                // Check if the "afdeling" is already assigned a color
-                if (!(afdeling in afdelingColors)) {
-                    // Generate a random color for the new "afdeling"
-                    var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-                    afdelingColors[afdeling] = randomColor;
-                }
-
-                var nilai = feature.properties.nilai;
-                var afdelingColor = afdelingColors[afdeling];
-
-                // Adjust the opacity or brightness of the "afdeling" color
-                var afdelingOpacity = 5; // Adjust the opacity value as desired
-                var afdelingColorWithOpacity = adjustColorOpacity(afdelingColor, afdelingOpacity);
-
-                // Assign color based on "nilai" value
-                var fillColor;
-                if (nilai >= 95.0 && nilai <= 100.0) {
-                    fillColor = "#4874c4";
-                } else if (nilai >= 85.0 && nilai < 95.0) {
-                    fillColor = "#00ff2e";
-                } else if (nilai >= 75.0 && nilai < 85.0) {
-                    fillColor = "yellow";
-                } else if (nilai >= 65.0 && nilai < 75.0) {
-                    fillColor = "orange";
-                } else if (nilai == 0) {
-                    fillColor = "white";
-                } else if (nilai < 65.0) {
-                    fillColor = "red";
-                }
-
-                return {
-                    fillColor: fillColor,
-                    color: afdelingColorWithOpacity,
-                    fillOpacity: 0.7,
-                    opacity: 5
-                };
-            }
         }).addTo(map);
 
-        // Create a legend control
-        var legendControl = L.control({
-            position: 'topright'
-        });
-        legendControl.onAdd = function(map) {
-            var div = L.DomUtil.create('div', 'legend');
-            var legendContent = '';
-
-            // Loop through the "afdeling" colors and generate the legend items
-            for (var afdeling in afdelingColors) {
-                var color = afdelingColors[afdeling];
-                legendContent += '<div class="legend-item">';
-                legendContent += '<div class="legend-color" style="background-color: ' + color + '">' + afdeling + '</div>';
-                legendContent += '</div>';
-            }
-
-
-            div.innerHTML = legendContent;
-            return div;
-        };
-
-        // Remove the existing legend if it exists
-        if (document.getElementsByClassName('legend')[0]) {
-            document.getElementsByClassName('legend')[0].remove();
-        }
-
-        // Add the legend control to the map
-        legendControl.addTo(map);
-
-        function adjustColorOpacity(color, opacity) {
-            var r = parseInt(color.substr(1, 2), 16);
-            var g = parseInt(color.substr(3, 2), 16);
-            var b = parseInt(color.substr(5, 2), 16);
-            return "rgba(" + r + "," + g + "," + b + "," + opacity + ")";
-        }
-
+        legendContainer.addTo(map);
 
 
         if (test.getBounds().isValid()) {
@@ -2205,7 +2155,7 @@
             console.error('Invalid bounds:', test.getBounds());
         }
     }
-
+    var test;
     // Declare a variable to store the previous Lottie animation instance
     let previousAnimation = null;
 
@@ -2314,16 +2264,17 @@
                 drawBlokPlot(blokResult)
 
                 var legend = L.control({
-                    position: "bottomright"
+                    position: "bottomleft"
                 });
                 legend.onAdd = function(map) {
                     var div = L.DomUtil.create("div", "legend");
-                    div.innerHTML += '<table class="table table-bordered text center" style="height:fit-content; font-size: 12px;"> <thead> <tr bgcolor="lightgrey"> <th rowspan="2" class="align-middle">Score</th><th colspan="2">Blok</th> </tr> <tr bgcolor="lightgrey"> <th>Jumlah</th> <th>%</th> </tr> </thead> <tbody><tr><td bgcolor="#4874c4">Excellent > 95</td><td>' + lgd[0][1] + '</td><td>' + lgd[6][1] + '</td></tr><tr><td bgcolor="#00ff2e">Good > 85</td><td>' + lgd[1][1] + '</td><td>' + lgd[7][1] + '</td></tr><tr><td bgcolor="yellow">Satisfactory > 75</td><td>' + lgd[2][1] + '</td><td>' + lgd[8][1] + '</td></tr><tr><td bgcolor="orange">Fair > 65</td><td>' + lgd[3][1] + '</td><td>' + lgd[9][1] + '</td></tr><tr><td bgcolor="red">Poor < 65</td><td>' + lgd[4][1] + '</td><td>' + lgd[10][1] + '</td></tr><tr><td >Belum Sidak</td><td>' + lgd[5][1] + '</td><td>' + lgd[12][1] + '</td></tr><tr bgcolor="lightgrey"><td>TOTAL</td><td colspan="2">' + lgd[6][1] + '</td></tr><tr bgcolor="lightgrey"><td>Highest</td><td colspan="2">' + highest[2][1] + '</td></tr><tr bgcolor="lightgrey"><td>Lowest</td><td colspan="2">' + lowest[2][1] + '</td></tr></tbody></table>';
+                    div.innerHTML += '<table class="table table-bordered text-center" style="height:fit-content; font-size: 14px;"> <thead> <tr bgcolor="lightgrey"> <th rowspan="2" class="align-middle">Score</th><th colspan="2">Blok</th> </tr> <tr bgcolor="lightgrey"> <th>Jumlah</th> <th>%</th> </tr> </thead> <tbody><tr><td bgcolor="#4874c4">Excellent > 95</td><td>' + lgd[0][1] + '</td><td>' + lgd[6][1] + '</td></tr><tr><td bgcolor="#00ff2e">Good > 85</td><td>' + lgd[1][1] + '</td><td>' + lgd[7][1] + '</td></tr><tr><td bgcolor="yellow">Satisfactory > 75</td><td>' + lgd[2][1] + '</td><td>' + lgd[8][1] + '</td></tr><tr><td bgcolor="orange">Fair > 65</td><td>' + lgd[3][1] + '</td><td>' + lgd[9][1] + '</td></tr><tr><td bgcolor="red">Poor < 65</td><td>' + lgd[4][1] + '</td><td>' + lgd[10][1] + '</td></tr><tr><td>Belum Sidak</td><td>' + lgd[5][1] + '</td><td>' + lgd[12][1] + '</td></tr><tr bgcolor="lightgrey"><td>TOTAL</td><td colspan="2">' + lgd[6][1] + '</td></tr><tr bgcolor="lightgrey"><td>Highest</td><td colspan="2">' + highest[2][1] + '</td></tr><tr bgcolor="lightgrey"><td>Lowest</td><td colspan="2">' + lowest[2][1] + '</td></tr></tbody></table>';
+
                     return div;
                 };
                 legend.addTo(map);
 
-                legendVar = legend
+                legendVar = legend;
             }
         })
     }

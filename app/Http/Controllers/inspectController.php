@@ -53,6 +53,54 @@ class inspectController extends Controller
 
         $DataMTAncak = $queryAncak->groupBy('blok');
         $DataMTAncak = json_decode($DataMTAncak, true);
+        $QueryEst = DB::connection('mysql2')
+        ->table("estate")
+        ->join('afdeling', 'afdeling.estate', 'estate.id')
+        ->join('blok', 'blok.afdeling', '=', 'afdeling.id')
+        ->select('blok.id', 'blok.nama', DB::raw('afdeling.nama as `afdeling`'), 'blok.lon' , 'blok.lat')
+        ->where('est', $est)
+        // ->orderBy('lat', 'desc')
+        ->get();
+    
+
+        $queryBlok = json_decode($QueryEst, true); 
+        // dd($dataAfdeling);
+        // $bloks_afd = array_reduce($queryBlok->toArray(), function ($carry, $item) {
+        //     $carry[$item->afdeling][$item->nama][] = $item;
+        //     return $carry;
+        // }, []);
+        $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
+            $carry[$item['afdeling']][$item['nama']][] = $item;
+            return $carry;
+        }, []);
+        
+        $plotBlokAlls = [];
+        foreach ($bloks_afd as $key => $coord) {
+            foreach ($coord as $key2 => $value) {
+                foreach ($value as $key3 => $value1) {
+                    $plotBlokAlls[$key][] = [$value1['lat'], $value1['lon']];
+                }
+               
+            }
+        }
+        // dd($plotBlokAlls);
+
+        $dataAfdeling = $QueryEst->groupBy('afdeling','nama');
+        $dataAfdeling = json_decode($dataAfdeling, true);
+        $coordinates = [];
+
+        foreach ($dataAfdeling as $key => $afdelingItems) {
+            $coords = [];
+            foreach ($afdelingItems as $item) {
+                $coords[] = [               
+                    'lat' => $item['lat'],
+                    'lon' => $item['lon'],
+                ];
+            }
+            $coordinates[$key] = $coords;
+        }
+
+        // dd($coordinates);
 
         $dataSkor = array();
         foreach ($DataEstate as $key => $value) {
@@ -163,31 +211,116 @@ class inspectController extends Controller
         $newData = '';
 
         // dd($regData,$est);
+        // foreach ($dataSkor as $key => $value) {
+        //     foreach ($value as $key1 => $value1) {
+        //         // dd($key);
+        //         if ($est == "NBE") {
+        //             if (strlen($key) == 5) {
+        //                 $newData = substr($key, 0, -2);
+        //             } else if (strlen($key) == 4) {
+        //                 $newData = substr($key, 0, 1) . substr($key, 2);
+        //             }
+        //         } else {
+        //             if (strlen($key) == 5) {
+        //                 $sliced = substr($key, 0, -2);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             } else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
+        //                 if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
+        //                     $sliced = substr($key, 0, -2);
+        //                     $newData = substr($sliced, 0, 1) . substr($sliced, 2);
+        //                 }elseif (strlen($key) == 6) {
+        //                     $newData = substr($key, 0, -3);
+        //                 }
+        //             }else if (strlen($key) == 8 ) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr($key, 0, -3);
+        //             }else if (strlen($key) == 7) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr($key, 0, -3);
+        //             } else if (strlen($key) == 6) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             } else if (strlen($key) == 3) {
+        //                 $sliced = $key;
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             } else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
+        //                 $sliced = substr($key, 0, -6);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             } else if (strpos($key, 'CBI') !== false) {
+        //                 $newData = substr($key, 0, -4);
+        //             } else if (strpos($key, 'CB') !== false) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -3);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             } else if ($regData == [7, 8]) {
+        //                 $newData = substr($key, 0, 3);
+        //             } else if ($regData == [10, 11]) {
+        //                 $newData = substr($key, 0, 4);
+        //             }
+        //         }
+                
+
+
+        //         $skorTrans = check_array('skorTrans', $value1);
+        //         $skorBuah = check_array('skorBuah', $value1);
+        //         $skorAncak = check_array('skorAncak', $value1);
+        //         // $skorAkhir = $skorTrans + $skorBuah + $skorAncak;
+        //         if ($skorTrans != 0 && $skorAncak != 0) {
+        //             $skorAkhir = $skorTrans + $skorAncak + 34;
+        //         } else if ($skorTrans != 0 ){
+        //             $skorAkhir = $skorTrans + 34;
+        //         }else if ($skorAncak != 0 ){
+        //             $skorAkhir = $skorAncak + 34;
+        //         }else{
+        //             $skorAkhir = 0;
+        //         }
+
+        //         if ($skorTrans == 0 && $skorAncak == 0) {
+        //             $check = 'empty';
+        //         } else {
+        //             $check = 'data';
+        //         }
+                
+        //         if ($check == 'data') {
+        //             $skor_kategori_akhir_est = skor_kategori_akhir($skorAkhir);
+        //         }else {
+        //             $skor_kategori_akhir_est = 'xxx';
+        //         }
+               
+                
+
+        //         $dataSkorResult[$newData][0]['estate'] = $est;
+        //         $dataSkorResult[$newData][0]['skorTrans'] = $skorTrans;
+        //         $dataSkorResult[$newData][0]['skorBuah'] = $skorBuah;
+        //         $dataSkorResult[$newData][0]['skorAncak'] = $skorAncak;
+        //         $dataSkorResult[$newData][0]['blok'] = $newData;
+        //         $dataSkorResult[$newData][0]['text'] = $skor_kategori_akhir_est[1];
+        //         $dataSkorResult[$newData][0]['skorAkhir'] = $skorAkhir;
+        //         $dataSkorResult[$newData][0]['check_data'] = $check;
+        //     }
+        // }
+
+        // dd($dataSkorResult);
+        // testing
         foreach ($dataSkor as $key => $value) {
             foreach ($value as $key1 => $value1) {
                 // dd($key);
-                if ($est == "NBE") {
-                    if (strlen($key) == 5) {
-                        $newData = substr($key, 0, -2);
-                    } else if (strlen($key) == 4) {
-                        $newData = substr($key, 0, 1) . substr($key, 2);
-                    }
-                } else {
-                    if (strlen($key) == 5) {
-                        $sliced = substr($key, 0, -2);
-                        $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
-                        if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
-                            $sliced = substr($key, 0, -2);
-                            $newData = substr($sliced, 0, 1) . substr($sliced, 2);
-                        }elseif (strlen($key) == 6) {
-                            $newData = substr($key, 0, -3);
-                        }
-                    }else if (strlen($key) == 8 ) {
+              
+                    if (strlen($key) == 8 ) {
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -2);
                         $newData = substr($key, 0, -3);
-                    }else if (strlen($key) == 7) {
+                    }else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
+                                        if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
+                                            $sliced = substr($key, 0, -2);
+                                            $newData = substr($sliced, 0, 1) . substr($sliced, 2);
+                                        }elseif (strlen($key) == 6) {
+                                            $newData = substr($key, 0, -3);
+                                        }
+                                    }else if (strlen($key) == 7) {
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -2);
                         $newData = substr($key, 0, -3);
@@ -195,24 +328,31 @@ class inspectController extends Controller
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -2);
                         $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if (strlen($key) == 3) {
-                        $sliced = $key;
+                    }  else if (strlen($key) == 4) {
+                        $newData = $key;
+                    } else if (strlen($key) == 5) {
+                        $sliced = substr($key, 0, -2);
                         $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
+                    }else if (strpos($key, 'SSMSCBI') !== false && strlen($key) == 14) {
+                        $newData = substr($key, 0, -10);
+                    }else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
                         $sliced = substr($key, 0, -6);
                         $newData = substr_replace($sliced, '0', 1, 0);
+                    }else if (strpos($key, 'CBI') !== false && strlen($key) == 10) {
+                        $newData = substr($key, 0, -6);
                     } else if (strpos($key, 'CBI') !== false) {
                         $newData = substr($key, 0, -4);
                     } else if (strpos($key, 'CB') !== false) {
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -3);
                         $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if ($regData == [7, 8]) {
-                        $newData = substr($key, 0, 3);
-                    } else if ($regData == [10, 11]) {
-                        $newData = substr($key, 0, 4);
+                    }  else if (strlen($key) == 3) {
+                        $newData = $key;
+                    }else if (strpos($key, 'SSMSC') !== false && strlen($key) == 10) {
+                        $newData = substr($key, 0, -6);
                     }
-                }
+              
+                
                 
 
 
@@ -255,10 +395,7 @@ class inspectController extends Controller
             }
         }
 
-        // dd($dataSkorResult);
-        
-
-        
+        // end testing 
         
         $datas = array();
         foreach ($dataSkorResult as $key => $value) {
@@ -284,80 +421,14 @@ class inspectController extends Controller
         }
         $blokEstate =  DB::connection('mysql2')->Table('blok')->whereIn('afdeling', $listIdAfd)->groupBy('nama')->pluck('nama', 'id');
         $blokEstateFix[$est] = json_decode($blokEstate, true);
-        // dd($blokEstateFix);
+        
        
      
-        
-        // foreach ($blokEstateFix as $key => $nestedArray) {
-        //     if ($key == 'NBE') {
-        //         foreach ($nestedArray as $nestedKey => $value) {
-        //             // dd($value);
-        //             if (strlen($value) == 4) {
-        //                 $sliced = substr($value, 0, -2);
-                      
-        //                 $value = substr($value, 0, 1) . substr($value, 2);
-        //                 $blokEstateFix[$key][$nestedKey] = $value;
-        //             }
-        //         }
-        //     }
-        // }
-        
-        // dd($blokEstateFix);
-        // dd($dataSkorResult);
-        // $dataLegend = array();
-        // $tot_exc = 0;
-        // $tot_good = 0;
-        // $tot_satis = 0;
-        // $tot_fair = 0;
-        // $tot_poor = 0;
-        // $tot_empty = 0;
-        // foreach ($dataSkorResult as $key => $value) {
-        //     $excellent = array();
-        //     $good = array();
-        //     $satis = array();
-        //     $fair = array();
-        //     $poor = array();
-        //     $empty = array();
-        //     foreach ($value as $key1 => $value1) {
-        //         $skor = $value1['skorAkhir'];
-        //         $data = $value1['check_data'];
-        //         if ($skor >= 95.0 && $skor <= 100.0) {
-        //             $excellent[] = $value1['skorAkhir'];
-        //         } else if ($skor >= 85.0 && $skor < 95.0) {
-        //             $good[] = $value1['skorAkhir'];
-        //         } else if ($skor >= 75.0 && $skor < 85.0) {
-        //             $satis[] = $value1['skorAkhir'];
-        //         } else if ($skor >= 65.0 && $skor < 75.0) {
-        //             $fair[] = $value1['skorAkhir'];
-        //         } else if ($skor < 65.0  && $data == 'data') {
-        //             $poor[] = $value1['skorAkhir'];
-        //         }else if ($skor < 65.0 && $data == 'empty') {
-        //             $empty[] = $value1['skorAkhir'];
-        //         }
-        //         $tot_exc += count($excellent);
-        //         $tot_good += count($good);
-        //         $tot_satis += count($satis);
-        //         $tot_fair += count($fair);
-        //         $tot_poor += count($poor);
-        //         $tot_empty += count($empty);
-        //     }
-        //     $totalSkor = $tot_exc + $tot_good + $tot_satis + $tot_fair + $tot_poor + $tot_empty;
+  
+        // $values = array_values($blokEstateFix['LME2']);
 
-        //     $dataLegend['excellent'] = $tot_exc;
-        //     $dataLegend['good'] = $tot_good;
-        //     $dataLegend['satis'] = $tot_satis;
-        //     $dataLegend['fair'] = $tot_fair;
-        //     $dataLegend['poor'] = $tot_poor;
-        //     $dataLegend['epmty'] = $tot_empty;
-        //     $dataLegend['total'] = $totalSkor;
-        //     $dataLegend['perExc'] = count_percent($tot_exc, $totalSkor);
-        //     $dataLegend['perGood'] = count_percent($tot_good, $totalSkor);
-        //     $dataLegend['perSatis'] = count_percent($tot_satis, $totalSkor);
-        //     $dataLegend['perFair'] = count_percent($tot_fair, $totalSkor);
-        //     $dataLegend['perPoor'] = count_percent($tot_poor, $totalSkor);
-        //     $dataLegend['perEmpty'] = count_percent($tot_empty, $totalSkor);
-        // }
-    
+       
+      
         // dd($dataSkorResult,$blokEstateFix);
         $blokLatLn = array();
         foreach ($blokEstateFix as $key => $value) {
@@ -459,7 +530,23 @@ class inspectController extends Controller
         $dataLegend['perPoor'] = count_percent($tot_poor, $totalSkor);
         $dataLegend['perEmpty'] = count_percent($tot_empty, $totalSkor);
 
-        // dd($blokEstateFix, $dataSkorResult,$dataSkor);
+
+        // $filteredKeys = array_keys($dataSkorResult);
+
+        // $diff = array_diff($filteredKeys, $values);
+        // $sameCount = count($filteredKeys) - count($diff);
+        
+        // $result = [
+        //     'same_count' => $sameCount,
+        //     'same_keys' => array_intersect($values, $filteredKeys),
+        //     'not_same_count' => count($diff),
+        //     'not_same_keys' => $diff
+        // ];
+
+        
+        
+        
+        // dd($values, $filteredKeys ,$dataSkor , $result);
         // dd($blokLatLn,$dataLegend);
         $highestValue = null;
         $estatesWithHighestNilai = [];
@@ -523,9 +610,10 @@ class inspectController extends Controller
         $plot['legend'] = $dataLegend;
         $plot['lowest'] = $resultsLow;
         $plot['highest'] = $resultsHIgh;
+        $plot['afdeling'] = $plotBlokAlls;
 
 
-        // dd($blokLatLn);
+        // dd($plotBlokAll);
         echo json_encode($plot);
     }
 
