@@ -1961,11 +1961,17 @@
                 }
             }, this);
 
-            // Reset the style of all features
+            // Reset the style of all features and labels
             test.eachLayer(function(layer) {
                 layer.setStyle({
-                    fillOpacity: 0.7,
+                    fillOpacity: 0.2, // Set a lower opacity for unchecked features
                 });
+
+                if (layer.myLabel) {
+                    layer.myLabel.setStyle({
+                        opacity: 0.2, // Set a lower opacity for unchecked labels
+                    });
+                }
             });
 
             // Find all the features with the selected "afdeling"
@@ -1982,9 +1988,17 @@
                     feature.setStyle({
                         fillOpacity: 1,
                     });
+
+                    if (feature.myLabel) {
+                        feature.myLabel.setStyle({
+                            opacity: 1, // Set full opacity for checked labels
+                        });
+                    }
                 });
             }
         }
+
+
 
         function handleFeatureClick(e) {
             var clickedFeature = e.target;
@@ -2081,6 +2095,8 @@
             document.getElementsByClassName('legend')[0].remove();
         }
 
+
+
         test = L.geoJSON(blok, {
             style: function(feature) {
                 const afdeling = feature.properties.afdeling;
@@ -2114,8 +2130,8 @@
                 return {
                     color: outlineColor,
                     fillColor: fillColor,
-                    fillOpacity: 0.7,
-                    opacity: 1,
+                    fillOpacity: 1,
+                    opacity: 0.3,
                 };
             },
             onEachFeature: function(feature, layer) {
@@ -2145,6 +2161,7 @@
                 });
             },
         }).addTo(map);
+
 
         legendContainer.addTo(map);
 

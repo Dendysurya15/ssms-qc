@@ -196,13 +196,6 @@
                 </div>
             </div>
 
-            <!-- <div class="card p-4">
-                <h4 class="text-center mt-2" style="font-weight: bold">Tracking Plot Sidak TPH - {{ $est }}
-                    {{ $afd }}
-                </h4>
-                <hr>
-                <div id="map" style="height:800px"></div>
-            </div> -->
         </div>
     </section>
 </div>

@@ -4803,7 +4803,51 @@ class SidaktphController extends Controller
 
         // dd($unique_dates);
         // Generate the HTML select element with options
+        $query2 = DB::connection('mysql2')->Table('sidak_tph')
+            ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.est', '=', 'sidak_tph.est') //kemudian di join untuk mengambil est perwilayah
+            ->where('sidak_tph.est', $est)
+            ->where('sidak_tph.afd', $afd)
+            ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            ->get();
 
+        $query2 = $query2->groupBy(function ($item) {
+            return $item->blok;
+        });
+
+        // dd($tanggal);
+        $datas = array();
+        $img = array();
+        foreach ($query2 as $key => $value) {
+            $inc = 0;
+            foreach ($value as $key2 => $value2) {
+                $datas[] = $value2;
+                if (!empty($value2->foto_temuan)) {
+                    $img[$key][$inc]['foto'] = $value2->foto_temuan;
+                    $img[$key][$inc]['title'] = $value2->est . ' ' .  $value2->afd . ' - ' . $value2->blok;
+                    $inc++;
+                }
+            }
+        }
+
+        $imgNew = array();
+        foreach ($img as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $imgNew[] = $value2;
+            }
+        }
+        // dd($img);
+
+        $queryBlok = DB::connection('mysql2')
+            ->Table('sidak_tph')
+            ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.est', '=', 'sidak_tph.est') //kemudian di join untuk mengambil est perwilayah
+            ->where('sidak_tph.est', $est)
+            ->where('sidak_tph.afd', $afd)
+            ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            ->groupBy('sidak_tph.blok')
+            ->orderBy('sidak_tph.blok', 'asc')
+            ->get()->toArray();
 
         $arrView = array();
 
@@ -4817,7 +4861,9 @@ class SidaktphController extends Controller
         // $formattedEndDate = $endDate->format('d-m-Y');
         json_encode($arrView);
 
-        return view('BaSidakTPH', $arrView);
+        // return view('BaSidakTPH', $arrView);
+
+        return view('BaSidakTPH', ['est' => $est, 'afd' => $afd, 'data' => $datas, 'img' => $imgNew, 'blok' => $queryBlok], $arrView);
     }
 
 
@@ -5074,6 +5120,7 @@ class SidaktphController extends Controller
         $afd = $request->get('afd');
         $est = $request->get('est');
         $date = $request->get('date');
+        $afd2 = $request->get('afd');
 
         // dd($afd, $est, $date);
 
@@ -5175,18 +5222,72 @@ class SidaktphController extends Controller
         $result_list_blok = array();
         foreach ($list_blok as $key => $value) {
             foreach ($value as $key2 => $data) {
-                if (strlen($data) == 5) {
-                    $result_list_blok[$key][$data] = substr($data, 0, -2);
+                // if (strlen($data) == 5) {
+                //     $result_list_blok[$key][$data] = substr($data, 0, -2);
+                // } else if (strlen($data) == 6) {
+                //     $sliced = substr_replace($data, '', 1, 1);
+                //     $result_list_blok[$key][$data] = substr($sliced, 0, -2);
+                // } else if (strlen($data) == 3) {
+                //     $result_list_blok[$key][$data] = $data;
+                // } else if (strpos($data, 'CBI') !== false) {
+                //     $result_list_blok[$key][$data] = substr($data, 0, -4);
+                // } else if (strpos($data, 'CB') !== false) {
+                //     $sliced = substr_replace($data, '', 1, 1);
+                //     $result_list_blok[$key][$data] = substr($sliced, 0, -3);
+                // }
+                if ($est == "SJE") {
+                    if (strlen($data) == 8 || strlen($data) == 7) {
+                        $sliced = substr($data, 0, -3);
+                        // $result_list_blok[$key][$data]  = substr($sliced, 0, 1) . substr($sliced, 2);
+                        $result_list_blok[$key][$data]  = str_replace("0", "", $sliced);
+                    }
+                    $length = strlen($data);
+                    if ($length < 6) {
+                        $sliced = substr($data, 0, -3);
+                        // $result_list_blok[$key][$data]  = substr($sliced, 0, 1) . substr($sliced, 2);
+                        $result_list_blok[$key][$data]  = str_replace("0", "", $sliced);
+                    }
+                } else if ($est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE") {
+                    if (strlen($data) == 6  && substr($data, 0, 1) == 'H') {
+                        $sliced = substr($data, 0, -2);
+                        $result_list_blok[$key][$data]  = substr($sliced, 0, 1) . substr($sliced, 2);
+                    } elseif (strlen($data) == 6) {
+                        $result_list_blok[$key][$data]  = substr($data, 0, -3);
+                    }
+                } else if (strlen($data) == 8) {
+                    $replace = substr_replace($data, '', 1, 1);
+                    $sliced = substr($replace, 0, -2);
+                    $result_list_blok[$key][$data]  = substr($data, 0, -3);
+                } else if (strlen($data) == 7) {
+                    $replace = substr_replace($data, '', 1, 1);
+                    $sliced = substr($replace, 0, -2);
+                    $result_list_blok[$key][$data]  = substr($data, 0, -3);
                 } else if (strlen($data) == 6) {
-                    $sliced = substr_replace($data, '', 1, 1);
-                    $result_list_blok[$key][$data] = substr($sliced, 0, -2);
-                } else if (strlen($data) == 3) {
-                    $result_list_blok[$key][$data] = $data;
+                    $replace = substr_replace($data, '', 1, 1);
+                    $sliced = substr($replace, 0, -2);
+                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
+                } else if (strlen($data) == 4) {
+                    $result_list_blok[$key][$data]  = $data;
+                } else if (strlen($data) == 5) {
+                    $sliced = substr($data, 0, -2);
+                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
+                } else if (strpos($data, 'SSMSCBI') !== false && strlen($data) == 14) {
+                    $result_list_blok[$key][$data]  = substr($data, 0, -10);
+                } else if (strpos($data, 'CBI') !== false && strlen($data) == 9) {
+                    $sliced = substr($data, 0, -6);
+                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
+                } else if (strpos($data, 'CBI') !== false && strlen($data) == 10) {
+                    $result_list_blok[$key][$data]  = substr($data, 0, -6);
                 } else if (strpos($data, 'CBI') !== false) {
-                    $result_list_blok[$key][$data] = substr($data, 0, -4);
+                    $result_list_blok[$key][$data]  = substr($data, 0, -4);
                 } else if (strpos($data, 'CB') !== false) {
-                    $sliced = substr_replace($data, '', 1, 1);
-                    $result_list_blok[$key][$data] = substr($sliced, 0, -3);
+                    $replace = substr_replace($data, '', 1, 1);
+                    $sliced = substr($replace, 0, -3);
+                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
+                } else if (strlen($data) == 3) {
+                    $result_list_blok[$key][$data]  = $data;
+                } else if (strpos($data, 'SSMSC') !== false && strlen($data) == 10) {
+                    $result_list_blok[$key][$data]  = substr($data, 0, -6);
                 }
             }
         }
@@ -5195,13 +5296,12 @@ class SidaktphController extends Controller
         foreach ($blokPerEstate as $key2 => $value) {
             foreach ($value as $key3 => $afd) {
                 foreach ($afd as $key4 => $data) {
-                    if (strlen($data) == 4) {
-                        $result_list_all_blok[$key2][] = substr_replace($data, '', 1, 1);
-                    }
+
+                    $result_list_all_blok[$key2][] = substr_replace($data, '', 1, 1);
                 }
             }
         }
-        dd($result_list_all_blok, $result_list_blok);
+        // dd($result_list_all_blok, $result_list_blok);
 
         // //bandingkan list blok query dan list all blok dan get hanya blok yang cocok
         $result_blok = array();
@@ -5250,11 +5350,47 @@ class SidaktphController extends Controller
                 $inc++;
             }
         }
+        // dd($est, $afd);
+        $query2 = DB::connection('mysql2')->Table('sidak_tph')
+            ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.est', '=', 'sidak_tph.est') //kemudian di join untuk mengambil est perwilayah
+            ->where('sidak_tph.est', $est)
+            ->where('sidak_tph.afd', $afd2)
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->get();
 
-        dd($plotMarker);
+        $query2 = $query2->groupBy(function ($item) {
+            return $item->blok;
+        });
+
+
+        $datas = array();
+        $img = array();
+        foreach ($query2 as $key => $value) {
+            $inc = 0;
+            foreach ($value as $key2 => $value2) {
+                $datas[] = $value2;
+                if (!empty($value2->foto_temuan)) {
+                    $img[$key][$inc]['foto'] = $value2->foto_temuan;
+                    $img[$key][$inc]['title'] = $value2->est . ' ' .  $value2->afd . ' - ' . $value2->blok;
+                    $inc++;
+                }
+            }
+        }
+
+        $imgNew = array();
+        foreach ($img as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $imgNew[] = $value2;
+            }
+        }
+        // dd($img);
+
+        // dd($blokLatLn);
         $plot['plot'] = $plotTitik;
         $plot['marker'] = $plotMarker;
         $plot['blok'] = $blokLatLn;
+        $plot['img'] = $imgNew;
         // dd($plot);
         echo json_encode($plot);
     }

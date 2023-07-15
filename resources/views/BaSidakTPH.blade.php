@@ -399,7 +399,7 @@
 
 
 <div class="content-wrapper">
-    <style>
+    <!-- <style>
         #back-to-data-btn {
             position: fixed;
             bottom: 30px;
@@ -413,9 +413,9 @@
         #back-to-data-btn:hover {
             opacity: 1;
         }
-    </style>
+    </style> -->
 
-    <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
+
     <div class="card table_wrapper">
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <h2>REKAP HARIAN SIDAK TPH </h2>
@@ -458,6 +458,7 @@
         <!-- end animasi -->
     </div>
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
+        <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
         <form action="{{ route('pdfBAsidak') }}" method="GET" class="form-inline" style="display: inline;" target="_blank">
             {{ csrf_field() }}
             <input type="hidden" name="est" id="est" value="{{$est}}">
@@ -489,13 +490,13 @@
                             <th scope="col">Blok</th>
                             <th scope="col">QC</th>
                             <th scope="col">No TPH</th>
-                            <th scope="col">BT TPH</th>
-                            <th scope="col">BT Jalan</th>
-                            <th scope="col">BT Bin</th>
-                            <th scope="col">Jum Karung</th>
+                            <th scope="col">Brondolan Tinggal di TPH</th>
+                            <th scope="col">Brondolan Tinggal di Jalan</th>
+                            <th scope="col">Brondolan Tinggal di Bin</th>
+                            <th scope="col">Jumlah Karung</th>
                             <th scope="col">Buah Tinggal</th>
                             <th scope="col">Restan Unreported</th>
-                            <th scope="col">TPH Semak</th>
+                            <!--<th scope="col">TPH Semak</th>-->
 
 
                             @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
@@ -512,7 +513,7 @@
             <div id="pagination" class="pagination"></div>
         </div>
     </div>
-    >
+
 
     <!-- Update Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
@@ -582,6 +583,12 @@
 
         </div>
     </div>
+
+    <div id="foto_temuan">
+
+
+    </div>
+
 
     <div class="card p-4">
         <h4 class="text-center mt-2" style="font-weight: bold">Tracking Plot Sidak TPH - {{ $est }}
@@ -752,8 +759,8 @@
                     buah_tinggal.innerText = item.buah_tinggal;
                     var restan_unreported = row.insertCell(11);
                     restan_unreported.innerText = item.restan_unreported;
-                    var tph_semak = row.insertCell(12);
-                    tph_semak.innerText = item.tph_semak;
+                    // var tph_semak = row.insertCell(12);
+                    // tph_semak.innerText = item.tph_semak;
                     // Continue adding cells for each column in your table
                     if (currentUserName === 'Askep' || currentUserName === 'Manager') {
                         createAksiButtons(row, item);
@@ -914,7 +921,7 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "https://qc-apps.srs-ssms.com/dashboardtph";
+        window.location.href = "http://ssms-qc.test/dashboardtph";
     }
 
     var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
@@ -949,6 +956,45 @@
                 const plotResult = Object.entries(plot['plot']);
                 const markerResult = Object.entries(plot['marker']);
                 const blokResult = Object.entries(plot['blok']);
+                var imgArray = Object.entries(plot['img']);
+                $('#foto_temuan').empty();
+
+                // Add the header and horizontal rule
+                $('#foto_temuan').append('<h4 class="text-center mt-2" style="font-weight: bold">FOTO TEMUAN 2</h4>');
+                $('#foto_temuan').append('<hr>');
+
+                // Create the row div
+                const rowDiv = $('<div>').addClass('row');
+                $('#foto_temuan').append(rowDiv);
+
+                // Iterate over the imgArray and populate the div with the images
+                imgArray.forEach(function(item) {
+                    const foto = item[1]['foto'];
+                    const title = item[1]['title'];
+                    const file = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/' + foto;
+                    const file_headers = $.ajax({
+                        url: file,
+                        type: 'HEAD',
+                        async: false
+                    }).done(function() {
+                        return true;
+                    }).fail(function() {
+                        return false;
+                    });
+
+                    if (file_headers !== false) {
+                        // Create the column div
+                        const colDiv = $('<div>').addClass('col-3');
+                        rowDiv.append(colDiv);
+
+                        // Add the image, hidden input, and paragraph
+                        colDiv.append($('<img>').attr('src', 'https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/' + foto).addClass('img-fluid popup_image'));
+                        colDiv.append($('<input>').attr('type', 'hidden').val(title).attr('id', 'titleImg'));
+                        colDiv.append($('<p>').addClass('text-center mt-3').css('font-weight', 'bold').text(title));
+                    }
+                });
+
+
 
 
                 var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
