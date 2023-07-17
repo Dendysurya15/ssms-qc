@@ -5392,22 +5392,15 @@
     var options = {
         chart: {
             height: 280,
-            type: "area"
+            type: "line"
         },
         dataLabels: {
             enabled: false
         },
         series: [{
-                name: "ESTATE",
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            },
-
-            {
-                name: "Score Good ",
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                color: "#ff0000" // set the color to red
-            }
-        ],
+            name: "ESTATE",
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }, ],
         fill: {
             type: "gradient",
             gradient: {
@@ -5417,11 +5410,202 @@
                 stops: [0, 90, 100]
             }
         },
+        yaxis: [{
+            axisTicks: {
+                show: true
+            },
+            axisBorder: {
+                show: true,
+                color: "#FF1654"
+            },
+            labels: {
+                style: {
+                    colors: "#FF1654"
+                }
+            },
+            title: {
+                text: "Series A",
+                style: {
+                    color: "#FF1654"
+                }
+            }
+        }],
+        annotations: {
+            yaxis: [{
+                    y: 90,
+                    y2: 100,
+                    borderColor: '#000',
+                    fillColor: '#4874c4',
+                    opacity: 0.4,
+                    label: {
+                        text: ' '
+                    }
+                }, {
+                    y: 80,
+                    y2: 90,
+                    borderColor: '#000',
+                    fillColor: '#78ac44',
+                    opacity: 0.4,
+                    label: {
+                        text: ''
+                    }
+                }, {
+                    y: 70,
+                    y2: 80,
+                    borderColor: '#000',
+                    fillColor: '#fffc04',
+                    opacity: 0.4,
+                    label: {
+                        text: 'Standar QC'
+                    }
+                }, {
+                    y: 60,
+                    y2: 70,
+                    borderColor: '#000',
+                    fillColor: '#f07c34',
+                    opacity: 0.4,
+                    label: {
+                        text: ''
+                    }
+                }, {
+                    y: 0,
+                    y2: 60,
+                    borderColor: '#000',
+                    fillColor: '#ff0404',
+                    opacity: 0.4,
+
+
+                    label: {
+                        text: ''
+                    }
+                }
+
+            ]
+        },
         xaxis: {
             categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "July", "Agustus", "Sept", "Okt", "Nov", "Dec"]
         }
     };
 
+    // var options_2 = {
+    //     series: [{
+    //         name: 'TEAM A',
+    //         type: 'area',
+    //         data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
+    //     }, {
+    //         name: 'TEAM C',
+    //         type: 'line',
+    //         data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
+    //     }],
+    //     chart: {
+    //         height: 350,
+    //         type: 'line',
+    //         stacked: false,
+    //     },
+    //     stroke: {
+    //         width: 3,
+    //         curve: 'smooth'
+    //     },
+
+    //     plotOptions: {
+    //         bar: {
+    //             columnWidth: '50%'
+    //         }
+    //     },
+    //     dataLabels: {
+    //         enabled: false
+    //     },
+
+    //     // fill: {
+    //     //     opacity: [0.85, 0.25, 1, 0.25, 0.25],
+    //     //     gradient: {
+    //     //         inverseColors: false,
+    //     //         shade: 'light',
+    //     //         type: "vertical",
+    //     //         opacityFrom: 0.85,
+    //     //         opacityTo: 0.55,
+    //     //         stops: [0, 100, 100, 100]
+    //     //     }
+    //     // },
+    //     markers: {
+    //         size: 0
+    //     },
+    //     xaxis: {
+    //         categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "July", "Agustus", "Sept", "Okt", "Nov", "Dec"]
+    //     },
+    //     yaxis: {
+    //         title: {
+    //             text: 'Score',
+    //         },
+    //         min: 0
+    //     },
+    //     tooltip: {
+    //         shared: true,
+    //         intersect: false,
+    //         y: {
+    //             formatter: function(y) {
+    //                 if (typeof y !== "undefined") {
+    //                     return y.toFixed(0) + " ";
+    //                 }
+    //                 return y;
+
+    //             }
+    //         }
+    //     },
+
+    //     annotations: {
+    //         yaxis: [{
+    //                 y: 90,
+    //                 y2: 100,
+    //                 borderColor: '#000',
+    //                 fillColor: '#4874c4',
+    //                 opacity: 0.6,
+    //                 label: {
+    //                     text: ' '
+    //                 }
+    //             }, {
+    //                 y: 80,
+    //                 y2: 90,
+    //                 borderColor: '#000',
+    //                 fillColor: '#78ac44',
+    //                 opacity: 0.6,
+    //                 label: {
+    //                     text: ''
+    //                 }
+    //             }, {
+    //                 y: 70,
+    //                 y2: 80,
+    //                 borderColor: '#000',
+    //                 fillColor: '#ff0404',
+    //                 opacity: 0.6,
+    //                 label: {
+    //                     text: 'Standar QC'
+    //                 }
+    //             }, {
+    //                 y: 60,
+    //                 y2: 70,
+    //                 borderColor: '#000',
+    //                 fillColor: '#f07c34',
+    //                 opacity: 0.6,
+    //                 label: {
+    //                     text: ''
+    //                 }
+    //             }, {
+    //                 y: 0,
+    //                 y2: 60,
+    //                 borderColor: '#000',
+    //                 fillColor: '#ff0404',
+    //                 opacity: 0.6,
+
+
+    //                 label: {
+    //                     text: ''
+    //                 }
+    //             }
+
+    //         ]
+    //     }
+    // };
 
     var chartScore = new ApexCharts(document.querySelector("#skorGraph"), options);
     chartScore.render();
@@ -7735,15 +7919,31 @@
                 // <!-- var wil_rekap = rekap_wil.map(item => item[0]); -->
                 // console.log(wil_rekap);
                 chartScore.updateSeries([{
-                        name: est,
-                        data: skorJson
-                    },
-
-                    {
-                        name: "Score Good",
-                        data: [85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85]
-                    }
-                ])
+                    name: est,
+                    data: skorJson
+                }, ])
+                chartScore.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }]
+                });
 
 
                 var seriesData = [];
@@ -7766,23 +7966,23 @@
                     seriesData.push(series);
                 }
 
-                seriesData.push({
-                    name: "Score Good",
-                    data: [85,
-                        85,
-                        85,
-                        85,
-                        85,
-                        85,
-                        85,
-                        85,
-                        85,
-                        85,
-                        85,
-                        85
-                    ],
-                    color: "#ff0000" // set the color to red
-                });
+                // seriesData.push({
+                //     name: "Score Good",
+                //     data: [85,
+                //         85,
+                //         85,
+                //         85,
+                //         85,
+                //         85,
+                //         85,
+                //         85,
+                //         85,
+                //         85,
+                //         85,
+                //         85
+                //     ],
+                //     color: "#ff0000" // set the color to red
+                // });
 
                 options.series = seriesData;
 
@@ -7807,104 +8007,498 @@
                         data: bttJson
                     },
 
-                    {
-                        name: "Score Good",
-                        data: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-                    }
+
                 ])
+                chartScoreBron.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 1,
+                            y2: 10,
+                            borderColor: '#000',
+                            fillColor: '#4874c4',
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: 0,
+                            y2: 1,
+                            borderColor: '#000',
+                            fillColor: '#ff0404',
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
                 chatScoreJan.updateSeries([{
                         name: est,
                         data: bhJson
                     },
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
-                GraphBhmth.updateSeries([{
-                        name: est,
-                        data: mths
-                    },
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
                 ])
+                chatScoreJan.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 1,
+                            y2: 10,
+                            borderColor: '#000',
+                            fillColor: '#4874c4',
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: 0,
+                            y2: 1,
+                            borderColor: '#000',
+                            fillColor: '#ff0404',
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
+                GraphBhmth.updateSeries([{
+                    name: est,
+                    data: mths
+                }, ])
+                GraphBhmth.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 1,
+                            y2: 100,
+                            borderColor: '#000',
+
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: -10,
+                            y2: 1,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
                 GraphBhMsak.updateSeries([{
                         name: est,
                         data: masak
                     },
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
                 ])
+                GraphBhMsak.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 90,
+                            y2: 100,
+                            borderColor: '#000',
+
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: 1,
+                            y2: 90,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
                 GraphBhOver.updateSeries([{
                         name: est,
                         data: ovr
                     },
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
                 ])
+                GraphBhOver.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 2,
+                            y2: 100,
+                            borderColor: '#000',
+
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: 0,
+                            y2: 2,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
                 GraphBhEmpty.updateSeries([{
                         name: est,
                         data: Ksong
                     },
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
                 ])
-                GraphBhvcute.updateSeries([{
-                        name: est,
-                        data: vcuts
-                    },
+                GraphBhEmpty.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 1,
+                            y2: 100,
+                            borderColor: '#000',
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: -10,
+                            y2: 1,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
+                GraphBhvcute.updateSeries([{
+                    name: est,
+                    data: vcuts
+                }, ])
+                GraphBhvcute.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: -10,
+                            y2: 2,
+                            borderColor: '#000',
+
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: 2,
+                            y2: 100,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
                 GraphBhAbnrl.updateSeries([{
                         name: est,
                         data: brnrm
                     },
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
                 ])
+                GraphBhAbnrl.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 1,
+                            y2: 100,
+                            borderColor: '#000',
+
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: -10,
+                            y2: 1,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
 
 
                 GraphTranBrd.updateSeries([{
-                        name: est,
-                        data: trbrd
-                    },
+                    name: est,
+                    data: trbrd
+                }, ])
+                GraphTranBrd.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 3,
+                            y2: 100,
+                            borderColor: '#000',
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
-                ])
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: 0,
+                            y2: 3,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
 
                 GraphTranBH.updateSeries([{
                         name: est,
                         data: trbuah
                     },
 
-                    {
-                        name: "Score Good",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }
                 ])
+                GraphTranBH.updateOptions({
+                    yaxis: [{
+                        axisTicks: {
+                            show: true
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: "#FF1654"
+                        },
+                        labels: {
+                            style: {
+                                colors: "#FF1654"
+                            }
+                        },
+                        title: {
+                            text: est,
+                            style: {
+                                color: "#FF1654"
+                            }
+                        }
+                    }],
+                    annotations: {
+                        yaxis: [{
+                            y: 0,
+                            y2: 100,
+                            borderColor: '#000',
+
+                            fillColor: '#ff0404', //merah
+                            opacity: 0.4,
+                            label: {
+                                text: ' '
+                            }
+                        }, {
+                            y: -10,
+                            y2: 0,
+                            borderColor: '#000',
+                            fillColor: '#4874c4', //biru
+                            opacity: 0.4,
+                            label: {
+                                text: 'Standar QC'
+                            }
+                        }]
+                    },
+                });
 
             }
         });
