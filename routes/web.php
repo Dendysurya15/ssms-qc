@@ -164,3 +164,6 @@ Route::get('/getDataDay', [inspectController::class, 'getDataDay'])->name('getDa
 
 
 Route::get('getMapsTph', [SidaktphController::class, 'getMapsTph'])->name('getMapsTph');
+
+
+Route::get('/getMapsData', [MutubuahController::class, 'getMapsData'])->name('getMapsData');

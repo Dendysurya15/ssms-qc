@@ -2668,8 +2668,8 @@
                 }
 
 
-                console.log(mutuAncak);
-                console.log(mutuAncakData);
+                // console.log(mutuAncak);
+                // console.log(mutuAncakData);
 
                 document.getElementById('closeModalBtn').addEventListener('click', function() {
                     $('#editModal').modal('hide');
@@ -4776,9 +4776,7 @@
                     let item52 = mbalas_br((total29 / total21) * 100)
                     let item53 = mbalas_br((total29 / total21) * 100) + mb_vcut((total28 / total22) * 100) + mb_jangkos(total27 / (total22 - total24) * 100) +
                         mb_over(total26 / (total22 - total24) * 100) + mb_masak(total25 / (total22 - total24) * 100) + mb_mentah(total23 / (total22 - total24) * 100)
-                    let item54 = mbalas_br((total29 / total21) * 100) + mb_vcut((total28 / total22) * 100) + mb_jangkos(total27 / (total22 - total24) * 100) +
-                        mb_over(total26 / (total22 - total24) * 100) + mb_masak(total25 / (total22 - total24) * 100) + mb_mentah(total23 / (total22 - total24) * 100) +
-                        buah_tph(total20 / total18) + buah_tph(total20 / total18) + skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(2)) + skor_brd_ma(total9);
+                    let item54 = item22 + item30 + item53;
                     let item55 = kategori(item54)
                     const items = [];
                     for (let i = 1; i <= 55; i++) {

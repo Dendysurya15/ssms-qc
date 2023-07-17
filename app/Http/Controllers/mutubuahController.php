@@ -7198,4 +7198,142 @@ class mutubuahController extends Controller
         // $filename = 'Weekly report-' . $arrView['tanggal']  . $arrView['est']  . '.pdf';
         // $dompdf->stream($filename);
     }
+
+    public function getMapsData(Request $request)
+    {
+        $date = $request->input('Tanggal');
+        $est = $request->input('est');
+        $afd = $request->input('afd');
+        // dd($date, $est, $afd);
+
+        $queryPlotEst = DB::connection('mysql2')->table('estate_plot')
+            ->select("estate_plot.*")
+            ->where('est', $est)
+            ->get();
+        // $queryPlotEst = $queryPlotEst->groupBy(['estate', 'afdeling']);
+        $queryPlotEst = json_decode($queryPlotEst, true);
+
+        // dd($queryPlotEst);
+
+        $convertedCoords = [];
+        foreach ($queryPlotEst as $coord) {
+            $convertedCoords[] = [$coord['lat'], $coord['lon']];
+        }
+
+        $afd = $request->input('afd');
+        $queryAfd = DB::connection('mysql2')->table('afdeling')
+            ->select(
+                'afdeling.id',
+                'afdeling.nama',
+                'estate.est'
+            ) //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
+            ->where('est', '=', $est)
+            ->where('afdeling.nama', '=', $afd)
+            ->get();
+        $queryAfd = json_decode($queryAfd, true);
+
+
+        // dd($queryAfd);
+        $id = $queryAfd[0]['id'];
+
+        $queryBlokMA = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select('sidak_mutu_buah.*', 'sidak_mutu_buah.blok as nama_blok')
+            ->whereDate('sidak_mutu_buah.datetime', $date)
+            ->where('estate', $est)
+            ->where('afdeling', $afd)
+            ->orderBy('sidak_mutu_buah.datetime', 'desc')
+            ->groupBy('nama_blok')
+            ->pluck('blok');
+        $queryBlokMA = json_decode($queryBlokMA, true);
+
+        // dd($queryBlokMA);
+
+        $blokSidak = array();
+        foreach ($queryBlokMA as $value) {
+            $length = strlen($value);
+            $blokSidak[] = substr($value, 0, $length - 3);
+            $modifiedStr2  = substr($value, 0, $length - 2);
+            $blokSidak[] = substr($value, 0, $length - 2);
+            $blokSidak[] =  substr_replace($modifiedStr2, "0", 1, 0);
+        }
+        // dd($blokSidak);
+
+        $blokSidakResult = DB::connection('mysql2')
+            ->table('blok')
+            ->select('blok.nama as nama_blok_visit')
+            ->where('afdeling', $id)
+            ->whereIn('nama', $blokSidak)
+            ->groupBy('nama_blok_visit')
+            ->pluck('nama_blok_visit');
+
+        $queryBlok = DB::connection('mysql2')->table('blok')
+            ->select("blok.*")
+            ->where('afdeling', '=', $id)
+            ->get();
+        $queryBlok = json_decode($queryBlok, true);
+        $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
+            $carry[$item['nama']][] = $item;
+            return $carry;
+        }, []);
+
+        $plotBlokAll = [];
+        foreach ($bloks_afd as $key => $coord) {
+            foreach ($coord as $key2 => $value) {
+                $plotBlokAll[$key][] = [$value['lat'], $value['lon']];
+            }
+        }
+
+        $queryTrans = DB::connection('mysql2')->table("sidak_mutu_buah")
+            ->select("sidak_mutu_buah.*", "estate.wil")
+            ->join('estate', 'estate.est', '=', 'sidak_mutu_buah.estate')
+            ->where('sidak_mutu_buah.estate', $est)
+            ->where('sidak_mutu_buah.afdeling', $afd)
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->where('sidak_mutu_buah.afdeling', '!=', 'Pla')
+            ->get();
+        $queryTrans = json_decode($queryTrans, true);
+
+        $groupedTrans = array_reduce($queryTrans, function ($carry, $item) {
+            $carry[$item['blok']][] = $item;
+            return $carry;
+        }, []);
+
+
+
+        $trans_plot = [];
+        foreach ($groupedTrans as $blok => $coords) {
+            foreach ($coords as $coord) {
+                $datetime = $coord['datetime'];
+                $time = date('H:i:s', strtotime($datetime));
+
+                $trans_plot[$blok][] = [
+                    'blok' => $blok,
+                    'lat' => $coord['lat'],
+                    'lon' => $coord['lon'],
+                    'bmt' => $coord['bmt'],
+                    'bmk' => $coord['bmk'],
+                    'overripe' => $coord['overripe'],
+                    'empty_bunch' => $coord['empty_bunch'],
+                    'abnormal' => $coord['abnormal'],
+                    'rd' => $coord['rd'],
+                    'vcut' => $coord['vcut'],
+                    'alas_br' => $coord['alas_br'],
+                    'foto_temuan' => $coord['foto_temuan'],
+                    'komentar' => $coord['komentar'],
+                    'time' => $time,
+                ];
+            }
+        }
+        // dd($blokSidakResult);
+        return response()->json([
+            // 'plot_line'=> $plotLine,             
+            'coords' => $convertedCoords,
+            'plot_blok_all' => $plotBlokAll,
+            'trans_plot' => $trans_plot,
+            // 'buah_plot' => $buah_plot,
+            // 'ancak_plot' => $ancak_plot,
+            'blok_sidak' => $blokSidakResult
+        ]);
+    }
 }

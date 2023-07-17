@@ -325,11 +325,53 @@
             padding: 0.125rem 0.25rem;
         }
     }
+
+    .modal-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .info.legend {
+        background-color: white;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .info.legend .eye-icon {
+        font-size: 14px;
+    }
+
+    .info.legend .color-box {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        border: 1px solid #ccc;
+        background-color: white;
+    }
+
+    .eye-icon {
+        font-size: 20px;
+        color: #888;
+    }
+
+    .legend-icon {
+        width: 16px;
+        /* Adjust the width to make the icons smaller */
+        height: 16px;
+        /* Adjust the height to make the icons smaller */
+    }
 </style>
 
 
 <div class="content-wrapper">
-    <style>
+    <!-- <style>
         #back-to-data-btn {
             position: fixed;
             bottom: 70px;
@@ -341,8 +383,8 @@
         #back-to-data-btn:hover {
             opacity: 1;
         }
-    </style>
-    <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
+    </style> -->
+
     <div class="card table_wrapper">
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <h2>REKAP HARIAN SIDAK MUTU BUAH </h2>
@@ -384,16 +426,12 @@
             </div>
         </div>
         <!-- animasi loading -->
-        <div id="lottie-container"
-            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation"
-                style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
-        <div id="lottie-container1"
-            style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
-            <div id="lottie-animation"
-                style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="lottie-container1" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; background-color: rgba(255, 255, 255, 0.8); display: none; z-index: 9999;">
+            <div id="lottie-animation" style="width: 100px; height: 100px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             </div>
         </div>
 
@@ -402,8 +440,9 @@
     </div>
 
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
-        <form action="{{ route('pdfBA_sidakbuah') }}" method="POST" class="form-inline" style="display: inline;"
-            target="_blank">
+        <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
+
+        <form action="{{ route('pdfBA_sidakbuah') }}" method="POST" class="form-inline" style="display: inline;" target="_blank">
             {{ csrf_field() }}
             <input type="hidden" name="estBA" id="estpdf" value="{{$est}}">
             <input type="hidden" name="afdBA" id="afdpdf" value="{{$afd}}">
@@ -483,20 +522,13 @@
                         <th rowspan="3" style="background-color: #ffc404; color: white;" class="text-center">Total
                             Janjang Sample</th>
                         <th colspan="7" style="background-color: #ffc404; color: white;" class="text-center">Mentah</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
-                            class="text-center">Matang</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
-                            class="text-center">Lewat Matang (O)</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
-                            class="text-center">Janjang Kosong (E)</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
-                            class="text-center">Tidak Standar Vcut</th>
-                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;"
-                            class="text-center">Abnormal</th>
-                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;"
-                            class="text-center">Rat Damage</th>
-                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;"
-                            class="text-center">Penggunaan Karung Brondolan</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Matang</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Lewat Matang (O)</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Janjang Kosong (E)</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Tidak Standar Vcut</th>
+                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Abnormal</th>
+                        <th rowspan="2" colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Rat Damage</th>
+                        <th rowspan="2" colspan="3" style="background-color: #ffc404; color: white;" class="text-center">Penggunaan Karung Brondolan</th>
                     </tr>
                     <tr>
                         <th colspan="2" style="background-color: #ffc404; color: white;" class="text-center">Tanpa
@@ -544,6 +576,12 @@
 
 
 
+    <div class="card p-4">
+        <h4 class="text-center mt-2" style="font-weight: bold">Tracking Plot Sidak Mutu Buah - {{$est}} {{$afd}} </h4>
+        <hr>
+        <div id="map" style="height:650px"></div>
+    </div>
+
 
 
 
@@ -558,8 +596,7 @@
         <div class="modal-content">
             <h2>Update Sidak Mutu Buah</h2>
             <button id="close-modal" class="btn btn-secondary">Tutup</button>
-            <form id="update-form" action="{{ route('updateBA_mutubuah') }}" enctype="multipart/form-data"
-                method="POST">
+            <form id="update-form" action="{{ route('updateBA_mutubuah') }}" enctype="multipart/form-data" method="POST">
                 {{ csrf_field() }}
                 <input type="hidden" id="update-id" name="id">
                 <input type="hidden" id="est" name="est" value="{{$est}}">
@@ -636,8 +673,7 @@
             <p>Apakah anda Yakin ingin Menghapus?</p>
             <div class="row">
                 <div class="col   text-right">
-                    <form id="delete-form" action="{{ route('deleteBA_mutubuah') }}" method="POST"
-                        onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
+                    <form id="delete-form" action="{{ route('deleteBA_mutubuah') }}" method="POST" onsubmit="event.preventDefault(); handleDeleteFormSubmit();">
                         {{ csrf_field() }}
                         <input type="hidden" id="delete-id" name="id">
 
@@ -657,7 +693,20 @@
     </div>
 
 
-
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="modalCloseButton" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="modal-image" id="img01">
+                    <p>Komentar:</p>
+                    <p id="modalKomentar"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>
@@ -666,6 +715,10 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>
 
 
 @include('layout/footer')
@@ -1382,4 +1435,274 @@
             }
         })
     }
+
+    function openModal(src, komentar) {
+        var modalImg = document.getElementById("img01");
+        modalImg.src = src;
+        var modalKomentar = document.getElementById("modalKomentar");
+        modalKomentar.textContent = komentar;
+
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {});
+        myModal.show();
+
+        var closeButton = document.getElementById('modalCloseButton');
+        closeButton.addEventListener('click', function() {
+            myModal.hide();
+        });
+    }
+
+
+    function getmapsbuah() {
+
+        var map = L.map('map');
+        map.remove();
+
+
+        var Tanggal = document.getElementById('inputDate').value;
+        var est = document.getElementById('est').value;
+        var afd = document.getElementById('afd').value;
+        var _token = $('input[name="_token"]').val();
+
+        $.ajax({
+            url: "{{ route('getMapsData') }}",
+            method: "get",
+            data: {
+                Tanggal,
+                est,
+                afd,
+                _token: _token
+            },
+            success: function(result) {
+
+                var polygonCoords = result.coords;
+                var plot_blok_all = result.plot_blok_all;
+                var trans_plot = result.trans_plot;
+                var blok_sidak = result.blok_sidak;
+
+                var mapContainer = L.DomUtil.get('map');
+                if (mapContainer != null) {
+                    mapContainer._leaflet_id = null;
+                }
+                // Initialize the new map instance
+
+
+                var map = L.map('map');
+
+                var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+                var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+                    maxZoom: 30,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                });
+
+                var baseMaps = {
+                    "Google Street": googleStreet,
+                    "Google Satellite": googleSatellite
+                };
+                L.control.layers(baseMaps).addTo(map);
+
+                var bounds = L.latLngBounds(polygonCoords.concat(plot_blok_all)); // Assuming polygonCoords and plot_blok_all are arrays of LatLng coordinates
+
+                map.fitBounds(bounds, {
+                    padding: [40, 40],
+                    maxZoom: 30
+                });
+                // Adjust the padding and maxZoom values as per your preference
+
+
+
+                for (var blockName in plot_blok_all) {
+                    // Get the coordinates array for the current block
+                    var coordinates = plot_blok_all[blockName];
+
+                    // Create a polygon for the current block
+                    var polygonOptions = {
+                        color: 'rgba(39, 138, 216, 0.5)',
+                        fillColor: '#278ad8',
+                        fillOpacity: 0.5
+                    };
+                    var textIcon;
+
+                    if (blok_sidak.includes(blockName)) {
+                        polygonOptions.color = 'green';
+                        polygonOptions.fillColor = 'green';
+                        polygonOptions.fillOpacity = 0.5;
+
+                        textIcon = L.divIcon({
+                            className: 'blok_visit',
+                            html: blockName,
+                            iconSize: [100, 20],
+                            iconAnchor: [50, 10]
+                        });
+                    } else {
+                        textIcon = L.divIcon({
+                            className: 'blok_all',
+                            html: blockName,
+                            iconSize: [100, 20],
+                            iconAnchor: [50, 10]
+                        });
+                    }
+
+                    var plotBlokPolygon = L.polygon(coordinates, polygonOptions)
+                        .addTo(map)
+                        .bindPopup('<strong>Afdeling:</strong>' + blockName);
+
+                    var bounds = plotBlokPolygon.getBounds();
+                    var center = bounds.getCenter();
+
+                    // Create a custom HTML icon with text and modified class name
+
+
+                    // Place the text icon in the center of the polygon
+                    L.marker(center, {
+                        icon: textIcon
+                    }).addTo(map);
+                }
+
+                var transGroup = L.layerGroup();
+                // var buahGroup = L.layerGroup();
+                // var ancakGroup = L.layerGroup();
+                var transIconUrl = '{{ asset("img/placeholder.png") }}';
+                var transicon = L.icon({
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
+
+                });
+
+                var transTmuanUrl = '{{ asset("img/placeholder2.png") }}';
+                var transtemuan = L.icon({
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
+                });
+
+                function trans() {
+                    for (var key in trans_plot) {
+                        if (trans_plot.hasOwnProperty(key)) {
+                            var plots = trans_plot[key];
+                            // var latLngs = []; // Array to store latitudes and longitudes for drawing lines
+
+                            for (var i = 0; i < plots.length; i++) {
+                                var plot = plots[i];
+                                var lat = parseFloat(plot.lat);
+                                var lon = parseFloat(plot.lon);
+                                var blok = plot.blok;
+                                var foto_temuan = plot.foto_temuan;
+                                var overripe = plot.overripe;
+                                var empty_bunch = plot.empty_bunch;
+                                var abnormal = plot.abnormal;
+                                var rd = plot.rd;
+                                var vcut = plot.vcut;
+                                var alas_br = plot.alas_br;
+
+
+                                var komentar = plot.komentar;
+
+                                var time = plot.time;
+
+                                var markerIcon = foto_temuan ? transtemuan : transicon;
+
+                                var popupContent = `<strong>Sidak Mutu Buah: </strong>${blok}<br/>`;
+
+
+                                popupContent += `<strong>Lewat Matang: </strong>${overripe}<br/>`;
+                                popupContent += `<strong>Janjang Kosong: </strong>${empty_bunch}<br/>`;
+                                popupContent += `<strong>Abnormal: </strong>${abnormal}<br/>`;
+                                popupContent += `<strong>Rat Damage: </strong>${rd}<br/>`;
+                                popupContent += `<strong>Tidak Standar Vcut: </strong>${vcut}<br/>`;
+                                popupContent += `<strong>Alas Brondol: </strong>${alas_br}<br/>`;
+
+                                popupContent += `<strong>Sidak: </strong>${time}<br/>`;
+
+
+                                if (foto_temuan) {
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                }
+
+                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
+                                    var marker = L.marker([lat, lon], {
+                                        icon: markerIcon
+                                    });
+
+                                    marker.bindPopup(popupContent);
+
+                                    transGroup.addLayer(marker);
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+                trans();
+                // buah();
+                // ancak();
+
+                // Add the Layer Groups to the map
+                transGroup.addTo(map);
+                // buahGroup.addTo(map);
+                // ancakGroup.addTo(map);
+                var legend = L.control({
+                    position: 'bottomright'
+                });
+
+                var estateIcon = '{{ asset("img/brazil.png") }}';
+                var Estatecon = L.icon({
+                    iconUrl: estateIcon,
+                    iconSize: [30, 80],
+                    iconAnchor: [30, 80],
+                    popupAnchor: [-3, -76],
+                    shadowUrl: estateIcon,
+                    shadowSize: [30, 80],
+                    shadowAnchor: [30, 80],
+                });
+                var afdIcon = '{{ asset("img/territory.png") }}';
+                var afdCon = L.icon({
+                    iconUrl: afdIcon,
+                    iconSize: [30, 80],
+                    iconAnchor: [30, 80],
+                    popupAnchor: [-3, -76],
+                    shadowUrl: afdIcon,
+                    shadowSize: [30, 80],
+                    shadowAnchor: [30, 80],
+                });
+
+
+                legend.onAdd = function(map) {
+
+                    var div = L.DomUtil.create("div", "legend");
+                    div.innerHTML += "<h4>Keterangan :</h4>";
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png" style="width:12pt;height:13pt" >  Foto Temuan';
+                    div.innerHTML += '</div>';
+                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" style="width:12pt;height:13pt" >  Mutu Sidak Buah';
+                    div.innerHTML += '</div>';
+
+
+                    div.innerHTML += '<div><i style="background: #88b87a;width:15px;height:15px;margin-top:5px;border:1px solid green"></i> Blok yang dikunjungi';
+                    div.innerHTML += '</div>';
+
+
+
+                    return div;
+                };
+
+                legend.addTo(map);
+
+            },
+            error: function() {
+
+            }
+        });
+    }
+
+    $("#show-button").click(function() {
+        getmapsbuah();
+    });
 </script>
