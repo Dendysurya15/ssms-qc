@@ -48,7 +48,7 @@ Route::post('/changeRegionEst', [SidaktphController::class, 'changeRegionEst'])-
 
 Route::post('/changeDataTph', [SidaktphController::class, 'changeDataTph'])->name('changeDataTph');
 
-Route::post('/getBtTphMonth', [SidaktphController::class, 'getBtTphMonth'])->name('getBtTphMonth');
+Route::get('/getBtTphMonth', [SidaktphController::class, 'getBtTphMonth'])->name('getBtTphMonth');
 
 Route::post('/getBtTphYear', [SidaktphController::class, 'getBtTphYear'])->name('getBtTphYear');
 

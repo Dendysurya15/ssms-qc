@@ -211,116 +211,31 @@ class inspectController extends Controller
         $newData = '';
 
         // dd($regData,$est);
-        // foreach ($dataSkor as $key => $value) {
-        //     foreach ($value as $key1 => $value1) {
-        //         // dd($key);
-        //         if ($est == "NBE") {
-        //             if (strlen($key) == 5) {
-        //                 $newData = substr($key, 0, -2);
-        //             } else if (strlen($key) == 4) {
-        //                 $newData = substr($key, 0, 1) . substr($key, 2);
-        //             }
-        //         } else {
-        //             if (strlen($key) == 5) {
-        //                 $sliced = substr($key, 0, -2);
-        //                 $newData = substr_replace($sliced, '0', 1, 0);
-        //             } else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
-        //                 if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
-        //                     $sliced = substr($key, 0, -2);
-        //                     $newData = substr($sliced, 0, 1) . substr($sliced, 2);
-        //                 }elseif (strlen($key) == 6) {
-        //                     $newData = substr($key, 0, -3);
-        //                 }
-        //             }else if (strlen($key) == 8 ) {
-        //                 $replace = substr_replace($key, '', 1, 1);
-        //                 $sliced = substr($replace, 0, -2);
-        //                 $newData = substr($key, 0, -3);
-        //             }else if (strlen($key) == 7) {
-        //                 $replace = substr_replace($key, '', 1, 1);
-        //                 $sliced = substr($replace, 0, -2);
-        //                 $newData = substr($key, 0, -3);
-        //             } else if (strlen($key) == 6) {
-        //                 $replace = substr_replace($key, '', 1, 1);
-        //                 $sliced = substr($replace, 0, -2);
-        //                 $newData = substr_replace($sliced, '0', 1, 0);
-        //             } else if (strlen($key) == 3) {
-        //                 $sliced = $key;
-        //                 $newData = substr_replace($sliced, '0', 1, 0);
-        //             } else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
-        //                 $sliced = substr($key, 0, -6);
-        //                 $newData = substr_replace($sliced, '0', 1, 0);
-        //             } else if (strpos($key, 'CBI') !== false) {
-        //                 $newData = substr($key, 0, -4);
-        //             } else if (strpos($key, 'CB') !== false) {
-        //                 $replace = substr_replace($key, '', 1, 1);
-        //                 $sliced = substr($replace, 0, -3);
-        //                 $newData = substr_replace($sliced, '0', 1, 0);
-        //             } else if ($regData == [7, 8]) {
-        //                 $newData = substr($key, 0, 3);
-        //             } else if ($regData == [10, 11]) {
-        //                 $newData = substr($key, 0, 4);
-        //             }
-        //         }
-                
-
-
-        //         $skorTrans = check_array('skorTrans', $value1);
-        //         $skorBuah = check_array('skorBuah', $value1);
-        //         $skorAncak = check_array('skorAncak', $value1);
-        //         // $skorAkhir = $skorTrans + $skorBuah + $skorAncak;
-        //         if ($skorTrans != 0 && $skorAncak != 0) {
-        //             $skorAkhir = $skorTrans + $skorAncak + 34;
-        //         } else if ($skorTrans != 0 ){
-        //             $skorAkhir = $skorTrans + 34;
-        //         }else if ($skorAncak != 0 ){
-        //             $skorAkhir = $skorAncak + 34;
-        //         }else{
-        //             $skorAkhir = 0;
-        //         }
-
-        //         if ($skorTrans == 0 && $skorAncak == 0) {
-        //             $check = 'empty';
-        //         } else {
-        //             $check = 'data';
-        //         }
-                
-        //         if ($check == 'data') {
-        //             $skor_kategori_akhir_est = skor_kategori_akhir($skorAkhir);
-        //         }else {
-        //             $skor_kategori_akhir_est = 'xxx';
-        //         }
-               
-                
-
-        //         $dataSkorResult[$newData][0]['estate'] = $est;
-        //         $dataSkorResult[$newData][0]['skorTrans'] = $skorTrans;
-        //         $dataSkorResult[$newData][0]['skorBuah'] = $skorBuah;
-        //         $dataSkorResult[$newData][0]['skorAncak'] = $skorAncak;
-        //         $dataSkorResult[$newData][0]['blok'] = $newData;
-        //         $dataSkorResult[$newData][0]['text'] = $skor_kategori_akhir_est[1];
-        //         $dataSkorResult[$newData][0]['skorAkhir'] = $skorAkhir;
-        //         $dataSkorResult[$newData][0]['check_data'] = $check;
-        //     }
-        // }
-
-        // dd($dataSkorResult);
-        // testing
         foreach ($dataSkor as $key => $value) {
             foreach ($value as $key1 => $value1) {
                 // dd($key);
-              
-                    if (strlen($key) == 8 ) {
+                if ($est == "NBE") {
+                    if (strlen($key) == 5) {
+                        $newData = substr($key, 0, -2);
+                    } else if (strlen($key) == 4) {
+                        $newData = substr($key, 0, 1) . substr($key, 2);
+                    }
+                } else {
+                    if (strlen($key) == 5) {
+                        $sliced = substr($key, 0, -2);
+                        $newData = substr_replace($sliced, '0', 1, 0);
+                    } else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
+                        if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
+                            $sliced = substr($key, 0, -2);
+                            $newData = substr($sliced, 0, 1) . substr($sliced, 2);
+                        }elseif (strlen($key) == 6) {
+                            $newData = substr($key, 0, -3);
+                        }
+                    }else if (strlen($key) == 8 ) {
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -2);
                         $newData = substr($key, 0, -3);
-                    }else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
-                                        if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
-                                            $sliced = substr($key, 0, -2);
-                                            $newData = substr($sliced, 0, 1) . substr($sliced, 2);
-                                        }elseif (strlen($key) == 6) {
-                                            $newData = substr($key, 0, -3);
-                                        }
-                                    }else if (strlen($key) == 7) {
+                    }else if (strlen($key) == 7) {
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -2);
                         $newData = substr($key, 0, -3);
@@ -328,31 +243,24 @@ class inspectController extends Controller
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -2);
                         $newData = substr_replace($sliced, '0', 1, 0);
-                    }  else if (strlen($key) == 4) {
-                        $newData = $key;
-                    } else if (strlen($key) == 5) {
-                        $sliced = substr($key, 0, -2);
+                    } else if (strlen($key) == 3) {
+                        $sliced = $key;
                         $newData = substr_replace($sliced, '0', 1, 0);
-                    }else if (strpos($key, 'SSMSCBI') !== false && strlen($key) == 14) {
-                        $newData = substr($key, 0, -10);
-                    }else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
+                    } else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
                         $sliced = substr($key, 0, -6);
                         $newData = substr_replace($sliced, '0', 1, 0);
-                    }else if (strpos($key, 'CBI') !== false && strlen($key) == 10) {
-                        $newData = substr($key, 0, -6);
                     } else if (strpos($key, 'CBI') !== false) {
                         $newData = substr($key, 0, -4);
                     } else if (strpos($key, 'CB') !== false) {
                         $replace = substr_replace($key, '', 1, 1);
                         $sliced = substr($replace, 0, -3);
                         $newData = substr_replace($sliced, '0', 1, 0);
-                    }  else if (strlen($key) == 3) {
-                        $newData = $key;
-                    }else if (strpos($key, 'SSMSC') !== false && strlen($key) == 10) {
-                        $newData = substr($key, 0, -6);
+                    } else if ($regData == [7, 8]) {
+                        $newData = substr($key, 0, 3);
+                    } else if ($regData == [10, 11]) {
+                        $newData = substr($key, 0, 4);
                     }
-              
-                
+                }
                 
 
 
@@ -394,6 +302,94 @@ class inspectController extends Controller
                 $dataSkorResult[$newData][0]['check_data'] = $check;
             }
         }
+
+        // dd($dataSkorResult);
+        // testing
+        // foreach ($dataSkor as $key => $value) {
+        //     foreach ($value as $key1 => $value1) {
+        //         // dd($key);
+              
+        //             if (strlen($key) == 8 ) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr($key, 0, -3);
+        //             }else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
+        //                                 if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
+        //                                     $sliced = substr($key, 0, -2);
+        //                                     $newData = substr($sliced, 0, 1) . substr($sliced, 2);
+        //                                 }elseif (strlen($key) == 6) {
+        //                                     $newData = substr($key, 0, -3);
+        //                                 }
+        //                             }else if (strlen($key) == 7) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr($key, 0, -3);
+        //             } else if (strlen($key) == 6) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }  else if (strlen($key) == 4) {
+        //                 $newData = $key;
+        //             } else if (strlen($key) == 5) {
+        //                 $sliced = substr($key, 0, -2);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }else if (strpos($key, 'SSMSCBI') !== false && strlen($key) == 14) {
+        //                 $newData = substr($key, 0, -10);
+        //             }else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
+        //                 $sliced = substr($key, 0, -6);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }else if (strpos($key, 'CBI') !== false && strlen($key) == 10) {
+        //                 $newData = substr($key, 0, -6);
+        //             } else if (strpos($key, 'CBI') !== false) {
+        //                 $newData = substr($key, 0, -4);
+        //             } else if (strpos($key, 'CB') !== false) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -3);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }  else if (strlen($key) == 3) {
+        //                 $newData = $key;
+        //             }else if (strpos($key, 'SSMSC') !== false && strlen($key) == 10) {
+        //                 $newData = substr($key, 0, -6);
+        //             }
+              
+        //         $skorTrans = check_array('skorTrans', $value1);
+        //         $skorBuah = check_array('skorBuah', $value1);
+        //         $skorAncak = check_array('skorAncak', $value1);
+        //         // $skorAkhir = $skorTrans + $skorBuah + $skorAncak;
+        //         if ($skorTrans != 0 && $skorAncak != 0) {
+        //             $skorAkhir = $skorTrans + $skorAncak + 34;
+        //         } else if ($skorTrans != 0 ){
+        //             $skorAkhir = $skorTrans + 34;
+        //         }else if ($skorAncak != 0 ){
+        //             $skorAkhir = $skorAncak + 34;
+        //         }else{
+        //             $skorAkhir = 0;
+        //         }
+
+        //         if ($skorTrans == 0 && $skorAncak == 0) {
+        //             $check = 'empty';
+        //         } else {
+        //             $check = 'data';
+        //         }
+                
+        //         if ($check == 'data') {
+        //             $skor_kategori_akhir_est = skor_kategori_akhir($skorAkhir);
+        //         }else {
+        //             $skor_kategori_akhir_est = 'xxx';
+        //         }
+               
+                
+
+        //         $dataSkorResult[$newData][0]['estate'] = $est;
+        //         $dataSkorResult[$newData][0]['skorTrans'] = $skorTrans;
+        //         $dataSkorResult[$newData][0]['skorBuah'] = $skorBuah;
+        //         $dataSkorResult[$newData][0]['skorAncak'] = $skorAncak;
+        //         $dataSkorResult[$newData][0]['blok'] = $newData;
+        //         $dataSkorResult[$newData][0]['text'] = $skor_kategori_akhir_est[1];
+        //         $dataSkorResult[$newData][0]['skorAkhir'] = $skorAkhir;
+        //         $dataSkorResult[$newData][0]['check_data'] = $check;
+        //     }
+        // }
 
         // end testing 
         

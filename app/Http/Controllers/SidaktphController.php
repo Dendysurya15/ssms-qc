@@ -1233,17 +1233,30 @@ class SidaktphController extends Controller
                 //untuk chart!!!
                 foreach ($queryGroup as $key => $value) {
                     $sum_bt_tph = 0;
+                    $sum_bt_jalan = 0;
+                    $sum_bt_bin = 0;
                     $skor_brd = 0;
                     $listBlokPerAfd = [];
+                    $jum_blok = 0;
+                    $tot_brd = 0;
+
                     foreach ($value as $val) {
                         if (!in_array($val->est . ' ' . $val->afd . ' ' . $val->blok, $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $val->est . ' ' . $val->afd . ' ' . $val->blok;
+                            $jum_blok++;
                         }
-                        $jum_blok = count($listBlokPerAfd);
                         $sum_bt_tph += $val->bt_tph;
+                        $sum_bt_jalan += $val->bt_jalan;
+                        $sum_bt_bin += $val->bt_bin;
                     }
-                    $skor_brd = round($sum_bt_tph / $jum_blok, 2);
+                    $tot_brd = $sum_bt_tph + $sum_bt_jalan + $sum_bt_bin;
+                    $skor_brd = round($tot_brd / $jum_blok, 2);
                     $arrBtTPHperEst[$key] = $skor_brd;
+                    // $arrBtTPHperEst[$key] = [
+                    //     'skor_brd' => $skor_brd,
+                    //     'jum_blok' => $jum_blok,
+                    //     'tot_brd' => $tot_brd,
+                    // ];
                 }
                 // dd($arrBtTPHperEst);
                 //sebelum di masukan ke aray harus looping karung berisi brondolan untuk mengambil datanya 2 lapis
@@ -2442,18 +2455,32 @@ class SidaktphController extends Controller
                 //untuk chart!!!
                 foreach ($queryGroup as $key => $value) {
                     $sum_bt_tph = 0;
+                    $sum_bt_jalan = 0;
+                    $sum_bt_bin = 0;
                     $skor_brd = 0;
                     $listBlokPerAfd = [];
+                    $jum_blok = 0;
+                    $tot_brd = 0;
+
                     foreach ($value as $val) {
                         if (!in_array($val->est . ' ' . $val->afd . ' ' . $val->blok, $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $val->est . ' ' . $val->afd . ' ' . $val->blok;
+                            $jum_blok++;
                         }
-                        $jum_blok = count($listBlokPerAfd);
                         $sum_bt_tph += $val->bt_tph;
+                        $sum_bt_jalan += $val->bt_jalan;
+                        $sum_bt_bin += $val->bt_bin;
                     }
-                    $skor_brd = round($sum_bt_tph / $jum_blok, 2);
+                    $tot_brd = $sum_bt_tph + $sum_bt_jalan + $sum_bt_bin;
+                    $skor_brd = round($tot_brd / $jum_blok, 2);
                     $arrBtTPHperEst[$key] = $skor_brd;
+                    // $arrBtTPHperEst[$key] = [
+                    //     'skor_brd' => $skor_brd,
+                    //     'jum_blok' => $jum_blok,
+                    //     'tot_brd' => $tot_brd,
+                    // ];
                 }
+
                 // dd($arrBtTPHperEst);
                 //sebelum di masukan ke aray harus looping karung berisi brondolan untuk mengambil datanya 2 lapis
                 foreach ($queryGroup as $key => $value) {
@@ -2469,7 +2496,13 @@ class SidaktphController extends Controller
                     }
                     $skor_brd = round($sum_jum_karung / $jum_blok, 2);
                     $arrKRest[$key] = $skor_brd;
+                    // $arrKRest[$key] = [
+                    //     'skor_kr' => $skor_brd,
+                    //     'jum_blok' => $jum_blok,
+                    //     'tot_brd' => $tot_brd,
+                    // ];
                 }
+                // dd($arrKRest);
                 //looping buah tinggal
                 foreach ($queryGroup as $key => $value) {
                     $sum_buah_tinggal = 0;
@@ -2484,7 +2517,13 @@ class SidaktphController extends Controller
                     }
                     $skor_brd = round($sum_buah_tinggal / $jum_blok, 2);
                     $arrBHest[$key] = $skor_brd;
+                    // $arrBHest[$key] = [
+                    //     'skor_bh' => $skor_brd,
+                    //     'jum_blok' => $jum_blok,
+                    //     'tot_bh' => $sum_buah_tinggal,
+                    // ];
                 }
+                // dd($arrBHest);
                 //looping buah restrant tidak di  laporkan
                 foreach ($queryGroup as $key => $value) {
                     $sum_restan_unreported = 0;
@@ -3618,17 +3657,30 @@ class SidaktphController extends Controller
                 //untuk chart!!!
                 foreach ($queryGroup as $key => $value) {
                     $sum_bt_tph = 0;
+                    $sum_bt_jalan = 0;
+                    $sum_bt_bin = 0;
                     $skor_brd = 0;
                     $listBlokPerAfd = [];
+                    $jum_blok = 0;
+                    $tot_brd = 0;
+
                     foreach ($value as $val) {
                         if (!in_array($val->est . ' ' . $val->afd . ' ' . $val->blok, $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $val->est . ' ' . $val->afd . ' ' . $val->blok;
+                            $jum_blok++;
                         }
-                        $jum_blok = count($listBlokPerAfd);
                         $sum_bt_tph += $val->bt_tph;
+                        $sum_bt_jalan += $val->bt_jalan;
+                        $sum_bt_bin += $val->bt_bin;
                     }
-                    $skor_brd = round($sum_bt_tph / $jum_blok, 2);
+                    $tot_brd = $sum_bt_tph + $sum_bt_jalan + $sum_bt_bin;
+                    $skor_brd = round($tot_brd / $jum_blok, 2);
                     $arrBtTPHperEst[$key] = $skor_brd;
+                    // $arrBtTPHperEst[$key] = [
+                    //     'skor_brd' => $skor_brd,
+                    //     'jum_blok' => $jum_blok,
+                    //     'tot_brd' => $tot_brd,
+                    // ];
                 }
                 // dd($arrBtTPHperEst);
                 //sebelum di masukan ke aray harus looping karung berisi brondolan untuk mengambil datanya 2 lapis

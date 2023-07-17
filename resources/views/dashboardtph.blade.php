@@ -2917,7 +2917,7 @@
       var regSidak = document.getElementById('regionalSidakMonth').value
       $.ajax({
         url: "{{ route('getBtTphMonth') }}",
-        method: "POST",
+        method: "get",
         data: {
           month: monthSidak,
           reg: regSidak,
