@@ -1714,6 +1714,8 @@
                                 var rd = plot.rd;
                                 var vcut = plot.vcut;
                                 var alas_br = plot.alas_br;
+                                var bmt = plot.bmt;
+                                var bmk = plot.bmk;
 
 
                                 var komentar = plot.komentar;
@@ -1725,6 +1727,8 @@
                                 var popupContent = `<strong>Sidak Mutu Buah: </strong>${blok}<br/>`;
 
 
+                                popupContent += `<strong>Mentah: </strong>${bmt}<br/>`;
+                                popupContent += `<strong>Matang: </strong>${bmk}<br/>`;
                                 popupContent += `<strong>Lewat Matang: </strong>${overripe}<br/>`;
                                 popupContent += `<strong>Janjang Kosong: </strong>${empty_bunch}<br/>`;
                                 popupContent += `<strong>Abnormal: </strong>${abnormal}<br/>`;

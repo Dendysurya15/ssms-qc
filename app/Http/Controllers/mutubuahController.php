@@ -7300,7 +7300,7 @@ class mutubuahController extends Controller
         }, []);
 
 
-
+        // dd($groupedTrans);
         $trans_plot = [];
         foreach ($groupedTrans as $blok => $coords) {
             foreach ($coords as $coord) {
@@ -7321,6 +7321,8 @@ class mutubuahController extends Controller
                     'alas_br' => $coord['alas_br'],
                     'foto_temuan' => $coord['foto_temuan'],
                     'komentar' => $coord['komentar'],
+                    'bmt' => $coord['bmt'],
+                    'bmk' => $coord['bmk'],
                     'time' => $time,
                 ];
             }

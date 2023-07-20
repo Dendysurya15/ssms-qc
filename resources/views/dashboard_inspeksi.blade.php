@@ -5428,11 +5428,13 @@
                 style: {
                     color: "#FF1654"
                 }
-            }
+            },
+
         }],
+
         annotations: {
             yaxis: [{
-                    y: 90,
+                    y: 95,
                     y2: 100,
                     borderColor: '#000',
                     fillColor: '#4874c4',
@@ -5441,8 +5443,8 @@
                         text: ' '
                     }
                 }, {
-                    y: 80,
-                    y2: 90,
+                    y: 85,
+                    y2: 95,
                     borderColor: '#000',
                     fillColor: '#78ac44',
                     opacity: 0.4,
@@ -5450,8 +5452,8 @@
                         text: ''
                     }
                 }, {
-                    y: 70,
-                    y2: 80,
+                    y: 75,
+                    y2: 85,
                     borderColor: '#000',
                     fillColor: '#fffc04',
                     opacity: 0.4,
@@ -5459,8 +5461,8 @@
                         text: 'Standar QC'
                     }
                 }, {
-                    y: 60,
-                    y2: 70,
+                    y: 65,
+                    y2: 75,
                     borderColor: '#000',
                     fillColor: '#f07c34',
                     opacity: 0.4,
@@ -5469,7 +5471,7 @@
                     }
                 }, {
                     y: 0,
-                    y2: 60,
+                    y2: 65,
                     borderColor: '#000',
                     fillColor: '#ff0404',
                     opacity: 0.4,
@@ -5487,125 +5489,7 @@
         }
     };
 
-    // var options_2 = {
-    //     series: [{
-    //         name: 'TEAM A',
-    //         type: 'area',
-    //         data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-    //     }, {
-    //         name: 'TEAM C',
-    //         type: 'line',
-    //         data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
-    //     }],
-    //     chart: {
-    //         height: 350,
-    //         type: 'line',
-    //         stacked: false,
-    //     },
-    //     stroke: {
-    //         width: 3,
-    //         curve: 'smooth'
-    //     },
 
-    //     plotOptions: {
-    //         bar: {
-    //             columnWidth: '50%'
-    //         }
-    //     },
-    //     dataLabels: {
-    //         enabled: false
-    //     },
-
-    //     // fill: {
-    //     //     opacity: [0.85, 0.25, 1, 0.25, 0.25],
-    //     //     gradient: {
-    //     //         inverseColors: false,
-    //     //         shade: 'light',
-    //     //         type: "vertical",
-    //     //         opacityFrom: 0.85,
-    //     //         opacityTo: 0.55,
-    //     //         stops: [0, 100, 100, 100]
-    //     //     }
-    //     // },
-    //     markers: {
-    //         size: 0
-    //     },
-    //     xaxis: {
-    //         categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "July", "Agustus", "Sept", "Okt", "Nov", "Dec"]
-    //     },
-    //     yaxis: {
-    //         title: {
-    //             text: 'Score',
-    //         },
-    //         min: 0
-    //     },
-    //     tooltip: {
-    //         shared: true,
-    //         intersect: false,
-    //         y: {
-    //             formatter: function(y) {
-    //                 if (typeof y !== "undefined") {
-    //                     return y.toFixed(0) + " ";
-    //                 }
-    //                 return y;
-
-    //             }
-    //         }
-    //     },
-
-    //     annotations: {
-    //         yaxis: [{
-    //                 y: 90,
-    //                 y2: 100,
-    //                 borderColor: '#000',
-    //                 fillColor: '#4874c4',
-    //                 opacity: 0.6,
-    //                 label: {
-    //                     text: ' '
-    //                 }
-    //             }, {
-    //                 y: 80,
-    //                 y2: 90,
-    //                 borderColor: '#000',
-    //                 fillColor: '#78ac44',
-    //                 opacity: 0.6,
-    //                 label: {
-    //                     text: ''
-    //                 }
-    //             }, {
-    //                 y: 70,
-    //                 y2: 80,
-    //                 borderColor: '#000',
-    //                 fillColor: '#ff0404',
-    //                 opacity: 0.6,
-    //                 label: {
-    //                     text: 'Standar QC'
-    //                 }
-    //             }, {
-    //                 y: 60,
-    //                 y2: 70,
-    //                 borderColor: '#000',
-    //                 fillColor: '#f07c34',
-    //                 opacity: 0.6,
-    //                 label: {
-    //                     text: ''
-    //                 }
-    //             }, {
-    //                 y: 0,
-    //                 y2: 60,
-    //                 borderColor: '#000',
-    //                 fillColor: '#ff0404',
-    //                 opacity: 0.6,
-
-
-    //                 label: {
-    //                     text: ''
-    //                 }
-    //             }
-
-    //         ]
-    //     }
-    // };
 
     var chartScore = new ApexCharts(document.querySelector("#skorGraph"), options);
     chartScore.render();
@@ -7922,28 +7806,65 @@
                     name: est,
                     data: skorJson
                 }, ])
+                // chartScore.updateOptions({
+                //     yaxis: [{
+                //         axisTicks: {
+                //             show: true
+                //         },
+                //         axisBorder: {
+                //             show: true,
+                //             color: "#FF1654"
+                //         },
+                //         labels: {
+                //             style: {
+                //                 colors: "#FF1654"
+                //             }
+                //         },
+                //         title: {
+                //             text: est,
+                //             style: {
+                //                 color: "#FF1654"
+                //             }
+                //         },
+
+                //     }]
+                // });
+
+
                 chartScore.updateOptions({
-                    yaxis: [{
-                        axisTicks: {
-                            show: true
-                        },
-                        axisBorder: {
+                    yaxis: {
+                        show: true,
+                        showAlways: true,
+                        showForNullSeries: true,
+                        seriesName: est,
+                        opposite: false,
+                        reversed: false,
+                        logarithmic: false,
+                        logBase: 10,
+                        tickAmount: 5,
+                        min: 0,
+                        max: 100,
+                        forceNiceScale: false,
+                        floating: false,
+                        decimalsInFloat: undefined,
+                        crosshairs: {
                             show: true,
-                            color: "#FF1654"
+                            position: 'back',
+                            stroke: {
+                                color: '#b6b6b6',
+                                width: 1,
+                                dashArray: 0,
+                            },
                         },
-                        labels: {
-                            style: {
-                                colors: "#FF1654"
-                            }
+                        tooltip: {
+                            enabled: true,
+                            offsetX: 0,
                         },
-                        title: {
-                            text: est,
-                            style: {
-                                color: "#FF1654"
-                            }
-                        }
-                    }]
+
+                    }
                 });
+
+
 
 
                 var seriesData = [];
@@ -8032,8 +7953,8 @@
                     }],
                     annotations: {
                         yaxis: [{
-                            y: 1,
-                            y2: 10,
+                            y: 0,
+                            y2: 1,
                             borderColor: '#000',
                             fillColor: '#4874c4',
                             opacity: 0.4,
@@ -8041,8 +7962,8 @@
                                 text: ' '
                             }
                         }, {
-                            y: 0,
-                            y2: 1,
+                            y: 1,
+                            y2: 10,
                             borderColor: '#000',
                             fillColor: '#ff0404',
                             opacity: 0.4,
@@ -8082,8 +8003,8 @@
                     }],
                     annotations: {
                         yaxis: [{
-                            y: 1,
-                            y2: 10,
+                            y: -10,
+                            y2: 0,
                             borderColor: '#000',
                             fillColor: '#4874c4',
                             opacity: 0.4,
@@ -8092,7 +8013,7 @@
                             }
                         }, {
                             y: 0,
-                            y2: 1,
+                            y2: 10,
                             borderColor: '#000',
                             fillColor: '#ff0404',
                             opacity: 0.4,
@@ -8179,8 +8100,8 @@
                     }],
                     annotations: {
                         yaxis: [{
-                            y: 90,
-                            y2: 100,
+                            y: 1,
+                            y2: 90,
                             borderColor: '#000',
 
                             fillColor: '#ff0404', //merah
@@ -8189,8 +8110,8 @@
                                 text: ' '
                             }
                         }, {
-                            y: 1,
-                            y2: 90,
+                            y: 90,
+                            y2: 100,
                             borderColor: '#000',
                             fillColor: '#4874c4', //biru
                             opacity: 0.4,
@@ -8327,8 +8248,8 @@
                     }],
                     annotations: {
                         yaxis: [{
-                            y: -10,
-                            y2: 2,
+                            y: 2,
+                            y2: 100,
                             borderColor: '#000',
 
                             fillColor: '#ff0404', //merah
@@ -8337,8 +8258,9 @@
                                 text: ' '
                             }
                         }, {
-                            y: 2,
-                            y2: 100,
+
+                            y: -10,
+                            y2: 2,
                             borderColor: '#000',
                             fillColor: '#4874c4', //biru
                             opacity: 0.4,
