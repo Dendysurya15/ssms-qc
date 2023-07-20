@@ -21,6 +21,7 @@ class inspectController extends Controller
 
         // dd($regData);
 
+
         $queryTrans = DB::connection('mysql2')->table("mutu_transport")
             ->select("mutu_transport.*", "estate.wil")
             ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
@@ -21051,52 +21052,113 @@ class inspectController extends Controller
                     ];
                 }
             }
-            // dd($ancak_fa);
+
+            $groupedArray = [];
+
+            foreach ($ancak_fa as $item) {
+                $blok = $item['blok'];
+                if (!isset($groupedArray[$blok])) {
+                    $groupedArray[$blok] = [];
+                }
+                $groupedArray[$blok][] = $item;
+            }
+            // dd($groupedArray,$ancak_fa);
+
+           
+
+            // dd($combinedArray);
+            // $ancak_plot = [];
+            // foreach ($groupedAncak as $blok => $coords) {
+            //     foreach ($coords as $coord) {
+            //         $ancak_fa_item = array();
+            //         $matchingAncakFa = [];
+            
+            //         foreach ($ancak_fa as $key => $value) {
+            //             if ($coord['blok'] == $value['blok'] && $coord['br1'] == $value['br1'] && $coord['br2'] == $value['br2']  && $coord['jalur_masuk'] == $value['jalur_masuk']) {
+                           
+            //                 $matchingAncakFa[] = $value;
+            //             }
+            //         }
+            //         // dd($matchingAncakFa);
+            //         $foto_temuan1 = null;
+            //         $foto_temuan2 = null;
+            //         $foto_fu1 = null;
+            //         $foto_fu2 = null;
+            //         $komentar = null;
+            
+            //         if (!empty($matchingAncakFa)) {
+            //             $firstMatch = $matchingAncakFa[0];
+            //             $foto_temuan1 = $firstMatch['foto_temuan1'];
+            //             $foto_temuan2 = $firstMatch['foto_temuan2'];
+            //             $foto_fu1 = $firstMatch['foto_fu1'];
+            //             $foto_fu2 = $firstMatch['foto_fu2'];
+            //             $komentar = $firstMatch['komentar'];
+            //         }
+            
+            //         $datetime = $coord['datetime'];
+            //         $time = date('H:i:s', strtotime($datetime));
+            //         $ancak_plot[] = [
+            //             'blok' => $blok,
+            //             'estate' => $coord['estate'],
+            //             'afdeling' => $coord['afdeling'],
+            //             'br1' => $coord['br1'],
+            //             'br2' => $coord['br2'],
+            //             'jalur_masuk' => $coord['jalur_masuk'],
+            //             'foto_temuan1' => $foto_temuan1,
+            //             'foto_temuan2' => $foto_temuan2,
+            //             'foto_fu1' => $foto_fu1,
+            //             'foto_fu2' => $foto_fu2,
+            //             'komentar' => $komentar,
+            //             'ket' => 'Lokasi akhir',
+            //             'lat' => $coord['lat_akhir'],
+            //             'lon' => $coord['lon_akhir'],
+
+            //             'luas_blok' => $coord['luas_blok'],
+            //             'sph' => $coord['sph'],
+            //             'sample' => $coord['sample'],
+            //             'pokok_kuning' => $coord['pokok_kuning'],
+            //             'piringan_semak' => $coord['piringan_semak'],
+            //             'underpruning' => $coord['underpruning'],
+            //             'overpruning' => $coord['overpruning'],
+            //             'jjg' => $coord['jjg'],
+            //             'brtp' => $coord['brtp'],
+            //             'brtk' => $coord['brtk'],
+            //             'brtgl' => $coord['brtgl'],
+            //             'bhts' => $coord['bhts'],
+            //             'bhtm1' => $coord['bhtm1'],
+            //             'bhtm2' => $coord['bhtm2'],
+            //             'bhtm3' => $coord['bhtm3'],
+            //             'ps' => $coord['ps'],
+            //             'sp' => $coord['sp'],
+            //             'time' => $time,
+            //         ];
+            //     }
+            // }
+
+       
+
             $ancak_plot = [];
+
             foreach ($groupedAncak as $blok => $coords) {
                 foreach ($coords as $coord) {
-                    $ancak_fa_item = array();
                     $matchingAncakFa = [];
             
                     foreach ($ancak_fa as $key => $value) {
-                        if ($coord['blok'] == $value['blok'] && $coord['br1'] == $value['br1'] && $coord['br2'] == $value['br2']  && $coord['jalur_masuk'] == $value['jalur_masuk']) {
+                        if ($coord['blok'] == $value['blok'] && $coord['br1'] == $value['br1'] && $coord['br2'] == $value['br2'] && $coord['jalur_masuk'] == $value['jalur_masuk']) {
                             $matchingAncakFa[] = $value;
                         }
                     }
             
-                    $foto_temuan1 = null;
-                    $foto_temuan2 = null;
-                    $foto_fu1 = null;
-                    $foto_fu2 = null;
-                    $komentar = null;
-            
-                    if (!empty($matchingAncakFa)) {
-                        $firstMatch = $matchingAncakFa[0];
-                        $foto_temuan1 = $firstMatch['foto_temuan1'];
-                        $foto_temuan2 = $firstMatch['foto_temuan2'];
-                        $foto_fu1 = $firstMatch['foto_fu1'];
-                        $foto_fu2 = $firstMatch['foto_fu2'];
-                        $komentar = $firstMatch['komentar'];
-                    }
-            
-                    $datetime = $coord['datetime'];
-                    $time = date('H:i:s', strtotime($datetime));
-                    $ancak_plot[] = [
+                    $ancak_fa_item = [
                         'blok' => $blok,
                         'estate' => $coord['estate'],
                         'afdeling' => $coord['afdeling'],
                         'br1' => $coord['br1'],
                         'br2' => $coord['br2'],
                         'jalur_masuk' => $coord['jalur_masuk'],
-                        'foto_temuan1' => $foto_temuan1,
-                        'foto_temuan2' => $foto_temuan2,
-                        'foto_fu1' => $foto_fu1,
-                        'foto_fu2' => $foto_fu2,
-                        'komentar' => $komentar,
                         'ket' => 'Lokasi akhir',
-                        'lat' => $coord['lat_akhir'],
-                        'lon' => $coord['lon_akhir'],
-
+                        'lat_' => $coord['lat_akhir'],
+                        'lon_' => $coord['lon_akhir'],
                         'luas_blok' => $coord['luas_blok'],
                         'sph' => $coord['sph'],
                         'sample' => $coord['sample'],
@@ -21114,14 +21176,42 @@ class inspectController extends Controller
                         'bhtm3' => $coord['bhtm3'],
                         'ps' => $coord['ps'],
                         'sp' => $coord['sp'],
-                        'time' => $time,
+                        'time' => date('H:i:s', strtotime($coord['datetime'])),
                     ];
+
+                    if (!empty($matchingAncakFa)) {
+                        $foto_temuan1 = [];
+                        $foto_temuan2 = [];
+                        $foto_fu1 = [];
+                        $foto_fu2 = [];
+                        $lat_ancak_fa = [];
+                        $lon_ancak_fa = [];
+                        $komentar = [];
+
+                        foreach ($matchingAncakFa as $match) {
+                            $foto_temuan1[] = 'foto_temuan1:' . (!empty($match['foto_temuan1']) ? $match['foto_temuan1'] : '') . ',foto_temuan2:' . (!empty($match['foto_temuan2']) ? $match['foto_temuan2'] : ' ') . ',foto_fu1:' . (!empty($match['foto_fu1']) ? $match['foto_fu1'] : ' '). ',foto_fu2:' . (!empty($match['foto_fu2']) ? $match['foto_fu2'] : ' '). ',lat:' . $match['lat'] . ',lon:' . $match['lon'] . ',komentar:' . $match['komentar'];
+                        
+                            $foto_fu1[] = 'foto_fu1:' . (!empty($match['foto_fu1']) ? $match['foto_fu1'] : '') . ',foto_fu2:' . (!empty($match['foto_fu2']) ? $match['foto_fu2'] : ' ') . ',lat:' . $match['lat'] . ',lon:' . $match['lon'];
+                        }
+                        
+                    
+                        $ancak_fa_item['foto_temuan'] = $foto_temuan1;
+                        
+                        // $ancak_fa_item['foto_fu'] = $foto_fu1;
+                       
+                    }
+                    
+                    
+            
+                    $ancak_plot[] = $ancak_fa_item;
                 }
             }
             
+
+            
  
             
-            // dd($ancak_plot);
+            // dd($ancak_plot); 
 
             return response()->json([
                 'plot_line'=> $plotLine        ,                 

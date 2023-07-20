@@ -597,6 +597,63 @@
         <hr>
         <div id="map" style="height:800px"></div>
     </div>
+
+
+
+    <style>
+        .modal-dialog {
+            max-width: 100%;
+            margin: auto;
+        }
+
+        .modal-content {
+            width: 100%;
+        }
+
+        .modal-body {
+            text-align: center;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: calc(100vh - 200px);
+            object-fit: contain;
+        }
+
+        .modal-image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .download-button-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px;
+        }
+    </style>
+
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="modalCloseButton" class="btn-close" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-image-container">
+                        <img class="modal-image" id="img01">
+                        <div class="download-button-container">
+                            <!-- Remove the "download" attribute from the anchor element -->
+                            <a id="downloadButton" class="btn btn-primary" href="#">Download Image</a>
+                        </div>
+                    </div>
+                    <p>Komentar:</p>
+                    <p id="modalKomentar"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <input type="hidden" id="estate" value="{{$est}}">
 <input type="hidden" id="afd" value="{{$afd}}">
@@ -611,6 +668,10 @@
 <!-- jQuery and Bootstrap JS -->
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+
 
 
 @include('layout/footer')
@@ -915,6 +976,82 @@
         });
     }
 
+    function openModal(src, komentar) {
+        var modalImg = document.getElementById("img01");
+        modalImg.src = src;
+        var modalKomentar = document.getElementById("modalKomentar");
+        modalKomentar.textContent = komentar;
+
+        var downloadButton = document.getElementById("downloadButton");
+        downloadButton.addEventListener("click", handleDownload);
+
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {});
+        myModal.show();
+
+        var closeButton = document.getElementById('modalCloseButton');
+        closeButton.addEventListener('click', function() {
+            myModal.hide();
+            downloadButton.removeEventListener("click", handleDownload); // Remove the event listener when the modal is closed
+            URL.revokeObjectURL(modalImg.src); // Clean up the object URL to avoid memory leaks
+        });
+    }
+
+    function handleDownload(event) {
+        var src = document.getElementById("img01").src;
+        var filename = getFilenameFromSrc(src);
+        downloadImage(src, filename);
+    }
+
+    function getFilenameFromSrc(src) {
+        var startIndex = src.lastIndexOf("/") + 1;
+        var endIndex = src.lastIndexOf(".");
+        var filename = src.substring(startIndex, endIndex);
+
+        // Split the filename into an array using "_" as the delimiter
+        var parts = filename.split("_");
+
+        // Extract the desired parts from the array
+        var part1 = parts[0]; // IMA
+        var part2 = parts[1]; // 2023710
+        var part3 = parts[2]; // 100348
+        var part4 = parts[3]; // KNE
+        var part5 = parts[4]; // OA
+        var part6 = parts[5]; // R01404
+        var part7 = parts[6]; // 102
+
+        // Construct the desired filename using the extracted parts and spaces
+        var customPart = "Est " + "_" + part4 + " Afd " + "_" + part5 + " Sidak " + "_" + part1 + " Blok " + "_" + part6;
+
+        return customPart;
+    }
+
+
+
+
+    function downloadImage(imageName, filename) {
+        var downloadLink = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageName);
+
+        fetch(downloadLink)
+            .then(response => response.blob())
+            .then(blob => {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url;
+                a.download = filename + ".jpg"; // Use the filename for the downloaded image
+                a.style.display = "none"; // Hide the anchor element
+
+                document.body.appendChild(a);
+
+                a.click(); // Trigger the click event on the hidden anchor element
+
+                // Clean up and remove the anchor element after the download
+                a.remove();
+                URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error("Error downloading image:", error);
+            });
+    }
 
     function goBack() {
         // Save the selected tab to local storage
@@ -1003,7 +1140,7 @@
                     maxZoom: 20,
                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                 });
-
+                map.addControl(new L.Control.Fullscreen());
                 var baseMaps = {
                     "Google Street": googleStreet,
                     "Google Satellite": googleSatellite
@@ -1130,7 +1267,7 @@
 
     function drawTemuan(markerResult) {
 
-        console.log(markerResult);
+        // console.log(markerResult);
         for (let i = 0; i < markerResult.length; i++) {
             let latlng = JSON.parse(markerResult[i][1]['latln']);
             // Define the custom icons
@@ -1163,34 +1300,48 @@
             });
 
 
-            let popupContent = "<div> <span style='font-weight:bold'>Jam Sidak : </span>" + markerResult[i][1]['jam'] +
-                "</div>" +
-                "<div> <span style='font-weight:bold'>Nomor TPH : </span>" + markerResult[i][1]['notph'] + "</div>" +
-                "<div ><span style='font-weight:bold'>Blok </span>: " + markerResult[i][1]['blok'] + "</div>" +
-                "<div ><span style='font-weight:bold'>Brondolan Tinggal </span>: " + markerResult[i][1]['brondol_tinggal'] + "</div>" +
-                "<div ><span style='font-weight:bold'>Jumlah Karung </span>: " + markerResult[i][1]['jum_karung'] + "</div>" +
-                "<div ><span style='font-weight:bold'>Buah Tinggal </span>: " + markerResult[i][1]['buah_tinggal'] + "</div>" +
-                "<div ><span style='font-weight:bold'>Restan Unreported </span>: " + markerResult[i][1]['restan_unreported'] + "</div>";
+            var popupContent = `<strong>Jam Sidak: </strong>${markerResult[i][1]['jam']}<br/>`;
+            popupContent += `<strong>Nomor TPH: </strong>${markerResult[i][1]['notph']}<br/>`;
+            popupContent += `<strong>Blok: </strong>${markerResult[i][1]['blok']}<br/>`;
+            popupContent += `<strong>Brondol_tinggal: </strong>${markerResult[i][1]['brondol_tinggal']}<br/>`;
+            popupContent += `<strong>Jumlah Karung: </strong>${markerResult[i][1]['jum_karung']}<br/>`;
+            popupContent += `<strong>Buah Tinggal: </strong>${markerResult[i][1]['buah_tinggal']}<br/>`;
+            popupContent += `<strong>Restan Unreported: </strong>${markerResult[i][1]['restan_unreported']}<br/>`;
 
-            // Add the image and comment for temuan1
-            if (markerResult[i][1]['foto_temuan1'] && markerResult[i][1]['komentar1']) {
-                popupContent += "<div><span style='font-weight:bold'>Temuan 1: </span><br>" +
-                    "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' data-lightbox='image1'>" +
-                    "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' style='max-width: 100%; height: auto;'>" +
-                    "</a><br>" +
-                    "<div class='image-comment'>" + markerResult[i][1]['komentar1'] + "</div>" +
-                    "</div>";
+            if (markerResult[i][1]['foto_temuan1']) {
+                popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/${markerResult[i][1]['foto_temuan1']}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar1']}')"><br/>`;
             }
+            if (markerResult[i][1]['foto_temuan2']) {
+                popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/${markerResult[i][1]['foto_temuan2']}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar2']}')"><br/>`;
+            }
+            // let popupContent = "<div> <span style='font-weight:bold'>Jam Sidak : </span>" + markerResult[i][1]['jam'] +
+            //     "</div>" +
+            //     "<div> <span style='font-weight:bold'>Nomor TPH : </span>" + markerResult[i][1]['notph'] + "</div>" +
+            //     "<div ><span style='font-weight:bold'>Blok </span>: " + markerResult[i][1]['blok'] + "</div>" +
+            //     "<div ><span style='font-weight:bold'>Brondolan Tinggal </span>: " + markerResult[i][1]['brondol_tinggal'] + "</div>" +
+            //     "<div ><span style='font-weight:bold'>Jumlah Karung </span>: " + markerResult[i][1]['jum_karung'] + "</div>" +
+            //     "<div ><span style='font-weight:bold'>Buah Tinggal </span>: " + markerResult[i][1]['buah_tinggal'] + "</div>" +
+            //     "<div ><span style='font-weight:bold'>Restan Unreported </span>: " + markerResult[i][1]['restan_unreported'] + "</div>";
 
-            // Add the image and comment for temuan2
-            if (markerResult[i][1]['foto_temuan2'] && markerResult[i][1]['komentar2']) {
-                popupContent += "<div><span style='font-weight:bold'>Temuan 2: </span><br>" +
-                    "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' data-lightbox='image2'>" +
-                    "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' style='max-width: 100%; height: auto;'>" +
-                    "</a><br>" +
-                    "<div class='image-comment'>" + markerResult[i][1]['komentar2'] + "</div>" +
-                    "</div>";
-            }
+            // // Add the image and comment for temuan1
+            // if (markerResult[i][1]['foto_temuan1'] && markerResult[i][1]['komentar1']) {
+            //     popupContent += "<div><span style='font-weight:bold'>Temuan 1: </span><br>" +
+            //         "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' data-lightbox='image1'>" +
+            //         "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' style='max-width: 100%; height: auto;'>" +
+            //         "</a><br>" +
+            //         "<div class='image-comment'>" + markerResult[i][1]['komentar1'] + "</div>" +
+            //         "</div>";
+            // }
+
+            // // Add the image and comment for temuan2
+            // if (markerResult[i][1]['foto_temuan2'] && markerResult[i][1]['komentar2']) {
+            //     popupContent += "<div><span style='font-weight:bold'>Temuan 2: </span><br>" +
+            //         "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' data-lightbox='image2'>" +
+            //         "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' style='max-width: 100%; height: auto;'>" +
+            //         "</a><br>" +
+            //         "<div class='image-comment'>" + markerResult[i][1]['komentar2'] + "</div>" +
+            //         "</div>";
+            // }
 
             marker.bindPopup(popupContent);
 

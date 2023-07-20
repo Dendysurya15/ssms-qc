@@ -1374,6 +1374,18 @@
             max-height: calc(100vh - 200px);
             object-fit: contain;
         }
+
+        .modal-image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .download-button-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px;
+        }
     </style>
 
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1383,14 +1395,19 @@
                     <button type="button" id="modalCloseButton" class="btn-close" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <img class="modal-image" id="img01">
+                    <div class="modal-image-container">
+                        <img class="modal-image" id="img01">
+                        <div class="download-button-container">
+                            <!-- Remove the "download" attribute from the anchor element -->
+                            <a id="downloadButton" class="btn btn-primary" href="#">Download Image</a>
+                        </div>
+                    </div>
                     <p>Komentar:</p>
                     <p id="modalKomentar"></p>
                 </div>
             </div>
         </div>
     </div>
-
 
 
     <div id="editModal" class="modal" tabindex="-1" role="dialog">
@@ -1768,6 +1785,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
 
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+
 
 @include('layout/footer')
 
@@ -1778,14 +1798,80 @@
         var modalKomentar = document.getElementById("modalKomentar");
         modalKomentar.textContent = komentar;
 
+        var downloadButton = document.getElementById("downloadButton");
+        downloadButton.addEventListener("click", handleDownload);
+
         var myModal = new bootstrap.Modal(document.getElementById('myModal'), {});
         myModal.show();
 
         var closeButton = document.getElementById('modalCloseButton');
         closeButton.addEventListener('click', function() {
             myModal.hide();
+            downloadButton.removeEventListener("click", handleDownload); // Remove the event listener when the modal is closed
+            URL.revokeObjectURL(modalImg.src); // Clean up the object URL to avoid memory leaks
         });
     }
+
+    function handleDownload(event) {
+        var src = document.getElementById("img01").src;
+        var filename = getFilenameFromSrc(src);
+        downloadImage(src, filename);
+    }
+
+    function getFilenameFromSrc(src) {
+        var startIndex = src.lastIndexOf("/") + 1;
+        var endIndex = src.lastIndexOf(".");
+        var filename = src.substring(startIndex, endIndex);
+
+        // Split the filename into an array using "_" as the delimiter
+        var parts = filename.split("_");
+
+        // Extract the desired parts from the array
+        var part1 = parts[0]; // IMA
+        var part2 = parts[1]; // 2023710
+        var part3 = parts[2]; // 100348
+        var part4 = parts[3]; // KNE
+        var part5 = parts[4]; // OA
+        var part6 = parts[5]; // R01404
+        var part7 = parts[6]; // 102
+
+        // Construct the desired filename using the extracted parts and spaces
+        var customPart = "Est " + "_" + part4 + " Afd " + "_" + part5 + " Sidak " + "_" + part1 + " Blok " + "_" + part6;
+
+        return customPart;
+    }
+
+
+
+
+    function downloadImage(imageName, filename) {
+        var downloadLink = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageName);
+
+        fetch(downloadLink)
+            .then(response => response.blob())
+            .then(blob => {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url;
+                a.download = filename + ".jpg"; // Use the filename for the downloaded image
+                a.style.display = "none"; // Hide the anchor element
+
+                document.body.appendChild(a);
+
+                a.click(); // Trigger the click event on the hidden anchor element
+
+                // Clean up and remove the anchor element after the download
+                a.remove();
+                URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error("Error downloading image:", error);
+            });
+    }
+
+
+
+
 
     // bagian untuk map
     function updateTanggal() {
@@ -1839,7 +1925,8 @@
                     maxZoom: 20,
                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                 });
-
+                map.addControl(new L.Control.Fullscreen());
+                // return map;
                 var baseMaps = {
                     "Google Street": googleStreet,
                     "Google Satellite": googleSatellite
@@ -2253,7 +2340,7 @@
 
 
 
-                var ancakTemuan1 = '{{ asset("img/push-pin.png") }}';
+
                 var caktemuan1 = L.icon({
                     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
                     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
@@ -2263,7 +2350,7 @@
                     shadowSize: [28, 20],
                 });
 
-                var ancakTemuan2 = '{{ asset("img/push-pin1.png") }}';
+
                 var caktemuan2 = L.icon({
                     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
                     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
@@ -2272,7 +2359,7 @@
                     popupAnchor: [1, -34],
                     shadowSize: [28, 20],
                 });
-                var ancak_fu1 = '{{ asset("img/push-pin1.png") }}';
+
                 var cakfu1 = L.icon({
                     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
                     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
@@ -2291,17 +2378,96 @@
                     shadowSize: [28, 20],
                 });
 
+
+                // function ancak() {
+                //     for (var i = 0; i < ancak_plot.length; i++) {
+                //         var lat = parseFloat(ancak_plot[i].lat);
+                //         var lon = parseFloat(ancak_plot[i].lon);
+                //         var blok = ancak_plot[i].blok;
+                //         var ket = ancak_plot[i].ket;
+                //         var foto_temuan1 = ancak_plot[i].foto_temuan1;
+                //         var foto_temuan2 = ancak_plot[i].foto_temuan2;
+                //         var foto_fu1 = ancak_plot[i].foto_fu1;
+                //         var foto_fu2 = ancak_plot[i].foto_fu2;
+                //         var komentar = ancak_plot[i].komentar;
+
+                //         var luas_blok = ancak_plot[i].luas_blok;
+                //         var sph = ancak_plot[i].sph;
+                //         var sample = ancak_plot[i].sample;
+                //         var pokok_kuning = ancak_plot[i].pokok_kuning;
+                //         var piringan_semak = ancak_plot[i].piringan_semak;
+                //         var underpruning = ancak_plot[i].underpruning;
+                //         var overpruning = ancak_plot[i].overpruning;
+                //         var jjg = ancak_plot[i].jjg;
+                //         var brtp = ancak_plot[i].brtp;
+                //         var brtk = ancak_plot[i].brtk;
+                //         var brtgl = ancak_plot[i].brtgl;
+                //         var bhts = ancak_plot[i].bhts;
+                //         var bhtm1 = ancak_plot[i].bhtm1;
+                //         var bhtm2 = ancak_plot[i].bhtm2;
+                //         var bhtm3 = ancak_plot[i].bhtm3;
+                //         var ps = ancak_plot[i].ps;
+                //         var sp = ancak_plot[i].sp;
+                //         var time = ancak_plot[i].time;
+                //         var markerIcon = (foto_fu1 || foto_fu2) ? cakfu2 : (foto_temuan1 || foto_temuan2) ? caktemuan2 : caktemuan1;
+
+                //         var popupContent = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
+
+                //         popupContent += `<strong>luas_blok: </strong>${luas_blok}<br/>`;
+                //         popupContent += `<strong>sph: </strong>${sph}<br/>`;
+                //         popupContent += `<strong>sample: </strong>${sample}<br/>`;
+                //         popupContent += `<strong>Pokok Kuning: </strong>${pokok_kuning}<br/>`;
+                //         popupContent += `<strong>Piringan Semak: </strong>${piringan_semak}<br/>`;
+                //         popupContent += `<strong>Underpruning: </strong>${underpruning}<br/>`;
+                //         popupContent += `<strong>Overpruning: </strong>${overpruning}<br/>`;
+                //         popupContent += `<strong>Janjang: </strong>${jjg}<br/>`;
+                //         popupContent += `<strong>Brondolan (P): </strong>${brtp}<br/>`;
+                //         popupContent += `<strong>Brondolan (K): </strong>${brtk}<br/>`;
+                //         popupContent += `<strong>Brondolan (TGL): </strong>${brtgl}<br/>`;
+                //         popupContent += `<strong>Buah Tinggal (S): </strong>${bhts}<br/>`;
+                //         popupContent += `<strong>Buah Tinggal (M1): </strong>${bhtm1}<br/>`;
+                //         popupContent += `<strong>Buah Tinggal (M2): </strong>${bhtm2}<br/>`;
+                //         popupContent += `<strong>Buah Tinggal (M3): </strong>${bhtm3}<br/>`;
+                //         popupContent += `<strong>Palepah Sengklek: </strong>${ps}<br/>`;
+                //         popupContent += `<strong>Frond Stacking: </strong>${sp}<br/>`;
+                //         popupContent += `<strong>Sidak: </strong>${time}<br/>`;
+                //         if (foto_temuan1) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan1}" alt="Foto Temuan 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         if (foto_temuan2) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan2}" alt="Foto Temuan 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         if (foto_fu1) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu1}" alt="Foto FU 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         if (foto_fu2) {
+                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu2}" alt="Foto FU 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                //         }
+
+                //         if (komentar) {
+                //             popupContent += `<strong>Komentar: </strong>${komentar}`;
+                //         }
+                //         var marker = L.marker([lat, lon], {
+                //             icon: markerIcon
+                //         });
+
+                //         marker.bindPopup(popupContent);
+
+                //         ancakGroup.addLayer(marker);
+                //     }
+                // }
+                // console.log(ancak_plot);
+
                 function ancak() {
                     for (var i = 0; i < ancak_plot.length; i++) {
-                        var lat = parseFloat(ancak_plot[i].lat);
-                        var lon = parseFloat(ancak_plot[i].lon);
+                        var lat = parseFloat(ancak_plot[i].lat_);
+                        var lon = parseFloat(ancak_plot[i].lon_);
                         var blok = ancak_plot[i].blok;
                         var ket = ancak_plot[i].ket;
-                        var foto_temuan1 = ancak_plot[i].foto_temuan1;
-                        var foto_temuan2 = ancak_plot[i].foto_temuan2;
-                        var foto_fu1 = ancak_plot[i].foto_fu1;
-                        var foto_fu2 = ancak_plot[i].foto_fu2;
-                        var komentar = ancak_plot[i].komentar;
+                        var foto_temuan = ancak_plot[i].foto_temuan;
 
                         var luas_blok = ancak_plot[i].luas_blok;
                         var sph = ancak_plot[i].sph;
@@ -2321,56 +2487,122 @@
                         var ps = ancak_plot[i].ps;
                         var sp = ancak_plot[i].sp;
                         var time = ancak_plot[i].time;
-                        var markerIcon = (foto_fu1 || foto_fu2) ? cakfu2 : (foto_temuan1 || foto_temuan2) ? caktemuan2 : caktemuan1;
 
-                        var popupContent = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
+                        var markerIcon2 = caktemuan1;
 
-                        popupContent += `<strong>luas_blok: </strong>${luas_blok}<br/>`;
-                        popupContent += `<strong>sph: </strong>${sph}<br/>`;
-                        popupContent += `<strong>sample: </strong>${sample}<br/>`;
-                        popupContent += `<strong>Pokok Kuning: </strong>${pokok_kuning}<br/>`;
-                        popupContent += `<strong>Piringan Semak: </strong>${piringan_semak}<br/>`;
-                        popupContent += `<strong>Underpruning: </strong>${underpruning}<br/>`;
-                        popupContent += `<strong>Overpruning: </strong>${overpruning}<br/>`;
-                        popupContent += `<strong>Janjang: </strong>${jjg}<br/>`;
-                        popupContent += `<strong>Brondolan (P): </strong>${brtp}<br/>`;
-                        popupContent += `<strong>Brondolan (K): </strong>${brtk}<br/>`;
-                        popupContent += `<strong>Brondolan (TGL): </strong>${brtgl}<br/>`;
-                        popupContent += `<strong>Buah Tinggal (S): </strong>${bhts}<br/>`;
-                        popupContent += `<strong>Buah Tinggal (M1): </strong>${bhtm1}<br/>`;
-                        popupContent += `<strong>Buah Tinggal (M2): </strong>${bhtm2}<br/>`;
-                        popupContent += `<strong>Buah Tinggal (M3): </strong>${bhtm3}<br/>`;
-                        popupContent += `<strong>Palepah Sengklek: </strong>${ps}<br/>`;
-                        popupContent += `<strong>Frond Stacking: </strong>${sp}<br/>`;
-                        popupContent += `<strong>Sidak: </strong>${time}<br/>`;
-                        if (foto_temuan1) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan1}" alt="Foto Temuan 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                        if (foto_temuan && foto_temuan.length > 0) {
+                            for (var j = 0; j < foto_temuan.length; j++) {
+                                var temuan = foto_temuan[j].split(',');
+
+                                var foto_temuan1, foto_temuan2, foto_fu1, foto_fu2, lat_temuan, lon_temuan, komentar;
+
+                                for (var k = 0; k < temuan.length; k++) {
+                                    var keyValuePair = temuan[k].split(':');
+                                    var key = keyValuePair[0].trim();
+                                    var value = keyValuePair.slice(1).join(':').trim();
+
+                                    if (key === 'foto_temuan1') {
+                                        foto_temuan1 = value;
+                                    } else if (key === 'foto_temuan2') {
+                                        foto_temuan2 = value;
+                                    } else if (key === 'foto_fu1') {
+                                        foto_fu1 = value;
+                                    } else if (key === 'foto_fu2') {
+                                        foto_fu2 = value;
+                                    } else if (key === 'lat') {
+                                        lat_temuan = parseFloat(value);
+                                    } else if (key === 'lon') {
+                                        lon_temuan = parseFloat(value);
+                                    } else if (key === 'komentar') {
+                                        komentar = value;
+                                    }
+                                }
+
+                                // if (foto_temuan1 || foto_temuan2) {
+                                //     markerIcon = caktemuan2;
+                                // } else if (foto_fu1 || foto_fu2) {
+                                //     markerIcon = cakfu1;
+                                // }
+                                var markerIcon3 = caktemuan2;
+                                var markerIcon4 = cakfu1;
+
+
+                                var popupContent = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
+
+                                if (foto_temuan1) {
+                                    popupContent += `<strong>Foto_temuan: </strong><br/>`;
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan1}" alt="Foto Temuan 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                    // var marker = L.marker([lat_temuan, lon_temuan]);
+                                    var marker = L.marker([lat_temuan, lon_temuan], {
+                                        icon: markerIcon3
+                                    });
+
+                                    marker.bindPopup(popupContent);
+                                    ancakGroup.addLayer(marker);
+                                }
+
+                                if (foto_temuan2) {
+                                    popupContent += `<strong>foto_temuan 2: </strong><br/>`;
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan2}" alt="Foto Temuan 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                    var marker = L.marker([lat_temuan, lon_temuan], {
+                                        icon: markerIcon3
+                                    });
+                                    marker.bindPopup(popupContent);
+                                    ancakGroup.addLayer(marker);
+                                }
+
+                                if (foto_fu1) {
+                                    popupContent += `<strong>Foto Follow Up: </strong><br/>`;
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu1}" alt="Foto FU 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                    var marker = L.marker([lat_temuan, lon_temuan], {
+                                        icon: markerIcon4
+                                    });
+                                    marker.bindPopup(popupContent);
+                                    ancakGroup.addLayer(marker);
+                                }
+
+                                if (foto_fu2) {
+                                    popupContent += `<strong>Foto Follow Up 2: </strong><br/>`;
+                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu2}" alt="Foto FU 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
+                                    var marker = L.marker([lat_temuan, lon_temuan], {
+                                        icon: markerIcon4
+                                    });
+                                    marker.bindPopup(popupContent);
+                                    ancakGroup.addLayer(marker);
+                                }
+                            }
                         }
 
-                        if (foto_temuan2) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan2}" alt="Foto Temuan 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                        }
+                        var popupContent2 = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
+                        popupContent2 += `<strong>luas_blok: </strong>${luas_blok}<br/>`;
+                        popupContent2 += `<strong>sph: </strong>${sph}<br/>`;
+                        popupContent2 += `<strong>sample: </strong>${sample}<br/>`;
+                        popupContent2 += `<strong>Pokok Kuning: </strong>${pokok_kuning}<br/>`;
+                        popupContent2 += `<strong>Piringan Semak: </strong>${piringan_semak}<br/>`;
+                        popupContent2 += `<strong>Underpruning: </strong>${underpruning}<br/>`;
+                        popupContent2 += `<strong>Overpruning: </strong>${overpruning}<br/>`;
+                        popupContent2 += `<strong>Janjang: </strong>${jjg}<br/>`;
+                        popupContent2 += `<strong>Brondolan (P): </strong>${brtp}<br/>`;
+                        popupContent2 += `<strong>Brondolan (K): </strong>${brtk}<br/>`;
+                        popupContent2 += `<strong>Brondolan (TGL): </strong>${brtgl}<br/>`;
+                        popupContent2 += `<strong>Buah Tinggal (S): </strong>${bhts}<br/>`;
+                        popupContent2 += `<strong>Buah Tinggal (M1): </strong>${bhtm1}<br/>`;
+                        popupContent2 += `<strong>Buah Tinggal (M2): </strong>${bhtm2}<br/>`;
+                        popupContent2 += `<strong>Buah Tinggal (M3): </strong>${bhtm3}<br/>`;
+                        popupContent2 += `<strong>Palepah Sengklek: </strong>${ps}<br/>`;
+                        popupContent2 += `<strong>Frond Stacking: </strong>${sp}<br/>`;
+                        popupContent2 += `<strong>Sidak: </strong>${time}<br/>`;
 
-                        if (foto_fu1) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu1}" alt="Foto FU 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                        }
-
-                        if (foto_fu2) {
-                            popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu2}" alt="Foto FU 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                        }
-
-                        if (komentar) {
-                            popupContent += `<strong>Komentar: </strong>${komentar}`;
-                        }
-                        var marker = L.marker([lat, lon], {
-                            icon: markerIcon
+                        var marker2 = L.marker([lat, lon], {
+                            icon: markerIcon2
                         });
 
-                        marker.bindPopup(popupContent);
-
-                        ancakGroup.addLayer(marker);
+                        marker2.bindPopup(popupContent2);
+                        ancakGroup.addLayer(marker2);
                     }
                 }
+
+
 
                 // Call the functions to create the markers and add them to their Layer Groups
                 trans();

@@ -8,6 +8,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+
+
 
 
 @include('layout/header')
@@ -693,6 +697,41 @@
     </div>
 
 
+
+
+    <style>
+        .modal-dialog {
+            max-width: 100%;
+            margin: auto;
+        }
+
+        .modal-content {
+            width: 100%;
+        }
+
+        .modal-body {
+            text-align: center;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: calc(100vh - 200px);
+            object-fit: contain;
+        }
+
+        .modal-image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .download-button-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px;
+        }
+    </style>
+
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
@@ -700,13 +739,20 @@
                     <button type="button" id="modalCloseButton" class="btn-close" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <img class="modal-image" id="img01">
+                    <div class="modal-image-container">
+                        <img class="modal-image" id="img01">
+                        <div class="download-button-container">
+                            <!-- Remove the "download" attribute from the anchor element -->
+                            <a id="downloadButton" class="btn btn-primary" href="#">Download Image</a>
+                        </div>
+                    </div>
                     <p>Komentar:</p>
                     <p id="modalKomentar"></p>
                 </div>
             </div>
         </div>
     </div>
+
 
 
 </div>
@@ -719,6 +765,10 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
+
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+
 
 
 @include('layout/footer')
@@ -1442,14 +1492,77 @@
         var modalKomentar = document.getElementById("modalKomentar");
         modalKomentar.textContent = komentar;
 
+        var downloadButton = document.getElementById("downloadButton");
+        downloadButton.addEventListener("click", handleDownload);
+
         var myModal = new bootstrap.Modal(document.getElementById('myModal'), {});
         myModal.show();
 
         var closeButton = document.getElementById('modalCloseButton');
         closeButton.addEventListener('click', function() {
             myModal.hide();
+            downloadButton.removeEventListener("click", handleDownload); // Remove the event listener when the modal is closed
+            URL.revokeObjectURL(modalImg.src); // Clean up the object URL to avoid memory leaks
         });
     }
+
+    function handleDownload(event) {
+        var src = document.getElementById("img01").src;
+        var filename = getFilenameFromSrc(src);
+        downloadImage(src, filename);
+    }
+
+    function getFilenameFromSrc(src) {
+        var startIndex = src.lastIndexOf("/") + 1;
+        var endIndex = src.lastIndexOf(".");
+        var filename = src.substring(startIndex, endIndex);
+
+        // Split the filename into an array using "_" as the delimiter
+        var parts = filename.split("_");
+
+        // Extract the desired parts from the array
+        var part1 = parts[0]; // IMA
+        var part2 = parts[1]; // 2023710
+        var part3 = parts[2]; // 100348
+        var part4 = parts[3]; // KNE
+        var part5 = parts[4]; // OA
+        var part6 = parts[5]; // R01404
+        var part7 = parts[6]; // 102
+
+        // Construct the desired filename using the extracted parts and spaces
+        var customPart = "Est " + "_" + part4 + " Afd " + "_" + part5 + " Sidak " + "_" + part1 + " Blok " + "_" + part6;
+
+        return customPart;
+    }
+
+
+
+
+    function downloadImage(imageName, filename) {
+        var downloadLink = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageName);
+
+        fetch(downloadLink)
+            .then(response => response.blob())
+            .then(blob => {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = url;
+                a.download = filename + ".jpg"; // Use the filename for the downloaded image
+                a.style.display = "none"; // Hide the anchor element
+
+                document.body.appendChild(a);
+
+                a.click(); // Trigger the click event on the hidden anchor element
+
+                // Clean up and remove the anchor element after the download
+                a.remove();
+                URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error("Error downloading image:", error);
+            });
+    }
+
 
 
     function getmapsbuah() {
@@ -1494,7 +1607,7 @@
                     maxZoom: 30,
                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                 });
-
+                map.addControl(new L.Control.Fullscreen());
                 var baseMaps = {
                     "Google Street": googleStreet,
                     "Google Satellite": googleSatellite
