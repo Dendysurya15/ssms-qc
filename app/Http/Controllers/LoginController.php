@@ -32,7 +32,7 @@ class LoginController extends Controller
             return back()->with('error', 'Email atau Password Salah');
         }
 
-        if (!Hash::check($request->password, $user->password)) {
+        if ($request->password != $user->password) {
             return back()->with('error', 'Email atau Password Salah');
         }
 
@@ -46,6 +46,7 @@ class LoginController extends Controller
 
         return redirect()->intended('dashboard_inspeksi');
     }
+
     public function logout(Request $request)
     {
         $request->session()->flush();
