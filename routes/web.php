@@ -9,7 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TesExportController;
 use App\Http\Controllers\inspectController;
 use App\Http\Controllers\mutubuahController;
-use App\Http\Controllers\perumController;
+use App\Http\Controllers\emplacementsController;
 use App\Http\Controllers\userNewController;
 use App\Http\Controllers\UserQCController;
 
@@ -136,9 +136,9 @@ Route::get('/cetakFiSmb/{est}/{tgl}', [MutubuahController::class, 'cetakFiSmb'])
 Route::get('/getMapsdetail', [inspectController::class, 'getMapsdetail'])->name('getMapsdetail');
 
 
-Route::get('/dashboard_perum', [perumController::class, 'dashboard_perum'])->name('dashboard_perum');
-Route::get('/getAFD', [perumController::class, 'getAFD'])->name('getAFD');
-Route::get('/estAFD', [perumController::class, 'estAFD'])->name('estAFD');
+Route::get('/dashboard_perum', [emplacementsController::class, 'dashboard_perum'])->name('dashboard_perum');
+Route::get('/getAFD', [emplacementsController::class, 'getAFD'])->name('getAFD');
+Route::get('/estAFD', [emplacementsController::class, 'estAFD'])->name('estAFD');
 Route::get('/User/user', [userNewController::class, 'showUser'])->name('user.show');
 Route::post('/getuser', [userNewController::class, 'getuser'])->name('getuser');
 Route::post('/update_user', [userNewController::class, 'update_user'])->name('update_user');
