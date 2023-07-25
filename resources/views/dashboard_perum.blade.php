@@ -77,36 +77,31 @@
                                         <th rowspan="2">EST</th>
                                         <th rowspan="2">AFDELING</th>
                                         <th rowspan="2">Asisten</th>
+
                                         <th colspan="14" id="yearHeader" style="text-align: center;">2023</th>
 
                                     </tr>
-                                    <tr>
-                                        @foreach($shortMonth as $items)
-                                        <th>{{$items}}</th>
-                                        @endforeach
+                                    <tr id="month_header">
+                                        <td id="Jan">Jan</td>
+                                        <td id="Feb">Feb</td>
+                                        <td id="Mar" colspan="2">Mar</td>
+                                        <td id="Apr" colspan="2">Apr</td>
+                                        <td id="May">May</td>
+                                        <td id="Jun">Jun</td>
+                                        <td id="Jul">Jul</td>
+                                        <td id="Aug">Aug</td>
+                                        <td id="Sep">Sep</td>
+                                        <td id="Oct">Oct</td>
+                                        <td id="Nov">Nov</td>
+                                        <td id="Dec">Dec</td>
+                                        <td id="Ave">Ave</td>
+                                        <td id="Status">Status</td>
                                     </tr>
+
                                 </thead>
                                 <tbody id="data_afd">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Kenambui</td>
-                                        <td>OA</td>
-                                        <td>Jojok</td>
-                                        <td>88,5</td>
-                                        <td>88,5</td>
-                                        <td>88,5</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>87,9</td>
-                                        <td>Good</td>
-                                    </tr>
+
+
                                 </tbody>
                             </table>
                         </div>
@@ -235,6 +230,77 @@
 
                 var parseResult = JSON.parse(result)
                 var bulan = Object.entries(parseResult['bulan'])
+                var rekap = Object.entries(parseResult['afd_rekap'])
+
+                // console.log(rekap);
+                var afd_bulan = rekap
+                // var tbody1 = document.getElementById('data_afd');
+                var tbody1 = document.getElementById('data_afd');
+                //         $('#thead1').empty()
+                console.log(afd_bulan);
+                afd_bulan.forEach((element, index) => {
+                    item1 = index + 1;
+                    let estate = element[0];
+                    let namaAFD = Object.keys(element[1]);
+
+                    let allMonths = Object.keys(element[1][namaAFD[0]]); // Assuming all AFDs have the same months
+
+                    namaAFD.forEach((key) => {
+                        tr = document.createElement('tr');
+                        let item0 = '-';
+                        let item1 = estate;
+                        let item2 = key;
+                        let item3 = '-';
+
+                        let items = [item0, item1, item2, item3];
+
+                        // Loop through all the months and visits to get skor_total
+                        allMonths.forEach((month) => {
+                            let monthData = element[1][key][month];
+                            if (monthData) {
+                                for (let visit in monthData) {
+                                    let skor_total = monthData[visit].skor_total;
+                                    items.push(skor_total);
+                                }
+                            } else {
+                                // If the current month doesn't have data for this AFD, push '-' for all visits
+                                let numVisits = Object.keys(element[1][namaAFD[0]][month]).length;
+                                for (let i = 0; i < numVisits; i++) {
+                                    items.push('-');
+                                }
+                            }
+                        });
+
+                        let column = 1; // Start column after the first three items
+                        for (let j = 0; j < items.length; j++) {
+                            let item = items[j];
+                            let td = document.createElement('td');
+                            if (column >= 5) {
+                                if (item >= 95) {
+                                    td.style.backgroundColor = "#0804fc";
+                                } else if (item >= 85 && item < 95) {
+                                    td.style.backgroundColor = "#08b454";
+                                } else if (item >= 75 && item < 85) {
+                                    td.style.backgroundColor = "#fffc04";
+                                } else if (item >= 65 && item < 75) {
+                                    td.style.backgroundColor = "#ffc404";
+                                } else if (item === 0) {
+                                    td.style.backgroundColor = "white";
+                                } else {
+                                    td.style.backgroundColor = "red";
+                                }
+                            }
+                            column++;
+                            td.innerText = item;
+                            tr.appendChild(td);
+                        }
+
+                        tbody1.appendChild(tr);
+                    });
+                });
+
+                // Assuming you have the afd_bulan array and tbody1 element defined
+
 
 
 

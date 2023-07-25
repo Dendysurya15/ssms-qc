@@ -18155,7 +18155,7 @@ class inspectController extends Controller
         $arrView['list_estate'] = $queryEsta;
         $arrView['estateEST'] = $estateEST;
 
-        // dd($RekapTahunwil);
+        dd($RekapBulanAFD);
         $arrView['FinalTahun'] = $FinalTahun;
         $arrView['Final_end'] = $Final_end;
         $arrView['RekapBulanwil'] = $RekapBulanwil;
