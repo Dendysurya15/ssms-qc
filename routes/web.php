@@ -167,3 +167,5 @@ Route::get('getMapsTph', [SidaktphController::class, 'getMapsTph'])->name('getMa
 
 
 Route::get('/getMapsData', [MutubuahController::class, 'getMapsData'])->name('getMapsData');
+
+Route::get('detailEmplashmend/{est}/{afd}/{date}', [emplacementsController::class, 'detailEmplashmend'])->name('detailEmplashmend');

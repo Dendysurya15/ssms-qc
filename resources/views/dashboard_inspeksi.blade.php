@@ -5432,58 +5432,58 @@
 
         }],
 
-        annotations: {
-            yaxis: [{
-                    y: 95,
-                    y2: 100,
-                    borderColor: '#000',
-                    fillColor: '#4874c4',
-                    opacity: 0.4,
-                    label: {
-                        text: ' '
-                    }
-                }, {
-                    y: 85,
-                    y2: 95,
-                    borderColor: '#000',
-                    fillColor: '#78ac44',
-                    opacity: 0.4,
-                    label: {
-                        text: ''
-                    }
-                }, {
-                    y: 75,
-                    y2: 85,
-                    borderColor: '#000',
-                    fillColor: '#fffc04',
-                    opacity: 0.4,
-                    label: {
-                        text: 'Standar QC'
-                    }
-                }, {
-                    y: 65,
-                    y2: 75,
-                    borderColor: '#000',
-                    fillColor: '#f07c34',
-                    opacity: 0.4,
-                    label: {
-                        text: ''
-                    }
-                }, {
-                    y: 0,
-                    y2: 65,
-                    borderColor: '#000',
-                    fillColor: '#ff0404',
-                    opacity: 0.4,
+        // annotations: {
+        //     yaxis: [{
+        //             y: 95,
+        //             y2: 100,
+        //             borderColor: '#000',
+        //             fillColor: '#4874c4',
+        //             opacity: 0.4,
+        //             label: {
+        //                 text: ' '
+        //             }
+        //         }, {
+        //             y: 85,
+        //             y2: 95,
+        //             borderColor: '#000',
+        //             fillColor: '#78ac44',
+        //             opacity: 0.4,
+        //             label: {
+        //                 text: ''
+        //             }
+        //         }, {
+        //             y: 75,
+        //             y2: 85,
+        //             borderColor: '#000',
+        //             fillColor: '#fffc04',
+        //             opacity: 0.4,
+        //             label: {
+        //                 text: 'Standar QC'
+        //             }
+        //         }, {
+        //             y: 65,
+        //             y2: 75,
+        //             borderColor: '#000',
+        //             fillColor: '#f07c34',
+        //             opacity: 0.4,
+        //             label: {
+        //                 text: ''
+        //             }
+        //         }, {
+        //             y: 0,
+        //             y2: 65,
+        //             borderColor: '#000',
+        //             fillColor: '#ff0404',
+        //             opacity: 0.4,
 
 
-                    label: {
-                        text: ''
-                    }
-                }
+        //             label: {
+        //                 text: ''
+        //             }
+        //         }
 
-            ]
-        },
+        //     ]
+        // },
         xaxis: {
             categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "July", "Agustus", "Sept", "Okt", "Nov", "Dec"]
         }
@@ -7806,29 +7806,7 @@
                     name: est,
                     data: skorJson
                 }, ])
-                // chartScore.updateOptions({
-                //     yaxis: [{
-                //         axisTicks: {
-                //             show: true
-                //         },
-                //         axisBorder: {
-                //             show: true,
-                //             color: "#FF1654"
-                //         },
-                //         labels: {
-                //             style: {
-                //                 colors: "#FF1654"
-                //             }
-                //         },
-                //         title: {
-                //             text: est,
-                //             style: {
-                //                 color: "#FF1654"
-                //             }
-                //         },
 
-                //     }]
-                // });
 
 
                 chartScore.updateOptions({
@@ -7861,7 +7839,59 @@
                             offsetX: 0,
                         },
 
-                    }
+                    },
+                    annotations: {
+                        yaxis: [{
+                                y: 95,
+                                y2: 100,
+                                borderColor: '#000',
+                                fillColor: '#4874c4',
+                                opacity: 0.4,
+                                label: {
+                                    text: ' '
+                                }
+                            }, {
+                                y: 85,
+                                y2: 95,
+                                borderColor: '#000',
+                                fillColor: '#78ac44',
+                                opacity: 0.4,
+                                label: {
+                                    text: ''
+                                }
+                            }, {
+                                y: 75,
+                                y2: 85,
+                                borderColor: '#000',
+                                fillColor: '#fffc04',
+                                opacity: 0.4,
+                                label: {
+                                    text: 'Standar QC'
+                                }
+                            }, {
+                                y: 65,
+                                y2: 75,
+                                borderColor: '#000',
+                                fillColor: '#f07c34',
+                                opacity: 0.4,
+                                label: {
+                                    text: ''
+                                }
+                            }, {
+                                y: 0,
+                                y2: 65,
+                                borderColor: '#000',
+                                fillColor: '#ff0404',
+                                opacity: 0.4,
+
+
+                                label: {
+                                    text: ''
+                                }
+                            }
+
+                        ]
+                    },
                 });
 
 
@@ -7887,27 +7917,19 @@
                     seriesData.push(series);
                 }
 
-                // seriesData.push({
-                //     name: "Score Good",
-                //     data: [85,
-                //         85,
-                //         85,
-                //         85,
-                //         85,
-                //         85,
-                //         85,
-                //         85,
-                //         85,
-                //         85,
-                //         85,
-                //         85
-                //     ],
-                //     color: "#ff0000" // set the color to red
-                // });
-
                 options.series = seriesData;
 
-                // Helper function to generate random colors
+                function getColorByNumber(number) {
+                    const colors = ["red", "blue", "yellow", "green", "pink", "black"];
+
+                    // If the number is out of range, return a random color instead
+                    if (number < 1 || number > colors.length) {
+                        return getRandomColor();
+                    }
+
+                    return colors[number - 1];
+                }
+
                 function getRandomColor() {
                     var letters = "0123456789ABCDEF";
                     var color = "#";
@@ -7919,7 +7941,11 @@
 
 
                 chartScorePerwil.updateOptions(options);
-
+                chartScorePerwil.updateOptions({
+                    stroke: {
+                        curve: 'smooth',
+                    }
+                });
 
 
 

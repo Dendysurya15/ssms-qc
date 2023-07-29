@@ -21,7 +21,6 @@ class inspectController extends Controller
 
         // dd($regData);
 
-
         $queryTrans = DB::connection('mysql2')->table("mutu_transport")
             ->select("mutu_transport.*", "estate.wil")
             ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
@@ -614,7 +613,6 @@ class inspectController extends Controller
         echo json_encode($plot);
     }
 
-    
     public function cetakPDFFI($id, $est, $tgl)
     {
 
@@ -4384,7 +4382,7 @@ class inspectController extends Controller
         ]);
     }
 
-   
+     
     public function filter(Request $request)
     {
 
@@ -4713,7 +4711,7 @@ class inspectController extends Controller
                 }
             }
         }
-        // dd($mergedData);
+        // dd($mergedData_reg);
         // //membuat data mutu ancak berdasarakan wilayah 1,2,3
         $mtancakWIltab1 = array();
         foreach ($queryEste as $key => $value) {
@@ -5093,6 +5091,8 @@ class inspectController extends Controller
                       $totalbhtm3_oanen = 0;
                       $totalpelepah_s = 0;
                       $total_brd = 0;
+                      $check_input = 'kosong';
+        $nilai_input = 0;
                       foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
                           if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
                               $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
@@ -5111,6 +5111,8 @@ class inspectController extends Controller
                           $totalbhtm3_oanen += $value3["bhtm3"];
   
                           $totalpelepah_s += $value3["ps"];
+                          $check_input = $value3["jenis_input"];
+                          $nilai_input = $value3["skor_akhir"];
                       }
   
   
@@ -5188,6 +5190,8 @@ class inspectController extends Controller
                       // total skor akhir
                      
                       $mtancaktab1Wil[$key][$key1][$key2]['skor_akhir'] = $ttlSkorMA;
+                      $mtancaktab1Wil[$key][$key1][$key2]['check_input'] = $check_input;
+                      $mtancaktab1Wil[$key][$key1][$key2]['nilai_input'] = $nilai_input;
   
                       $pokok_panenEst += $totalPokok;
   
@@ -5352,10 +5356,11 @@ class inspectController extends Controller
               $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
               $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
   
-              if ($janjang_panenWil != 0) {
-                  $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
+              if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
+                $akpWil = 0;
               } else {
-                  $akpWil = 0;
+                
+                  $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
               }
   
               if ($totalPKTwil != 0) {
@@ -5557,11 +5562,13 @@ class inspectController extends Controller
                     } else {
                         $brdPertphEst = 0;
                     }
+                    
                     if ($dataBLokEst != 0) {
                         $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 2);
                     } else {
                         $buahPerTPHEst = 0;
                     }
+                    
                     // dd($mtTranstab1Wil);
                     $totalSkorEst = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
                 } else {
@@ -6702,7 +6709,7 @@ class inspectController extends Controller
         }
         // dd($mtBuahtab1Wil[1]['KNE']['OD']);
       
-        // dd($mtancaktab1Wil);
+        // dd($mtancakWIltab1_reg);
         $mtancaktab1Wil_reg = array();
         foreach ($mtancakWIltab1_reg as $key => $value) if (!empty($value)) {
             $pokok_panenWil = 0;
@@ -6773,7 +6780,10 @@ class inspectController extends Controller
                     $totalbhtm3_oanen = 0;
                     $totalpelepah_s = 0;
                     $total_brd = 0;
+                    $tod_ah ='kosong';
+                    $skor_input = 0;
                     foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+                       
                         if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
                         }
@@ -6791,6 +6801,8 @@ class inspectController extends Controller
                         $totalbhtm3_oanen += $value3["bhtm3"];
 
                         $totalpelepah_s += $value3["ps"];
+                        $tod_ah = $value3['jenis_input'];
+                        $skor_input = $value3['skor_akhir'];
                     }
 
 
@@ -6854,6 +6866,8 @@ class inspectController extends Controller
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_brd'] = skor_buah_Ma($sumPerBH);
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_ps'] = skor_palepah_ma($perPl);
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_akhir'] = $ttlSkorMA;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['check_input'] = $tod_ah;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_input'] = $skor_input;
 
                     $pokok_panenEst += $totalPokok;
 
@@ -7002,10 +7016,11 @@ class inspectController extends Controller
             $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
             $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
 
-            if ($janjang_panenWil != 0) {
-                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
-            } else {
+            if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
                 $akpWil = 0;
+            } else {
+               
+                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
             }
 
             if ($totalPKTwil != 0) {
@@ -7113,10 +7128,12 @@ class inspectController extends Controller
 
         //
 
-        if ($panen != 0) {
-            $akpWil = round(($panen / $pkok) * 100, 2);
-        } else {
+        if ($panen == 0 || $pkok  == 0 ) {
+           
             $akpWil = 0;
+        } else {
+            
+            $akpWil = round(($panen / $pkok) * 100, 2);
         }
 
         $totalPKTwil = $p + $k + $tgl;
@@ -7738,10 +7755,11 @@ class inspectController extends Controller
         $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
         $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
 
-        if ($janjang_panenWil != 0) {
-            $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
-        } else {
+        if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
             $akpWil = 0;
+        } else {
+           
+            $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
         }
 
         if ($totalPKTwil != 0) {
@@ -8423,14 +8441,21 @@ class inspectController extends Controller
                                                 && $bh2 == $tr2
                                             ) {
                                                 // dd($trans2);
-                                                if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                // dd($key);
+                                                if ($value2['check_input'] == 'manual' && $value2['nilai_input'] != 0 ){
+                                                    $RekapWIlTabel[$key][$key1][$key2]['data'] = 'ada';
+                                                }
+                                                else if($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
                                                     $RekapWIlTabel[$key][$key1][$key2]['data'] = 'kosong';
                                                 }
                                                 
-                                                if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                if  ($value2['check_input'] == 'manual' ) {
+                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['nilai_input'];
+                                                   
+                                                }else  if($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
                                                     $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = 0;
-                                                }else{
-                                                     $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['skor_akhir'] + $buah2['TOTAL_SKOR'] + $trans2['totalSkor'];
+                                                }else {
+                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['skor_akhir'] + $buah2['TOTAL_SKOR'] + $trans2['totalSkor'];
                                                 }
 
                                                
@@ -10416,7 +10441,7 @@ class inspectController extends Controller
  
 
         $arrView = array();
-        // dd($result_buah,$result_brd);
+        // dd($FormatTabEst1);
         $arrView['chart_brd'] = $result_brd;
         $arrView['chart_buah'] = $result_buah;
         $arrView['chart_brdwil'] =  $chartPerwil;
@@ -10467,7 +10492,6 @@ class inspectController extends Controller
         exit();
     }
 
-    
    
     public function filterTahun(Request $request)
     {
@@ -12283,31 +12307,7 @@ class inspectController extends Controller
                                 }
                                 $jum_ha = count($listBlokPerAfd);
 
-                                // $pokok_panen = json_decode($value5["pokok_dipanen"], true);
-                                // $jajang_panen = json_decode($value5["jjg_dipanen"], true);
-                                // $brtp = json_decode($value5["brtp"], true);
-                                // $brtk = json_decode($value5["brtk"], true);
-                                // $brtgl = json_decode($value5["brtgl"], true);
-
-                                // $pokok_panen  = count($pokok_panen);
-                                // $janjang_panen = array_sum($jajang_panen);
-                                // $p_panen = array_sum($brtp);
-                                // $k_panen = array_sum($brtk);
-                                // $brtgl_panen = array_sum($brtgl);
-                                // $bhts = json_decode($value5["bhts"], true);
-                                // $bhtm1 = json_decode($value5["bhtm1"], true);
-                                // $bhtm2 = json_decode($value5["bhtm2"], true);
-                                // $bhtm3 = json_decode($value5["bhtm3"], true);
-
-
-                                // $bhts_panen = array_sum($bhts);
-                                // $bhtm1_panen = array_sum($bhtm1);
-                                // $bhtm2_panen = array_sum($bhtm2);
-                                // $bhtm3_oanen = array_sum($bhtm3);
-                                // $ps = json_decode($value5["ps"], true);
-                                // $pelepah_s = array_sum($ps);
-
-
+                     
                                 $totalPokok += $value5["sample"];;
                                 $totalPanen += $value5["jjg"];;
                                 $totalP_panen += $value5["brtp"];;
@@ -12321,7 +12321,14 @@ class inspectController extends Controller
 
                                 $totalpelepah_s += $value5["ps"];;
                             }
-                            $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                            // $akp = round(($totalPanen / $totalPokok) * 100, 1);
+
+                            if ($totalPokok != 0) {
+                                $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                            } else {
+                                $akp = 0;
+                            }
+            
                             $totalPKGL = $totalP_panen + $totalK_panen + $totalPTgl_panen;
 
                             if ($totalPanen != 0) {
@@ -12870,7 +12877,13 @@ class inspectController extends Controller
 
                         $totalpelepah_s += $value3["ps"];
                     }
-                    $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                    // $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                    if ($totalPokok != 0) {
+                        $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                    } else {
+                        $akp = 0;
+                    }
+    
                     $skor_bTinggal = $totalP_panen + $totalK_panen + $totalPTgl_panen;
 
                     if ($totalPanen != 0) {
@@ -18155,7 +18168,7 @@ class inspectController extends Controller
         $arrView['list_estate'] = $queryEsta;
         $arrView['estateEST'] = $estateEST;
 
-        dd($RekapBulanAFD);
+        // dd($RekapTahunwil);
         $arrView['FinalTahun'] = $FinalTahun;
         $arrView['Final_end'] = $Final_end;
         $arrView['RekapBulanwil'] = $RekapBulanwil;
@@ -20093,7 +20106,7 @@ class inspectController extends Controller
         $ancaks = $request->input('delete_id');
         $id_trans = $request->input('id_trans');
 
-        dd($id_trans);
+        // dd($id_trans);
 
    
         $ancakFA = DB::connection('mysql2')->table('mutu_ancak_new')
@@ -27302,10 +27315,14 @@ class inspectController extends Controller
             // dd($FinalTahun);
             echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
             exit();
-    }
+        }
     
- 
-    public function pdfBA_excel(Request $request)
+
+   
+  
+   
+   
+        public function pdfBA_excel(Request $request)
     {
         $est = $request->input('estBA_excel');
         $afd = $request->input('afdBA_excel');

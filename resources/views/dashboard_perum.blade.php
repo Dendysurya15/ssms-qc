@@ -82,18 +82,18 @@
 
                                     </tr>
                                     <tr id="month_header">
-                                        <td id="Jan">Jan</td>
-                                        <td id="Feb">Feb</td>
-                                        <td id="Mar" colspan="2">Mar</td>
-                                        <td id="Apr" colspan="2">Apr</td>
+                                        <td id="January">Jan</td>
+                                        <td id="February">Feb</td>
+                                        <td id="March">Mar</td>
+                                        <td id="April">Apr</td>
                                         <td id="May">May</td>
-                                        <td id="Jun">Jun</td>
-                                        <td id="Jul">Jul</td>
-                                        <td id="Aug">Aug</td>
-                                        <td id="Sep">Sep</td>
-                                        <td id="Oct">Oct</td>
-                                        <td id="Nov">Nov</td>
-                                        <td id="Dec">Dec</td>
+                                        <td id="June">Jun</td>
+                                        <td id="July">Jul</td>
+                                        <td id="August">Aug</td>
+                                        <td id="September">Sep</td>
+                                        <td id="October">October</td>
+                                        <td id="November">Nov</td>
+                                        <td id="December">December</td>
                                         <td id="Ave">Ave</td>
                                         <td id="Status">Status</td>
                                     </tr>
@@ -146,33 +146,25 @@
                                         <th colspan="14" id="yearHeader2" style="text-align: center;">2023</th>
 
                                     </tr>
-                                    <tr>
-                                        @foreach($shortMonth as $items)
-                                        <th>{{$items}}</th>
-                                        @endforeach
+                                    <tr id="month_header2">
+                                        <td id="Jan">Jan</td>
+                                        <td id="Feb">Feb</td>
+                                        <td id="Mar">Mar</td>
+                                        <td id="Apr">Apr</td>
+                                        <td id="May">May</td>
+                                        <td id="Jun">Jun</td>
+                                        <td id="Jul">Jul</td>
+                                        <td id="Aug">Aug</td>
+                                        <td id="Sept">Sep</td>
+                                        <td id="Oct">October</td>
+                                        <td id="Nov">Nov</td>
+                                        <td id="Dec">December</td>
+                                        <td id="Ave">Ave</td>
+                                        <td id="Status">Status</td>
                                     </tr>
                                 </thead>
                                 <tbody id="data_est">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Kenambui</td>
-                                        <td>OA</td>
-                                        <td>Jojok</td>
-                                        <td>88,5</td>
-                                        <td>88,5</td>
-                                        <td>88,5</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>87,9</td>
-                                        <td>Good</td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -205,7 +197,7 @@
     }
 
     function getAFD() {
-
+        $('#data_afd').empty()
         var reg = '';
         var tahun = '';
 
@@ -232,12 +224,56 @@
                 var bulan = Object.entries(parseResult['bulan'])
                 var rekap = Object.entries(parseResult['afd_rekap'])
 
+
                 // console.log(rekap);
                 var afd_bulan = rekap
                 // var tbody1 = document.getElementById('data_afd');
                 var tbody1 = document.getElementById('data_afd');
                 //         $('#thead1').empty()
-                console.log(afd_bulan);
+                const header = Object.entries(parseResult['header_cell']);
+                const header_head = Object.entries(parseResult['header_head']);
+                // console.log(header_head);
+
+                const head_year = document.getElementById('yearHeader');
+                const colspanValue = header_head.find(entry => entry[0] === "head")[1];
+
+                // Update the colspan attribute of the "yearHeader" element
+                head_year.setAttribute("colspan", colspanValue);
+                // Function to set the colspan for the month header cells
+                function setColspanForMonths() {
+                    const jan = document.getElementById('January');
+                    const feb = document.getElementById('February');
+                    const mar = document.getElementById('March');
+                    const apr = document.getElementById('April');
+                    const may = document.getElementById('May');
+                    const June = document.getElementById('June');
+                    const July = document.getElementById('July');
+                    const August = document.getElementById('August');
+                    const September = document.getElementById('September');
+                    const October = document.getElementById('October');
+                    const November = document.getElementById('November');
+                    const December = document.getElementById('December');
+                    // ... add the rest of the months
+
+                    const monthHeaders = [jan, feb, mar, apr, may, June, July, August, September, October, November, December];
+
+                    header.forEach((monthData, index) => {
+                        const [monthId, colspanValue] = monthData;
+                        const headerCell = monthHeaders[index];
+
+                        if (headerCell) {
+                            headerCell.colSpan = colspanValue > 1 ? colspanValue : 1;
+                        } else {
+                            console.error(`Header cell for month ${monthId} not found.`);
+                        }
+                    });
+                }
+
+
+                // Call the function to set the colspans
+                setColspanForMonths();
+
+
                 afd_bulan.forEach((element, index) => {
                     item1 = index + 1;
                     let estate = element[0];
@@ -252,21 +288,32 @@
                         let item2 = key;
                         let item3 = '-';
 
-                        let items = [item0, item1, item2, item3];
 
-                        // Loop through all the months and visits to get skor_total
+                        let items = [item0, item1, item2, item3, ];
+
+                        // ... Your previous code ...
+
                         allMonths.forEach((month) => {
                             let monthData = element[1][key][month];
+                            // console.log(element[1][key]);
                             if (monthData) {
                                 for (let visit in monthData) {
                                     let skor_total = monthData[visit].skor_total;
-                                    items.push(skor_total);
-                                }
-                            } else {
-                                // If the current month doesn't have data for this AFD, push '-' for all visits
-                                let numVisits = Object.keys(element[1][namaAFD[0]][month]).length;
-                                for (let i = 0; i < numVisits; i++) {
-                                    items.push('-');
+                                    let est = monthData[visit].est;
+                                    let afd = monthData[visit].afd;
+                                    let date = monthData[visit].date;
+                                    if (skor_total != 0) {
+                                        let itemUrl = document.createElement('a');
+                                        itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
+                                        itemUrl.textContent = skor_total;
+
+                                        let td = document.createElement('td');
+                                        td.appendChild(itemUrl); // Append the anchor to the table cell
+
+                                        items.push(td); // Push the table cell containing the anchor to the items array
+                                    } else {
+                                        items.push(skor_total);
+                                    }
                                 }
                             }
                         });
@@ -275,35 +322,30 @@
                         for (let j = 0; j < items.length; j++) {
                             let item = items[j];
                             let td = document.createElement('td');
-                            if (column >= 5) {
-                                if (item >= 95) {
-                                    td.style.backgroundColor = "#0804fc";
-                                } else if (item >= 85 && item < 95) {
-                                    td.style.backgroundColor = "#08b454";
-                                } else if (item >= 75 && item < 85) {
-                                    td.style.backgroundColor = "#fffc04";
-                                } else if (item >= 65 && item < 75) {
-                                    td.style.backgroundColor = "#ffc404";
-                                } else if (item === 0) {
-                                    td.style.backgroundColor = "white";
-                                } else {
-                                    td.style.backgroundColor = "red";
-                                }
-                            }
+
                             column++;
-                            td.innerText = item;
-                            tr.appendChild(td);
+                            if (item instanceof Node) { // Check if the item is a Node (e.g., a <td> element)
+                                td.appendChild(item); // Append the item (which is a Node) to the table cell
+                            } else {
+                                td.innerText = item; // Otherwise, treat it as a regular string and set its text content
+                            }
+                            tr.appendChild(td); // Append the table cell to the table row
                         }
+
+                        // ... Your remaining code ...
+
+                        let item4 = 'Ave';
+                        let item5 = 'GooD';
+                        let td4 = document.createElement('td');
+                        let td5 = document.createElement('td');
+                        td4.innerText = item4;
+                        td5.innerText = item5;
+                        tr.appendChild(td4);
+                        tr.appendChild(td5);
 
                         tbody1.appendChild(tr);
                     });
                 });
-
-                // Assuming you have the afd_bulan array and tbody1 element defined
-
-
-
-
 
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -313,7 +355,7 @@
     }
 
     function getEST() {
-
+        $('#data_est').empty()
         var reg = '';
         var tahun = '';
 
@@ -339,8 +381,158 @@
 
                 var parseResult = JSON.parse(result)
                 var bulan = Object.entries(parseResult['bulan'])
+                var rekap = Object.entries(parseResult['afd_rekap'])
+                var rata_rata = Object.entries(parseResult['rata_rata'])
+
+                var afd_bulan = rekap
+
+                var tbody1 = document.getElementById('data_est');
+                //         $('#thead1').empty()
+                const header = Object.entries(parseResult['header_cell']);
+                const header_head = Object.entries(parseResult['header_head']);
+                // console.log(header_head);
+
+                const head_year = document.getElementById('yearHeader2');
+                const colspanValue = header_head.find(entry => entry[0] === "head")[1];
+
+                // Update the colspan attribute of the "yearHeader" element
+                head_year.setAttribute("colspan", colspanValue);
 
 
+
+                function setColspanForMonths() {
+                    const jan = document.getElementById('Jan');
+                    const feb = document.getElementById('Feb');
+                    const mar = document.getElementById('Mar');
+                    const apr = document.getElementById('Apr');
+                    const may = document.getElementById('May');
+                    const June = document.getElementById('Jun');
+                    const July = document.getElementById('Jul');
+                    const August = document.getElementById('Aug');
+                    const September = document.getElementById('Sept');
+                    const October = document.getElementById('Oct');
+                    const November = document.getElementById('Nov');
+                    const December = document.getElementById('Dec');
+                    // ... add the rest of the months
+
+                    const monthHeaders = [jan, feb, mar, apr, may, June, July, August, September, October, November, December];
+
+                    header.forEach((monthData, index) => {
+                        const [monthId, colspanValue] = monthData;
+                        const headerCell = monthHeaders[index];
+
+                        if (headerCell) {
+                            headerCell.colSpan = colspanValue > 1 ? colspanValue : 1;
+                        } else {
+                            console.error(`Header cell for month ${monthId} not found.`);
+                        }
+                    });
+                }
+
+                setColspanForMonths();
+                console.log(rata_rata);
+                afd_bulan.forEach((element, index) => {
+                    item1 = index + 1;
+                    let estate = element[0];
+                    let namaAFD = Object.keys(element[1]);
+
+                    let allMonths = Object.keys(element[1][namaAFD[0]]); // Assuming all AFDs have the same months
+                    let rataRataElement = rata_rata[index];
+                    let item4 = rataRataElement[1].avg; // Accessing 'afd' property from the second element of the array
+                    let tr = document.createElement('tr'); // Create the tr element here
+
+
+                    let item5;
+                    if (item4 >= 95) {
+                        tr.style.backgroundColor = "#0804fc";
+                        item5 = 'mantap';
+                    } else if (item4 >= 85 && item4 < 95) {
+                        tr.style.backgroundColor = "#08b454";
+                        item5 = 'bagus';
+                    } else if (item4 >= 75 && item4 < 85) {
+                        tr.style.backgroundColor = "#fffc04";
+                        item5 = 'lumayan';
+                    } else if (item4 >= 65 && item4 < 75) {
+                        tr.style.backgroundColor = "#ffc404";
+                        item5 = 'oke';
+                    } else if (item4 === 0) {
+                        tr.style.backgroundColor = "white";
+                        item5 = 'sip';
+                    } else {
+                        tr.style.backgroundColor = "red";
+                    }
+
+                    namaAFD.forEach((key) => {
+                        tr = document.createElement('tr');
+                        let item0 = '-';
+                        let item1 = estate;
+                        let item2 = key;
+                        let item3 = '-';
+
+
+                        let items = [item0, item1, item2, item3, ];
+
+                        // ... Your previous code ...
+
+                        allMonths.forEach((month) => {
+                            let monthData = element[1][key][month];
+                            // console.log(element[1][key]);
+                            if (monthData) {
+                                for (let visit in monthData) {
+                                    let skor_total = monthData[visit].skor_total;
+                                    let est = monthData[visit].est;
+                                    let afd = monthData[visit].afd;
+                                    let date = monthData[visit].date;
+                                    if (skor_total != 0) {
+                                        let itemUrl = document.createElement('a');
+                                        itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
+                                        itemUrl.textContent = skor_total;
+
+                                        let td = document.createElement('td');
+                                        td.appendChild(itemUrl); // Append the anchor to the table cell
+
+                                        items.push(td); // Push the table cell containing the anchor to the items array
+                                    } else {
+                                        items.push(skor_total);
+                                    }
+                                }
+                            }
+                        });
+
+                        let column = 1; // Start column after the first three items
+                        for (let j = 0; j < items.length; j++) {
+                            let item = items[j];
+                            let td = document.createElement('td');
+
+                            column++;
+                            if (item instanceof Node) { // Check if the item is a Node (e.g., a <td> element)
+                                td.appendChild(item); // Append the item (which is a Node) to the table cell
+                            } else {
+                                td.innerText = item; // Otherwise, treat it as a regular string and set its text content
+                            }
+                            tr.appendChild(td); // Append the table cell to the table row
+                        }
+
+
+
+
+
+                        tbody1.appendChild(tr);
+                    });
+
+
+                    let td4 = document.createElement('td');
+                    let td5 = document.createElement('td');
+                    td4.innerText = item4;
+                    td5.innerText = item5;
+                    tr.appendChild(td4);
+                    tr.appendChild(td5);
+
+
+
+                    tbody1.appendChild(tr);
+
+                });
 
             },
             error: function(jqXHR, textStatus, errorThrown) {

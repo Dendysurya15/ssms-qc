@@ -1129,7 +1129,7 @@
                 let currentPage = 1;
                 const totalPages = Math.ceil(mutuAncak1.length / rowsPerPage);
 
-                function renderData(page) {
+                function renderData(page, callback) {
                     const start = (page - 1) * rowsPerPage;
                     const end = start + rowsPerPage;
 
@@ -1182,6 +1182,9 @@
 
                         tRans.appendChild(row);
                     });
+                    if (callback) {
+                        callback();
+                    }
                 }
 
                 function renderPagination() {
@@ -1191,19 +1194,35 @@
                     for (let i = 1; i <= totalPages; i++) {
                         const li = document.createElement('li');
                         li.classList.add('page-item');
+
                         li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                        li.addEventListener('click', (e) => {
+
+                        // Create a separate function to capture the correct value of i for the event listener
+                        const clickHandler = (pageNumber) => (e) => {
                             e.preventDefault();
-                            currentPage = i;
-                            renderData(currentPage);
-                        });
+                            currentPage = pageNumber;
+                            renderData(currentPage, () => {
+                                // After renderData is completed, update the pagination
+                                renderPagination();
+                            });
+                        };
+
+                        li.addEventListener('click', clickHandler(i)); // Use the clickHandler function
+
+                        // Add the 'active' class to the current page
+                        if (i === currentPage) {
+                            li.classList.add('active');
+                        }
+
                         paginationElement.appendChild(li);
                     }
                 }
 
                 // Render the first page and the pagination
-                renderData(currentPage);
-                renderPagination();
+                renderData(currentPage, () => {
+                    renderPagination();
+                });
+
 
 
 

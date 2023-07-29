@@ -21,8 +21,9 @@ class LingkunganFactory extends Factory
         $datetime = $this->generateUniqueDatetime();
         return [
             'datetime' => $datetime,
-            'est' => $this->faker->randomElement(['KNE', 'PLE', 'RDE', 'SLE', 'BKE', 'KDE', 'RGE', 'SGE', 'NBE', 'SYE', 'UPE']),
-            'afd' => $this->faker->randomElement(['OA', 'OB', 'OC', 'OD']),
+            'est' => $this->faker->randomElement(['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'CWS1', 'SLE', 'RGE', 'RDE', 'KNE', 'PLE', 'UPE', 'SYE', 'KDE', 'SGE', 'BKE', 'NBE', 'BGE']),
+            // 'est' => $this->faker->randomElement(['REG-I']),
+            'afd' => $this->faker->randomElement(['EST']),
             'petugas' => $this->faker->name(),
             'pendamping' => $this->faker->name(),
             'penghuni' => $this->faker->name(),
@@ -37,11 +38,11 @@ class LingkunganFactory extends Factory
 
     protected function generateUniqueDatetime()
     {
-        $datetime = $this->faker->dateTimeBetween('2023-02-01', '2023-04-25')->format('Y-m-d H:i:s');
+        $datetime = $this->faker->dateTimeBetween('2023-01-01', '2023-04-25')->format('Y-m-d H:i:s');
 
         // Check if the datetime is already used, if so, regenerate until unique
         while (in_array($datetime, $this->usedDatetimes)) {
-            $datetime = $this->faker->dateTimeBetween('2023-02-01', '2023-04-25')->format('Y-m-d H:i:s');
+            $datetime = $this->faker->dateTimeBetween('2023-01-01', '2023-04-25')->format('Y-m-d H:i:s');
         }
 
         // Store the generated datetime in the usedDatetimes array to avoid duplicates
@@ -49,6 +50,8 @@ class LingkunganFactory extends Factory
 
         return $datetime;
     }
+
+
     protected function generateRandomItems($count, $extension = null, $format = null, $min = null, $max = null)
     {
         $items = [];
