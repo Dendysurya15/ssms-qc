@@ -31,13 +31,77 @@
             <div class="card table_wrapper">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-utama-tab" data-toggle="tab" href="#nav-utama" role="tab" aria-controls="nav-utama" aria-selected="true">Perumahan Afdeling</a>
-                        <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Perumahan Estate</a>
+                        <a class="nav-item nav-link active" id="nav-utama-tab" data-toggle="tab" href="#nav-utama" role="tab" aria-controls="nav-utama" aria-selected="true">Perumahan Estate</a>
+                        <a class="nav-item nav-link" id="nav-data-tab" data-toggle="tab" href="#nav-data" role="tab" aria-controls="nav-data" aria-selected="false">Perumahan Afdeling</a>
 
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
+
+
                     <div class="tab-pane fade show active" id="nav-utama" role="tabpanel" aria-labelledby="nav-utama-tab">
+                        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
+                            <h5><b>SUMMARY SCORE PERUMAHAN ESTATE REGIONAL - I</b></h5>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
+                            <div class="row w-100">
+                                <div class="col-md-2 offset-md-8">
+                                    {{csrf_field()}}
+                                    <select class="form-control" id="estreg">
+                                        <option value="1" selected>Regional 1</option>
+                                        <option value="2">Regional 2</option>
+                                        <option value="3">Regional 3</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                    {{csrf_field()}}
+                                    <select class="form-control" id="tahunest">
+                                        <option value="2023" selected>2023</option>
+                                        <option value="2022">2022</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mb-3" style="float: right" id="btnShoWEst">Show</button>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="my-table">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">No</th>
+                                        <th rowspan="2">UNIT KERJA</th>
+                                        <th rowspan="2">KODE</th>
+                                        <th rowspan="2">PIC</th>
+                                        <th colspan="14" id="yearHeader2" style="text-align: center;">2023</th>
+
+                                    </tr>
+                                    <tr id="month_header2">
+                                        <td id="Jan">Jan</td>
+                                        <td id="Feb">Feb</td>
+                                        <td id="Mar">Mar</td>
+                                        <td id="Apr">Apr</td>
+                                        <td id="May">May</td>
+                                        <td id="Jun">Jun</td>
+                                        <td id="Jul">Jul</td>
+                                        <td id="Aug">Aug</td>
+                                        <td id="Sept">Sep</td>
+                                        <td id="Oct">October</td>
+                                        <td id="Nov">Nov</td>
+                                        <td id="Dec">December</td>
+                                        <td id="Ave">Ave</td>
+                                        <td id="Status">Status</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="data_est">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class=" tab-pane fade" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
                             <h5><b>SUMMARY SCORE PERUMAHAN AFDELING REGIONAL - I
 
@@ -101,69 +165,6 @@
                                 </thead>
                                 <tbody id="data_afd">
 
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-
-
-                    <div class=" tab-pane fade" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
-                        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
-                            <h5><b>SUMMARY SCORE PERUMAHAN ESTATE REGIONAL - I</b></h5>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
-                            <div class="row w-100">
-                                <div class="col-md-2 offset-md-8">
-                                    {{csrf_field()}}
-                                    <select class="form-control" id="estreg">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                                    {{csrf_field()}}
-                                    <select class="form-control" id="tahunest">
-                                        <option value="2023" selected>2023</option>
-                                        <option value="2022">2022</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary mb-3" style="float: right" id="btnShoWEst">Show</button>
-                        </div>
-
-                        <div class="table-wrapper">
-                            <table class="my-table">
-                                <thead>
-                                    <tr>
-                                        <th rowspan="2">No</th>
-                                        <th rowspan="2">UNIT KERJA</th>
-                                        <th rowspan="2">KODE</th>
-                                        <th rowspan="2">PIC</th>
-                                        <th colspan="14" id="yearHeader2" style="text-align: center;">2023</th>
-
-                                    </tr>
-                                    <tr id="month_header2">
-                                        <td id="Jan">Jan</td>
-                                        <td id="Feb">Feb</td>
-                                        <td id="Mar">Mar</td>
-                                        <td id="Apr">Apr</td>
-                                        <td id="May">May</td>
-                                        <td id="Jun">Jun</td>
-                                        <td id="Jul">Jul</td>
-                                        <td id="Aug">Aug</td>
-                                        <td id="Sept">Sep</td>
-                                        <td id="Oct">October</td>
-                                        <td id="Nov">Nov</td>
-                                        <td id="Dec">December</td>
-                                        <td id="Ave">Ave</td>
-                                        <td id="Status">Status</td>
-                                    </tr>
-                                </thead>
-                                <tbody id="data_est">
 
                                 </tbody>
                             </table>
@@ -302,18 +303,19 @@
                                     let est = monthData[visit].est;
                                     let afd = monthData[visit].afd;
                                     let date = monthData[visit].date;
-                                    if (skor_total != 0) {
-                                        let itemUrl = document.createElement('a');
-                                        itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
-                                        itemUrl.textContent = skor_total;
+                                    // if (skor_total != 0) {
+                                    //     let itemUrl = document.createElement('a');
+                                    //     itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
+                                    //     itemUrl.textContent = skor_total;
 
-                                        let td = document.createElement('td');
-                                        td.appendChild(itemUrl); // Append the anchor to the table cell
+                                    //     let td = document.createElement('td');
+                                    //     td.appendChild(itemUrl); // Append the anchor to the table cell
 
-                                        items.push(td); // Push the table cell containing the anchor to the items array
-                                    } else {
-                                        items.push(skor_total);
-                                    }
+                                    //     items.push(td); // Push the table cell containing the anchor to the items array
+                                    // } else {
+                                    //     items.push(skor_total);
+                                    // }
+                                    items.push(skor_total);
                                 }
                             }
                         });
