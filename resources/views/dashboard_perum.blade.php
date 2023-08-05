@@ -69,10 +69,10 @@
                             <table class="my-table">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">No</th>
-                                        <th rowspan="2">UNIT KERJA</th>
-                                        <th rowspan="2">KODE</th>
-                                        <th rowspan="2">PIC</th>
+                                        <th rowspan="3">No</th>
+                                        <th rowspan="3">UNIT KERJA</th>
+                                        <th rowspan="3">KODE</th>
+                                        <th rowspan="3">PIC</th>
                                         <th colspan="14" id="yearHeader2" style="text-align: center;">2023</th>
 
                                     </tr>
@@ -81,7 +81,7 @@
                                         <td id="Feb">Feb</td>
                                         <td id="Mar">Mar</td>
                                         <td id="Apr">Apr</td>
-                                        <td id="May">May</td>
+                                        <td id="Maye">May</td>
                                         <td id="Jun">Jun</td>
                                         <td id="Jul">Jul</td>
                                         <td id="Aug">Aug</td>
@@ -89,8 +89,11 @@
                                         <td id="Oct">October</td>
                                         <td id="Nov">Nov</td>
                                         <td id="Dec">December</td>
-                                        <td id="Ave">Ave</td>
-                                        <td id="Status">Status</td>
+                                        <td rowspan="2" id="Ave">Ave</td>
+                                        <td rowspan="2" id="Status">Status</td>
+                                    </tr>
+                                    <tr id="visit">
+
                                     </tr>
                                 </thead>
                                 <tbody id="data_est">
@@ -385,10 +388,35 @@
                 var bulan = Object.entries(parseResult['bulan'])
                 var rekap = Object.entries(parseResult['afd_rekap'])
                 var rata_rata = Object.entries(parseResult['rata_rata'])
+                var visitArray = Object.entries(parseResult['visit'])
+                var skoring = Object.entries(parseResult['skoring'])
+                var new_afd = Object.entries(parseResult['new_afd'])
+
+                // console.log(visitArray);
+
+                if (visitArray !== null) {
+                    function createTableHeader(content) {
+                        var th = document.createElement("th");
+                        th.textContent = content;
+                        return th;
+                    }
+
+                    // Get the existing tr element with ID "visit"
+                    var visitTr = document.getElementById("visit");
+
+                    // Append the TH elements to the existing tr
+                    for (var i = 0; i < visitArray.length; i++) {
+                        var content = visitArray[i][1];
+                        visitTr.appendChild(createTableHeader(content));
+                    }
+                }
+
+
+
 
                 var afd_bulan = rekap
 
-                var tbody1 = document.getElementById('data_est');
+
                 //         $('#thead1').empty()
                 const header = Object.entries(parseResult['header_cell']);
                 const header_head = Object.entries(parseResult['header_head']);
@@ -397,17 +425,16 @@
                 const head_year = document.getElementById('yearHeader2');
                 const colspanValue = header_head.find(entry => entry[0] === "head")[1];
 
+                // console.log(visit);
                 // Update the colspan attribute of the "yearHeader" element
                 head_year.setAttribute("colspan", colspanValue);
-
-
 
                 function setColspanForMonths() {
                     const jan = document.getElementById('Jan');
                     const feb = document.getElementById('Feb');
                     const mar = document.getElementById('Mar');
                     const apr = document.getElementById('Apr');
-                    const may = document.getElementById('May');
+                    const may = document.getElementById('Maye');
                     const June = document.getElementById('Jun');
                     const July = document.getElementById('Jul');
                     const August = document.getElementById('Aug');
@@ -432,109 +459,238 @@
                 }
 
                 setColspanForMonths();
-                console.log(rata_rata);
-                afd_bulan.forEach((element, index) => {
-                    item1 = index + 1;
-                    let estate = element[0];
-                    let namaAFD = Object.keys(element[1]);
-
-                    let allMonths = Object.keys(element[1][namaAFD[0]]); // Assuming all AFDs have the same months
-                    let rataRataElement = rata_rata[index];
-                    let item4 = rataRataElement[1].avg; // Accessing 'afd' property from the second element of the array
-                    let tr = document.createElement('tr'); // Create the tr element here
+                // console.log(rata_rata);
 
 
-                    let item5;
-                    if (item4 >= 95) {
-                        tr.style.backgroundColor = "#0804fc";
-                        item5 = 'mantap';
-                    } else if (item4 >= 85 && item4 < 95) {
-                        tr.style.backgroundColor = "#08b454";
-                        item5 = 'bagus';
-                    } else if (item4 >= 75 && item4 < 85) {
-                        tr.style.backgroundColor = "#fffc04";
-                        item5 = 'lumayan';
-                    } else if (item4 >= 65 && item4 < 75) {
-                        tr.style.backgroundColor = "#ffc404";
-                        item5 = 'oke';
-                    } else if (item4 === 0) {
-                        tr.style.backgroundColor = "white";
-                        item5 = 'sip';
-                    } else {
-                        tr.style.backgroundColor = "red";
+                // afd_bulan.forEach((element, index) => {
+                //     item1 = index + 1;
+                //     let estate = element[0];
+                //     let namaAFD = Object.keys(element[1]);
+
+                //     let allMonths = Object.keys(element[1][namaAFD[0]]); // Assuming all AFDs have the same months
+                //     let rataRataElement = rata_rata[index];
+                //     let item4 = rataRataElement[1].avg; // Accessing 'afd' property from the second element of the array
+                //     let tr = document.createElement('tr'); // Create the tr element here
+
+
+                //     let item5;
+                //     if (item4 >= 95) {
+                //         tr.style.backgroundColor = "#0804fc";
+                //         item5 = 'mantap';
+                //     } else if (item4 >= 85 && item4 < 95) {
+                //         tr.style.backgroundColor = "#08b454";
+                //         item5 = 'bagus';
+                //     } else if (item4 >= 75 && item4 < 85) {
+                //         tr.style.backgroundColor = "#fffc04";
+                //         item5 = 'lumayan';
+                //     } else if (item4 >= 65 && item4 < 75) {
+                //         tr.style.backgroundColor = "#ffc404";
+                //         item5 = 'oke';
+                //     } else if (item4 === 0) {
+                //         tr.style.backgroundColor = "white";
+                //         item5 = 'sip';
+                //     } else {
+                //         tr.style.backgroundColor = "red";
+                //     }
+
+                //     namaAFD.forEach((key) => {
+                //         tr = document.createElement('tr');
+                //         let item0 = '-';
+                //         let item1 = estate;
+                //         let item2 = key;
+                //         let item3 = '-';
+
+
+                //         let items = [item0, item1, item2, item3, ];
+
+                //         // ... Your previous code ...
+
+                //         allMonths.forEach((month) => {
+                //             let monthData = element[1][key][month];
+                //             // console.log(element[1][key]);
+                //             if (monthData) {
+                //                 let total = 0;
+                //                 let count = 0;
+
+                //                 for (let visit in monthData) {
+                //                     let skor_total = monthData[visit].skor_total;
+
+                //                     let est = monthData[visit].est;
+                //                     let afd = monthData[visit].afd;
+                //                     let date = monthData[visit].date;
+
+
+                //                     if (skor_total != 0) {
+                //                         let itemUrl = document.createElement('a');
+                //                         itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
+                //                         itemUrl.textContent = skor_total;
+
+                //                         let td = document.createElement('td');
+                //                         td.appendChild(itemUrl); // Append the anchor to the table cell
+
+                //                         items.push(td);
+                //                     } else {
+                //                         items.push(skor_total);
+                //                     }
+
+                //                 }
+                //             }
+                //         });
+
+
+                //         let column = 1; // Start column after the first three items
+                //         for (let j = 0; j < items.length; j++) {
+                //             let item = items[j];
+                //             let td = document.createElement('td');
+
+                //             column++;
+                //             if (item instanceof Node) { // Check if the item is a Node (e.g., a <td> element)
+                //                 td.appendChild(item); // Append the item (which is a Node) to the table cell
+                //             } else {
+                //                 td.innerText = item; // Otherwise, treat it as a regular string and set its text content
+                //             }
+                //             tr.appendChild(td); // Append the table cell to the table row
+                //         }
+
+
+
+
+
+                //         tbody1.appendChild(tr);
+                //     });
+
+
+                //     let td4 = document.createElement('td');
+                //     let td5 = document.createElement('td');
+                //     td4.innerText = item4;
+                //     td5.innerText = item5;
+                //     tr.appendChild(td4);
+                //     tr.appendChild(td5);
+
+
+
+                //     tbody1.appendChild(tr);
+
+                // });
+
+                var table1 = new_afd;
+                var tbody1 = document.getElementById('data_est');
+
+                console.log(table1);
+                table1.forEach((element, index) => {
+                    let tr = document.createElement('tr');
+                    let item1 = element[0];
+                    let item2 = element[1].unit_kerja;
+                    let item3 = element[1].kode;
+                    let item4 = element[1].pic;
+                    let januaryArray = element[1].January;
+                    let Feb = element[1].February;
+                    let March = element[1].March;
+                    let April = element[1].April;
+                    let May = element[1].May;
+                    let June = element[1].June;
+                    let Jully = element[1].July;
+                    let Aug = element[1].August;
+                    let Sept = element[1].September;
+                    let Oct = element[1].October;
+                    let Nov = element[1].November;
+                    let Dec = element[1].December;
+                    let item6 = element[1].January_avg;
+                    let item7 = element[1].February_avg;
+                    let item8 = element[1].March_avg
+                    let item9 = element[1].April_avg
+                    let item10 = element[1].May_avg
+                    let item11 = element[1].June_avg
+                    let item12 = element[1].July_avg
+                    let item13 = element[1].August_avg
+                    let item14 = element[1].September_avg
+                    let item15 = element[1].October_avg
+                    let item16 = element[1].November_avg
+                    let item17 = element[1].December_avg
+
+
+                    let JanDate = element[1].January_dates[0];
+                    let FebDate = element[1].February_dates[0];
+                    let MarchDate = element[1].March_dates[0];
+                    let AprDate = element[1].April_dates[0];
+                    let MayDate = element[1].May_dates[0];
+                    let JuneDate = element[1].June_dates[0];
+                    let JulyDate = element[1].July_dates[0];
+                    let AugDate = element[1].August_dates[0];
+                    let SepDate = element[1].September_dates[0];
+                    let OctDate = element[1].October_dates[0];
+                    let NovDate = element[1].November_dates[0];
+                    let DecDate = element[1].December_dates[0];
+
+
+                    let url = element[1].kode;
+
+                    if (url.includes('EST')) {
+                        url = url.replace('-EST', '').trim();
                     }
+                    // ... your existing code ...
 
-                    namaAFD.forEach((key) => {
-                        tr = document.createElement('tr');
-                        let item0 = '-';
-                        let item1 = estate;
-                        let item2 = key;
-                        let item3 = '-';
+                    let januaryLink = (item6 !== 0) ? `<a href="/detailEmplashmend/${url}/${JanDate}">${item6}</a>` : item6;
+                    let februaryLink = (item7 !== 0) ? `<a href="/detailEmplashmend/${url}/${FebDate}">${item7}</a>` : item7;
+                    let marchLink = (item8 !== 0) ? `<a href="/detailEmplashmend/${url}/${MarchDate}">${item8}</a>` : item8;
+                    let aprilLink = (item9 !== 0) ? `<a href="/detailEmplashmend/${url}/${AprDate}">${item9}</a>` : item9;
+                    let mayLink = (item10 !== 0) ? `<a href="/detailEmplashmend/${url}/${MayDate}">${item10}</a>` : item10;
+                    let juneLink = (item11 !== 0) ? `<a href="/detailEmplashmend/${url}/${JuneDate}">${item11}</a>` : item11;
+                    let julyLink = (item12 !== 0) ? `<a href="/detailEmplashmend/${url}/${JulyDate}">${item12}</a>` : item12;
+                    let augustLink = (item13 !== 0) ? `<a href="/detailEmplashmend/${url}/${AugDate}">${item13}</a>` : item13;
+                    let septemberLink = (item14 !== 0) ? `<a href="/detailEmplashmend/${url}/${SepDate}">${item14}</a>` : item14;
+                    let octoberLink = (item15 !== 0) ? `<a href="/detailEmplashmend/${url}/${OctDate}">${item15}</a>` : item15;
+                    let novemberLink = (item16 !== 0) ? `<a href="/detailEmplashmend/${url}/${NovDate}">${item16}</a>` : item16;
+                    let decemberLink = (item17 !== 0) ? `<a href="/detailEmplashmend/${url}/${DecDate}">${item17}</a>` : item17;
 
+                    let items = [item1, item2, item3, item4,
+                        ...januaryArray, januaryLink,
+                        ...Feb, februaryLink,
+                        ...March, marchLink,
+                        ...April, aprilLink,
+                        ...May, mayLink,
+                        ...June, juneLink,
+                        ...Jully, julyLink,
+                        ...Aug, augustLink,
+                        ...Sept, septemberLink,
+                        ...Oct, octoberLink,
+                        ...Nov, novemberLink,
+                        ...Dec, decemberLink,
+                    ];
 
-                        let items = [item0, item1, item2, item3, ];
+                    for (let j = 0; j < items.length; j++) {
+                        let item = items[j];
 
-                        // ... Your previous code ...
-
-                        allMonths.forEach((month) => {
-                            let monthData = element[1][key][month];
-                            // console.log(element[1][key]);
-                            if (monthData) {
-                                for (let visit in monthData) {
-                                    let skor_total = monthData[visit].skor_total;
-                                    let est = monthData[visit].est;
-                                    let afd = monthData[visit].afd;
-                                    let date = monthData[visit].date;
-                                    if (skor_total != 0) {
-                                        let itemUrl = document.createElement('a');
-                                        itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
-                                        itemUrl.textContent = skor_total;
-
-                                        let td = document.createElement('td');
-                                        td.appendChild(itemUrl); // Append the anchor to the table cell
-
-                                        items.push(td); // Push the table cell containing the anchor to the items array
-                                    } else {
-                                        items.push(skor_total);
-                                    }
-                                }
-                            }
-                        });
-
-                        let column = 1; // Start column after the first three items
-                        for (let j = 0; j < items.length; j++) {
-                            let item = items[j];
-                            let td = document.createElement('td');
-
-                            column++;
-                            if (item instanceof Node) { // Check if the item is a Node (e.g., a <td> element)
-                                td.appendChild(item); // Append the item (which is a Node) to the table cell
-                            } else {
-                                td.innerText = item; // Otherwise, treat it as a regular string and set its text content
-                            }
-                            tr.appendChild(td); // Append the table cell to the table row
-                        }
-
-
-
-
-
-                        tbody1.appendChild(tr);
-                    });
-
+                        let td = document.createElement('td');
+                        // Set innerHTML instead of innerText to allow HTML content
+                        td.innerHTML = item;
+                        tr.appendChild(td);
+                    }
 
                     let td4 = document.createElement('td');
                     let td5 = document.createElement('td');
-                    td4.innerText = item4;
-                    td5.innerText = item5;
+
+                    // Access 'avg' property from rata_rata array
+                    let rataRataElement = rata_rata[index];
+                    let itemavg = rataRataElement[1].avg;
+
+                    td4.innerText = itemavg;
+
+
+
+                    td5.innerText = '-';
+
                     tr.appendChild(td4);
                     tr.appendChild(td5);
 
-
-
                     tbody1.appendChild(tr);
-
                 });
+
+
+
+
+
+
 
             },
             error: function(jqXHR, textStatus, errorThrown) {

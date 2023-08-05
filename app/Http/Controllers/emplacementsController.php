@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use DateTime;
+use Illuminate\Validation\Rules\Unique;
 
 require '../app/helpers.php';
 
@@ -656,7 +658,8 @@ class emplacementsController extends Controller
                         $visitsWithoutDates = []; // Array to store visit data without individual dates
                         foreach ($visits as $date => $visitData) {
                             if (is_array($visitData)) { // Check if $visitData is an array (not an individual date)
-                                $visitKey = 'visit' . count($visitsWithoutDates) + 1;
+                                $visitKey = 'visit' . (count($visitsWithoutDates) + 1);
+
                                 $visitsWithoutDates[$visitKey] = $visitData;
                             }
                         }
@@ -808,6 +811,7 @@ class emplacementsController extends Controller
         // dd($queryEste);
         $estates = array_column($queryEste, 'est');
 
+        // dd($estates);
         $emplacement = DB::connection('mysql2')->table('perumahan')
             ->select(
                 "perumahan.*",
@@ -816,6 +820,7 @@ class emplacementsController extends Controller
             )
             ->where('perumahan.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
+            // ->where('est', '=', 'NBM')
             ->where('perumahan.afd', 'EST')
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
@@ -825,7 +830,7 @@ class emplacementsController extends Controller
         $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
         $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
 
-        // dd($emplacement);
+        // dd($emplacement, $estates);
 
         $lingkungan = DB::connection('mysql2')->table('lingkungan')
             ->select(
@@ -835,6 +840,7 @@ class emplacementsController extends Controller
             )
             ->where('lingkungan.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
+            // ->where('est', '=', 'NBM')
             ->where('lingkungan.afd', 'EST')
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
@@ -853,6 +859,7 @@ class emplacementsController extends Controller
             )
             ->where('landscape.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
+            // ->where('est', '=', 'NBM')
             ->where('landscape.afd', 'EST')
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
@@ -942,7 +949,7 @@ class emplacementsController extends Controller
                 $defaultNew[$est['nama']][$month] = 0;
             }
         }
-
+        // dd($defaultNew);
 
         // perhitungan perumahan 
 
@@ -990,6 +997,7 @@ class emplacementsController extends Controller
             }
         }
 
+        // dd($dataPerBulan);
         function groupArrayByDatetime($data)
         {
             $groupedArray = [];
@@ -1143,7 +1151,8 @@ class emplacementsController extends Controller
             }
         }
 
-        addMissingMonths($FinalArr_rumah, $defaultNew);
+        // dd($FinalArr_rumah);
+        // addMissingMonths($FinalArr_rumah, $defaultNew);
         // dd($FinalArr_rumah);
 
         // perhitungan landscape 
@@ -1665,7 +1674,7 @@ class emplacementsController extends Controller
                         $visitsWithoutDates = []; // Array to store visit data without individual dates
                         foreach ($visits as $date => $visitData) {
                             if (is_array($visitData)) { // Check if $visitData is an array (not an individual date)
-                                $visitKey = 'visit' . count($visitsWithoutDates) + 1;
+                                $visitKey = 'visit' . (count($visitsWithoutDates) + 1);
                                 $visitsWithoutDates[$visitKey] = $visitData;
                             }
                         }
@@ -1709,6 +1718,39 @@ class emplacementsController extends Controller
         // dd($resultArray);
 
 
+
+
+        $result_skor = array();
+
+        foreach ($resultArray as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                foreach ($value2 as $key2 => $value3) {
+                    $tot_skor = 0;
+                    $avarage = count($value3);
+                    $tot_avg = 0;
+                    foreach ($value3 as $key3 => $value4) {
+                        if ($value4['skor_total'] != 0) {
+                            $tot_skor += $value4['skor_total'];
+                        } else {
+                            $tot_skor = 0;
+                        }
+                    }
+                    $tot_avg = $tot_skor / $avarage;
+                    $result_skor[$key][$key1][$key2]['total_avg'] = $tot_avg;
+                } # code...
+            }   # code...
+        }
+
+        // Assuming $array1 and $array2 are the two arrays you have
+
+
+
+        // dd($result_skor, $resultArray);
+        // The $array2 now contains the combined values
+
+
+        // dd($resultArray, $result_skor);
+
         $get_cell = array();
         foreach ($resultArray as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -1745,12 +1787,31 @@ class emplacementsController extends Controller
             $max_visit[$month]['max_visitEst'] = $max_visitEst;
         }
 
-        $header_cell = array();
+        // Create an array with the correct order of months
+        $allMonths = array(
+            "January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"
+        );
+
+        // Initialize the $header_cell array with all months set to 1 visit
+        $header_cell = array_fill_keys($allMonths, 1);
+
+        // Update the visits count based on the $max_visit array
         foreach ($max_visit as $key => $value) {
-            $header_cell[$key] = $value['max_visitEst'];
+            if (in_array($key, $allMonths)) {
+                $header_cell[$key] = $value['max_visitEst'];
+            }
+        }
+        $header_cell2 = array_fill_keys($allMonths, 1);
+
+        // Update the visits count based on the $max_visit array
+        foreach ($max_visit as $key => $value) {
+            if (in_array($key, $allMonths)) {
+                $header_cell2[$key] = $value['max_visitEst'] + 1;
+            }
         }
 
-        // dd($header_cell);
+        // dd($header_cell2);
 
         function createEmptyVisit2($visitNumber)
         {
@@ -1765,57 +1826,281 @@ class emplacementsController extends Controller
         }
 
 
-        foreach ($resultArray as $key1 => &$level1) {
-            foreach ($level1 as $key2 => &$level2) {
-                foreach ($level2 as $month => &$visits) {
-                    if (isset($header_cell[$month])) {
-                        $requiredVisits = $header_cell[$month];
-                        $currentVisits = count($visits);
+        // foreach ($resultArray as $key1 => &$level1) {
+        //     foreach ($level1 as $key2 => &$level2) {
+        //         foreach ($level2 as $month => &$visits) {
+        //             if (isset($header_cell[$month])) {
+        //                 $requiredVisits = $header_cell[$month];
+        //                 $currentVisits = count($visits);
 
-                        // Add empty visits if required
-                        for ($i = $currentVisits + 1; $i <= $requiredVisits; $i++) {
-                            $visits["visit" . $i] = createEmptyVisit2($i);
-                        }
+        //                 // Add empty visits if required
+        //                 for ($i = $currentVisits + 1; $i <= $requiredVisits; $i++) {
+        //                     $visits["visit" . $i] = createEmptyVisit2($i);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // dd($resultArray);
+        // dd($visit);
+        // dd($resultArray);
+        $sum_header = [
+            "head" => array_sum($header_cell2) + 2,
+        ];
+        // dd($header_cell, $sum_header);
+        // dd($resultArray);
+
+
+        function generateArray($inputArray)
+        {
+            $resultArray = [];
+
+            foreach ($inputArray as $month => $value) {
+                for ($i = 1; $i <= $value; $i++) {
+                    $resultArray[] = $i;
+                }
+                $resultArray[] = 'Skor';
+            }
+
+            return $resultArray;
+        }
+        // dd($resultArray);
+
+
+        // Function to adjust the last element to "Skor" in each month's section
+        function adjustLastElementToSkor($inputArray)
+        {
+            $resultArray = [];
+
+            foreach ($inputArray as $key => $value) {
+                if ($value !== 'Skor') {
+                    if (isset($inputArray[$key + 1]) && $inputArray[$key + 1] === 'Skor') {
+                        $resultArray[] = 'Skor';
+                    } else {
+                        $resultArray[] = $value;
                     }
                 }
+            }
+
+            return $resultArray;
+        }
+        // dd($resultArray);
+        // Generate the array with numeric values and "Skor" as the last element for each month
+        $numericSkorArray = generateArray($header_cell);
+
+        // Adjust the last element to "Skor" for each month's section
+        $desiredArray = adjustLastElementToSkor($numericSkorArray);
+
+        // dd($desiredArray, $numericSkorArray);
+        // dd($numericSkorArray, $desiredArray);
+        // dd($resultArray);
+        foreach ($result_skor as $key1 => $value1) {
+            if (array_key_exists($key1, $resultArray)) {
+                // Merge the sub-arrays for the common key
+                $resultArray[$key1] = array_merge_recursive($resultArray[$key1], $value1);
+            } else {
+                // Add the new key and its value to the $resultArray
+                $resultArray[$key1] = $value1;
             }
         }
 
         // dd($resultArray);
-        $sum_header = [
-            "head" => array_sum($header_cell) + 2,
-        ];
-        // dd($header_cell, $sum_header);
+
+        $new_array = array();
+        $inc = 1;
 
         // dd($resultArray);
+
+        // Initialize an associative array to store 'skor_total_array' values for each month
+        $skor_total_per_month = array();
+
+        foreach ($resultArray as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $avg_per_month = array(); // Initialize an associative array to store 'total_avg' values for each month
+                $max_values = max($header_cell); // Get the maximum number of values for any month from the $header_cell array
+
+                foreach ($value1 as $key2 => $value2) {
+                    if (in_array($key2, $allMonths)) { // Assuming $allMonths contains all the months in the correct order
+                        $skor_total_array = array();
+                        $dates_per_month_array = array(); // Initialize an array to store dates for each visit
+                        // Create an array to store 'skor_total' values for each visit
+                        foreach ($value2 as $key3 => $value3) {
+                            if (strpos($key3, 'visit') === 0 && isset($value3['skor_total'])) {
+                                $skor_total_array[] = $value3['skor_total'];
+
+                                $date_str = $value3['date'];
+                                $year_month = substr($date_str, 0, 7); // Extract year and month (e.g., "2023-08")
+                                $dates_per_month_array[] = $year_month;
+                            }
+                        }
+                        $skor_total_per_month[$key2] = $skor_total_array;
+                        $dates_per_month[$key2] = $dates_per_month_array;
+                        $avg_per_month[$key2] = $value2['total_avg'];
+                    }
+                }
+
+                // Now, use the $skor_total_per_month and $avg_per_month arrays to populate 'January', 'February', etc. in $new_array
+                $new_row = array(
+                    'no' => $inc++,
+                    'unit_kerja' => $key,
+                    'kode' => $key1,
+                    'pic' => '-',
+                );
+
+                // Loop through each month and add the corresponding number of values and dates
+                foreach ($allMonths as $month) {
+                    $values = $skor_total_per_month[$month] ?? array();
+                    $dates = $dates_per_month[$month] ?? array();
+                    $avg = $avg_per_month[$month] ?? 0;
+                    if (isset($header_cell[$month]) && $header_cell[$month] === 1 && count($values) === 1 && $values[0] === 0) {
+                        $values = $values;
+                    } else {
+                        $values = array_pad($values, $max_values, 0);
+                    }
+
+                    $new_row[$month] = $values;
+                    $new_row[$month . '_avg'] = $avg;
+                    $new_row[$month . '_dates'] = $dates; // Add the dates for the month
+                }
+
+                // Add the row to the $new_array
+                $new_array[] = $new_row;
+            }
+        }
+
+
+
+
+        // dd($resultArray, $new_array);
         // Return a JSON response
         $arrView = array();
 
         $arrView['reg'] =  $regional;
         $arrView['bulan'] =  $bulan;
         $arrView['afd_rekap'] =  $resultArray;
-        $arrView['header_cell'] =  $header_cell;
+        $arrView['header_cell'] =  $header_cell2;
         $arrView['header_head'] =  $sum_header;
         $arrView['rata_rata'] =  $extractedData;
+        $arrView['visit'] =  $numericSkorArray;
+        $arrView['skoring'] =  $result_skor;
+        $arrView['new_afd'] =  $new_array;
 
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
 
-    public function detailEmplashmend($est, $afd, $date)
+
+
+    public function detailEmplashmend($est,  $date)
     {
 
+        // dd($est, $date);
 
-        $emplacement = DB::connection('mysql2')->table('perumahan')
-            ->select(
-                "perumahan.*",
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
-            )
+        $new_date = $date;
+
+
+        $prum_dates = DB::connection('mysql2')->table('perumahan')
+            ->select(DB::raw('DATE(perumahan.datetime) as date'))
             ->where('perumahan.datetime', 'like', '%' . $date . '%')
             ->where('perumahan.est', $est)
             ->where('perumahan.afd', 'EST')
+            ->groupBy(DB::raw('DATE(perumahan.datetime)'))
+            ->get();
+
+        $prum_dates = json_decode(json_encode($prum_dates), true);
+
+        $lcp_dates = DB::connection('mysql2')->table('perumahan')
+            ->select(DB::raw('DATE(perumahan.datetime) as date'))
+            ->where('perumahan.datetime', 'like', '%' . $date . '%')
+            ->where('perumahan.est', $est)
+            ->where('perumahan.afd', 'EST')
+            ->groupBy(DB::raw('DATE(perumahan.datetime)'))
+            ->get();
+
+        $lcp_dates = json_decode(json_encode($lcp_dates), true);
+
+        $lkl_dates = DB::connection('mysql2')->table('lingkungan')
+            ->select(DB::raw('DATE(lingkungan.datetime) as date'))
+            ->where('lingkungan.datetime', 'like', '%' . $date . '%')
+            ->where('lingkungan.est', $est)
+            ->where('lingkungan.afd', 'EST')
+            ->groupBy(DB::raw('DATE(lingkungan.datetime)'))
+            ->get();
+
+        $lkl_dates = json_decode(json_encode($lkl_dates), true);
+
+
+        // dd($uniqueDates);
+        $new_est = '-';
+        if ($est = 'NBM') {
+            $new_est = 'NBE';
+        } else {
+            $new_est = $est;
+        }
+        // dd($new_est);
+
+
+        $prafd_dates = DB::connection('mysql2')->table('perumahan')
+            ->select(DB::raw('DATE(perumahan.datetime) as date'))
+            ->where('perumahan.datetime', 'like', '%' . $date . '%')
+            ->where('perumahan.est', $new_est)
+            ->where('perumahan.afd', '!=', 'EST')
+            ->groupBy(DB::raw('DATE(perumahan.datetime)'))
+            ->get();
+
+        $prafd_dates = json_decode(json_encode($prafd_dates), true);
+
+
+
+        $lcafd_dates = DB::connection('mysql2')->table('landscape')
+            ->select(DB::raw('DATE(landscape.datetime) as date'))
+            ->where('landscape.datetime', 'like', '%' . $date . '%')
+            ->where('landscape.est', $new_est)
+            ->where('landscape.afd', '!=',  'EST')
+            ->groupBy(DB::raw('DATE(landscape.datetime)'))
+            ->get();
+
+        $lcafd_dates = json_decode(json_encode($lcafd_dates), true);
+
+        $lkafd_dates = DB::connection('mysql2')->table('lingkungan')
+            ->select(DB::raw('DATE(lingkungan.datetime) as date'))
+            ->where('lingkungan.datetime', 'like', '%' . $date . '%')
+            ->where('lingkungan.est', $new_est)
+            ->where('lingkungan.afd', '!=',  'EST')
+            ->groupBy(DB::raw('DATE(lingkungan.datetime)'))
+            ->get();
+
+        $lkafd_dates = json_decode(json_encode($lkafd_dates), true);
+
+        $combinedArray = array_merge(
+            $prum_dates,
+            $lcp_dates,
+            $lkl_dates,
+            $prafd_dates,
+            $lcafd_dates,
+            $lkafd_dates
+        );
+
+        // Extract the "date" values
+        $dates = array_column($combinedArray, 'date');
+
+        // Get unique dates
+        $uniqueDates = array_unique($dates);
+
+        // dd($uniqueDates);
+
+        ////// new
+
+        $emplacement = DB::connection('mysql2')->table('landscape')
+            ->select(
+                "landscape.*",
+                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
+            )
+            ->where('landscape.datetime', 'like', '%' . $date . '%')
+            ->where('landscape.est', $est)
+            ->where('landscape.afd', 'EST')
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
             ->orderBy('datetime', 'asc')
@@ -1861,7 +2146,7 @@ class emplacementsController extends Controller
         $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
 
 
-
+        // dd($date);
         // dd($emplacement, $landscape, $lingkungan);
 
         $hitungRmh = array();
@@ -1920,7 +2205,7 @@ class emplacementsController extends Controller
             }
         }
 
-        // dd($emplashmenOri, $hitungRmh);
+        // dd($hitungRmh);
 
 
         $hitungLandscape = array();
@@ -2058,20 +2343,25 @@ class emplacementsController extends Controller
                         }
                     }
 
-                    // dd($numberOfFotoTemuanLsKeys);
-                    for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                        $number++;
-                        $groupedData[] = array(
-                            "foto_temuan_ls" => $value2["foto_temuan_ls" . $i],
-                            "komentar_temuan_ls" => $value2["komentar_temuan_ls" . $i],
-                            "komentar_ls" => $value2["komentar_ls" . $i],
-                            "title" => $value2["est"] . "-" . $value2["afd"],
 
-                        );
+
+
+                    if ($value2['foto_temuan_ls1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_ls" => $value2["foto_temuan_ls" . $i],
+                                "komentar_temuan_ls" => $value2["komentar_temuan_ls" . $i],
+                                "komentar_ls" => $value2["komentar_ls" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Lscp[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Lscp[$key][$key1][$key2] = '';
                     }
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-                    $new_Lscp[$key][$key1][$key2][$index] = $groupedData;
                 }
             }
         }
@@ -2095,22 +2385,32 @@ class emplacementsController extends Controller
                         }
                     }
 
-                    for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                        $number++;
-                        $groupedData[] = array(
-                            "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
-                            "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
-                            "komentar_rmh" => $value2["komentar_rmh" . $i],
-                            "title" => $value2["est"] . "-" . $value2["afd"],
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_rmh1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
+                                "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
+                                "komentar_rmh" => $value2["komentar_rmh" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
 
-                        );
+                            );
+                        }
+
+                        $new_Rmh[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Rmh[$key][$key1][$key2] = '';
                     }
 
+
                     // Now, use the incremented index to create new arrays with desired keys and values
-                    $new_Rmh[$key][$key1][$key2][$index] = $groupedData;
+
                 }
             }
         }
+
+        // dd($new_Rmh);
         $new_lkngan = array();
 
         foreach ($hitungLingkungan as $key => $value) {
@@ -2128,20 +2428,24 @@ class emplacementsController extends Controller
                             $numberOfFotoTemuanLsKeys++;
                         }
                     }
-                    // dd($numberOfFotoTemuanLsKeys);
-                    for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                        $number++;
-                        $groupedData[] = array(
-                            "foto_temuan_ll" => $value2["foto_temuan_ll" . $i],
-                            "komentar_temuan_ll" => $value2["komentar_temuan_ll" . $i],
-                            "komentar_ll" => $value2["komentar_ll" . $i],
-                            "title" => $value2["est"] . "-" . $value2["afd"],
 
-                        );
+
+                    if ($value2['foto_temuan_ll1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_ll" => $value2["foto_temuan_ll" . $i],
+                                "komentar_temuan_ll" => $value2["komentar_temuan_ll" . $i],
+                                "komentar_ll" => $value2["komentar_ll" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_lkngan[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_lkngan[$key][$key1][$key2] = '';
                     }
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-                    $new_lkngan[$key][$key1][$key2][$index] = $groupedData;
                 }
             }
         }
@@ -2149,13 +2453,14 @@ class emplacementsController extends Controller
 
         // Output the result
 
+        // dd($new_Rmh);
         // dd($new_lkngan, $hitungLingkungan);
         $new_Rmh_result = array();
 
-        foreach ($new_Rmh as $key => $value) {
-            foreach ($value as $key1 => $value1) {
+        foreach ($new_Rmh as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
                 $merged_values = array();
-                foreach ($value1 as $key2 => $value2) {
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                     // Merge all the nested arrays into a single array
                     $merged_values = array_merge($merged_values, $value2);
                 }
@@ -2165,13 +2470,14 @@ class emplacementsController extends Controller
             // Unset the unnecessary level of the array
             $new_Rmh_result[$key][$key1] = $new_Rmh_result[$key][$key1];
         }
+        // dd($new_Rmh_result);
 
         $new_Lscp_result = array();
 
-        foreach ($new_Lscp as $key => $value) {
-            foreach ($value as $key1 => $value1) {
+        foreach ($new_Lscp as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
                 $merged_values = array();
-                foreach ($value1 as $key2 => $value2) {
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                     // Merge all the nested arrays into a single array
                     $merged_values = array_merge($merged_values, $value2);
                 }
@@ -2183,10 +2489,10 @@ class emplacementsController extends Controller
         }
         $new_lkngan_result = array();
 
-        foreach ($new_lkngan as $key => $value) {
-            foreach ($value as $key1 => $value1) {
+        foreach ($new_lkngan as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
                 $merged_values = array();
-                foreach ($value1 as $key2 => $value2) {
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                     // Merge all the nested arrays into a single array
                     $merged_values = array_merge($merged_values, $value2);
                 }
@@ -2198,7 +2504,7 @@ class emplacementsController extends Controller
         }
 
         // Output the result
-
+        // dd($new_Rmh_result);
         // Loop through the outermost array and merge the nested arrays for each key dynamically
         foreach ($new_Rmh_result as $key1 => $value1) {
             foreach ($value1 as $key2 => $value2) {
@@ -2263,16 +2569,1520 @@ class emplacementsController extends Controller
 
         // dd($paginatedItems_lscp);
 
+        // dd($paginatedItems);
         // Send the paginated collection to the view
+
+
+
+
+        // untuk afdeling 
+
+        // $estates = array_column($queryEste, 'est');
+        $new_est = '-';
+        if ($est = 'NBM') {
+            $new_est = 'NBE';
+        } else {
+            $new_est = $est;
+        }
+        // dd($new_est);
+        $prumahan_afd  = DB::connection('mysql2')->table('perumahan')
+            ->select(
+                "perumahan.*",
+                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
+            )
+            ->where('perumahan.datetime', 'like', '%' . $new_date . '%')
+            ->where('perumahan.est', $new_est)
+            ->where('perumahan.afd', '!=', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $prumahan_afd  = json_decode(json_encode($prumahan_afd), true); // Convert the collection to an array
+        $prumahan_afd  = collect($prumahan_afd)->groupBy(['est', 'afd'])->toArray();
+
+        $lingkungan_afd = DB::connection('mysql2')->table('lingkungan')
+            ->select(
+                "lingkungan.*",
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
+            )
+            ->where('lingkungan.datetime', 'like', '%' . $new_date . '%')
+            ->where('lingkungan.est', $new_est)
+            ->where('lingkungan.afd', '!=', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $lingkungan_afd = json_decode(json_encode($lingkungan_afd), true); // Convert the collection to an array
+        $lingkungan_afd = collect($lingkungan_afd)->groupBy(['est', 'afd'])->toArray();
+
+
+        $landscape_afd = DB::connection('mysql2')->table('landscape')
+            ->select(
+                "landscape.*",
+                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
+            )
+            ->where('landscape.datetime', 'like', '%' . $new_date . '%')
+            ->where('landscape.est', $new_est)
+            ->where('landscape.afd', '!=', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $landscape_afd = json_decode(json_encode($landscape_afd), true); // Convert the collection to an array
+        $landscape_afd = collect($landscape_afd)->groupBy(['est', 'afd'])->toArray();
+
+
+        // dd($prumahan_afd, $landscape_afd, $lingkungan_afd);
+
+        $hitungRmh_afd = array();
+        foreach ($prumahan_afd as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungRmh_afd[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungRmh_afd[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_rmh' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($hitungRmh_afd);
+
+        $new_Rmh_afd = array();
+
+        foreach ($hitungRmh_afd as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_rmh') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_rmh1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
+                                "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
+                                "komentar_rmh" => $value2["komentar_rmh" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Rmh_afd[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Rmh_afd[$key][$key1][$key2] = '';
+                    }
+
+
+                    // Now, use the incremented index to create new arrays with desired keys and values
+
+                }
+            }
+        }
+
+        $rmh_afd = array();
+
+        foreach ($new_Rmh_afd as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $rmh_afd[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $rmh_afd[$key][$key1] = $rmh_afd[$key][$key1];
+        }
+
+        foreach ($rmh_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $rmh_afd[$key1][$key2] = $mergedArray;
+            }
+        }
+
+        $mergeAfdRmh = [];
+        foreach ($rmh_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergeAfdRmh = array_merge($mergeAfdRmh, $value2);
+            }
+        }
+
+
+
+        $pagermh_afd =  new Collection($mergeAfdRmh);
+        $curent_afdrmh = $pagermh_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $pagianteafd_rmh = new LengthAwarePaginator($curent_afdrmh, count($pagermh_afd), $perPage);
+        $pagianteafd_rmh->setPath(request()->url());
+        // dd($rmh_afd, $mergeAfdRmh, $new_Rmh_result);
+        // dd($pagianteafd_rmh);
+
+        $hitungLcp_afd = array();
+        foreach ($landscape_afd as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungLcp_afd[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungLcp_afd[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_lcp' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['nilai_lcp' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['komentar_lcp' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $new_Lcp_afd = array();
+
+        foreach ($hitungLcp_afd as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_lcp') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_lcp1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_lcp" => $value2["foto_temuan_lcp" . $i],
+                                "komentar_temuan_lcp" => $value2["komentar_temuan_lcp" . $i],
+                                "komentar_lcp" => $value2["komentar_lcp" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Lcp_afd[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Lcp_afd[$key][$key1][$key2] = '';
+                    }
+
+
+                    // Now, use the incremented index to create new arrays with desired keys and values
+
+                }
+            }
+        }
+        // dd($new_Lcp_afd);
+
+
+        foreach ($new_Lcp_afd as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $new_Lcp_afd[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $new_Lcp_afd[$key][$key1] = $new_Lcp_afd[$key][$key1];
+        }
+
+
+
+        foreach ($new_Lcp_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $new_Lcp_afd[$key1][$key2] = $mergedArray;
+            }
+        }
+
+        $mergeAfdlcp = [];
+        foreach ($new_Lcp_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergeAfdlcp = array_merge($mergeAfdlcp, $value2);
+            }
+        }
+
+        // dd($mergeAfdlcp);
+
+        $pagelcp_afd =  new Collection($mergeAfdlcp);
+        $curent_afdlcp = $pagelcp_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $pagianteafd_lcp = new LengthAwarePaginator($curent_afdlcp, count($pagelcp_afd), $perPage);
+        $pagianteafd_lcp->setPath(request()->url());
+
+        // dd($pagianteafd_lcp);
+
+        $hitungLk_afd = array();
+        foreach ($lingkungan_afd as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungLk_afd[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungLk_afd[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_lk' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['foto_temuan_lk' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['nilai_lk' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['komentar_lk' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $new_Lk_afd = array();
+
+        foreach ($hitungLk_afd as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_lk') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_lk1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_lk" => $value2["foto_temuan_lk" . $i],
+                                "komentar_temuan_lk" => $value2["komentar_temuan_lk" . $i],
+                                "komentar_lk" => $value2["komentar_lk" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Lk_afd[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Lk_afd[$key][$key1][$key2] = '';
+                    }
+
+
+                    // Now, use the incremented index to create new arrays with desired keys and values
+
+                }
+            }
+        }
+
+        foreach ($new_Lk_afd as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $new_Lk_afd[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $new_Lk_afd[$key][$key1] = $new_Lk_afd[$key][$key1];
+        }
+
+
+
+        foreach ($new_Lk_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $new_Lk_afd[$key1][$key2] = $mergedArray;
+            }
+        }
+
+        $mergeAfdlk = [];
+        foreach ($new_Lk_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergeAfdlk = array_merge($mergeAfdlk, $value2);
+            }
+        }
+        $pagelk_afd =  new Collection($mergeAfdlk);
+        $curent_afdlk = $pagelk_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $pagianteafd_lk = new LengthAwarePaginator($curent_afdlk, count($pagelk_afd), $perPage);
+        $pagianteafd_lk->setPath(request()->url());
+
+
+        $dateString = $date;
+
+        // Convert the string to a DateTime object
+        $dateTimeObj = new DateTime($dateString);
+
+        // Get the year and month from the DateTime object
+        $yearAndMonth = $dateTimeObj->format('Y-m');
+        // dd($pagianteafd_lk);
         $arrView = array();
         $arrView['est'] =  $est;
-        $arrView['afd'] =  $afd;
+        // dd($date);
+
         $arrView['Landscape'] =  $paginatedItems_lscp;
         $arrView['lingkungan'] =  $paginatedItems_lkngan;
-        $arrView['tanggal'] =  $date;
+        $arrView['tanggal'] =  $yearAndMonth;
         $arrView['li'] =  $hitungRmh;
         $arrView['Perumahan'] = $paginatedItems;
 
+
+        // afd 
+        // dd($pagianteafd_lcp);
+        $arrView['rumah_afd'] = $pagianteafd_rmh;
+        $arrView['lcp_afd'] = $pagianteafd_lcp;
+        $arrView['lingkungan_afd'] = $pagianteafd_lk;
+        $arrView['date'] = $uniqueDates;
         return view('datailEmplashmend', $arrView);
+    }
+
+
+    public function getTemuan(Request $request)
+    {
+        $est = $request->input('estData');
+        $tanggal = $request->input('tanggal');
+
+
+        // $new_date = $date;
+
+
+
+
+        ////// new
+
+        $emplacement = DB::connection('mysql2')->table('landscape')
+            ->select(
+                "landscape.*",
+                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
+            )
+            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
+            ->where('landscape.est', $est)
+            ->where('landscape.afd', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
+        $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
+
+        // dd($emplacement);
+        $lingkungan = DB::connection('mysql2')->table('lingkungan')
+            ->select(
+                "lingkungan.*",
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
+            )
+            ->where('lingkungan.datetime', 'like', '%' . $tanggal . '%')
+            ->where('lingkungan.est', $est)
+            ->where('lingkungan.afd', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $lingkungan = json_decode(json_encode($lingkungan), true); // Convert the collection to an array
+        $lingkungan = collect($lingkungan)->groupBy(['est', 'afd'])->toArray();
+
+
+        $landscape = DB::connection('mysql2')->table('landscape')
+            ->select(
+                "landscape.*",
+                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
+            )
+            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
+            ->where('landscape.est', $est)
+            ->where('landscape.afd', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
+        $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
+
+
+        // dd($date);
+        // dd($emplacement, $landscape, $lingkungan);
+
+        $hitungRmh = array();
+        foreach ($emplacement as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungRmh[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_Lngkl' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungRmh[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungRmh[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($hitungRmh);
+
+
+        $hitungLandscape = array();
+        foreach ($landscape as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungLandscape[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_Lngkl' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungLandscape[$key][$key1][$key2]['foto_temuan_ls' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungLandscape[$key][$key1][$key2]['nilai_ls' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungLandscape[$key][$key1][$key2]['komentar_ls' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        $hitungLingkungan = array();
+
+        foreach ($lingkungan as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungLingkungan[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_Lngkl' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungLingkungan[$key][$key1][$key2]['foto_temuan_ll' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungLingkungan[$key][$key1][$key2]['nilai_ll' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungLingkungan[$key][$key1][$key2]['komentar_ll' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($hitungRmh, $hitungLandscape, $hitungLingkungan);
+
+        $new_Lscp = array();
+
+        foreach ($hitungLandscape as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_ls') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+
+
+
+                    if ($value2['foto_temuan_ls1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_ls" => $value2["foto_temuan_ls" . $i],
+                                "komentar_temuan_ls" => $value2["komentar_temuan_ls" . $i],
+                                "komentar_ls" => $value2["komentar_ls" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Lscp[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Lscp[$key][$key1][$key2] = '';
+                    }
+                }
+            }
+        }
+
+        // dd($new_Lscp);
+        $new_Rmh = array();
+
+        foreach ($hitungRmh as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_rmh') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_rmh1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
+                                "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
+                                "komentar_rmh" => $value2["komentar_rmh" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Rmh[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Rmh[$key][$key1][$key2] = '';
+                    }
+
+
+                    // Now, use the incremented index to create new arrays with desired keys and values
+
+                }
+            }
+        }
+
+        // dd($new_Rmh);
+        $new_lkngan = array();
+
+        foreach ($hitungLingkungan as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_ll') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+
+                    if ($value2['foto_temuan_ll1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_ll" => $value2["foto_temuan_ll" . $i],
+                                "komentar_temuan_ll" => $value2["komentar_temuan_ll" . $i],
+                                "komentar_ll" => $value2["komentar_ll" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_lkngan[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_lkngan[$key][$key1][$key2] = '';
+                    }
+                }
+            }
+        }
+
+
+        // Output the result
+
+        // dd($new_Rmh);
+        // dd($new_lkngan, $hitungLingkungan);
+        $new_Rmh_result = array();
+
+        foreach ($new_Rmh as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $new_Rmh_result[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $new_Rmh_result[$key][$key1] = $new_Rmh_result[$key][$key1];
+        }
+        // dd($new_Rmh_result);
+
+        $new_Lscp_result = array();
+
+        foreach ($new_Lscp as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $new_Lscp_result[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $new_Lscp_result[$key][$key1] = $new_Lscp_result[$key][$key1];
+        }
+        $new_lkngan_result = array();
+
+        foreach ($new_lkngan as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $new_lkngan_result[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $new_lkngan_result[$key][$key1] = $new_lkngan_result[$key][$key1];
+        }
+
+        // Output the result
+        // dd($new_Rmh_result);
+        // Loop through the outermost array and merge the nested arrays for each key dynamically
+        foreach ($new_Rmh_result as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $new_Rmh_result[$key1][$key2] = $mergedArray;
+            }
+        }
+        foreach ($new_Lscp_result as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $new_Lscp_result[$key1][$key2] = $mergedArray;
+            }
+        }
+        foreach ($new_lkngan_result as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $new_lkngan_result[$key1][$key2] = $mergedArray;
+            }
+        }
+
+        // pagination perumahan 
+        // dd($new_Rmh_result);
+        $mergedArray = [];
+        foreach ($new_Rmh_result as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge($mergedArray, $value2);
+            }
+        }
+        $mergedArray_lscp = [];
+        foreach ($new_Lscp_result as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray_lscp = array_merge($mergedArray_lscp, $value2);
+            }
+        }
+        $mergedArray_lkngn = [];
+        foreach ($new_lkngan_result as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray_lkngn = array_merge($mergedArray_lkngn, $value2);
+            }
+        }
+
+        // Convert the flat array into a Laravel collection
+        $collection = new Collection($mergedArray);
+        $collection_ls = new Collection($mergedArray_lscp);
+        $collection_lkngn = new Collection($mergedArray_lkngn);
+
+        // Paginate the collection with 8 items per page
+        $perPage = 8;
+        $currentPage = Paginator::resolveCurrentPage('page');
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $paginatedItems = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
+        $paginatedItems->setPath(request()->url());
+
+
+        $currentPageItems_ls = $collection_ls->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $paginatedItems_lscp = new LengthAwarePaginator($currentPageItems_ls, count($collection_ls), $perPage);
+        $paginatedItems_lscp->setPath(request()->url());
+
+        $currentPageItems_lkngn = $collection_lkngn->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $paginatedItems_lkngan = new LengthAwarePaginator($currentPageItems_lkngn, count($collection_lkngn), $perPage);
+        $paginatedItems_lkngan->setPath(request()->url());
+
+        // dd($paginatedItems_lscp);
+
+        // dd($paginatedItems);
+        // Send the paginated collection to the view
+
+
+
+
+        // untuk afdeling 
+
+        // $estates = array_column($queryEste, 'est');
+        $new_est = '-';
+        if ($est = 'NBM') {
+            $new_est = 'NBE';
+        } else {
+            $new_est = $est;
+        }
+        // dd($new_est);
+        $prumahan_afd  = DB::connection('mysql2')->table('perumahan')
+            ->select(
+                "perumahan.*",
+                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
+            )
+            ->where('perumahan.datetime', 'like', '%' . $tanggal . '%')
+            ->where('perumahan.est', $new_est)
+            ->where('perumahan.afd', '!=', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $prumahan_afd  = json_decode(json_encode($prumahan_afd), true); // Convert the collection to an array
+        $prumahan_afd  = collect($prumahan_afd)->groupBy(['est', 'afd'])->toArray();
+
+        $lingkungan_afd = DB::connection('mysql2')->table('lingkungan')
+            ->select(
+                "lingkungan.*",
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
+            )
+            ->where('lingkungan.datetime', 'like', '%' . $tanggal . '%')
+            ->where('lingkungan.est', $new_est)
+            ->where('lingkungan.afd', '!=', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $lingkungan_afd = json_decode(json_encode($lingkungan_afd), true); // Convert the collection to an array
+        $lingkungan_afd = collect($lingkungan_afd)->groupBy(['est', 'afd'])->toArray();
+
+
+        $landscape_afd = DB::connection('mysql2')->table('landscape')
+            ->select(
+                "landscape.*",
+                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
+            )
+            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
+            ->where('landscape.est', $new_est)
+            ->where('landscape.afd', '!=', 'EST')
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $landscape_afd = json_decode(json_encode($landscape_afd), true); // Convert the collection to an array
+        $landscape_afd = collect($landscape_afd)->groupBy(['est', 'afd'])->toArray();
+
+
+        // dd($prumahan_afd, $landscape_afd, $lingkungan_afd);
+
+        $hitungRmh_afd = array();
+        foreach ($prumahan_afd as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungRmh_afd[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungRmh_afd[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_rmh' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungRmh_afd[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($hitungRmh_afd);
+
+        $new_Rmh_afd = array();
+
+        foreach ($hitungRmh_afd as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_rmh') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_rmh1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
+                                "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
+                                "komentar_rmh" => $value2["komentar_rmh" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Rmh_afd[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Rmh_afd[$key][$key1][$key2] = '';
+                    }
+
+
+                    // Now, use the incremented index to create new arrays with desired keys and values
+
+                }
+            }
+        }
+
+        $rmh_afd = array();
+
+        foreach ($new_Rmh_afd as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $rmh_afd[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $rmh_afd[$key][$key1] = $rmh_afd[$key][$key1];
+        }
+
+        foreach ($rmh_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $rmh_afd[$key1][$key2] = $mergedArray;
+            }
+        }
+
+        $mergeAfdRmh = [];
+        foreach ($rmh_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergeAfdRmh = array_merge($mergeAfdRmh, $value2);
+            }
+        }
+
+
+
+        $pagermh_afd =  new Collection($mergeAfdRmh);
+        $curent_afdrmh = $pagermh_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $pagianteafd_rmh = new LengthAwarePaginator($curent_afdrmh, count($pagermh_afd), $perPage);
+        $pagianteafd_rmh->setPath(request()->url());
+        // dd($rmh_afd, $mergeAfdRmh, $new_Rmh_result);
+        // dd($pagianteafd_rmh);
+
+        $hitungLcp_afd = array();
+        foreach ($landscape_afd as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungLcp_afd[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungLcp_afd[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_lcp' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['nilai_lcp' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungLcp_afd[$key][$key1][$key2]['komentar_lcp' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $new_Lcp_afd = array();
+
+        foreach ($hitungLcp_afd as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_lcp') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_lcp1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_lcp" => $value2["foto_temuan_lcp" . $i],
+                                "komentar_temuan_lcp" => $value2["komentar_temuan_lcp" . $i],
+                                "komentar_lcp" => $value2["komentar_lcp" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Lcp_afd[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Lcp_afd[$key][$key1][$key2] = '';
+                    }
+
+
+                    // Now, use the incremented index to create new arrays with desired keys and values
+
+                }
+            }
+        }
+        // dd($new_Lcp_afd);
+
+
+        foreach ($new_Lcp_afd as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $new_Lcp_afd[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $new_Lcp_afd[$key][$key1] = $new_Lcp_afd[$key][$key1];
+        }
+
+
+
+        foreach ($new_Lcp_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $new_Lcp_afd[$key1][$key2] = $mergedArray;
+            }
+        }
+
+        $mergeAfdlcp = [];
+        foreach ($new_Lcp_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergeAfdlcp = array_merge($mergeAfdlcp, $value2);
+            }
+        }
+
+        // dd($mergeAfdlcp);
+
+        $pagelcp_afd =  new Collection($mergeAfdlcp);
+        $curent_afdlcp = $pagelcp_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $pagianteafd_lcp = new LengthAwarePaginator($curent_afdlcp, count($pagelcp_afd), $perPage);
+        $pagianteafd_lcp->setPath(request()->url());
+
+        // dd($pagianteafd_lcp);
+
+        $hitungLk_afd = array();
+        foreach ($lingkungan_afd as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                // Initialize the "nilai_total" for each month to 0
+                $hitungLk_afd[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            // Store the sum in the "nilai_total" key of the corresponding index
+                            $date = $value3['datetime'];
+                            // Get the year and month from the datetime
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $nilai = explode('$', $value3['nilai']);
+                            $komentar = explode('$', $value3['komentar']);
+
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungLk_afd[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_lk' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['foto_temuan_lk' . ($i + 1)] = $foto;
+                            }
+
+                            foreach ($kom_temuan as $i => $komn) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
+                            }
+
+                            foreach ($nilai as $i => $nilai) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['nilai_lk' . ($i + 1)] = $nilai;
+                            }
+
+                            foreach ($komentar as $i => $komens) {
+                                // Create new keys for each exploded value
+                                $hitungLk_afd[$key][$key1][$key2]['komentar_lk' . ($i + 1)] = $komens;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $new_Lk_afd = array();
+
+        foreach ($hitungLk_afd as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $index = 0; // Initialize index here
+                foreach ($value1 as $key2 => $value2) {
+                    $index++; // Increment the index inside the loop
+
+                    // Group data based on "rmhX" keys
+                    $number = 1;
+                    $groupedData = array();
+                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
+                    foreach ($value2 as $key3 => $value3) {
+                        if (strpos($key3, 'foto_temuan_lk') === 0) {
+                            $numberOfFotoTemuanLsKeys++;
+                        }
+                    }
+
+                    // dd($hitungRmh);
+                    if ($value2['foto_temuan_lk1'] !== '') {
+                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
+                            $number++;
+                            $groupedData[] = array(
+                                "foto_temuan_lk" => $value2["foto_temuan_lk" . $i],
+                                "komentar_temuan_lk" => $value2["komentar_temuan_lk" . $i],
+                                "komentar_lk" => $value2["komentar_lk" . $i],
+                                "title" => $value2["est"] . "-" . $value2["afd"],
+
+                            );
+                        }
+
+                        $new_Lk_afd[$key][$key1][$key2][$index] = $groupedData;
+                    } else {
+                        $new_Lk_afd[$key][$key1][$key2] = '';
+                    }
+
+
+                    // Now, use the incremented index to create new arrays with desired keys and values
+
+                }
+            }
+        }
+
+        foreach ($new_Lk_afd as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $merged_values = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // Merge all the nested arrays into a single array
+                    $merged_values = array_merge($merged_values, $value2);
+                }
+                // Add the merged array to the result
+                $new_Lk_afd[$key][$key1] = $merged_values;
+            }
+            // Unset the unnecessary level of the array
+            $new_Lk_afd[$key][$key1] = $new_Lk_afd[$key][$key1];
+        }
+
+
+
+        foreach ($new_Lk_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergedArray = array_merge(...$value2);
+                $new_Lk_afd[$key1][$key2] = $mergedArray;
+            }
+        }
+
+        $mergeAfdlk = [];
+        foreach ($new_Lk_afd as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                $mergeAfdlk = array_merge($mergeAfdlk, $value2);
+            }
+        }
+        $pagelk_afd =  new Collection($mergeAfdlk);
+        $curent_afdlk = $pagelk_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $pagianteafd_lk = new LengthAwarePaginator($curent_afdlk, count($pagelk_afd), $perPage);
+        $pagianteafd_lk->setPath(request()->url());
+
+
+        $dateString = $date;
+
+        // Convert the string to a DateTime object
+        $dateTimeObj = new DateTime($dateString);
+
+        // Get the year and month from the DateTime object
+        $yearAndMonth = $dateTimeObj->format('Y-m');
+        // dd($pagianteafd_lk);
+        $arrView = array();
+        $arrView['est'] =  $est;
+        // dd($date);
+
+        $arrView['Landscape'] =  $paginatedItems_lscp;
+        $arrView['lingkungan'] =  $paginatedItems_lkngan;
+        $arrView['tanggal'] =  $yearAndMonth;
+        $arrView['li'] =  $hitungRmh;
+        $arrView['Perumahan'] = $paginatedItems;
+
+
+        // afd 
+        // dd($pagianteafd_lcp);
+        $arrView['rumah_afd'] = $pagianteafd_rmh;
+        $arrView['lcp_afd'] = $pagianteafd_lcp;
+        $arrView['lingkungan_afd'] = $pagianteafd_lk;
+
+
+        echo json_encode($arrView);
+        exit();
     }
 }

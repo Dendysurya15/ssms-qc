@@ -175,7 +175,7 @@ session_start();
 
                         <li class="nav-item">
                             <a href="{{ asset('/dashboard_perum') }}" class="nav-link">
-                                <div class="nav-icon lottie-animation" data-animation-path="https://assets1.lottiefiles.com/packages/lf20_bENSfZ37DY.json">
+                                <div class="nav-icon lottie-animation" data-animation-path="{{ asset('img/homejson.json') }}">
                                 </div>
 
                                 <p>

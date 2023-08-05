@@ -1933,38 +1933,7 @@
                 };
                 L.control.layers(baseMaps).addTo(map);
 
-                // polygonCoords.forEach(function(coordinate, index) {
-                //     // Create a custom icon for the marker
-                //     var customIcon = new L.Icon({
-                //         iconUrl: "https://raw.githubusercontent.com/sheiun/leaflet-color-number-markers/main/dist/img/blue/marker-icon-2x-blue-" + (index + 1) + ".png",
-                //         shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-                //         iconSize: [25, 41],
-                //         iconAnchor: [12, 41],
-                //         popupAnchor: [1, -34],
-                //         shadowSize: [41, 41]
-                //     });
 
-                //     // Create a marker for the coordinate using the custom icon
-                //     var marker = L.marker(coordinate, { icon: customIcon }).addTo(map);
-
-                //     // You can customize the marker if needed
-                //     // marker.bindPopup('Marker popup content');
-                // });
-                // var estatePolygon = L.polygon(polygonCoords, {
-                //     color: '#003B73'
-                // }).addTo(map).bindPopup('<strong>Estate:</strong>' + est);
-                // // console.log(plot_blok_all);
-
-                // var bounds = estatePolygon.getBounds();
-                //         var center = bounds.getCenter();
-
-                //         // Create a custom HTML icon with centered text
-                //         var textIcon = L.divIcon({
-                //             className: 'text-icon-estate',
-                //             html: '<strong>' + est + ' <br> Estate</strong>',
-                //             iconSize: [100, 20],
-                //             iconAnchor: [50, 10]
-                //         });
 
                 for (var blockName in plot_blok_all) {
                     // Get the coordinates array for the current block
@@ -2028,12 +1997,7 @@
                     latlngs.push(latlngGroup);
                 }
 
-                // console.log(latlngs)
-                // var latlngs = [
-                //     [45.51, -122.68],
-                //     [37.77, -122.43],
-                //     [34.04, -118.2]
-                // ];
+
 
                 var polyline = L.polyline(latlngs, {
                     color: 'yellow'
@@ -2117,40 +2081,6 @@
                 });
                 // console.log(trans_plot);
 
-                // function trans() {
-                //     for (var i = 0; i < trans_plot.length; i++) {
-                //         var lat = parseFloat(trans_plot[i].lat);
-                //         var lon = parseFloat(trans_plot[i].lon);
-                //         var blok = trans_plot[i].blok;
-                //         var foto_temuan = trans_plot[i].foto_temuan;
-                //         var foto_fu = trans_plot[i].foto_fu;
-                //         var komentar = trans_plot[i].komentar;
-
-                //         var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
-
-
-                //         var popupContent = `<strong>Mutu Transport Blok: </strong>${blok}<br/>`;
-
-                //         if (foto_temuan) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         if (foto_fu) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mt/${foto_fu}" alt="Foto FU" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-
-                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                //         var marker = L.marker([lat, lon], {
-                //             icon: markerIcon
-                //         });
-
-                //         marker.bindPopup(popupContent);
-
-                //         transGroup.addLayer(marker);
-                //     }
-                // }
 
                 function trans() {
                     for (var key in trans_plot) {
@@ -2245,35 +2175,6 @@
                 });
 
 
-                // console.log(buah_plot);
-
-                // function buah() {
-                //     for (var i = 0; i < buah_plot.length; i++) {
-                //         var lat = parseFloat(buah_plot[i].lat);
-                //         var lon = parseFloat(buah_plot[i].lon);
-                //         var blok = buah_plot[i].blok;
-                //         var foto_temuan = buah_plot[i].foto_temuan;
-                //         var komentar = buah_plot[i].komentar;
-
-                //         var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
-
-                //         var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
-
-                //         if (foto_temuan) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_mb/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         popupContent += `<strong>Komentar: </strong>${komentar}`;
-
-                //         var marker = L.marker([lat, lon], {
-                //             icon: markerIcon
-                //         });
-
-                //         marker.bindPopup(popupContent);
-
-                //         buahGroup.addLayer(marker);
-                //     }
-                // }
 
                 function buah() {
                     for (var key in buah_plot) {
@@ -2379,87 +2280,6 @@
                 });
 
 
-                // function ancak() {
-                //     for (var i = 0; i < ancak_plot.length; i++) {
-                //         var lat = parseFloat(ancak_plot[i].lat);
-                //         var lon = parseFloat(ancak_plot[i].lon);
-                //         var blok = ancak_plot[i].blok;
-                //         var ket = ancak_plot[i].ket;
-                //         var foto_temuan1 = ancak_plot[i].foto_temuan1;
-                //         var foto_temuan2 = ancak_plot[i].foto_temuan2;
-                //         var foto_fu1 = ancak_plot[i].foto_fu1;
-                //         var foto_fu2 = ancak_plot[i].foto_fu2;
-                //         var komentar = ancak_plot[i].komentar;
-
-                //         var luas_blok = ancak_plot[i].luas_blok;
-                //         var sph = ancak_plot[i].sph;
-                //         var sample = ancak_plot[i].sample;
-                //         var pokok_kuning = ancak_plot[i].pokok_kuning;
-                //         var piringan_semak = ancak_plot[i].piringan_semak;
-                //         var underpruning = ancak_plot[i].underpruning;
-                //         var overpruning = ancak_plot[i].overpruning;
-                //         var jjg = ancak_plot[i].jjg;
-                //         var brtp = ancak_plot[i].brtp;
-                //         var brtk = ancak_plot[i].brtk;
-                //         var brtgl = ancak_plot[i].brtgl;
-                //         var bhts = ancak_plot[i].bhts;
-                //         var bhtm1 = ancak_plot[i].bhtm1;
-                //         var bhtm2 = ancak_plot[i].bhtm2;
-                //         var bhtm3 = ancak_plot[i].bhtm3;
-                //         var ps = ancak_plot[i].ps;
-                //         var sp = ancak_plot[i].sp;
-                //         var time = ancak_plot[i].time;
-                //         var markerIcon = (foto_fu1 || foto_fu2) ? cakfu2 : (foto_temuan1 || foto_temuan2) ? caktemuan2 : caktemuan1;
-
-                //         var popupContent = `<strong>Mutu Ancak Blok: </strong>${blok}<br/>`;
-
-                //         popupContent += `<strong>luas_blok: </strong>${luas_blok}<br/>`;
-                //         popupContent += `<strong>sph: </strong>${sph}<br/>`;
-                //         popupContent += `<strong>sample: </strong>${sample}<br/>`;
-                //         popupContent += `<strong>Pokok Kuning: </strong>${pokok_kuning}<br/>`;
-                //         popupContent += `<strong>Piringan Semak: </strong>${piringan_semak}<br/>`;
-                //         popupContent += `<strong>Underpruning: </strong>${underpruning}<br/>`;
-                //         popupContent += `<strong>Overpruning: </strong>${overpruning}<br/>`;
-                //         popupContent += `<strong>Janjang: </strong>${jjg}<br/>`;
-                //         popupContent += `<strong>Brondolan (P): </strong>${brtp}<br/>`;
-                //         popupContent += `<strong>Brondolan (K): </strong>${brtk}<br/>`;
-                //         popupContent += `<strong>Brondolan (TGL): </strong>${brtgl}<br/>`;
-                //         popupContent += `<strong>Buah Tinggal (S): </strong>${bhts}<br/>`;
-                //         popupContent += `<strong>Buah Tinggal (M1): </strong>${bhtm1}<br/>`;
-                //         popupContent += `<strong>Buah Tinggal (M2): </strong>${bhtm2}<br/>`;
-                //         popupContent += `<strong>Buah Tinggal (M3): </strong>${bhtm3}<br/>`;
-                //         popupContent += `<strong>Palepah Sengklek: </strong>${ps}<br/>`;
-                //         popupContent += `<strong>Frond Stacking: </strong>${sp}<br/>`;
-                //         popupContent += `<strong>Sidak: </strong>${time}<br/>`;
-                //         if (foto_temuan1) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan1}" alt="Foto Temuan 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         if (foto_temuan2) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_temuan2}" alt="Foto Temuan 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         if (foto_fu1) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu1}" alt="Foto FU 1" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         if (foto_fu2) {
-                //             popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_ma/${foto_fu2}" alt="Foto FU 2" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                //         }
-
-                //         if (komentar) {
-                //             popupContent += `<strong>Komentar: </strong>${komentar}`;
-                //         }
-                //         var marker = L.marker([lat, lon], {
-                //             icon: markerIcon
-                //         });
-
-                //         marker.bindPopup(popupContent);
-
-                //         ancakGroup.addLayer(marker);
-                //     }
-                // }
-                // console.log(ancak_plot);
 
                 function ancak() {
                     for (var i = 0; i < ancak_plot.length; i++) {
@@ -2672,23 +2492,6 @@
 
 
 
-
-                // ...
-
-
-                // Toggle layer visibility when the eye icon is clicked
-                // Toggle layer visibility when the eye icon is clicked
-                // eye.addEventListener('click', function() {
-                //     var index = parseInt(this.dataset.index);
-
-                //     // Remove all layers
-                //     for (var j = 0; j < layers.length; j++) {
-                //         map.removeLayer(layers[j]);
-                //     }
-
-                //     // Add the clicked layer
-                //     map.addLayer(layers[index]);
-                // });
 
 
             },

@@ -2331,7 +2331,7 @@
 
         $.ajax({
             url: "{{ route('getFindData') }}",
-            method: "POST",
+            method: "get",
             data: {
                 regional: regional,
                 date: date,
@@ -2367,7 +2367,7 @@
                 // console.log(sortedArray);
 
 
-                // console.log(newCum);
+                console.log(newCum);
                 var arrTbody1 = newCum
                 // console.log(arrTbody1);
 

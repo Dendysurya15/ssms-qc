@@ -72,7 +72,7 @@ Route::get('/cetakpdf/{id}', [unitController::class, 'cetakpdf']);
 
 Route::get('/dashboard_inspeksi', [inspectController::class, 'dashboard_inspeksi'])->name('dashboard_inspeksi');
 Route::get('/cetakPDFFI/{id}/{est}/{tgl}', [inspectController::class, 'cetakPDFFI'])->name('cetakPDFFI');
-Route::post('/getFindData', [inspectController::class, 'getFindData'])->name('getFindData');
+Route::get('/getFindData', [inspectController::class, 'getFindData'])->name('getFindData');
 Route::post('/changeDataInspeksi', [inspectController::class, 'changeDataInspeksi'])->name('changeDataInspeksi');
 Route::post('/plotEstate', [inspectController::class, 'plotEstate'])->name('plotEstate');
 Route::get('/plotBlok', [inspectController::class, 'plotBlok'])->name('plotBlok');
@@ -136,9 +136,7 @@ Route::get('/cetakFiSmb/{est}/{tgl}', [MutubuahController::class, 'cetakFiSmb'])
 Route::get('/getMapsdetail', [inspectController::class, 'getMapsdetail'])->name('getMapsdetail');
 
 
-Route::get('/dashboard_perum', [emplacementsController::class, 'dashboard_perum'])->name('dashboard_perum');
-Route::get('/getAFD', [emplacementsController::class, 'getAFD'])->name('getAFD');
-Route::get('/estAFD', [emplacementsController::class, 'estAFD'])->name('estAFD');
+
 Route::get('/User/user', [userNewController::class, 'showUser'])->name('user.show');
 Route::post('/getuser', [userNewController::class, 'getuser'])->name('getuser');
 Route::post('/update_user', [userNewController::class, 'update_user'])->name('update_user');
@@ -168,4 +166,11 @@ Route::get('getMapsTph', [SidaktphController::class, 'getMapsTph'])->name('getMa
 
 Route::get('/getMapsData', [MutubuahController::class, 'getMapsData'])->name('getMapsData');
 
-Route::get('detailEmplashmend/{est}/{afd}/{date}', [emplacementsController::class, 'detailEmplashmend'])->name('detailEmplashmend');
+Route::get('detailEmplashmend/{est}/{date}', [emplacementsController::class, 'detailEmplashmend'])->name('detailEmplashmend');
+Route::get('getDateBA/{est}/{date}', [emplacementsController::class, 'getDateBA'])->name('getDateBA');
+Route::get('/dashboard_perum', [emplacementsController::class, 'dashboard_perum'])->name('dashboard_perum');
+Route::get('/getAFD', [emplacementsController::class, 'getAFD'])->name('getAFD');
+Route::get('/estAFD', [emplacementsController::class, 'estAFD'])->name('estAFD');
+
+
+Route::get('/getTemuan', [emplacementsController::class, 'getTemuan'])->name('getTemuan');
