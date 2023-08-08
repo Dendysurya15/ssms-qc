@@ -70,23 +70,39 @@
                 <div class="right-container">
                     <div class="date">
                         {{ csrf_field() }}
-
                         <input type="hidden" name="est" id="est" value="{{$est}}">
                         <select class="form-control" name="date" id="inputDate">
                             <option value="" disabled selected hidden>Pilih tanggal</option>
                             @foreach($date as $item)
-                            <option value="{{ $item}}">{{ $item }}</option>
+                            <option value="{{ $item }}">{{ $item }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="ml-2 btn btn-primary mb-2" id="empData">Show</button>
+                        <button type="button" class="ml-2 btn btn-primary mb-2" id="empData" onclick="showData()">Show</button>
                     </div>
                     <div class="afd mt-2"> ESTATE/ AFD : {{$est}}</div>
                     <div class="afd">Tahun/Bulan : <span id="selectedDate">{{ $tanggal }}</span></div>
-                    <button id="back-to-data-btn" class="btn btn-primary" onclick="downloadpdf()" disabled>Download PDF</button>
-                    <button id="back-to-data-btn" class="btn btn-primary" onclick="downloadBA()" disabled>Download BA</button>
-                    <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Home</button>
+                    <!-- <button id="back-to-data-btn" class="btn btn-primary" onclick="downloadpdf()">Download PDF</button> -->
 
+                    <form action="{{ route('downloadPDF') }}" method="POST" class="form-inline" style="display: inline;" target="_blank" id="downloadPDF">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="estPDF" id="estPDF" value="{{$est}}">
+                        <input type="hidden" name="tglpdfnew" id="tglpdfnew">
+                        <button type="submit" class="btn btn-primary" id="downloadpdf" disabled>
+                            Download PDF
+                        </button>
+                    </form>
+
+                    <form action="{{ route('downloadBAemp') }}" method="POST" class="form-inline" style="display: inline;" target="_blank" id="download-form">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="estBA" id="estpdf" value="{{$est}}">
+                        <input type="hidden" name="tglPDF" id="tglPDF">
+                        <button type="submit" class="btn btn-primary" id="downloadba" disabled>
+                            Download BA
+                        </button>
+                    </form>
+                    <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Home</button>
                 </div>
+
             </div>
         </div>
         <br>
@@ -115,192 +131,15 @@
                 }
             </style>
 
-            <!-- 
-            <div class="text-center mt-3 mb-2 border border-dark">
-                @if ($Perumahan->count() > 0)
-             
-                <div class="text-center">
-                    <h1>Foto Temuan Perumahan</h1>
-                </div>
-                <div class="row justify-content-center">
-                    @foreach ($Perumahan as $item)
-                    @php
-                    $imageUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/" . $item['foto_temuan_rmh'];
-                    $imageInfo = @getimagesize($imageUrl);
-                    $imageSrc = $imageInfo ? $imageUrl : asset('img/404img.png');
-                    @endphp
 
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="card">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_rmh'] }}" class="img-thumbnail" data-toggle="modal" data-target="#myModal{{ $loop->iteration }}">
-
-                            <div class="card-body mt-2">
-                                <h5 class="card-title text-right">Est: {{ $item['title'] }}</h5>
-                                <p class="card-text text-left">Temuan: {{ $item['komentar_temuan_rmh'] }}</p>
-                                <p class="card-text text-left">Komentar: {{ $item['komentar_rmh'] }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endforeach
-                </div>
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $Perumahan->links() }}
-                </div>
-
-                @else
-                <p>Perumahan not found.</p>
-                @endif
-            </div> -->
-            <!-- 
-            <div class="text-center mt-3 mb-2 border border-dark">
-                @if ($lingkungan->count() > 0)
-
-                <div class="text-center">
-                    <h1>Foto Temuan Lingkungan</h1>
-                </div>
-                <div class="row justify-content-center">
-                    @foreach ($lingkungan as $item)
-                    @php
-                    $imageUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/" . $item['foto_temuan_ll'];
-                    $imageInfo = @getimagesize($imageUrl);
-                    $imageSrc = $imageInfo ? $imageUrl : asset('img/404img.png');
-                    @endphp
-
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="card">
-
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_ll'] }}" class="img-thumbnail" data-toggle="modal" data-target="#lingkunganMod{{ $loop->iteration }}">
-
-                            <div class="card-body mt-2">
-                                <h5 class="card-title text-right">Est: {{ $item['title'] }}</h5>
-                                <p class="card-text text-left">Temuan: {{ $item['komentar_temuan_ll'] }}</p>
-                                <p class="card-text text-left">Komentar: {{ $item['komentar_ll'] }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endforeach
-                </div>
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $lingkungan->links() }}
-                </div>
-
-                @else
-                <p>Lingkungan not found.</p>
-                @endif
-            </div> -->
-
-            <!-- 
-            <div class="text-center mt-3 mb-2 border border-dark">
-                @if ($Landscape->count() > 0)
-
-                <div class="text-center">
-                    <h1>Foto Temuan Landscape</h1>
-                </div>
-                <div class="row justify-content-center">
-                    @foreach ($Landscape as $item)
-                    @php
-                    $imageUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/landscape/" . $item['foto_temuan_ls'];
-                    $imageInfo = @getimagesize($imageUrl);
-                    $imageSrc = $imageInfo ? $imageUrl : asset('img/404img.png');
-                    @endphp
-
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="card">
-                            <img src="{{ $imageSrc }}" alt="" class="img-thumbnail" data-toggle="modal" data-target="#landcsp{{ $loop->iteration }}">
-
-                            <div class="card-body mt-2">
-                                <h5 class="card-title text-right">Est: {{ $item['title'] }}</h5>
-                                <p class="card-text text-left">Temuan: {{ $item['komentar_temuan_ls'] }}</p>
-                                <p class="card-text text-left">Komentar: {{ $item['komentar_ls'] }}</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $Landscape->links() }}
-                </div>
-
-                @else
-                <p>Landscape not found.</p>
-                @endif
-            </div> -->
-
-
-
-            <!-- modoal  -->
-            <!-- Move the modal section outside of the loop -->
-
-            <!-- @foreach ($Perumahan as $item)
-            <div class="modal fade" id="myModal{{ $loop->iteration }}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center">{{ $item['title'] }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_rmh'] }}" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <p class="card-text text-left mb-0"><strong>Temuan:</strong> {{ $item['komentar_temuan_rmh'] }}</p>
-                            <p class="card-text text-left mb-0"><strong>Komentar:</strong> {{ $item['komentar_rmh'] }}</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="text-center mt-3 mb-2 border border-dark" id="perumahan">
             </div>
-            @endforeach
-            @foreach ($lingkungan as $item)
-            <div class="modal fade" id="lingkunganMod{{ $loop->iteration }}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center">{{ $item['title'] }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_ll'] }}" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <p class="card-text text-left mb-0"><strong>Temuan:</strong> {{ $item['foto_temuan_ll'] }}</p>
-                            <p class="card-text text-left mb-0"><strong>Komentar:</strong> {{ $item['komentar_ll'] }}</p>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="text-center mt-3 mb-2 border border-dark" id="landscape">
             </div>
-            @endforeach
-            @foreach ($Landscape as $item)
-            <div class="modal fade" id="landcsp{{ $loop->iteration }}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center">{{ $item['title'] }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_ls'] }}" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <p class="card-text text-left mb-0"><strong>Temuan:</strong> {{ $item['foto_temuan_ls'] }}</p>
-                            <p class="card-text text-left mb-0"><strong>Komentar:</strong> {{ $item['komentar_ls'] }}</p>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="text-center mt-3 mb-2 border border-dark" id="lingkungan">
             </div>
-            @endforeach -->
-
-
-
-
         </div>
 
 
@@ -308,192 +147,19 @@
             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark custom_background">
                 <h2>Temuan AFDELING</h2>
             </div>
-
-
-            <!-- <div class="text-center mt-3 mb-2 border border-dark">
-                @if ($rumah_afd->count() > 0)
-
-                <div class="text-center">
-                    <h1>Foto Temuan Perumahan</h1>
-                </div>
-                <div class="row justify-content-center">
-                    @foreach ($rumah_afd as $item)
-                    @php
-                    $imageUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/" . $item['foto_temuan_rmh'];
-                    $imageInfo = @getimagesize($imageUrl);
-                    $imageSrc = $imageInfo ? $imageUrl : asset('img/404img.png');
-                    @endphp
-
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="card">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_rmh'] }}" class="img-thumbnail" data-toggle="modal" data-target="#rumah_afd{{ $loop->iteration }}">
-
-                            <div class="card-body mt-2">
-                                <h5 class="card-title text-right">Est: {{ $item['title'] }}</h5>
-                                <p class="card-text text-left">Temuan: {{ $item['komentar_temuan_rmh'] }}</p>
-                                <p class="card-text text-left">Komentar: {{ $item['komentar_rmh'] }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endforeach
-                </div>
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $rumah_afd->links() }}
-                </div>
-
-                @else
-                <p>Perumahan not found.</p>
-                @endif
+            <div class="text-center mt-3 mb-2 border border-dark" id="afd_rmh">
             </div>
 
-            <div class="text-center mt-3 mb-2 border border-dark">
-                @if ($lingkungan_afd->count() > 0)
-
-                <div class="text-center">
-                    <h1>Foto Temuan Lingkungan</h1>
-                </div>
-                <div class="row justify-content-center">
-                    @foreach ($lingkungan_afd as $item)
-                    @php
-                    $imageUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/" . $item['foto_temuan_lk'];
-                    $imageInfo = @getimagesize($imageUrl);
-                    $imageSrc = $imageInfo ? $imageUrl : asset('img/404img.png');
-                    @endphp
-
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="card">
-
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_lk'] }}" class="img-thumbnail" data-toggle="modal" data-target="#afd_ling{{ $loop->iteration }}">
-
-                            <div class="card-body mt-2">
-                                <h5 class="card-title text-right">Est: {{ $item['title'] }}</h5>
-                                <p class="card-text text-left">Temuan: {{ $item['komentar_temuan_lk'] }}</p>
-                                <p class="card-text text-left">Komentar: {{ $item['komentar_lk'] }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endforeach
-                </div>
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $lingkungan_afd->links() }}
-                </div>
-
-                @else
-                <p>Lingkungan not found.</p>
-                @endif
+            <div class="text-center mt-3 mb-2 border border-dark" id="afd_landscape">
             </div>
-
-            <div class="text-center mt-3 mb-2 border border-dark">
-                @if ($lcp_afd->count() > 0)
-
-                <div class="text-center">
-                    <h1>Foto Temuan Landscape</h1>
-                </div>
-                <div class="row justify-content-center">
-                    @foreach ($lcp_afd as $item)
-                    @php
-                    $imageUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/landscape/" . $item['foto_temuan_lcp'];
-                    $imageInfo = @getimagesize($imageUrl);
-                    $imageSrc = $imageInfo ? $imageUrl : asset('img/404img.png');
-                    @endphp
-
-                    <div class="col-md-6 col-lg-3 mb-3">
-                        <div class="card">
-                            <img src="{{ $imageSrc }}" alt="" class="img-thumbnail" data-toggle="modal" data-target="#afd_lcp{{ $loop->iteration }}">
-
-                            <div class="card-body mt-2">
-                                <h5 class="card-title text-right">Est: {{ $item['title'] }}</h5>
-                                <p class="card-text text-left">Temuan: {{ $item['komentar_temuan_lcp'] }}</p>
-                                <p class="card-text text-left">Komentar: {{ $item['komentar_lcp'] }}</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $lcp_afd->links() }}
-                </div>
-
-                @else
-                <p>Landscape not found.</p>
-                @endif
-            </div> -->
-
-
-            <!-- modal  -->
-
-            <!-- @foreach ($rumah_afd as $item)
-            <div class="modal fade" id="rumah_afd{{ $loop->iteration }}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center">{{ $item['title'] }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_rmh'] }}" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <p class="card-text text-left mb-0"><strong>Temuan:</strong> {{ $item['komentar_temuan_rmh'] }}</p>
-                            <p class="card-text text-left mb-0"><strong>Komentar:</strong> {{ $item['komentar_rmh'] }}</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="text-center mt-3 mb-2 border border-dark" id="afd_lingkungan">
             </div>
-            @endforeach
-            @foreach ($lingkungan_afd as $item)
-            <div class="modal fade" id="afd_ling{{ $loop->iteration }}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center">{{ $item['title'] }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_lk'] }}" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <p class="card-text text-left mb-0"><strong>Temuan:</strong> {{ $item['komentar_temuan_lk'] }}</p>
-                            <p class="card-text text-left mb-0"><strong>Komentar:</strong> {{ $item['komentar_lk'] }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-            @foreach ($lcp_afd as $item)
-            <div class="modal fade" id="afd_lcp{{ $loop->iteration }}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-center">{{ $item['title'] }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ $imageSrc }}" alt="{{ $item['foto_temuan_lcp'] }}" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <p class="card-text text-left mb-0"><strong>Temuan:</strong> {{ $item['komentar_temuan_lcp'] }}</p>
-                            <p class="card-text text-left mb-0"><strong>Komentar:</strong> {{ $item['komentar_lcp'] }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach -->
-
         </div>
 
     </div>
     @include('layout/footer')
 
+    <!-- Using a CDN link -->
 
 
     <script>
@@ -519,30 +185,424 @@
             // });
         });
 
+        function rumahupdate(Perumahan) {
+            const container = document.getElementById("perumahan");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (Perumahan.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Perumahan</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                Perumahan.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_rmh;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_rmh;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    image.onerror = function() {
+                        // If the image fails to load, use the default image
+                        this.src = defaultImageUrl;
+                    };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_rmh}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_rmh}</p>
+                        <p class="card-text text-left">Komentar: ${data.komentar_rmh}</p>
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Perumahan not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+        function landscapeupdate(Landscape) {
+            const container = document.getElementById("landscape");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/landscape/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (Landscape.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Landscape</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                Landscape.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_ls;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_ls;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    image.onerror = function() {
+                        // If the image fails to load, use the default image
+                        this.src = defaultImageUrl;
+                    };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_ls}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ls}</p>
+                        <p class="card-text text-left">Komentar: ${data.komentar_ls}</p>
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Landscape not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+        function lingkunganupdate(lingkungan) {
+            const container = document.getElementById("lingkungan");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (lingkungan.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Lingkungan</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                lingkungan.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_ll;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_ll;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    image.onerror = function() {
+                        // If the image fails to load, use the default image
+                        this.src = defaultImageUrl;
+                    };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_ll}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ll}</p>
+                        <p class="card-text text-left">Komentar: ${data.komentar_ll}</p>
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Lingkungan not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+
+        function afd_rmh(rumah_afd) {
+            const container = document.getElementById("afd_rmh");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (rumah_afd.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Perumahan</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                rumah_afd.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_rmh;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_rmh;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    image.onerror = function() {
+                        // If the image fails to load, use the default image
+                        this.src = defaultImageUrl;
+                    };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_rmh}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_rmh}</p>
+                        <p class="card-text text-left">Komentar: ${data.komentar_rmh}</p>
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Perumahan not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+        function afd_landscape(lcp_afd) {
+            const container = document.getElementById("afd_landscape");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/landscape/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (lcp_afd.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Landscape</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                lcp_afd.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_lcp;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_lcp;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    image.onerror = function() {
+                        // If the image fails to load, use the default image
+                        this.src = defaultImageUrl;
+                    };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_lcp}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_lcp}</p>
+                        <p class="card-text text-left">Komentar: ${data.komentar_lcp}</p>
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Landscape not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+        function afd_lingkungan(lingkungan_afd) {
+            const container = document.getElementById("afd_lingkungan");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (lingkungan_afd.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Lingkungan</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                lingkungan_afd.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_lk;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_lk;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    image.onerror = function() {
+                        // If the image fails to load, use the default image
+                        this.src = defaultImageUrl;
+                    };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_lk}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_lk}</p>
+                        <p class="card-text text-left">Komentar: ${data.komentar_lk}</p>
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Lingkungan not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+
         function getTemuan() {
             var _token = $('input[name="_token"]').val();
             var estData = $("#est").val();
             var tanggal = $("#inputDate").val();
-
+            // $perumahan.empty
+            $('#perumahan').empty();
+            $('#landscape').empty();
+            $('#lingkungan').empty();
+            $('#afd_rmh').empty();
+            $('#afd_landscape').empty();
+            $('#afd_lingkungan').empty();
             $.ajax({
                 url: "{{ route('getTemuan') }}",
                 method: "get",
                 data: {
                     estData: estData,
                     tanggal: tanggal,
-
                     _token: _token
                 },
                 success: function(result) {
-                    var parseResult = JSON.parse(result)
-                    // Swal.close();
-                    var Landscape = Object.entries(parseResult['Landscape'])
-                    var lingkungan = Object.entries(parseResult['lingkungan'])
-                    var Perumahan = Object.entries(parseResult['Perumahan'])
+                    var parseResult = JSON.parse(result);
+                    var Perumahan = Object.entries(parseResult['Perumahan']);
+                    var Landscape = Object.entries(parseResult['Landscape']);
+                    var lingkungan = Object.entries(parseResult['lingkungan']);
 
-                    console.log(Landscape);
+                    var rumah_afd = Object.entries(parseResult['rumah_afd']);
+                    var lcp_afd = Object.entries(parseResult['lcp_afd']);
+                    var lingkungan_afd = Object.entries(parseResult['lingkungan_afd']);
 
+
+                    // estate 
+                    rumahupdate(Perumahan);
+                    landscapeupdate(Landscape);
+                    lingkunganupdate(lingkungan);
+
+                    // afdeling 
+                    afd_rmh(rumah_afd);
+                    afd_landscape(lcp_afd);
+                    afd_lingkungan(lingkungan_afd);
+
+                },
+                error: function(xhr, status, error) {
+                    // Handle the error here
+                    console.error('AJAX request error:', error);
                 }
+
             });
+        }
+
+        function showData() {
+            var selectedDate = document.getElementById("inputDate").value;
+            if (selectedDate) {
+                document.getElementById("downloadba").disabled = false;
+                document.getElementById("downloadpdf").disabled = false;
+                document.getElementById("tglPDF").value = selectedDate;
+                document.getElementById("tglpdfnew").value = selectedDate;
+            } else {
+                alert("Please select a date first.");
+            }
+        }
+
+
+
+        function downloadpdf() {
+            // Get the selected date from the inputDate select element
+            var selectedDate = $("#inputDate").val();
+
+            // Set the value of the tglPDF hidden input field
+            $("#tglPDF").val(selectedDate);
+
+            // Submit the form
+            $("#download-form").submit();
+
+
+        }
+
+        function downloadPDFpi() {
+            var selectedDate = $("#inputDate").val();
+            $("#tglpdfnew").val(selectedDate);
+
+            $("#downloadPDF").submit();
         }
     </script>

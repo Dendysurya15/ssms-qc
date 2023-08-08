@@ -174,3 +174,5 @@ Route::get('/estAFD', [emplacementsController::class, 'estAFD'])->name('estAFD')
 
 
 Route::get('/getTemuan', [emplacementsController::class, 'getTemuan'])->name('getTemuan');
+Route::post('/downloadBAemp', [emplacementsController::class, 'downloadBAemp'])->name('downloadBAemp');
+Route::post('/downloadPDF', [emplacementsController::class, 'downloadPDF'])->name('downloadPDF');
