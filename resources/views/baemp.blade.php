@@ -280,7 +280,7 @@
                 </tr>
                 <!-- pemilharaaan  -->
                 <tr>
-                    <td rowspan="2" colspan="2" style="text-align: left;border: 1px solid black;">Kondisi Fisik Tanaman></td>
+                    <td rowspan="2" colspan="2" style="text-align: left;border: 1px solid black;">Kondisi Fisik Tanaman</td>
                     <td colspan="2" style="text-align: left;border: 1px solid black;">Kondisi Fisik Tanaman</td>
                     <td colspan="1" style="text-align: center;border: 1px solid black;">5</td>
                     <td colspan="1" style="text-align: center;border: 1px solid black;">{{$item2['landscape_nilai3']}}</td>
@@ -294,7 +294,7 @@
                 </tr>
                 <!-- design  -->
                 <tr>
-                    <td rowspan="1" colspan="2" style="text-align: left;border: 1px solid black;">Design></td>
+                    <td rowspan="1" colspan="2" style="text-align: left;border: 1px solid black;">Design</td>
                     <td colspan="2" style="text-align: left;border: 1px solid black;">Bentuk Taman: Simetris (1), Lengkung (2), Vertikal (3)</td>
                     <td colspan="1" style="text-align: center;border: 1px solid black;">3</td>
                     <td colspan="1" style="text-align: center;border: 1px solid black;">{{$item2['landscape_nilai5']}}</td>
@@ -398,7 +398,9 @@
 
 
 
+    @if (!$loop->last) <!-- Check if it's not the last iteration -->
     <div style="page-break-before: always;"></div>
+    @endif
     @endforeach
     @endforeach
 

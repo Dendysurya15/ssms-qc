@@ -66,7 +66,7 @@
                         </div>
 
                         <div class="table-wrapper">
-                            <table class="my-table">
+                            <table class="my-table" id="test">
                                 <thead>
                                     <tr>
                                         <th rowspan="3">No</th>
@@ -227,6 +227,7 @@
                 var parseResult = JSON.parse(result)
                 var bulan = Object.entries(parseResult['bulan'])
                 var rekap = Object.entries(parseResult['afd_rekap'])
+                var avarage = Object.entries(parseResult['avg'])
 
 
                 // console.log(rekap);
@@ -276,36 +277,37 @@
 
                 // Call the function to set the colspans
                 setColspanForMonths();
-
-
+                var item1x = 1;
+                // console.log(afd_bulan);
                 afd_bulan.forEach((element, index) => {
-                    item1 = index + 1;
+
                     let estate = element[0];
                     let namaAFD = Object.keys(element[1]);
 
                     let allMonths = Object.keys(element[1][namaAFD[0]]); // Assuming all AFDs have the same months
-
+                    var num = 0
                     namaAFD.forEach((key) => {
                         tr = document.createElement('tr');
-                        let item0 = '-';
+                        let item0 = item1x++
                         let item1 = estate;
                         let item2 = key;
                         let item3 = '-';
 
-
+                        // let item4 =
+                        // console.log(item4);
                         let items = [item0, item1, item2, item3, ];
 
                         // ... Your previous code ...
 
                         allMonths.forEach((month) => {
                             let monthData = element[1][key][month];
-                            // console.log(element[1][key]);
+
                             if (monthData) {
                                 for (let visit in monthData) {
                                     let skor_total = monthData[visit].skor_total;
                                     let est = monthData[visit].est;
                                     let afd = monthData[visit].afd;
-                                    let date = monthData[visit].date;
+
                                     // if (skor_total != 0) {
                                     //     let itemUrl = document.createElement('a');
                                     //     itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
@@ -319,8 +321,10 @@
                                     //     items.push(skor_total);
                                     // }
                                     items.push(skor_total);
+                                    // items.push(avg);
                                 }
                             }
+
                         });
 
                         let column = 1; // Start column after the first three items
@@ -337,20 +341,47 @@
                             tr.appendChild(td); // Append the table cell to the table row
                         }
 
-                        // ... Your remaining code ...
 
-                        let item4 = 'Ave';
-                        let item5 = 'GooD';
                         let td4 = document.createElement('td');
                         let td5 = document.createElement('td');
-                        td4.innerText = item4;
-                        td5.innerText = item5;
+
+                        // Access 'avg' property from rata_rata array
+
+                        let itemavg = element[1][key].afd
+                        // console.log(itemavg);
+                        td4.innerText = itemavg;
+
+
+                        if (itemavg >= 95) {
+                            td5.style.backgroundColor = "#609cd4";
+                            td5.innerText = 'EXCELLENT';
+                        } else if (itemavg >= 85 && itemavg < 95) {
+                            td5.style.backgroundColor = "#08b454";
+                            td5.innerText = 'GOOD';
+                        } else if (itemavg >= 75 && itemavg < 85) {
+                            td5.style.backgroundColor = "#fffc04";
+                            td5.innerText = 'SATISFACTORY';
+                        } else if (itemavg >= 65 && itemavg < 75) {
+                            td5.style.backgroundColor = "#ffc404";
+                            td5.innerText = 'FAIR';
+                        } else {
+                            td5.style.backgroundColor = "red";
+                            td5.innerText = 'POOR';
+                        }
+
+
+
+
                         tr.appendChild(td4);
                         tr.appendChild(td5);
 
                         tbody1.appendChild(tr);
                     });
                 });
+
+                var avarageArray = avarage;
+
+
 
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -361,6 +392,8 @@
 
     function getEST() {
         $('#data_est').empty()
+        // $('#month_header2').empty()
+        $('#visit').empty()
         var reg = '';
         var tahun = '';
 
@@ -392,7 +425,7 @@
                 var skoring = Object.entries(parseResult['skoring'])
                 var new_afd = Object.entries(parseResult['new_afd'])
 
-                // console.log(visitArray);
+                console.log(visitArray);
 
                 if (visitArray !== null) {
                     function createTableHeader(content) {
@@ -462,121 +495,12 @@
                 // console.log(rata_rata);
 
 
-                // afd_bulan.forEach((element, index) => {
-                //     item1 = index + 1;
-                //     let estate = element[0];
-                //     let namaAFD = Object.keys(element[1]);
 
-                //     let allMonths = Object.keys(element[1][namaAFD[0]]); // Assuming all AFDs have the same months
-                //     let rataRataElement = rata_rata[index];
-                //     let item4 = rataRataElement[1].avg; // Accessing 'afd' property from the second element of the array
-                //     let tr = document.createElement('tr'); // Create the tr element here
-
-
-                //     let item5;
-                //     if (item4 >= 95) {
-                //         tr.style.backgroundColor = "#0804fc";
-                //         item5 = 'mantap';
-                //     } else if (item4 >= 85 && item4 < 95) {
-                //         tr.style.backgroundColor = "#08b454";
-                //         item5 = 'bagus';
-                //     } else if (item4 >= 75 && item4 < 85) {
-                //         tr.style.backgroundColor = "#fffc04";
-                //         item5 = 'lumayan';
-                //     } else if (item4 >= 65 && item4 < 75) {
-                //         tr.style.backgroundColor = "#ffc404";
-                //         item5 = 'oke';
-                //     } else if (item4 === 0) {
-                //         tr.style.backgroundColor = "white";
-                //         item5 = 'sip';
-                //     } else {
-                //         tr.style.backgroundColor = "red";
-                //     }
-
-                //     namaAFD.forEach((key) => {
-                //         tr = document.createElement('tr');
-                //         let item0 = '-';
-                //         let item1 = estate;
-                //         let item2 = key;
-                //         let item3 = '-';
-
-
-                //         let items = [item0, item1, item2, item3, ];
-
-                //         // ... Your previous code ...
-
-                //         allMonths.forEach((month) => {
-                //             let monthData = element[1][key][month];
-                //             // console.log(element[1][key]);
-                //             if (monthData) {
-                //                 let total = 0;
-                //                 let count = 0;
-
-                //                 for (let visit in monthData) {
-                //                     let skor_total = monthData[visit].skor_total;
-
-                //                     let est = monthData[visit].est;
-                //                     let afd = monthData[visit].afd;
-                //                     let date = monthData[visit].date;
-
-
-                //                     if (skor_total != 0) {
-                //                         let itemUrl = document.createElement('a');
-                //                         itemUrl.href = 'detailEmplashmend/' + est + '/' + afd + '/' + date;
-                //                         itemUrl.textContent = skor_total;
-
-                //                         let td = document.createElement('td');
-                //                         td.appendChild(itemUrl); // Append the anchor to the table cell
-
-                //                         items.push(td);
-                //                     } else {
-                //                         items.push(skor_total);
-                //                     }
-
-                //                 }
-                //             }
-                //         });
-
-
-                //         let column = 1; // Start column after the first three items
-                //         for (let j = 0; j < items.length; j++) {
-                //             let item = items[j];
-                //             let td = document.createElement('td');
-
-                //             column++;
-                //             if (item instanceof Node) { // Check if the item is a Node (e.g., a <td> element)
-                //                 td.appendChild(item); // Append the item (which is a Node) to the table cell
-                //             } else {
-                //                 td.innerText = item; // Otherwise, treat it as a regular string and set its text content
-                //             }
-                //             tr.appendChild(td); // Append the table cell to the table row
-                //         }
-
-
-
-
-
-                //         tbody1.appendChild(tr);
-                //     });
-
-
-                //     let td4 = document.createElement('td');
-                //     let td5 = document.createElement('td');
-                //     td4.innerText = item4;
-                //     td5.innerText = item5;
-                //     tr.appendChild(td4);
-                //     tr.appendChild(td5);
-
-
-
-                //     tbody1.appendChild(tr);
-
-                // });
 
                 var table1 = new_afd;
                 var tbody1 = document.getElementById('data_est');
 
-                console.log(table1);
+                // console.log(table1);
                 table1.forEach((element, index) => {
                     let tr = document.createElement('tr');
                     let item1 = element[0];
@@ -677,8 +601,25 @@
                     td4.innerText = itemavg;
 
 
+                    if (itemavg >= 95) {
+                        td5.style.backgroundColor = "#609cd4";
+                        td5.innerText = 'EXCELLENT';
+                    } else if (itemavg >= 85 && itemavg < 95) {
+                        td5.style.backgroundColor = "#08b454";
+                        td5.innerText = 'GOOD';
+                    } else if (itemavg >= 75 && itemavg < 85) {
+                        td5.style.backgroundColor = "#fffc04";
+                        td5.innerText = 'SATISFACTORY';
+                    } else if (itemavg >= 65 && itemavg < 75) {
+                        td5.style.backgroundColor = "#ffc404";
+                        td5.innerText = 'FAIR';
+                    } else {
+                        td5.style.backgroundColor = "red";
+                        td5.innerText = 'POOR';
+                    }
 
-                    td5.innerText = '-';
+
+
 
                     tr.appendChild(td4);
                     tr.appendChild(td5);

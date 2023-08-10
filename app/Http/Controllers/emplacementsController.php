@@ -11,6 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use DateTime;
 use Illuminate\Validation\Rules\Unique;
 use Barryvdh\DomPDF\Facade\Pdf;
+use PhpParser\Node\Expr\Isset_;
 
 require '../app/helpers.php';
 
@@ -129,7 +130,7 @@ class emplacementsController extends Controller
         $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
         $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
 
-        // dd($emplacement);
+        // dd($emplacement, $landscape, $lingkungan);
 
 
         $queryAfd = DB::connection('mysql2')->table('afdeling')
@@ -304,10 +305,61 @@ class emplacementsController extends Controller
                 $landscapeOri[$value2['nama']] = $value;
             }
         }
+        // dd($dataPerBulan);
+        function grupwaktu($data)
+        {
+            $groupedArray = [];
+
+            foreach ($data as $bulan => $locations) {
+                if (is_array($locations)) {
+                    foreach ($locations as $location => $estAfdData) {
+                        foreach ($estAfdData as $estAfd => $items) if (is_array($items)) {
+                            $groupedItems = [];
+
+                            foreach ($items as $item) {
+                                $key = $item['est'] . '-' . $item['afd'] . '-' . $item['petugas'] . '-' . $item['pendamping'] . '-' . substr($item['datetime'], 0, 10);
+
+                                if (!isset($groupedItems[$key])) {
+                                    $groupedItems[$key] = $item;
+                                } else {
+                                    $existingItem = $groupedItems[$key];
+                                    $index = 1;
+
+                                    // Find the next available index
+                                    while (isset($existingItem['nilai' . $index])) {
+                                        $index++;
+                                    }
+
+                                    // Set the new index for the current item
+                                    foreach ($item as $field => $value) {
+                                        $existingItem[$field . $index] = $value;
+                                    }
+
+                                    $groupedItems[$key] = $existingItem;
+                                }
+                            }
+
+                            $groupedArray[$bulan][$location][$estAfd] = array_values($groupedItems);
+                        }
+                    }
+                } else {
+                    $groupedArray[$bulan] = 0;
+                }
+            }
+
+            return $groupedArray;
+        }
+
+        $groupedArray = grupwaktu($emplashmenOri);
+        $groupedArray_lcp = grupwaktu($landscapeOri);
+        $groupedArray_lkn = grupwaktu($lingkunganOri);
+
+        // dd($groupedArray, $emplashmenOri);
 
 
+        // dd($emplashmenOri);
         $hitungRmh = array();
-        foreach ($emplashmenOri as $key => $value) {
+        foreach ($groupedArray as $key => $value) {
             foreach ($value as $key1 => $value2) {
                 // Initialize the "nilai_total" for each month to 0
                 $hitungRmh[$key][$key1] = [];
@@ -316,17 +368,42 @@ class emplacementsController extends Controller
                         if (is_array($value3)) {
                             // Initialize the "nilai_total" for each index (OA, OB, OC, OD) to 0
                             $hitungRmh[$key][$key1][$key2] = [];
+
                             foreach ($value3 as $key3 => $value4) {
+                                $avg_nilai = 0;
                                 if (is_array($value4)) {
+                                    $totalNilai = 0;
+                                    $nilaiKeys = [];
                                     // Check if the "nilai" key exists, otherwise set it to 0
                                     $sumNilai = isset($value4['nilai']) ? array_sum(array_map('intval', explode('$', $value4['nilai']))) : 0;
                                     // Store the sum in the "nilai_total" key of the corresponding index
                                     $date = $value4['datetime'];
                                     // Get the year and month from the datetime
                                     $yearMonth = date('Y-m-d', strtotime($date));
+                                    foreach ($value4 as $innerKey => $innerValue) {
+                                        if (strpos($innerKey, 'nilai') === 0) {
+                                            $nilaiKeys[] = $innerKey;
+                                            $nilaiValues = array_map('intval', explode('$', $innerValue));
+                                            $totalNilai += array_sum($nilaiValues);
+                                        }
+                                    }
 
+                                    $dividen = 0;
+                                    foreach ($value4 as $key4 => $item) {
+                                        if (strpos($key4, 'nilai') === 0) {
+                                            $dividen++;
+                                        }
+                                    }
 
-                                    $hitungRmh[$key][$key1][$key2][$key3]['nilai_total'] = $sumNilai;
+                                    if ($dividen != 1) {
+                                        $avg_nilai = round($totalNilai / $dividen, 2);
+                                    } else {
+                                        $avg_nilai = $totalNilai;
+                                    }
+                                    $hitungRmh[$key][$key1][$key2][$key3]['nilai_total'] = $avg_nilai;
+                                    $hitungRmh[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
+                                    $hitungRmh[$key][$key1][$key2][$key3]['dividen'] = $dividen;
+
                                     $hitungRmh[$key][$key1][$key2][$key3]['date'] = $yearMonth;
                                     $hitungRmh[$key][$key1][$key2][$key3]['est'] = $value4['est'];
                                     $hitungRmh[$key][$key1][$key2][$key3]['afd'] = $value4['afd'];
@@ -367,6 +444,7 @@ class emplacementsController extends Controller
         // Resulting merged array with values from hitungRmh
         $mergedArray_rmh = $emplashmenOri;
 
+        // dd($mergedArray_rmh);
         // Now, the "nilai" values will be updated with their respective sums in the $emplacement array.
 
 
@@ -387,12 +465,12 @@ class emplacementsController extends Controller
                 }
             }
         }
-
+        // dd($FinalArr_rumah, $mergedArray_rmh);
         // dd($mergedArray_rmh, $FinalArr_rumah);
 
         // untuk landscape 
         $hitungLandscape = array();
-        foreach ($landscapeOri as $key => $value) {
+        foreach ($groupedArray_lcp as $key => $value) {
             foreach ($value as $key1 => $value2) {
                 // Initialize the "nilai_total" for each month to 0
                 $hitungLandscape[$key][$key1] = [];
@@ -402,14 +480,38 @@ class emplacementsController extends Controller
                             // Initialize the "nilai_total" for each index (OA, OB, OC, OD) to 0
                             $hitungLandscape[$key][$key1][$key2] = [];
                             foreach ($value3 as $key3 => $value4) {
+                                $avg_nilai = 0;
                                 if (is_array($value4)) {
+                                    $totalNilai = 0;
+                                    $nilaiKeys = [];
                                     // Check if the "nilai" key exists, otherwise set it to 0
                                     $sumNilai = isset($value4['nilai']) ? array_sum(array_map('intval', explode('$', $value4['nilai']))) : 0;
                                     // Store the sum in the "nilai_total" key of the corresponding index
                                     $date = $value4['datetime'];
                                     // Get the year and month from the datetime
                                     $yearMonth = date('Y-m-d', strtotime($date));
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['nilai_total_LP'] = $sumNilai;
+
+                                    foreach ($value4 as $innerKey => $innerValue) {
+                                        if (strpos($innerKey, 'nilai') === 0) {
+                                            $nilaiKeys[] = $innerKey;
+                                            $nilaiValues = array_map('intval', explode('$', $innerValue));
+                                            $totalNilai += array_sum($nilaiValues);
+                                        }
+                                    }
+
+                                    $dividen = 0;
+                                    foreach ($value4 as $key4 => $item) {
+                                        if (strpos($key4, 'nilai') === 0) {
+                                            $dividen++;
+                                        }
+                                    }
+
+                                    if ($dividen != 1) {
+                                        $avg_nilai = round($totalNilai / $dividen, 2);
+                                    } else {
+                                        $avg_nilai = $totalNilai;
+                                    }
+                                    $hitungLandscape[$key][$key1][$key2][$key3]['nilai_total_LP'] = $avg_nilai;
                                     $hitungLandscape[$key][$key1][$key2][$key3]['date'] = $yearMonth;
                                     $hitungLandscape[$key][$key1][$key2][$key3]['est_LP'] = $value4['est'];
                                     $hitungLandscape[$key][$key1][$key2][$key3]['afd_LP'] = $value4['afd'];
@@ -467,7 +569,7 @@ class emplacementsController extends Controller
         // hitungan lingkungan 
 
         $hitungLingkungan = array();
-        foreach ($lingkunganOri as $key => $value) {
+        foreach ($groupedArray_lkn as $key => $value) {
             foreach ($value as $key1 => $value2) {
                 // Initialize the "nilai_total" for each month to 0
                 $hitungLingkungan[$key][$key1] = [];
@@ -477,7 +579,10 @@ class emplacementsController extends Controller
                             // Initialize the "nilai_total" for each index (OA, OB, OC, OD) to 0
                             $hitungLingkungan[$key][$key1][$key2] = [];
                             foreach ($value3 as $key3 => $value4) {
+                                $avg_nilai = 0;
                                 if (is_array($value4)) {
+                                    $totalNilai = 0;
+                                    $nilaiKeys = [];
                                     // Check if the "nilai" key exists, otherwise set it to 0
                                     $sumNilai = isset($value4['nilai']) ? array_sum(array_map('intval', explode('$', $value4['nilai']))) : 0;
                                     // Store the sum in the "nilai_total" key of the corresponding index
@@ -485,8 +590,28 @@ class emplacementsController extends Controller
                                     // Get the year and month from the datetime
                                     $yearMonth = date('Y-m-d', strtotime($date));
 
+                                    foreach ($value4 as $innerKey => $innerValue) {
+                                        if (strpos($innerKey, 'nilai') === 0) {
+                                            $nilaiKeys[] = $innerKey;
+                                            $nilaiValues = array_map('intval', explode('$', $innerValue));
+                                            $totalNilai += array_sum($nilaiValues);
+                                        }
+                                    }
 
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_total_Lngkl'] = $sumNilai;
+                                    $dividen = 0;
+                                    foreach ($value4 as $key4 => $item) {
+                                        if (strpos($key4, 'nilai') === 0) {
+                                            $dividen++;
+                                        }
+                                    }
+
+                                    if ($dividen != 1) {
+                                        $avg_nilai = round($totalNilai / $dividen, 2);
+                                    } else {
+                                        $avg_nilai = $totalNilai;
+                                    }
+
+                                    $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_total_Lngkl'] = $avg_nilai;
                                     $hitungLingkungan[$key][$key1][$key2][$key3]['date'] = $yearMonth;
                                     $hitungLingkungan[$key][$key1][$key2][$key3]['est_Lngkl'] = $value4['est'];
                                     $hitungLingkungan[$key][$key1][$key2][$key3]['afd_Lngkl'] = $value4['afd'];
@@ -704,6 +829,69 @@ class emplacementsController extends Controller
         }
 
         // dd($resultArray);
+        $avarage = array();
+        foreach ($resultArray as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $avg = 0;
+                foreach ($value1 as $key2 => $value2) {
+                    $avg = count($value2);
+                    $totalNil = 0;
+                    foreach ($value2 as $key3 => $value3) {
+                        $totalNil += $value3['skor_total'];
+                    }
+
+                    // $tod_nilai = round($totalNil / $avg, 1);
+
+                    if ($avg != 1) {
+                        $avarage[$key][$key1][$key2]['dividen'] = $avg;
+                    } else {
+                        $avarage[$key][$key1][$key2]['dividen'] = 0;
+                    }
+
+                    $avarage[$key][$key1][$key2]['total'] = $totalNil;
+                } # code...
+            } # code...
+        }
+        // dd($avarage);
+
+        $averages = array();
+        $regAvg = array();
+
+        foreach ($avarage as $key => $value) {
+            $estAvg = array();
+
+            foreach ($value as $key1 => $value1) {
+                $allAvg = array(); // Initialize an array to store all the averages for each key2
+                $totalNil = 0;
+                $avgCount = 0;
+                $todNilai = 0;
+                foreach ($value1 as $key2 => $value2) {
+
+                    // dd($value2);
+                    $totalNil += $value2['total'];
+                    $avgCount  += $value2['dividen'];
+                }
+
+                if ($avgCount != 0) {
+                    $todNilai = round($totalNil / $avgCount, 1);
+                } else {
+                    $todNilai = $totalNil;
+                }
+
+
+                $averages[$key][$key1]['avgafd'] = $todNilai;
+                $estAvg[] = $todNilai;
+            }
+
+            if (!empty($estAvg)) {
+                $regAvg = array_merge($regAvg, $estAvg); // Merge the calculated averages
+                // $averages[$key]['avgEst'] = $estAvg;
+            }
+        }
+        // $averages['avgReg'] = $regAvg;
+        // dd($avarage, $averages);
+
+
         $get_cell = array();
         foreach ($resultArray as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -778,14 +966,47 @@ class emplacementsController extends Controller
             "head" => array_sum($header_cell) + 2,
         ];
 
+        // $AfdFinals = array();
+        // foreach ($resultArray as $key => $value) {
+        //     foreach ($value as $key1 => $value1) {
+        //         foreach ($value1 as $key2 => $value2) {
+        //             foreach ($averages as $key3 => $value3) if ($key3 == $key) {
 
-        // dd($header_cell, $sum_header);
+        //                 foreach ($value3 as $key4 => $value4) if ($key4 == $key1) {
+        //                     // dd($key4 == $key1);
+        //                     foreach ($value4 as $key5 => $value5) {
+        //                         $AfdFinals[$key][$key1]['afd'] = $value5;
+        //                         $AfdFinals[$key][$key1] = $value1;
+        //                     } # code...
+        //                 } # code...
+        //             }
+        //         }
+        //     }
+        // }
+        $AfdFinals = array();
+
+        foreach ($resultArray as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $AfdFinals[$key][$key1] = array(); // Initialize the sub-array
+                foreach ($value1 as $key2 => $value2) {
+                    $AfdFinals[$key][$key1][$key2] = $value2;
+                }
+                if (isset($averages[$key][$key1]['avgafd'])) {
+                    $AfdFinals[$key][$key1]['afd'] = $averages[$key][$key1]['avgafd'];
+                }
+            }
+        }
+
+
+        // dd($resultArray, $averages, $AfdFinals);
+        // dd($resultArray, $sum_header);
         $arrView = array();
         $arrView['reg'] =  $regional;
         $arrView['bulan'] =  $bulan;
-        $arrView['afd_rekap'] =  $resultArray;
+        $arrView['afd_rekap'] =  $AfdFinals;
         $arrView['header_cell'] =  $header_cell;
         $arrView['header_head'] =  $sum_header;
+        $arrView['avg'] =  $averages;
 
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
@@ -1113,7 +1334,7 @@ class emplacementsController extends Controller
 
 
 
-        // dd($hitungRmh);
+        // dd($hitungRmh, $groupedArray);
 
         $dataPerBulan = array_fill_keys($bulan, 0);
 
@@ -1804,13 +2025,23 @@ class emplacementsController extends Controller
             }
         }
         $header_cell2 = array_fill_keys($allMonths, 1);
-
+        // dd($max_visit);
         // Update the visits count based on the $max_visit array
-        foreach ($max_visit as $key => $value) {
-            if (in_array($key, $allMonths)) {
-                $header_cell2[$key] = $value['max_visitEst'] + 1;
+        // Check if $max_visit is empty
+        if (empty($max_visit)) {
+            // If it's empty, update $header_cell2 for all months
+            foreach ($allMonths as $key) {
+                $header_cell2[$key] = 2;
+            }
+        } else {
+            // If it's not empty, update $header_cell2 based on $max_visit
+            foreach ($max_visit as $key => $value) {
+                if (in_array($key, $allMonths)) {
+                    $header_cell2[$key] = $value['max_visitEst'] + 1;
+                }
             }
         }
+
 
         // dd($header_cell2);
 
@@ -1972,7 +2203,7 @@ class emplacementsController extends Controller
 
 
 
-        // dd($resultArray, $new_array);
+        // dd($header_cell2, $new_array);
         // Return a JSON response
         $arrView = array();
 
@@ -3631,11 +3862,11 @@ class emplacementsController extends Controller
                             unset($value3['nilai']);
                             unset($value3['komentar']);
 
-                            // $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
-                            //     // 'nilai_total_Lngkl' => $sumNilai,
-                            //     // 'date' => $yearMonth,
-                            //     'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            // ]);
+                            $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
+                                // 'nilai_total_Lngkl' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
 
                             foreach ($foto_temuan as $i => $foto) {
                                 // Create new keys for each exploded value
@@ -3677,11 +3908,11 @@ class emplacementsController extends Controller
                             unset($value3['nilai']);
                             unset($value3['komentar']);
 
-                            // $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
-                            //     // 'nilai_total_Lngkl' => $sumNilai,
-                            //     // 'date' => $yearMonth,
-                            //     // 'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            // ]);
+                            $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
+                                // 'nilai_total_Lngkl' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
 
                             foreach ($foto_temuan as $i => $foto) {
                                 // Create new keys for each exploded value
@@ -3711,7 +3942,9 @@ class emplacementsController extends Controller
             }
         }
 
-        $newArray = [];
+
+        // dd($filter_rmh);
+        // $newArray = [];
 
         // foreach ($filter_rmh as $estKey => $estValue) {
         //     foreach ($estValue as $afdKey => $afdValue) {
@@ -3719,11 +3952,11 @@ class emplacementsController extends Controller
         //         $counter = 1;
 
         //         foreach ($afdValue as $item) {
-        //             $combinedArray["foto_temuan_rmh" . $counter] = $item["foto_temuan_rmh1"];
-        //             $combinedArray["komentar_temuan_rmh" . $counter] = $item["komentar_temuan_rmh1"];
+        //             $combinedArray["foto_temuan_rmh" . $counter] = $item["foto_temuan_rmh" . $counter];
+        //             $combinedArray["komentar_temuan_rmh" . $counter] = $item["komentar_temuan_rmh" . $counter];
         //             $counter++;
-        //             $combinedArray["foto_temuan_rmh" . $counter] = $item["foto_temuan_rmh2"];
-        //             $combinedArray["komentar_temuan_rmh" . $counter] = $item["komentar_temuan_rmh2"];
+        //             $combinedArray["foto_temuan_rmh" . $counter] = $item["foto_temuan_rmh" . $counter];
+        //             $combinedArray["komentar_temuan_rmh" . $counter] = $item["komentar_temuan_rmh" . $counter];
         //             $counter++;
         //         }
 
@@ -3732,38 +3965,11 @@ class emplacementsController extends Controller
         // }
 
 
-        foreach ($filter_rmh as $estKey => $estValue) {
-            foreach ($estValue as $afdKey => $afdValue) {
-                $combinedArray = [];
-                $counter = 1;
 
-                $itemKeys = array_keys($afdValue[0]);
-
-                foreach ($itemKeys as $itemKey) {
-                    if (strpos($itemKey, 'foto_temuan_rmh') === 0) {
-                        $combinedArray[$itemKey] = [];
-                        foreach ($afdValue as $item) {
-                            if (isset($item[$itemKey])) {
-                                $combinedArray[$itemKey][] = $item[$itemKey];
-                            }
-                        }
-                    } elseif (strpos($itemKey, 'komentar_temuan_rmh') === 0) {
-                        $combinedArray[$itemKey] = [];
-                        foreach ($afdValue as $item) {
-                            if (isset($item[$itemKey])) {
-                                $combinedArray[$itemKey][] = $item[$itemKey];
-                            }
-                        }
-                    }
-                }
-
-                $newArray[$estKey][$afdKey] = $combinedArray;
-            }
-        }
 
 
         // Output the new arra
-        dd($newArray);
+        // dd($newArray);
         $filter_lingkungan = [];
 
         foreach ($hitungLingkungan as $estKey => $afdArray) {
@@ -3786,16 +3992,112 @@ class emplacementsController extends Controller
                 }
             }
         }
+
+        $mergedArray = array();
+
+        foreach ($filter_rmh as $key => $value) {
+            if (isset($filter_lingkungan[$key]) && isset($filter_landscape[$key])) {
+                foreach ($value as $subKey => $subValue) {
+                    if (isset($filter_lingkungan[$key][$subKey]) && isset($filter_landscape[$key][$subKey])) {
+                        $mergedArray[$key][$subKey] = array_merge(
+                            $subValue,
+                            $filter_lingkungan[$key][$subKey],
+                            $filter_landscape[$key][$subKey]
+                        );
+                    }
+                }
+            }
+        }
         // Now $filteredHitungRmh will contain only the desired arrays
+        // Assuming your array is named $mergedArray
+        // dd($mergedArray);
+        $newArray = [];
 
-        dd($filter_rmh);
+        foreach ($mergedArray as $estKey => $estValue) {
+            foreach ($estValue as $afdKey => $afdValue) {
 
+
+                $combinedIndex = [
+                    "est" => $estKey,
+                    "afd" => $afdKey,
+
+                    "foto_temuan" => [],
+                    "komentar_temuan" => [],
+
+                ];
+
+
+                foreach ($afdValue as $indexData) {
+                    // Combine the foto_temuan entries
+
+
+                    foreach ($indexData as $key => $value) {
+                        if (strpos($key, 'foto_temuan_rmh') === 0) {
+                            $combinedIndex['foto_temuan'][] = $value . "-" . "rmh";
+                        }
+                    }
+                    foreach ($indexData as $key => $value) {
+                        if (strpos($key, 'foto_temuan_lcp') === 0) {
+                            $combinedIndex['foto_temuan'][] = $value . "-" . "lcp";
+                        }
+                    }
+                    foreach ($indexData as $key => $value) {
+                        if (strpos($key, 'foto_temuan_lkng') === 0) {
+                            $combinedIndex['foto_temuan'][] = $value . "-" . "lkn";
+                        }
+                    }
+
+                    // Combine the komentar_temuan entries
+                    foreach ($indexData as $key => $value) {
+                        if (strpos($key, 'komentar_temuan_rmh') === 0) {
+                            $combinedIndex['komentar_temuan'][] = $value . "-" . "rmh";
+                        }
+                    }
+                    foreach ($indexData as $key => $value) {
+                        if (strpos($key, 'komentar_temuan_lcp') === 0) {
+                            $combinedIndex['komentar_temuan'][] = $value . "-" . "lcp";
+                        }
+                    }
+                    foreach ($indexData as $key => $value) {
+                        if (strpos($key, 'komentar_temuan_lkng') === 0) {
+                            $combinedIndex['komentar_temuan'][] = $value . "-" . "lkn";
+                        }
+                    }
+                }
+
+                $newArray[] = $combinedIndex;
+            }
+        }
+
+
+
+
+        $header = array();
+
+        foreach ($mergedArray as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value3) {
+                    foreach ($newArray as $key4 => $value4) {
+                        if ($value4['est'] == $key && $value4['afd'] == $key1) {
+                            $header[$key4]['est'] = $value3['est'];
+                            $header[$key4]['afd'] = $value3['afd'];
+                            $header[$key4]['petugas'] = $value3['petugas'];
+                            $header[$key4]['date'] = $value3['date'];
+                            $header[$key4]['foto_temuan'] = $value4['foto_temuan'];
+                            $header[$key4]['komentar_temuan'] = $value4['komentar_temuan'];
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($newArray, $header);
         // Example usage
 
         $arrView = array();
 
         $arrView['test'] =  'oke';
-        // $arrView['total'] =  $mergedArray;
+        $arrView['total'] =  $header;
         // $arrView['lingkungan'] =  $nila_akhir_lingkungan;
 
         $pdf = PDF::loadView('emplPDF', ['data' => $arrView]);
