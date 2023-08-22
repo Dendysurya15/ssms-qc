@@ -1063,21 +1063,48 @@
 
     var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
 
-    googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+    // googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+    //     maxZoom: 20,
+    //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    // }).addTo(map);
+    var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+    var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(map);
+    });
+    map.addControl(new L.Control.Fullscreen());
+    var baseMaps = {
+        "Google Street": googleStreet,
+        "Google Satellite": googleSatellite
+    };
+    L.control.layers(baseMaps).addTo(map);
+
+
+    var blokLayer, temuanLayer, legendContainer; // Define layer and legend variables
 
     $("#showFindingYear").click(function() {
+
         getMapsTph();
     });
 
     function getMapsTph() {
+
+
         var _token = $('input[name="_token"]').val();
         var est = $("#est").val();
         var afd = $("#afd").val();
         var date = $("#inputDate").val();
 
+        if (blokLayer) {
+            map.removeLayer(blokLayer);
+        }
+        if (temuanLayer) {
+            map.removeLayer(temuanLayer);
+        }
+        if (legendContainer) {
+            legendContainer.remove(map);
+        }
         $.ajax({
             url: "{{ route('getMapsTph') }}",
             method: "get",
@@ -1134,22 +1161,15 @@
 
 
 
-                var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-                var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
-                    maxZoom: 20,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                });
-                map.addControl(new L.Control.Fullscreen());
-                var baseMaps = {
-                    "Google Street": googleStreet,
-                    "Google Satellite": googleSatellite
-                };
-                L.control.layers(baseMaps).addTo(map);
+
+
 
                 drawBlok(blokResult)
-                drawTemuan(markerResult)
+
+                drawTemuan(markerResult);
                 drawLegend(markerResult)
+
 
             },
             error: function(xhr, status, error) {
@@ -1159,6 +1179,7 @@
     }
 
     function drawBlok(blok) {
+
         var getPlotStr = '{"type"'
         getPlotStr += ":"
         getPlotStr += '"FeatureCollection",'
@@ -1262,12 +1283,20 @@
                 }
             })
             .addTo(map);
+
+        blokLayer = test; // Store the reference to the new blokLayer
+
         map.fitBounds(test.getBounds());
+
+        // map.remove();
     }
 
     function drawTemuan(markerResult) {
 
         // console.log(markerResult);
+
+        temuanLayer = L.layerGroup();
+
         for (let i = 0; i < markerResult.length; i++) {
             let latlng = JSON.parse(markerResult[i][1]['latln']);
             // Define the custom icons
@@ -1314,51 +1343,29 @@
             if (markerResult[i][1]['foto_temuan2']) {
                 popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/${markerResult[i][1]['foto_temuan2']}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar2']}')"><br/>`;
             }
-            // let popupContent = "<div> <span style='font-weight:bold'>Jam Sidak : </span>" + markerResult[i][1]['jam'] +
-            //     "</div>" +
-            //     "<div> <span style='font-weight:bold'>Nomor TPH : </span>" + markerResult[i][1]['notph'] + "</div>" +
-            //     "<div ><span style='font-weight:bold'>Blok </span>: " + markerResult[i][1]['blok'] + "</div>" +
-            //     "<div ><span style='font-weight:bold'>Brondolan Tinggal </span>: " + markerResult[i][1]['brondol_tinggal'] + "</div>" +
-            //     "<div ><span style='font-weight:bold'>Jumlah Karung </span>: " + markerResult[i][1]['jum_karung'] + "</div>" +
-            //     "<div ><span style='font-weight:bold'>Buah Tinggal </span>: " + markerResult[i][1]['buah_tinggal'] + "</div>" +
-            //     "<div ><span style='font-weight:bold'>Restan Unreported </span>: " + markerResult[i][1]['restan_unreported'] + "</div>";
-
-            // // Add the image and comment for temuan1
-            // if (markerResult[i][1]['foto_temuan1'] && markerResult[i][1]['komentar1']) {
-            //     popupContent += "<div><span style='font-weight:bold'>Temuan 1: </span><br>" +
-            //         "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' data-lightbox='image1'>" +
-            //         "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan1'] + "' style='max-width: 100%; height: auto;'>" +
-            //         "</a><br>" +
-            //         "<div class='image-comment'>" + markerResult[i][1]['komentar1'] + "</div>" +
-            //         "</div>";
-            // }
-
-            // // Add the image and comment for temuan2
-            // if (markerResult[i][1]['foto_temuan2'] && markerResult[i][1]['komentar2']) {
-            //     popupContent += "<div><span style='font-weight:bold'>Temuan 2: </span><br>" +
-            //         "<a href='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' data-lightbox='image2'>" +
-            //         "<img src='https://mobilepro.srs-ssms.com/storage/app/public/qc/sidak_tph/" + markerResult[i][1]['foto_temuan2'] + "' style='max-width: 100%; height: auto;'>" +
-            //         "</a><br>" +
-            //         "<div class='image-comment'>" + markerResult[i][1]['komentar2'] + "</div>" +
-            //         "</div>";
-            // }
 
             marker.bindPopup(popupContent);
 
             // Add the marker to the map
-            marker.addTo(map);
-        }
+            marker.addTo(temuanLayer);
 
+        }
         // Adjust the map's bounds to fit all markers
         if (markerResult.length > 0) {
             let latlngs = markerResult.map(item => JSON.parse(item[1]['latln']));
             let bounds = L.latLngBounds(latlngs);
             map.fitBounds(bounds);
         }
+
+        temuanLayer.addTo(map); // Add the entire layer group to the map
     }
 
+    var legendContainer = null; // Declare the variable outside the function
+
     function drawLegend(markerResult) {
-        var legendContainer = L.control({
+
+
+        legendContainer = L.control({
             position: 'bottomright'
         });
 
@@ -1374,7 +1381,7 @@
             }
 
             var totalItemsCount = markerResult.length;
-            div.innerHTML += '<div class="legend-item">Total Sidak TPH: ' + totalItemsCount + '</div>'; // Added the legend item for total items count
+            // div.innerHTML += '<div class="legend-item">Total Sidak TPH: ' + totalItemsCount + '</div>'; // Added the legend item for total items count
 
             div.innerHTML += '<div class="legend-item"><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" class="legend-icon"> Temuan (' + temuanCount + ')</div>';
 

@@ -3943,31 +3943,6 @@ class emplacementsController extends Controller
         }
 
 
-        // dd($filter_rmh);
-        // $newArray = [];
-
-        // foreach ($filter_rmh as $estKey => $estValue) {
-        //     foreach ($estValue as $afdKey => $afdValue) {
-        //         $combinedArray = [];
-        //         $counter = 1;
-
-        //         foreach ($afdValue as $item) {
-        //             $combinedArray["foto_temuan_rmh" . $counter] = $item["foto_temuan_rmh" . $counter];
-        //             $combinedArray["komentar_temuan_rmh" . $counter] = $item["komentar_temuan_rmh" . $counter];
-        //             $counter++;
-        //             $combinedArray["foto_temuan_rmh" . $counter] = $item["foto_temuan_rmh" . $counter];
-        //             $combinedArray["komentar_temuan_rmh" . $counter] = $item["komentar_temuan_rmh" . $counter];
-        //             $counter++;
-        //         }
-
-        //         $newArray[$estKey][$afdKey] = $combinedArray;
-        //     }
-        // }
-
-
-
-
-
         // Output the new arra
         // dd($newArray);
         $filter_lingkungan = [];
@@ -3993,24 +3968,39 @@ class emplacementsController extends Controller
             }
         }
 
+        // filter_rmh,filter_lingkungan,filter_landscape
         $mergedArray = array();
 
-        foreach ($filter_rmh as $key => $value) {
-            if (isset($filter_lingkungan[$key]) && isset($filter_landscape[$key])) {
-                foreach ($value as $subKey => $subValue) {
-                    if (isset($filter_lingkungan[$key][$subKey]) && isset($filter_landscape[$key][$subKey])) {
-                        $mergedArray[$key][$subKey] = array_merge(
-                            $subValue,
-                            $filter_lingkungan[$key][$subKey],
-                            $filter_landscape[$key][$subKey]
-                        );
-                    }
+        // Iterate through each main key in filter_rmh
+        foreach ($filter_rmh as $mainKey => $subArray) {
+            // Create a list of all subkeys across the arrays for this main key
+            $subKeys = array_unique(array_merge(
+                array_keys($subArray),
+                array_keys($filter_lingkungan[$mainKey]),
+                array_keys($filter_landscape[$mainKey])
+            ));
+
+            foreach ($subKeys as $subKey) {
+                $mergedArray[$mainKey][$subKey] = array();
+
+                if (isset($filter_rmh[$mainKey][$subKey])) {
+                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_rmh[$mainKey][$subKey]);
+                }
+
+                if (isset($filter_lingkungan[$mainKey][$subKey])) {
+                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_lingkungan[$mainKey][$subKey]);
+                }
+
+                if (isset($filter_landscape[$mainKey][$subKey])) {
+                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_landscape[$mainKey][$subKey]);
                 }
             }
         }
+
+
         // Now $filteredHitungRmh will contain only the desired arrays
         // Assuming your array is named $mergedArray
-        // dd($mergedArray);
+        // dd($filter_rmh, $filter_lingkungan, $filter_landscape, $mergedArray);
         $newArray = [];
 
         foreach ($mergedArray as $estKey => $estValue) {
@@ -4103,10 +4093,10 @@ class emplacementsController extends Controller
         $pdf = PDF::loadView('emplPDF', ['data' => $arrView]);
 
         $customPaper = array(360, 360, 360, 360);
-        $pdf->set_paper('A2', 'landscape');
+        $pdf->set_paper('A2', 'potrait');
         // $pdf->set_paper('A2', 'potrait');
 
-        $filename = 'BA FORM PEMERIKSAAN PERUMAHAN' . $arrView['test'] . '.pdf';
+        $filename = 'PDF FORM PEMERIKSAAN PERUMAHAN' . $arrView['test'] . '.pdf';
 
         return $pdf->stream($filename);
     }

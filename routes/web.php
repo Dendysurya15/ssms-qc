@@ -12,6 +12,7 @@ use App\Http\Controllers\mutubuahController;
 use App\Http\Controllers\emplacementsController;
 use App\Http\Controllers\userNewController;
 use App\Http\Controllers\UserQCController;
+use App\Http\Controllers\CheckimgController;
 
 /*
 |--------------------------------------------------------------------------
@@ -176,3 +177,6 @@ Route::get('/estAFD', [emplacementsController::class, 'estAFD'])->name('estAFD')
 Route::get('/getTemuan', [emplacementsController::class, 'getTemuan'])->name('getTemuan');
 Route::post('/downloadBAemp', [emplacementsController::class, 'downloadBAemp'])->name('downloadBAemp');
 Route::post('/downloadPDF', [emplacementsController::class, 'downloadPDF'])->name('downloadPDF');
+
+Route::get('/checkIMG', [CheckimgController::class, 'dashboard'])->name('dashboard');
+Route::get('/getIMGgudang', [CheckimgController::class, 'getIMGgudang'])->name('getIMGgudang');

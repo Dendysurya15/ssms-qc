@@ -12,7 +12,7 @@
         @foreach ($data['total'] as $key => $item)
         @foreach ($item as $item2)
 
-        <div style="display: flex; justify-content: center; margin-top: 3px; margin-bottom: 2px; margin-left: 3px; margin-right: 3px; border: 1px solid black; background-color: #f8f4f4">
+        <div style="display: flex; justify-content: center; margin-top: 1px; margin-bottom: 2px; margin-left: 3px; margin-right: 3px; border: 1px solid black; background-color: #f8f4f4">
             <h2 style="text-align: center;">FORM PEMERIKSAAN PERUMAHAN</h2>
         </div>
 
@@ -40,7 +40,7 @@
                 </td>
             </tr>
         </table>
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size : 18px">
             <tr>
                 <th style="background-color: #e8ecdc;border: 1px solid black;" colspan="1">NO</th>
                 <th style="background-color: #e8ecdc;border: 1px solid black;" colspan="2">PARAMETER</th>
@@ -320,7 +320,7 @@
 
 
 
-        <div style="padding: 10px;border: 1px solid black; border-radius: 10px;margin-top: 60px;">
+        <div style="padding: 10px;border: 1px solid black; border-radius: 10px;margin-top: 20px;">
 
             <table class=" custom-table table-1-no-border" style="float: left; width: 20%; border: 1px solid black; border-radius: 10px;margin-top : 20px;margin-bottom : 40px;margin-left : 10px;">
                 <thead>

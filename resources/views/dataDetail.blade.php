@@ -1883,7 +1883,6 @@
 
 
 
-
     function getmaps() {
         var map = L.map('map');
         map.remove();
@@ -2101,6 +2100,7 @@
                                 var bt = plot.bt;
                                 var rst = plot.Rst;
                                 var time = plot.time;
+                                var maps = plot.maps;
 
                                 var markerIcon = foto_fu ? transFollowup : (foto_temuan ? transtemuan : transicon);
 
@@ -2119,6 +2119,7 @@
 
 
                                 popupContent += `<strong>Sidak: </strong>${time}<br/>`;
+                                popupContent += `<strong>Maps : </strong>${maps}<br/>`;
 
 
                                 if (foto_temuan) {
@@ -2199,6 +2200,7 @@
                                 var vcut = plot.vcut;
                                 var alas_br = plot.alas_br;
                                 var time = plot.time;
+                                var maps = plot.maps;
                                 var markerIcon = foto_temuan ? myIcon : myIcon2; // Choose the icon based on the condition
 
                                 var popupContent = `<strong>Mutu Buah Blok: </strong>${blok}<br/>`;
@@ -2213,6 +2215,7 @@
                                 popupContent += `<strong>Tidak Standar vcut: </strong>${vcut}<br/>`;
                                 popupContent += `<strong>Alas Karung: </strong>${alas_br}<br/>`;
                                 popupContent += `<strong>Sidak: </strong>${time}<br/>`;
+                                popupContent += `<strong>Maps: </strong>${maps}<br/>`;
 
 
                                 if (foto_temuan) {
@@ -2307,6 +2310,7 @@
                         var ps = ancak_plot[i].ps;
                         var sp = ancak_plot[i].sp;
                         var time = ancak_plot[i].time;
+                        var maps = ancak_plot[i].maps;
 
                         var markerIcon2 = caktemuan1;
 
@@ -2411,7 +2415,9 @@
                         popupContent2 += `<strong>Buah Tinggal (M3): </strong>${bhtm3}<br/>`;
                         popupContent2 += `<strong>Palepah Sengklek: </strong>${ps}<br/>`;
                         popupContent2 += `<strong>Frond Stacking: </strong>${sp}<br/>`;
+                        popupContent2 += `<strong>Maps: </strong>${maps}<br/>`;
                         popupContent2 += `<strong>Sidak: </strong>${time}<br/>`;
+
 
                         var marker2 = L.marker([lat, lon], {
                             icon: markerIcon2
@@ -2657,9 +2663,6 @@
             success: function(result) {
                 lottieAnimation.stop(); // Stop the Lottie animation
                 lottieContainer.style.display = 'none'; // Hide the Lottie container
-
-
-
                 // Get the modal
                 const modal = document.getElementById("imageModal");
 
@@ -2695,7 +2698,7 @@
                 var mutuAncak = Object.entries(parseResult['mutuAncak'])
 
 
-
+                // console.log(mutuAncak);
                 var mutuAncakData = [];
                 for (var i = 0; i < mutuAncak.length; i++) {
                     var rowData = Object.values(mutuAncak[i][1]);
@@ -3129,6 +3132,13 @@
                         }
                     },
                     {
+                        targets: 23,
+                        title: 'Maps',
+                        render: function(data, type, row, meta) {
+                            return row[34]; // Access the value from index 3 of the data array
+                        }
+                    },
+                    {
                         targets: -1, // -1 targets the last column
                         title: 'Actions',
                         visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),
@@ -3141,7 +3151,7 @@
                     }
                 ];
                 // Initialize DataTables for mutuAncak
-
+                // console.log(mutuAncakData);
                 var mutuAncakTable = $('#mutuAncakTable').DataTable({
                     data: mutuAncakData, // Use modifiedMutuAncakData instead of mutuAncakData
                     columns: columnDefs,
@@ -3468,6 +3478,13 @@
                             return row[18];
                         }
                     },
+                    {
+                        targets: 21,
+                        title: 'Maps',
+                        render: function(data, type, row, meta) {
+                            return row[21]; // Access the value from index 3 of the data array
+                        }
+                    },
 
                     {
                         targets: -1, // -1 targets the last column
@@ -3515,7 +3532,7 @@
                             delete item.lon;
                             delete item.bulan;
                             delete item.tahun;
-                            delete item.app_version;
+
                             delete item.foto_fu;
                             delete item.foto_temuan;
                             delete item.foto_komentar;
@@ -3755,6 +3772,14 @@
                         targets: 10,
                         title: 'Buah di TPH'
                     },
+                    {
+                        targets: 11,
+                        title: 'Maps',
+                        render: function(data, type, row, meta) {
+                            return row[11]; // Access the value from index 3 of the data array
+                        }
+                    },
+
 
                     {
                         targets: -1, // -1 targets the last column

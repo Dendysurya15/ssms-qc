@@ -302,6 +302,95 @@ class inspectController extends Controller
                 $dataSkorResult[$newData][0]['check_data'] = $check;
             }
         }
+
+        // dd($dataSkorResult);
+        // testing
+        // foreach ($dataSkor as $key => $value) {
+        //     foreach ($value as $key1 => $value1) {
+        //         // dd($key);
+              
+        //             if (strlen($key) == 8 ) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr($key, 0, -3);
+        //             }else if ( $est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE"  ) {
+        //                                 if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
+        //                                     $sliced = substr($key, 0, -2);
+        //                                     $newData = substr($sliced, 0, 1) . substr($sliced, 2);
+        //                                 }elseif (strlen($key) == 6) {
+        //                                     $newData = substr($key, 0, -3);
+        //                                 }
+        //                             }else if (strlen($key) == 7) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr($key, 0, -3);
+        //             } else if (strlen($key) == 6) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -2);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }  else if (strlen($key) == 4) {
+        //                 $newData = $key;
+        //             } else if (strlen($key) == 5) {
+        //                 $sliced = substr($key, 0, -2);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }else if (strpos($key, 'SSMSCBI') !== false && strlen($key) == 14) {
+        //                 $newData = substr($key, 0, -10);
+        //             }else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
+        //                 $sliced = substr($key, 0, -6);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }else if (strpos($key, 'CBI') !== false && strlen($key) == 10) {
+        //                 $newData = substr($key, 0, -6);
+        //             } else if (strpos($key, 'CBI') !== false) {
+        //                 $newData = substr($key, 0, -4);
+        //             } else if (strpos($key, 'CB') !== false) {
+        //                 $replace = substr_replace($key, '', 1, 1);
+        //                 $sliced = substr($replace, 0, -3);
+        //                 $newData = substr_replace($sliced, '0', 1, 0);
+        //             }  else if (strlen($key) == 3) {
+        //                 $newData = $key;
+        //             }else if (strpos($key, 'SSMSC') !== false && strlen($key) == 10) {
+        //                 $newData = substr($key, 0, -6);
+        //             }
+              
+        //         $skorTrans = check_array('skorTrans', $value1);
+        //         $skorBuah = check_array('skorBuah', $value1);
+        //         $skorAncak = check_array('skorAncak', $value1);
+        //         // $skorAkhir = $skorTrans + $skorBuah + $skorAncak;
+        //         if ($skorTrans != 0 && $skorAncak != 0) {
+        //             $skorAkhir = $skorTrans + $skorAncak + 34;
+        //         } else if ($skorTrans != 0 ){
+        //             $skorAkhir = $skorTrans + 34;
+        //         }else if ($skorAncak != 0 ){
+        //             $skorAkhir = $skorAncak + 34;
+        //         }else{
+        //             $skorAkhir = 0;
+        //         }
+
+        //         if ($skorTrans == 0 && $skorAncak == 0) {
+        //             $check = 'empty';
+        //         } else {
+        //             $check = 'data';
+        //         }
+                
+        //         if ($check == 'data') {
+        //             $skor_kategori_akhir_est = skor_kategori_akhir($skorAkhir);
+        //         }else {
+        //             $skor_kategori_akhir_est = 'xxx';
+        //         }
+               
+                
+
+        //         $dataSkorResult[$newData][0]['estate'] = $est;
+        //         $dataSkorResult[$newData][0]['skorTrans'] = $skorTrans;
+        //         $dataSkorResult[$newData][0]['skorBuah'] = $skorBuah;
+        //         $dataSkorResult[$newData][0]['skorAncak'] = $skorAncak;
+        //         $dataSkorResult[$newData][0]['blok'] = $newData;
+        //         $dataSkorResult[$newData][0]['text'] = $skor_kategori_akhir_est[1];
+        //         $dataSkorResult[$newData][0]['skorAkhir'] = $skorAkhir;
+        //         $dataSkorResult[$newData][0]['check_data'] = $check;
+        //     }
+        // }
+
         // end testing 
         
         $datas = array();
@@ -510,7 +599,7 @@ class inspectController extends Controller
         ];
         
      
-        // dd($blokLatLn);
+        // dd($blokLatLn,$dataLegend);
         
 
         $plot['blok'] = $blokLatLn;
@@ -530,6 +619,7 @@ class inspectController extends Controller
         if ($est == 'Pla') {
             $est = 'Plasma1';
         }
+
         $date = Carbon::parse($tgl)->format('F Y');
         $queryMTFI = DB::connection('mysql2')->table('mutu_transport')
             ->select("mutu_transport.*")
@@ -746,29 +836,7 @@ class inspectController extends Controller
 
 
      
-        // function getGroupLetter($key)
-        // {
-        //     return substr($key, 4, 2);
-        // }
-        // uksort($all_mutu, function ($a, $b) {
-        //     $groupLetterA = getGroupLetter($a);
-        //     $groupLetterB = getGroupLetter($b);
-
-        //     if ($groupLetterA === $groupLetterB) {
-        //         return strcmp($a, $b); // If the group letters are the same, compare the full keys
-        //     }
-
-        //     return strcmp($groupLetterA, $groupLetterB); // Compare the group letters
-        // });
-
-        // dd($all_mutu);
-   
-        ////
-     
-        
-        
-        // print_r($all_mutu);
-       
+    //    dd($all_mutu);
 
         $pdf = pdf::loadview('cetakFI', [
             'id' => $id,
@@ -785,6 +853,7 @@ class inspectController extends Controller
         return $pdf->stream($filename);
     }
 
+ 
     public function getFindData(Request $request)
     {
         // $test = $request->get('date');
@@ -1214,6 +1283,7 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
+    
     
     public function changeDataInspeksi(Request $request)
     {
@@ -19869,10 +19939,46 @@ class inspectController extends Controller
             ->get();
         $mutuTransport = json_decode($mutuTransport, true);
         // dd($mutuAncak, $mutuBuah, $mutuTransport);
+        foreach ($mutuAncak as &$item) {
+            // Check if "app_version" key exists in the current item
+            if (isset($item['app_version'])) {
+                // Check if the value contains ";GA" or ":GL"
+                if (strpos($item['app_version'], ';GA') !== false) {
+                    $item['app_version'] = 'GPS Akurat';
+                } elseif (strpos($item['app_version'], ':GL') !== false) {
+                    $item['app_version'] = 'GPS Liar';
+                }
+            }
+        }
 
+        foreach ($mutuTransport as &$item) {
+            // Check if "app_version" key exists in the current item
+            if (isset($item['app_version'])) {
+                // Check if the value contains ";GA" or ":GL"
+                if (strpos($item['app_version'], ';GA') !== false) {
+                    $item['app_version'] = 'GPS Akurat';
+                } elseif (strpos($item['app_version'], ':GL') !== false) {
+                    $item['app_version'] = 'GPS Liar';
+                }
+            }
+        }
+
+        foreach ($mutuBuah as &$item) {
+            // Check if "app_version" key exists in the current item
+            if (isset($item['app_version'])) {
+                // Check if the value contains ";GA" or ":GL"
+                if (strpos($item['app_version'], ';GA') !== false) {
+                    $item['app_version'] = 'GPS Akurat';
+                } elseif (strpos($item['app_version'], ':GL') !== false) {
+                    $item['app_version'] = 'GPS Liar';
+                }
+            }
+        }
+        
+        // dd($mutuAncak,$mutuBuah,$mutuTransport);
 
         $arrView = array();
-
+        // dd($mutuTransport);
         $arrView['mutuAncak'] =  $mutuAncak;
         $arrView['mutuBuah'] =  $mutuBuah;
         $arrView['mutuTransport'] =  $mutuTransport;
@@ -19883,6 +19989,7 @@ class inspectController extends Controller
         exit();
     }
     
+
     public function updateBA(Request $request)
     {
 
@@ -20706,7 +20813,6 @@ class inspectController extends Controller
             'estates' => $EstMapVal
         ]);
     }
-
     public function getMapsdetail(Request $request)
     {
         $est = $request->input('est');
@@ -20870,36 +20976,56 @@ class inspectController extends Controller
 
             // dd($groupedBuah);
             $buah_plot = [];
+
             foreach ($groupedBuah as $blok => $coords) {
                 foreach ($coords as $coord) {
                     $datetime = $coord['datetime'];
                     $time = date('H:i:s', strtotime($datetime));
-                    $buah_plot[$blok][] = ['blok' => $blok,
-                    'lat' => $coord['lat'],
-                    'lon' => $coord['lon'],
-                    'foto_temuan' => $coord['foto_temuan'],
-                    'komentar' => $coord['komentar'],
-                    'tph_baris' => $coord['tph_baris'],
-                    'status_panen' => $coord['status_panen'],
-                    'jumlah_jjg' => $coord['jumlah_jjg'],
-                    'bmt' => $coord['bmt'],
-                    'bmk' => $coord['bmk'],
-                    'overripe' => $coord['overripe'],
-                    'empty_bunch' => $coord['empty_bunch'],
-                    'abnormal' => $coord['abnormal'],
-                    'vcut' => $coord['vcut'],
-                    'alas_br' => $coord['alas_br'],
-                    'time' => $time,
+            
+                    $maps = $coord['app_version'];
+                    if (strpos($maps, ';GA') !== false) {
+                        $maps = 'GPS Akurat';
+                    } elseif (strpos($maps, ';GL') !== false) {
+                        $maps = 'GPS Liar';
+                    }
+            
+                    $buah_plot[$blok][] = [
+                        'blok' => $blok,
+                        'lat' => $coord['lat'],
+                        'lon' => $coord['lon'],
+                        'foto_temuan' => $coord['foto_temuan'],
+                        'komentar' => $coord['komentar'],
+                        'tph_baris' => $coord['tph_baris'],
+                        'status_panen' => $coord['status_panen'],
+                        'jumlah_jjg' => $coord['jumlah_jjg'],
+                        'bmt' => $coord['bmt'],
+                        'bmk' => $coord['bmk'],
+                        'overripe' => $coord['overripe'],
+                        'empty_bunch' => $coord['empty_bunch'],
+                        'abnormal' => $coord['abnormal'],
+                        'vcut' => $coord['vcut'],
+                        'alas_br' => $coord['alas_br'],
+                        'maps' => $maps,
+                        'time' => $time,
                     ];
                 }
             }
-
+            
+           
+          
+            
             // dd($buah_plot);
             $trans_plot = [];
             foreach ($groupedTrans as $blok => $coords) {
                 foreach ($coords as $coord) {
                     $datetime = $coord['datetime'];
                     $time = date('H:i:s', strtotime($datetime));
+                    $maps = $coord['app_version'];
+                    if (strpos($maps, ';GA') !== false) {
+                        $maps = 'GPS Akurat';
+                    } elseif (strpos($maps, ';GL') !== false) {
+                        $maps = 'GPS Liar';
+                    }
             
                     $trans_plot[$blok][] = [
                         'blok' => $blok, 
@@ -20912,7 +21038,7 @@ class inspectController extends Controller
                         'luas_blok' => $coord['luas_blok'],
                         'bt' => $coord['bt'],
                         'Rst' => $coord['rst'],
-                       
+                        'maps' => $maps,
                         'time' => $time,
                     ];
                 }
@@ -20993,79 +21119,7 @@ class inspectController extends Controller
             }
             // dd($groupedArray,$ancak_fa);
 
-           
-
-            // dd($combinedArray);
-            // $ancak_plot = [];
-            // foreach ($groupedAncak as $blok => $coords) {
-            //     foreach ($coords as $coord) {
-            //         $ancak_fa_item = array();
-            //         $matchingAncakFa = [];
-            
-            //         foreach ($ancak_fa as $key => $value) {
-            //             if ($coord['blok'] == $value['blok'] && $coord['br1'] == $value['br1'] && $coord['br2'] == $value['br2']  && $coord['jalur_masuk'] == $value['jalur_masuk']) {
-                           
-            //                 $matchingAncakFa[] = $value;
-            //             }
-            //         }
-            //         // dd($matchingAncakFa);
-            //         $foto_temuan1 = null;
-            //         $foto_temuan2 = null;
-            //         $foto_fu1 = null;
-            //         $foto_fu2 = null;
-            //         $komentar = null;
-            
-            //         if (!empty($matchingAncakFa)) {
-            //             $firstMatch = $matchingAncakFa[0];
-            //             $foto_temuan1 = $firstMatch['foto_temuan1'];
-            //             $foto_temuan2 = $firstMatch['foto_temuan2'];
-            //             $foto_fu1 = $firstMatch['foto_fu1'];
-            //             $foto_fu2 = $firstMatch['foto_fu2'];
-            //             $komentar = $firstMatch['komentar'];
-            //         }
-            
-            //         $datetime = $coord['datetime'];
-            //         $time = date('H:i:s', strtotime($datetime));
-            //         $ancak_plot[] = [
-            //             'blok' => $blok,
-            //             'estate' => $coord['estate'],
-            //             'afdeling' => $coord['afdeling'],
-            //             'br1' => $coord['br1'],
-            //             'br2' => $coord['br2'],
-            //             'jalur_masuk' => $coord['jalur_masuk'],
-            //             'foto_temuan1' => $foto_temuan1,
-            //             'foto_temuan2' => $foto_temuan2,
-            //             'foto_fu1' => $foto_fu1,
-            //             'foto_fu2' => $foto_fu2,
-            //             'komentar' => $komentar,
-            //             'ket' => 'Lokasi akhir',
-            //             'lat' => $coord['lat_akhir'],
-            //             'lon' => $coord['lon_akhir'],
-
-            //             'luas_blok' => $coord['luas_blok'],
-            //             'sph' => $coord['sph'],
-            //             'sample' => $coord['sample'],
-            //             'pokok_kuning' => $coord['pokok_kuning'],
-            //             'piringan_semak' => $coord['piringan_semak'],
-            //             'underpruning' => $coord['underpruning'],
-            //             'overpruning' => $coord['overpruning'],
-            //             'jjg' => $coord['jjg'],
-            //             'brtp' => $coord['brtp'],
-            //             'brtk' => $coord['brtk'],
-            //             'brtgl' => $coord['brtgl'],
-            //             'bhts' => $coord['bhts'],
-            //             'bhtm1' => $coord['bhtm1'],
-            //             'bhtm2' => $coord['bhtm2'],
-            //             'bhtm3' => $coord['bhtm3'],
-            //             'ps' => $coord['ps'],
-            //             'sp' => $coord['sp'],
-            //             'time' => $time,
-            //         ];
-            //     }
-            // }
-
-       
-
+ 
             $ancak_plot = [];
 
             foreach ($groupedAncak as $blok => $coords) {
@@ -21077,7 +21131,12 @@ class inspectController extends Controller
                             $matchingAncakFa[] = $value;
                         }
                     }
-            
+                    $maps = $coord['app_version'];
+                    if (strpos($maps, ';GA') !== false) {
+                        $maps = 'GPS Akurat';
+                    } elseif (strpos($maps, ';GL') !== false) {
+                        $maps = 'GPS Liar';
+                    }
                     $ancak_fa_item = [
                         'blok' => $blok,
                         'estate' => $coord['estate'],
@@ -21103,6 +21162,7 @@ class inspectController extends Controller
                         'bhtm1' => $coord['bhtm1'],
                         'bhtm2' => $coord['bhtm2'],
                         'bhtm3' => $coord['bhtm3'],
+                        'maps' => $maps,
                         'ps' => $coord['ps'],
                         'sp' => $coord['sp'],
                         'time' => date('H:i:s', strtotime($coord['datetime'])),
@@ -21140,7 +21200,7 @@ class inspectController extends Controller
             
  
             
-            dd($trans_plot); 
+            // dd($trans_plot,$buah_plot,$ancak_plot); 
 
             return response()->json([
                 'plot_line'=> $plotLine        ,                 
@@ -21152,7 +21212,6 @@ class inspectController extends Controller
                 'blok_sidak'=> $blokSidakResult
             ]);
     }
-
 
     public function getWeekInpeksi(Request $request)
     {

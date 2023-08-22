@@ -27,9 +27,9 @@
                     <p style="text-align: left;">QUALITY CONTROL</p>
 
                 </td>
-                <td style=" width: 60%;border:0;">
+                <td style=" width: 40%;border:0;">
                 </td>
-                <td style="vertical-align: middle; text-align: right;width:20%;border:0;">
+                <td style="vertical-align: middle; text-align: right;width:40%;border:0;">
                     <div class="right-container">
                         <div class="text-container" style="border:1px solid black">
 
@@ -45,7 +45,7 @@
 
         <table style="width: 100%; border: 1px solid black">
             <tr>
-                <th colspan="12" style="text-align: center; background-color: #fff4cc">FOTO</th>
+                <th colspan="9" style="text-align: center; background-color: #fff4cc">FOTO</th>
             </tr>
             <tbody>
                 @php
@@ -54,16 +54,16 @@
                 $komentar_temuan = $item['komentar_temuan'];
                 @endphp
 
-                @for ($i = 0; $i < count($foto_temuan); $i++) @php $foto_info=explode('-', $foto_temuan[$i]); $foto_name=$foto_info[0]; $foto_type=$foto_info[1]; $foto_url=$baseURL . ($foto_type==='rmh' ? 'perumahan/' : ($foto_type==='lcp' ? 'landscape/' : 'lingkungan/' )) . $foto_name; $komentar=preg_replace('/-(rmh|lkn|lcp)$/', '' , $komentar_temuan[$i]); // Remove the suffix @endphp @if ($i % 4===0) <tr>
+                @for ($i = 0; $i < count($foto_temuan); $i++) @php $foto_info=explode('-', $foto_temuan[$i]); $foto_name=$foto_info[0]; $foto_type=$foto_info[1]; $foto_url=$baseURL . ($foto_type==='rmh' ? 'perumahan/' : ($foto_type==='lcp' ? 'landscape/' : 'lingkungan/' )) . $foto_name; $komentar=preg_replace('/-(rmh|lkn|lcp)$/', '' , $komentar_temuan[$i]); // Remove the suffix @endphp @if ($i % 3===0) <tr>
                     @endif
 
-                    <td class="align-middle" width="25%" style="position: relative; border:1px solid black">
-                        <img src="{{ $foto_url }}" style="width: 400pt; height: 250pt; object-fit: contain;">
-                        <p style="text-align: center; font-size: 20px; font-weight: bold; border-bottom: 1px solid black; border-top: 1px solid black">{{$item['est']}} - {{$item['afd']}}</p>
+                    <td class="align-middle" width="33%" style="position: relative; border: 1px solid black">
+                        <img src="{{ $foto_url }}" style="width: 370pt; height: 250pt; object-fit: contain;">
+                        <p style="text-align: center; font-size: 20px; font-weight: bold; border-bottom: 1px solid black; border-top: 1px solid black">{{ $item['est'] }} - {{ $item['afd'] }}</p>
                         <p style="text-align: center; font-size: 20px; font-weight: bold;">{{ $komentar }}</p>
                     </td>
 
-                    @if ($i % 4 === 3 || $i === count($foto_temuan) - 1)
+                    @if ($i % 3 === 2 || $i === count($foto_temuan) - 1)
                     </tr>
                     @endif
                     @endfor

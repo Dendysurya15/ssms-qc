@@ -215,6 +215,16 @@ session_start();
 
 
                         <div class="fixed-bottom mb-3" style="position: absolute;">
+                            <li class="nav-item">
+                                <a href="/checkIMG" class="nav-link">
+
+                                    <div class="nav-icon lottie-animation" data-animation-path="https://assets9.lottiefiles.com/packages/lf20_8y92hieq.json">
+                                    </div>
+                                    <p>
+                                        Check Foto
+                                    </p>
+                                </a>
+                            </li>
                             @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
                             <li class="nav-item">
                                 <a href="{{ route('user.show') }}" class="nav-link">
