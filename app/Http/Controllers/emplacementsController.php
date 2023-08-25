@@ -3968,16 +3968,19 @@ class emplacementsController extends Controller
             }
         }
 
-        // filter_rmh,filter_lingkungan,filter_landscape
+        // dd($filter_rmh, $filter_lingkungan, $filter_landscape);
         $mergedArray = array();
 
         // Iterate through each main key in filter_rmh
         foreach ($filter_rmh as $mainKey => $subArray) {
+            // Initialize the merged array for this main key
+            $mergedArray[$mainKey] = array();
+
             // Create a list of all subkeys across the arrays for this main key
             $subKeys = array_unique(array_merge(
                 array_keys($subArray),
-                array_keys($filter_lingkungan[$mainKey]),
-                array_keys($filter_landscape[$mainKey])
+                isset($filter_lingkungan[$mainKey]) ? array_keys($filter_lingkungan[$mainKey]) : [],
+                isset($filter_landscape[$mainKey]) ? array_keys($filter_landscape[$mainKey]) : []
             ));
 
             foreach ($subKeys as $subKey) {
@@ -3997,6 +4000,9 @@ class emplacementsController extends Controller
             }
         }
 
+        // Now $mergedArray contains the merged and combined data
+
+        // dd($mergedArray);
 
         // Now $filteredHitungRmh will contain only the desired arrays
         // Assuming your array is named $mergedArray
@@ -4061,7 +4067,53 @@ class emplacementsController extends Controller
 
 
 
+        $allPetugas = array();
 
+        // Step 1: Gather all petugas names
+        foreach ($mergedArray as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value3) {
+                    $allPetugas[] = $value3['petugas'];
+                }
+            }
+        }
+
+        $allAfd = array();
+
+        // Step 1: Gather all petugas names
+        foreach ($mergedArray as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value3) {
+                    $allAfd[] = $value3['afd'];
+                }
+            }
+        }
+
+        $allDate = array();
+
+        // Step 1: Gather all petugas names
+        foreach ($mergedArray as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value3) {
+                    $datetimeString = $value3['datetime'];
+                    $dateTime = new DateTime($datetimeString);
+
+                    $datePart = $dateTime->format("Y-m-d");
+                    $allDate[] = $datePart;
+                }
+            }
+        }
+
+        // Step 2: Create a unique list of petugas names
+        $uniquePetugas = array_unique($allPetugas);
+        $unique = array_unique($allAfd);
+        $uniqueDate = array_unique($allDate);
+
+
+        // dd($uniqueDate);
+        // Step 3: Combine unique petugas names with ampersand (&)
+        $combinedPetugas = implode(' & ', $uniquePetugas);
+        $combinedAfd = implode(' & ', $unique);
         $header = array();
 
         foreach ($mergedArray as $key => $value) {
@@ -4071,7 +4123,7 @@ class emplacementsController extends Controller
                         if ($value4['est'] == $key && $value4['afd'] == $key1) {
                             $header[$key4]['est'] = $value3['est'];
                             $header[$key4]['afd'] = $value3['afd'];
-                            $header[$key4]['petugas'] = $value3['petugas'];
+                            $header[$key4]['petugas'] = $combinedPetugas; // Use the combined petugas
                             $header[$key4]['date'] = $value3['date'];
                             $header[$key4]['foto_temuan'] = $value4['foto_temuan'];
                             $header[$key4]['komentar_temuan'] = $value4['komentar_temuan'];
@@ -4081,13 +4133,39 @@ class emplacementsController extends Controller
             }
         }
 
-        // dd($newArray, $header);
+        // dd($header);
         // Example usage
+        $arrayMerge = [];
+
+        foreach ($header as $item) {
+            $arrayMerge['est'] = $item['est'];
+            $arrayMerge['date'] = $item['date'];
+            $arrayMerge['afd'] = $combinedAfd;
+            $arrayMerge['petugas'] = $combinedPetugas;
+            $arrayMerge['foto_temuan'] = array_merge($arrayMerge['foto_temuan'] ?? [], $item['foto_temuan']);
+            $arrayMerge['komentar_temuan'] = array_merge($arrayMerge['komentar_temuan'] ?? [], $item['komentar_temuan']);
+
+            // Extract and append detail_temuan
+            $detail_temuan = [];
+            foreach ($item['foto_temuan'] as $foto) {
+                $parts = explode('_', $foto);
+
+                if (count($parts) > 2) {
+                    $detail_parts = explode('.', $parts[4]); // Split the fourth part by dot
+                    if (count($detail_parts) > 1) {
+                        $detail_temuan[] = $parts[3] . ' ' . $detail_parts[0]; // Concatenate the third part and the part after dot
+                    }
+                }
+            }
+            $arrayMerge['detail_temuan'] = array_merge($arrayMerge['detail_temuan'] ?? [], $detail_temuan);
+        }
+
+        // dd($arrayMerge);
 
         $arrView = array();
 
         $arrView['test'] =  'oke';
-        $arrView['total'] =  $header;
+        $arrView['total'] =  $arrayMerge;
         // $arrView['lingkungan'] =  $nila_akhir_lingkungan;
 
         $pdf = PDF::loadView('emplPDF', ['data' => $arrView]);

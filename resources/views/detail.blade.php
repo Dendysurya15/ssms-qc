@@ -191,6 +191,21 @@
                                     <td class="my-cell">FOTO</td>
                                 </tr>
 
+
+                                <!-- The Modal -->
+
+                                <div class="modal">
+                                    <div class="modal-content">
+                                        <img src="" alt="" class="modal-image">
+                                        <div class="button-group">
+                                            <button class="rotate btn btn-primary">Rotate</button>
+                                            <button id="save-btn" class="btn btn-success">Save</button>
+                                        </div>
+                                        <span class="close">&times;</span>
+                                    </div>
+                                </div>
+
+
                                 <tr>
 
 
@@ -284,7 +299,7 @@
                                     @if ($data->foto_mr_ditandatangani_1)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
 
 
@@ -302,7 +317,7 @@
                                     @if ($data->foto_kebersihan_gudang_1)
                                     <td class="my-cell col-md-4"><img data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
 
 
@@ -314,24 +329,24 @@
                                     @if ($data->foto_inspeksi_ktu_1)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
                                     @if ($data->foto_mr_ditandatangani_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     @if ($data->foto_kebersihan_gudang_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     @if ($data->foto_inspeksi_ktu_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
@@ -366,23 +381,6 @@
                                     <td class="my-cell">FOTO</td>
                                 </tr>
 
-
-                                <div class="modal">
-                                    <div class="modal-content">
-                                        <img src="" alt="" class="modal-image">
-                                        <div class="button-group">
-                                            <button class="rotate btn btn-primary">Rotate</button>
-                                            <button id="save-btn" class="btn btn-success">Save</button>
-                                            <label for="image-upload" class="btn btn-success">Upload</label>
-                                            <!-- Add the form element for image upload -->
-                                            <form id="uploadForm" method="post" enctype="multipart/form-data">
-                                                <input type="file" id="image-upload" accept="image/*">
-                                                <button id="upload-button">Upload</button>
-                                            </form>
-                                        </div>
-                                        <span class="close">&times;</span>
-                                    </div>
-                                </div>
 
 
                                 <tr>
@@ -456,7 +454,7 @@
                                     @if ($data->foto_barang_nonstok_1)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     <td class="my-cell" rowspan="2">
                                         {{($data->mr_ditandatangani == 10) ? 'MR Ditandatangani oleh EM Seluruhnya ' :
@@ -469,7 +467,7 @@
                                     @if ($data->foto_mr_ditandatangani_1)
                                     <td class="my-cell col-md-4"><img data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     <td class="my-cell" rowspan="2">
                                         {{$data->kebersihan_gudang + $data->gudang_pupuk + $data->bincard_terbungkus +
@@ -478,24 +476,24 @@
                                     @if ($data->foto_kebersihan_gudang_1)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
                                     @if ($data->foto_barang_nonstok_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     @if ($data->foto_mr_ditandatangani_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                     @if ($data->foto_kebersihan_gudang_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
@@ -524,14 +522,14 @@
                                     @if ($data->foto_inspeksi_ktu_1)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
                                     @if ($data->foto_inspeksi_ktu_2)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}" class="img-fluid modal-image"></td>
                                     @else
-                                    <td><img src="{{asset('img/404img.png')}}" style="weight:75pt;height:150pt"></td>
+                                    <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
                                 </tr>
                                 <tr>
@@ -549,172 +547,229 @@
                 </div>
             </div>
     </section>
+
+
+    <!-- Main Modal -->
+    <div class="modal">
+        <div class="modal-content">
+            <img src="" alt="" class="modal-image">
+            <div class="button-group">
+                <button class="rotate btn btn-primary">Rotate</button>
+                @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
+                <button id="openNestedModalBtn" class="btn btn-info">Upload Foto</button>
+                @endif
+                <button id="save-btn" class="btn btn-success">Save</button>
+            </div>
+            <span class="close">&times;</span>
+        </div>
+    </div>
+    <!-- Nested Modal -->
+    <div id="nestedModal" class="modal">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <!-- <h2>Upload Foto</h2> -->
+                <h2>Upload Foto jika hanya foto tidak tersedia!</h2>
+                <!-- <button id="closeNestedModalBtn" class="close">&times;</button> -->
+            </div>
+            <!-- Body -->
+            <div class="modal-body">
+                <p><strong>Image Source:</strong> <span id="nestedSrc"></span></p>
+                <p><strong>Image Alt:</strong> <span id="nestedAlt"></span></p>
+                <div class="file-upload">
+                    <label for="uploadInput" class="btn btn-primary">Choose Foto</label>
+                    <input type="file" id="uploadInput" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button id="uploadBtn" class="btn btn-primary">Upload</button>
+                <button id="closeNestedModalBtn" class="btn btn-danger">Close</button>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 @include('layout/footer')
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the main modal element
-        const modal = document.querySelector('.modal');
+    const openNestedModalBtn = document.getElementById("openNestedModalBtn");
+    const closeNestedModalBtn = document.getElementById("closeNestedModalBtn");
+    const mainModal = document.querySelector(".modal");
+    const nestedModal = document.getElementById("nestedModal");
 
-        // Get the modal content element
-        const modalContent = document.querySelector('.modal-content');
+    // Declare src and alt variables in a higher scope
+    let src = '';
+    let alt = '';
 
-        // Get the close button for the modal
-        const closeButton = modal.querySelector('.close');
+    // Get all the images
+    const images = document.querySelectorAll('.modal-image');
 
-        // Get the rotate button
-        const rotateButton = modal.querySelector('.rotate');
+    // Get the modal element
+    const modal = document.querySelector('.modal');
 
-        // Get the save button
-        const saveButton = modal.querySelector('#save-btn');
-        // Get the modal image element
-        const modalImage = modal.querySelector('.modal-image');
+    // Get the modal content element
+    const modalContent = document.querySelector('.modal-content');
 
-        let totalRotation = 0;
-        const imageUploadInput = document.getElementById('image-upload');
-        const uploadButton = document.getElementById('upload-button');
+    // Loop through each image
+    images.forEach((image) => {
+        // Add a click event listener to the image
+        image.addEventListener('click', () => {
+            // Get the clicked image source and alt attributes
+            src = image.getAttribute('src');
+            alt = image.getAttribute('alt');
 
-        uploadButton.addEventListener('click', function() {
-            const file = imageUploadInput.files[0];
-
-            if (file) {
-                const formData = new FormData();
-                formData.append('image', file);
-                formData.append('filename', file.name);
-
-                const xhr = new XMLHttpRequest();
-                const url = 'https://srs-ssms.com/qc_inspeksi/upGudang.php';
-                xhr.open('POST', url, true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            console.log(xhr.responseText);
-                            // Handle response from server
-                        } else {
-                            console.log('Error:', xhr.statusText);
-                        }
-                    }
-                };
-                xhr.send(formData);
-            } else {
-                console.log('No file selected.');
-            }
-        });
-
-        // Add a click event listener to the image upload label
-        imageUploadInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                modalImage.src = URL.createObjectURL(file);
-                modalImage.alt = file.name;
-                modal.style.display = 'block';
-                resetRotation();
-
-                // Set the filename for upload based on modalImage src
-                const modalImageSrc = modalImage.getAttribute('src');
-                const filename = modalImageSrc.substring(modalImageSrc.lastIndexOf('/') + 1);
-                imageUploadInput.setAttribute('data-filename', filename);
-            }
-        });
-
-
-        // Loop through each image
-        const images = document.querySelectorAll('.modal-image');
-        images.forEach((image) => {
-            // Add a click event listener to the image
-            image.addEventListener('click', () => {
-                // Get the clicked image source and alt attributes
-                const src = image.getAttribute('src');
-                const alt = image.getAttribute('alt');
-
-                // Update the modal image source and alt attributes
-                modalImage.setAttribute('src', src);
-                modalImage.setAttribute('alt', alt);
-                resetRotation();
-
-                // Show the main modal
-                modal.style.display = 'block';
-            });
-        });
-
-        // Add a click event listener to the close button
-        modalContent.addEventListener('click', (event) => {
-            if (event.target === closeButton || event.target === modalContent) {
-                // Hide the modal
-                modal.style.display = 'none';
-            }
-        });
-
-
-        // Add a click event listener to the rotate button
-        rotateButton.addEventListener('click', () => {
-            // Get the modal image
+            // Update the modal image source and alt attributes
             const modalImage = modal.querySelector('.modal-image');
-
-            // Calculate the new rotation angle
-            const newRotation = totalRotation + 90;
-
-            // Update the rotation angle and style
-            modalImage.style.transform = `rotate(${newRotation}deg)`;
-
-            // Update the total rotation angle
-            totalRotation = newRotation;
+            modalImage.setAttribute('src', src);
+            modalImage.setAttribute('alt', alt);
+            resetRotation();
+            // Show the modal
+            modal.style.display = 'block';
         });
+    });
 
-        // Add a click event listener to the save button
-        saveButton.addEventListener('click', function() {
-            sendRequest();
-            // sendIMG();
-        });
-        // Function to reset rotation
-        function resetRotation() {
-            totalRotation = 0;
+    openNestedModalBtn.addEventListener("click", () => {
+        const nestedSrcSpan = nestedModal.querySelector('#nestedSrc');
+        const nestedAltSpan = nestedModal.querySelector('#nestedAlt');
 
-            // Get the modal image and reset the rotation angle and style
-            const modalImage = modal.querySelector('.modal-image');
-            modalImage.style.transform = 'rotate(0deg)';
-            modalImage.removeAttribute('data-rotation');
-        }
+        // Extract the desired portion from the src string
+        const srcParts = src.split('/');
+        const lastPart = srcParts[srcParts.length - 1];
 
-        // Function to send image rotation request
-        function sendRequest() {
-            // Get the modal image source, file name, and degree of rotation
-            const modalImage = modal.querySelector('.modal-image');
-            const src = modalImage.getAttribute('src');
-            const fileName = src.substring(src.lastIndexOf('/') + 1);
+        // Set the src and alt attributes to the spans
+        nestedSrcSpan.textContent = lastPart;
+        nestedAltSpan.textContent = alt;
+        nestedModal.style.display = 'block'; // Show the nested modal
+    });
+    closeNestedModalBtn.addEventListener("click", () => {
+        mainModal.style.display = "block"; // Show the main modal
+        nestedModal.style.display = "none"; // Hide the nested modal
+    });
 
-            // Get the degree of rotation
-            let rotation = totalRotation;
-            if (rotation === undefined) {
-                rotation = 0;
-            }
+    // Get the upload input and upload button
+    const uploadInput = nestedModal.querySelector('#uploadInput');
+    const uploadBtn = nestedModal.querySelector('#uploadBtn');
 
-            // Send the data to the server using Ajax
+    // Add a click event listener to the upload button
+    uploadBtn.addEventListener('click', () => {
+        if (uploadInput.files.length > 0) {
+            const uploadedFile = uploadInput.files[0];
+            const newFileName = nestedModal.querySelector('#nestedSrc').textContent;
+
+            const formData = new FormData();
+            formData.append('image', uploadedFile);
+            formData.append('filename', newFileName);
+
+            // Create a new XMLHttpRequest object
             const xhr = new XMLHttpRequest();
-            const url = 'https://srs-ssms.com/gudang/rotateImage.php';
-            const params = `fileName=${fileName}&rotation=${rotation}`;
+            const url = 'https://srs-ssms.com/qc_inspeksi/upGudang.php';
+
             xhr.open('POST', url, true);
-            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     console.log(xhr.responseText);
-                    // Hide the modal and reset the rotation
-                    modal.style.display = 'none';
-                    resetRotation();
-
-                    // Remove the event listener to prevent multiple requests
-                    saveButton.removeEventListener('click', sendRequest);
-                    alert('Foto baru sudah tersimpan');
-                    location.reload();
+                    alert('Image uploaded successfully.');
                 } else if (xhr.readyState === 4 && xhr.status !== 200) {
-                    console.log('Error:', xhr.statusText);
+                    console.log('Error uploading image:', xhr.statusText);
                 }
             };
-            xhr.send(params);
+
+            xhr.send(formData);
+        } else {
+            alert('Please select a file to upload.');
+        }
+    });
+
+
+    // Get the close button
+    const closeButton = modal.querySelector('.close');
+
+    // Add a click event listener to the close button
+    closeButton.addEventListener('click', () => {
+        // Hide the modal
+        modal.style.display = 'none';
+        resetRotation();
+    });
+
+    // Add a click event listener to the modal content element
+    modalContent.addEventListener('click', (event) => {
+        // If the clicked element is the modal content itself
+        if (event.target === modalContent) {
+            // Hide the modal
+            modal.style.display = 'none';
+        }
+    });
+
+    function resetRotation() {
+        // Reset the total rotation angle
+        totalRotation = 0;
+
+        // Get the modal image and reset the rotation angle and style
+        const modalImage = modal.querySelector('.modal-image');
+        modalImage.style.transform = 'rotate(0deg)';
+        modalImage.removeAttribute('data-rotation');
+    }
+    // Get the rotate button
+    const rotateButton = modal.querySelector('.rotate');
+    let totalRotation = 0;
+    // Add a click event listener to the rotate button
+    rotateButton.addEventListener('click', () => {
+        // Get the modal image
+        const modalImage = modal.querySelector('.modal-image');
+
+        // Calculate the new rotation angle
+        const newRotation = totalRotation + 90;
+
+        // Update the rotation angle and style
+        modalImage.style.transform = `rotate(${newRotation}deg)`;
+
+        // Update the total rotation angle
+        totalRotation = newRotation;
+    });
+    // Get the save button
+    const saveButton = modal.querySelector('#save-btn');
+
+    function sendRequest() {
+        // Get the modal image source, file name, and degree of rotation
+        const modalImage = modal.querySelector('.modal-image');
+        const src = modalImage.getAttribute('src');
+        const fileName = src.substring(src.lastIndexOf('/') + 1);
+
+        // Get the degree of rotation
+        let rotation = totalRotation;
+        if (rotation === undefined) {
+            rotation = 0;
         }
 
+        // Send the data to the server using Ajax
+        const xhr = new XMLHttpRequest();
+        const url = 'https://srs-ssms.com/gudang/rotateImage.php';
+        const params = `fileName=${fileName}&rotation=${rotation}`;
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(xhr.responseText);
+                // Hide the modal and reset the rotation
+                modal.style.display = 'none';
+                resetRotation();
 
+                // Remove the event listener to prevent multiple requests
+                saveButton.removeEventListener('click', sendRequest);
+                alert('Foto baru sudah tersimpan');
+                location.reload();
+            } else if (xhr.readyState === 4 && xhr.status !== 200) {
+                console.log('Error:', xhr.statusText);
+            }
+        };
+        xhr.send(params);
+    }
 
+    // Add a click event listener to the save button
+    saveButton.addEventListener('click', sendRequest, {
+        once: true
     });
 </script>
