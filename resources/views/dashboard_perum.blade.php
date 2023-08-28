@@ -131,7 +131,7 @@
                                     </div>
                                 </div>
                                 <button class="btn btn-primary mb-3" style="float: right" id="btnShow">Show</button>
-                            
+
                             </div>
                         </div>
 
@@ -555,18 +555,18 @@
                     }
                     // ... your existing code ...
 
-                    let januaryLink = (item6 !== 0) ? `<a href="/detailEmplashmend/${url}/${JanDate}">${item6}</a>` : item6;
-                    let februaryLink = (item7 !== 0) ? `<a href="/detailEmplashmend/${url}/${FebDate}">${item7}</a>` : item7;
-                    let marchLink = (item8 !== 0) ? `<a href="/detailEmplashmend/${url}/${MarchDate}">${item8}</a>` : item8;
-                    let aprilLink = (item9 !== 0) ? `<a href="/detailEmplashmend/${url}/${AprDate}">${item9}</a>` : item9;
-                    let mayLink = (item10 !== 0) ? `<a href="/detailEmplashmend/${url}/${MayDate}">${item10}</a>` : item10;
-                    let juneLink = (item11 !== 0) ? `<a href="/detailEmplashmend/${url}/${JuneDate}">${item11}</a>` : item11;
-                    let julyLink = (item12 !== 0) ? `<a href="/detailEmplashmend/${url}/${JulyDate}">${item12}</a>` : item12;
-                    let augustLink = (item13 !== 0) ? `<a href="/detailEmplashmend/${url}/${AugDate}">${item13}</a>` : item13;
-                    let septemberLink = (item14 !== 0) ? `<a href="/detailEmplashmend/${url}/${SepDate}">${item14}</a>` : item14;
-                    let octoberLink = (item15 !== 0) ? `<a href="/detailEmplashmend/${url}/${OctDate}">${item15}</a>` : item15;
-                    let novemberLink = (item16 !== 0) ? `<a href="/detailEmplashmend/${url}/${NovDate}">${item16}</a>` : item16;
-                    let decemberLink = (item17 !== 0) ? `<a href="/detailEmplashmend/${url}/${DecDate}">${item17}</a>` : item17;
+                    let januaryLink = `<a href="/detailEmplashmend/${url}/${JanDate}">${item6}</a>`
+                    let februaryLink = `<a href="/detailEmplashmend/${url}/${FebDate}">${item7}</a>`
+                    let marchLink = `<a href="/detailEmplashmend/${url}/${MarchDate}">${item8}</a>`
+                    let aprilLink = `<a href="/detailEmplashmend/${url}/${AprDate}">${item9}</a>`
+                    let mayLink = `<a href="/detailEmplashmend/${url}/${MayDate}">${item10}</a>`
+                    let juneLink = `<a href="/detailEmplashmend/${url}/${JuneDate}">${item11}</a>`
+                    let julyLink = `<a href="/detailEmplashmend/${url}/${JulyDate}">${item12}</a>`
+                    let augustLink = `<a href="/detailEmplashmend/${url}/${AugDate}">${item13}</a>`
+                    let septemberLink = `<a href="/detailEmplashmend/${url}/${SepDate}">${item14}</a>`
+                    let octoberLink = `<a href="/detailEmplashmend/${url}/${OctDate}">${item15}</a>`
+                    let novemberLink = `<a href="/detailEmplashmend/${url}/${NovDate}">${item16}</a>`
+                    let decemberLink = `<a href="/detailEmplashmend/${url}/${DecDate}">${item17}</a>`
 
                     let items = [item1, item2, item3, item4,
                         ...januaryArray, januaryLink,

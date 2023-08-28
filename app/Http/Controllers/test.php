@@ -180,7 +180,7 @@ class emplacementsController extends Controller
                 }
             }
         }
-        // dd($defaultNew);
+        dd($defaultNew);
         foreach ($defaultNew as $key => $estValue) {
             foreach ($estValue as $monthKey => $monthValue) {
                 foreach ($dataPerBulan as $dataKey => $dataValue) {
@@ -195,7 +195,7 @@ class emplacementsController extends Controller
             }
         }
 
-        // dd($dataPerBulan);
+        // dd($defaultNew);
 
 
         foreach ($defaultNew as $key => $value) {
@@ -1042,10 +1042,10 @@ class emplacementsController extends Controller
         $est_emp = DB::connection('mysql2')->table('estate_emp')
             ->select(
                 'estate_emp.id',
+                'estate_emp.nama',
                 'estate.nama',
                 'estate.est',
                 'estate_emp.wil',
-                'estate_emp.nama  as namaafd',
             )
             ->join('wil', 'wil.id', '=', 'estate_emp.wil')
             ->where('wil.regional', $regional)
@@ -1058,10 +1058,7 @@ class emplacementsController extends Controller
             return !in_array($item['nama'], $excludedEstValues);
         });
 
-        // dd($filteredArray);
         $estates = array_column($filteredArray, 'est');
-
-        $qerafd = array_column($filteredArray, 'namaafd');
         // dd($estates);
         $emplacement = DB::connection('mysql2')->table('perumahan')
             ->select(
@@ -1071,10 +1068,9 @@ class emplacementsController extends Controller
             )
             ->where('perumahan.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
-            ->whereIn('afd', $qerafd)
             // ->where('est', '=', 'NBM')
             // ->whereIn('perumahan.afd', ['EST', 'WIL'])
-            // ->where('perumahan.afd', 'EST')
+            ->where('perumahan.afd', 'EST')
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
             ->orderBy('datetime', 'asc')
@@ -1083,7 +1079,7 @@ class emplacementsController extends Controller
         $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
         $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
 
-        // dd($emplacement, $qerafd);
+        // dd($emplacement, $estates);
 
         $lingkungan = DB::connection('mysql2')->table('lingkungan')
             ->select(
@@ -1093,10 +1089,9 @@ class emplacementsController extends Controller
             )
             ->where('lingkungan.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
-            ->whereIn('afd', $qerafd)
             // ->where('est', '=', 'NBM')
             // ->whereIn('lingkungan.afd', ['EST', 'WIL'])
-            // ->where('lingkungan.afd', 'EST')
+            ->where('lingkungan.afd', 'EST')
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
             ->orderBy('datetime', 'asc')
@@ -1114,10 +1109,9 @@ class emplacementsController extends Controller
             )
             ->where('landscape.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
-            ->whereIn('afd', $qerafd)
             // ->where('est', '=', 'NBM')
             // ->whereIn('landscape.afd', ['EST', 'WIL'])
-            // ->where('landscape.afd', 'EST')
+            ->where('landscape.afd', 'EST')
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
             ->orderBy('datetime', 'asc')
@@ -1129,456 +1123,293 @@ class emplacementsController extends Controller
         // dd($landscape, $emplacement, $lingkungan);
 
 
+
+        // dd($est_emp);
+
+        // check date yang sama  helper
+        function countEntriesWithSameDate($data, $est)
+        {
+            $count = 0;
+            $targetDate = null;
+            $sameDateIds = [];
+
+            foreach (['EST', 'WIL'] as $subEst) {
+                foreach ($data[$est][$subEst] ?? [] as $entry) {
+                    // Extract the year-month-date from the "datetime" value
+                    $dateTime = explode(" ", $entry['datetime']);
+                    $date = $dateTime[0]; // "2023-01-10"
+
+                    // If it's the first entry or the date matches the target date, continue counting
+                    if ($targetDate === null || $date === $targetDate) {
+                        $count++;
+                        $sameDateIds[] = $entry['id']; // Add the ID to the list
+                    } else {
+                        // If the dates are not the same, break the loop (since entries are sorted by date)
+                        break;
+                    }
+
+                    $targetDate = $date; // Update the target date with the current date
+                }
+            }
+
+            return [
+                'count' => $count,
+                'ids' => $sameDateIds,
+            ];
+        }
+
+
+        // ngisi nilai defaull jika bulan kosong 
+        function addMissingMonths(&$array1, $array2)
+        {
+            $monthsOrder = [
+                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+            ];
+
+            foreach ($array1 as $location => &$locationData) {
+                $existingMonths = array_keys($locationData);
+                $missingMonths = array_diff($monthsOrder, $existingMonths);
+
+                if (!empty($missingMonths)) {
+                    foreach ($missingMonths as $month) {
+                        $locationData[$month] = $array2[$location][$month];
+                    }
+                }
+
+                // Sort the months in the desired order
+                uksort($locationData, function ($a, $b) use ($monthsOrder) {
+                    return array_search($a, $monthsOrder) - array_search($b, $monthsOrder);
+                });
+            }
+        }
+        // Sample data (replace this with your actual array)
+
+
+        // Call the function for each "est" key and get the count
+        $samedateCounts = [];
+
+        foreach ($landscape as $estKey => $estValue) {
+            $count = countEntriesWithSameDate($landscape, $estKey);
+            $samedateCounts[$estKey] = $count;
+        }
+
+        // dd($samedateCounts);
+
         $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+        // nilai default perbulan 
+
+        // dd($queryEste, $est_emp);
+        // $defaultNew = array();
+        // foreach ($bulan as $month) {
+        //     foreach ($queryEste as $est) {
 
 
-        $dataPerBulan = array();
-        foreach ($emplacement as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $month = date('F', strtotime($value3['datetime']));
-                    if (!array_key_exists($month, $dataPerBulan)) {
-                        $dataPerBulan[$month] = array();
-                    }
-                    if (!array_key_exists($key, $dataPerBulan[$month])) {
-                        $dataPerBulan[$month][$key] = array();
-                    }
-                    if (!array_key_exists($key2, $dataPerBulan[$month][$key])) {
-                        $dataPerBulan[$month][$key][$key2] = array();
-                    }
-                    $dataPerBulan[$month][$key][$key2][$key3] = $value3;
-                }
-            }
-        }
+        //         $defaultNew[$est['nama']][$month] = 0;
+        //     }
+        // }
 
-        // // dd($dataPerBulan);
-        // dd($queryEste, $filteredArray);
-
+        // dd($queryEste, $est_emp);
         $defaultNew = array();
         foreach ($bulan as $month) {
-            foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
-                    if ($est['est'] == $afd['est']) {
-                        $defaultNew[$est['est']][$month][$afd['namaafd']] = 0;
-                    }
-                }
+            foreach ($filteredArray as $est) {
+
+
+                $defaultNew[$est['nama']][$month] = 0;
             }
         }
+        // dd($emplacement);
 
+        // perhitungan perumahan 
 
+        $dataPerBulan = [];
+        foreach ($bulan as $month) {
+            foreach ($emplacement as $estKey => $estValue) {
+                foreach ($estValue['EST'] as $entry) {
+                    // Get the month and year from the "datetime" field
+                    $entryMonth = date('F', strtotime($entry['datetime']));
+                    $year = date('Y', strtotime($entry['datetime']));
 
-        foreach ($defaultNew as $key => $estValue) {
-            foreach ($estValue as $monthKey => $monthValue) {
-                foreach ($dataPerBulan as $dataKey => $dataValue) {
-                    // dd($dataKey == $monthKey);
-                    if ($dataKey == $monthKey) {
-                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
-                            if ($dataEstKey == $key) {
-                                $defaultNew[$key][$monthKey] = array_merge($monthValue, $dataEstValue);
+                    if ($entryMonth === $month) {
+                        // Group the data by "nama" value
+                        if (!isset($dataPerBulan[$month])) {
+                            $dataPerBulan[$month] = [];
+                        }
+
+                        // Find the corresponding "nama" value from the "queryEste" array
+                        $nama = '';
+                        foreach ($filteredArray as $namaData) {
+                            // dd($namaData);
+                            if ($namaData['est'] === $estKey) {
+                                $nama = $namaData['nama'];
+                                break;
                             }
                         }
+
+                        // Handle keys that should not have the "-EST" suffix
+                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'];
+                        $keyToAdd = in_array($estKey, $exceptKeys) ? $estKey : $estKey . '-EST';
+
+                        // Group the data by "nama" value and "est" key
+                        if (!isset($dataPerBulan[$month][$nama][$keyToAdd])) {
+                            $dataPerBulan[$month][$nama][$keyToAdd] = [];
+                        }
+
+                        // Add the data to the result array
+                        $dataPerBulan[$month][$nama][$keyToAdd][] = $entry;
                     }
                 }
             }
-        }
-        // dd($defaultNew, $dataPerBulan);
-        $emplashmenOri = array();
 
-        // dd($defaultNew);
-        foreach ($defaultNew as $key => $value) {
-            foreach ($value as $key3 => $value3) {
-                foreach ($value3 as $key4 => $value4) {
-                    foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'REG-1'];
-                        $keyToAdd = in_array($key, $exceptKeys) ? $key : $key . '-EST';
-                        $emplashmenOri[$value2['nama']][$keyToAdd][$key3] = $value4;
-                    }
-                }
+            // Check if the month has no data and set its value to 0
+            if (!isset($dataPerBulan[$month])) {
+                $dataPerBulan[$month] = 0;
             }
         }
-        // dd($key);
-        // dd($emplashmenOri);
 
-        function combineItemsByDatetime($data)
+        // dd($dataPerBulan);
+        function groupArrayByDatetime($data)
         {
-            $combinedArray = [];
+            $groupedArray = [];
 
             foreach ($data as $bulan => $locations) {
-                foreach ($locations as $location => $estData) {
-                    foreach ($estData as $estAfd => $items) {
-                        $datetimeMap = [];
+                if (is_array($locations)) {
+                    foreach ($locations as $location => $estAfdData) {
+                        foreach ($estAfdData as $estAfd => $items) {
+                            $groupedItems = [];
 
-                        if (!is_array($items)) {
-                            $combinedArray[$bulan][$location][$estAfd] = $items;
-                            continue;
-                        }
+                            foreach ($items as $item) {
+                                $key = $item['est'] . '-' . $item['afd'] . '-' . $item['petugas'] . '-' . $item['pendamping'] . '-' . substr($item['datetime'], 0, 10);
 
-                        foreach ($items as $item) {
-                            $datetime = explode(" ", $item['datetime'])[0];
+                                if (!isset($groupedItems[$key])) {
+                                    $groupedItems[$key] = $item;
+                                } else {
+                                    $existingItem = $groupedItems[$key];
+                                    $index = 1;
 
-                            if (!isset($datetimeMap[$datetime])) {
-                                $datetimeMap[$datetime] = [];
-                            }
+                                    // Find the next available index
+                                    while (isset($existingItem['nilai' . $index])) {
+                                        $index++;
+                                    }
 
-                            $datetimeMap[$datetime][] = $item;
-                        }
+                                    // Set the new index for the current item
+                                    foreach ($item as $field => $value) {
+                                        $existingItem[$field . $index] = $value;
+                                    }
 
-                        $combinedItems = [];
-                        foreach ($datetimeMap as $datetimeItems) {
-                            $combinedItem = [];
-
-                            foreach ($datetimeItems as $index => $item) {
-                                foreach ($item as $key => $value) {
-                                    $combinedItem[$key . ($index + 1)] = $value;
+                                    $groupedItems[$key] = $existingItem;
                                 }
                             }
 
-                            $combinedItems[] = $combinedItem;
+                            $groupedArray[$bulan][$location][$estAfd] = array_values($groupedItems);
                         }
-
-                        $combinedArray[$bulan][$location][$estAfd] = $combinedItems;
                     }
+                } else {
+                    $groupedArray[$bulan] = 0;
                 }
             }
 
-            return $combinedArray;
+            return $groupedArray;
         }
 
-        $combinedArray = combineItemsByDatetime($emplashmenOri);
-        // dd($emplashmenOri, $combinedArray);
-        $new_rumah = array();
+        $groupedArray = groupArrayByDatetime($dataPerBulan);
 
-        foreach ($combinedArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value2) {
+        // dd($groupedArray, $dataPerBulan);
+        // $hitungRmh = array();
+
+        foreach ($groupedArray as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $key1 => $value2) {
                     if (is_array($value2)) {
-                        foreach ($value2 as $key3 => $value3) {
-                            $avg_nilai = 0;
-
+                        foreach ($value2 as $key2 => $value3) {
                             if (is_array($value3)) {
-                                $totalNilai = 0;
-                                $nilaiKeys = [];
+                                foreach ($value3 as $key3 => $value4) {
+                                    $avg_nilai = 0;
+                                    if (is_array($value4)) {
 
-                                foreach ($value3 as $innerKey => $innerValue) {
-                                    if (strpos($innerKey, 'nilai') === 0) {
-                                        $nilaiKeys[] = $innerKey;
-                                        $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                        $totalNilai += array_sum($nilaiValues);
+                                        $totalNilai = 0;
+                                        $nilaiKeys = [];
+
+                                        foreach ($value4 as $innerKey => $innerValue) {
+                                            if (strpos($innerKey, 'nilai') === 0) {
+                                                $nilaiKeys[] = $innerKey;
+                                                $nilaiValues = array_map('intval', explode('$', $innerValue));
+                                                $totalNilai += array_sum($nilaiValues);
+                                            }
+                                        }
+
+                                        $dividen = 0;
+                                        foreach ($value4 as $key4 => $item) {
+                                            if (strpos($key4, 'nilai') === 0) {
+                                                $dividen++;
+                                            }
+                                        }
+
+                                        if ($dividen != 1) {
+                                            $avg_nilai = round($totalNilai / $dividen, 2);
+                                        } else {
+                                            $avg_nilai = $totalNilai;
+                                        }
+
+                                        $date = $value4['datetime'];
+                                        $yearMonth = date('Y-m-d', strtotime($date));
+
+                                        $hitungRmh[$key][$key1][$key2][$key3]['nilai_total'] = $avg_nilai;
+                                        $hitungRmh[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
+                                        $hitungRmh[$key][$key1][$key2][$key3]['dividen'] = $dividen;
+
+                                        $hitungRmh[$key][$key1][$key2][$key3]['date'] = $yearMonth;
+                                        $hitungRmh[$key][$key1][$key2][$key3]['est'] = $value4['est'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['afd'] = $value4['afd'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['petugas'] = $value4['petugas'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['pendamping'] = $value4['pendamping'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['penghuni'] = $value4['penghuni'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['tipe_rumah'] = $value4['tipe_rumah'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['foto_temuan'] = $value4['foto_temuan'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['komentar_temuan'] = $value4['komentar_temuan'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['nilai'] = $value4['nilai'];
+                                        $hitungRmh[$key][$key1][$key2][$key3]['komentar'] = $value4['komentar'];
                                     }
                                 }
-
-                                $dividen = count($nilaiKeys);
-                                if ($dividen !== 0) {
-                                    $avg_nilai = round($totalNilai / $dividen);
-                                } else {
-                                    $avg_nilai = $totalNilai;
-                                }
-
-                                $date = $value3['datetime1'];
-                                $yearMonth = date('Y-m-d', strtotime($date));
-
-                                $new_rumah[$key][$key1][$key2][$key3]['nilai_total'] = $avg_nilai;
-                                $new_rumah[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
-                                $new_rumah[$key][$key1][$key2][$key3]['dividen'] = $dividen;
-                                $new_rumah[$key][$key1][$key2][$key3]['date'] = $yearMonth;
-                                $new_rumah[$key][$key1][$key2][$key3]['est'] = $value3['est1'];
-                                $new_rumah[$key][$key1][$key2][$key3]['afd'] = $value3['afd1'];
                             }
                         }
-                    } else {
-                        // dd($bulan);
-                        $tahun = $request->input('tahun');
-
-
-                        $parts = explode('-', $key1);
-
-                        $part1 = isset($parts[0]) ? $parts[0] : '';
-                        $part2 = isset($parts[1]) ? $parts[1] : '';
-
-                        $arrDef = [
-                            'nilai_total' => 0,
-                            'total_nilai' => 0,
-                            'dividen' => 0,
-                            'date' => $tahun, // Make sure $tahun is defined somewhere
-                            'est' => $part1,
-                            'afd' => $part2,
-                        ];
-                        $new_rumah[$key][$key1][$key2][0] = $arrDef;
                     }
                 }
             }
         }
 
-        // dd($new_rumah);
 
 
 
-        // dd($new_rumah, $combinedArray);
 
-        // perhitungan landscape 
+        // dd($hitungRmh, $groupedArray);
 
+        $dataPerBulan = array_fill_keys($bulan, 0);
 
-        $dataLcp = array();
-        foreach ($landscape as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $month = date('F', strtotime($value3['datetime']));
-                    if (!array_key_exists($month, $dataLcp)) {
-                        $dataLcp[$month] = array();
-                    }
-                    if (!array_key_exists($key, $dataLcp[$month])) {
-                        $dataLcp[$month][$key] = array();
-                    }
-                    if (!array_key_exists($key2, $dataLcp[$month][$key])) {
-                        $dataLcp[$month][$key][$key2] = array();
-                    }
-                    $dataLcp[$month][$key][$key2][$key3] = $value3;
-                }
-            }
-        }
-
-        $defaultLcp = array();
+        // Populate $dataPerBulan with actual data
         foreach ($bulan as $month) {
-            foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
-                    if ($est['est'] == $afd['est']) {
-                        $defaultLcp[$est['est']][$month][$afd['namaafd']] = 0;
-                    }
-                }
+            if (isset($hitungRmh[$month])) {
+                $dataPerBulan[$month] = $hitungRmh[$month];
             }
         }
 
-        foreach ($defaultLcp as $key => $estValue) {
-            foreach ($estValue as $monthKey => $monthValue) {
-                foreach ($dataLcp as $dataKey => $dataValue) {
-                    // dd($dataKey == $monthKey);
-                    if ($dataKey == $monthKey) {
-                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
-                            if ($dataEstKey == $key) {
-                                $defaultLcp[$key][$monthKey] = array_merge($monthValue, $dataEstValue);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $landscapeOri = array();
-
-        // dd($defaultNew);
-        foreach ($defaultLcp as $key => $value) {
-            foreach ($value as $key3 => $value3) {
-                foreach ($value3 as $key4 => $value4) {
-                    foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'REG-1'];
-                        $keyToAdd = in_array($key, $exceptKeys) ? $key : $key . '-EST';
-                        $landscapeOri[$value2['nama']][$keyToAdd][$key3] = $value4;
-                    }
-                }
-            }
-        }
-
-        // dd($dataLcp, $landscapeOri);
-        $cmbLandscape = combineItemsByDatetime($landscapeOri);
-        $new_lcp = array();
-
-        foreach ($cmbLandscape as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value2) {
-                    if (is_array($value2)) {
-                        foreach ($value2 as $key3 => $value3) {
-                            $avg_nilai = 0;
-
-                            if (is_array($value3)) {
-                                $totalNilai = 0;
-                                $nilaiKeys = [];
-
-                                foreach ($value3 as $innerKey => $innerValue) {
-                                    if (strpos($innerKey, 'nilai') === 0) {
-                                        $nilaiKeys[] = $innerKey;
-                                        $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                        $totalNilai += array_sum($nilaiValues);
-                                    }
-                                }
-
-                                $dividen = count($nilaiKeys);
-                                if ($dividen !== 0) {
-                                    $avg_nilai = round($totalNilai / $dividen);
-                                } else {
-                                    $avg_nilai = $totalNilai;
-                                }
-
-                                $date = $value3['datetime1'];
-                                $yearMonth = date('Y-m-d', strtotime($date));
-
-                                $new_lcp[$key][$key1][$key2][$key3]['nilai_total_LP'] = $avg_nilai;
-                                $new_lcp[$key][$key1][$key2][$key3]['total_nilai_LP'] = $totalNilai;
-                                $new_lcp[$key][$key1][$key2][$key3]['dividen_LP'] = $dividen;
-                                $new_lcp[$key][$key1][$key2][$key3]['date_LP'] = $yearMonth;
-                                $new_lcp[$key][$key1][$key2][$key3]['est_LP'] = $value3['est1'];
-                                $new_lcp[$key][$key1][$key2][$key3]['afd_LP'] = $value3['afd1'];
-                            }
-                        }
-                    } else {
-                        // dd($bulan);
-                        $tahun = $request->input('tahun');
 
 
-                        $parts = explode('-', $key1);
-
-                        $part1 = isset($parts[0]) ? $parts[0] : '';
-                        $part2 = isset($parts[1]) ? $parts[1] : '';
-
-                        $arrDef = [
-                            'nilai_total_LP' => 0,
-                            'total_nilai_LP' => 0,
-                            'dividen_LP' => 0,
-                            'date_LP' => $tahun, // Make sure $tahun is defined somewhere
-                            'est_LP' => $part1,
-                            'afd_LP' => $part2,
-                        ];
-                        $new_lcp[$key][$key1][$key2][0] = $arrDef;
-                    }
-                }
-            }
-        }
-
-        // dd($new_lcp);
-
-        //perhitungan lingkungan
-
-        $dataLkng = array();
-        foreach ($lingkungan as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $month = date('F', strtotime($value3['datetime']));
-                    if (!array_key_exists($month, $dataLkng)) {
-                        $dataLkng[$month] = array();
-                    }
-                    if (!array_key_exists($key, $dataLkng[$month])) {
-                        $dataLkng[$month][$key] = array();
-                    }
-                    if (!array_key_exists($key2, $dataLkng[$month][$key])) {
-                        $dataLkng[$month][$key][$key2] = array();
-                    }
-                    $dataLkng[$month][$key][$key2][$key3] = $value3;
-                }
-            }
-        }
-
-        $defaultLkng = array();
-        foreach ($bulan as $month) {
-            foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
-                    if ($est['est'] == $afd['est']) {
-                        $defaultLkng[$est['est']][$month][$afd['namaafd']] = 0;
-                    }
-                }
-            }
-        }
-
-        foreach ($defaultLkng as $key => $estValue) {
-            foreach ($estValue as $monthKey => $monthValue) {
-                foreach ($dataLkng as $dataKey => $dataValue) {
-                    // dd($dataKey == $monthKey);
-                    if ($dataKey == $monthKey) {
-                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
-                            if ($dataEstKey == $key) {
-                                $defaultLkng[$key][$monthKey] = array_merge($monthValue, $dataEstValue);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        $lingkuganOri = array();
-
-        // dd($defaultNew);
-        foreach ($defaultLkng as $key => $value) {
-            foreach ($value as $key3 => $value3) {
-                foreach ($value3 as $key4 => $value4) {
-                    foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'REG-1'];
-                        $keyToAdd = in_array($key, $exceptKeys) ? $key : $key . '-EST';
-                        $lingkuganOri[$value2['nama']][$keyToAdd][$key3] = $value4;
-                    }
-                }
-            }
-        }
-
-        $cmbLingkungan = combineItemsByDatetime($lingkuganOri);
-
-        $new_lkng = array();
-
-        foreach ($cmbLingkungan as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value2) {
-                    if (is_array($value2)) {
-                        foreach ($value2 as $key3 => $value3) {
-                            $avg_nilai = 0;
-
-                            if (is_array($value3)) {
-                                $totalNilai = 0;
-                                $nilaiKeys = [];
-
-                                foreach ($value3 as $innerKey => $innerValue) {
-                                    if (strpos($innerKey, 'nilai') === 0) {
-                                        $nilaiKeys[] = $innerKey;
-                                        $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                        $totalNilai += array_sum($nilaiValues);
-                                    }
-                                }
-
-                                $dividen = count($nilaiKeys);
-                                if ($dividen !== 0) {
-                                    $avg_nilai = round($totalNilai / $dividen);
-                                } else {
-                                    $avg_nilai = $totalNilai;
-                                }
-
-                                $date = $value3['datetime1'];
-                                $yearMonth = date('Y-m-d', strtotime($date));
-
-                                $new_lkng[$key][$key1][$key2][$key3]['nilai_total_Lngkl'] = $avg_nilai;
-                                $new_lkng[$key][$key1][$key2][$key3]['total_nilai_Lngkl'] = $totalNilai;
-                                $new_lkng[$key][$key1][$key2][$key3]['dividen_Lngkl'] = $dividen;
-                                $new_lkng[$key][$key1][$key2][$key3]['date_Lngkl'] = $yearMonth;
-                                $new_lkng[$key][$key1][$key2][$key3]['est_Lngkl'] = $value3['est1'];
-                                $new_lkng[$key][$key1][$key2][$key3]['afd_Lngkl'] = $value3['afd1'];
-                            }
-                        }
-                    } else {
-                        // dd($bulan);
-                        $tahun = $request->input('tahun');
-
-
-                        $parts = explode('-', $key1);
-
-                        $part1 = isset($parts[0]) ? $parts[0] : '';
-                        $part2 = isset($parts[1]) ? $parts[1] : '';
-
-                        $arrDef = [
-                            'nilai_total_Lngkl' => 0,
-                            'total_nilai_Lngkl' => 0,
-                            'dividen_Lngkl' => 0,
-                            'date_Lngkl' => $tahun, // Make sure $tahun is defined somewhere
-                            'est_Lngkl' => $part1,
-                            'afd_Lngkl' => $part2,
-                        ];
-                        $new_lkng[$key][$key1][$key2][0] = $arrDef;
-                    }
+        $resultArray = [];
+        foreach ($dataPerBulan as $estate => $months) if (is_array($months)) {
+            foreach ($months as $month => $afdelings) if (is_array($afdelings)) {
+                foreach ($afdelings as $afdeling => $data) if (is_array($data)) {
+                    $resultArray[$month][$estate][$afdeling] = $data;
                 }
             }
         }
 
 
-        // dd($new_lkng);
 
-        // dd($FinalArr_LK);
+
 
         $FinalArr_rumah = array();
-        foreach ($new_rumah as $key1 => $value1) {
+        foreach ($resultArray as $key1 => $value1) {
             foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                 foreach ($value2 as $key3 => $value3) {
                     if (is_array($value3)) {
@@ -1590,33 +1421,310 @@ class emplacementsController extends Controller
             }
         }
 
-        $FinalArr_LK = array();
-        foreach ($new_lkng as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        foreach ($value3 as $value4) {
-                            $FinalArr_LK[$key1][$key2][$key3][$value4['date_Lngkl']] = $value4;
+        // dd($FinalArr_rumah);
+        // addMissingMonths($FinalArr_rumah, $defaultNew);
+        // dd($FinalArr_rumah);
+
+        // perhitungan landscape 
+
+        $dataPerBulan_Ls = [];
+        foreach ($bulan as $month) {
+            foreach ($landscape as $estKey => $estValue) {
+                foreach ($estValue['EST'] as $entry) {
+                    // Get the month and year from the "datetime" field
+                    $entryMonth = date('F', strtotime($entry['datetime']));
+                    $year = date('Y', strtotime($entry['datetime']));
+
+                    if ($entryMonth === $month) {
+                        // Group the data by "nama" value
+                        if (!isset($dataPerBulan_Ls[$month])) {
+                            $dataPerBulan_Ls[$month] = [];
+                        }
+
+                        // Find the corresponding "nama" value from the "queryEste" array
+                        $nama = '';
+                        foreach ($queryEste as $namaData) {
+                            if ($namaData['est'] === $estKey) {
+                                $nama = $namaData['nama'];
+                                break;
+                            }
+                        }
+
+                        // Handle keys that should not have the "-EST" suffix
+                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'];
+                        $keyToAdd = in_array($estKey, $exceptKeys) ? $estKey : $estKey . '-EST';
+
+                        // Group the data by "nama" value and "est" key
+                        if (!isset($dataPerBulan_Ls[$month][$nama][$keyToAdd])) {
+                            $dataPerBulan_Ls[$month][$nama][$keyToAdd] = [];
+                        }
+
+                        // Add the data to the result array
+                        $dataPerBulan_Ls[$month][$nama][$keyToAdd][] = $entry;
+                    }
+                }
+            }
+
+            // Check if the month has no data and set its value to 0
+            if (!isset($dataPerBulan_Ls[$month])) {
+                $dataPerBulan_Ls[$month] = 0;
+            }
+        }
+
+        $groupedArray_LS = groupArrayByDatetime($dataPerBulan_Ls);
+
+        // dd($groupedArray_LS, $dataPerBulan_Ls);
+
+        $hitungLandscape = array();
+
+        foreach ($groupedArray_LS as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $key1 => $value2) {
+                    if (is_array($value2)) {
+                        foreach ($value2 as $key2 => $value3) {
+                            if (is_array($value3)) {
+                                foreach ($value3 as $key3 => $value4) {
+                                    $avg_nilai = 0;
+                                    if (is_array($value4)) {
+
+                                        $totalNilai = 0;
+                                        $nilaiKeys = [];
+
+                                        foreach ($value4 as $innerKey => $innerValue) {
+                                            if (strpos($innerKey, 'nilai') === 0) {
+                                                $nilaiKeys[] = $innerKey;
+                                                $nilaiValues = array_map('intval', explode('$', $innerValue));
+                                                $totalNilai += array_sum($nilaiValues);
+                                            }
+                                        }
+
+                                        $dividen = 0;
+                                        foreach ($value4 as $key4 => $item) {
+                                            if (strpos($key4, 'nilai') === 0) {
+                                                $dividen++;
+                                            }
+                                        }
+
+                                        if ($dividen != 1) {
+                                            $avg_nilai = round($totalNilai / $dividen, 2);
+                                        } else {
+                                            $avg_nilai = $totalNilai;
+                                        }
+
+                                        $date = $value4['datetime'];
+                                        $yearMonth = date('Y-m-d', strtotime($date));
+
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['nilai_total_LP'] = $avg_nilai;
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['dividen'] = $dividen;
+
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['date'] = $yearMonth;
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['est_LP'] = $value4['est'];
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['afd_LP'] = $value4['afd'];
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['petugas_LP'] = $value4['petugas'];
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['pendamping_LP'] = $value4['pendamping'];
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['foto_temuan_LP'] = $value4['foto_temuan'];
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['komentar_temuan_LP'] = $value4['komentar_temuan'];
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['nilai_LP'] = $value4['nilai'];
+                                        $hitungLandscape[$key][$key1][$key2][$key3]['komentar_LP'] = $value4['komentar'];
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
+
+        // dd($hitungLandscape);
+        $dataPerBulan_Ls = array_fill_keys($bulan, 0);
+        foreach ($bulan as $month) {
+            if (isset($hitungLandscape[$month])) {
+                $dataPerBulan_Ls[$month] = $hitungLandscape[$month];
+            }
+        }
+
+
+        $resultArray_Ls = [];
+        foreach ($dataPerBulan_Ls as $estate => $months) if (is_array($months)) {
+            foreach ($months as $month => $afdelings) if (is_array($afdelings)) {
+                foreach ($afdelings as $afdeling => $data) if (is_array($data)) {
+                    $resultArray_Ls[$month][$estate][$afdeling] = $data;
+                }
+            }
+        }
+
+
+
+
+
 
         $FinalArr_LS = array();
-        foreach ($new_lcp as $key1 => $value1) {
+        foreach ($resultArray_Ls as $key1 => $value1) {
             foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                 foreach ($value2 as $key3 => $value3) {
                     if (is_array($value3)) {
                         foreach ($value3 as $value4) {
-                            $FinalArr_LS[$key1][$key2][$key3][$value4['date_LP']] = $value4;
+                            $FinalArr_LS[$key1][$key2][$key3][$value4['date']] = $value4;
                         }
                     }
                 }
             }
         }
 
+        addMissingMonths($FinalArr_LS, $defaultNew);
+
         // dd($FinalArr_LS);
+        //perhitungan lingkungan
+
+        $dataPerBulan_LK = [];
+        foreach ($bulan as $month) {
+            foreach ($lingkungan as $estKey => $estValue) {
+                foreach ($estValue['EST'] as $entry) {
+                    // Get the month and year from the "datetime" field
+                    $entryMonth = date('F', strtotime($entry['datetime']));
+                    $year = date('Y', strtotime($entry['datetime']));
+
+                    if ($entryMonth === $month) {
+                        // Group the data by "nama" value
+                        if (!isset($dataPerBulan_LK[$month])) {
+                            $dataPerBulan_LK[$month] = [];
+                        }
+
+                        // Find the corresponding "nama" value from the "queryEste" array
+                        $nama = '';
+                        foreach ($queryEste as $namaData) {
+                            if ($namaData['est'] === $estKey) {
+                                $nama = $namaData['nama'];
+                                break;
+                            }
+                        }
+
+                        // Handle keys that should not have the "-EST" suffix
+                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'];
+                        $keyToAdd = in_array($estKey, $exceptKeys) ? $estKey : $estKey . '-EST';
+
+                        // Group the data by "nama" value and "est" key
+                        if (!isset($dataPerBulan_LK[$month][$nama][$keyToAdd])) {
+                            $dataPerBulan_LK[$month][$nama][$keyToAdd] = [];
+                        }
+
+                        // Add the data to the result array
+                        $dataPerBulan_LK[$month][$nama][$keyToAdd][] = $entry;
+                    }
+                }
+            }
+
+            // Check if the month has no data and set its value to 0
+            if (!isset($dataPerBulan_LK[$month])) {
+                $dataPerBulan_LK[$month] = 0;
+            }
+        }
+
+        $groupedArray_LK = groupArrayByDatetime($dataPerBulan_LK);
+
+        $hitungLingkungan = array();
+
+
+        foreach ($groupedArray_LK as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $key1 => $value2) {
+                    if (is_array($value2)) {
+                        foreach ($value2 as $key2 => $value3) {
+                            if (is_array($value3)) {
+                                foreach ($value3 as $key3 => $value4) {
+                                    $avg_nilai = 0;
+                                    if (is_array($value4)) {
+
+                                        $totalNilai = 0;
+                                        $nilaiKeys = [];
+
+                                        foreach ($value4 as $innerKey => $innerValue) {
+                                            if (strpos($innerKey, 'nilai') === 0) {
+                                                $nilaiKeys[] = $innerKey;
+                                                $nilaiValues = array_map('intval', explode('$', $innerValue));
+                                                $totalNilai += array_sum($nilaiValues);
+                                            }
+                                        }
+
+                                        $dividen = 0;
+                                        foreach ($value4 as $key4 => $item) {
+                                            if (strpos($key4, 'nilai') === 0) {
+                                                $dividen++;
+                                            }
+                                        }
+
+                                        if ($dividen != 1) {
+                                            $avg_nilai = round($totalNilai / $dividen, 2);
+                                        } else {
+                                            $avg_nilai = $totalNilai;
+                                        }
+
+                                        $date = $value4['datetime'];
+                                        $yearMonth = date('Y-m-d', strtotime($date));
+
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_total_Lngkl'] = $avg_nilai;
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['dividen'] = $dividen;
+
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['date'] = $yearMonth;
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['est_Lngkl'] = $value4['est'];
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['afd_Lngkl'] = $value4['afd'];
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['petugas_Lngkl'] = $value4['petugas'];
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['pendamping_Lngkl'] = $value4['pendamping'];
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['foto_temuan_Lngkl'] = $value4['foto_temuan'];
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['komentar_temuan_Lngkl'] = $value4['komentar_temuan'];
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_Lngkl'] = $value4['nilai'];
+                                        $hitungLingkungan[$key][$key1][$key2][$key3]['komentar_Lngkl'] = $value4['komentar'];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $dataPerBulan_LK = array_fill_keys($bulan, 0);
+        foreach ($bulan as $month) {
+            if (isset($hitungLingkungan[$month])) {
+                $dataPerBulan_LK[$month] = $hitungLingkungan[$month];
+            }
+        }
+
+
+        $resultArray_LK = [];
+        foreach ($dataPerBulan_LK as $estate => $months) if (is_array($months)) {
+            foreach ($months as $month => $afdelings) if (is_array($afdelings)) {
+                foreach ($afdelings as $afdeling => $data) if (is_array($data)) {
+                    $resultArray_LK[$month][$estate][$afdeling] = $data;
+                }
+            }
+        }
+
+
+
+        // dd($dataPerBulan_LK);
+
+
+        $FinalArr_LK = array();
+        foreach ($resultArray_LK as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                foreach ($value2 as $key3 => $value3) {
+                    if (is_array($value3)) {
+                        foreach ($value3 as $value4) {
+                            $FinalArr_LK[$key1][$key2][$key3][$value4['date']] = $value4;
+                        }
+                    }
+                }
+            }
+        }
+        // dd($FinalArr_LK);
+        addMissingMonths($FinalArr_LK, $defaultNew);
+
+        dd($FinalArr_LK, $FinalArr_rumah, $FinalArr_LS);
+
 
         function mergeArray_est($arr1, $arr2, $arr3)
         {
@@ -1651,8 +1759,7 @@ class emplacementsController extends Controller
 
         $result = mergeArray_est($FinalArr_rumah, $FinalArr_LK, $FinalArr_LS);
 
-
-        // dd($result);
+        dd($result);
 
         //  delete index with 0 value 
         foreach ($result as $key => $months) {
@@ -1669,7 +1776,7 @@ class emplacementsController extends Controller
             }
         }
 
-
+        // dd($result);
         $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
 
         $queryAsisten = json_decode($queryAsisten, true);
@@ -1708,24 +1815,13 @@ class emplacementsController extends Controller
                 $final_result[$key][$key1] = $value1;
             }
         }
-        $test = array();
 
         // dd($final_result);
-        foreach ($final_result as $key => $value) {
-            foreach ($value as $key3 => $value3) {
-                foreach ($value3 as $key4 => $value4) {
-                    foreach ($filteredArray as $key2 => $value2) if ($key == $value2['nama']) {
 
-                        $test[$value2['nama']][$key4][$key3] = $value4;
-                    }
-                }
-            }
-        }
-        // dd($test);
 
         $avarage = array();
 
-        foreach ($test as $estate => $months) {
+        foreach ($final_result as $estate => $months) {
             $countMth = 0; // Initialize the month count with zero
             $est_avg = 0;
             $avg_tod = 0;
@@ -1781,12 +1877,10 @@ class emplacementsController extends Controller
         // Now $avarage array contains the counts of months with data for each estate
 
         // dd($avarage, $extractedData);
-
-
         $resultArray = [];
 
         // Loop through the original array
-        foreach ($test as $estate => $months) {
+        foreach ($final_result as $estate => $months) {
             // Initialize the data for the estate and afdeling
             $resultArray[$estate] = [];
 
@@ -1809,6 +1903,9 @@ class emplacementsController extends Controller
                 }
             }
         }
+
+
+
         // dd($resultArray);
 
 
@@ -1880,7 +1977,7 @@ class emplacementsController extends Controller
                             $tot_skor = 0;
                         }
                     }
-                    $tot_avg = round($tot_skor / $avarage, 2);
+                    $tot_avg = $tot_skor / $avarage;
                     $result_skor[$key][$key1][$key2]['total_avg'] = $tot_avg;
                 } # code...
             }   # code...
@@ -1981,7 +2078,23 @@ class emplacementsController extends Controller
         }
 
 
+        // foreach ($resultArray as $key1 => &$level1) {
+        //     foreach ($level1 as $key2 => &$level2) {
+        //         foreach ($level2 as $month => &$visits) {
+        //             if (isset($header_cell[$month])) {
+        //                 $requiredVisits = $header_cell[$month];
+        //                 $currentVisits = count($visits);
 
+        //                 // Add empty visits if required
+        //                 for ($i = $currentVisits + 1; $i <= $requiredVisits; $i++) {
+        //                     $visits["visit" . $i] = createEmptyVisit2($i);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // dd($resultArray);
+        // dd($visit);
         // dd($resultArray);
         $sum_header = [
             "head" => array_sum($header_cell2) + 2,
@@ -2110,7 +2223,7 @@ class emplacementsController extends Controller
 
 
 
-        // dd($resultArray, $new_array);
+        dd($resultArray, $new_array);
         // Return a JSON response
         $arrView = array();
 

@@ -35,7 +35,7 @@
                         <div class="text-container" style="border:1px solid black">
 
                             <div style="font-size: 20px;border:1px solid black">ESTATE: {{$data['total']['est']}} </div>
-                            <div style="font-size: 20px;border:1px solid black">AFD: {{$data['total']['afd']}} </div>
+                            <!-- <div style="font-size: 20px;border:1px solid black">AFD: {{$data['total']['afd']}} </div> -->
                             <div style="font-size: 20px;border:1px solid black">TANGGAL: {{$data['total']['date']}}</div>
                             <div style="font-size: 20px;border:1px solid black">DIPERIKSA OLEH: {{$data['total']['petugas']}}</div>
 

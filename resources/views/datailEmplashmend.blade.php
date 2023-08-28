@@ -168,22 +168,24 @@
             localStorage.setItem('selectedTab', 'nav-data-tab');
 
             // Redirect to the target page
-            window.location.href = "http://ssms-qc.test/dashboard_perum";
+            window.location.href = "https://qc-apps.srs-ssms.com/dashboard_perum";
         }
 
         $('#empData').click(function() {
             getTemuan();
 
-            // Swal.fire({
-            //     title: 'Loading',
-            //     html: '<span class="loading-text">Mohon Tunggu...</span>',
-            //     allowOutsideClick: false,
-            //     showConfirmButton: false,
-            //     onBeforeOpen: () => {
-            //         Swal.showLoading();
-            //     }
-            // });
+            Swal.fire({
+                title: 'Loading',
+                html: '<span class="loading-text">Mohon Tunggu...</span>',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
         });
+
+
 
         function rumahupdate(Perumahan) {
             const container = document.getElementById("perumahan");
@@ -232,6 +234,21 @@
                     </div>
                      `;
                     rowContainer.appendChild(card);
+
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = "#"; // Set a placeholder link initially
+                    downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
+                    card.querySelector(".card-body").appendChild(downloadLink);
+
+                    // Add click event to trigger download
+                    downloadLink.addEventListener("click", () => {
+                        // Use the image URL to construct the download URL
+                        const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                        // Open a new tab/window to initiate the download
+                        window.open(downloadUrl, "_blank");
+                    });
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -288,6 +305,20 @@
                     </div>
                      `;
                     rowContainer.appendChild(card);
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = "#"; // Set a placeholder link initially
+                    downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
+                    card.querySelector(".card-body").appendChild(downloadLink);
+
+                    // Add click event to trigger download
+                    downloadLink.addEventListener("click", () => {
+                        // Use the image URL to construct the download URL
+                        const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                        // Open a new tab/window to initiate the download
+                        window.open(downloadUrl, "_blank");
+                    });
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -344,6 +375,21 @@
                     </div>
                      `;
                     rowContainer.appendChild(card);
+
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = "#"; // Set a placeholder link initially
+                    downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
+                    card.querySelector(".card-body").appendChild(downloadLink);
+
+                    // Add click event to trigger download
+                    downloadLink.addEventListener("click", () => {
+                        // Use the image URL to construct the download URL
+                        const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                        // Open a new tab/window to initiate the download
+                        window.open(downloadUrl, "_blank");
+                    });
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -401,6 +447,21 @@
                     </div>
                      `;
                     rowContainer.appendChild(card);
+
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = "#"; // Set a placeholder link initially
+                    downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
+                    card.querySelector(".card-body").appendChild(downloadLink);
+
+                    // Add click event to trigger download
+                    downloadLink.addEventListener("click", () => {
+                        // Use the image URL to construct the download URL
+                        const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                        // Open a new tab/window to initiate the download
+                        window.open(downloadUrl, "_blank");
+                    });
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -457,6 +518,21 @@
                     </div>
                      `;
                     rowContainer.appendChild(card);
+
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = "#"; // Set a placeholder link initially
+                    downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
+                    card.querySelector(".card-body").appendChild(downloadLink);
+
+                    // Add click event to trigger download
+                    downloadLink.addEventListener("click", () => {
+                        // Use the image URL to construct the download URL
+                        const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                        // Open a new tab/window to initiate the download
+                        window.open(downloadUrl, "_blank");
+                    });
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -513,6 +589,21 @@
                     </div>
                      `;
                     rowContainer.appendChild(card);
+
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = "#"; // Set a placeholder link initially
+                    downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
+                    card.querySelector(".card-body").appendChild(downloadLink);
+
+                    // Add click event to trigger download
+                    downloadLink.addEventListener("click", () => {
+                        // Use the image URL to construct the download URL
+                        const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                        // Open a new tab/window to initiate the download
+                        window.open(downloadUrl, "_blank");
+                    });
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -543,6 +634,7 @@
                     _token: _token
                 },
                 success: function(result) {
+                    Swal.close();
                     var parseResult = JSON.parse(result);
                     var Perumahan = Object.entries(parseResult['Perumahan']);
                     var Landscape = Object.entries(parseResult['Landscape']);
