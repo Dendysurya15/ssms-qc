@@ -13,6 +13,7 @@ use App\Http\Controllers\emplacementsController;
 use App\Http\Controllers\userNewController;
 use App\Http\Controllers\UserQCController;
 use App\Http\Controllers\CheckimgController;
+use App\Http\Controllers\taksasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -180,3 +181,4 @@ Route::post('/downloadPDF', [emplacementsController::class, 'downloadPDF'])->nam
 
 Route::get('/checkIMG', [CheckimgController::class, 'dashboard'])->name('dashboard');
 Route::get('/getIMGgudang', [CheckimgController::class, 'getIMGgudang'])->name('getIMGgudang');
+Route::get('/gettaksasi/', [taksasiController::class, 'dashboard']);

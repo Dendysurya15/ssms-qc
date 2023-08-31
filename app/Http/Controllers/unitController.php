@@ -322,22 +322,19 @@ class unitController extends Controller
             ->where('wil.regional', $regional)
             ->where('estate.nama', '!=', 'PLASMA')
             // ->where('wil.nama', '!=', 'Plasma')
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM'])
             ->get();
 
         $queryEstate = json_decode($queryEstate, true);
-
 
         $dataRaw = array();
 
         foreach ($queryEstate as $value) {
 
-            // dd($value);
+            // dd($year);
             $queryPerEstate = DB::connection('mysql2')->table('qc_gudang')
                 ->select("qc_gudang.*", DB::raw('DATE_FORMAT(qc_gudang.tanggal, "%M") as bulan'))
                 // ->join('estate', 'estate.est', '=', 'qc_gudang.unit')
-
-                // ->where('wil.regional', $regional)
                 ->where(function ($query) use ($value) {
                     $query->where('unit', '=', $value['id'])
                         ->orWhere('unit', '=', $value['est']);

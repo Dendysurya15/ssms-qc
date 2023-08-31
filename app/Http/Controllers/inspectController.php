@@ -753,7 +753,7 @@ class inspectController extends Controller
 
 
      
-    //    dd($all_mutu);
+  
 
         $pdf = pdf::loadview('cetakFI', [
             'id' => $id,
@@ -1131,20 +1131,30 @@ class inspectController extends Controller
         $groupedArray = array();
 
         foreach ($mutu_all as $key => $value) {
-             if (strpos($key, 'KTE4') !== false) {
-                $groupKey = substr($key, 0, 4);
-            }else {
+            $groupKeys = ['KTE4', 'LME1', 'LME2'];
+            $found = false;
+        
+            foreach ($groupKeys as $groupKey) {
+                if (strpos($key, $groupKey) !== false) {
+                    $found = true;
+                    $groupKey = $groupKey;
+                    break;
+                }
+            }
+        
+            if (!$found) {
                 $groupKey = substr($key, 0, 3);
             }
-           
-
+        
             if (!array_key_exists($groupKey, $groupedArray)) {
                 $groupedArray[$groupKey] = array();
             }
-
+        
             $groupedArray[$groupKey][$key] = $value;
         }
+        
         // dd($mutu_all,$groupedArray);
+        // dd($groupedArray);
 
         $item_counts = [];
 
@@ -1191,7 +1201,7 @@ class inspectController extends Controller
         
         // Example usage:
       
-        // dd($item_counts);
+        // dd($dataResFind,$item_counts);
         $arrView = array();
 
         $arrView['dataResFind'] = $dataResFind;
@@ -19838,6 +19848,13 @@ class inspectController extends Controller
         $mutuAncak = json_decode($mutuAncak, true);
 
 
+        $mutuAncak2 = DB::connection('mysql2')->table('mutu_ancak_new')
+            ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $dates . '%')
+            ->where('mutu_ancak_new.estate', $Reg)
+            ->where('mutu_ancak_new.afdeling', $afd)
+            ->get();
+            $mutuAncak2 = json_decode($mutuAncak2, true);
         $mutuBuah = DB::connection('mysql2')->table('mutu_buah')
             ->select("mutu_buah.*", DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
             ->where('datetime', 'like', '%' . $dates . '%')
@@ -19862,7 +19879,7 @@ class inspectController extends Controller
                 // Check if the value contains ";GA" or ":GL"
                 if (strpos($item['app_version'], ';GA') !== false) {
                     $item['app_version'] = 'GPS Akurat';
-                } elseif (strpos($item['app_version'], ':GL') !== false) {
+                } elseif (strpos($item['app_version'], ';GL') !== false) {
                     $item['app_version'] = 'GPS Liar';
                 }
             }
@@ -19874,7 +19891,7 @@ class inspectController extends Controller
                 // Check if the value contains ";GA" or ":GL"
                 if (strpos($item['app_version'], ';GA') !== false) {
                     $item['app_version'] = 'GPS Akurat';
-                } elseif (strpos($item['app_version'], ':GL') !== false) {
+                } elseif (strpos($item['app_version'], ';GL') !== false) {
                     $item['app_version'] = 'GPS Liar';
                 }
             }
@@ -19886,18 +19903,31 @@ class inspectController extends Controller
                 // Check if the value contains ";GA" or ":GL"
                 if (strpos($item['app_version'], ';GA') !== false) {
                     $item['app_version'] = 'GPS Akurat';
-                } elseif (strpos($item['app_version'], ':GL') !== false) {
+                } elseif (strpos($item['app_version'], ';GL') !== false) {
                     $item['app_version'] = 'GPS Liar';
                 }
             }
         }
         
+
+        foreach ($mutuAncak2 as &$item) {
+            // Check if "app_version" key exists in the current item
+            if (isset($item['app_version'])) {
+                // Check if the value contains ";GA" or ":GL"
+                if (strpos($item['app_version'], ';GA') !== false) {
+                    $item['app_version'] = 'GPS Akurat';
+                } elseif (strpos($item['app_version'], ';GL') !== false) {
+                    $item['app_version'] = 'GPS Liar';
+                }
+            }
+        }
         // dd($mutuAncak,$mutuBuah,$mutuTransport);
 
         $arrView = array();
-        // dd($mutuTransport);
+        // dd($mutuAncak2);
         $arrView['mutuAncak'] =  $mutuAncak;
         $arrView['mutuBuah'] =  $mutuBuah;
+        $arrView['AncakTest'] =  $mutuAncak2;
         $arrView['mutuTransport'] =  $mutuTransport;
         // $arrView['est'] =  $est;
         // $arrView['afd'] =  $afd;
@@ -19911,10 +19941,10 @@ class inspectController extends Controller
     {
 
       
-        $id_buah = $request->input('editId_buah');
-        $est_buah = $request->input('estBH');
-        $afdBH = $request->input('afdBH');
-        $tphBH = $request->input('tphBH');
+        // $id_buah = $request->input('editId_buah');
+        // $est_buah = $request->input('estBH');
+        // $afdBH = $request->input('afdBH');
+        // $tphBH = $request->input('tphBH');
 
         // dd($id_buah,$est_buah,$afdBH,$tphBH);
         // mutu ancak 
@@ -19968,8 +19998,8 @@ class inspectController extends Controller
         $alsBR = $request->input('alsBR');
         // $kmnBH = $request->input('kmnBH');
         // mutu transport
-
-
+        // dd($ids,$jjgBH);
+        
         $id_trans = $request->input('id_trans');
         $afd_trans = $request->input('afd_trans');
         $blok_trans = $request->input('blok_trans');
@@ -19981,7 +20011,7 @@ class inspectController extends Controller
         $rstTrans = $request->input('rstTrans');
         $estTrans = $request->input('estTrans');
 
-        // dd($id_trans, $afd_trans, $blok_trans, $bt_trans, $komentar_trans);
+        // dd($id, $blok, $status_panen, $sph, $br1);
 
         DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $id)->update([
             'blok' => $blok,
@@ -20046,7 +20076,7 @@ class inspectController extends Controller
         $ancaks = $request->input('delete_id');
         $id_trans = $request->input('id_trans');
 
-        // dd($id_trans);
+        // dd($ancaks);
 
    
         $ancakFA = DB::connection('mysql2')->table('mutu_ancak_new')
@@ -27214,7 +27244,7 @@ class inspectController extends Controller
   
    
    
-        public function pdfBA_excel(Request $request)
+    public function pdfBA_excel(Request $request)
     {
         $est = $request->input('estBA_excel');
         $afd = $request->input('afdBA_excel');

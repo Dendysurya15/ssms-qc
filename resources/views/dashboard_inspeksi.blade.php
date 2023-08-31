@@ -2340,7 +2340,7 @@
             success: function(result) {
                 Swal.close();
                 var parseResult = JSON.parse(result)
-                var dataResFind = Object.entries(parseResult['dataResFind']) //parsing data brondolan ke dalam var list
+                // var dataResFind = Object.entries(parseResult['dataResFind']) //parsing data brondolan ke dalam var list
                 // var dataResFindes = Object.entries(parseResult['dataResFindes']) //parsing data brondolan ke dalam var list
 
                 // console.log(dataResFind)
@@ -2367,7 +2367,7 @@
                 // console.log(sortedArray);
 
 
-                console.log(newCum);
+                // console.log(newCum);
                 var arrTbody1 = newCum
                 // console.log(arrTbody1);
 
