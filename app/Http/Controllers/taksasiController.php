@@ -12,10 +12,8 @@ require '../app/helpers.php';
 
 class taksasiController extends Controller
 {
-    public function dashboard(Request $request)
+    public function dashboard($query)
     {
-
-        $query = $request->input('query');
         $decodedDataAfd = json_decode($query, true);
         $first_array = json_decode($query, true);
 
@@ -43,6 +41,9 @@ class taksasiController extends Controller
                 unset($testing[$key]);
             }
         }
+        // dd($decodedDataAfd, $first_array);
+        // dd($dataAfd);
+        // dd($dataAfd, $modifiedDateString, $datetime);
 
         return view('Taksasi.taksasi')->with(['collection' => $dataAfd, 'total' => $testing, 'est' => $modifiedVariable, 'awal' => $datetime, 'akhir' => $modifiedDateString, 'wil' => $modWIl]);
     }

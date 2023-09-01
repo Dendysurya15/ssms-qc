@@ -181,4 +181,4 @@ Route::post('/downloadPDF', [emplacementsController::class, 'downloadPDF'])->nam
 
 Route::get('/checkIMG', [CheckimgController::class, 'dashboard'])->name('dashboard');
 Route::get('/getIMGgudang', [CheckimgController::class, 'getIMGgudang'])->name('getIMGgudang');
-Route::get('/gettaksasi/', [taksasiController::class, 'dashboard']);
+Route::get('/gettaksasi/{query}', [taksasiController::class, 'dashboard']);
