@@ -51,7 +51,7 @@
             <tbody>
                 @php
                 $baseURL = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/';
-                $foto_temuan = $data['total']['foto_temuan'];
+                $foto_temuan = $data['total']['data_temuan'];
                 $komentar_temuan =$data['total']['komentar_temuan'];
                 $detail_temuan = $data['total']['detail_temuan'];
                 @endphp
