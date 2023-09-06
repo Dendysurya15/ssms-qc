@@ -1279,15 +1279,15 @@
       $('#tbody3Month').empty()
       $('#plasmaMonth').empty()
       $('#tbodySkorRHMonth').empty()
-      Swal.fire({
-        title: 'Loading',
-        html: '<span class="loading-text">Mohon Tunggu...</span>',
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        onBeforeOpen: () => {
-          Swal.showLoading();
-        }
-      });
+      // Swal.fire({
+      //   title: 'Loading',
+      //   html: '<span class="loading-text">Mohon Tunggu...</span>',
+      //   allowOutsideClick: false,
+      //   showConfirmButton: false,
+      //   onBeforeOpen: () => {
+      //     Swal.showLoading();
+      //   }
+      // });
       getDataTphMonth()
     });
 
@@ -1384,7 +1384,7 @@
 
       $.ajax({
         url: "{{ route('changeDataTph') }}",
-        method: "POST",
+        method: "GET",
         cache: false,
         data: {
           _token: _token,
@@ -2924,7 +2924,7 @@
           _token: _token
         },
         success: function(result) {
-          Swal.close();
+          // Swal.close();
           //parsing result ke json untuk dalam estate
           var parseResult = JSON.parse(result)
           // ubah json ke array agar bisa di for atau foreach
@@ -2965,6 +2965,20 @@
           const plasma = Object.entries(parseResult['PlasmaWIl']);
           const plasmaEM = Object.entries(parseResult['PlasmaEM']);
           const plasmaGM = Object.entries(parseResult['plasmaGM']);
+
+
+          // new tph 
+          var afdeling1 = Object.entries(parseResult['afdeling1'])
+          var afdeling2 = Object.entries(parseResult['afdeling2'])
+          var afdeling3 = Object.entries(parseResult['afdeling3'])
+          var afdeling4 = Object.entries(parseResult['afdeling4'])
+
+          var estate1 = Object.entries(parseResult['estate1'])
+          var estate2 = Object.entries(parseResult['estate2'])
+          var estate3 = Object.entries(parseResult['estate3'])
+          var estate4 = Object.entries(parseResult['estate4'])
+          var hasilRh = Object.entries(parseResult['hasilRh'])
+
 
           //mnghitung dan mengurai string dengan substrack untuk chart
           //list estate
@@ -3236,15 +3250,14 @@
             }));
 
             var plasmaGMe = document.getElementById('plasmaMonth');
-            var arrPlasmaGM = newPlasma
+            var arrPlasmaGM = afdeling4
             arrPlasmaGM.forEach(element => {
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              //   let item2 = 'GM'
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
+              let item1 = element[1]['est']
+              let item2 = element[1]['afd']
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = element[1]['ranking']
               // let item6 = newPlasmaEM['EM']
 
               let itemElement1 = document.createElement('td')
@@ -3304,15 +3317,14 @@
             });
 
             var plasmaGMe = document.getElementById('plasmaMonth');
-            var arrPlasmaGM = newPlasmaEM
+            var arrPlasmaGM = estate4
             arrPlasmaGM.forEach(element => {
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              //   let item2 = 'GM'
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = ''
+              let item1 = element[1]['est']
+              let item2 = 'EM'
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = '-'
               // let item6 = newPlasmaEM['EM']
 
               let itemElement1 = document.createElement('td')
@@ -3382,77 +3394,7 @@
               // }
             });
 
-            var plasmaGMe = document.getElementById('plasmaMonth');
-            var arrPlasmaGM = newPlasmaGM
-            arrPlasmaGM.forEach(element => {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              //   let item2 = 'GM'
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = ''
-              // let item6 = newPlasmaEM['EM']
 
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-
-              itemElement1.style.backgroundColor = "#Fff4cc";
-              itemElement2.style.backgroundColor = "#Fff4cc";
-              itemElement3.style.backgroundColor = "#Fff4cc";
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-              } else if (item4 == 0) {
-                itemElement4.style.backgroundColor = "#e8ecdc";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "white";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "white";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "white";
-              } else {
-                itemElement4.style.color = "black";
-              }
-
-              itemElement4.innerText = item4;
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              plasmaGMe.appendChild(tr)
-              // }
-            });
             //persetate
             renderChartTphMonth.updateSeries([{
               name: 'Brondolan/Blok Tinggal di TPH',
@@ -3495,37 +3437,22 @@
               data: arrayvalRSnoneWilJson
             }])
 
-            //          //untuk table
+            ///untuk table
             //table wil 1
-            function filterArrayByEst(array) {
-              return array.filter(obj => !obj.est.includes('Plasma'));
-            }
 
-            const originalArray = list_all_wil[0][1]
-
-            const filteredArray = filterArrayByEst(originalArray);
-            const wilarr = filterArrayByEst(list_all_est[0][1])
-            var arrTbody1 = filteredArray
+            var arrTbody1 = afdeling1
             // console.log(arrTbody1);
             var table1 = document.getElementById('table1Month');
             var tbody1 = document.getElementById('tbody1Month');
             // Create a copy of the original array and sort it in descending order of scores
-            let sortedArray = [...arrTbody1].sort((a, b) => b.skor - a.skor);
-
-            // Create a map of objects to ranks
-            let objectToRank = new Map();
-
-            sortedArray.forEach((item, index) => {
-              objectToRank.set(item, index + 1);
-            });
             arrTbody1.forEach((element, index) => {
 
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = objectToRank.get(element);
+              let item1 = element[1]['est']
+              let item2 = element[1]['afd']
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = element[1]['ranking']
               // console.log(item5);
 
               let itemElement1 = document.createElement('td')
@@ -3590,20 +3517,19 @@
               tbody1.appendChild(tr)
               // }
             });
-            //  testing
-
-            var arrTbody1 = wilarr
-            // console.log(wilarr);
+            // table will 1 bagian perestate skor 
+            var arrTbody1 = estate1
             var table1 = document.getElementById('table1Month');
             var tbody1 = document.getElementById('tbody1Month');
             arrTbody1.forEach(element => {
               // for (let i = 0; i < 5; i++) {
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['EM']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
+              let item1 = element[1]['est']
+              let item2 = element[1]['afd']
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = element[1]['ranking']
+              let item6 = element[1]['est_score']
 
               let itemElement1 = document.createElement('td')
               let itemElement2 = document.createElement('td')
@@ -3651,13 +3577,6 @@
               itemElement2.innerText = item2
               itemElement3.innerText = item3
               itemElement4.innerText = item4
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="BaSidakTPH/' + element[
-                          'est'] + '/' + firstWeek + '/' + lastWeek +
-                      '" target="_blank">' + element['skor'] + ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
               itemElement5.innerText = item5
 
               tr.appendChild(itemElement1)
@@ -3667,8 +3586,12 @@
               tr.appendChild(itemElement5)
 
               tbody1.appendChild(tr)
-              // }
+
             });
+
+
+
+
             tbodySkorRH = document.getElementById('tbodySkorRHMonth')
             var reg = ''
             if (list_skor_rh[0][0] == 1) {
@@ -3684,7 +3607,7 @@
             let item1 = reg
             let item2 = 'RH - ' + list_skor_rh[0][0]
             let item3 = list_skor_rh[0][1]['nama']
-            let item4 = list_skor_rh[0][1]['skor']
+            let item4 = hasilRh[0][1]['skor']
             let itemElement1 = document.createElement('td')
             let itemElement2 = document.createElement('td')
             let itemElement3 = document.createElement('td')
@@ -3736,21 +3659,16 @@
             // endtesting
 
             ///table wil 2
-            const originalArray2 = list_all_wil[1][1]
-
-            const filteredArray2 = filterArrayByEst(originalArray2);
-            var arrTbody2 = filteredArray2
-
-            // console.log(arrTbody2);
+            var arrTbody2 = afdeling2
             var tbody2 = document.getElementById('tbody2Month');
             arrTbody2.forEach(element => {
               // for (let i = 0; i < 5; i++) {
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
+              let item1 = element[1]['est']
+              let item2 = element[1]['afd']
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
               let itemElement2 = document.createElement('td')
@@ -3812,17 +3730,15 @@
               // }
             });
             //untuk estate wil 2
-            var arrTbody1 = list_all_est[1][1]
-            var tbody1 = document.getElementById('tbody2Month');
-            arrTbody1.forEach(element => {
+            var arrTbody2 = estate2
+            arrTbody2.forEach(element => {
               // for (let i = 0; i < 5; i++) {
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['EM']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
-
+              let item1 = element[1]['est']
+              let item2 = element[1]['afd']
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = element[1]['ranking']
               let itemElement1 = document.createElement('td')
               let itemElement2 = document.createElement('td')
               let itemElement3 = document.createElement('td')
@@ -3869,13 +3785,6 @@
               itemElement2.innerText = item2
               itemElement3.innerText = item3
               itemElement4.innerText = item4
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="BaSidakTPH/' + element[
-                          'est'] + '/' + firstWeek + '/' + lastWeek +
-                      '" target="_blank">' + element['skor'] + ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
               itemElement5.innerText = item5
 
               tr.appendChild(itemElement1)
@@ -3884,26 +3793,22 @@
               tr.appendChild(itemElement4)
               tr.appendChild(itemElement5)
 
-              tbody1.appendChild(tr)
+              tbody2.appendChild(tr)
               // }
             });
 
             ///table wil 3
             // if (regSidak != 3) {
-            const originalArray3 = list_all_wil[2][1]
-
-            const filteredArray3 = filterArrayByEst(originalArray3);
-            var arrTbody3 = filteredArray3
-
+            var arrTbody3 = afdeling3
             var tbody3 = document.getElementById('tbody3Month');
             arrTbody3.forEach(element => {
               // for (let i = 0; i < 5; i++) {
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
+              let item1 = element[1]['est']
+              let item2 = element[1]['afd']
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
               let itemElement2 = document.createElement('td')
@@ -3966,18 +3871,16 @@
               tbody3.appendChild(tr)
               // }
             });
-
             // untuk estate will 3
-            var arrTbody1 = list_all_est[2][1]
-            var tbody1 = document.getElementById('tbody3Month');
-            arrTbody1.forEach(element => {
+            var arrTbody3 = estate3
+            arrTbody3.forEach(element => {
               // for (let i = 0; i < 5; i++) {
               tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['EM']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
+              let item1 = element[1]['est']
+              let item2 = element[1]['afd']
+              let item3 = element[1]['asisten']
+              let item4 = element[1]['skor']
+              let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
               let itemElement2 = document.createElement('td')
@@ -4040,82 +3943,11 @@
               tr.appendChild(itemElement4)
               tr.appendChild(itemElement5)
 
-              tbody1.appendChild(tr)
+              tbody3.appendChild(tr)
               // }
             });
 
-            var inc = 0;
-            for (let i = 1; i <= 3; i++) {
-              var tbody = document.getElementById('tbody' + i + 'Month');
-              var wil = ''
-              if (i == 1) {
-                wil = 'I'
-              } else if (i == 2) {
-                wil = 'II'
-              } else {
-                wil = 'III'
-              }
 
-              tr = document.createElement('tr')
-              let item1 = list_skor_gmNew[inc][1]['est']
-              let item2 = list_skor_gmNew[inc][1]['afd']
-              let item3 = list_skor_gmNew[inc][1]['namaGM']
-              let item4 = list_skor_gmNew[inc][1]['skor']
-              let item5 = ''
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-              itemElement1.style.backgroundColor = "#fff4cc";
-              itemElement2.style.backgroundColor = "#fff4cc";
-              itemElement3.style.backgroundColor = "#fff4cc";
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-              } else if (item4 == 0) {
-                itemElement4.style.backgroundColor = "#fff4cc";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "white";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "white";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "white";
-              } else {
-                itemElement4.style.color = "black";
-              }
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              itemElement5.innerText = item5
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-              tbody.appendChild(tr)
-              inc++
-            }
 
             // }
           }

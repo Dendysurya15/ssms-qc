@@ -48,7 +48,7 @@ Route::get('/exportPDF', [SidaktphController::class, 'exportPDF'])->name('export
 
 Route::post('/changeRegionEst', [SidaktphController::class, 'changeRegionEst'])->name('changeRegionEst');
 
-Route::post('/changeDataTph', [SidaktphController::class, 'changeDataTph'])->name('changeDataTph');
+Route::get('/changeDataTph', [SidaktphController::class, 'changeDataTph'])->name('changeDataTph');
 
 Route::get('/getBtTphMonth', [SidaktphController::class, 'getBtTphMonth'])->name('getBtTphMonth');
 

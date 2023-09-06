@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Illuminate\Support\Arr;
 use Nette\Utils\DateTime;
 use Termwind\Components\Dd;
+use Symfony\Component\VarDumper\VarDumper;
 
 require "../app/helpers.php";
 
@@ -246,7 +247,7 @@ class SidaktphController extends Controller
             $DataEstate = $queryTrans->groupBy(['est', 'afd']);
             // dd($DataEstate);
             $DataEstate = json_decode($DataEstate, true);
-
+            // dd($DataEstate);
             foreach ($DataEstate as $key => $value) {
                 $luas_ha_est = 0;
                 $jml_blok_est = 0;
@@ -278,7 +279,11 @@ class SidaktphController extends Controller
                         $sum_krg += $value3['jum_karung'];
                         $sumBuah += $value3['buah_tinggal'];
                         $sumRst += $value3['restan_unreported'];
+
+                        $status_panen = $value3['status'];
                     }
+
+                    // dd($status_panen);
                     $luas_ha_est += $luas_ha;
                     $jml_blok_est += $jml_blok;
                     $sum_bt_tph_est += $sum_bt_tph;
@@ -308,6 +313,7 @@ class SidaktphController extends Controller
                     $dataSkor[$value1['wil']][$key][$key2]['skorRst'] = skor_rst_tph(round($sumRst / $jml_blok, 2));
                     $dataSkor[$value1['wil']][$key][$key2]['allSkor'] = skor_bt_tph(round($tot_bt / $jml_blok, 2)) + skor_krg_tph(round($sum_krg / $jml_blok, 2)) + skor_buah_tph(round($sumBuah / $jml_blok, 2)) + skor_rst_tph(round($sumRst / $jml_blok, 2));
                 }
+                // dd($dataSkor);
                 $tot_bt_est = ($sum_bt_tph_est + $sum_bt_jln_est + $sum_bt_bin_est);
                 $dataSkor[$value1['wil']][$key]['jml_blok_est'] = $jml_blok_est;
                 $dataSkor[$value1['wil']][$key]['luas_ha_est'] = $luas_ha_est;
@@ -329,7 +335,7 @@ class SidaktphController extends Controller
                 $dataSkor[$value1['wil']][$key]['allSkor_est'] = skor_bt_tph(round($tot_bt_est / $jml_blok_est, 2)) + skor_krg_tph(round($sum_krg_est / $jml_blok_est, 2)) + skor_buah_tph(round($sumBuah_est / $jml_blok_est, 2)) + skor_rst_tph(round($sumRst_est / $jml_blok_est, 2));
             }
         }
-        // dd($dataSkor);
+        dd($dataSkor);
         $dataSkorPlas = array();
         foreach ($queryEstate as $value1) {
             $querySidaks = DB::connection('mysql2')->table('sidak_tph')
@@ -426,6 +432,8 @@ class SidaktphController extends Controller
             }
         }
         // $regional = $request->get('regional');
+
+        dd($dataSkor);
         return view('dataSidakTph', [
             'dataSkor' => $dataSkor,
             'dataSkorPlasma' => $dataSkorPlas,
@@ -1825,7 +1833,7 @@ class SidaktphController extends Controller
         // dd($queryEst);
         $queryEste = DB::connection('mysql2')
             ->table('estate')
-            ->whereNotIn('estate.est', ['PLASMA', 'SRE', 'LDE', 'SKE'])
+            ->whereNotIn('estate.est', ['PLASMA', 'SRE', 'LDE', 'SKE', 'CWS1'])
             ->whereIn('wil', $queryReg2)
             ->get();
         $queryEste = $queryEste->groupBy(function ($item) {
@@ -1839,7 +1847,7 @@ class SidaktphController extends Controller
             ->Table('afdeling')
             ->select('afdeling.id', 'afdeling.nama', 'estate.est') //buat mengambil data di estate db dan willayah db
             ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
             ->get();
 
         $queryAfd = json_decode($queryAfd, true);
@@ -1899,9 +1907,1182 @@ class SidaktphController extends Controller
         $querySidak = DB::connection('mysql2')
             ->table('sidak_tph')
             ->where('sidak_tph.datetime', 'like', '%' . $monthSidak . '%')
-            // ->whereBetween('sidak_tph.datetime', ['2023-01-23', '202-12-25'])
+            ->orderBy('est', 'desc')
+            ->orderBy('afd', 'desc')
+            ->orderBy('blok', 'asc')
+            ->orderBy('datetime', 'asc')
             ->get();
         $querySidak = json_decode($querySidak, true);
+
+
+
+
+
+        // new hitungan 
+
+
+
+
+        $ancakFA = DB::connection('mysql2')
+            ->table('sidak_tph')
+            ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal')) // Change the format to "%Y-%m-%d"
+            ->where('sidak_tph.datetime', 'like', '%' . $monthSidak . '%')
+            ->orderBy('status', 'asc')
+            ->get();
+
+        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'status', 'tanggal', 'blok']);
+        $ancakFA = json_decode($ancakFA, true);
+
+        $dateString = $monthSidak;
+        $dateParts = date_parse($dateString);
+        $year = $dateParts['year'];
+        $month = $dateParts['month'];
+
+
+
+        $year = $year; // Replace with the desired year
+        $month = $month;   // Replace with the desired month (September in this example)
+
+        $weeks = [];
+        $firstDayOfMonth = strtotime("$year-$month-01");
+        $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
+
+        $weekNumber = 1;
+        $startDate = $firstDayOfMonth;
+        $endDate = $startDate;
+
+        while ($startDate <= $lastDayOfMonth) {
+            $endDate = strtotime("+6 days", $endDate);
+
+            if ($endDate > $lastDayOfMonth) {
+                $endDate = $lastDayOfMonth;
+            }
+
+            $weeks[$weekNumber] = [
+                'start' => date('Y-m-d', $startDate), // Modify date format
+                'end' => date('Y-m-d', $endDate),     // Modify date format
+            ];
+
+            $startDate = strtotime("+1 day", $endDate);
+            $weekNumber++;
+        }
+
+        $result = [];
+
+        // Iterate through the original array
+        foreach ($ancakFA as $mainKey => $mainValue) {
+            $result[$mainKey] = [];
+
+            foreach ($mainValue as $subKey => $subValue) {
+                $result[$mainKey][$subKey] = [];
+
+                foreach ($subValue as $dateKey => $dateValue) {
+                    // Remove 'H+' prefix if it exists
+                    $numericIndex = is_numeric($dateKey) ? $dateKey : (strpos($dateKey, 'H+') === 0 ? substr($dateKey, 2) : $dateKey);
+
+                    if (!isset($result[$mainKey][$subKey][$numericIndex])) {
+                        $result[$mainKey][$subKey][$numericIndex] = [];
+                    }
+
+                    foreach ($dateValue as $statusKey => $statusValue) {
+                        // Handle 'H+' prefix in status
+                        $statusIndex = is_numeric($statusKey) ? $statusKey : (strpos($statusKey, 'H+') === 0 ? substr($statusKey, 2) : $statusKey);
+
+                        if (!isset($result[$mainKey][$subKey][$numericIndex][$statusIndex])) {
+                            $result[$mainKey][$subKey][$numericIndex][$statusIndex] = [];
+                        }
+
+                        foreach ($statusValue as $blokKey => $blokValue) {
+                            $result[$mainKey][$subKey][$numericIndex][$statusIndex][$blokKey] = $blokValue;
+                        }
+                    }
+                }
+            }
+        }
+
+        // result by statis week 
+        $newResult = [];
+
+        foreach ($result as $key => $value) {
+            $newResult[$key] = [];
+
+            foreach ($value as $estKey => $est) {
+                $newResult[$key][$estKey] = [];
+
+                foreach ($est as $statusKey => $status) {
+                    $newResult[$key][$estKey][$statusKey] = [];
+
+                    foreach ($weeks as $weekKey => $week) {
+                        $newStatus = [];
+
+                        foreach ($status as $date => $data) {
+                            if (strtotime($date) >= strtotime($week["start"]) && strtotime($date) <= strtotime($week["end"])) {
+                                $newStatus[$date] = $data;
+                            }
+                        }
+
+                        if (!empty($newStatus)) {
+                            $newResult[$key][$estKey][$statusKey]["week" . ($weekKey + 1)] = $newStatus;
+                        }
+                    }
+                }
+            }
+        }
+
+        // result by week status 
+        $WeekStatus = [];
+
+        foreach ($result as $key => $value) {
+            $WeekStatus[$key] = [];
+
+            foreach ($value as $estKey => $est) {
+                $WeekStatus[$key][$estKey] = [];
+
+                foreach ($weeks as $weekKey => $week) {
+                    $WeekStatus[$key][$estKey]["week" . ($weekKey + 1)] = [];
+
+                    foreach ($est as $statusKey => $status) {
+                        $newStatus = [];
+
+                        foreach ($status as $date => $data) {
+                            if (strtotime($date) >= strtotime($week["start"]) && strtotime($date) <= strtotime($week["end"])) {
+                                $newStatus[$date] = $data;
+                            }
+                        }
+
+                        if (!empty($newStatus)) {
+                            $WeekStatus[$key][$estKey]["week" . ($weekKey + 1)][$statusKey] = $newStatus;
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($WeekStatus);
+
+
+
+        $qrafd = DB::connection('mysql2')->table('afdeling')
+            ->select(
+                'afdeling.id',
+                'afdeling.nama',
+                'estate.est'
+            ) //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
+            ->get();
+        $qrafd = json_decode($qrafd, true);
+        $queryEstereg = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->whereNotIn('estate.est', ['PLASMA', 'SRE', 'LDE', 'SKE', 'CWS1', 'SRS'])
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $regSidak)
+            ->get();
+        $queryEstereg = json_decode($queryEstereg, true);
+
+        // dd($queryEstereg);
+        $defaultNew = array();
+
+        foreach ($queryEstereg as $est) {
+            foreach ($qrafd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $defaultNew[$est['est']][$afd['nama']] = 0;
+                }
+            }
+        }
+
+
+
+        foreach ($defaultNew as $key => $estValue) {
+            foreach ($estValue as $monthKey => $monthValue) {
+                foreach ($newResult as $dataKey => $dataValue) {
+
+                    if ($dataKey == $key) {
+                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
+
+                            if ($dataEstKey == $monthKey) {
+                                $defaultNew[$key][$monthKey] = $dataEstValue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $defaultWeek = array();
+
+        foreach ($queryEstereg as $est) {
+            foreach ($qrafd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $defaultWeek[$est['est']][$afd['nama']] = 0;
+                }
+            }
+        }
+
+        foreach ($defaultWeek as $key => $estValue) {
+            foreach ($estValue as $monthKey => $monthValue) {
+                foreach ($WeekStatus as $dataKey => $dataValue) {
+
+                    if ($dataKey == $key) {
+                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
+
+                            if ($dataEstKey == $monthKey) {
+                                $defaultWeek[$key][$monthKey] = $dataEstValue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Function to filter and unset empty 'week' keys recursively
+        function filterEmptyWeeks(&$array)
+        {
+            foreach ($array as $key => &$value) {
+                if (is_array($value)) {
+                    filterEmptyWeeks($value); // Recursively check nested arrays
+                    if (empty($value) && $key !== 'week') {
+                        unset($array[$key]);
+                    }
+                }
+            }
+        }
+
+        // Call the function on your array
+        filterEmptyWeeks($defaultWeek);
+
+        // dd($defaultWeek);
+        foreach ($defaultWeek as &$value) {
+            if (is_array($value)) {
+                foreach ($value as &$value1) if (is_array($value1)) {
+                    foreach ($value1 as $subKey => &$subValue) {
+                        if (is_array($subValue)) {
+                            // dd($subValue);
+                            // Check if both key 0 and key 1 exist
+                            $hasKeyZero = isset($subValue[0]);
+                            $hasKeyOne = isset($subValue[1]);
+
+                            // Merge key 0 into key 1
+                            if ($hasKeyZero && $hasKeyOne) {
+                                $subValue[1] = array_merge_recursive((array)$subValue[1], (array)$subValue[0]);
+                                unset($subValue[0]);
+                            } elseif ($hasKeyZero && !$hasKeyOne) {
+                                // Create key 1 and merge key 0 into it
+                                $subValue[1] = $subValue[0];
+                                unset($subValue[0]);
+                            }
+
+                            // Check if keys 1 through 7 don't exist, add them with a default value of 0
+                            for ($i = 1; $i <= 7; $i++) {
+                                if (!isset($subValue[$i])) {
+                                    $subValue[$i] = 0;
+                                }
+                            }
+
+                            // Ensure key 8 exists, and if not, create it with a default value of an empty array
+                            if (!isset($subValue[8])) {
+                                $subValue[8] = 0;
+                            }
+
+                            // Check if keys higher than 8 exist, merge them into index 8
+                            for ($i = 9; $i <= 100; $i++) {
+                                if (isset($subValue[$i])) {
+                                    $subValue[8] = array_merge_recursive((array)$subValue[8], (array)$subValue[$i]);
+                                    unset($subValue[$i]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // dd($defaultWeek);
+
+        $testing = $defaultNew;
+
+        foreach ($testing as &$value) {
+            if (is_array($value)) {
+                foreach ($value as $subKey => &$subValue) {
+                    if (is_array($subValue)) {
+                        // dd($subValue);
+                        // Check if both key 0 and key 1 exist
+                        $hasKeyZero = isset($subValue[0]);
+                        $hasKeyOne = isset($subValue[1]);
+
+                        // Merge key 0 into key 1
+                        if ($hasKeyZero && $hasKeyOne) {
+                            $subValue[1] = array_merge_recursive((array)$subValue[1], (array)$subValue[0]);
+                            unset($subValue[0]);
+                        } elseif ($hasKeyZero && !$hasKeyOne) {
+                            // Create key 1 and merge key 0 into it
+                            $subValue[1] = $subValue[0];
+                            unset($subValue[0]);
+                        }
+
+                        // Check if keys 1 through 7 don't exist, add them with a default value of 0
+                        for ($i = 1; $i <= 7; $i++) {
+                            if (!isset($subValue[$i])) {
+                                $subValue[$i] = 0;
+                            }
+                        }
+
+                        // Ensure key 8 exists, and if not, create it with a default value of an empty array
+                        if (!isset($subValue[8])) {
+                            $subValue[8] = 0;
+                        }
+
+                        // Check if keys higher than 8 exist, merge them into index 8
+                        for ($i = 9; $i <= 100; $i++) {
+                            if (isset($subValue[$i])) {
+                                $subValue[8] = array_merge_recursive((array)$subValue[8], (array)$subValue[$i]);
+                                unset($subValue[$i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+        // dd($testing, $defaultNew);
+        // dd($result_status['UPE']['OA'][8], $defaultNew);
+        $deff_fuck = [1, 2, 3, 4, 5, 6, 7, 8];
+        foreach ($queryEstereg as $est) {
+            foreach ($qrafd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $index = 1;
+                    foreach ($deff_fuck as $key => $value) {
+                        $deff_index[$est['est']][$afd['nama']][$index] = 0;
+                        $index++;
+                    }
+                }
+            }
+        }
+
+        function mergeArrays($testing, $deff_index)
+        {
+            foreach ($deff_index as $key => $value) {
+                if (is_array($value)) {
+                    // If the key exists in testing, merge recursively
+                    if (isset($testing[$key]) && is_array($testing[$key])) {
+                        $testing[$key] = mergeArrays($testing[$key], $value);
+                    } else {
+                        // Key doesn't exist in testing, use deff_index value
+                        $testing[$key] = $value;
+                    }
+                } elseif (!isset($testing[$key])) {
+                    // Key is missing in testing, add it with the value 0
+                    $testing[$key] = 0;
+                }
+            }
+            return $testing;
+        }
+
+        $finals_arr = mergeArrays($testing, $deff_index);
+
+
+        function removeZeroFromDatetime(&$array)
+        {
+            foreach ($array as $key => &$value) {
+                if (is_array($value)) {
+                    foreach ($value as $key1 => &$value2) {
+                        if (is_array($value2)) {
+                            foreach ($value2 as $key2 => &$value3) {
+                                if (is_array($value3)) {
+                                    foreach ($value3 as $key3 => &$value4) if (is_array($value4)) {
+                                        foreach ($value4 as $key4 => $value5) {
+                                            if ($key4 === 0 && $value5 === 0) {
+                                                unset($value4[$key4]); // Unset the key 0 => 0 within the current nested array
+                                            }
+                                            removeZeroFromDatetime($value4);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Call the function on your array
+        removeZeroFromDatetime($defaultWeek);
+
+        // dd($defaultWeek);
+        $newSidak = array();
+        $asisten_qc = DB::connection('mysql2')
+            ->Table('asisten_qc')
+            ->get();
+        $asisten_qc = json_decode($asisten_qc, true);
+        foreach ($defaultWeek as $key => $value) {
+            $dividen_afd = 0;
+            $total_skoreest = 0;
+            $tot_estAFd = 0;
+            foreach ($value as $key1 => $value2)  if (is_array($value2)) {
+                $deviden = 0;
+                $tot_afdscore = 0;
+                $totskor_brd1 = 0;
+                $totskor_janjang1 = 0;
+
+                foreach ($value2 as $key2 => $value3) {
+                    $total_brondolan = 0;
+                    $total_janjang = 0;
+                    $all_skor = 0;
+                    $totskor_brd = 0;
+                    $totskor_janjang = 0;
+                    $all_skorafd = 0;
+                    foreach ($value3 as $key3 => $value4) if (is_array($value4)) {
+                        $tph1 = 0;
+                        $jalan1 = 0;
+                        $bin1 = 0;
+                        $karung1 = 0;
+                        $buah1 = 0;
+                        $restan1 = 0;
+                        foreach ($value4 as $key4 => $value5) if (is_array($value5)) {
+                            $tph = 0;
+                            $jalan = 0;
+                            $bin = 0;
+                            $karung = 0;
+                            $buah = 0;
+                            $restan = 0;
+                            foreach ($value5 as $key5 => $value6) {
+                                $sum_bt_tph = 0;
+                                $sum_bt_jalan = 0;
+                                $sum_bt_bin = 0;
+                                $sum_jum_karung = 0;
+                                $sum_buah_tinggal = 0;
+                                $sum_restan_unreported = 0;
+                                $sum_all_restan_unreported = 0;
+                                foreach ($value6 as $key6 => $value7) {
+                                    $sum_bt_tph += $value7['bt_tph'];
+                                    $sum_bt_jalan += $value7['bt_jalan'];
+                                    $sum_bt_bin += $value7['bt_bin'];
+                                    $sum_jum_karung += $value7['jum_karung'];
+
+
+                                    $sum_buah_tinggal += $value7['buah_tinggal'];
+                                    $sum_restan_unreported += $value7['restan_unreported'];
+                                }
+                                $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['tph'] = $sum_bt_tph;
+                                $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['jalan'] = $sum_bt_jalan;
+                                $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['bin'] = $sum_bt_bin;
+                                $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['karung'] = $sum_jum_karung;
+
+                                $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['buah'] = $sum_buah_tinggal;
+                                $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['restan'] = $sum_restan_unreported;
+
+                                $tph += $sum_bt_tph;
+                                $jalan += $sum_bt_jalan;
+                                $bin += $sum_bt_bin;
+                                $karung += $sum_jum_karung;
+                                $buah += $sum_buah_tinggal;
+                                $restan += $sum_restan_unreported;
+                            }
+
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['tph'] = $tph;
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['jalan'] = $jalan;
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['bin'] = $bin;
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['karung'] = $karung;
+
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['buah'] = $buah;
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['restan'] = $restan;
+
+                            $tph1 += $tph;
+                            $jalan1 += $jalan;
+                            $bin1 += $bin;
+                            $karung1 += $karung;
+                            $buah1 += $buah;
+                            $restan1 += $restan;
+                        }
+                        // dd($key3);
+                        $status_panen = $key3;
+
+                        [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+
+                        // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
+                        $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
+                        $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
+                        $newSidak[$key][$key1][$key2][$key3]['tph'] = $tph1;
+                        $newSidak[$key][$key1][$key2][$key3]['jalan'] = $jalan1;
+                        $newSidak[$key][$key1][$key2][$key3]['bin'] = $bin1;
+                        $newSidak[$key][$key1][$key2][$key3]['karung'] = $karung1;
+
+                        $newSidak[$key][$key1][$key2][$key3]['buah'] = $buah1;
+                        $newSidak[$key][$key1][$key2][$key3]['restan'] = $restan1;
+                        $newSidak[$key][$key1][$key2][$key3]['skor_brd'] = $total_brondolan;
+                        $newSidak[$key][$key1][$key2][$key3]['skor_janjang'] = $total_janjang;
+
+                        $totskor_brd += $total_brondolan;
+                        $totskor_janjang += $total_janjang;
+                    } else {
+                        $newSidak[$key][$key1][$key2][$key3]['tph'] = 0;
+                        $newSidak[$key][$key1][$key2][$key3]['jalan'] = 0;
+                        $newSidak[$key][$key1][$key2][$key3]['bin'] = 0;
+                        $newSidak[$key][$key1][$key2][$key3]['karung'] = 0;
+
+                        $newSidak[$key][$key1][$key2][$key3]['buah'] = 0;
+                        $newSidak[$key][$key1][$key2][$key3]['restan'] = 0;
+
+                        $newSidak[$key][$key1][$key2][$key3]['skor_brd'] = 0;
+                        $newSidak[$key][$key1][$key2][$key3]['skor_janjang'] = 0;
+                    }
+
+
+                    $newSidak[$key][$key1][$key2]['all_score'] = $all_skor;
+                    $newSidak[$key][$key1][$key2]['total_brd'] = $totskor_brd;
+                    $newSidak[$key][$key1][$key2]['total_janjang'] = $totskor_janjang;
+
+                    $totskor_brd1 += $totskor_brd;
+                    $totskor_janjang1 += $totskor_janjang;
+                }
+                $namaGM = '-';
+                foreach ($asisten_qc as $asisten) {
+
+                    // dd($asisten);
+                    if ($asisten['est'] == $key && $asisten['afd'] == $key1) {
+                        $namaGM = $asisten['nama'];
+                        break;
+                    }
+                }
+                $deviden = count($value2);
+                $tot_afdscore = round(($totskor_brd1 + $totskor_janjang1) / $deviden, 1);
+                $newSidak[$key][$key1]['deviden'] = $deviden;
+                $newSidak[$key][$key1]['total_score'] = $tot_afdscore;
+                $newSidak[$key][$key1]['total_brd'] = $totskor_brd1;
+                $newSidak[$key][$key1]['total_janjang'] = $totskor_janjang1;
+                $newSidak[$key][$key1]['asisten'] = $namaGM;
+
+                $tot_estAFd += $tot_afdscore;
+            } else {
+                $namaGM = '-';
+                foreach ($asisten_qc as $asisten) {
+
+                    // dd($asisten);
+                    if ($asisten['est'] == $key && $asisten['afd'] == $key1) {
+                        $namaGM = $asisten['nama'];
+                        break;
+                    }
+                }
+                $newSidak[$key][$key1]['deviden'] = 0;
+                $newSidak[$key][$key1]['total_score'] = 0;
+                $newSidak[$key][$key1]['total_brd'] = 0;
+                $newSidak[$key][$key1]['total_janjang'] = 0;
+                $newSidak[$key][$key1]['asisten'] = $namaGM;
+            }
+
+            $dividen_afd = count($value);
+            $total_skoreest = round($tot_estAFd / $dividen_afd, 1);
+            // dd($value);
+
+            $namaGM = '-';
+            foreach ($asisten_qc as $asisten) {
+                if ($asisten['est'] == $key && $asisten['afd'] == 'EM') {
+                    $namaGM = $asisten['nama'];
+                    break;
+                }
+            }
+            $newSidak[$key]['deviden'] = $dividen_afd;
+            $newSidak[$key]['total_skorest'] = $tot_estAFd;
+            $newSidak[$key]['score_estate'] = $total_skoreest;
+            $newSidak[$key]['asisten'] = $namaGM;
+            $newSidak[$key]['estate'] = $key;
+            $newSidak[$key]['afd'] = 'GM';
+        }
+
+
+        $mtancakWIltab1 = array();
+        foreach ($queryEstereg as $key => $value) {
+            foreach ($newSidak as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtancakWIltab1[$value['wil']][$key2] = array_merge($mtancakWIltab1[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+        $plasmaArray = [];
+
+        foreach ($mtancakWIltab1 as $key => $innerArray) {
+            foreach ($innerArray as $innerKey => $innerValue) {
+                if (strpos($innerKey, "Plasma") !== false) {
+                    // Move the inner array with "Plasma" key to the "Plasma" key
+                    $plasmaArray["Plasma"] = $innerValue;
+                    unset($mtancakWIltab1[$key][$innerKey]); // Remove the "Plasma" key
+                }
+            }
+        }
+
+        // Add the "Plasma" array to the original array
+        if (!empty($plasmaArray)) {
+            $mtancakWIltab1["Plasma"] = $plasmaArray;
+        }
+        // final untuk penampilan afdeling 
+
+        // dd($mtancakWIltab1);
+        $resultafd1 = array();
+
+        $keysToIterate = [1, 4, 7, 10]; // Define the keys you want to iterate through
+
+        foreach ($keysToIterate as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    foreach ($value as $key1 => $value1) {
+                        if (is_array($value1)) { // Check if $value1 is an array
+                            $est = $key;
+                            $afd = $key1;
+
+                            $total_score = $value1['total_score'];
+                            $asisten = $value1['asisten'];
+
+                            // Create a new array for each iteration
+                            $resultafd1[] = array(
+                                'est' => $est,
+                                'afd' => $afd,
+                                'skor' => $total_score,
+                                'asisten' => $asisten,
+                                'ranking' => null, // Placeholder for ranking
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        // Create a copy of the array to preserve the original order
+        $sortedArray = $resultafd1;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedArray, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        // Calculate rankings based on the sorted array
+        $rank = 1;
+        $prevScore = null;
+
+        foreach ($sortedArray as &$item) {
+            if ($prevScore === null || $prevScore != $item['skor']) {
+                $item['ranking'] = $rank;
+            }
+            $prevScore = $item['skor'];
+            $rank++;
+        }
+
+        // Merge the ranked data back into the original order
+        foreach ($resultafd1 as &$item) {
+            foreach ($sortedArray as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor']) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+        // dd($resultafd1);
+
+
+
+        $resultafd2 = array();
+
+        $keys2 = [2, 5, 8, 11]; // Define the keys you want to iterate through
+
+        foreach ($keys2 as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    foreach ($value as $key1 => $value1) {
+                        if (is_array($value1)) { // Check if $value1 is an array
+                            $est = $key;
+                            $afd = $key1;
+
+                            $total_score = $value1['total_score'];
+                            $asisten = $value1['asisten'];
+
+                            // Create a new array for each iteration
+                            $resultafd2[] = array(
+                                'est' => $est,
+                                'afd' => $afd,
+                                'skor' => $total_score,
+                                'asisten' => $asisten,
+                                'ranking' => null, // Placeholder for ranking
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        $sortedArray1 = $resultafd2;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedArray1, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        $rank2 = 1;
+        $prevScore2 = null;
+
+        foreach ($sortedArray1 as &$item) {
+            if ($prevScore2 === null || $prevScore2 != $item['skor']) {
+                $item['ranking'] = $rank2;
+            }
+            $prevScore2 = $item['skor'];
+            $rank2++;
+        }
+
+        // Merge the ranked data back into the original order
+        foreach ($resultafd2 as &$item) {
+            foreach ($sortedArray1 as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor']) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+
+        // dd($resultafd2);
+
+        $resultafd3 = array();
+
+        $keys3 = [3, 6]; // Define the keys you want to iterate through
+
+        foreach ($keys3 as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    foreach ($value as $key1 => $value1) {
+                        if (is_array($value1)) { // Check if $value1 is an array
+                            $est = $key;
+                            $afd = $key1;
+
+                            $total_score = $value1['total_score'];
+                            $asisten = $value1['asisten'];
+
+                            // Create a new array for each iteration
+                            $resultafd3[] = array(
+                                'est' => $est,
+                                'afd' => $afd,
+                                'skor' => $total_score,
+                                'asisten' => $asisten,
+                                'ranking' => null, // Placeholder for ranking
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        $sortedArray2 = $resultafd3;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedArray2, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        // Calculate rankings based on the sorted array
+        $rank3 = 1;
+        $prevScore3 = null;
+
+        foreach ($sortedArray2 as &$item) {
+            if ($prevScore3 === null || $prevScore3 != $item['skor']) {
+                $item['ranking'] = $rank3;
+            }
+            $prevScore3 = $item['skor'];
+            $rank3++;
+        }
+
+        // Merge the ranked data back into the original order
+        foreach ($resultafd3 as &$item) {
+            foreach ($sortedArray2 as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor']) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+
+        $resultafd4 = array();
+
+        $keys4 = ['Plasma']; // Define the keys you want to iterate through
+
+        foreach ($keys4 as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    foreach ($value as $key1 => $value1) {
+                        if (is_array($value1)) { // Check if $value1 is an array
+                            $est = $key;
+                            $afd = $key1;
+
+                            $total_score = $value1['total_score'];
+                            $asisten = $value1['asisten'];
+
+                            // Create a new array for each iteration
+                            $resultafd4[] = array(
+                                'est' => $est,
+                                'afd' => $afd,
+                                'skor' => $total_score,
+                                'asisten' => $asisten,
+                                'ranking' => null, // Placeholder for ranking
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        $sortedArray4 = $resultafd4;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedArray4, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        // Calculate rankings based on the sorted array
+        $rank4 = 1;
+        $prevScore4 = null;
+
+        foreach ($sortedArray4 as &$item) {
+            if ($prevScore4 === null || $prevScore4 != $item['skor']) {
+                $item['ranking'] = $rank4;
+            }
+            $prevScore4 = $item['skor'];
+            $rank4++;
+        }
+
+        // Merge the ranked data back into the original order
+        foreach ($resultafd4 as &$item) {
+            foreach ($sortedArray4 as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor']) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+        // dd($resultafd1, $resultafd2, $resultafd3, $resultafd4, $mtancakWIltab1);
+
+        // table per estate 
+
+        $resultest1 = array();
+
+        $keyEst = [1, 4, 7, 10]; // Define the keys you want to iterate through
+
+        foreach ($keyEst as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                $estateScore = 0;
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    // dd($mtancakWIltab1[$keyToIterate]);
+                    if (is_array($value)) { // Check if $value1 is an array
+                        $est = $key;
+                        $afd = $key1;
+
+                        $total_score = $value['score_estate'];
+                        $asisten = $value['asisten'];
+                        $estateScore += $value['score_estate'];
+                        $diveden = count($mtancakWIltab1[$keyToIterate]);
+
+                        $totalEst = round($estateScore / $diveden, 2);
+                        // Create a new array for each iteration
+                        $resultest1[] = array(
+                            'est' => $est,
+                            'afd' => 'EM',
+                            'skor' => $total_score,
+                            'asisten' => $asisten,
+                            'ranking' => null,
+                        );
+                    }
+                }
+                $resultest1[] = array(
+                    'afd' => 'GM',
+                    'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
+                    'skor' => $totalEst,
+                    'asisten' => '-',
+                    'ranking' => '-',
+                    'est_score' => $estateScore,
+                    'dividen' => $diveden
+                );
+            }
+        }
+
+        // Create a copy of the array to preserve the original order
+        $sortedest1 = $resultest1;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedest1, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        // Calculate rankings based on the sorted array
+        $est1 = 1;
+        $prevEst1 = null;
+
+        foreach ($sortedest1 as &$item) {
+            // Check if 'est_score' and 'dividen' are present in the array
+            if (!isset($item['est_score']) && !isset($item['dividen'])) {
+                if ($prevEst1 === null || $prevEst1 != $item['skor']) {
+                    $item['ranking'] = $est1;
+                }
+                $prevEst1 = $item['skor'];
+                $est1++;
+            }
+        }
+
+        // Merge the ranked data back into the original order
+        foreach ($resultest1 as &$item) {
+            foreach ($sortedest1 as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor'] && !isset($item['est_score']) && !isset($item['dividen'])) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+
+
+        // dd($resultest1);
+        $resultest2 = array();
+        $keyEst2 = [2, 5, 8, 11];
+
+        foreach ($keyEst2 as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                $estateScore = 0;
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    if (is_array($value)) { // Check if $value1 is an array
+                        $est = $key;
+                        $afd = $key1;
+
+                        $total_score = $value['score_estate'];
+                        $asisten = $value['asisten'];
+                        $estateScore += $value['score_estate'];
+                        $diveden = count($mtancakWIltab1[$keyToIterate]);
+
+                        $totalEst = round($estateScore / $diveden, 2);
+                        // Create a new array for each iteration
+                        $resultest2[] = array(
+                            'est' => $est,
+                            'afd' => $afd,
+                            'skor' => $total_score,
+                            'asisten' => $asisten,
+                            'ranking' => null, // Placeholder for ranking
+                        );
+                    }
+                }
+                $resultest2[] = array(
+                    'afd' => 'GM',
+                    'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
+                    'skor' => $totalEst,
+                    'asisten' => '-',
+                    'ranking' => '-',
+                    'est_score' => $estateScore,
+                    'dividen' => $diveden
+                );
+            }
+        }
+
+        $sortedest2 = $resultest2;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedest2, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        // Calculate rankings based on the sorted array
+        $est2 = 1;
+        $prevEst2 = null;
+
+        foreach ($sortedest2 as &$item) {
+            // Check if 'est_score' and 'dividen' are present in the array
+            if (!isset($item['est_score']) && !isset($item['dividen'])) {
+                if ($prevEst2 === null || $prevEst2 != $item['skor']) {
+                    $item['ranking'] = $est2;
+                }
+                $prevEst2 = $item['skor'];
+                $est2++;
+            }
+        }
+
+        // Merge the ranked data back into the original order
+        foreach ($resultest2 as &$item) {
+            foreach ($sortedest2 as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor'] && !isset($item['est_score']) && !isset($item['dividen'])) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+
+
+        // dd($resultest2);
+
+        $resultest3 = array();
+
+        $keyEst3 = [3, 6]; // Define the keys you want to iterate through
+
+        foreach ($keyEst3 as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                $estateScore = 0;
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    if (is_array($value)) { // Check if $value1 is an array
+                        $est = $key;
+                        $afd = $key1;
+
+                        $total_score = $value['score_estate'];
+                        $asisten = $value['asisten'];
+                        $estateScore += $value['score_estate'];
+                        $diveden = count($mtancakWIltab1[$keyToIterate]);
+
+                        $totalEst = round($estateScore / $diveden, 2);
+                        // Create a new array for each iteration
+                        $resultest3[] = array(
+                            'est' => $est,
+                            'afd' => $afd,
+                            'skor' => $total_score,
+                            'asisten' => $asisten,
+                            'ranking' => null, // Placeholder for ranking
+                        );
+                    }
+                }
+                $resultest3[] = array(
+                    'afd' => 'GM',
+                    'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
+                    'skor' => $totalEst,
+                    'asisten' => '-',
+                    'ranking' => '-',
+                    'est_score' => $estateScore,
+                    'dividen' => $diveden
+                );
+            }
+        }
+        // Create a copy of the array to preserve the original order
+        $sortedest3 = $resultest3;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedest3, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        // Calculate rankings based on the sorted array
+        $est33 = 1;
+        $prevEst3 = null;
+
+        foreach ($sortedest3 as &$item) {
+            // Check if 'est_score' and 'dividen' are present in the array
+            if (!isset($item['est_score']) && !isset($item['dividen'])) {
+                if ($prevEst3 === null || $prevEst3 != $item['skor']) {
+                    $item['ranking'] = $est33;
+                }
+                $prevEst2 = $item['skor'];
+                $est33++;
+            }
+        }
+        // Merge the ranked data back into the original order
+        foreach ($resultest3 as &$item) {
+            foreach ($sortedest3 as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor'] && !isset($item['est_score']) && !isset($item['dividen'])) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+
+
+
+        $resultest4 = array();
+
+        $keyEst4 = ['Plasma']; // Define the keys you want to iterate through
+
+        foreach ($keyEst4 as $keyToIterate) {
+            if (isset($mtancakWIltab1[$keyToIterate])) {
+                $estateScore = 0;
+                foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+                    if (is_array($value)) { // Check if $value1 is an array
+                        $est = $key;
+                        $afd = $key1;
+
+                        $total_score = $value['score_estate'];
+                        $asisten = $value['asisten'];
+                        $estateScore += $value['score_estate'];
+                        $diveden = count($mtancakWIltab1[$keyToIterate]);
+
+                        $totalEst = round($estateScore / $diveden, 2);
+                        // Create a new array for each iteration
+                        $resultest4[] = array(
+                            'est' => $est,
+                            'afd' => $afd,
+                            'skor' => $total_score,
+                            'asisten' => $asisten,
+                            'ranking' => null, // Placeholder for ranking
+                        );
+                    }
+                }
+                $resultest4[] = array(
+                    'afd' => 'GM',
+                    'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
+                    'skor' => $totalEst,
+                    'asisten' => '-',
+                    'ranking' => '-',
+                    'est_score' => $estateScore,
+                    'dividen' => $diveden
+                );
+            }
+        }
+        // Create a copy of the array to preserve the original order
+        $sortedest4 = $resultest4;
+
+        // Sort the copy based on 'skor' (total_score) in descending order
+        usort($sortedest4, function ($a, $b) {
+            return $b['skor'] <=> $a['skor'];
+        });
+
+        // Calculate rankings based on the sorted array
+        $est4 = 1;
+        $prevEst4 = null;
+        foreach ($sortedest4 as &$item) {
+            // Check if 'est_score' and 'dividen' are present in the array
+            if (!isset($item['est_score']) && !isset($item['dividen'])) {
+                if ($prevEst4 === null || $prevEst4 != $item['skor']) {
+                    $item['ranking'] = $est4;
+                }
+                $prevEst2 = $item['skor'];
+                $est4++;
+            }
+        }
+
+        // Merge the ranked data back into the original order
+        foreach ($resultest4 as &$item) {
+            foreach ($sortedest4 as $sortedItem) {
+                if ($sortedItem['skor'] == $item['skor'] && !isset($item['est_score']) && !isset($item['dividen'])) {
+                    $item['ranking'] = $sortedItem['ranking'];
+                    break;
+                }
+            }
+        }
+        // dd($resultest4, $mtancakWIltab1);
+        $rhEstate = array();
+        $total_rh = 0;
+        foreach ($mtancakWIltab1 as $key => $value) {
+            $estateScore = 0;
+            foreach ($value as $key1 => $value1) {
+                $estateScore += $value1['score_estate'];
+                $diveden = count($value);
+
+                $totalEst = round($estateScore / $diveden, 2);
+            }
+            // $rhEstate[$key]['est_total'] = $estateScore;
+            // $rhEstate[$key]['score_est'] = $totalEst;
+            // $rhEstate[$key]['dividen'] = $diveden;
+            $total_rh += $totalEst;
+            $dividen_rh = count($mtancakWIltab1);
+        }
+
+        // Create a new array for each iteration
+        $rhEstate[] = array(
+            'est' => 'REG-1',
+            'jab' => 'RH',
+            'nama' => '-',
+            'total' => $total_rh,
+            'skor' => round($total_rh / $dividen_rh, 2)
+
+        );
+
+        // dd($rhEstate, $mtancakWIltab1);
+        // end new hitungan 
 
         $allBlok = $query->groupBy(function ($item) {
             return $item->blok;
@@ -1924,7 +3105,7 @@ class SidaktphController extends Controller
             $queryWill2 = $queryWi->groupBy(function ($item) {
                 return $item->nama;
             });
-
+            // dd($querySidak);
             //untuk table!!
             // store wil -> est -> afd
             // menyimpan array nested dari  wil -> est -> afd
@@ -1972,6 +3153,7 @@ class SidaktphController extends Controller
                     }
                 }
 
+                // dd($listBlokPerAfd);
                 // //menghitung data skor untuk brd/blok
                 foreach ($dataAfdEst as $key => $value) {
                     foreach ($value as $key2 => $value2) {
@@ -2022,6 +3204,7 @@ class SidaktphController extends Controller
                             $skoreTotal = skorBRDsidak($skor_brd) + skorKRsidak($skor_kr) + skorBHsidak($skor_buahtgl) + skorRSsidak($skor_restan);
 
                             $dataSkorAwal[$key][$key2]['karung_tes'] = $sum_all_karung;
+                            $dataSkorAwal[$key][$key2]['jum_blok'] = $jum_blok;
                             $dataSkorAwal[$key][$key2]['tph_test'] = $sum_all;
                             $dataSkorAwal[$key][$key2]['buah_test'] = $sum_all_bt_tgl;
                             $dataSkorAwal[$key][$key2]['restant_tes'] = $sum_all_restan_unreported;
@@ -2036,6 +3219,7 @@ class SidaktphController extends Controller
                             $dataSkorAwal[$key][$key2]['skore_akhir'] = $skoreTotal;
                         } else {
                             $dataSkorAwal[$key][$key2]['karung_tes'] = 0;
+                            $dataSkorAwal[$key][$key2]['jum_blok'] = -0;
                             $dataSkorAwal[$key][$key2]['restant_tes'] = 0;
                             $dataSkorAwal[$key][$key2]['jumlah_blok'] = 0;
                             $dataSkorAwal[$key][$key2]['tph_test'] = 0;
@@ -2049,7 +3233,7 @@ class SidaktphController extends Controller
                         }
                     }
                 }
-
+                // dd($newSidak, $dataSkorAwal);
                 // dd($dataSkorAwal);
 
                 foreach ($dataSkorAwal as $key => $value) {
@@ -2944,6 +4128,7 @@ class SidaktphController extends Controller
 
             // $list_all_est = BpthKTE($list_all_est);
             // // dd($result);
+            // dd($list_all_will);
 
 
             $queryWill = list_wil($queryWill);
@@ -3018,11 +4203,27 @@ class SidaktphController extends Controller
             $arrView['val_bt_tph_wil'] = $arrBtTPHperWil; //data jsen brondolan tinggal di tph
             $arrView['val_bh_tph_wil'] = $arrBHestWil; //data jsen buah yang tinggal
             $arrView['val_rs_tph_wil'] = $arrRestWill; //data jsen restan yang tidak dilaporkan
-            // dd($arrBtTPHperEst);
+            // dd($resultest1);
+
+            // new tph result 
+            // untuk afdeling table 1 sampe 4 
+            $arrView['afdeling1'] = $resultafd1;
+            $arrView['afdeling2'] = $resultafd2;
+            $arrView['afdeling3'] = $resultafd3;
+            $arrView['afdeling4'] = $resultafd4;
+            //  untuk estate table 1 sampe 4 
+            $arrView['estate1'] = $resultest1;
+            $arrView['estate2'] = $resultest2;
+            $arrView['estate3'] = $resultest3;
+            $arrView['estate4'] = $resultest4;
+            $arrView['hasilRh'] = $rhEstate;
+
+
             echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
             exit();
         }
     }
+
     public function getBtTphYear(Request $request)
     {
         $regSidak = $request->get('reg');

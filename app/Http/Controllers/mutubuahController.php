@@ -1437,10 +1437,6 @@ class mutubuahController extends Controller
             usort($sortedData, function ($a, $b) {
                 return $b['scores']['All_skor'] - $a['scores']['All_skor'];
             });
-            // //mengurutkan untuk nilai estate
-            // usort($sortedDataEst, function ($a, $b) {
-            //     return $b['data']['TotalSkorEST'] - $a['data']['TotalSkorEST'];
-            // });
 
             //menambahkan nilai rank ke dalam afd
             $rank = 1;

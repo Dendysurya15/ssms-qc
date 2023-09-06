@@ -17,7 +17,7 @@ class taksasiController extends Controller
         $decodedDataAfd = json_decode($query, true);
         $first_array = json_decode($query, true);
 
-        // dd($decodedDataAfd);
+        dd($decodedDataAfd);
         $dataAfd = $first_array['dataAfd'];
         $testing = $first_array['dataAfd'];
 
