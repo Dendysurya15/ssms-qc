@@ -831,7 +831,7 @@ if (!function_exists('calculatePanen')) {
             $panen_brd = 5;
             $panen_jjg = 17;
         } else if ($status_panen == 7) {
-            $panen_brd = 8;
+            $panen_brd = 6;
             $panen_jjg = 20;
         } else if ($status_panen >= 7) {
             $panen_brd = 8;

@@ -745,69 +745,705 @@
             </div>
 
 
-            <div class="ml-3 mr-3 mb-3">
-              <div class="row text-center tbl-fixed">
-                <table style="width: 100%;">
-                  <thead style="color: black;">
-                    <tr>
-                      <th class="freeze-col align-middle" rowspan="3" bgcolor="#883c0c" style="color: white;">Est.
-                      </th>
-                      <th class="freeze-col align-middle" rowspan="3" bgcolor="#883c0c" style="color: white;">Afd.
-                      </th>
-                      <th class="align-middle" colspan="2" bgcolor="#d8cccc">DATA BLOK
-                        SAMPEL</th>
-                      <th class="align-middle" colspan="15" bgcolor="#e8ecdc">SIDAK TPH
-                      </th>
-                      <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">All
-                        Skor</th>
-                      <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">
-                        Kategori</th>
-                      </th>
-                    </tr>
-                    <tr>
-                      {{-- Table Mutu Ancak --}}
-                      <th class="align-middle" rowspan="2" bgcolor="#d8cccc">Luas Ha Sampel
-                      </th>
-                      <th class="align-middle" rowspan="2" bgcolor="#d8cccc" width="10">Jumlah Blok Sampel</th>
-                      <th class="align-middle" colspan="6" bgcolor="#e8ecdc">Brondolan
-                        Tinggal
-                      </th>
-                      <th class="align-middle" colspan="3" bgcolor="#e8ecdc">Karung Isi
-                        Brondolan
-                      </th>
-                      <th class="align-middle" colspan="3" bgcolor="#e8ecdc">Buah Tinggal di
-                        TPH
-                      </th>
-                      <th class="align-middle" colspan="3" bgcolor="#e8ecdc">Restan Tidak
-                        Dilaporkan</th>
-                    </tr>
-                    <tr>
-                      {{-- Table Mutu Ancak --}}
-                      <th class="align-middle" bgcolor="#e8ecdc">Di TPH</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Di Jalan</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Di BIN</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Total Brd</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Brd/Blok</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Skor</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Jml</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Jml/Blok</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Skor</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Jml</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Jjg/Blok</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Skor</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Jml</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Jjg/Blok</th>
-                      <th class="align-middle" bgcolor="#e8ecdc">Skor</th>
-                    </tr>
-                  </thead>
 
-                  <tbody id="dataRekapTph">
-                    <!-- <td>PLE</td>
-                                        <td>OG</td> -->
-                  </tbody>
-                </table>
+
+            <div class="ml-3 mr-3 mb-3">
+              <ul class="nav nav-tabs" id="myTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active" id="week1-tab" data-toggle="tab" href="#week1" role="tab" aria-controls="week1" aria-selected="true">week1</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="week2-tab" data-toggle="tab" href="#week2" role="tab" aria-controls="week2" aria-selected="false">week2</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="week3-tab" data-toggle="tab" href="#week3" role="tab" aria-controls="week3" aria-selected="false">week3</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="week4-tab" data-toggle="tab" href="#week4" role="tab" aria-controls="week4" aria-selected="false">week4</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="month-tab" data-toggle="tab" href="#month" role="tab" aria-controls="month" aria-selected="false">week5</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabsContent">
+                <style>
+                  #newweek1 thead {
+                    background-color: white;
+                  }
+
+                  #newweek2 thead {
+                    background-color: white;
+                  }
+
+                  #newweek3 thead {
+                    background-color: white;
+                  }
+
+                  #newweek4 thead {
+                    background-color: white;
+                  }
+
+                  #newweek5 thead {
+                    background-color: white;
+                  }
+
+                  feFlood
+                </style>
+
+                <!-- mingg pertama  -->
+                <div class="tab-pane fade show active" id="week1" role="tabpanel" aria-labelledby="week1-tab">
+                  <div class="row text-center tbl-fixed">
+                    <table style="width: 100%;" id="newweek1">
+                      <thead>
+                        <tr>
+                          <th rowspan="3">EST</th>
+                          <th rowspan="3">AFD</th>
+                          <th colspan="10"> H+1</th>
+                          <th colspan="10"> H+2</th>
+                          <th colspan="10"> H+3</th>
+                          <th colspan="10"> H+4</th>
+                          <th colspan="10"> H+5</th>
+                          <th colspan="10"> H+6</th>
+                          <th colspan="10"> H+7</th>
+                          <th colspan="10"> >H+7 </th>
+                          <th rowspan="3"> All Skor</th>
+                          <th rowspan="3"> Kategori</th>
+                        </tr>
+                        <tr>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                        </tr>
+                        <tr>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- minggu ke dua  -->
+                <div class="tab-pane fade" id="week2" role="tabpanel" aria-labelledby="week2-tab">
+                  <div class="row text-center tbl-fixed">
+                    <table style="width: 100%;" id="newweek2">
+                      <thead>
+                        <tr>
+                          <th rowspan="3">EST</th>
+                          <th rowspan="3">AFD</th>
+                          <th colspan="10"> H+1</th>
+                          <th colspan="10"> H+2</th>
+                          <th colspan="10"> H+3</th>
+                          <th colspan="10"> H+4</th>
+                          <th colspan="10"> H+5</th>
+                          <th colspan="10"> H+6</th>
+                          <th colspan="10"> H+7</th>
+                          <th colspan="10"> >H+7 </th>
+                          <th rowspan="3"> All Skor</th>
+                          <th rowspan="3"> Kategori</th>
+                        </tr>
+                        <tr>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                        </tr>
+                        <tr>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- minggu ke 3  -->
+                <div class="tab-pane fade" id="week3" role="tabpanel" aria-labelledby="week3-tab">
+                  <div class="row text-center tbl-fixed">
+                    <table style="width: 100%;" id="newweek3">
+                      <thead>
+                        <tr>
+                          <th rowspan="3">EST</th>
+                          <th rowspan="3">AFD</th>
+                          <th colspan="10"> H+1</th>
+                          <th colspan="10"> H+2</th>
+                          <th colspan="10"> H+3</th>
+                          <th colspan="10"> H+4</th>
+                          <th colspan="10"> H+5</th>
+                          <th colspan="10"> H+6</th>
+                          <th colspan="10"> H+7</th>
+                          <th colspan="10"> >H+7 </th>
+                          <th rowspan="3"> All Skor</th>
+                          <th rowspan="3"> Kategori</th>
+                        </tr>
+                        <tr>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                        </tr>
+                        <tr>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+
+                <!-- minggu ke 4  -->
+                <div class="tab-pane fade" id="week4" role="tabpanel" aria-labelledby="week4-tab">
+                  <div class="row text-center tbl-fixed">
+                    <table style="width: 100%;" id="newweek4">
+                      <thead>
+                        <tr>
+                          <th rowspan="3">EST</th>
+                          <th rowspan="3">AFD</th>
+                          <th colspan="10"> H+1</th>
+                          <th colspan="10"> H+2</th>
+                          <th colspan="10"> H+3</th>
+                          <th colspan="10"> H+4</th>
+                          <th colspan="10"> H+5</th>
+                          <th colspan="10"> H+6</th>
+                          <th colspan="10"> H+7</th>
+                          <th colspan="10"> >H+7 </th>
+                          <th rowspan="3"> All Skor</th>
+                          <th rowspan="3"> Kategori</th>
+                        </tr>
+                        <tr>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                        </tr>
+                        <tr>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+                <!-- bulan  -->
+                <div class="tab-pane fade" id="month" role="tabpanel" aria-labelledby="month-tab">
+                  <div class="row text-center tbl-fixed">
+                    <table style="width: 100%;" id="newweek5">
+                      <thead>
+                        <tr>
+                          <th rowspan="3">EST</th>
+                          <th rowspan="3">AFD</th>
+                          <th colspan="10"> H+1</th>
+                          <th colspan="10"> H+2</th>
+                          <th colspan="10"> H+3</th>
+                          <th colspan="10"> H+4</th>
+                          <th colspan="10"> H+5</th>
+                          <th colspan="10"> H+6</th>
+                          <th colspan="10"> H+7</th>
+                          <th colspan="10"> >H+7 </th>
+                          <th rowspan="3"> All Skor</th>
+                          <th rowspan="3"> Kategori</th>
+                        </tr>
+                        <tr>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                          <th colspan="6">Brondolan Tinggal</th>
+                          <th colspan="4">Buah Tinggal</th>
+                        </tr>
+                        <tr>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+                          <th> Di TPH</th>
+                          <th> Di Jalan</th>
+                          <th> Di Bin</th>
+                          <th> Di Karung</th>
+                          <th> Total Brd</th>
+                          <th> Skor</th>
+                          <th> Buah Sortiran / Buah Jatuh </th>
+                          <th>Restan Tidak Dilaporkan </th>
+                          <th>Total Jjg </th>
+                          <th>Skor</th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+
               </div>
             </div>
+
+
+
+
           </div>
 
           <div class="tab-pane fade" id="nav-sbi" role="tabpanel" aria-labelledby="nav-sbi-tab">
@@ -1381,7 +2017,21 @@
       var regTph = $("#regDataTph").val();
       var dateTph = $("#dateDataTph").val();
       var _token = $('input[name="_token"]').val();
-
+      if ($.fn.DataTable.isDataTable('#newweek1')) {
+        $('#newweek1').DataTable().destroy();
+      }
+      if ($.fn.DataTable.isDataTable('#newweek2')) {
+        $('#newweek2').DataTable().destroy();
+      }
+      if ($.fn.DataTable.isDataTable('#newweek3')) {
+        $('#newweek3').DataTable().destroy();
+      }
+      if ($.fn.DataTable.isDataTable('#newweek4')) {
+        $('#newweek4').DataTable().destroy();
+      }
+      if ($.fn.DataTable.isDataTable('#newweek5')) {
+        $('#newweek5').DataTable().destroy();
+      }
       $.ajax({
         url: "{{ route('changeDataTph') }}",
         method: "GET",
@@ -1393,10 +2043,1624 @@
         },
         success: function(result) {
           Swal.close();
-          $("#dataRekapTph").html(result);
+          var parseResult = JSON.parse(result)
+
+          var datatableweek1 = $('#newweek1').DataTable({
+            columns: [{
+                data: 'est'
+              },
+              {
+                data: 'afd'
+              },
+
+              {
+                data: 'tph1'
+              },
+              {
+                data: 'jalan1'
+              },
+              {
+                data: 'bin1'
+              },
+              {
+                data: 'karung1'
+              },
+
+              {
+                data: 'tot_brd1'
+              },
+              {
+                data: 'skor_brd1'
+              },
+              {
+                data: 'buah1'
+              },
+              {
+                data: 'restan1'
+              },
+              {
+                data: 'tod_jjg1'
+              },
+              {
+                data: 'skor_janjang1'
+              },
+
+
+              {
+                data: 'tph2'
+              },
+              {
+                data: 'jalan2'
+              },
+              {
+                data: 'bin2'
+              },
+              {
+                data: 'karung2'
+              },
+
+              {
+                data: 'tot_brd2'
+              },
+              {
+                data: 'skor_brd2'
+              },
+              {
+                data: 'buah2'
+              },
+              {
+                data: 'restan2'
+              },
+              {
+                data: 'tod_jjg2'
+              },
+              {
+                data: 'skor_janjang2'
+              },
+
+
+
+              {
+                data: 'tph3'
+              },
+              {
+                data: 'jalan3'
+              },
+              {
+                data: 'bin3'
+              },
+              {
+                data: 'karung3'
+              },
+
+              {
+                data: 'tot_brd3'
+              },
+              {
+                data: 'skor_brd3'
+              },
+              {
+                data: 'buah3'
+              },
+              {
+                data: 'restan3'
+              },
+              {
+                data: 'tod_jjg3'
+              },
+              {
+                data: 'skor_janjang3'
+              },
+
+
+              {
+                data: 'tph4'
+              },
+              {
+                data: 'jalan4'
+              },
+              {
+                data: 'bin4'
+              },
+              {
+                data: 'karung4'
+              },
+
+              {
+                data: 'tot_brd4'
+              },
+              {
+                data: 'skor_brd4'
+              },
+              {
+                data: 'buah4'
+              },
+              {
+                data: 'restan4'
+              },
+              {
+                data: 'tod_jjg4'
+              },
+              {
+                data: 'skor_janjang4'
+              },
+
+
+              {
+                data: 'tph5'
+              },
+              {
+                data: 'jalan5'
+              },
+              {
+                data: 'bin5'
+              },
+              {
+                data: 'karung5'
+              },
+
+              {
+                data: 'tot_brd5'
+              },
+              {
+                data: 'skor_brd5'
+              },
+              {
+                data: 'buah5'
+              },
+              {
+                data: 'restan5'
+              },
+              {
+                data: 'tod_jjg5'
+              },
+              {
+                data: 'skor_janjang5'
+              },
+
+
+              {
+                data: 'tph6'
+              },
+              {
+                data: 'jalan6'
+              },
+              {
+                data: 'bin6'
+              },
+              {
+                data: 'karung6'
+              },
+
+              {
+                data: 'tot_brd6'
+              },
+              {
+                data: 'skor_brd6'
+              },
+              {
+                data: 'buah6'
+              },
+              {
+                data: 'restan6'
+              },
+              {
+                data: 'tod_jjg6'
+              },
+              {
+                data: 'skor_janjang6'
+              },
+
+
+              {
+                data: 'tph7'
+              },
+              {
+                data: 'jalan7'
+              },
+              {
+                data: 'bin7'
+              },
+              {
+                data: 'karung7'
+              },
+
+              {
+                data: 'tot_brd7'
+              },
+              {
+                data: 'skor_brd7'
+              },
+              {
+                data: 'buah7'
+              },
+              {
+                data: 'restan7'
+              },
+              {
+                data: 'tod_jjg7'
+              },
+              {
+                data: 'skor_janjang7'
+              },
+
+              {
+                data: 'tph8'
+              },
+              {
+                data: 'jalan8'
+              },
+              {
+                data: 'bin8'
+              },
+              {
+                data: 'karung8'
+              },
+
+              {
+                data: 'tot_brd8'
+              },
+              {
+                data: 'skor_brd8'
+              },
+              {
+                data: 'buah8'
+              },
+              {
+                data: 'restan8'
+              },
+              {
+                data: 'tod_jjg8'
+              },
+              {
+                data: 'skor_janjang8'
+              },
+
+              {
+                data: 'total_score'
+              },
+
+              {
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var totalScoreValue = parseFloat(data);
+                  var kategori = '';
+
+                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
+                    kategori = 'BAD';
+                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
+                    kategori = 'BETTER';
+                  } else if (totalScoreValue >= 50) {
+                    kategori = 'GOOD';
+                  }
+
+                  return kategori;
+                }
+              }
+
+            ],
+            "createdRow": function(row, data, dataIndex) {
+              // Assuming 'data' contains the data for each row
+              var afdValue = data['afd']; // Replace with the correct column name or data source
+              var totalScoreValue = parseFloat(data['total_score']); // Convert total_score to a number
+
+              // Check if the 'afd' value is 'EST' and set background color to blue
+              if (afdValue === 'EST') {
+                $(row).css('background-color', '#b0d48c');
+              }
+
+              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+                $(row).find('td:eq(82)').css('background-color', 'red');
+                $(row).find('td:eq(83)').css('background-color', 'red');
+              }
+
+              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
+                $(row).find('td:eq(82)').css('background-color', 'yellow');
+                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              }
+
+              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
+                $(row).find('td:eq(82)').css('background-color', 'green');
+                $(row).find('td:eq(83)').css('background-color', 'green');
+              }
+            }
+          });
+          datatableweek1.clear().rows.add(parseResult['week1']).draw();
+
+
+          var datatableweek2 = $('#newweek2').DataTable({
+            columns: [{
+                data: 'est'
+              },
+              {
+                data: 'afd'
+              },
+
+              {
+                data: 'tph1'
+              },
+              {
+                data: 'jalan1'
+              },
+              {
+                data: 'bin1'
+              },
+              {
+                data: 'karung1'
+              },
+
+              {
+                data: 'tot_brd1'
+              },
+              {
+                data: 'skor_brd1'
+              },
+              {
+                data: 'buah1'
+              },
+              {
+                data: 'restan1'
+              },
+              {
+                data: 'tod_jjg1'
+              },
+              {
+                data: 'skor_janjang1'
+              },
+
+
+              {
+                data: 'tph2'
+              },
+              {
+                data: 'jalan2'
+              },
+              {
+                data: 'bin2'
+              },
+              {
+                data: 'karung2'
+              },
+
+              {
+                data: 'tot_brd2'
+              },
+              {
+                data: 'skor_brd2'
+              },
+              {
+                data: 'buah2'
+              },
+              {
+                data: 'restan2'
+              },
+              {
+                data: 'tod_jjg2'
+              },
+              {
+                data: 'skor_janjang2'
+              },
+
+
+
+              {
+                data: 'tph3'
+              },
+              {
+                data: 'jalan3'
+              },
+              {
+                data: 'bin3'
+              },
+              {
+                data: 'karung3'
+              },
+
+              {
+                data: 'tot_brd3'
+              },
+              {
+                data: 'skor_brd3'
+              },
+              {
+                data: 'buah3'
+              },
+              {
+                data: 'restan3'
+              },
+              {
+                data: 'tod_jjg3'
+              },
+              {
+                data: 'skor_janjang3'
+              },
+
+
+              {
+                data: 'tph4'
+              },
+              {
+                data: 'jalan4'
+              },
+              {
+                data: 'bin4'
+              },
+              {
+                data: 'karung4'
+              },
+
+              {
+                data: 'tot_brd4'
+              },
+              {
+                data: 'skor_brd4'
+              },
+              {
+                data: 'buah4'
+              },
+              {
+                data: 'restan4'
+              },
+              {
+                data: 'tod_jjg4'
+              },
+              {
+                data: 'skor_janjang4'
+              },
+
+
+              {
+                data: 'tph5'
+              },
+              {
+                data: 'jalan5'
+              },
+              {
+                data: 'bin5'
+              },
+              {
+                data: 'karung5'
+              },
+
+              {
+                data: 'tot_brd5'
+              },
+              {
+                data: 'skor_brd5'
+              },
+              {
+                data: 'buah5'
+              },
+              {
+                data: 'restan5'
+              },
+              {
+                data: 'tod_jjg5'
+              },
+              {
+                data: 'skor_janjang5'
+              },
+
+
+              {
+                data: 'tph6'
+              },
+              {
+                data: 'jalan6'
+              },
+              {
+                data: 'bin6'
+              },
+              {
+                data: 'karung6'
+              },
+
+              {
+                data: 'tot_brd6'
+              },
+              {
+                data: 'skor_brd6'
+              },
+              {
+                data: 'buah6'
+              },
+              {
+                data: 'restan6'
+              },
+              {
+                data: 'tod_jjg6'
+              },
+              {
+                data: 'skor_janjang6'
+              },
+
+
+              {
+                data: 'tph7'
+              },
+              {
+                data: 'jalan7'
+              },
+              {
+                data: 'bin7'
+              },
+              {
+                data: 'karung7'
+              },
+
+              {
+                data: 'tot_brd7'
+              },
+              {
+                data: 'skor_brd7'
+              },
+              {
+                data: 'buah7'
+              },
+              {
+                data: 'restan7'
+              },
+              {
+                data: 'tod_jjg7'
+              },
+              {
+                data: 'skor_janjang7'
+              },
+
+              {
+                data: 'tph8'
+              },
+              {
+                data: 'jalan8'
+              },
+              {
+                data: 'bin8'
+              },
+              {
+                data: 'karung8'
+              },
+
+              {
+                data: 'tot_brd8'
+              },
+              {
+                data: 'skor_brd8'
+              },
+              {
+                data: 'buah8'
+              },
+              {
+                data: 'restan8'
+              },
+              {
+                data: 'tod_jjg8'
+              },
+              {
+                data: 'skor_janjang8'
+              },
+
+              {
+                data: 'total_score'
+              },
+
+              {
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var totalScoreValue = parseFloat(data);
+                  var kategori = '';
+
+                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
+                    kategori = 'BAD';
+                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
+                    kategori = 'BETTER';
+                  } else if (totalScoreValue >= 50) {
+                    kategori = 'GOOD';
+                  }
+
+                  return kategori;
+                }
+              }
+
+            ],
+            "createdRow": function(row, data, dataIndex) {
+              // Assuming 'data' contains the data for each row
+              var afdValue = data['afd']; // Replace with the correct column name or data source
+              var totalScoreValue = parseFloat(data['total_score']); // Convert total_score to a number
+
+              // Check if the 'afd' value is 'EST' and set background color to blue
+              if (afdValue === 'EST') {
+                $(row).css('background-color', '#b0d48c');
+              }
+
+              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+                $(row).find('td:eq(82)').css('background-color', 'red');
+                $(row).find('td:eq(83)').css('background-color', 'red');
+              }
+
+              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
+                $(row).find('td:eq(82)').css('background-color', 'yellow');
+                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              }
+
+              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
+                $(row).find('td:eq(82)').css('background-color', 'green');
+                $(row).find('td:eq(83)').css('background-color', 'green');
+              }
+            }
+          });
+          datatableweek2.clear().rows.add(parseResult['week2']).draw();
+
+
+          var datatableweek3 = $('#newweek3').DataTable({
+            columns: [{
+                data: 'est'
+              },
+              {
+                data: 'afd'
+              },
+
+              {
+                data: 'tph1'
+              },
+              {
+                data: 'jalan1'
+              },
+              {
+                data: 'bin1'
+              },
+              {
+                data: 'karung1'
+              },
+
+              {
+                data: 'tot_brd1'
+              },
+              {
+                data: 'skor_brd1'
+              },
+              {
+                data: 'buah1'
+              },
+              {
+                data: 'restan1'
+              },
+              {
+                data: 'tod_jjg1'
+              },
+              {
+                data: 'skor_janjang1'
+              },
+
+
+              {
+                data: 'tph2'
+              },
+              {
+                data: 'jalan2'
+              },
+              {
+                data: 'bin2'
+              },
+              {
+                data: 'karung2'
+              },
+
+              {
+                data: 'tot_brd2'
+              },
+              {
+                data: 'skor_brd2'
+              },
+              {
+                data: 'buah2'
+              },
+              {
+                data: 'restan2'
+              },
+              {
+                data: 'tod_jjg2'
+              },
+              {
+                data: 'skor_janjang2'
+              },
+
+
+
+              {
+                data: 'tph3'
+              },
+              {
+                data: 'jalan3'
+              },
+              {
+                data: 'bin3'
+              },
+              {
+                data: 'karung3'
+              },
+
+              {
+                data: 'tot_brd3'
+              },
+              {
+                data: 'skor_brd3'
+              },
+              {
+                data: 'buah3'
+              },
+              {
+                data: 'restan3'
+              },
+              {
+                data: 'tod_jjg3'
+              },
+              {
+                data: 'skor_janjang3'
+              },
+
+
+              {
+                data: 'tph4'
+              },
+              {
+                data: 'jalan4'
+              },
+              {
+                data: 'bin4'
+              },
+              {
+                data: 'karung4'
+              },
+
+              {
+                data: 'tot_brd4'
+              },
+              {
+                data: 'skor_brd4'
+              },
+              {
+                data: 'buah4'
+              },
+              {
+                data: 'restan4'
+              },
+              {
+                data: 'tod_jjg4'
+              },
+              {
+                data: 'skor_janjang4'
+              },
+
+
+              {
+                data: 'tph5'
+              },
+              {
+                data: 'jalan5'
+              },
+              {
+                data: 'bin5'
+              },
+              {
+                data: 'karung5'
+              },
+
+              {
+                data: 'tot_brd5'
+              },
+              {
+                data: 'skor_brd5'
+              },
+              {
+                data: 'buah5'
+              },
+              {
+                data: 'restan5'
+              },
+              {
+                data: 'tod_jjg5'
+              },
+              {
+                data: 'skor_janjang5'
+              },
+
+
+              {
+                data: 'tph6'
+              },
+              {
+                data: 'jalan6'
+              },
+              {
+                data: 'bin6'
+              },
+              {
+                data: 'karung6'
+              },
+
+              {
+                data: 'tot_brd6'
+              },
+              {
+                data: 'skor_brd6'
+              },
+              {
+                data: 'buah6'
+              },
+              {
+                data: 'restan6'
+              },
+              {
+                data: 'tod_jjg6'
+              },
+              {
+                data: 'skor_janjang6'
+              },
+
+
+              {
+                data: 'tph7'
+              },
+              {
+                data: 'jalan7'
+              },
+              {
+                data: 'bin7'
+              },
+              {
+                data: 'karung7'
+              },
+
+              {
+                data: 'tot_brd7'
+              },
+              {
+                data: 'skor_brd7'
+              },
+              {
+                data: 'buah7'
+              },
+              {
+                data: 'restan7'
+              },
+              {
+                data: 'tod_jjg7'
+              },
+              {
+                data: 'skor_janjang7'
+              },
+
+              {
+                data: 'tph8'
+              },
+              {
+                data: 'jalan8'
+              },
+              {
+                data: 'bin8'
+              },
+              {
+                data: 'karung8'
+              },
+
+              {
+                data: 'tot_brd8'
+              },
+              {
+                data: 'skor_brd8'
+              },
+              {
+                data: 'buah8'
+              },
+              {
+                data: 'restan8'
+              },
+              {
+                data: 'tod_jjg8'
+              },
+              {
+                data: 'skor_janjang8'
+              },
+
+              {
+                data: 'total_score'
+              },
+
+              {
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var totalScoreValue = parseFloat(data);
+                  var kategori = '';
+
+                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
+                    kategori = 'BAD';
+                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
+                    kategori = 'BETTER';
+                  } else if (totalScoreValue >= 50) {
+                    kategori = 'GOOD';
+                  }
+
+                  return kategori;
+                }
+              }
+
+            ],
+            "createdRow": function(row, data, dataIndex) {
+              // Assuming 'data' contains the data for each row
+              var afdValue = data['afd']; // Replace with the correct column name or data source
+              var totalScoreValue = parseFloat(data['total_score']); // Convert total_score to a number
+
+              // Check if the 'afd' value is 'EST' and set background color to blue
+              if (afdValue === 'EST') {
+                $(row).css('background-color', '#b0d48c');
+              }
+
+              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+                $(row).find('td:eq(82)').css('background-color', 'red');
+                $(row).find('td:eq(83)').css('background-color', 'red');
+              }
+
+              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
+                $(row).find('td:eq(82)').css('background-color', 'yellow');
+                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              }
+
+              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
+                $(row).find('td:eq(82)').css('background-color', 'green');
+                $(row).find('td:eq(83)').css('background-color', 'green');
+              }
+            }
+          });
+          datatableweek3.clear().rows.add(parseResult['week3']).draw();
+
+          var datatableweek4 = $('#newweek4').DataTable({
+            columns: [{
+                data: 'est'
+              },
+              {
+                data: 'afd'
+              },
+
+              {
+                data: 'tph1'
+              },
+              {
+                data: 'jalan1'
+              },
+              {
+                data: 'bin1'
+              },
+              {
+                data: 'karung1'
+              },
+
+              {
+                data: 'tot_brd1'
+              },
+              {
+                data: 'skor_brd1'
+              },
+              {
+                data: 'buah1'
+              },
+              {
+                data: 'restan1'
+              },
+              {
+                data: 'tod_jjg1'
+              },
+              {
+                data: 'skor_janjang1'
+              },
+
+
+              {
+                data: 'tph2'
+              },
+              {
+                data: 'jalan2'
+              },
+              {
+                data: 'bin2'
+              },
+              {
+                data: 'karung2'
+              },
+
+              {
+                data: 'tot_brd2'
+              },
+              {
+                data: 'skor_brd2'
+              },
+              {
+                data: 'buah2'
+              },
+              {
+                data: 'restan2'
+              },
+              {
+                data: 'tod_jjg2'
+              },
+              {
+                data: 'skor_janjang2'
+              },
+
+
+
+              {
+                data: 'tph3'
+              },
+              {
+                data: 'jalan3'
+              },
+              {
+                data: 'bin3'
+              },
+              {
+                data: 'karung3'
+              },
+
+              {
+                data: 'tot_brd3'
+              },
+              {
+                data: 'skor_brd3'
+              },
+              {
+                data: 'buah3'
+              },
+              {
+                data: 'restan3'
+              },
+              {
+                data: 'tod_jjg3'
+              },
+              {
+                data: 'skor_janjang3'
+              },
+
+
+              {
+                data: 'tph4'
+              },
+              {
+                data: 'jalan4'
+              },
+              {
+                data: 'bin4'
+              },
+              {
+                data: 'karung4'
+              },
+
+              {
+                data: 'tot_brd4'
+              },
+              {
+                data: 'skor_brd4'
+              },
+              {
+                data: 'buah4'
+              },
+              {
+                data: 'restan4'
+              },
+              {
+                data: 'tod_jjg4'
+              },
+              {
+                data: 'skor_janjang4'
+              },
+
+
+              {
+                data: 'tph5'
+              },
+              {
+                data: 'jalan5'
+              },
+              {
+                data: 'bin5'
+              },
+              {
+                data: 'karung5'
+              },
+
+              {
+                data: 'tot_brd5'
+              },
+              {
+                data: 'skor_brd5'
+              },
+              {
+                data: 'buah5'
+              },
+              {
+                data: 'restan5'
+              },
+              {
+                data: 'tod_jjg5'
+              },
+              {
+                data: 'skor_janjang5'
+              },
+
+
+              {
+                data: 'tph6'
+              },
+              {
+                data: 'jalan6'
+              },
+              {
+                data: 'bin6'
+              },
+              {
+                data: 'karung6'
+              },
+
+              {
+                data: 'tot_brd6'
+              },
+              {
+                data: 'skor_brd6'
+              },
+              {
+                data: 'buah6'
+              },
+              {
+                data: 'restan6'
+              },
+              {
+                data: 'tod_jjg6'
+              },
+              {
+                data: 'skor_janjang6'
+              },
+
+
+              {
+                data: 'tph7'
+              },
+              {
+                data: 'jalan7'
+              },
+              {
+                data: 'bin7'
+              },
+              {
+                data: 'karung7'
+              },
+
+              {
+                data: 'tot_brd7'
+              },
+              {
+                data: 'skor_brd7'
+              },
+              {
+                data: 'buah7'
+              },
+              {
+                data: 'restan7'
+              },
+              {
+                data: 'tod_jjg7'
+              },
+              {
+                data: 'skor_janjang7'
+              },
+
+              {
+                data: 'tph8'
+              },
+              {
+                data: 'jalan8'
+              },
+              {
+                data: 'bin8'
+              },
+              {
+                data: 'karung8'
+              },
+
+              {
+                data: 'tot_brd8'
+              },
+              {
+                data: 'skor_brd8'
+              },
+              {
+                data: 'buah8'
+              },
+              {
+                data: 'restan8'
+              },
+              {
+                data: 'tod_jjg8'
+              },
+              {
+                data: 'skor_janjang8'
+              },
+
+              {
+                data: 'total_score'
+              },
+
+              {
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var totalScoreValue = parseFloat(data);
+                  var kategori = '';
+
+                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
+                    kategori = 'BAD';
+                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
+                    kategori = 'BETTER';
+                  } else if (totalScoreValue >= 50) {
+                    kategori = 'GOOD';
+                  }
+
+                  return kategori;
+                }
+              }
+
+            ],
+            "createdRow": function(row, data, dataIndex) {
+              // Assuming 'data' contains the data for each row
+              var afdValue = data['afd']; // Replace with the correct column name or data source
+              var totalScoreValue = parseFloat(data['total_score']); // Convert total_score to a number
+
+              // Check if the 'afd' value is 'EST' and set background color to blue
+              if (afdValue === 'EST') {
+                $(row).css('background-color', '#b0d48c');
+              }
+
+              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+                $(row).find('td:eq(82)').css('background-color', 'red');
+                $(row).find('td:eq(83)').css('background-color', 'red');
+              }
+
+              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
+                $(row).find('td:eq(82)').css('background-color', 'yellow');
+                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              }
+
+              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
+                $(row).find('td:eq(82)').css('background-color', 'green');
+                $(row).find('td:eq(83)').css('background-color', 'green');
+              }
+            }
+          });
+          datatableweek4.clear().rows.add(parseResult['week4']).draw();
+
+          var datatableweek4 = $('#newweek5').DataTable({
+            columns: [{
+                data: 'est'
+              },
+              {
+                data: 'afd'
+              },
+
+              {
+                data: 'tph1'
+              },
+              {
+                data: 'jalan1'
+              },
+              {
+                data: 'bin1'
+              },
+              {
+                data: 'karung1'
+              },
+
+              {
+                data: 'tot_brd1'
+              },
+              {
+                data: 'skor_brd1'
+              },
+              {
+                data: 'buah1'
+              },
+              {
+                data: 'restan1'
+              },
+              {
+                data: 'tod_jjg1'
+              },
+              {
+                data: 'skor_janjang1'
+              },
+
+
+              {
+                data: 'tph2'
+              },
+              {
+                data: 'jalan2'
+              },
+              {
+                data: 'bin2'
+              },
+              {
+                data: 'karung2'
+              },
+
+              {
+                data: 'tot_brd2'
+              },
+              {
+                data: 'skor_brd2'
+              },
+              {
+                data: 'buah2'
+              },
+              {
+                data: 'restan2'
+              },
+              {
+                data: 'tod_jjg2'
+              },
+              {
+                data: 'skor_janjang2'
+              },
+
+
+
+              {
+                data: 'tph3'
+              },
+              {
+                data: 'jalan3'
+              },
+              {
+                data: 'bin3'
+              },
+              {
+                data: 'karung3'
+              },
+
+              {
+                data: 'tot_brd3'
+              },
+              {
+                data: 'skor_brd3'
+              },
+              {
+                data: 'buah3'
+              },
+              {
+                data: 'restan3'
+              },
+              {
+                data: 'tod_jjg3'
+              },
+              {
+                data: 'skor_janjang3'
+              },
+
+
+              {
+                data: 'tph4'
+              },
+              {
+                data: 'jalan4'
+              },
+              {
+                data: 'bin4'
+              },
+              {
+                data: 'karung4'
+              },
+
+              {
+                data: 'tot_brd4'
+              },
+              {
+                data: 'skor_brd4'
+              },
+              {
+                data: 'buah4'
+              },
+              {
+                data: 'restan4'
+              },
+              {
+                data: 'tod_jjg4'
+              },
+              {
+                data: 'skor_janjang4'
+              },
+
+
+              {
+                data: 'tph5'
+              },
+              {
+                data: 'jalan5'
+              },
+              {
+                data: 'bin5'
+              },
+              {
+                data: 'karung5'
+              },
+
+              {
+                data: 'tot_brd5'
+              },
+              {
+                data: 'skor_brd5'
+              },
+              {
+                data: 'buah5'
+              },
+              {
+                data: 'restan5'
+              },
+              {
+                data: 'tod_jjg5'
+              },
+              {
+                data: 'skor_janjang5'
+              },
+
+
+              {
+                data: 'tph6'
+              },
+              {
+                data: 'jalan6'
+              },
+              {
+                data: 'bin6'
+              },
+              {
+                data: 'karung6'
+              },
+
+              {
+                data: 'tot_brd6'
+              },
+              {
+                data: 'skor_brd6'
+              },
+              {
+                data: 'buah6'
+              },
+              {
+                data: 'restan6'
+              },
+              {
+                data: 'tod_jjg6'
+              },
+              {
+                data: 'skor_janjang6'
+              },
+
+
+              {
+                data: 'tph7'
+              },
+              {
+                data: 'jalan7'
+              },
+              {
+                data: 'bin7'
+              },
+              {
+                data: 'karung7'
+              },
+
+              {
+                data: 'tot_brd7'
+              },
+              {
+                data: 'skor_brd7'
+              },
+              {
+                data: 'buah7'
+              },
+              {
+                data: 'restan7'
+              },
+              {
+                data: 'tod_jjg7'
+              },
+              {
+                data: 'skor_janjang7'
+              },
+
+              {
+                data: 'tph8'
+              },
+              {
+                data: 'jalan8'
+              },
+              {
+                data: 'bin8'
+              },
+              {
+                data: 'karung8'
+              },
+
+              {
+                data: 'tot_brd8'
+              },
+              {
+                data: 'skor_brd8'
+              },
+              {
+                data: 'buah8'
+              },
+              {
+                data: 'restan8'
+              },
+              {
+                data: 'tod_jjg8'
+              },
+              {
+                data: 'skor_janjang8'
+              },
+
+              {
+                data: 'total_score'
+              },
+
+              {
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var totalScoreValue = parseFloat(data);
+                  var kategori = '';
+
+                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
+                    kategori = 'BAD';
+                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
+                    kategori = 'BETTER';
+                  } else if (totalScoreValue >= 50) {
+                    kategori = 'GOOD';
+                  }
+
+                  return kategori;
+                }
+              }
+
+            ],
+            "createdRow": function(row, data, dataIndex) {
+              // Assuming 'data' contains the data for each row
+              var afdValue = data['afd']; // Replace with the correct column name or data source
+              var totalScoreValue = parseFloat(data['total_score']); // Convert total_score to a number
+
+              // Check if the 'afd' value is 'EST' and set background color to blue
+              if (afdValue === 'EST') {
+                $(row).css('background-color', '#b0d48c');
+              }
+
+              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+                $(row).find('td:eq(82)').css('background-color', 'red');
+                $(row).find('td:eq(83)').css('background-color', 'red');
+              }
+
+              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
+                $(row).find('td:eq(82)').css('background-color', 'yellow');
+                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              }
+
+              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
+                $(row).find('td:eq(82)').css('background-color', 'green');
+                $(row).find('td:eq(83)').css('background-color', 'green');
+              }
+            }
+          });
+          datatableweek4.clear().rows.add(parseResult['week5']).draw();
         }
       });
     }
+
+
 
     function changeClass() {
       var regSidak = document.getElementById('regionalSidak').value

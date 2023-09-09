@@ -3904,47 +3904,41 @@ class emplacementsController extends Controller
         // Now $mergedArray contains the merged and combined data
         // dd($mergedArray);
 
-        foreach ($mergedArray as $estKey => &$estValue) {
-            foreach ($estValue as $afdKey => &$afdValue) {
+        foreach ($mergedArray as $estKey => $estValue) {
+            foreach ($estValue as $afdKey => $afdValue) {
                 foreach ($afdValue as $key => $value) {
                     if (
                         isset($value['foto_temuan_lkng1']) && $value['foto_temuan_lkng1'] === '-' ||
                         isset($value['foto_temuan_rmh1']) && $value['foto_temuan_rmh1'] === '-' ||
                         isset($value['foto_temuan_lcp1']) && $value['foto_temuan_lcp1'] === '-'
                     ) {
-                        unset($afdValue[$key]);
+                        unset($mergedArray[$estKey][$afdKey][$key]);
                     }
                 }
             }
         }
 
+
+        // dd($mergedArray);
+
+
         // Re-index the arrays after unsetting elements
         $yourArray = array_map('array_values', $mergedArray);
 
-        // dd($yourArray, $mergedArray);
-        // Now $filteredHitungRmh will contain only the desired arrays
-        // Assuming your array is named $mergedArray
-        // dd($filter_rmh, $filter_lingkungan, $filter_landscape, $mergedArray);
+
         $newArray = [];
 
         foreach ($mergedArray as $estKey => $estValue) {
             foreach ($estValue as $afdKey => $afdValue) {
-
-
                 $combinedIndex = [
                     "est" => $estKey,
                     "afd" => $afdKey,
-
                     "foto_temuan" => [],
-
-
                 ];
 
 
                 foreach ($afdValue as $indexData) {
-                    // Combine the foto_temuan entries
-
-
+                    // dd($indexData);
                     foreach ($indexData as $key => $value) {
                         if (strpos($key, 'foto_temuan_rmh') === 0) {
                             $combinedIndex['foto_temuan'][] = $value . "-" . "rmh";
@@ -3966,7 +3960,8 @@ class emplacementsController extends Controller
             }
         }
 
-        // dd($newArray);
+
+        // dd($newArray, $mergedArray);
 
         $allPetugas = array();
 
@@ -4011,7 +4006,7 @@ class emplacementsController extends Controller
         $uniqueDate = array_unique($allDate);
 
 
-        // dd($uniqueDate);
+        // dd($mergedArray);
         // Step 3: Combine unique petugas names with ampersand (&)
         $combinedPetugas = implode(' & ', $uniquePetugas);
         $combinedAfd = implode(' & ', $unique);
@@ -4086,8 +4081,8 @@ class emplacementsController extends Controller
             }
             $arrayMerge['data_temuan'] = array_merge($arrayMerge['data_temuan'] ?? [], $data_temuan);
         }
-
         // dd($arrayMerge);
+
 
         $arrView = array();
 
