@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Illuminate\Support\Arr;
 use Nette\Utils\DateTime;
+use PhpParser\Node\Stmt\Foreach_;
 use Termwind\Components\Dd;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -272,6 +273,7 @@ class SidaktphController extends Controller
             $weekNumber++;
         }
 
+        // dd($weeks);
         $result = [];
 
         // Iterate through the original array
@@ -837,13 +839,17 @@ class SidaktphController extends Controller
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week1'])) {
                     $week1Data = $subValue['week1']; // Access "week1" data
-
+                    foreach ($weeks as $keywk => $value) if ($keywk == 1) {
+                        $start = $value['start'];
+                        $end = $value['end'];
+                    }
                     // week for afdeling 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test'
+                        'kategori' => 'Test',
+
                     ];
 
                     // Extract tphx values for keys 1 to 8 and flatten them
@@ -914,7 +920,10 @@ class SidaktphController extends Controller
                 'est' => $key,
                 'afd' => 'EST',
                 'kategori' => 'Test',
-                'total_score' => $skor_akhir
+                'total_score' => $skor_akhir,
+                'start' => $start,
+                'end' => $end,
+                'reg' => $regional,
             ];
             $skor_brd = 0;
             $skor_janjang = 0;
@@ -7052,22 +7061,17 @@ class SidaktphController extends Controller
     }
 
 
-    public function BasidakTph($est, $afd, $tanggal, $regional)
+    public function BasidakTph($est, $start, $last, $regional)
     {
-        // dd($est, $afd, $tanggal, $regional);
-        // $startDate = DateTime::createFromFormat('Y-m-d', $start);
-        // $endDate = clone $startDate;
-        // $endDate->modify('+6 days');
 
-        // $formattedStartDate = $startDate->format('d-m-Y');
-        // $formattedEndDate = $endDate->format('d-m-Y');
 
         $query = DB::connection('mysql2')->Table('sidak_tph')
             ->select('sidak_tph.*', 'estate.wil')
             ->join('estate', 'estate.est', '=', 'sidak_tph.est')
             ->where('sidak_tph.est', $est)
             // ->whereBetween('sidak_tph.datetime', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            // ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            ->whereBetween('sidak_tph.datetime', [$start, $last])
             ->get();
 
         $query = $query->groupBy(['afd']);
@@ -7096,15 +7100,16 @@ class SidaktphController extends Controller
             ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
             ->join('estate', 'estate.est', '=', 'sidak_tph.est') //kemudian di join untuk mengambil est perwilayah
             ->where('sidak_tph.est', $est)
-            ->where('sidak_tph.afd', $afd)
-            ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            // ->where('sidak_tph.afd', $afd)
+            // ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            ->whereBetween('sidak_tph.datetime', [$start, $last])
             ->get();
 
         $query2 = $query2->groupBy(function ($item) {
             return $item->blok;
         });
 
-        // dd($tanggal);
+        // dd($query2);
         $datas = array();
         $img = array();
         foreach ($query2 as $key => $value) {
@@ -7132,16 +7137,18 @@ class SidaktphController extends Controller
             ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
             ->join('estate', 'estate.est', '=', 'sidak_tph.est') //kemudian di join untuk mengambil est perwilayah
             ->where('sidak_tph.est', $est)
-            ->where('sidak_tph.afd', $afd)
-            ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            // ->where('sidak_tph.afd', $afd)
+            // ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            ->whereBetween('sidak_tph.datetime', [$start, $last])
             ->groupBy('sidak_tph.blok')
             ->orderBy('sidak_tph.blok', 'asc')
             ->get()->toArray();
 
         $arrView = array();
+        $afd = 'OB';
 
         $arrView['est'] =  $est;
-        $arrView['tanggal'] =  $tanggal;
+        $arrView['tanggal'] =  $start;
         $arrView['regional'] =  $regional;
         $arrView['afd'] =  $afd;
         $arrView['filter'] =  $unique_dates;
@@ -7172,14 +7179,22 @@ class SidaktphController extends Controller
             ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y") as tahun'))
             ->where('datetime', 'like', '%' . $dates . '%')
             ->where('sidak_tph.est', $estate)
-            ->where('sidak_tph.afd', $afd)
+            // ->where('sidak_tph.afd', $afd)
 
             ->orderBy('blok', 'asc')
             ->paginate($perPage, ['*'], 'page');
 
 
+        $sidak_tph2 = DB::connection('mysql2')->table('sidak_tph')
+            ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $dates . '%')
+            ->where('sidak_tph.est', $estate)
+            ->get();
+        $sidak_tph2 = json_decode($sidak_tph2, true);
+
         $arrView = array();
         $arrView['sidak_tph'] =  $sidak_tph;
+        $arrView['sidak_tph2'] =  $sidak_tph2;
         $arrView['tanggal'] =  $dates;
 
         // dd($sidak_tph);
@@ -7246,127 +7261,413 @@ class SidaktphController extends Controller
     public function pdfBAsidak(Request $request)
     {
         $est = $request->input('est');
-        $afd = $request->input('afdling');
-        $awal = $request->input('inputDates');
 
-        // dd($est, $afd, $awal);
-        // $start = '2023-04-03';
-        // $startDate = DateTime::createFromFormat('d-m-Y', $awal);
-        // $endDate = clone $startDate;
-        // $endDate->modify('+6 days');
+        // $afd = $request->input('afdling');
+        // $awal = $request->input('inputDates');
 
-        // $formattedStartDate = $startDate->format('d-m-Y');
-        // $formattedEndDate = $endDate->format('d-m-Y');
-
-        // dd($start, $endDate);
-        $query = DB::connection('mysql2')
+        $tanggal = $request->get('inputDates');
+        // $regional = $request->get('regional');
+        $ancakFA = DB::connection('mysql2')
             ->table('sidak_tph')
-            ->select('sidak_tph.*', 'estate.wil')
-            ->join('estate', 'estate.est', '=', 'sidak_tph.est')
+            ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal')) // Change the format to "%Y-%m-%d"
             ->where('sidak_tph.est', $est)
-            ->where('sidak_tph.afd', $afd)
-            // ->whereBetween('sidak_tph.datetime', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->where('sidak_tph.datetime', 'like', '%' . $awal . '%')
-            ->orderBy('blok', 'asc')
+            ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
+            ->orderBy('afd', 'asc')
+            ->orderBy('status', 'asc')
             ->get();
 
+        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'status', 'tanggal', 'blok']);
+        $ancakFA = json_decode($ancakFA, true);
 
-        $query = $query->groupBy(['afd', 'blok']);
-        // dd($query);
-        $query = json_decode($query, true);
-        // dd($query);
+        $dateString = $tanggal;
+        $dateParts = date_parse($dateString);
+        $year = $dateParts['year'];
+        $month = $dateParts['month'];
 
-        $pdf = array();
-        foreach ($query as $key => $value) {
-            $bloks = 0;
-            foreach ($value as $key2 => $value2) {
-                $sum_bt_tph = 0;
-                $sum_bt_jalan = 0;
-                $sum_bt_bin = 0;
-                $sum_jum_karung = 0;
-                $sum_buah_tinggal = 0;
-                $sum_restan_unreported = 0;
-                $luas_blok = 0;
-                $bloks = count($value2);
-                foreach ($value2 as $key3 => $value3) {
-                    $sum_bt_tph += $value3['bt_tph'];
-                    $sum_bt_jalan += $value3['bt_jalan'];
-                    $sum_bt_bin += $value3['bt_bin'];
+        // dd($ancakFA);
 
-                    $sum_jum_karung += $value3['jum_karung'];
-                    $sum_buah_tinggal += $value3['buah_tinggal'];
-                    $sum_restan_unreported += $value3['restan_unreported'];
-                    $luas_bk =  $value2[0]['luas'];
+        $year = $year; // Replace with the desired year
+        $month = $month;   // Replace with the desired month (September in this example)
+
+        $weeks = [];
+        $firstDayOfMonth = strtotime("$year-$month-01");
+        $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
+
+        $weekNumber = 1;
+        $startDate = $firstDayOfMonth;
+        $endDate = $startDate;
+
+        while ($startDate <= $lastDayOfMonth) {
+            $endDate = strtotime("+6 days", $endDate);
+
+            if ($endDate > $lastDayOfMonth) {
+                $endDate = $lastDayOfMonth;
+            }
+
+            $weeks[$weekNumber] = [
+                'start' => date('Y-m-d', $startDate), // Modify date format
+                'end' => date('Y-m-d', $endDate),     // Modify date format
+            ];
+
+            $startDate = strtotime("+1 day", $endDate);
+            $weekNumber++;
+        }
+
+        // dd($weeks);
+        $result = [];
+
+        // Iterate through the original array
+        foreach ($ancakFA as $mainKey => $mainValue) {
+            $result[$mainKey] = [];
+
+            foreach ($mainValue as $subKey => $subValue) {
+                $result[$mainKey][$subKey] = [];
+
+                foreach ($subValue as $dateKey => $dateValue) {
+                    // Remove 'H+' prefix if it exists
+                    $numericIndex = is_numeric($dateKey) ? $dateKey : (strpos($dateKey, 'H+') === 0 ? substr($dateKey, 2) : $dateKey);
+
+                    if (!isset($result[$mainKey][$subKey][$numericIndex])) {
+                        $result[$mainKey][$subKey][$numericIndex] = [];
+                    }
+
+                    foreach ($dateValue as $statusKey => $statusValue) {
+                        // Handle 'H+' prefix in status
+                        $statusIndex = is_numeric($statusKey) ? $statusKey : (strpos($statusKey, 'H+') === 0 ? substr($statusKey, 2) : $statusKey);
+
+                        if (!isset($result[$mainKey][$subKey][$numericIndex][$statusIndex])) {
+                            $result[$mainKey][$subKey][$numericIndex][$statusIndex] = [];
+                        }
+
+                        foreach ($statusValue as $blokKey => $blokValue) {
+                            $result[$mainKey][$subKey][$numericIndex][$statusIndex][$blokKey] = $blokValue;
+                        }
+                    }
                 }
-                $pdf[$key][$key2]['blok'] = $bloks;
-                $pdf[$key][$key2]['bt_tph'] = $sum_bt_tph;
-                $pdf[$key][$key2]['bt_blok'] = $bloks != 0 ? round($sum_bt_tph / $bloks, 2) : 0;
-                $pdf[$key][$key2]['bt_jalan'] = $sum_bt_jalan;
-                $pdf[$key][$key2]['jalan_blok'] = $bloks != 0 ? round($sum_bt_jalan / $bloks, 2) : 0;
-                $pdf[$key][$key2]['bt_bin'] = $sum_bt_bin;
-                $pdf[$key][$key2]['bin_blok'] = $bloks != 0 ? round($sum_bt_bin / $bloks, 2) : 0;
-                $pdf[$key][$key2]['jum_karung'] = $sum_jum_karung;
-                $pdf[$key][$key2]['blok_karung'] = $bloks != 0 ? round($sum_jum_karung / $bloks, 2) : 0;
-                $pdf[$key][$key2]['buah_tinggal'] = $sum_buah_tinggal;
-                $pdf[$key][$key2]['blok_buah'] = $bloks != 0 ? round($sum_buah_tinggal / $bloks, 2) : 0;
-                $pdf[$key][$key2]['restan_unreported'] = $sum_restan_unreported;
-                $pdf[$key][$key2]['blok_restanx'] = $bloks != 0 ? round($sum_restan_unreported / $bloks, 2) : 0;
-                $pdf[$key][$key2]['TotalBRD'] = $sum_bt_bin + $sum_bt_jalan + $sum_bt_tph;
-                $pdf[$key][$key2]['total_blok'] = $bloks != 0 ? round(($sum_bt_bin + $sum_bt_jalan + $sum_bt_tph) / $bloks, 2) : 0;
-                $pdf[$key][$key2]['luas'] = $luas_bk;
             }
         }
 
+        // result by statis week 
+        $newResult = [];
 
+        foreach ($result as $key => $value) {
+            $newResult[$key] = [];
 
-        $total_pdf = array();
+            foreach ($value as $estKey => $est) {
+                $newResult[$key][$estKey] = [];
 
-        foreach ($pdf as $key => $value1) {
-            $dtBlok = 0;
-            $btTPH = 0;
-            $btJlan = 0;
-            $btBin = 0;
-            $jumKR = 0;
-            $bhTGL = 0;
-            $rsUNR  = 0;
-            $luas_blok = 0;
-            foreach ($value1 as $key1 => $value1) {
-                $luas_blok += $value1['luas'];
-                $dtBlok += $value1['blok'];
-                $btTPH += $value1['bt_tph'];
-                $btJlan += $value1['bt_jalan'];
-                $btBin += $value1['bt_bin'];
-                $jumKR += $value1['jum_karung'];
-                $bhTGL += $value1['buah_tinggal'];
-                $rsUNR += $value1['restan_unreported'];
+                foreach ($est as $statusKey => $status) {
+                    $newResult[$key][$estKey][$statusKey] = [];
+
+                    foreach ($weeks as $weekKey => $week) {
+                        $newStatus = [];
+
+                        foreach ($status as $date => $data) {
+                            if (strtotime($date) >= strtotime($week["start"]) && strtotime($date) <= strtotime($week["end"])) {
+                                $newStatus[$date] = $data;
+                            }
+                        }
+
+                        if (!empty($newStatus)) {
+                            $newResult[$key][$estKey][$statusKey]["week" . ($weekKey + 1)] = $newStatus;
+                        }
+                    }
+                }
             }
-            $total_pdf[$key]['luas_blok'] = $luas_blok;
-            $total_pdf[$key]['jum_blok'] = $dtBlok;
-            $total_pdf[$key]['bt_tph'] = $btTPH;
-            $total_pdf[$key]['tph_blok'] = $dtBlok != 0 ? round($btTPH / $dtBlok, 2) : 0;
-            $total_pdf[$key]['bt_jalan'] = $btJlan;
-            $total_pdf[$key]['jalan_blok'] = $dtBlok != 0 ? round($btJlan / $dtBlok, 2) : 0;
-            $total_pdf[$key]['bt_bin'] = $btBin;
-            $total_pdf[$key]['bin_blok'] = $dtBlok != 0 ? round($btBin / $dtBlok, 2) : 0;
-            $total_pdf[$key]['TotalBRD'] = $btTPH + $btJlan + $btBin;
-            $total_pdf[$key]['Total_blok'] = $dtBlok != 0 ? round(($btTPH + $btJlan + $btBin) / $dtBlok, 2) : 0;
-            $total_pdf[$key]['jum_karung'] = $jumKR;
-            $total_pdf[$key]['blok_karung'] = $dtBlok != 0 ? round($jumKR / $dtBlok, 2) : 0;
-            $total_pdf[$key]['buah_tinggal'] = $bhTGL;
-            $total_pdf[$key]['blok_buah'] = $dtBlok != 0 ? round($bhTGL / $dtBlok, 2) : 0;
-            $total_pdf[$key]['restan_unreported'] = $rsUNR;
-            $total_pdf[$key]['blok_restanx'] = $dtBlok != 0 ? round($rsUNR / $dtBlok, 2) : 0;
         }
+
+        // dd($newResult);
+
+        // result by week status 
+        $WeekStatus = [];
+
+        foreach ($result as $key => $value) {
+            $WeekStatus[$key] = [];
+
+            foreach ($value as $estKey => $est) {
+                $WeekStatus[$key][$estKey] = [];
+
+                foreach ($weeks as $weekKey => $week) {
+                    $WeekStatus[$key][$estKey]["week" . ($weekKey + 1)] = []; // Note: Use "week" . ($weekKey + 1) instead of "week" . ($weekKey + 0)
+
+                    foreach ($est as $statusKey => $status) {
+                        $newStatus = [];
+
+                        foreach ($status as $date => $data) {
+                            if (strtotime($date) >= strtotime($week["start"]) && strtotime($date) <= strtotime($week["end"])) {
+                                $newStatus[$date] = $data;
+                            }
+                        }
+
+                        if (!empty($newStatus)) {
+                            $WeekStatus[$key][$estKey]["week" . ($weekKey + 1)][$statusKey] = $newStatus;
+                        }
+                    }
+
+                    // Remove the week if it's empty
+                    if (empty($WeekStatus[$key][$estKey]["week" . ($weekKey + 1)])) {
+                        unset($WeekStatus[$key][$estKey]["week" . ($weekKey + 1)]);
+                    }
+                }
+            }
+        }
+
+        // dd($WeekStatus);
+
+
+
+        // dd($WeekStatus);
+
+        $newDefaultWeek = [];
+
+        foreach ($WeekStatus as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $key1 => $value1) {
+                    if (is_array($value1)) {
+                        foreach ($value1 as $subKey => $subValue) {
+                            if (is_array($subValue)) {
+                                // Check if both key 0 and key 1 exist
+                                $hasKeyZero = isset($subValue[0]);
+                                $hasKeyOne = isset($subValue[1]);
+
+                                // Merge key 0 into key 1
+                                if ($hasKeyZero && $hasKeyOne) {
+                                    $subValue[1] = array_merge_recursive((array)$subValue[1], (array)$subValue[0]);
+                                    unset($subValue[0]);
+                                } elseif ($hasKeyZero && !$hasKeyOne) {
+                                    // Create key 1 and merge key 0 into it
+                                    $subValue[1] = $subValue[0];
+                                    unset($subValue[0]);
+                                }
+
+                                // Check if keys 1 through 7 don't exist, add them with a default value of 0
+                                for ($i = 1; $i <= 7; $i++) {
+                                    if (!isset($subValue[$i])) {
+                                        $subValue[$i] = 0;
+                                    }
+                                }
+
+                                // Ensure key 8 exists, and if not, create it with a default value of an empty array
+                                if (!isset($subValue[8])) {
+                                    $subValue[8] = 0;
+                                }
+
+                                // Check if keys higher than 8 exist, merge them into index 8
+                                for ($i = 9; $i <= 100; $i++) {
+                                    if (isset($subValue[$i])) {
+                                        $subValue[8] = array_merge_recursive((array)$subValue[8], (array)$subValue[$i]);
+                                        unset($subValue[$i]);
+                                    }
+                                }
+                            }
+                            $newDefaultWeek[$key][$key1][$subKey] = $subValue;
+                        }
+                    }
+                }
+            }
+        }
+        // dd($newDefaultWeek['Plasma1']['WIL-III']);
+        // dd($newDefaultWeek);
+
+        function removeZeroFromDatetime3(&$array)
+        {
+            foreach ($array as $key => &$value) {
+                if (is_array($value)) {
+                    foreach ($value as $key1 => &$value2) {
+                        if (is_array($value2)) {
+                            foreach ($value2 as $key2 => &$value3) {
+                                if (is_array($value3)) {
+                                    foreach ($value3 as $key3 => &$value4) if (is_array($value4)) {
+                                        foreach ($value4 as $key4 => $value5) {
+                                            if ($key4 === 0 && $value5 === 0) {
+                                                unset($value4[$key4]); // Unset the key 0 => 0 within the current nested array
+                                            }
+                                            removeZeroFromDatetime3($value4);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        removeZeroFromDatetime3($newDefaultWeek);
+        // dd($newDefaultWeek);
+        $calculation = [];
+
+        foreach ($newDefaultWeek as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                if (is_array($value1)) {
+                    $totalKeys = [];
+
+                    foreach ($value1 as $key2 => $value2) {
+                        if (is_array($value2)) {
+                            foreach ($value2 as $key3 => $value3) {
+                                if (is_array($value3)) {
+                                    foreach ($value3 as $key4 => $value4) {
+                                        if (is_array($value4)) {
+                                            $totalKeys = array_merge($totalKeys, array_keys($value4));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Concatenate the keys with a period (".") separator
+                    $calculation[$key][$key1] = implode('.', array_values(array_unique($totalKeys)));
+                }
+            }
+        }
+
+        $hitung = [];
+        // dd($newDefaultWeek);
+
+        foreach ($newDefaultWeek as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value2) {
+                    foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+                        $brd2 = 0;
+                        $janjang2 = 0;
+                        $luas2 = 0;
+                        foreach ($value3 as $key4 => $value4) if (is_array($value4)) {
+                            $brd1 = 0;
+                            $janjang1 = 0;
+                            $luas1 = 0;
+                            foreach ($value4 as $key5 => $value5) {
+                                $bt_tph  = 0;
+                                $bt_jalan = 0;
+                                $bt_bin  = 0;
+                                $jum_karung = 0;
+                                $buah_tinggal = 0;
+                                $restan_unreported = 0;
+                                $brd = 0;
+                                $janjang = 0;
+                                $total_brondolan = 0;
+                                $total_janjang = 0;
+                                // dd($key3);
+                                foreach ($value5 as $key6 => $value6) {
+                                    $bt_tph += $value6['bt_tph'];
+                                    $bt_jalan += $value6['bt_jalan'];
+                                    $bt_bin += $value6['bt_bin'];
+                                    $jum_karung += $value6['jum_karung'];
+                                    $buah_tinggal += $value6['buah_tinggal'];
+                                    $restan_unreported += $value6['restan_unreported'];
+                                    $luas = $value6['luas'];
+                                }
+
+                                $hitung[$key][$key1][$key2][$key3][$key4][$key5]['brondolan_tph'] = $bt_tph;
+                                $hitung[$key][$key1][$key2][$key3][$key4][$key5]['brondolan_jalan'] = $bt_jalan;
+                                $hitung[$key][$key1][$key2][$key3][$key4][$key5]['brondolan_bin'] = $bt_bin;
+                                $hitung[$key][$key1][$key2][$key3][$key4][$key5]['brondolan_karung'] = $jum_karung;
+                                $hitung[$key][$key1][$key2][$key3][$key4][$key5]['luas'] = $luas;
+                                $hitung[$key][$key1][$key2][$key3][$key4][$key5]['janjnang_tinggal'] = $buah_tinggal;
+                                $hitung[$key][$key1][$key2][$key3][$key4][$key5]['janjang_unreported'] = $restan_unreported;
+
+
+                                $brd = $bt_bin + $bt_jalan + $bt_tph + $jum_karung;
+                                $janjang = $restan_unreported + $buah_tinggal;
+                                $brd1 += $brd;
+                                $janjang1 += $janjang;
+                                $luas1 += $luas;
+                            }
+
+                            $hitung[$key][$key1][$key2][$key3][$key4]['tot_janjnag'] = $janjang1;
+                            $hitung[$key][$key1][$key2][$key3][$key4]['tod_brd'] = $brd1;
+                            $hitung[$key][$key1][$key2][$key3][$key4]['tod_luas'] = $luas1;
+
+
+                            $janjang2 += $janjang1;
+                            $brd2 += $brd1;
+                            $luas2 += $luas1;
+                        }
+
+                        $status_panen = $key3;
+                        [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        $total_brondolan =  round(($brd2) * $panen_brd / 100, 1);
+                        $total_janjang =  round(($janjang2) * $panen_jjg / 100, 1);
+                        $hitung[$key][$key1][$key2][$key3]['tot_janjnag'] = $janjang2;
+                        $hitung[$key][$key1][$key2][$key3]['tod_brd'] = $brd2;
+                        $hitung[$key][$key1][$key2][$key3]['tod_luas'] = $luas2;
+                        $hitung[$key][$key1][$key2][$key3]['skor_brd'] = $total_brondolan;
+                        $hitung[$key][$key1][$key2][$key3]['skor_jjg'] = $total_janjang;
+                        $hitung[$key][$key1][$key2][$key3]['avg'] = 1;
+                    } else {
+                        $hitung[$key][$key1][$key2][$key3]['tot_janjnag'] = 0;
+                        $hitung[$key][$key1][$key2][$key3]['tod_brd'] = 0;
+                        $hitung[$key][$key1][$key2][$key3]['tod_luas'] = 0;
+                        $hitung[$key][$key1][$key2][$key3]['skor_brd'] = 0;
+                        $hitung[$key][$key1][$key2][$key3]['skor_jjg'] = 0;
+                        $hitung[$key][$key1][$key2][$key3]['avg'] = 0;
+                    }
+                }
+            }
+        }
+
+        $final = [];
+        foreach ($hitung as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                foreach ($value1 as $key2 => $value2) {
+                    $tot_luas = 0;
+                    $tot_janjnag = 0;
+                    $tod_brd = 0;
+                    $avg = 0;
+                    foreach ($value2 as $key3 => $value3) {
+                        foreach ($calculation as $keyx => $value4) if ($key == $keyx) {
+                            foreach ($value4 as $keyx1 => $value5) if ($key1 == $keyx1) {
+                                $blok = $value5;
+                            } # code...
+                        }
+                        $weekestate = [
+                            'est' => $key,
+                            'afd' => $key1,
+                            'status' => $key3,
+                            'janjang' => $value3['tot_janjnag'],
+                            'brd' => $value3['tod_brd'],
+                            'luas' => $value3['tod_luas'],
+                            'skor_brd' => $value3['skor_brd'],
+                            'skor_luas' => $value3['skor_jjg'],
+                        ];
+
+                        $final[$key][$key1][$key3] = $weekestate;
+
+                        $tot_luas += $value3['tod_luas'];
+                        $tot_janjnag += $value3['skor_jjg'];
+                        $tod_brd += $value3['skor_brd'];
+                        $avg += $value3['avg'];
+                    } # code...
+                    $final[$key][$key1]['blok'] = $blok;
+                    $final[$key][$key1]['luas'] = $tot_luas;
+                    $final[$key][$key1]['total_skor'] = $tot_janjnag + $tod_brd;
+                    $final[$key][$key1]['skor_akhir'] = 100 - ($tot_janjnag + $tod_brd);
+                } # code...
+            }  # code...
+        }
+
+        // Now $keysCollection contains the keys as you described, including the date values.
+
+        // dd($hitung, $final);
+
+
+
+
+        // dd($newDefaultWeek['Plasma1']['WIL-III']);
+        $newSidak = array();
+        $asisten_qc = DB::connection('mysql2')
+            ->Table('asisten_qc')
+            ->get();
+        $asisten_qc = json_decode($asisten_qc, true);
 
         // dd($pdf, $total_pdf);
-        // dd($pdf);
-        $arrView = array();
-        $arrView['hitung'] =  $pdf;
-        $arrView['total_hitung'] =  $total_pdf;
 
-        $arrView['est'] =  $est;
-        $arrView['afd'] =  $afd;
-        $arrView['awal'] =  $awal;
+        $arrView = array();
+        $arrView['hitung'] =  $final;
+        $arrView['total_hitung'] =  '-';
+
+        $arrView['est'] =  $request->input('est');
+        $arrView['afd'] =  '-';
+        $arrView['awal'] =  $tanggal;
         // $arrView['akhir'] =  $formattedEndDate;
 
         $pdf = PDF::loadView('Pdfsidaktphba', ['data' => $arrView]);
@@ -7376,7 +7677,7 @@ class SidaktphController extends Controller
         // $pdf->set_paper('A2', 'potrait');
 
         // $filename = 'BA Sidak TPH -' . $arrView['awal'] . '-' .  $arrView['akhir'] . '-' . $arrView['est']  . '.pdf';
-        $filename = 'BA Sidak TPH -' . $arrView['awal'] . '-' . $arrView['est'] . '-' . $arrView['afd'] . '.pdf';
+        $filename = 'BA Sidak TPH -' . '.pdf';
 
         return $pdf->stream($filename);
     }
@@ -7417,7 +7718,7 @@ class SidaktphController extends Controller
             ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
             ->join('estate', 'estate.est', '=', 'sidak_tph.est') //kemudian di join untuk mengambil est perwilayah
             ->where('sidak_tph.est', $est)
-            ->where('sidak_tph.afd', $afd)
+            // ->where('sidak_tph.afd', $afd)
             ->where('datetime', 'like', '%' . $date . '%')
             // ->where('sidak_tph.datetime', $date)
             ->get();
@@ -7442,13 +7743,14 @@ class SidaktphController extends Controller
         $plotTitik = array();
         $plotMarker = array();
         $inc = 0;
-
+        // dd($datas);
         foreach ($datas as $key => $value) {
             if (!empty($value->lat)) {
                 $plotTitik[] = '[' . $value->lon . ',' . $value->lat . ']';
                 $plotMarker[$inc]['latln'] = '[' . $value->lat . ',' . $value->lon . ']';
                 $plotMarker[$inc]['notph'] = $value->no_tph;
                 $plotMarker[$inc]['blok'] = $value->blok;
+                $plotMarker[$inc]['afd'] = $value->afd;
                 $plotMarker[$inc]['brondol_tinggal'] = $value->bt_tph + $value->bt_jalan + $value->bt_bin;
                 $plotMarker[$inc]['jum_karung'] = $value->jum_karung;
                 $plotMarker[$inc]['buah_tinggal'] = $value->buah_tinggal;
@@ -7511,19 +7813,7 @@ class SidaktphController extends Controller
         $result_list_blok = array();
         foreach ($list_blok as $key => $value) {
             foreach ($value as $key2 => $data) {
-                // if (strlen($data) == 5) {
-                //     $result_list_blok[$key][$data] = substr($data, 0, -2);
-                // } else if (strlen($data) == 6) {
-                //     $sliced = substr_replace($data, '', 1, 1);
-                //     $result_list_blok[$key][$data] = substr($sliced, 0, -2);
-                // } else if (strlen($data) == 3) {
-                //     $result_list_blok[$key][$data] = $data;
-                // } else if (strpos($data, 'CBI') !== false) {
-                //     $result_list_blok[$key][$data] = substr($data, 0, -4);
-                // } else if (strpos($data, 'CB') !== false) {
-                //     $sliced = substr_replace($data, '', 1, 1);
-                //     $result_list_blok[$key][$data] = substr($sliced, 0, -3);
-                // }
+
                 if ($est == "SJE") {
                     if (strlen($data) == 8 || strlen($data) == 7) {
                         $sliced = substr($data, 0, -3);
@@ -7640,11 +7930,14 @@ class SidaktphController extends Controller
             }
         }
         // dd($est, $afd);
+
+
+
         $query2 = DB::connection('mysql2')->Table('sidak_tph')
             ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
             ->join('estate', 'estate.est', '=', 'sidak_tph.est') //kemudian di join untuk mengambil est perwilayah
             ->where('sidak_tph.est', $est)
-            ->where('sidak_tph.afd', $afd2)
+            // ->where('sidak_tph.afd', $afd2)
             ->where('datetime', 'like', '%' . $date . '%')
             ->get();
 
@@ -7673,7 +7966,7 @@ class SidaktphController extends Controller
                 $imgNew[] = $value2;
             }
         }
-        // dd($img);
+        // dd($imgNew);
 
         // dd($blokLatLn);
         $plot['plot'] = $plotTitik;
@@ -7682,5 +7975,49 @@ class SidaktphController extends Controller
         $plot['img'] = $imgNew;
         // dd($plot);
         echo json_encode($plot);
+    }
+
+
+    public function updatesidakTPhnew(Request $request)
+    {
+
+        // mutu buah 
+        $ids = $request->input('id');
+        $blok_bh = $request->input('blok_bh');
+        $brdtgl = $request->input('brdtgl');
+
+        // dd($brdtgl, $ids);
+        $brdjln = $request->input('brdjln');
+        $brdbin = $request->input('brdbin');
+        $qc = $request->input('qc');
+        $jumkrng = $request->input('jumkrng');
+        $buahtgl = $request->input('buahtgl');
+        $restan = $request->input('restan');
+
+
+        DB::connection('mysql2')->table('sidak_tph')->where('id', $ids)->update([
+            'blok' => $blok_bh,
+            'bt_tph' => $brdtgl,
+            'bt_jalan' => $brdjln,
+            'bt_bin' => $brdbin,
+            'qc' => $qc,
+            'jum_karung' => $jumkrng,
+            'buah_tinggal' => $buahtgl,
+            'restan_unreported' => $restan,
+        ]);
+    }
+    public function deletedetailtph(Request $request)
+    {
+        $ancaks = $request->input('delete_id');
+
+        if (is_array($ancaks)) {
+            // Delete multiple rows
+            DB::connection('mysql2')->table('sidak_tph')->whereIn('id', $ancaks)->delete();
+        } else {
+            // Delete a single row
+            DB::connection('mysql2')->table('sidak_tph')->where('id', $ancaks)->delete();
+        }
+
+        return response()->json(['status' => 'success']);
     }
 }

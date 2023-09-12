@@ -2050,7 +2050,20 @@
                 data: 'est'
               },
               {
-                data: 'afd'
+                data: 'afd',
+                render: function(data, type, row) {
+                  if (row.afd === 'EST') {
+
+
+
+                    var linkText = 'Link';
+                    var linkUrl = 'BaSidakTPH/' + row.est + '/' + row.start + '/' + row.end + '/' + row.reg;
+                    return '<a href="' + linkUrl + '">' + row.afd + '</a>';
+                  } else {
+
+                    return row.afd;
+                  }
+                }
               },
 
               {

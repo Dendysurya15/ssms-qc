@@ -106,7 +106,7 @@ Route::post('/hapusKTU', [unitController::class, 'hapusKTU'])->name('hapusKTU');
 
 Route::post('/hapusDetailSidak', [SidaktphController::class, 'hapusDetailSidak'])->name('hapusDetailSidak');
 // Route::get('BaSidakTPH/{est}/{start}/{last}', [SidaktphController::class, 'BasidakTph'])->name('BasidakTph');
-Route::get('BaSidakTPH/{est}/{afd}/{tanggal}/{regional}', [SidaktphController::class, 'BasidakTph'])->name('BasidakTph');
+Route::get('BaSidakTPH/{est}/{start}/{last}/{regional}', [SidaktphController::class, 'BasidakTph'])->name('BasidakTph');
 
 Route::get('/dashboard_mutubuah', [mutubuahController::class, 'dashboard_mutubuah'])->name('dashboard_mutubuah');
 Route::get('/getWeek', [MutubuahController::class, 'getWeek'])->name('getWeek');
@@ -182,3 +182,7 @@ Route::post('/downloadPDF', [emplacementsController::class, 'downloadPDF'])->nam
 Route::get('/checkIMG', [CheckimgController::class, 'dashboard'])->name('dashboard');
 Route::get('/getIMGgudang', [CheckimgController::class, 'getIMGgudang'])->name('getIMGgudang');
 Route::get('/gettaksasi/{query}', [taksasiController::class, 'dashboard']);
+
+Route::post('/updatesidakTPhnew', [SidaktphController::class, 'updatesidakTPhnew'])->name('updatesidakTPhnew');
+
+Route::post('/deletedetailtph', [SidaktphController::class, 'deletedetailtph'])->name('deletedetailtph');

@@ -1,217 +1,113 @@
-    function fetchAndUpdateData() {
-    lottieAnimation.play(); // Start the Lottie animation
-    lottieContainer.style.display = 'block'; // Display the Lottie container
+so i have result like this but how to make it be one array long. from this result to
 
-    dataTableAncakTest.clear().draw();
+array:1 [▼ // app\Http\Controllers\SidaktphController.php:7611
+"BKE" => array:6 [▼
+"OD" => array:8 [▼
+0 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 1
+"janjang" => 0
+"brd" => 350
+"luas" => 29.53
+]
+1 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 3
+"janjang" => 5
+"brd" => 98
+"luas" => 68.08
+]
+2 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 4
+"janjang" => 1
+"brd" => 3863
+"luas" => 95.92
+]
+3 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 2
+"janjang" => 0
+"brd" => 0
+"luas" => 0
+]
+4 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 5
+"janjang" => 0
+"brd" => 0
+"luas" => 0
+]
+5 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 6
+"janjang" => 0
+"brd" => 0
+"luas" => 0
+]
+6 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 7
+"janjang" => 0
+"brd" => 0
+"luas" => 0
+]
+7 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 8
+"janjang" => 0
+"brd" => 0
+"luas" => 0
+]
+]
+"OE" => array:8 [▶]
+"OB" => array:8 [▶]
+"OF" => array:8 [▶]
+"OC" => array:8 [▶]
+"OA" => array:8 [▶]
+]
+]
 
-    var Tanggal = document.getElementById('inputDate').value;
-    var est = document.getElementById('est').value;
-    var afd = document.getElementById('afd').value;
-    var _token = $('input[name="_token"]').val();
+this result :
+array:1 [▼ // app\Http\Controllers\SidaktphController.php:7611
+"BKE" => array:6 [▶]
+]
+array:1 [▼ // app\Http\Controllers\SidaktphController.php:7611
+"BKE" => array:6 [▼
+"OD" => array:8 [▼
+0 => array:6 [▼
+"est" => "BKE"
+"afd" => "OD"
+"status" => 1
+"janjang" => 0
+"brd" => 350
+"luas" => 29.53
+"status2" => 3
+"janjang2" => 5
+"brd2" => 98
+"luas2" => 68.08
+"status3" => 4
+"janjang3" => 1
+"brd3" => 3863
+"luas3" => 95.92
+"status4" => 2
+"janjang4" => 0
+"brd4" => 0
 
-    $.ajax({
-    url: "{{ route('filterDataDetail') }}",
-    method: "GET",
-    data: {
-    Tanggal,
-    est,
-    afd,
-    _token: _token
-    },
-    success: function(result) {
-    lottieAnimation.stop(); // Stop the Lottie animation
-    lottieContainer.style.display = 'none'; // Hide the Lottie container
-
-    var dataTableAncakTest = $('#mutuAncakTable').DataTable({
-    columns: [{
-    title: 'ID',
-    data: 'id'
-    },
-    {
-    title: 'Estate',
-    data: 'estate'
-    },
-    {
-    title: 'Afdeling',
-    data: 'afdeling'
-    },
-    {
-    title: 'Blok',
-    data: 'blok'
-    },
-    {
-    title: 'Blok',
-    data: 'petugas'
-    },
-    {
-    title: 'Blok',
-    data: 'datetime'
-    },
-    {
-    title: 'luas blok',
-    data: 'luas_blok',
-
-    },
-    {
-    title: 'Sph',
-    data: 'sph',
-
-    },
-    {
-    title: 'Baris 1',
-    data: 'br1',
-
-    },
-    {
-    title: 'Baris 2',
-    data: 'br2',
-
-    },
-    {
-    title: 'Jalur masuk',
-    data: 'jalur_masuk',
-    },
-    {
-    title: 'Status Panen',
-    data: 'status_panen',
-    },
-    {
-    title: 'Kemandoran',
-    data: 'kemandoran',
-    },
-    {
-    title: 'Ancak Pemanen',
-    data: 'ancak_pemanen',
-    },
-    {
-    title: 'Pokok Panen',
-    data: 'pokok_panen',
-
-    },
-    {
-    title: 'Pokok Sample',
-    data: 'sample',
-
-    },
-    {
-    title: 'Janjang Panen',
-    data: 'jjg',
-
-    },
-    {
-    title: 'Brondolan (P)',
-    data: 'brtp',
-
-    },
-    {
-    title: 'Brondolan (K)',
-    data: 'brtk',
-
-    },
-    {
-    title: 'Brondolan (GL)',
-    data: 'brtgl',
-
-    },
-    {
-    title: 'Buah Tinggal (S)',
-    data: 'bhts',
-
-    },
-    {
-    title: 'Buah Tinggal (M1)',
-    data: 'bhtm1',
-
-    },
-    {
-    title: 'Buah Tinggal (M2)',
-    data: 'bhtm2',
-
-    },
-    {
-    title: 'Buah Tinggal (M3)',
-    data: 'bhtm3',
-
-    },
-    {
-    title: 'Pelepah Sengkleh',
-    data: 'ps',
-
-    },
-    {
-    title: 'Frond Stacking',
-    data: 'sp',
-
-    },
-    {
-    title: 'Piringan Semak',
-    data: 'piringan_semak',
-
-    },
-    {
-    title: 'Pokok Kuning',
-    data: 'pokok_kuning',
-
-    },
-    {
-    title: 'Underpruning',
-    data: 'underpruning',
-
-    },
-    {
-    title: 'Overpruning',
-    data: 'overpruning',
-
-    },
-    {
-    title: 'Blok',
-    data: 'app_version',
-
-    },
-    {
-    // -1 targets the last column
-    title: 'Actions',
-    visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),
-    render: function(data, type, row, meta) {
-    var buttons =
-    '<button class="edit-btn">Edit</button>' +
-    '<button class="delete-btn">Delete</button>';
-    return buttons;
-    }
-    }
-    ],
-    });
-
-    dataTableAncakTest.rows.add(parseResult['mutuAncak']);
-    dataTableAncakTest.draw();
-
-
-    // Attach event handlers to dynamically created buttons
-    $('#mutuAncakTable').on('click', '.edit-btn', function() {
-    var rowData = dataTableAncakTest.row($(this).closest('tr')).data();
-    var rowIndex = dataTableAncakTest.row($(this).closest('tr')).index();
-    editRow(rowIndex);
-    });
-
-    $('#mutuAncakTable').on('click', '.delete-btn', function() {
-    var rowIndex = dataTableAncakTest.row($(this).closest('tr')).index();
-    deleteRow(rowIndex);
-    });
-
-    },
-    error: function() {
-    lottieAnimation.stop(); // Stop the Lottie animation
-    lottieContainer.style.display = 'none'; // Hide the Lottie container
-    }
-    });
-
-
-
-
-    }
-
-    function Show() {
-    fetchAndUpdateData();
-    getmaps();
-    getDataDay();
-    }
+]
+]
+"OE" => array:8 [▶]
+"OB" => array:8 [▶]
+"OF" => array:8 [▶]
+"OC" => array:8 [▶]
+"OA" => array:8 [▶]
+]
+]

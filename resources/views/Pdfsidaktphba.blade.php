@@ -184,7 +184,7 @@
                     <div class="right-container">
                         <div class="text-container">
 
-                            <div class="afd">ESTATE : {{$data['est']}} </div>
+                            <div class="afd">ESTATE :{{$data['est']}} </div>
                             <div class="afd">TANGGAL/BULAN: {{$data['awal']}}</div>
                         </div>
                     </div>
@@ -201,157 +201,208 @@
                 <table class="my-table">
                     <thead>
                         <tr>
-
-                            <th colspan="17">Mutu Transport</th>
-                            <th colspan="12">Keterangan</th>
+                            <th colspan="3">Data Blok Sample</th>
+                            <th colspan="16">Data Blok Temuan</th>
                         </tr>
                         <tr>
-                            <th rowspan="3">Blok</th>
-                            <th rowspan="3">Luas HA Sample</th>
-                            <th rowspan="3">Jumlah Blok Sample</th>
-                            <th colspan="8">Brondolan Tinggal</th>
-                            <th colspan="2" rowspan="2">Karung Isi Brondolan</th>
-                            <th colspan="2" rowspan="2">Buah Tinggal Di Tph</th>
-                            <th colspan="2" rowspan="2">Restan tidak dilaporkan</th>
-
-                            <th colspan="20" rowspan="20"></th>
-
-
+                            <th rowspan="2">Afdling</th>
+                            <th rowspan="2">Blok Sample</th>
+                            <th rowspan="2">Luas HA Sample</th>
+                            <th colspan="2">H+1</th>
+                            <th colspan="2">H+2</th>
+                            <th colspan="2">H+3</th>
+                            <th colspan="2">H+4</th>
+                            <th colspan="2">H+5</th>
+                            <th colspan="2">H+6</th>
+                            <th colspan="2">H+7</th>
+                            <th colspan="2">>H+7</th>
                         </tr>
                         <tr>
-
-                            <th colspan="2">Di TPH</th>
-                            <th colspan="2">Di Jalan</th>
-                            <th colspan="2">Di Bin</th>
-                            <th colspan="2">Total</th>
-
-
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
                         </tr>
-                        <tr>
-
-                            <th>Jumlah</th>
-                            <th>Brd/Blok</th>
-                            <th>Jumlah</th>
-                            <th>Brd/Blok</th>
-                            <th>Jumlah</th>
-                            <th>Brd/Blok</th>
-                            <th>Jumlah</th>
-                            <th>Brd/Blok</th>
-
-                            <th>Jumlah</th>
-                            <th>Krg/Blok</th>
-                            <th>Jumlah</th>
-                            <th>Jjg/Blok</th>
-                            <th>Jumlah</th>
-                            <th>Jjg/Blok</th>
-                        <tr>
-
                     </thead>
-                    <tbody id="tab2">
+                    <tbody>
+                        @foreach ($data['hitung'] as $key => $items)
+                        @foreach ($items as $key1 => $items1)
 
 
-                        @foreach($data['hitung'] as $key => $value)
-                        @foreach($value as $key1 => $value1)
                         <tr>
                             <td>{{$key1}}</td>
-                            <td>{{$value1['luas']}}</td>
-                            <td>{{$value1['blok']}}</td>
-                            <td>{{$value1['bt_tph']}}</td>
-                            <td>{{$value1['bt_blok']}}</td>
-                            <td>{{$value1['bt_jalan']}}</td>
-                            <td>{{$value1['jalan_blok']}}</td>
-                            <td>{{$value1['bt_bin']}}</td>
-                            <td>{{$value1['bin_blok']}}</td>
-                            <td>{{$value1['TotalBRD']}}</td>
-                            <td>{{$value1['total_blok']}}</td>
-                            <td>{{$value1['jum_karung']}}</td>
-                            <td>{{$value1['blok_karung']}}</td>
-                            <td>{{$value1['buah_tinggal']}}</td>
-                            <td>{{$value1['blok_buah']}}</td>
-                            <td>{{$value1['restan_unreported']}}</td>
-                            <td>{{$value1['blok_restanx']}}</td>
+                            <td>{{$items1['blok']}}</td>
+                            <td>{{$items1['luas']}}</td>
+                            <td>{{$items1['1']['brd']}}</td>
+                            <td>{{$items1['1']['janjang']}}</td>
+                            <td>{{$items1['2']['brd']}}</td>
+                            <td>{{$items1['2']['janjang']}}</td>
+                            <td>{{$items1['3']['brd']}}</td>
+                            <td>{{$items1['3']['janjang']}}</td>
+                            <td>{{$items1['4']['brd']}}</td>
+                            <td>{{$items1['4']['janjang']}}</td>
+                            <td>{{$items1['5']['brd']}}</td>
+                            <td>{{$items1['5']['janjang']}}</td>
+                            <td>{{$items1['6']['brd']}}</td>
+                            <td>{{$items1['6']['janjang']}}</td>
+                            <td>{{$items1['7']['brd']}}</td>
+                            <td>{{$items1['7']['janjang']}}</td>
+                            <td>{{$items1['8']['brd']}}</td>
+                            <td>{{$items1['8']['janjang']}}</td>
                         </tr>
+
                         @endforeach
                         @endforeach
-
-
-                        @php
-                        $totalItems = 0;
-                        foreach ($data['hitung'] as $key => $items) {
-                        $totalItems += count($items);
-                        }
-                        $emptyRows = 15 - $totalItems;
-                        @endphp
-
-
-                        @for ($i = 0; $i < $emptyRows; $i++) <tr>
-                            <td>&nbsp;</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                            </tr>
-                            @endfor
-
-
-
-                            @foreach($data['total_hitung'] as $key => $value)
-                            <tr>
-                                <td>{{$data['est']}}-{{$key}}</td>
-                                <td>{{$value['luas_blok']}}</td>
-                                <td>{{$value['jum_blok']}}</td>
-                                <td>{{$value['bt_tph']}}</td>
-                                <td>{{$value['tph_blok']}}</td>
-                                <td>{{$value['bt_jalan']}}</td>
-                                <td>{{$value['jalan_blok']}}</td>
-                                <td>{{$value['bt_bin']}}</td>
-                                <td>{{$value['bin_blok']}}</td>
-                                <td>{{$value['TotalBRD']}}</td>
-                                <td>{{$value['Total_blok']}}</td>
-                                <td>{{$value['jum_karung']}}</td>
-                                <td>{{$value['blok_karung']}}</td>
-                                <td>{{$value['buah_tinggal']}}</td>
-                                <td>{{$value['blok_buah']}}</td>
-                                <td>{{$value['restan_unreported']}}</td>
-                                <td>{{$value['blok_restanx']}}</td>
-                            </tr>
-                            @endforeach
-
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 " style="padding: 5px;">
-            <!-- Table 1 -->
-            <table class="custom-table table-1-no-border" style="float: left; width: 40%;">
+        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
+            <div class="Wraping">
+                <table class="my-table">
+                    <thead>
+                        <tr>
+                            <th colspan="19">Rekapitulasi Penilaian Sidak Pemeriksaan TPH (Mutu Transport) </th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">Afdeling</th>
+                            <th colspan="2">H+1</th>
+                            <th colspan="2">H+2</th>
+                            <th colspan="2">H+3</th>
+                            <th colspan="2">H+4</th>
+                            <th colspan="2">H+5</th>
+                            <th colspan="2">H+6</th>
+                            <th colspan="2">H+7</th>
+                            <th colspan="2">>H+7</th>
+                            <th rowspan="2">Total (x)</th>
+                            <th rowspan="2">Skor Akhir(100 - x)</th>
+                        </tr>
+                        <tr>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                            <th>Brondolan(Butir)</th>
+                            <th>Buah Tinggal(Janjang)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data['hitung'] as $key => $items)
+                        @foreach ($items as $key1 => $items1)
+
+
+                        <tr>
+                            <td>{{$key1}}</td>
+
+                            <td>{{$items1['1']['brd']}}</td>
+                            <td>{{$items1['1']['janjang']}}</td>
+                            <td>{{$items1['2']['brd']}}</td>
+                            <td>{{$items1['2']['janjang']}}</td>
+                            <td>{{$items1['3']['brd']}}</td>
+                            <td>{{$items1['3']['janjang']}}</td>
+                            <td>{{$items1['4']['brd']}}</td>
+                            <td>{{$items1['4']['janjang']}}</td>
+                            <td>{{$items1['5']['brd']}}</td>
+                            <td>{{$items1['5']['janjang']}}</td>
+                            <td>{{$items1['6']['brd']}}</td>
+                            <td>{{$items1['6']['janjang']}}</td>
+                            <td>{{$items1['7']['brd']}}</td>
+                            <td>{{$items1['7']['janjang']}}</td>
+                            <td>{{$items1['8']['brd']}}</td>
+                            <td>{{$items1['8']['janjang']}}</td>
+                            <td>{{$items1['total_skor']}}</td>
+                            <td>{{$items1['skor_akhir']}}</td>
+                        </tr>
+
+                        @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3  border border-dark" style="padding: 10px;">
+
+            <table class=" custom-table table-1-no-border" style="float: left; width: 40%;">
                 <thead>
-                    <tr class="table-1-no-border hide-row">
-                        <th colspan="2" class="text-center"></th>
+                    <tr>
+                        <th class="text-center">Catatan Lainnya(%)</th>
                     </tr>
                 </thead>
-            </table>
-            <!-- Table 2 -->
-            <table class="custom-table" style="float: left; width: 40%; border-collapse: collapse;" border="1">
-                <thead>
+                <tbody>
                     <tr>
-                        <th colspan="12" class="table-1-no-border hide-row">Demikian hasil pemeriksaan ini dengan sebenar-benarnya tanpa rekayasa dan paksaan dari Siapapun,</th>
+                        <td>
+                            -
+                        </td>
                     </tr>
                     <tr>
-                        <th colspan="9" class="text-center">Dibuat</th>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <!-- Table 2 -->
+            <table class="custom-table" style="float: right; width: 60%; border-collapse: collapse;" border="1">
+                <thead>
+
+                    <tr>
+                        <th colspan="6" class="text-center">Dibuat</th>
                         <th colspan="3" class="text-center">Diterima</th>
                     </tr>
                 </thead>
@@ -359,29 +410,24 @@
                     <tr></tr>
                     <tr></tr>
                     <tr></tr>
+                    <tr></tr>
+
                     <tr>
-                        <td colspan="3" style="vertical-align: bottom; padding-top: 244px; text-align:center; border: 1px solid black;"></td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
+                        <td colspan="2" style="vertical-align: bottom;padding-top: 244px;text-align:center">__________</td>
+                        <td colspan="2" style="vertical-align: bottom;padding-top: 244px;text-align:center">__________</td>
+                        <td colspan="2" style="vertical-align: bottom;padding-top: 244px;text-align:center">__________</td>
+                        <td colspan="3" style="vertical-align: bottom;text-align:center">__________</td>
+
                     </tr>
                     <tr>
-                        <td colspan="9" style="vertical-align: bottom; text-align:center; border: 1px solid black;">Quality Control</td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;">Estate Manager</td>
+                        <td colspan="6" style="text-align: center;">Quality Control</td>
+                        <td colspan="3" style="text-align: center;">Estate Manager</td>
                     </tr>
+
                 </tbody>
-            </table>
-            <!-- Table 3 -->
-            <table class="custom-table table-1-no-border" style="float: right; width: 20%;">
-                <thead>
-                    <tr class="hide-row">
-                        <th colspan="2" class="text-center"></th>
-                    </tr>
-                </thead>
             </table>
             <div style="clear:both;"></div>
         </div>
-
         <div style="clear:both;"></div>
     </div>
 

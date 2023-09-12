@@ -8,7 +8,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-
 @include('layout/header')
 
 
@@ -477,112 +476,120 @@
         <div id="lottie-animation" style="width: 200px; height: 200px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         </div>
     </div>
-    <div class="d-flex justify-content-center mt-3 mb-4 ml-3 mr-3 border border-dark">
-        <div class="Wraping">
-            <h1 class="text-center">Tabel Sidak TPH</h1>
-            <div class="table-responsive">
-                <table class="table table-bordered" id="mutu_ancak">
-                    <thead class="table-white">
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Estate</th>
-                            <th scope="col">Afdeling</th>
-                            <th scope="col">Blok</th>
-                            <th scope="col">QC</th>
-                            <th scope="col">No TPH</th>
-                            <th scope="col">Brondolan Tinggal di TPH</th>
-                            <th scope="col">Brondolan Tinggal di Jalan</th>
-                            <th scope="col">Brondolan Tinggal di Bin</th>
-                            <th scope="col">Jumlah Karung</th>
-                            <th scope="col">Buah Tinggal</th>
-                            <th scope="col">Restan Unreported</th>
-                            <!--<th scope="col">TPH Semak</th>-->
 
 
-                            @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
-                            <th scope="col">Aksi</th>
-                            @endif
-
-                        </tr>
-                    </thead>
-                    <tbody id="tab1">
-                        <!-- Table rows will be dynamically added using JavaScript -->
-                    </tbody>
-                </table>
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <h1 style="text-align: center;">Tabel Mutu Transport</h1>
+                    <table class="table table-striped table-bordered" id="new_Sidak">
+                        <thead>
+                            <!-- Table header content -->
+                        </thead>
+                        <tbody>
+                            <!-- Table body content will be dynamically generated -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div id="pagination" class="pagination"></div>
         </div>
     </div>
 
 
-    <!-- Update Modal -->
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div id="editModalTPH" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="text-align: center; font-weight: bold;">Update Mutu Transport</h5>
+                    <button type="button" class="close" id="closeModalBtn" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm_buah" action="{{ route('updatesidakTPhnew') }}" method="POST">
+                        {{ csrf_field() }}
+                        <div class=" row m-1">
+                            <div class="col">
+
+                                <label for="update-editId_buah" class="col-form-label">ID</label>
+                                <input type="text" class="form-control" id="editId_buah" name="id">
+
+                                <label for="update-estBH" class="col-form-label">Estate</label>
+                                <input type="text" class="form-control" id="update-estBH" name="estBH" value="">
+
+
+                                <label for="update-afdBH" class="col-form-label">Afdeling</label>
+                                <input type="text" class="form-control" id="update-afdBH" name="afdBH" value="">
+
+
+                                <label for="update-blok_bh" class="col-form-label">Blok</label>
+                                <input type="text" class="form-control" id="update-blok_bh" name="blok_bh" value="">
+
+
+                            </div>
+
+                            <div class="col">
+
+                                <label for="update-brdtgl" class="col-form-label">Brondolan TPH</label>
+                                <input type="text" class="form-control" id="update-brdtgl" name="brdtgl" value="" required>
+
+                                <label for="update-brdjln" class="col-form-label">Brondolan Jalan</label>
+                                <input type="text" class="form-control" id="update-brdjln" name="brdjln" value="" required>
+
+                                <label for="update-brdbin" class="col-form-label">Brondolan BIN</label>
+                                <input type="text" class="form-control" id="update-brdbin" name="brdbin" value="" required>
+
+                                <label for="update-qc" class="col-form-label">QC</label>
+                                <input type="text" class="form-control" id="update-qc" name="qc" value="">
+
+                            </div>
+                        </div>
+
+                        <div class="row m-1">
+                            <div class="col">
+                                <label for="update-jumkrng" class="col-form-label">Jumlah Karung</label>
+                                <input type="text" class="form-control" id="update-jumkrng" name="jumkrng" value="" required>
+
+                                <label for="update-buahtgl" class="col-form-label">Buah Tinggal</label>
+                                <input type="text" class="form-control" id="update-buahtgl" name="buahtgl" value="" required>
+
+                                <label for="update-restan" class="col-form-label">Restan Unreported Karung</label>
+                                <input type="text" class="form-control" id="update-restan" name="restan" value="" required>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn_buah">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" id="closeModalBtn_buah" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="deleteModalancak" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Update Data</h5>
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="update-form">
-                        @csrf
-                        <input type="hidden" name="id" id="update-id">
-                        {{-- <div class="row m-1">
-                            <div class="col">
-
-                            </div>
-                            <div class="col">
-
-                            </div>
-                        </div> --}}
-                        <div class="row">
-                            <div class="col">
-                                <label for="update-est">Estate</label>
-                                <input type="text" class="form-control" name="Estate" id="update-est">
-                                <label for="update-afd">Afdeling</label>
-                                <input type="text" class="form-control" name="Afdeling" id="update-afd">
-                                <label for="update-qc">QC</label>
-                                <input type="text" class="form-control" name="QC" id="update-qc">
-                                <label for="update-notph">No TPH</label>
-                                <input type="text" class="form-control" name="no_tph" id="update-notph">
-                                <label for="update-bttph">BT TPH</label>
-                                <input type="text" class="form-control" name="bttph" id="update-bttph">
-                                <label for="update-btjalan">BT Jalan</label>
-                                <input type="text" class="form-control" name="btjalan" id="update-btjalan">
-                            </div>
-                            <div class="col">
-
-                                <label for="update-btbin">BT Bin</label>
-                                <input type="text" class="form-control" name="btbin" id="update-btbin">
-                                <label for="update-jumkrng">Jum Karung</label>
-                                <input type="text" class="form-control" name="jumkrng" id="update-jumkrng">
-                                <label for="update-buahtgl">Buah Tinggal</label>
-                                <input type="text" class="form-control" name="buahtgl" id="update-buahtgl">
-                                <label for="update-restanunr">Restan unreported</label>
-                                <input type="text" class="form-control" name="restanunr" id="update-restanunr">
-                                <label for="update-tphsemak">TPH Semak</label>
-                                <input type="text" class="form-control" name="tphsemak" id="update-tphsemak">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="save-changes-button">Save changes</button>
-
-                        </div>
+                    <p>Anda yakin ingin menghapus data??</p>
                 </div>
-
-
-
-
-                <!-- Add more form fields for other properties -->
-                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn">Yes</button>
+                </div>
             </div>
-
         </div>
     </div>
+
 
     <div id="foto_temuan">
 
@@ -673,7 +680,6 @@
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 
 
-
 @include('layout/footer')
 
 <script>
@@ -714,8 +720,12 @@
     };
 
     function dashboardFindingYear(page = 1) {
-        $('#tab1').empty()
+        // $('#tab1').empty()
 
+
+        if ($.fn.DataTable.isDataTable('#new_Sidak')) {
+            $('#new_Sidak').DataTable().destroy();
+        }
         var tanggal = ''
         var est = ''
 
@@ -745,236 +755,264 @@
                 lottieContainer.style.display = 'none'; // Hide the Lottie container
 
                 var parseResult = JSON.parse(result);
-                var sidak_tph = Object.entries(parseResult['sidak_tph']);
-                var data = sidak_tph.find(([key, value]) => key === 'data')[1];
-                var lastPage = sidak_tph.find(([key, value]) => key === 'last_page')[1];
-                var currentPage = sidak_tph.find(([key, value]) => key === 'current_page')[1];
 
 
-                var tableBody = document.getElementById('tab1');
-                tableBody.innerHTML = ''; // Clear the table body
-
-                function createAksiButtons(row, item) {
-                    const td = document.createElement('td');
-                    td.style.display = 'inline-flex';
-
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                        // Create the update button
-                        const updateBtn = document.createElement('button');
-                        updateBtn.className = 'btn btn-success mr-2';
-                        updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
-                        updateBtn.onclick = function() {
-                            showUpdateModal(item);
-                        };
-                        td.appendChild(updateBtn);
-
-                        // Create the delete button
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.id = 'deleteBtn-' + item.id;
-                        deleteBtn.className = 'btn btn-danger';
-                        deleteBtn.innerHTML = '<i class="nav-icon fa-solid fa-trash"></i>';
-                        deleteBtn.onclick = function() {
-                            // Call your delete function with the id
-                            deleteFunction(item.id);
-                        };
-                        td.appendChild(deleteBtn);
-                    }
-
-                    row.appendChild(td);
-                }
-
-
-
-
-                data.forEach(function(item, index) {
-                    var row = tableBody.insertRow();
-
-                    var cellNo = row.insertCell(0);
-                    cellNo.innerText = index + 1;
-
-                    var cellEstate = row.insertCell(1);
-                    cellEstate.innerText = item.est;
-
-                    // Add more cells as needed
-
-                    // Example: Afdeling
-                    var cellAfdeling = row.insertCell(2);
-                    cellAfdeling.innerText = item.afd;
-
-                    var blok = row.insertCell(3);
-                    blok.innerText = item.blok;
-
-                    var qc = row.insertCell(4);
-                    qc.innerText = item.qc;
-                    var no_tph = row.insertCell(5);
-                    no_tph.innerText = item.no_tph;
-                    var bt_tph = row.insertCell(6);
-                    bt_tph.innerText = item.bt_tph;
-                    var bt_jalan = row.insertCell(7);
-                    bt_jalan.innerText = item.bt_jalan;
-                    var bt_bin = row.insertCell(8);
-                    bt_bin.innerText = item.bt_bin;
-                    var jum_karung = row.insertCell(9);
-                    jum_karung.innerText = item.jum_karung;
-                    var buah_tinggal = row.insertCell(10);
-                    buah_tinggal.innerText = item.buah_tinggal;
-                    var restan_unreported = row.insertCell(11);
-                    restan_unreported.innerText = item.restan_unreported;
-                    // var tph_semak = row.insertCell(12);
-                    // tph_semak.innerText = item.tph_semak;
-                    // Continue adding cells for each column in your table
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                        createAksiButtons(row, item);
-                    }
+                // new sida 
+                var sidakTPhNEw = $('#new_Sidak').DataTable({
+                    columns: [{
+                            title: 'ID',
+                            data: 'id',
+                        },
+                        {
+                            title: 'Estate',
+                            data: 'est'
+                        },
+                        {
+                            title: 'Afdeling',
+                            data: 'afd'
+                        },
+                        {
+                            title: 'Blok',
+                            data: 'blok'
+                        },
+                        {
+                            title: 'QC',
+                            data: 'qc'
+                        },
+                        {
+                            title: 'No TPH',
+                            data: 'no_tph'
+                        },
+                        {
+                            title: 'Brondolan Tinggal TPH',
+                            data: 'bt_tph'
+                        },
+                        {
+                            title: 'Brondolan TInggal di Jalan',
+                            data: 'bt_jalan'
+                        },
+                        {
+                            title: 'Brondolan Tinggal di BIN',
+                            data: 'bt_bin'
+                        },
+                        {
+                            title: 'Jumlah Karung',
+                            data: 'jum_karung'
+                        },
+                        {
+                            title: 'Buah Tinggal',
+                            data: 'buah_tinggal'
+                        },
+                        {
+                            title: 'Restan Unreported',
+                            data: 'restan_unreported'
+                        },
+                        {
+                            // -1 targets the last column
+                            title: 'Actions',
+                            visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),
+                            render: function(data, type, row, meta) {
+                                var buttons =
+                                    '<button class="edit-btn">Edit</button>' +
+                                    '<button class="delete-btn">Delete</button>';
+                                return buttons;
+                            }
+                        }
+                    ],
 
                 });
 
+                // Populate DataTable with data
+                sidakTPhNEw.clear().rows.add(parseResult['sidak_tph2']).draw();
 
-                // console.log(sidak_tph);
-                var paginationDiv = document.getElementById('pagination');
-                paginationDiv.innerHTML = ''; // Clear the pagination div
 
-                for (var i = 1; i <= lastPage; i++) {
-                    var btn = document.createElement('button');
-                    btn.innerText = i;
-                    btn.classList.add('pagination-button');
-                    if (i === currentPage) {
-                        btn.classList.add('current-page');
-                    }
+                $('#new_Sidak').on('click', '.edit-btn', function() {
+                    var rowData = sidakTPhNEw.row($(this).closest('tr')).data();
+                    var rowIndex = sidakTPhNEw.row($(this).closest('tr')).index();
+                    editSidakTPh(rowIndex);
+                });
 
-                    btn.addEventListener('click', function() {
-                        var newPage = parseInt(this.innerText);
-                        lottieAnimation.play(); // Play the Lottie animation
-                        dashboardFindingYear(newPage);
-                    });
+                $('#new_Sidak').on('click', '.delete-btn', function() {
+                    var rowIndex = sidakTPhNEw.row($(this).closest('tr')).index();
+                    deleteRowBuah(rowIndex);
+                });
 
-                    paginationDiv.appendChild(btn);
+
+                function editSidakTPh(id) {
+                    // Save the selected row index
+                    selectedRowIndex = id;
+
+                    // Retrieve the id from the first column of the selected row
+                    var rowData = sidakTPhNEw.row(id).data();
+                    var rowId = rowData[0];
+
+                    // Populate the form with the data of the selected row
+                    $('#editId_buah').val(rowData.id).prop('disabled', true);
+                    $('#update-estBH').val(rowData.est).prop('disabled', true);
+                    $('#update-afdBH').val(rowData.afd).prop('disabled', true);
+                    $('#update-blok_bh').val(rowData.blok)
+                    $('#update-qc').val(rowData.qc)
+
+
+                    $('#update-brdtgl').val(rowData.bt_tph)
+                    $('#update-brdjln').val(rowData.bt_jalan)
+                    $('#update-brdbin').val(rowData.bt_bin)
+                    $('#update-jumkrng').val(rowData.jum_karung)
+                    $('#update-buahtgl').val(rowData.buah_tinggal)
+                    $('#update-restan').val(rowData.restan_unreported)
+
+
+
+                    $('#editModalTPH').modal('show');
                 }
 
+                $(document).ready(function() {
+                    // Close modal when the close button is clicked
+                    $('#closeModalBtn_buah').click(function() {
+                        $('#editModalTPH').modal('hide');
+                    });
+
+                    // Submit the form when the Save Changes button is clicked
+                    $('#saveChangesBtn_buah').off('click').on('click', function() {
+                        $('#editForm_buah').submit();
+                    });
+
+                    function isNumber(value) {
+                        return !isNaN(parseFloat(value)) && isFinite(value);
+                    }
+
+                    $('#editForm_buah').submit(function(e) {
+                        e.preventDefault(); // Prevent the default form submission
+
+                        // Get the form data
+                        var formData = new FormData(this);
+                        formData.append('id', $('#editId_buah').val());
+
+                        var brdtgl = $('#update-brdtgl').val();
+                        var brdjln = $('#update-brdjln').val();
+                        var brdbin = $('#update-brdbin').val();
+                        var jumkarung = $('#update-jumkrng').val();
+                        var buahtgl = $('#update-buahtgl').val();
+                        var restan = $('#update-restan').val();
+
+                        if (!isNumber(brdtgl) ||
+                            !isNumber(brdjln) ||
+                            !isNumber(brdbin) ||
+                            !isNumber(jumkarung) ||
+                            !isNumber(buahtgl) ||
+                            !isNumber(restan)
+                        ) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Masukan Error',
+                                text: 'Hanya bisa di masukan angka Saja!'
+                            });
+                            return;
+                        }
+
+                        // console.log(brdtgl);
+                        // Send the AJAX request
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route("updatesidakTPhnew") }}',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                // console.log(response);
+                                // Close the modal
+                                $('#editModalTPH').modal('hide');
+                                // console.log(formData);
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Data berhasil diperbarui!'
+                                }).then(function() {
+                                    // Refresh the data on the page
+                                    // fetchAndUpdateData();
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr.responseText);
+                                // Show an error message or perform any other actions
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Gagal memperbarui data!'
+                                });
+                            }
+                        });
+                    });
+                });
+
+                function deleteRowBuah(id) {
+                    // Save the selected row index
+                    selectedRowIndex = id;
+
+                    // Get the selected row data
+                    var rowData = sidakTPhNEw.row(id).data();
+                    var rowId = rowData.id;
+
+                    // Show the delete modal
+                    $('#deleteModalancak').modal('show');
+
+                    // Handle delete confirmation
+                    $('#confirmDeleteBtn').off('click').on('click', function() {
+                        // Create a form data object
+                        var formData = new FormData();
+                        formData.append('delete_id', rowId);
+
+                        // Get the CSRF token from the meta tag
+                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                        // Set the CSRF token in the request headers
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            }
+                        });
+
+                        // Send the AJAX request to the controller
+                        $.ajax({
+                            url: '{{ route("deletedetailtph") }}',
+                            method: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                // Close the delete modal
+                                $('#deleteModalancak').modal('hide');
+
+                                // Show a success message using SweetAlert
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Data deleted successfully!',
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                // Handle the error if needed
+                                console.error(error);
+
+                                // Close the delete modal
+                                $('#deleteModalancak').modal('hide');
+                            }
+                        });
+                    });
+                }
+
+
+                // end new sidak 
             }
 
 
         });
     }
 
-
-
-    function showUpdateModal(item) {
-        // Populate the form with the item data
-        document.getElementById('update-id').value = item.id;
-        document.getElementById('update-est').value = item.est;
-        document.getElementById('update-afd').value = item.afd;
-        document.getElementById('update-qc').value = item.qc;
-        document.getElementById('update-notph').value = item.no_tph;
-
-        document.getElementById('update-bttph').value = item.bt_tph;
-        document.getElementById('update-btjalan').value = item.bt_jalan;
-        document.getElementById('update-btbin').value = item.bt_bin;
-        document.getElementById('update-jumkrng').value = item.jum_karung;
-        document.getElementById('update-buahtgl').value = item.buah_tinggal;
-        document.getElementById('update-restanunr').value = item.restan_unreported;
-        document.getElementById('update-tphsemak').value = item.tph_semak;
-        // Show the modal
-        $('#updateModal').modal('show');
-    }
-
-    async function updateFunction() {
-        // Collect the form data
-        const form = document.getElementById('update-form');
-        const formData = new FormData(form);
-
-        // Send the form data to your server
-        try {
-            const response = await fetch('/updateBASidakTPH', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                // The update was successful, close the modal and refresh the data
-                $('#updateModal').modal('hide');
-                // Refresh your data by calling the function that loads your table data
-                dashboardFindingYear();
-
-                // Show a success message
-                Swal.fire(
-                    'Updated!',
-                    'Data Telah di update',
-                    'success'
-                );
-            } else {
-                // Show an error message
-                Swal.fire(
-                    'Error!',
-                    'Error updating data: ' + response.statusText,
-                    'error'
-                );
-            }
-        } catch (error) {
-            // Handle network errors
-            Swal.fire(
-                'Error!',
-                'Network error: ' + error,
-                'error'
-            );
-        }
-    }
-
-
-    async function deleteFunction(id) {
-        // Show a stylish confirmation alert
-        Swal.fire({
-            title: 'Anda yakin?',
-            text: 'Anda yakin ingin mendelete data?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                // Create a FormData object to send the ID
-                const formData = new FormData();
-                formData.append('id', id);
-
-                // Add the CSRF token to the FormData object
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                formData.append('_token', csrfToken);
-
-                // Send the request to your server
-                try {
-                    const response = await fetch('/deleteBAsidakTPH', {
-                        method: 'POST',
-                        body: formData,
-                    });
-
-                    if (response.ok) {
-                        // The delete was successful, refresh the data
-                        Swal.fire(
-                            'Deleted!',
-                            'Data telah terhapus!.',
-                            'success'
-                        );
-                        dashboardFindingYear();
-                    } else {
-                        // Show an error message or handle the error
-                        Swal.fire(
-                            'Error!',
-                            'Error deleting data: ' + response.statusText,
-                            'error'
-                        );
-                    }
-                } catch (error) {
-                    // Handle network errors
-                    Swal.fire(
-                        'Error!',
-                        'Network error: ' + error,
-                        'error'
-                    );
-                }
-            }
-        });
-    }
 
     function openModal(src, komentar) {
         var modalImg = document.getElementById("img01");
@@ -1331,6 +1369,7 @@
 
             var popupContent = `<strong>Jam Sidak: </strong>${markerResult[i][1]['jam']}<br/>`;
             popupContent += `<strong>Nomor TPH: </strong>${markerResult[i][1]['notph']}<br/>`;
+            popupContent += `<strong>Afdeling: </strong>${markerResult[i][1]['afd']}<br/>`;
             popupContent += `<strong>Blok: </strong>${markerResult[i][1]['blok']}<br/>`;
             popupContent += `<strong>Brondol_tinggal: </strong>${markerResult[i][1]['brondol_tinggal']}<br/>`;
             popupContent += `<strong>Jumlah Karung: </strong>${markerResult[i][1]['jum_karung']}<br/>`;
