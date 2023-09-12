@@ -192,9 +192,6 @@
             </tr>
         </table>
 
-        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
-
-        </div>
 
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <div class="Wraping">
@@ -218,22 +215,22 @@
                             <th colspan="2">>H+7</th>
                         </tr>
                         <tr>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -243,7 +240,8 @@
 
                         <tr>
                             <td>{{$key1}}</td>
-                            <td>{{$items1['blok']}}</td>
+                            <td style="white-space: pre-wrap;font-size: 12px">{{$items1['blok']}}</td>
+
                             <td>{{$items1['luas']}}</td>
                             <td>{{$items1['1']['brd']}}</td>
                             <td>{{$items1['1']['janjang']}}</td>
@@ -291,22 +289,22 @@
                             <th rowspan="2">Skor Akhir(100 - x)</th>
                         </tr>
                         <tr>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
-                            <th>Brondolan(Butir)</th>
-                            <th>Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
+                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
                         </tr>
                     </thead>
                     <tbody>

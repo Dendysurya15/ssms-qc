@@ -2386,7 +2386,20 @@
                 data: 'est'
               },
               {
-                data: 'afd'
+                data: 'afd',
+                render: function(data, type, row) {
+                  if (row.afd === 'EST') {
+
+
+
+                    var linkText = 'Link';
+                    var linkUrl = 'BaSidakTPH/' + row.est + '/' + row.start + '/' + row.end + '/' + row.reg;
+                    return '<a href="' + linkUrl + '">' + row.afd + '</a>';
+                  } else {
+
+                    return row.afd;
+                  }
+                }
               },
 
               {
@@ -2709,9 +2722,21 @@
                 data: 'est'
               },
               {
-                data: 'afd'
-              },
+                data: 'afd',
+                render: function(data, type, row) {
+                  if (row.afd === 'EST') {
 
+
+
+                    var linkText = 'Link';
+                    var linkUrl = 'BaSidakTPH/' + row.est + '/' + row.start + '/' + row.end + '/' + row.reg;
+                    return '<a href="' + linkUrl + '">' + row.afd + '</a>';
+                  } else {
+
+                    return row.afd;
+                  }
+                }
+              },
               {
                 data: 'tph1'
               },
@@ -3031,9 +3056,21 @@
                 data: 'est'
               },
               {
-                data: 'afd'
-              },
+                data: 'afd',
+                render: function(data, type, row) {
+                  if (row.afd === 'EST') {
 
+
+
+                    var linkText = 'Link';
+                    var linkUrl = 'BaSidakTPH/' + row.est + '/' + row.start + '/' + row.end + '/' + row.reg;
+                    return '<a href="' + linkUrl + '">' + row.afd + '</a>';
+                  } else {
+
+                    return row.afd;
+                  }
+                }
+              },
               {
                 data: 'tph1'
               },
@@ -3348,14 +3385,26 @@
           });
           datatableweek4.clear().rows.add(parseResult['week4']).draw();
 
-          var datatableweek4 = $('#newweek5').DataTable({
+          var datatableweek5 = $('#newweek5').DataTable({
             columns: [{
                 data: 'est'
               },
               {
-                data: 'afd'
-              },
+                data: 'afd',
+                render: function(data, type, row) {
+                  if (row.afd === 'EST') {
 
+
+
+                    var linkText = 'Link';
+                    var linkUrl = 'BaSidakTPH/' + row.est + '/' + row.start + '/' + row.end + '/' + row.reg;
+                    return '<a href="' + linkUrl + '">' + row.afd + '</a>';
+                  } else {
+
+                    return row.afd;
+                  }
+                }
+              },
               {
                 data: 'tph1'
               },
@@ -3668,7 +3717,7 @@
               }
             }
           });
-          datatableweek4.clear().rows.add(parseResult['week5']).draw();
+          datatableweek5.clear().rows.add(parseResult['week5']).draw();
         }
       });
     }

@@ -567,7 +567,7 @@ class SidaktphController extends Controller
                 $dividen[$key][$key1]['dividen'] = 0;
             }
         }
-        // dd($dividen);
+        // dd($newDefaultWeek['BKE']['OA']);
 
         // dd($newDefaultWeek['Plasma1']['WIL-III']);
         $newSidak = array();
@@ -953,7 +953,7 @@ class SidaktphController extends Controller
 
         $week2 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
-            $estateValues = [];
+            $estateValues = []; // Initialize an array to accumulate values for estate
             $est_brd = 0;
             $total_weeks = 0;
             $deviden = 0;
@@ -961,13 +961,17 @@ class SidaktphController extends Controller
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week2'])) {
                     $week1Data = $subValue['week2']; // Access "week1" data
-
+                    foreach ($weeks as $keywk => $value) if ($keywk == 2) {
+                        $start = $value['start'];
+                        $end = $value['end'];
+                    }
                     // week for afdeling 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test'
+                        'kategori' => 'Test',
+
                     ];
 
                     // Extract tphx values for keys 1 to 8 and flatten them
@@ -1038,7 +1042,10 @@ class SidaktphController extends Controller
                 'est' => $key,
                 'afd' => 'EST',
                 'kategori' => 'Test',
-                'total_score' => $skor_akhir
+                'total_score' => $skor_akhir,
+                'start' => $start,
+                'end' => $end,
+                'reg' => $regional,
             ];
             $skor_brd = 0;
             $skor_janjang = 0;
@@ -1059,12 +1066,15 @@ class SidaktphController extends Controller
                 $weekestate["tod_jjg$i"] = $estateValues["tod_jjg$i"];
                 // $weekestate["total_score"] = round($skor_brd + $skor_janjang, 1);
             }
+
+
             $week2[] = $weekestate;
         }
 
+
         $week3 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
-            $estateValues = [];
+            $estateValues = []; // Initialize an array to accumulate values for estate
             $est_brd = 0;
             $total_weeks = 0;
             $deviden = 0;
@@ -1072,13 +1082,17 @@ class SidaktphController extends Controller
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week3'])) {
                     $week1Data = $subValue['week3']; // Access "week1" data
-
+                    foreach ($weeks as $keywk => $value) if ($keywk == 3) {
+                        $start = $value['start'];
+                        $end = $value['end'];
+                    }
                     // week for afdeling 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test'
+                        'kategori' => 'Test',
+
                     ];
 
                     // Extract tphx values for keys 1 to 8 and flatten them
@@ -1149,7 +1163,10 @@ class SidaktphController extends Controller
                 'est' => $key,
                 'afd' => 'EST',
                 'kategori' => 'Test',
-                'total_score' => $skor_akhir
+                'total_score' => $skor_akhir,
+                'start' => $start,
+                'end' => $end,
+                'reg' => $regional,
             ];
             $skor_brd = 0;
             $skor_janjang = 0;
@@ -1170,12 +1187,14 @@ class SidaktphController extends Controller
                 $weekestate["tod_jjg$i"] = $estateValues["tod_jjg$i"];
                 // $weekestate["total_score"] = round($skor_brd + $skor_janjang, 1);
             }
+
+
             $week3[] = $weekestate;
         }
 
         $week4 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
-            $estateValues = [];
+            $estateValues = []; // Initialize an array to accumulate values for estate
             $est_brd = 0;
             $total_weeks = 0;
             $deviden = 0;
@@ -1183,13 +1202,17 @@ class SidaktphController extends Controller
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week4'])) {
                     $week1Data = $subValue['week4']; // Access "week1" data
-
+                    foreach ($weeks as $keywk => $value) if ($keywk == 4) {
+                        $start = $value['start'];
+                        $end = $value['end'];
+                    }
                     // week for afdeling 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test'
+                        'kategori' => 'Test',
+
                     ];
 
                     // Extract tphx values for keys 1 to 8 and flatten them
@@ -1260,7 +1283,10 @@ class SidaktphController extends Controller
                 'est' => $key,
                 'afd' => 'EST',
                 'kategori' => 'Test',
-                'total_score' => $skor_akhir
+                'total_score' => $skor_akhir,
+                'start' => $start,
+                'end' => $end,
+                'reg' => $regional,
             ];
             $skor_brd = 0;
             $skor_janjang = 0;
@@ -1281,12 +1307,14 @@ class SidaktphController extends Controller
                 $weekestate["tod_jjg$i"] = $estateValues["tod_jjg$i"];
                 // $weekestate["total_score"] = round($skor_brd + $skor_janjang, 1);
             }
+
+
             $week4[] = $weekestate;
         }
 
         $week5 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
-            $estateValues = [];
+            $estateValues = []; // Initialize an array to accumulate values for estate
             $est_brd = 0;
             $total_weeks = 0;
             $deviden = 0;
@@ -1294,13 +1322,17 @@ class SidaktphController extends Controller
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week5'])) {
                     $week1Data = $subValue['week5']; // Access "week1" data
-
+                    foreach ($weeks as $keywk => $value) if ($keywk == 5) {
+                        $start = $value['start'];
+                        $end = $value['end'];
+                    }
                     // week for afdeling 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test'
+                        'kategori' => 'Test',
+
                     ];
 
                     // Extract tphx values for keys 1 to 8 and flatten them
@@ -1371,7 +1403,10 @@ class SidaktphController extends Controller
                 'est' => $key,
                 'afd' => 'EST',
                 'kategori' => 'Test',
-                'total_score' => $skor_akhir
+                'total_score' => $skor_akhir,
+                'start' => $start,
+                'end' => $end,
+                'reg' => $regional,
             ];
             $skor_brd = 0;
             $skor_janjang = 0;
@@ -1392,8 +1427,11 @@ class SidaktphController extends Controller
                 $weekestate["tod_jjg$i"] = $estateValues["tod_jjg$i"];
                 // $weekestate["total_score"] = round($skor_brd + $skor_janjang, 1);
             }
+
+
             $week5[] = $weekestate;
         }
+
 
         // dd($week2);
         $arrView = array();
@@ -7065,14 +7103,17 @@ class SidaktphController extends Controller
     {
 
 
-        $query = DB::connection('mysql2')->Table('sidak_tph')
+        $query = DB::connection('mysql2')
+            ->table('sidak_tph')
             ->select('sidak_tph.*', 'estate.wil')
             ->join('estate', 'estate.est', '=', 'sidak_tph.est')
             ->where('sidak_tph.est', $est)
-            // ->whereBetween('sidak_tph.datetime', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            // ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
-            ->whereBetween('sidak_tph.datetime', [$start, $last])
+            ->where(function ($query) use ($start, $last) {
+                $query->where('sidak_tph.datetime', '>=', $start)
+                    ->where('sidak_tph.datetime', '<=', $last . ' 23:59:59');
+            })
             ->get();
+
 
         $query = $query->groupBy(['afd']);
 
@@ -7092,9 +7133,9 @@ class SidaktphController extends Controller
         // Sort unique dates
         sort($unique_dates);
 
-
-
         // dd($unique_dates);
+
+        // dd($unique_dates, $start, $last, $est);
         // Generate the HTML select element with options
         $query2 = DB::connection('mysql2')->Table('sidak_tph')
             ->select('sidak_tph.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
@@ -7145,7 +7186,7 @@ class SidaktphController extends Controller
             ->get()->toArray();
 
         $arrView = array();
-        $afd = 'OB';
+        $afd = '-';
 
         $arrView['est'] =  $est;
         $arrView['tanggal'] =  $start;
@@ -7515,12 +7556,20 @@ class SidaktphController extends Controller
                         }
                     }
 
-                    // Concatenate the keys with a period (".") separator
-                    $calculation[$key][$key1] = implode('.', array_values(array_unique($totalKeys)));
+                    // Extract the first 4 characters from each key and remove '0'
+                    $shortenedKeys = array_map(function ($key) {
+                        $shortenedKey = substr($key, 0, 4);
+                        return str_replace('0', '', $shortenedKey);
+                    }, $totalKeys);
+
+                    // Concatenate the modified keys with a comma separator
+                    $calculation[$key][$key1] = implode('-', $shortenedKeys);
                 }
             }
         }
 
+
+        // dd($calculation);
         $hitung = [];
         // dd($newDefaultWeek);
 
@@ -7647,7 +7696,7 @@ class SidaktphController extends Controller
 
         // Now $keysCollection contains the keys as you described, including the date values.
 
-        // dd($hitung, $final);
+        // dd($final);
 
 
 
@@ -7676,8 +7725,8 @@ class SidaktphController extends Controller
         $pdf->set_paper('A2', 'landscape');
         // $pdf->set_paper('A2', 'potrait');
 
-        // $filename = 'BA Sidak TPH -' . $arrView['awal'] . '-' .  $arrView['akhir'] . '-' . $arrView['est']  . '.pdf';
-        $filename = 'BA Sidak TPH -' . '.pdf';
+        $filename = 'BA Sidak TPH -' . $arrView['awal'] . '-' . $arrView['est']  . '.pdf';
+        // $filename = 'BA Sidak TPH -' . '.pdf';
 
         return $pdf->stream($filename);
     }
