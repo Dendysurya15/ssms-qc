@@ -3830,11 +3830,30 @@ class SidaktphController extends Controller
                         );
                     }
                 }
+                if ($keyToIterate == 1) {
+                    $newKey = 'WIL-I';
+                } elseif ($keyToIterate == 4) {
+                    $newKey = 'WIL-IV';
+                } elseif ($keyToIterate == 7) {
+                    $newKey = 'WIL-VII';
+                } elseif ($keyToIterate == 10) {
+                    $newKey = 'WIL-IX';
+                } else {
+                    $newKey = 'WIL-';
+                }
+
+                $namaGM = '-';
+                foreach ($asisten_qc as $asisten) {
+                    if ($asisten['est'] == $newKey && $asisten['afd'] == 'GM') {
+                        $namaGM = $asisten['nama'];
+                        break;
+                    }
+                }
                 $resultest1[] = array(
                     'afd' => 'GM',
-                    'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
+                    'est' => $newKey,
                     'skor' => $totalEst,
-                    'asisten' => '-',
+                    'asisten' => $namaGM,
                     'ranking' => '-',
                     'est_score' => $estateScore,
                     'dividen' => $diveden
@@ -3912,11 +3931,30 @@ class SidaktphController extends Controller
                         );
                     }
                 }
+                if ($keyToIterate == 2) {
+                    $newKey = 'WIL-II';
+                } elseif ($keyToIterate == 5) {
+                    $newKey = 'WIL-V';
+                } elseif ($keyToIterate == 8) {
+                    $newKey = 'WIL-VIII';
+                } elseif ($keyToIterate == 11) {
+                    $newKey = 'WIL-XI';
+                } else {
+                    $newKey = 'WIL-';
+                }
+
+                $namaGM = '-';
+                foreach ($asisten_qc as $asisten) {
+                    if ($asisten['est'] == $newKey && $asisten['afd'] == 'GM') {
+                        $namaGM = $asisten['nama'];
+                        break;
+                    }
+                }
                 $resultest2[] = array(
                     'afd' => 'GM',
-                    'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
+                    'est' =>  $newKey, // Concatenate $keyEst here
                     'skor' => $totalEst,
-                    'asisten' => '-',
+                    'asisten' => $namaGM,
                     'ranking' => '-',
                     'est_score' => $estateScore,
                     'dividen' => $diveden
@@ -3994,11 +4032,26 @@ class SidaktphController extends Controller
                         );
                     }
                 }
+                if ($keyToIterate == 3) {
+                    $newKey = 'WIL-III';
+                } elseif ($keyToIterate == 6) {
+                    $newKey = 'WIL-VI';
+                } else {
+                    $newKey = 'WIL-';
+                }
+
+                $namaGM = '-';
+                foreach ($asisten_qc as $asisten) {
+                    if ($asisten['est'] == $newKey && $asisten['afd'] == 'GM') {
+                        $namaGM = $asisten['nama'];
+                        break;
+                    }
+                }
                 $resultest3[] = array(
                     'afd' => 'GM',
-                    'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
+                    'est' =>  $newKey, // Concatenate $keyEst here
                     'skor' => $totalEst,
-                    'asisten' => '-',
+                    'asisten' => $namaGM,
                     'ranking' => '-',
                     'est_score' => $estateScore,
                     'dividen' => $diveden
@@ -4074,11 +4127,20 @@ class SidaktphController extends Controller
                         );
                     }
                 }
+
+
+                $namaGM = '-';
+                foreach ($asisten_qc as $asisten) {
+                    if ($asisten['est'] == $value['estate'] && $asisten['afd'] == 'GM') {
+                        $namaGM = $asisten['nama'];
+                        break;
+                    }
+                }
                 $resultest4[] = array(
                     'afd' => 'GM',
                     'est' => 'WIL-' . $keyToIterate, // Concatenate $keyEst here
                     'skor' => $totalEst,
-                    'asisten' => '-',
+                    'asisten' => $namaGM,
                     'ranking' => '-',
                     'est_score' => $estateScore,
                     'dividen' => $diveden
@@ -4143,11 +4205,6 @@ class SidaktphController extends Controller
             }
 
             $total_rh += $totalEst;
-
-            // $rhEstate[$key]['skor_estate'] = $estateScore;
-            // $rhEstate[$key]['dividen_est'] = $diveden;
-            // $rhEstate[$key]['reg_skor'] = $reg_est;
-            // $rhEstate[$key]['reg_div'] = $div_reg;
 
 
             $reg_finalskor += $reg_est;

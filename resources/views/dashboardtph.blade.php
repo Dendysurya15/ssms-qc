@@ -1915,15 +1915,15 @@
       $('#tbody3Month').empty()
       $('#plasmaMonth').empty()
       $('#tbodySkorRHMonth').empty()
-      // Swal.fire({
-      //   title: 'Loading',
-      //   html: '<span class="loading-text">Mohon Tunggu...</span>',
-      //   allowOutsideClick: false,
-      //   showConfirmButton: false,
-      //   onBeforeOpen: () => {
-      //     Swal.showLoading();
-      //   }
-      // });
+      Swal.fire({
+        title: 'Loading',
+        html: '<span class="loading-text">Mohon Tunggu...</span>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        }
+      });
       getDataTphMonth()
     });
 
@@ -2339,12 +2339,16 @@
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
 
-                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
-                    kategori = 'BAD';
-                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
-                    kategori = 'BETTER';
-                  } else if (totalScoreValue >= 50) {
+                  if (totalScoreValue >= 95) {
+                    kategori = 'EXCELLENT';
+                  } else if (totalScoreValue >= 85) {
                     kategori = 'GOOD';
+                  } else if (totalScoreValue >= 75) {
+                    kategori = 'SATISFACTORY';
+                  } else if (totalScoreValue >= 65) {
+                    kategori = 'FAIR';
+                  } else {
+                    kategori = 'POOR';
                   }
 
                   return kategori;
@@ -2362,19 +2366,28 @@
                 $(row).css('background-color', '#b0d48c');
               }
 
-              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+
+              if (totalScoreValue == 0 && totalScoreValue <= 0) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
 
-              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
-                $(row).find('td:eq(82)').css('background-color', 'yellow');
-                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              if (totalScoreValue >= 65 && totalScoreValue <= 75) {
+                $(row).find('td:eq(82)').css('background-color', '#ffc404');
+                $(row).find('td:eq(83)').css('background-color', '#ffc404');
               }
 
-              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
-                $(row).find('td:eq(82)').css('background-color', 'green');
-                $(row).find('td:eq(83)').css('background-color', 'green');
+              if (totalScoreValue >= 75 && totalScoreValue <= 85) {
+                $(row).find('td:eq(82)').css('background-color', '#fffc04');
+                $(row).find('td:eq(83)').css('background-color', '#fffc04');
+              }
+              if (totalScoreValue >= 85 && totalScoreValue <= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#08b454');
+                $(row).find('td:eq(83)').css('background-color', '#08b454');
+              }
+              if (totalScoreValue >= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#609cd4');
+                $(row).find('td:eq(83)').css('background-color', '#609cd4');
               }
             }
           });
@@ -2675,18 +2688,21 @@
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
 
-                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
-                    kategori = 'BAD';
-                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
-                    kategori = 'BETTER';
-                  } else if (totalScoreValue >= 50) {
+                  if (totalScoreValue >= 95) {
+                    kategori = 'EXCELLENT';
+                  } else if (totalScoreValue >= 85) {
                     kategori = 'GOOD';
+                  } else if (totalScoreValue >= 75) {
+                    kategori = 'SATISFACTORY';
+                  } else if (totalScoreValue >= 65) {
+                    kategori = 'FAIR';
+                  } else {
+                    kategori = 'POOR';
                   }
 
                   return kategori;
                 }
               }
-
             ],
             "createdRow": function(row, data, dataIndex) {
               // Assuming 'data' contains the data for each row
@@ -2698,19 +2714,28 @@
                 $(row).css('background-color', '#b0d48c');
               }
 
-              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+
+              if (totalScoreValue == 0 && totalScoreValue <= 0) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
 
-              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
-                $(row).find('td:eq(82)').css('background-color', 'yellow');
-                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              if (totalScoreValue >= 65 && totalScoreValue <= 75) {
+                $(row).find('td:eq(82)').css('background-color', '#ffc404');
+                $(row).find('td:eq(83)').css('background-color', '#ffc404');
               }
 
-              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
-                $(row).find('td:eq(82)').css('background-color', 'green');
-                $(row).find('td:eq(83)').css('background-color', 'green');
+              if (totalScoreValue >= 75 && totalScoreValue <= 85) {
+                $(row).find('td:eq(82)').css('background-color', '#fffc04');
+                $(row).find('td:eq(83)').css('background-color', '#fffc04');
+              }
+              if (totalScoreValue >= 85 && totalScoreValue <= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#08b454');
+                $(row).find('td:eq(83)').css('background-color', '#08b454');
+              }
+              if (totalScoreValue >= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#609cd4');
+                $(row).find('td:eq(83)').css('background-color', '#609cd4');
               }
             }
           });
@@ -3010,12 +3035,16 @@
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
 
-                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
-                    kategori = 'BAD';
-                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
-                    kategori = 'BETTER';
-                  } else if (totalScoreValue >= 50) {
+                  if (totalScoreValue >= 95) {
+                    kategori = 'EXCELLENT';
+                  } else if (totalScoreValue >= 85) {
                     kategori = 'GOOD';
+                  } else if (totalScoreValue >= 75) {
+                    kategori = 'SATISFACTORY';
+                  } else if (totalScoreValue >= 65) {
+                    kategori = 'FAIR';
+                  } else {
+                    kategori = 'POOR';
                   }
 
                   return kategori;
@@ -3033,19 +3062,28 @@
                 $(row).css('background-color', '#b0d48c');
               }
 
-              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+
+              if (totalScoreValue == 0 && totalScoreValue <= 0) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
 
-              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
-                $(row).find('td:eq(82)').css('background-color', 'yellow');
-                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              if (totalScoreValue >= 65 && totalScoreValue <= 75) {
+                $(row).find('td:eq(82)').css('background-color', '#ffc404');
+                $(row).find('td:eq(83)').css('background-color', '#ffc404');
               }
 
-              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
-                $(row).find('td:eq(82)').css('background-color', 'green');
-                $(row).find('td:eq(83)').css('background-color', 'green');
+              if (totalScoreValue >= 75 && totalScoreValue <= 85) {
+                $(row).find('td:eq(82)').css('background-color', '#fffc04');
+                $(row).find('td:eq(83)').css('background-color', '#fffc04');
+              }
+              if (totalScoreValue >= 85 && totalScoreValue <= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#08b454');
+                $(row).find('td:eq(83)').css('background-color', '#08b454');
+              }
+              if (totalScoreValue >= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#609cd4');
+                $(row).find('td:eq(83)').css('background-color', '#609cd4');
               }
             }
           });
@@ -3344,12 +3382,16 @@
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
 
-                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
-                    kategori = 'BAD';
-                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
-                    kategori = 'BETTER';
-                  } else if (totalScoreValue >= 50) {
+                  if (totalScoreValue >= 95) {
+                    kategori = 'EXCELLENT';
+                  } else if (totalScoreValue >= 85) {
                     kategori = 'GOOD';
+                  } else if (totalScoreValue >= 75) {
+                    kategori = 'SATISFACTORY';
+                  } else if (totalScoreValue >= 65) {
+                    kategori = 'FAIR';
+                  } else {
+                    kategori = 'POOR';
                   }
 
                   return kategori;
@@ -3367,19 +3409,28 @@
                 $(row).css('background-color', '#b0d48c');
               }
 
-              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+
+              if (totalScoreValue == 0 && totalScoreValue <= 0) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
 
-              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
-                $(row).find('td:eq(82)').css('background-color', 'yellow');
-                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              if (totalScoreValue >= 65 && totalScoreValue <= 75) {
+                $(row).find('td:eq(82)').css('background-color', '#ffc404');
+                $(row).find('td:eq(83)').css('background-color', '#ffc404');
               }
 
-              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
-                $(row).find('td:eq(82)').css('background-color', 'green');
-                $(row).find('td:eq(83)').css('background-color', 'green');
+              if (totalScoreValue >= 75 && totalScoreValue <= 85) {
+                $(row).find('td:eq(82)').css('background-color', '#fffc04');
+                $(row).find('td:eq(83)').css('background-color', '#fffc04');
+              }
+              if (totalScoreValue >= 85 && totalScoreValue <= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#08b454');
+                $(row).find('td:eq(83)').css('background-color', '#08b454');
+              }
+              if (totalScoreValue >= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#609cd4');
+                $(row).find('td:eq(83)').css('background-color', '#609cd4');
               }
             }
           });
@@ -3678,12 +3729,16 @@
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
 
-                  if (totalScoreValue >= 0 && totalScoreValue < 20) {
-                    kategori = 'BAD';
-                  } else if (totalScoreValue >= 20 && totalScoreValue < 50) {
-                    kategori = 'BETTER';
-                  } else if (totalScoreValue >= 50) {
+                  if (totalScoreValue >= 95) {
+                    kategori = 'EXCELLENT';
+                  } else if (totalScoreValue >= 85) {
                     kategori = 'GOOD';
+                  } else if (totalScoreValue >= 75) {
+                    kategori = 'SATISFACTORY';
+                  } else if (totalScoreValue >= 65) {
+                    kategori = 'FAIR';
+                  } else {
+                    kategori = 'POOR';
                   }
 
                   return kategori;
@@ -3701,19 +3756,28 @@
                 $(row).css('background-color', '#b0d48c');
               }
 
-              if (totalScoreValue >= 0 && totalScoreValue <= 10) {
+
+              if (totalScoreValue == 0 && totalScoreValue <= 0) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
 
-              if (totalScoreValue >= 10 && totalScoreValue <= 20) {
-                $(row).find('td:eq(82)').css('background-color', 'yellow');
-                $(row).find('td:eq(83)').css('background-color', 'yellow');
+              if (totalScoreValue >= 65 && totalScoreValue <= 75) {
+                $(row).find('td:eq(82)').css('background-color', '#ffc404');
+                $(row).find('td:eq(83)').css('background-color', '#ffc404');
               }
 
-              if (totalScoreValue >= 20 && totalScoreValue <= 100) {
-                $(row).find('td:eq(82)').css('background-color', 'green');
-                $(row).find('td:eq(83)').css('background-color', 'green');
+              if (totalScoreValue >= 75 && totalScoreValue <= 85) {
+                $(row).find('td:eq(82)').css('background-color', '#fffc04');
+                $(row).find('td:eq(83)').css('background-color', '#fffc04');
+              }
+              if (totalScoreValue >= 85 && totalScoreValue <= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#08b454');
+                $(row).find('td:eq(83)').css('background-color', '#08b454');
+              }
+              if (totalScoreValue >= 95) {
+                $(row).find('td:eq(82)').css('background-color', '#609cd4');
+                $(row).find('td:eq(83)').css('background-color', '#609cd4');
               }
             }
           });
@@ -5250,7 +5314,7 @@
           _token: _token
         },
         success: function(result) {
-          // Swal.close();
+          Swal.close();
           //parsing result ke json untuk dalam estate
           var parseResult = JSON.parse(result)
           // ubah json ke array agar bisa di for atau foreach
@@ -6277,6 +6341,16 @@
 
             // }
           }
+        },
+        error: function(xhr, status, error) {
+          Swal.close();
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Data Kosong.'
+          });
+          // Handle the error here
+          console.log("An error occurred:", error);
         }
       })
     }

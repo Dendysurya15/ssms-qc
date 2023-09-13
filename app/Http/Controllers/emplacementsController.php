@@ -3390,14 +3390,28 @@ class emplacementsController extends Controller
                     $datetime = $value3['datetime'];
                     $time = date('Y-m-d', strtotime($datetime));
 
-                    for ($i = 1; $i <= 13; $i++) {
-                        $nilai[$i] += $value3["nilai_rmh$i"] / $avg;
-                        $komentar_rmh[$i] .= $value3["komentar_rmh$i"] . ', ';
-                    }
+                    // for ($i = 1; $i <= 13; $i++) {
+                    //     $nilai[$i] += $value3["nilai_rmh$i"] / $avg;
+                    //     if ($komentar_rmh[$i]  != '-') {
+                    //         $komentar_rmh[$i] .= ($value3["komentar_rmh$i"] . '(' . $value3['tipe_rumah'] . ')') . ', ';
+                    //     } else {
+                    //         $komentar_rmh[$i] .= $value3["komentar_rmh$i"] . ', ';
+                    //     }
+                    // }
 
                     $tiperumah .= $value3['tipe_rumah'] . ', ';
                     $penghuni .= $value3['penghuni'] . ', ';
+
+                    for ($i = 1; $i <= 13; $i++) {
+                        $nilai[$i] += $value3["nilai_rmh$i"] / $avg;
+                        if ($value3["komentar_rmh$i"] != '-') { // Check if komentar_rmh is not equal to "-"
+                            $komentar_rmh[$i] .= ($value3["komentar_rmh$i"] . '(' . $value3['tipe_rumah'] . ')') . ', ';
+                        } else {
+                            $komentar_rmh[$i] .= ' ' . ', ';
+                        }
+                    }
                 }
+
 
                 $nila_akhir[$key][$key1]['est'] = $value3['est'] . '-' . $value3['afd'];
                 $nila_akhir[$key][$key1]['tipe_rumah'] = rtrim($tiperumah, ', ');
@@ -3414,7 +3428,7 @@ class emplacementsController extends Controller
         }
 
 
-        // dd($nila_akhir);
+        // dd($nila_akhir, $hitungRmh);
 
         $hitungLingkungan = array();
 
@@ -3488,13 +3502,20 @@ class emplacementsController extends Controller
                     $datetime = $value3['datetime'];
                     $time = date('Y-m-d', strtotime($datetime));
 
+                    // for ($i = 1; $i <= 14; $i++) {
+                    //     $nilai[$i] += $value3["nilai_ll$i"] / $avg;
+                    //     $komentar_rmh[$i] .= $value3["komentar_ll$i"] . ', ';
+                    // }
+
+
                     for ($i = 1; $i <= 14; $i++) {
                         $nilai[$i] += $value3["nilai_ll$i"] / $avg;
-                        $komentar_rmh[$i] .= $value3["komentar_ll$i"] . ', ';
+                        if ($value3["komentar_ll$i"] != '-') { // Check if komentar_rmh is not equal to "-"
+                            $komentar_rmh[$i] .= $value3["komentar_ll$i"]  . ', ';
+                        } else {
+                            $komentar_rmh[$i] .= ' ' . ', ';
+                        }
                     }
-
-                    // $tiperumah .= $value3['tipe_rumah'] . ', ';
-                    // $penghuni .= $value3['penghuni'] . ', ';
                 }
 
 
@@ -3577,14 +3598,21 @@ class emplacementsController extends Controller
                 foreach ($value1 as $key2 => $value3) {
                     $datetime = $value3['datetime'];
                     $time = date('Y-m-d', strtotime($datetime));
+                    // dd($value3);
+
+                    // for ($i = 1; $i <= 5; $i++) {
+                    //     $nilai[$i] += $value3["nilai_ls$i"] / $avg;
+                    //     $komentar_rmh[$i] .= $value3["komentar_ls$i"] . ', ';
+                    // }
 
                     for ($i = 1; $i <= 5; $i++) {
                         $nilai[$i] += $value3["nilai_ls$i"] / $avg;
-                        $komentar_rmh[$i] .= $value3["komentar_ls$i"] . ', ';
+                        if ($value3["komentar_ls$i"] != '-') { // Check if komentar_rmh is not equal to "-"
+                            $komentar_rmh[$i] .= $value3["komentar_ls$i"]  . ', ';
+                        } else {
+                            $komentar_rmh[$i] .= ' ' . ', ';
+                        }
                     }
-
-                    // $tiperumah .= $value3['tipe_rumah'] . ', ';
-                    // $penghuni .= $value3['penghuni'] . ', ';
                 }
 
 
@@ -3613,9 +3641,25 @@ class emplacementsController extends Controller
                 }
             }
         }
-        // dd($nila_akhir, $nila_akhir_lingkungan, $nila_akhir_landscape, $mergedArray);
-        // dd($nila_akhir, $mergedArray);
-        // dd($mergedArray);
+
+        $mergedArray2 = array();
+
+        foreach ($hitungRmh as $key => $value) {
+            if (isset($hitungLingkungan[$key]) && isset($hitungLandscape[$key])) {
+                foreach ($value as $subKey => $subValue) {
+                    if (isset($hitungLingkungan[$key][$subKey]) && isset($hitungLandscape[$key][$subKey])) {
+                        $mergedArray2[$key][$subKey] = array_merge(
+                            $subValue,
+                            $hitungLingkungan[$key][$subKey],
+                            $hitungLandscape[$key][$subKey]
+                        );
+                    }
+                }
+            }
+        }
+        // dd($hitungRmh, $hitungLingkungan, $hitungLandscape, $mergedArray2);
+        // // dd($nila_akhir, $mergedArray);
+        // dd($mergedArray2);
         // dd($date, $est);
         $arrView = array();
 

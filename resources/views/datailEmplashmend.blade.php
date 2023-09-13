@@ -155,7 +155,14 @@
             <div class="text-center mt-3 mb-2 border border-dark" id="afd_lingkungan">
             </div>
         </div>
-
+        <input type="file" id="fileInput" style="display: none;">
+        <style>
+            .btn-container {
+                display: flex;
+                gap: 10px;
+                /* Adjust the spacing between buttons as needed */
+            }
+        </style>
     </div>
     @include('layout/footer')
 
@@ -235,12 +242,98 @@
                      `;
                     rowContainer.appendChild(card);
 
+                    const buttonContainer = document.createElement("div");
+                    buttonContainer.classList.add("btn-container");
+
                     const downloadLink = document.createElement("a");
                     downloadLink.href = "#"; // Set a placeholder link initially
                     downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
-                    card.querySelector(".card-body").appendChild(downloadLink);
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(downloadLink);
 
+                    const uploading = document.createElement("a");
+                    uploading.href = "#"; // Set a placeholder link initially
+                    uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                    uploading.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(uploading);
+
+                    const deletes = document.createElement("a");
+                    deletes.href = "#"; // Set a placeholder link initially
+                    deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                    deletes.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(deletes);
+
+                    // Append the container to the card body
+                    card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                    deletes.addEventListener("click", () => {
+                        // Display a confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Confirmation',
+                            text: 'Anda Yaking Ingin Menghapus Foto??',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User confirmed deletion, proceed with the deletion logic
+
+                                // Hardcode the item type as 'perumahan' (change as needed)
+                                const itemType = 'perumahan';
+
+                                // Construct the delete URL
+                                const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Create a FormData object to send the filename, item type, and action (delete)
+                                const formData = new FormData();
+                                formData.append('filename', filename); // Send the filename to be deleted
+                                formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                // Send a POST request to your PHP script for deletion
+                                fetch(deleteUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'Image deleted successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Delete Success',
+                                                text: 'The image was deleted successfully.',
+                                            });
+
+                                            // Reload the page with cache-busting
+                                            location.reload(true); // Force a hard reload (including cache)
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Delete Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
                     // Add click event to trigger download
                     downloadLink.addEventListener("click", () => {
                         // Use the image URL to construct the download URL
@@ -248,6 +341,72 @@
 
                         // Open a new tab/window to initiate the download
                         window.open(downloadUrl, "_blank");
+                    });
+
+                    uploading.addEventListener("click", () => {
+                        // Create a file input element
+                        const fileInput = document.createElement("input");
+                        fileInput.type = "file";
+
+                        // Trigger the file input when the button is clicked
+                        fileInput.click();
+
+                        // Listen for changes in the file input
+                        fileInput.addEventListener("change", (event) => {
+                            const selectedFile = event.target.files[0]; // Get the selected file
+
+                            if (selectedFile) {
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Hardcode the item type as 'perumahan'
+                                const itemType = 'perumahan'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                // Construct the upload URL
+                                const uploadUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Create a FormData object to send the file, item type, and action (upload)
+                                const formData = new FormData();
+                                formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                formData.append('itemType', itemType); // Send the item type to the PHP script
+                                formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                // Send a POST request to your PHP script for upload
+                                fetch(uploadUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'File uploaded successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Upload Success',
+                                                text: 'The image was uploaded successfully.',
+                                            });
+
+                                            location.reload(true);
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Upload Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
                     });
                 });
             } else {
@@ -305,12 +464,98 @@
                     </div>
                      `;
                     rowContainer.appendChild(card);
+                    const buttonContainer = document.createElement("div");
+                    buttonContainer.classList.add("btn-container");
+
                     const downloadLink = document.createElement("a");
                     downloadLink.href = "#"; // Set a placeholder link initially
                     downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
-                    card.querySelector(".card-body").appendChild(downloadLink);
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(downloadLink);
 
+                    const uploading = document.createElement("a");
+                    uploading.href = "#"; // Set a placeholder link initially
+                    uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                    uploading.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(uploading);
+
+                    const deletes = document.createElement("a");
+                    deletes.href = "#"; // Set a placeholder link initially
+                    deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                    deletes.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(deletes);
+
+                    // Append the container to the card body
+                    card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                    deletes.addEventListener("click", () => {
+                        // Display a confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Confirmation',
+                            text: 'Anda Yaking Ingin Menghapus Foto??',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User confirmed deletion, proceed with the deletion logic
+
+                                // Hardcode the item type as 'perumahan' (change as needed)
+                                const itemType = 'landscape';
+
+                                // Construct the delete URL
+                                const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Create a FormData object to send the filename, item type, and action (delete)
+                                const formData = new FormData();
+                                formData.append('filename', filename); // Send the filename to be deleted
+                                formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                // Send a POST request to your PHP script for deletion
+                                fetch(deleteUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'Image deleted successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Delete Success',
+                                                text: 'The image was deleted successfully.',
+                                            });
+
+                                            // Reload the page with cache-busting
+                                            location.reload(true); // Force a hard reload (including cache)
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Delete Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
                     // Add click event to trigger download
                     downloadLink.addEventListener("click", () => {
                         // Use the image URL to construct the download URL
@@ -318,6 +563,72 @@
 
                         // Open a new tab/window to initiate the download
                         window.open(downloadUrl, "_blank");
+                    });
+
+                    uploading.addEventListener("click", () => {
+                        // Create a file input element
+                        const fileInput = document.createElement("input");
+                        fileInput.type = "file";
+
+                        // Trigger the file input when the button is clicked
+                        fileInput.click();
+
+                        // Listen for changes in the file input
+                        fileInput.addEventListener("change", (event) => {
+                            const selectedFile = event.target.files[0]; // Get the selected file
+
+                            if (selectedFile) {
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Hardcode the item type as 'perumahan'
+                                const itemType = 'landscape'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                // Construct the upload URL
+                                const uploadUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Create a FormData object to send the file, item type, and action (upload)
+                                const formData = new FormData();
+                                formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                formData.append('itemType', itemType); // Send the item type to the PHP script
+                                formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                // Send a POST request to your PHP script for upload
+                                fetch(uploadUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'File uploaded successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Upload Success',
+                                                text: 'The image was uploaded successfully.',
+                                            });
+
+                                            location.reload(true);
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Upload Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
                     });
                 });
             } else {
@@ -376,12 +687,98 @@
                      `;
                     rowContainer.appendChild(card);
 
+                    const buttonContainer = document.createElement("div");
+                    buttonContainer.classList.add("btn-container");
+
                     const downloadLink = document.createElement("a");
                     downloadLink.href = "#"; // Set a placeholder link initially
                     downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
-                    card.querySelector(".card-body").appendChild(downloadLink);
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(downloadLink);
 
+                    const uploading = document.createElement("a");
+                    uploading.href = "#"; // Set a placeholder link initially
+                    uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                    uploading.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(uploading);
+
+                    const deletes = document.createElement("a");
+                    deletes.href = "#"; // Set a placeholder link initially
+                    deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                    deletes.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(deletes);
+
+                    // Append the container to the card body
+                    card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                    deletes.addEventListener("click", () => {
+                        // Display a confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Confirmation',
+                            text: 'Anda Yaking Ingin Menghapus Foto??',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User confirmed deletion, proceed with the deletion logic
+
+                                // Hardcode the item type as 'perumahan' (change as needed)
+                                const itemType = 'lingkungan';
+
+                                // Construct the delete URL
+                                const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Create a FormData object to send the filename, item type, and action (delete)
+                                const formData = new FormData();
+                                formData.append('filename', filename); // Send the filename to be deleted
+                                formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                // Send a POST request to your PHP script for deletion
+                                fetch(deleteUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'Image deleted successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Delete Success',
+                                                text: 'The image was deleted successfully.',
+                                            });
+
+                                            // Reload the page with cache-busting
+                                            location.reload(true); // Force a hard reload (including cache)
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Delete Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
                     // Add click event to trigger download
                     downloadLink.addEventListener("click", () => {
                         // Use the image URL to construct the download URL
@@ -389,6 +786,72 @@
 
                         // Open a new tab/window to initiate the download
                         window.open(downloadUrl, "_blank");
+                    });
+
+                    uploading.addEventListener("click", () => {
+                        // Create a file input element
+                        const fileInput = document.createElement("input");
+                        fileInput.type = "file";
+
+                        // Trigger the file input when the button is clicked
+                        fileInput.click();
+
+                        // Listen for changes in the file input
+                        fileInput.addEventListener("change", (event) => {
+                            const selectedFile = event.target.files[0]; // Get the selected file
+
+                            if (selectedFile) {
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Hardcode the item type as 'perumahan'
+                                const itemType = 'lingkungan'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                // Construct the upload URL
+                                const uploadUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Create a FormData object to send the file, item type, and action (upload)
+                                const formData = new FormData();
+                                formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                formData.append('itemType', itemType); // Send the item type to the PHP script
+                                formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                // Send a POST request to your PHP script for upload
+                                fetch(uploadUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'File uploaded successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Upload Success',
+                                                text: 'The image was uploaded successfully.',
+                                            });
+
+                                            location.reload(true);
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Upload Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
                     });
                 });
             } else {
@@ -448,12 +911,99 @@
                      `;
                     rowContainer.appendChild(card);
 
+                    // Create a container div for the buttons
+                    const buttonContainer = document.createElement("div");
+                    buttonContainer.classList.add("btn-container");
+
                     const downloadLink = document.createElement("a");
                     downloadLink.href = "#"; // Set a placeholder link initially
                     downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
-                    card.querySelector(".card-body").appendChild(downloadLink);
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(downloadLink);
 
+                    const uploading = document.createElement("a");
+                    uploading.href = "#"; // Set a placeholder link initially
+                    uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                    uploading.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(uploading);
+
+                    const deletes = document.createElement("a");
+                    deletes.href = "#"; // Set a placeholder link initially
+                    deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                    deletes.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(deletes);
+
+                    // Append the container to the card body
+                    card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                    deletes.addEventListener("click", () => {
+                        // Display a confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Confirmation',
+                            text: 'Anda Yaking Ingin Menghapus Foto??',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User confirmed deletion, proceed with the deletion logic
+
+                                // Hardcode the item type as 'perumahan' (change as needed)
+                                const itemType = 'perumahan';
+
+                                // Construct the delete URL
+                                const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Create a FormData object to send the filename, item type, and action (delete)
+                                const formData = new FormData();
+                                formData.append('filename', filename); // Send the filename to be deleted
+                                formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                // Send a POST request to your PHP script for deletion
+                                fetch(deleteUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'Image deleted successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Delete Success',
+                                                text: 'The image was deleted successfully.',
+                                            });
+
+                                            // Reload the page with cache-busting
+                                            location.reload(true); // Force a hard reload (including cache)
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Delete Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
                     // Add click event to trigger download
                     downloadLink.addEventListener("click", () => {
                         // Use the image URL to construct the download URL
@@ -462,6 +1012,74 @@
                         // Open a new tab/window to initiate the download
                         window.open(downloadUrl, "_blank");
                     });
+
+                    uploading.addEventListener("click", () => {
+                        // Create a file input element
+                        const fileInput = document.createElement("input");
+                        fileInput.type = "file";
+
+                        // Trigger the file input when the button is clicked
+                        fileInput.click();
+
+                        // Listen for changes in the file input
+                        fileInput.addEventListener("change", (event) => {
+                            const selectedFile = event.target.files[0]; // Get the selected file
+
+                            if (selectedFile) {
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Hardcode the item type as 'perumahan'
+                                const itemType = 'perumahan'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                // Construct the upload URL
+                                const uploadUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Create a FormData object to send the file, item type, and action (upload)
+                                const formData = new FormData();
+                                formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                formData.append('itemType', itemType); // Send the item type to the PHP script
+                                formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                // Send a POST request to your PHP script for upload
+                                fetch(uploadUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'File uploaded successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Upload Success',
+                                                text: 'The image was uploaded successfully.',
+                                            });
+
+                                            location.reload(true);
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Upload Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
+
+
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -519,12 +1137,98 @@
                      `;
                     rowContainer.appendChild(card);
 
+                    const buttonContainer = document.createElement("div");
+                    buttonContainer.classList.add("btn-container");
+
                     const downloadLink = document.createElement("a");
                     downloadLink.href = "#"; // Set a placeholder link initially
                     downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
-                    card.querySelector(".card-body").appendChild(downloadLink);
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(downloadLink);
 
+                    const uploading = document.createElement("a");
+                    uploading.href = "#"; // Set a placeholder link initially
+                    uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                    uploading.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(uploading);
+
+                    const deletes = document.createElement("a");
+                    deletes.href = "#"; // Set a placeholder link initially
+                    deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                    deletes.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(deletes);
+
+                    // Append the container to the card body
+                    card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                    deletes.addEventListener("click", () => {
+                        // Display a confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Confirmation',
+                            text: 'Anda Yaking Ingin Menghapus Foto??',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User confirmed deletion, proceed with the deletion logic
+
+                                // Hardcode the item type as 'perumahan' (change as needed)
+                                const itemType = 'landscape';
+
+                                // Construct the delete URL
+                                const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Create a FormData object to send the filename, item type, and action (delete)
+                                const formData = new FormData();
+                                formData.append('filename', filename); // Send the filename to be deleted
+                                formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                // Send a POST request to your PHP script for deletion
+                                fetch(deleteUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'Image deleted successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Delete Success',
+                                                text: 'The image was deleted successfully.',
+                                            });
+
+                                            // Reload the page with cache-busting
+                                            location.reload(true); // Force a hard reload (including cache)
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Delete Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
                     // Add click event to trigger download
                     downloadLink.addEventListener("click", () => {
                         // Use the image URL to construct the download URL
@@ -533,6 +1237,73 @@
                         // Open a new tab/window to initiate the download
                         window.open(downloadUrl, "_blank");
                     });
+
+                    uploading.addEventListener("click", () => {
+                        // Create a file input element
+                        const fileInput = document.createElement("input");
+                        fileInput.type = "file";
+
+                        // Trigger the file input when the button is clicked
+                        fileInput.click();
+
+                        // Listen for changes in the file input
+                        fileInput.addEventListener("change", (event) => {
+                            const selectedFile = event.target.files[0]; // Get the selected file
+
+                            if (selectedFile) {
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Hardcode the item type as 'perumahan'
+                                const itemType = 'landscape'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                // Construct the upload URL
+                                const uploadUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Create a FormData object to send the file, item type, and action (upload)
+                                const formData = new FormData();
+                                formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                formData.append('itemType', itemType); // Send the item type to the PHP script
+                                formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                // Send a POST request to your PHP script for upload
+                                fetch(uploadUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'File uploaded successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Upload Success',
+                                                text: 'The image was uploaded successfully.',
+                                            });
+
+                                            location.reload(true);
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Upload Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
+
                 });
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -590,12 +1361,98 @@
                      `;
                     rowContainer.appendChild(card);
 
+                    const buttonContainer = document.createElement("div");
+                    buttonContainer.classList.add("btn-container");
+
                     const downloadLink = document.createElement("a");
                     downloadLink.href = "#"; // Set a placeholder link initially
                     downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadLink.classList.add("btn", "btn-primary", "btn-sm", "mt-2");
-                    card.querySelector(".card-body").appendChild(downloadLink);
+                    downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(downloadLink);
 
+                    const uploading = document.createElement("a");
+                    uploading.href = "#"; // Set a placeholder link initially
+                    uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                    uploading.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(uploading);
+
+                    const deletes = document.createElement("a");
+                    deletes.href = "#"; // Set a placeholder link initially
+                    deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                    deletes.classList.add("btn", "btn-primary", "btn-sm");
+                    buttonContainer.appendChild(deletes);
+
+                    // Append the container to the card body
+                    card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                    deletes.addEventListener("click", () => {
+                        // Display a confirmation dialog
+                        Swal.fire({
+                            title: 'Delete Confirmation',
+                            text: 'Anda Yaking Ingin Menghapus Foto??',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // User confirmed deletion, proceed with the deletion logic
+
+                                // Hardcode the item type as 'perumahan' (change as needed)
+                                const itemType = 'lingkungan';
+
+                                // Construct the delete URL
+                                const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Create a FormData object to send the filename, item type, and action (delete)
+                                const formData = new FormData();
+                                formData.append('filename', filename); // Send the filename to be deleted
+                                formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                // Send a POST request to your PHP script for deletion
+                                fetch(deleteUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'Image deleted successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Delete Success',
+                                                text: 'The image was deleted successfully.',
+                                            });
+
+                                            // Reload the page with cache-busting
+                                            location.reload(true); // Force a hard reload (including cache)
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Delete Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
+                    });
                     // Add click event to trigger download
                     downloadLink.addEventListener("click", () => {
                         // Use the image URL to construct the download URL
@@ -603,6 +1460,72 @@
 
                         // Open a new tab/window to initiate the download
                         window.open(downloadUrl, "_blank");
+                    });
+
+                    uploading.addEventListener("click", () => {
+                        // Create a file input element
+                        const fileInput = document.createElement("input");
+                        fileInput.type = "file";
+
+                        // Trigger the file input when the button is clicked
+                        fileInput.click();
+
+                        // Listen for changes in the file input
+                        fileInput.addEventListener("change", (event) => {
+                            const selectedFile = event.target.files[0]; // Get the selected file
+
+                            if (selectedFile) {
+                                // Get the filename from the image URL
+                                const imageUrlParts = imageUrl.split('/');
+                                const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                // Hardcode the item type as 'perumahan'
+                                const itemType = 'lingkungan'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                // Construct the upload URL
+                                const uploadUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                // Create a FormData object to send the file, item type, and action (upload)
+                                const formData = new FormData();
+                                formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                formData.append('itemType', itemType); // Send the item type to the PHP script
+                                formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                // Send a POST request to your PHP script for upload
+                                fetch(uploadUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(result => {
+                                        if (result === 'File uploaded successfully.') {
+                                            // Display a success message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Upload Success',
+                                                text: 'The image was uploaded successfully.',
+                                            });
+
+                                            location.reload(true);
+                                        } else {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + result, // Display the error message from the server
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Display an error message using SweetAlert
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Upload Error',
+                                            text: 'Error: ' + error, // Display the fetch error message
+                                        });
+                                    });
+                            }
+                        });
                     });
                 });
             } else {
