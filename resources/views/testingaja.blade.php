@@ -1,113 +1,61 @@
-so i have result like this but how to make it be one array long. from this result to
+<?php
 
-array:1 [▼ // app\Http\Controllers\SidaktphController.php:7611
-"BKE" => array:6 [▼
-"OD" => array:8 [▼
-0 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 1
-"janjang" => 0
-"brd" => 350
-"luas" => 29.53
-]
-1 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 3
-"janjang" => 5
-"brd" => 98
-"luas" => 68.08
-]
-2 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 4
-"janjang" => 1
-"brd" => 3863
-"luas" => 95.92
-]
-3 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 2
-"janjang" => 0
-"brd" => 0
-"luas" => 0
-]
-4 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 5
-"janjang" => 0
-"brd" => 0
-"luas" => 0
-]
-5 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 6
-"janjang" => 0
-"brd" => 0
-"luas" => 0
-]
-6 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 7
-"janjang" => 0
-"brd" => 0
-"luas" => 0
-]
-7 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 8
-"janjang" => 0
-"brd" => 0
-"luas" => 0
-]
-]
-"OE" => array:8 [▶]
-"OB" => array:8 [▶]
-"OF" => array:8 [▶]
-"OC" => array:8 [▶]
-"OA" => array:8 [▶]
-]
-]
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+header('Access-Control-Allow-Methods: GET, POST, PUT');
+header('content-type: application/json; charset=utf-8');
 
-this result :
-array:1 [▼ // app\Http\Controllers\SidaktphController.php:7611
-"BKE" => array:6 [▶]
-]
-array:1 [▼ // app\Http\Controllers\SidaktphController.php:7611
-"BKE" => array:6 [▼
-"OD" => array:8 [▼
-0 => array:6 [▼
-"est" => "BKE"
-"afd" => "OD"
-"status" => 1
-"janjang" => 0
-"brd" => 350
-"luas" => 29.53
-"status2" => 3
-"janjang2" => 5
-"brd2" => 98
-"luas2" => 68.08
-"status3" => 4
-"janjang3" => 1
-"brd3" => 3863
-"luas3" => 95.92
-"status4" => 2
-"janjang4" => 0
-"brd4" => 0
+// Set the base path where you want to store the uploaded images
+$imageBasePath = '/home/srsssmsc/mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/';
 
-]
-]
-"OE" => array:8 [▶]
-"OB" => array:8 [▶]
-"OF" => array:8 [▶]
-"OC" => array:8 [▶]
-"OA" => array:8 [▶]
-]
-]
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check if the action parameter is set
+    if (isset($_POST['action'])) {
+        if ($_POST['action'] === 'upload') {
+            // Handle image upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadedFile = $_FILES['image'];
+                $clientFileName = $_POST['filename']; // The filename you want
+                $fullPath = $imageBasePath . '/' . $clientFileName; // Use the client-specified filename
+              if (move_uploaded_file($uploadedFile['tmp_name'], $fullPath)) {
+    $response = [
+        'status' => 'success',
+        'message' => 'File uploaded successfully.',
+        'file_path' => $fullPath, // Optionally, you can include the file path in the response
+    ];
+    echo json_encode($response);
+} else {
+    $response = [
+        'status' => 'error',
+        'message' => 'Failed to move uploaded file.',
+    ];
+    echo json_encode($response);
+}
+        } elseif ($_POST['action'] === 'delete') {
+            // Handle image deletion
+            if (isset($_POST['imageFileName'])) {
+                $imageFileName = $_POST['imageFileName'];
+                $fullPath = $imageBasePath . '/' . $imageFileName;
+                
+                if (file_exists($fullPath)) {
+                    if (unlink($fullPath)) {
+                        echo 'File deleted successfully.';
+                    } else {
+                        echo 'Failed to delete the file.';
+                    }
+                } else {
+                    echo 'File not found.';
+                }
+            } else {
+                echo 'Missing imageFileName parameter.';
+            }
+        } else {
+            echo 'Invalid action parameter.';
+        }
+    } else {
+        echo 'Missing action parameter.';
+    }
+} else {
+    echo 'Invalid request method.';
+}
+?>

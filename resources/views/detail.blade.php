@@ -550,14 +550,16 @@
 
 
     <!-- Main Modal -->
+    @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
     <div class="modal">
         <div class="modal-content">
             <img src="" alt="" class="modal-image">
             <div class="button-group">
                 <button class="rotate btn btn-primary">Rotate</button>
-                @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
-                <button id="openNestedModalBtn" class="btn btn-info">Upload Foto</button>
-                @endif
+
+                <button id="uploadFoto" class="btn btn-info">Upload Foto</button>
+                <button id="deleteMod" class="btn btn-danger">Delete Foto</button>
+
                 <button id="save-btn" class="btn btn-success">Save</button>
             </div>
             <span class="close">&times;</span>
@@ -590,11 +592,52 @@
     </div>
 
 
+    @else
+
+    <div class="modal">
+        <div class="modal-content">
+            <img src="" alt="" class="modal-image">
+            <div class="button-group">
+                <button class="rotate btn btn-primary">Rotate</button>
+                <button id="save-btn" class="btn btn-success">Save</button>
+            </div>
+            <span class="close">&times;</span>
+        </div>
+    </div>
+    <!-- Nested Modal -->
+    <div id="nestedModal" class="modal">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <!-- <h2>Upload Foto</h2> -->
+                <h2>Upload Foto jika hanya foto tidak tersedia!</h2>
+                <!-- <button id="closeNestedModalBtn" class="close">&times;</button> -->
+            </div>
+            <!-- Body -->
+            <div class="modal-body">
+                <p><strong>Image Source:</strong> <span id="nestedSrc"></span></p>
+                <p><strong>Image Alt:</strong> <span id="nestedAlt"></span></p>
+                <div class="file-upload">
+                    <label for="uploadInput" class="btn btn-primary">Choose Foto</label>
+                    <input type="file" id="uploadInput" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button id="uploadBtn" class="btn btn-primary">Upload</button>
+                <button id="closeNestedModalBtn" class="btn btn-danger">Close</button>
+            </div>
+        </div>
+    </div>
+
+    @endif
+
 </div>
 @include('layout/footer')
 
 
 <script>
+    var currentUserName = "{{ session('jabatan') }}";
     const openNestedModalBtn = document.getElementById("openNestedModalBtn");
     const closeNestedModalBtn = document.getElementById("closeNestedModalBtn");
     const mainModal = document.querySelector(".modal");
@@ -631,56 +674,144 @@
         });
     });
 
-    openNestedModalBtn.addEventListener("click", () => {
-        const nestedSrcSpan = nestedModal.querySelector('#nestedSrc');
-        const nestedAltSpan = nestedModal.querySelector('#nestedAlt');
 
-        // Extract the desired portion from the src string
-        const srcParts = src.split('/');
-        const lastPart = srcParts[srcParts.length - 1];
+    document.getElementById('uploadFoto').addEventListener('click', function() {
+        if (currentUserName === 'Askep' || currentUserName === 'Manager') {
+            Swal.fire({
+                title: 'Select Image',
+                input: 'file',
+                inputAttributes: {
+                    accept: 'image/*',
+                    'aria-label': 'Upload your profile picture'
+                },
+                confirmButtonText: 'Upload',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You need to select an image!';
+                    }
+                }
+            }).then((file) => {
+                if (file.value) {
+                    const uploadedFile = file.value;
 
-        // Set the src and alt attributes to the spans
-        nestedSrcSpan.textContent = lastPart;
-        nestedAltSpan.textContent = alt;
-        nestedModal.style.display = 'block'; // Show the nested modal
+
+                    const srcParts = src.split('/');
+                    const lastPart = srcParts[srcParts.length - 1];
+
+
+                    const formData = new FormData();
+                    formData.append('image', uploadedFile);
+                    formData.append('filename', lastPart);
+                    formData.append('action', 'upload'); // Add action
+
+                    // Create a new XMLHttpRequest object
+                    const xhr = new XMLHttpRequest();
+                    const url = 'https://srs-ssms.com/qc_inspeksi/upGudang.php';
+
+                    xhr.open('POST', url, true);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+
+                                if (response.status === 'success') {
+                                    Swal.fire('Uploaded!', response.message, 'success');
+                                    // Optionally, you can use response.file_path if you need the file path.
+                                } else {
+                                    Swal.fire('Error', response.message, 'error');
+                                }
+                            } else {
+                                Swal.fire('Error', 'Failed to upload the file.', 'error');
+                            }
+                        }
+                    };
+
+
+                    xhr.send(formData);
+
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Anda tidak punya Akses untuk fungsi Ini',
+                text: 'Berlaku Hanya untuk Manager/Askep/Asisten!',
+                icon: 'warning',
+                showCancelButton: true,
+                // confirmButtonText: 'Yes, delete it!',
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Terima Kasih');
+                }
+            });
+        }
     });
+
+
+    // Add an event listener for the delete button
+    document.getElementById('deleteMod').addEventListener('click', function() {
+        if (currentUserName === 'Askep' || currentUserName === 'Manager') {
+            const srcParts = src.split('/');
+            const lastPart = srcParts[srcParts.length - 1];
+
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Log the image file name before deleting
+                    const xhr = new XMLHttpRequest();
+                    const url = 'https://srs-ssms.com/qc_inspeksi/upGudang.php';
+
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+                            } else {
+                                Swal.fire('Error', 'Failed to delete the file.', 'error');
+                            }
+                        }
+                    };
+
+                    // Send both the image file name and the action as parameters to your PHP script
+                    const params = `imageFileName=${lastPart}&action=delete`; // Set action to 'delete'
+                    xhr.send(params);
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // The user canceled the action
+                    Swal.fire('Cancelled', 'Your file is safe :)', 'error');
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Anda tidak punya Akses untuk fungsi Ini',
+                text: 'Berlaku Hanya untuk Manager/Askep/Asisten!',
+                icon: 'warning',
+                showCancelButton: true,
+                // confirmButtonText: 'Yes, delete it!',
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Terima Kasih');
+                }
+            });
+        }
+
+
+    });
+
+
     closeNestedModalBtn.addEventListener("click", () => {
         mainModal.style.display = "block"; // Show the main modal
         nestedModal.style.display = "none"; // Hide the nested modal
-    });
-
-    // Get the upload input and upload button
-    const uploadInput = nestedModal.querySelector('#uploadInput');
-    const uploadBtn = nestedModal.querySelector('#uploadBtn');
-
-    // Add a click event listener to the upload button
-    uploadBtn.addEventListener('click', () => {
-        if (uploadInput.files.length > 0) {
-            const uploadedFile = uploadInput.files[0];
-            const newFileName = nestedModal.querySelector('#nestedSrc').textContent;
-
-            const formData = new FormData();
-            formData.append('image', uploadedFile);
-            formData.append('filename', newFileName);
-
-            // Create a new XMLHttpRequest object
-            const xhr = new XMLHttpRequest();
-            const url = 'https://srs-ssms.com/qc_inspeksi/upGudang.php';
-
-            xhr.open('POST', url, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(xhr.responseText);
-                    alert('Image uploaded successfully.');
-                } else if (xhr.readyState === 4 && xhr.status !== 200) {
-                    console.log('Error uploading image:', xhr.statusText);
-                }
-            };
-
-            xhr.send(formData);
-        } else {
-            alert('Please select a file to upload.');
-        }
     });
 
 
