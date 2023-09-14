@@ -13,7 +13,6 @@ require '../app/helpers.php';
 class inspectController extends Controller
 {
 
-
     public function plotBlok(Request $request)
     {
         $est = $request->get('est');
@@ -536,7 +535,6 @@ class inspectController extends Controller
         if ($est == 'Pla') {
             $est = 'Plasma1';
         }
-
         $date = Carbon::parse($tgl)->format('F Y');
         $queryMTFI = DB::connection('mysql2')->table('mutu_transport')
             ->select("mutu_transport.*")
@@ -753,7 +751,29 @@ class inspectController extends Controller
 
 
      
-  
+        // function getGroupLetter($key)
+        // {
+        //     return substr($key, 4, 2);
+        // }
+        // uksort($all_mutu, function ($a, $b) {
+        //     $groupLetterA = getGroupLetter($a);
+        //     $groupLetterB = getGroupLetter($b);
+
+        //     if ($groupLetterA === $groupLetterB) {
+        //         return strcmp($a, $b); // If the group letters are the same, compare the full keys
+        //     }
+
+        //     return strcmp($groupLetterA, $groupLetterB); // Compare the group letters
+        // });
+
+        // dd($all_mutu);
+   
+        ////
+     
+        
+        
+        // print_r($all_mutu);
+       
 
         $pdf = pdf::loadview('cetakFI', [
             'id' => $id,
@@ -1210,7 +1230,6 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
-    
     
     public function changeDataInspeksi(Request $request)
     {
@@ -19828,7 +19847,6 @@ class inspectController extends Controller
         return view('dataDetail', $arrView);
     }
 
-
     public function filterDataDetail(Request $request)
     {
 
@@ -20011,7 +20029,7 @@ class inspectController extends Controller
         $rstTrans = $request->input('rstTrans');
         $estTrans = $request->input('estTrans');
 
-        // dd($id, $blok, $status_panen, $sph, $br1);
+        // dd($id_trans, $afd_trans, $blok_trans, $bt_trans, $komentar_trans);
 
         DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $id)->update([
             'blok' => $blok,
@@ -20067,7 +20085,6 @@ class inspectController extends Controller
             'tph_baris' => $tphbrTrans,
         ]);
     }
-
     public function deleteBA(Request $request)
     {
 
@@ -20076,7 +20093,7 @@ class inspectController extends Controller
         $ancaks = $request->input('delete_id');
         $id_trans = $request->input('id_trans');
 
-        // dd($ancaks);
+        // dd($id_trans);
 
    
         $ancakFA = DB::connection('mysql2')->table('mutu_ancak_new')
@@ -20165,15 +20182,6 @@ class inspectController extends Controller
         $date = $request->input('tglPDF');
         $reg = $request->input('regPDF');
 
-        // $mutuAncak = DB::connection('mysql2')->table('mutu_ancak_new')
-        //     ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
-        //     ->where('datetime', 'like', '%' . $date . '%')
-        //     ->where('mutu_ancak_new.estate', $est)
-        //     ->where('mutu_ancak_new.afdeling', $afd)
-
-        //     ->get();
-        // $mutuAncak = $mutuAncak->groupBy(['blok']);
-        // $mutuAncak = json_decode($mutuAncak, true);
         $mutuAncak = DB::connection('mysql2')
         ->table('mutu_ancak_new')
         ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
@@ -20202,21 +20210,9 @@ class inspectController extends Controller
             );
         }else {
   
-        //     foreach ($mutuAncak as $key => $value) {
-        //         $mutuAncak[$key] = array_map(function ($item) {
-        //             return json_decode(json_encode($item), true);
-        //         }, $value);
-        //     }
-            
-        //     $mutuAncak = json_decode(json_encode($mutuAncak), true);
         
         }
      
-        // foreach ($mutuAncak as $key => $value) {
-        //     $mutuAncak[$key] = array_map(function ($item) {
-        //         return json_decode(json_encode($item), true);
-        //     }, $value);
-        // }
         
         $mutuAncak = json_decode(json_encode($mutuAncak), true);
         // dd($mutuAncak);
@@ -20232,14 +20228,7 @@ class inspectController extends Controller
         $mutuBuahQuery = $mutuBuahQuery->groupBy(['blok']);
         $mutuBuahQuery = json_decode($mutuBuahQuery, true);
 
-        // $mutuTransport = DB::connection('mysql2')->table('mutu_transport')
-        //     ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
-        //     ->where('datetime', 'like', '%' . $date . '%')
-        //     ->where('mutu_transport.estate', $est)
-        //     ->where('mutu_transport.afdeling', $afd)
-
-        //     ->get();
-        // $mutuTransport = $mutuTransport->groupBy(['blok']);
+      
         // $mutuTransport = json_decode($mutuTransport, true);
         $mutuTransport = DB::connection('mysql2')
         ->table('mutu_transport')
@@ -20279,15 +20268,42 @@ class inspectController extends Controller
         
         }
 
-        // foreach ($mutuTransport as $key => $value) {
-        //     $mutuTransport[$key] = array_map(function ($item) {
-        //         return json_decode(json_encode($item), true);
-        //     }, $value);
-        // }
-        
         $mutuTransport = json_decode(json_encode($mutuTransport), true);
     
-        // dd($mutuAncak,$mutuTransport);
+        $filteredAncakPemanen = [];
+
+        foreach ($mutuAncak as $key => $blockData) {
+            $hah = []; // Initialize an empty array for each block
+        
+            foreach ($blockData as $key1 => $data) {
+                // Check if any of the specified fields have a non-zero value
+                if (
+                    $data["brtp"] != 0 ||
+                    $data["brtk"] != 0 ||
+                    $data["brtgl"] != 0 ||
+                    $data["bhts"] != 0 ||
+                    $data["bhtm1"] != 0 ||
+                    $data["bhtm2"] != 0 ||
+                    $data["bhtm3"] != 0
+                ) {
+                    // Add "ancak_pemanen" value to the $hah array
+                    $hah[] = $data["ancak_pemanen"];
+                }
+            }
+        
+            // If $hah is empty, all specified fields are 0; get the first "ancak_pemanen"
+            if (empty($hah)) {
+                $hah[] = $blockData[0]["ancak_pemanen"];
+            }
+        
+            // Concatenate the "ancak_pemanen" values into a single index
+            $filteredAncakPemanen[$key]['new_ancak'] = implode('-', $hah);
+        }
+        
+        // Debugging: Use dd to dump the original array and the filtered result
+        // dd($mutuAncak, $filteredAncakPemanen);
+        
+        
 
         $ancak = array();
         $sum = 0; // Initialize sum variable
@@ -20296,7 +20312,7 @@ class inspectController extends Controller
             $jumPokok = 0;
             $sph = 0;
             $jml_jjg_panen = 0;
-            $jml_brtp = 0;
+            
             $jml_brtk = 0;
             $jml_brtgl = 0;
             $jml_bhts = 0;
@@ -20312,7 +20328,10 @@ class inspectController extends Controller
             $over_prun = 0;
             $pokok_panen = 0;
             $firstEntry = $value[0];
+            $jml_brtp = 0;
             foreach ($value as $key1 => $value2) {
+                
+              
                 $jumPokok += $value2['sample'];
                 if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $listBlok)) {
                     if ($value2['sph'] != 0) {
@@ -20402,7 +20421,15 @@ class inspectController extends Controller
             $ancak[$key]['pk_kuning'] = $pk_kuning;
             $ancak[$key]['und'] = $unprun;
             $ancak[$key]['overprn'] = $over_prun;
+            foreach ($filteredAncakPemanen as $keyx => $valuex) if($keyx == $key){
+                foreach ($valuex as $valuex1) {
+                   $newAncak = $valuex['new_ancak'];
+                } # code...
+            }
+
+
             $ancak[$key]['ancak_panen'] = $value2['ancak_pemanen'];
+            $ancak[$key]['ancak_panenReg2'] = $newAncak;
             $ancak[$key]['prsmk'] = $pr_smak;
             $ancak[$key]['frontstack'] = ($jumPokok != 0) ? round(($sp / $jumPokok) * 100, 2) : 0;
             $ancak[$key]['under'] = ($jumPokok != 0) ? round(($unprun / $jumPokok) * 100, 2) : 0;
@@ -20415,6 +20442,8 @@ class inspectController extends Controller
                 $count++;
             }
         }
+
+        // dd($ancak,$mutuAncak);
         $average = $count != 0 ? $sum / $count : 0;
     
 
@@ -20709,7 +20738,7 @@ class inspectController extends Controller
         $CalculateStack['bmt'] = $bmt;
         $CalculateStack['pokok_sample'] = $jjg;
         // dd($transReg2,$transport);
-        // dd($transReg2);
+        // dd($ancak);
         // Session::put('transReg2', $transReg2);
         // dd($transport);
         $arrView = array();
@@ -27244,7 +27273,7 @@ class inspectController extends Controller
   
    
    
-    public function pdfBA_excel(Request $request)
+        public function pdfBA_excel(Request $request)
     {
         $est = $request->input('estBA_excel');
         $afd = $request->input('afdBA_excel');

@@ -173,7 +173,7 @@
             </tr>
         </table>
 
-        @if ($data['reg'] === '1' || $data['reg'] === '3')
+        @if ($data['reg'] === '1' || $data['reg'] === '3' || $data['reg'] === '4')
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <div class="table-responsive">
                 <table class="my-table">
@@ -589,7 +589,7 @@
 
         @endif
 
-        @if ($data['reg'] === '2' || $data['reg'] === '4')
+        @if ($data['reg'] === '2' )
 
         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
             <div class="table-responsive">
@@ -765,7 +765,7 @@
 
                                 <td>{{ $data['mutuAncak'][$key]['status_panen'] ?? $data['mutuTransport'][$key]['status_panen'] }}</td>
                                 <td>{{ $key }}</td>
-                                <td colspan="2">{{ $data['mutuAncak'][$key]['ancak_panen'] ?? '-' }}</td>
+                                <td colspan="2" style="white-space: pre-wrap;font-size: 11px">{{ $data['mutuAncak'][$key]['ancak_panenReg2'] ?? '-' }}</td>
                                 <td>{{ $data['mutuAncak'][$key]['luas_blok'] ?? '-' }}</td>
                                 <td>{{ $data['mutuAncak'][$key]['sph'] ?? '-' }}</td>
                                 <td>{{ $data['mutuAncak'][$key]['pokok_sample'] ?? '-' }}</td>
