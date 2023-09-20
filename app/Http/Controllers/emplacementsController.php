@@ -4126,12 +4126,132 @@ class emplacementsController extends Controller
             $arrayMerge['data_temuan'] = array_merge($arrayMerge['data_temuan'] ?? [], $data_temuan);
         }
         // dd($arrayMerge);
+        $baseURL = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/';
+        $baseURL2 = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/PLG_2023829_112324_RGE_OB.jpg';
 
+        $testing = get_headers($baseURL2);
+        // dd($testing);
+
+        $unavailableImages = [];
+
+        foreach ($arrayMerge['data_temuan'] as $imageURL) {
+            // Extract the location from the image URL (e.g., 'rmh', 'lcp', 'lkn')
+            $location = explode('-', $imageURL)[1];
+
+            // dd($location);
+            // Build the full image URL
+            $fullURL = $baseURL;
+
+            if ($location === 'rmh') {
+                $fullURL .= 'perumahan/';
+            } elseif ($location === 'lcp') {
+                $fullURL .= 'landscape/';
+            } elseif ($location === 'lkn') {
+                $fullURL .= 'lingkungan/';
+            }
+
+            $fullURL .= $imageURL;
+
+
+            // dd($fullURL);
+
+            $cleanedURL = explode('-', $fullURL);
+
+            $finisurl = $cleanedURL[0] . '-' . $cleanedURL[1];
+            // dd($finisurl);
+            // Send a HEAD request to check the image status
+            $headers = get_headers($finisurl);
+
+            // Extract the HTTP status code
+            $statusCode = (int) substr($headers[0], 9, 3);
+
+            // Check if the status code is 404 (Not Found)
+            if ($statusCode === 404) {
+                $newurl =  explode('/', $finisurl);
+
+                // dd($newurl);
+
+                $unavailableImages[] = $newurl[8];
+            }
+        }
+        // dd($fullURL);
+        foreach ($header as $key => $value) {
+            if (isset($value['foto_temuan']) && is_array($value['foto_temuan'])) {
+                foreach ($value['foto_temuan'] as $key2 => $value2) {
+                    $img = explode('-', $value2)[0];
+
+                    if (in_array($img, $unavailableImages)) {
+                        unset($header[$key]['foto_temuan'][$key2]);
+                    }
+                }
+            }
+        }
+
+        // To reindex the 'foto_temuan' arrays
+        foreach ($header as $key => $value) {
+            if (isset($value['foto_temuan']) && is_array($value['foto_temuan'])) {
+                $header[$key]['foto_temuan'] = array_values($header[$key]['foto_temuan']);
+            }
+        }
+
+        // dd($header, $unavailableImages);
+        $arrayMerge2 = [];
+
+        foreach ($header as $item) {
+            $arrayMerge2['est'] = $item['est'];
+            $arrayMerge2['date'] = $item['date'];
+            $arrayMerge2['afd'] = $combinedAfd;
+            $arrayMerge2['petugas'] = $combinedPetugas;
+            $arrayMerge2['foto_temuan'] = array_merge($arrayMerge2['foto_temuan'] ?? [], $item['foto_temuan']);
+
+            $detail_temuan = [];
+            foreach ($item['foto_temuan'] as $foto) {
+                $parts = explode('_', $foto);
+
+                if (count($parts) > 2) {
+                    $detail_parts = explode('.', $parts[4]); // Split the fourth part by dot
+                    if (count($detail_parts) > 1) {
+                        $detail_temuan[] = $parts[3] . ' ' . $detail_parts[0]; // Concatenate the third part and the part after dot
+                    }
+                }
+            }
+            $arrayMerge2['detail_temuan'] = array_merge($arrayMerge2['detail_temuan'] ?? [], $detail_temuan);
+
+            $komentar_temuan = [];
+
+            foreach ($item['foto_temuan'] as $foto) {
+                $parts = explode('_', $foto);
+
+                if (count($parts) > 4) {
+                    $detail_parts = explode('-', $parts[4]);
+
+                    if (count($detail_parts) > 1) {
+                        $komentar_temuan[] = $detail_parts[1];
+                    }
+                }
+            }
+
+            $arrayMerge2['komentar_temuan'] = array_merge($arrayMerge2['komentar_temuan'] ?? [], $komentar_temuan);
+
+
+            $data_temuan = [];
+            foreach ($item['foto_temuan'] as $foto) {
+                $parts = explode('-', $foto);
+                // dd($parts);
+                if (count($parts) > 2) {
+
+                    $data_temuan[] = $parts[0] . '-' . $parts[2]; // Concatenate the third part and the part after dot
+
+                }
+            }
+            $arrayMerge2['data_temuan'] = array_merge($arrayMerge2['data_temuan'] ?? [], $data_temuan);
+        }
+        // dd($arrayMerge2);
 
         $arrView = array();
 
         $arrView['test'] =  $est;
-        $arrView['total'] =  $arrayMerge;
+        $arrView['total'] =  $arrayMerge2;
         // $arrView['lingkungan'] =  $nila_akhir_lingkungan;
 
         $pdf = PDF::loadView('emplPDF', ['data' => $arrView]);

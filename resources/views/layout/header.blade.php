@@ -183,6 +183,19 @@ session_start();
                                 </p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="{{ asset('/userqcpanel') }}" class="nav-link">
+                                <div class="nav-icon lottie-animation" data-animation-path="{{ asset('img/homejson.json') }}">
+                                </div>
+
+                                <p>
+                                    Management User QC
+                                </p>
+                            </a>
+                        </li>
+
+
                         @if (strpos(session('departemen'), 'QC') !== false)
                         <li class="nav-item">
                             <a class="nav-link" id="deleteData">

@@ -4406,7 +4406,7 @@ class inspectController extends Controller
         // dd($queryEste);
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
-            ->whereNotIn('estate.est', ['Plasma1','Plasma2','Plasma3'])
+            ->whereNotIn('estate.est', ['Plasma1','Plasma2','Plasma3','CWS1','NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM'])
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $Reg)
             ->get();
@@ -8847,7 +8847,7 @@ class inspectController extends Controller
 
         $queryEsta = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
-            ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->whereNotIn('estate.est', ['Plasma1','Plasma2','Plasma3','CWS1','CWS2','CWS3','NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM'])
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $Reg)
             // ->where('wil.regional', '3')

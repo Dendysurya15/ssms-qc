@@ -1870,6 +1870,7 @@
         });
         removeMarkers();
         getPlotBlok();
+        drawEstatePlot();
     });
 
 

@@ -14,6 +14,7 @@ use App\Http\Controllers\userNewController;
 use App\Http\Controllers\UserQCController;
 use App\Http\Controllers\CheckimgController;
 use App\Http\Controllers\taksasiController;
+use App\Http\Controllers\adminpanelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -186,3 +187,8 @@ Route::get('/gettaksasi/{query}', [taksasiController::class, 'dashboard']);
 Route::post('/updatesidakTPhnew', [SidaktphController::class, 'updatesidakTPhnew'])->name('updatesidakTPhnew');
 
 Route::post('/deletedetailtph', [SidaktphController::class, 'deletedetailtph'])->name('deletedetailtph');
+
+
+Route::get('/userqcpanel', [adminpanelController::class, 'dashboard'])->name('userqcpanel');
+Route::get('/listqc', [adminpanelController::class, 'listqc'])->name('listqc');
+Route::post('/updateUserqc', [adminpanelController::class, 'updateUserqc'])->name('updateUserqc');
