@@ -17,6 +17,8 @@ require '../app/helpers.php';
 
 class emplacementsController extends Controller
 {
+
+
     public function dashboard_perum(Request $request)
     {
 
@@ -45,6 +47,26 @@ class emplacementsController extends Controller
             ->get();
 
         $queryAsisten = json_decode($queryAsisten, true);
+        $optionREg = DB::connection('mysql2')->table('reg')
+            ->select('reg.*')
+            ->whereNotIn('reg.id', [5])
+            // ->where('wil.regional', 1)
+            ->get();
+
+
+        $optionREg = json_decode($optionREg, true);
+
+        $perum = DB::connection('mysql2')->table('perumahan')
+            ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
+            ->orderBy('year', 'asc')
+            ->get();
+
+        $years = [];
+        foreach ($perum as $sidak) {
+            $years[] = $sidak->year;
+        }
+
+        // dd($years);
 
         // dd($mutu_buahs, $sidak_buah);
         // $arrView['list_bulan'] =  $bulan;
@@ -55,8 +77,11 @@ class emplacementsController extends Controller
             'arrHeaderReg' => $arrHeaderReg,
             'list_bulan' => $bulan,
             'shortMonth' => $shortMonth,
+            'option_reg' => $optionREg,
+            'list_tahun' => $years,
         ]);
     }
+
 
     public function getAFD(Request $request)
     {
@@ -69,7 +94,7 @@ class emplacementsController extends Controller
             ->select('estate.*')
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3', 'SRS', 'TC', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'])
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'SRS', 'TC', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'])
             ->get();
         $queryEste = json_decode($queryEste, true);
 
@@ -142,11 +167,7 @@ class emplacementsController extends Controller
             ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
             ->get();
         $queryAfd = json_decode($queryAfd, true);
-        $filteredArray = array_filter($queryAfd, function ($item) {
-            return $item['nama'] !== 'EST';
-        });
-
-        // dd($filteredArray);
+        // dd($emplacement);
         $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         // untuk perumahan 
@@ -173,7 +194,7 @@ class emplacementsController extends Controller
         $defaultNew = array();
         foreach ($bulan as $month) {
             foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
+                foreach ($queryAfd as $afd) {
                     if ($est['est'] == $afd['est']) {
                         $defaultNew[$est['est']][$month][$afd['nama']] = 0;
                     }
@@ -194,8 +215,6 @@ class emplacementsController extends Controller
                 }
             }
         }
-
-        // dd($dataPerBulan);
 
 
         foreach ($defaultNew as $key => $value) {
@@ -228,7 +247,7 @@ class emplacementsController extends Controller
         $def_lingkungan = array();
         foreach ($bulan as $month) {
             foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
+                foreach ($queryAfd as $afd) {
                     if ($est['est'] == $afd['est']) {
                         $def_lingkungan[$est['est']][$month][$afd['nama']] = 0;
                     }
@@ -283,7 +302,7 @@ class emplacementsController extends Controller
         $def_lanscape = array();
         foreach ($bulan as $month) {
             foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
+                foreach ($queryAfd as $afd) {
                     if ($est['est'] == $afd['est']) {
                         $def_lanscape[$est['est']][$month][$afd['nama']] = 0;
                     }
@@ -2087,17 +2106,32 @@ class emplacementsController extends Controller
                 );
 
                 // Loop through each month and add the corresponding number of values and dates
+                // foreach ($allMonths as $month) {
+                //     $values = $skor_total_per_month[$month] ?? array();
+                //     $dates = $dates_per_month[$month] ?? array();
+                //     $avg = $avg_per_month[$month] ?? 0;
+                //     if (isset($header_cell[$month]) && $header_cell[$month] === 1 && count($values) === 1 && $values[0] === 0) {
+                //         $values = $values;
+                //     } else {
+                //         $values = array_pad($values, $max_values, 0);
+                //     }
+
+                //     $new_row[$month] = $values;
+                //     $new_row[$month . '_avg'] = $avg;
+                //     $new_row[$month . '_dates'] = $dates; // Add the dates for the month
+                // }
+
                 foreach ($allMonths as $month) {
                     $values = $skor_total_per_month[$month] ?? array();
                     $dates = $dates_per_month[$month] ?? array();
                     $avg = $avg_per_month[$month] ?? 0;
-                    if (isset($header_cell[$month]) && $header_cell[$month] === 1 && count($values) === 1 && $values[0] === 0) {
-                        $values = $values;
-                    } else {
-                        $values = array_pad($values, $max_values, 0);
-                    }
 
-                    $new_row[$month] = $values;
+                    // Check if the month is present in $header_cell and get its value
+                    $headerValue = $header_cell[$month] ?? 1;
+
+                    // Create an array with the appropriate number of indices based on $headerValue
+                    $new_row[$month] = array_pad($values, $headerValue, 0);
+
                     $new_row[$month . '_avg'] = $avg;
                     $new_row[$month . '_dates'] = $dates; // Add the dates for the month
                 }
@@ -2128,8 +2162,6 @@ class emplacementsController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
-
-
 
     public function detailEmplashmend($est,  $date)
     {
@@ -3254,6 +3286,7 @@ class emplacementsController extends Controller
         echo json_encode($arrView);
         exit();
     }
+
 
     public function downloadBAemp(Request $request)
     {

@@ -244,10 +244,9 @@ class SidaktphController extends Controller
         $year = $dateParts['year'];
         $month = $dateParts['month'];
 
-
-
         $year = $year; // Replace with the desired year
         $month = $month;   // Replace with the desired month (September in this example)
+
 
         $weeks = [];
         $firstDayOfMonth = strtotime("$year-$month-01");
@@ -257,8 +256,21 @@ class SidaktphController extends Controller
         $startDate = $firstDayOfMonth;
         $endDate = $startDate;
 
+        // Find the first Monday of the month
+        while (date('N', $startDate) != 1) {
+            $startDate = strtotime("+1 day", $startDate);
+        }
+
+        // Handle the days from the 1st of the month until the first Monday
+        $weeks[$weekNumber] = [
+            'start' => date('Y-m-d', $firstDayOfMonth),
+            'end' => date('Y-m-d', strtotime("-1 day", $startDate)),
+        ];
+
+        $weekNumber++;
+
         while ($startDate <= $lastDayOfMonth) {
-            $endDate = strtotime("+6 days", $endDate);
+            $endDate = strtotime("+6 days", $startDate);
 
             if ($endDate > $lastDayOfMonth) {
                 $endDate = $lastDayOfMonth;
@@ -274,6 +286,7 @@ class SidaktphController extends Controller
         }
 
         // dd($weeks);
+
         $result = [];
 
         // Iterate through the original array
@@ -2949,10 +2962,9 @@ class SidaktphController extends Controller
         $year = $dateParts['year'];
         $month = $dateParts['month'];
 
-
-
         $year = $year; // Replace with the desired year
         $month = $month;   // Replace with the desired month (September in this example)
+
 
         $weeks = [];
         $firstDayOfMonth = strtotime("$year-$month-01");
@@ -2962,8 +2974,21 @@ class SidaktphController extends Controller
         $startDate = $firstDayOfMonth;
         $endDate = $startDate;
 
+        // Find the first Monday of the month
+        while (date('N', $startDate) != 1) {
+            $startDate = strtotime("+1 day", $startDate);
+        }
+
+        // Handle the days from the 1st of the month until the first Monday
+        $weeks[$weekNumber] = [
+            'start' => date('Y-m-d', $firstDayOfMonth),
+            'end' => date('Y-m-d', strtotime("-1 day", $startDate)),
+        ];
+
+        $weekNumber++;
+
         while ($startDate <= $lastDayOfMonth) {
-            $endDate = strtotime("+6 days", $endDate);
+            $endDate = strtotime("+6 days", $startDate);
 
             if ($endDate > $lastDayOfMonth) {
                 $endDate = $lastDayOfMonth;
@@ -7382,10 +7407,9 @@ class SidaktphController extends Controller
         $year = $dateParts['year'];
         $month = $dateParts['month'];
 
-        // dd($ancakFA);
-
         $year = $year; // Replace with the desired year
         $month = $month;   // Replace with the desired month (September in this example)
+
 
         $weeks = [];
         $firstDayOfMonth = strtotime("$year-$month-01");
@@ -7395,8 +7419,21 @@ class SidaktphController extends Controller
         $startDate = $firstDayOfMonth;
         $endDate = $startDate;
 
+        // Find the first Monday of the month
+        while (date('N', $startDate) != 1) {
+            $startDate = strtotime("+1 day", $startDate);
+        }
+
+        // Handle the days from the 1st of the month until the first Monday
+        $weeks[$weekNumber] = [
+            'start' => date('Y-m-d', $firstDayOfMonth),
+            'end' => date('Y-m-d', strtotime("-1 day", $startDate)),
+        ];
+
+        $weekNumber++;
+
         while ($startDate <= $lastDayOfMonth) {
-            $endDate = strtotime("+6 days", $endDate);
+            $endDate = strtotime("+6 days", $startDate);
 
             if ($endDate > $lastDayOfMonth) {
                 $endDate = $lastDayOfMonth;

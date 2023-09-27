@@ -48,17 +48,18 @@
                                 <div class="col-md-2 offset-md-8">
                                     {{csrf_field()}}
                                     <select class="form-control" id="estreg">
-                                        <option value="1" selected>Regional 1</option>
-                                        <option value="2">Regional 2</option>
-                                        <option value="3">Regional 3</option>
+                                        @foreach($option_reg as $key => $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
                                 <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                     {{csrf_field()}}
                                     <select class="form-control" id="tahunest">
-                                        <option value="2023" selected>2023</option>
-                                        <option value="2022">2022</option>
+                                        @foreach($list_tahun as $item)
+                                        <option value="{{$item}}">{{$item}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -116,17 +117,18 @@
                                     <div class="col-md-2 offset-md-8">
                                         {{csrf_field()}}
                                         <select class="form-control" id="afdreg">
-                                            <option value="1" selected>Regional 1</option>
-                                            <option value="2">Regional 2</option>
-                                            <option value="3">Regional 3</option>
+                                            @foreach($option_reg as $key => $item)
+                                            <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                                         {{csrf_field()}}
                                         <select class="form-control" id="tahunafd">
-                                            <option value="2023" selected>2023</option>
-                                            <option value="2022">2022</option>
+                                            @foreach($list_tahun as $item)
+                                            <option value="{{$item}}">{{$item}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -502,9 +504,10 @@
                 var tbody1 = document.getElementById('data_est');
 
                 // console.log(table1);
+                inc = 1
                 table1.forEach((element, index) => {
                     let tr = document.createElement('tr');
-                    let item1 = element[0];
+                    let item1 = inc++
                     let item2 = element[1].unit_kerja;
                     let item3 = element[1].kode;
                     let item4 = element[1].pic;

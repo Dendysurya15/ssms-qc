@@ -19959,12 +19959,7 @@ class inspectController extends Controller
     {
 
       
-        // $id_buah = $request->input('editId_buah');
-        // $est_buah = $request->input('estBH');
-        // $afdBH = $request->input('afdBH');
-        // $tphBH = $request->input('tphBH');
 
-        // dd($id_buah,$est_buah,$afdBH,$tphBH);
         // mutu ancak 
         $est = $request->input('est');
         $afd = $request->input('afd');
@@ -19996,24 +19991,7 @@ class inspectController extends Controller
         $pk_panen = $request->input('pk_panenCAk');
         // dd($id, $estate, $afdeling,$blok,$status_panen);
 
-        // mutu buah 
-        $ids = $request->input('editId_buah');
-        $blok_bh = $request->input('blok_bh');
-        $status_bhpanen = $request->input('StatusBhpnen');
-        $bmt = $request->input('bmt');
-        $bmk = $request->input('bmk');
-        $pemanen_bh = $request->input('pemanen_bh');
-
-        $estBH = $request->input('estBH');
-        $afdBH = $request->input('afdBH');
-        $tphBH = $request->input('tphBH');
-        $petugasBHs = $request->input('petugasBH');
-        $emptyBHS = $request->input('emptyBH');
-        $jjgBH = $request->input('jjgBH');
-        $overBH = $request->input('overBH');
-        $abrBH = $request->input('abrBH');
-        $vcutBHs = $request->input('vcutBH');
-        $alsBR = $request->input('alsBR');
+       
         // $kmnBH = $request->input('kmnBH');
         // mutu transport
         // dd($ids,$jjgBH);
@@ -20054,6 +20032,27 @@ class inspectController extends Controller
             'sp' => $sp,
             'pokok_panen' => $pk_panen,
         ]);
+
+
+         $ids = $request->input('editId_buah');
+         $blok_bh = $request->input('blok_bh');
+         $status_bhpanen = $request->input('StatusBhpnen');
+         $bmt = $request->input('bmt');
+         $bmk = $request->input('bmk');
+         $pemanen_bh = $request->input('pemanen_bh');
+ 
+         $estBH = $request->input('estBH');
+         $afdBH = $request->input('afdBH');
+         $tphBH = $request->input('tphBH');
+         $petugasBHs = $request->input('petugasBH');
+         $emptyBHS = $request->input('emptyBH');
+         $jjgBH = $request->input('jjgBH');
+         $overBH = $request->input('overBH');
+         $abrBH = $request->input('abrBH');
+         $vcutBHs = $request->input('vcutBH');
+         $alsBR = $request->input('alsBR');
+
+        //  dd($ids,$blok_bh,$status_bhpanen,$bmt);
 
         DB::connection('mysql2')->table('mutu_buah')->where('id', $ids)->update([
             'blok' => $blok_bh,

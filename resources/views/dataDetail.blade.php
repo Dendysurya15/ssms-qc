@@ -2741,7 +2741,7 @@
                     var rowId = rowData[0];
 
                     // Populate the form with the data of the selected row
-                    $('#editId_buah').val(rowData.id).prop('disabled', true);
+                    $('#editId_buah').val(rowData.id)
 
                     $('#update-estBH').val(rowData.estate)
                     $('#update-afdBH').val(rowData.afdeling)
@@ -2763,6 +2763,9 @@
                     $('#editModalBuah').modal('show');
                 }
 
+
+
+
                 $(document).ready(function() {
                     // Close modal when the close button is clicked
                     $('#closeModalBtn_buah').click(function() {
@@ -2779,8 +2782,7 @@
 
                         // Get the form data
                         var formData = new FormData(this);
-                        formData.append('id', $('#editId_buah').val()); // Append the id field to the form data
-
+                        formData.append('id', $('#editId_buah').val());
                         var bmt = $('#update-bmt').val();
                         var bmk = $('#update-bmk').val();
                         var emptyBH = $('#update-emptyBH').val();
