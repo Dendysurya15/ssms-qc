@@ -99,6 +99,7 @@ class adminpanelController extends Controller
                     $newjbtanInput = $jabatan_input;
                 }
 
+                // dd($newjbtanInput);
                 DB::table('pengguna')->insert([
                     'email' => $emailValue,
                     'password' => $passwordValue,

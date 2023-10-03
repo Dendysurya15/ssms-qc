@@ -30,9 +30,9 @@ if (!function_exists('skor_brd_tinggal')) {
 if (!function_exists('skor_buah_tinggal')) {
     function skor_buah_tinggal($skor)
     {
-        if ($skor <= 0.0) {
+        if ($skor <= 0) {
             return 10;
-        } else if ($skor >= 0.0 && $skor <= 0.5) {
+        } else if ($skor > 0 && $skor <= 0.5) {
             return 8;
         } else if ($skor >= 0.5 && $skor <= 1) {
             return 6;

@@ -1916,7 +1916,7 @@ class inspectController extends Controller
                     $dataSkor[$value1['wil']][$key][$key2]['restan_total'] = $sum_Restan;
             
                     $dataSkor[$value1['wil']][$key][$key2]['skor'] = $btr_tph;
-                    $dataSkor[$value1['wil']][$key][$key2]['skor_restan'] = $jjg_tph;
+                    $dataSkor[$value1['wil']][$key][$key2]['skor_restan'] = ceil($jjg_tph);
                 }
 
                 
@@ -1924,7 +1924,8 @@ class inspectController extends Controller
                 $dataSkor[$value1['wil']][$key]['tph_sample_total'] = $sum_tph_sample;
                 $dataSkor[$value1['wil']][$key]['bt_tph_total'] = round($sum_skor_bt / $sum_tph_sample, 2);
                 $dataSkor[$value1['wil']][$key]['jjg_total'] = $sum_jjg;
-                $dataSkor[$value1['wil']][$key]['jjg_tph_total'] = round($sum_jjg / $sum_tph_sample, 2);
+                $dataSkor[$value1['wil']][$key]['jjg_tph_total'] = round($sum_jjg / $sum_tph_sample,3);
+                // $dataSkor[$value1['wil']][$key]['jjg_tph_total'] = 'test';
             }
         }
         // dd($dataSkor);
@@ -2090,8 +2091,8 @@ class inspectController extends Controller
 
                     $dataSkor_trans[$value1['wil']][$key][$key2]['bt_total'] = $sum_bt;
                     $dataSkor_trans[$value1['wil']][$key][$key2]['restan_total'] = $sum_Restan;
-                    $dataSkor_trans[$value1['wil']][$key][$key2]['bt_tph'] = $btr_tph;
-                    $dataSkor_trans[$value1['wil']][$key][$key2]['restan_tph'] = $jjg_tph;
+                    $dataSkor_trans[$value1['wil']][$key][$key2]['bt_tph'] = ceil($btr_tph);
+                    $dataSkor_trans[$value1['wil']][$key][$key2]['restan_tph'] = ceil($jjg_tph);
                     $dataSkor_trans[$value1['wil']][$key][$key2]['Skor_bt'] = skor_brd_tinggal($btr_tph);
                     $dataSkor_trans[$value1['wil']][$key][$key2]['Skor_tph'] = skor_buah_tinggal($jjg_tph);
                 }
@@ -20458,11 +20459,12 @@ class inspectController extends Controller
 
         // Calculate the sum of sph values
         $sum = array_sum($sph_values);
-
-        // Calculate the average of sph values
-        $average = round($sum / count($sph_values), 0);
-
-    
+        if (count($sph_values) > 0) {
+            $average = round($sum / count($sph_values), 0);
+        } else {
+            $average = 0; // or any default value you prefer
+        }
+        
 
         $transport = array();
 
@@ -27905,9 +27907,12 @@ class inspectController extends Controller
         // Calculate the sum of sph values
         $sum = array_sum($sph_values);
 
-        // Calculate the average of sph values
-        $average = round($sum / count($sph_values), 0);
-
+        if (count($sph_values) > 0) {
+            $average = round($sum / count($sph_values), 0);
+        } else {
+            $average = 0; // or any default value you prefer
+        }
+        
         // dd($average, $ancak);
 
         $transport = array();

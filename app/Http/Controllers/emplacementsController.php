@@ -68,7 +68,7 @@ class emplacementsController extends Controller
 
         // dd($years);
 
-        // dd($mutu_buahs, $sidak_buah);
+
         // $arrView['list_bulan'] =  $bulan;
         return view('dashboard_perum', [
             'arrHeader' => $arrHeader,
@@ -79,6 +79,7 @@ class emplacementsController extends Controller
             'shortMonth' => $shortMonth,
             'option_reg' => $optionREg,
             'list_tahun' => $years,
+
         ]);
     }
 
@@ -4204,7 +4205,9 @@ class emplacementsController extends Controller
 
                 // dd($newurl);
 
-                $unavailableImages[] = $newurl[8];
+                if (isset($newurl[8])) {
+                    $unavailableImages[] = $newurl[8];
+                }
             }
         }
         // dd($fullURL);

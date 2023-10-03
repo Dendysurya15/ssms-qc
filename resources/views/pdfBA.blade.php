@@ -401,31 +401,34 @@
 
                                 <tr>
                                     <td colspan="2">Total</td>
-                                    <td>{{$luasBloks}}</td>
+                                    <td>{{ isset($luasBloks) ? $luasBloks : '-' }}</td>
+
                                     <td>{{$data['sph_avg']}}</td>
                                     <td>{{ $totalPokokSample }}</td>
-                                    <td>{{$TotLuasSam}}</td>
-                                    <td>{{$persen_sampNew}}</td>
-                                    <td>{{$totaljumPanen}}</td>
-                                    <td>{{$akp_real}}</td>
-                                    <td>{{$total_p}}</td>
-                                    <td>{{$total_k}}</td>
-                                    <td>{{$total_gl}}</td>
-                                    <td>{{$total_brdMA}}</td>
-                                    <td>{{$brd_jjg}}</td>
-                                    <td>{{ $total_s}}</td>
-                                    <td>{{ $total_m1}}</td>
-                                    <td>{{ $total_m2}}</td>
-                                    <td>{{ $total_m3}}</td>
-                                    <td>{{ $total_bh}}</td>
-                                    <td>{{$buah_brd}}</td>
-                                    <td>{{$total_ps}}</td>
-                                    <td>{{$ps_persen}}</td>
-                                    <td>{{$total_tph}}</td>
-                                    <td>{{$total_brd}}</td>
-                                    <td>{{$brd_tph}}</td>
-                                    <td>{{$total_buah}}</td>
-                                    <td>{{$buah_tph}}</td>
+                                    <td>{{ isset($TotLuasSam) ? $TotLuasSam : '-' }}</td>
+
+                                    <td>{{ isset($persen_sampNew) ? $persen_sampNew : '-' }}</td>
+                                    <td>{{ isset($totaljumPanen) ? $totaljumPanen : '-' }}</td>
+                                    <td>{{ isset($akp_real) ? $akp_real : '-' }}</td>
+                                    <td>{{ isset($total_p) ? $total_p : '-' }}</td>
+                                    <td>{{ isset($total_k) ? $total_k : '-' }}</td>
+                                    <td>{{ isset($total_gl) ? $total_gl : '-' }}</td>
+                                    <td>{{ isset($total_brdMA) ? $total_brdMA : '-' }}</td>
+                                    <td>{{ isset($brd_jjg) ? $brd_jjg : '-' }}</td>
+                                    <td>{{ isset($total_s) ? $total_s : '-' }}</td>
+                                    <td>{{ isset($total_m1) ? $total_m1 : '-' }}</td>
+                                    <td>{{ isset($total_m2) ? $total_m2 : '-' }}</td>
+                                    <td>{{ isset($total_m3) ? $total_m3 : '-' }}</td>
+                                    <td>{{ isset($total_bh) ? $total_bh : '-' }}</td>
+                                    <td>{{ isset($buah_brd) ? $buah_brd : '-' }}</td>
+                                    <td>{{ isset($total_ps) ? $total_ps : '-' }}</td>
+                                    <td>{{ isset($ps_persen) ? $ps_persen : '-' }}</td>
+                                    <td>{{ isset($total_tph) ? $total_tph : '-' }}</td>
+                                    <td>{{ isset($total_brd) ? $total_brd : '-' }}</td>
+                                    <td>{{ isset($brd_tph) ? $brd_tph : '-' }}</td>
+                                    <td>{{ isset($total_buah) ? $total_buah : '-' }}</td>
+                                    <td>{{ isset($buah_tph) ? $buah_tph : '-' }}</td>
+
                                 </tr>
                         </tbody>
                     </table>

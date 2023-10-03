@@ -247,45 +247,37 @@ class SidaktphController extends Controller
         $year = $year; // Replace with the desired year
         $month = $month;   // Replace with the desired month (September in this example)
 
-
         $weeks = [];
         $firstDayOfMonth = strtotime("$year-$month-01");
         $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
 
         $weekNumber = 1;
         $startDate = $firstDayOfMonth;
-        $endDate = $startDate;
-
-        // Find the first Monday of the month
-        while (date('N', $startDate) != 1) {
-            $startDate = strtotime("+1 day", $startDate);
-        }
-
-        // Handle the days from the 1st of the month until the first Monday
-        $weeks[$weekNumber] = [
-            'start' => date('Y-m-d', $firstDayOfMonth),
-            'end' => date('Y-m-d', strtotime("-1 day", $startDate)),
-        ];
-
-        $weekNumber++;
 
         while ($startDate <= $lastDayOfMonth) {
-            $endDate = strtotime("+6 days", $startDate);
-
+            $endDate = strtotime("next Sunday", $startDate);
             if ($endDate > $lastDayOfMonth) {
                 $endDate = $lastDayOfMonth;
             }
 
             $weeks[$weekNumber] = [
-                'start' => date('Y-m-d', $startDate), // Modify date format
-                'end' => date('Y-m-d', $endDate),     // Modify date format
+                'start' => date('Y-m-d', $startDate),
+                'end' => date('Y-m-d', $endDate),
             ];
 
-            $startDate = strtotime("+1 day", $endDate);
+            $nextMonday = strtotime("next Monday", $endDate);
+
+            // Check if the next Monday is still within the current month.
+            if (date('m', $nextMonday) == $month) {
+                $startDate = $nextMonday;
+            } else {
+                // If the next Monday is in the next month, break the loop.
+                break;
+            }
+
             $weekNumber++;
         }
 
-        // dd($weeks);
 
         $result = [];
 
@@ -2972,36 +2964,32 @@ class SidaktphController extends Controller
 
         $weekNumber = 1;
         $startDate = $firstDayOfMonth;
-        $endDate = $startDate;
-
-        // Find the first Monday of the month
-        while (date('N', $startDate) != 1) {
-            $startDate = strtotime("+1 day", $startDate);
-        }
-
-        // Handle the days from the 1st of the month until the first Monday
-        $weeks[$weekNumber] = [
-            'start' => date('Y-m-d', $firstDayOfMonth),
-            'end' => date('Y-m-d', strtotime("-1 day", $startDate)),
-        ];
-
-        $weekNumber++;
 
         while ($startDate <= $lastDayOfMonth) {
-            $endDate = strtotime("+6 days", $startDate);
-
+            $endDate = strtotime("next Sunday", $startDate);
             if ($endDate > $lastDayOfMonth) {
                 $endDate = $lastDayOfMonth;
             }
 
             $weeks[$weekNumber] = [
-                'start' => date('Y-m-d', $startDate), // Modify date format
-                'end' => date('Y-m-d', $endDate),     // Modify date format
+                'start' => date('Y-m-d', $startDate),
+                'end' => date('Y-m-d', $endDate),
             ];
 
-            $startDate = strtotime("+1 day", $endDate);
+            $nextMonday = strtotime("next Monday", $endDate);
+
+            // Check if the next Monday is still within the current month.
+            if (date('m', $nextMonday) == $month) {
+                $startDate = $nextMonday;
+            } else {
+                // If the next Monday is in the next month, break the loop.
+                break;
+            }
+
             $weekNumber++;
         }
+
+
 
         $result = [];
 
@@ -4237,14 +4225,14 @@ class SidaktphController extends Controller
         }
         // dd($rhEstate, $mtancakWIltab1);
         // Create a new array for each iteration
-        $rhEstate[] = array(
+        $regEstate[] = array(
             'est' => 'REG-1',
             'jab' => 'RH',
             'nama' => '-',
             'total' => $reg_finalskor,
-            'skor' => round($reg_finalskor / $reg_devskor, 1)
-
+            'skor' => ($reg_devskor != 0) ? round($reg_finalskor / $reg_devskor, 1) : 0
         );
+
 
         // dd($rhEstate, $mtancakWIltab1);
         // end new hitungan 
@@ -7410,43 +7398,37 @@ class SidaktphController extends Controller
         $year = $year; // Replace with the desired year
         $month = $month;   // Replace with the desired month (September in this example)
 
-
         $weeks = [];
         $firstDayOfMonth = strtotime("$year-$month-01");
         $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
 
         $weekNumber = 1;
         $startDate = $firstDayOfMonth;
-        $endDate = $startDate;
-
-        // Find the first Monday of the month
-        while (date('N', $startDate) != 1) {
-            $startDate = strtotime("+1 day", $startDate);
-        }
-
-        // Handle the days from the 1st of the month until the first Monday
-        $weeks[$weekNumber] = [
-            'start' => date('Y-m-d', $firstDayOfMonth),
-            'end' => date('Y-m-d', strtotime("-1 day", $startDate)),
-        ];
-
-        $weekNumber++;
 
         while ($startDate <= $lastDayOfMonth) {
-            $endDate = strtotime("+6 days", $startDate);
-
+            $endDate = strtotime("next Sunday", $startDate);
             if ($endDate > $lastDayOfMonth) {
                 $endDate = $lastDayOfMonth;
             }
 
             $weeks[$weekNumber] = [
-                'start' => date('Y-m-d', $startDate), // Modify date format
-                'end' => date('Y-m-d', $endDate),     // Modify date format
+                'start' => date('Y-m-d', $startDate),
+                'end' => date('Y-m-d', $endDate),
             ];
 
-            $startDate = strtotime("+1 day", $endDate);
+            $nextMonday = strtotime("next Monday", $endDate);
+
+            // Check if the next Monday is still within the current month.
+            if (date('m', $nextMonday) == $month) {
+                $startDate = $nextMonday;
+            } else {
+                // If the next Monday is in the next month, break the loop.
+                break;
+            }
+
             $weekNumber++;
         }
+
 
         // dd($weeks);
         $result = [];
