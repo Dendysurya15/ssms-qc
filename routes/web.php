@@ -15,6 +15,9 @@ use App\Http\Controllers\UserQCController;
 use App\Http\Controllers\CheckimgController;
 use App\Http\Controllers\taksasiController;
 use App\Http\Controllers\adminpanelController;
+use App\Http\Controllers\incpectcomponent\inspeksidashController;
+use App\Http\Controllers\incpectcomponent\pdfgenerateController;
+use App\Http\Controllers\incpectcomponent\makemapsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,30 +77,32 @@ Route::get('/cetakpdf/{id}', [unitController::class, 'cetakpdf']);
 // });
 
 Route::get('/dashboard_inspeksi', [inspectController::class, 'dashboard_inspeksi'])->name('dashboard_inspeksi');
-Route::get('/cetakPDFFI/{id}/{est}/{tgl}', [inspectController::class, 'cetakPDFFI'])->name('cetakPDFFI');
+
 Route::get('/getFindData', [inspectController::class, 'getFindData'])->name('getFindData');
 Route::post('/changeDataInspeksi', [inspectController::class, 'changeDataInspeksi'])->name('changeDataInspeksi');
 Route::post('/plotEstate', [inspectController::class, 'plotEstate'])->name('plotEstate');
-Route::get('/plotBlok', [inspectController::class, 'plotBlok'])->name('plotBlok');
-// Route::post('/filter', [inspectController::class, 'filter']);
 
 
-Route::get('/filter', [inspectController::class, 'filter'])->name('filter');
-Route::get('/graphfilter', [inspectController::class, 'graphfilter'])->name('graphfilter');
-Route::get('/filterTahun', [inspectController::class, 'filterTahun'])->name('filterTahun');
 Route::get('/scorebymap', [inspectController::class, 'scorebymap'])->name('scorebymap');
 Route::get('detailInpeksi/{est}/{afd}/{date}', [inspectController::class, 'detailInpeksi'])->name('detailInpeksi');
 Route::get('dataDetail/{est}/{afd}/{date}/{reg}', [inspectController::class, 'dataDetail'])->name('dataDetail');
 Route::get('filterDataDetail', [inspectController::class, 'filterDataDetail'])->name('filterDataDetail');
 
+// yang di ubah 
+Route::get('/cetakPDFFI/{id}/{est}/{tgl}', [pdfgenerateController::class, 'cetakPDFFI'])->name('cetakPDFFI');
+Route::get('/filter', [inspeksidashController::class, 'filterv2'])->name('filter');
+Route::get('/graphfilter', [inspeksidashController::class, 'graphfilter'])->name('graphfilter');
+Route::get('/filterTahun', [inspeksidashController::class, 'filterTahun'])->name('filterTahun');
+Route::post('/updateBA', [pdfgenerateController::class, 'updateBA'])->name('updateBA');
+Route::post('/deleteBA', [pdfgenerateController::class, 'deleteBA'])->name('deleteBA');
+Route::delete('/deleteTrans/{id}', [pdfgenerateController::class, 'deleteTrans'])->name('deleteTrans');
+Route::post('/pdfBA', [pdfgenerateController::class, 'pdfBA'])->name('pdfBA');
+Route::get('/getMapsdetail', [makemapsController::class, 'getMapsdetail'])->name('getMapsdetail');
+Route::get('/plotBlok', [makemapsController::class, 'plotBlok'])->name('plotBlok'); // Route::post('/filter', [inspectController::class, 'filter']);
 
-Route::post('/updateBA', [inspectController::class, 'updateBA'])->name('updateBA');
-
-Route::post('/deleteBA', [inspectController::class, 'deleteBA'])->name('deleteBA');
 
 
-Route::delete('/deleteTrans/{id}', [inspectController::class, 'deleteTrans'])->name('deleteTrans');
-Route::post('/pdfBA', [inspectController::class, 'pdfBA'])->name('pdfBA');
+// end 
 
 Route::post('/fetchEstatesByRegion', [inspectController::class, 'fetchEstatesByRegion'])->name('fetchEstatesByRegion');
 Route::get('/listktu', [unitController::class, 'listktu'])->name('listktu');
@@ -135,8 +140,6 @@ Route::post('/pdfBA_sidakbuah', [MutubuahController::class, 'pdfBA_sidakbuah'])-
 Route::post('/findIssueSmb', [MutubuahController::class, 'findIssueSmb'])->name('findIssueSmb');
 Route::get('/cetakFiSmb/{est}/{tgl}', [MutubuahController::class, 'cetakFiSmb'])->name('cetakFiSmb');
 
-
-Route::get('/getMapsdetail', [inspectController::class, 'getMapsdetail'])->name('getMapsdetail');
 
 
 

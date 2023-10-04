@@ -253,38 +253,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody id="tbody2">
-                                                        @foreach ($dataPerWil[2] as $key => $value)
-                                                        @foreach($value as $key2 => $value2)
-                                                        @foreach ($value2 as $key3 => $value3)
-                                                        @if (is_array($value3))
-                                                        <tr>
-                                                            <td>{{ $key }}</td>
-                                                            <td>{{ $key2 }}</td>
-                                                            <td>no data </td>
-                                                            <td id="skor" bgcolor="red" style="color: white">{{
-                                                                $value3['skor_akhir'] }}</td>
-                                                            <td>{{ $value2['rank'] }}</td>
-                                                        </tr>
-                                                        @endif
-                                                        @endforeach
-                                                        @endforeach
-                                                        @endforeach
 
-                                                        @foreach ($TotalperEstate[2] as $key4 => $value4)
-
-                                                        <tr>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">{{ $key4 }}
-                                                            </td>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">EM</td>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">no data</td>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">{{
-                                                                $value4['skor_akhir'] }}
-                                                            </td>
-                                                            <td bgcolor="#e0dcec" style="color: #000000">{{
-                                                                $value4['rank'] }}</td>
-                                                        </tr>
-
-                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -1826,7 +1795,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -1839,7 +1808,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -1864,7 +1833,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -2443,16 +2412,6 @@
         });
     }
 
-    var skor = document.getElementById("skor").innerHTML;
-    if (skor < 65) {
-        document.getElementById("skor").style.backgroundColor = "#ff0404";
-        document.getElementById("skor").style.color = "black";
-    } else if (skor >= 65 && skor < 75) {
-        document.getElementById("skor").style.backgroundColor = "#ffc404";
-    } else {
-        document.getElementById("skor").style.backgroundColor = "#fffc04";
-    }
-
     //testing  table ke tengah
     const c = document.getElementById('btnShow');
     const o = document.getElementById('regionalPanen');
@@ -2568,40 +2527,6 @@
         }
     });
     //untuk chart
-    var list_wilayah = <?php echo json_encode($queryEsta); ?>;
-    var list_btt = <?php echo json_encode($chartBTT); ?>;
-    var list_buah = <?php echo json_encode($chartBuahTT); ?>;
-    var list_brdWil = <?php echo json_encode($chartPerwil); ?>;
-    var list_buahWil = <?php echo json_encode($buahPerwil); ?>;
-
-    var wilayah = '['
-    list_wilayah.forEach(element => {
-        wilayah += '"' + element + '",'
-    });
-    wilayah = wilayah.substring(0, wilayah.length - 1);
-    wilayah += ']'
-
-
-
-    var buahWil = '['
-    list_brdWil.forEach(element => {
-        buahWil += '"' + element + '",'
-    });
-    buahWil = buahWil.substring(0, buahWil.length - 1);
-    buahWil += ']'
-
-    var btWill = '['
-    list_buahWil.forEach(element => {
-        btWill += '"' + element + '",'
-    });
-    btWill = btWill.substring(0, btWill.length - 1);
-    btWill += ']'
-
-    var estate = JSON.parse(wilayah)
-    var brd_wil = JSON.parse(buahWil)
-    var buah_wil = JSON.parse(btWill)
-    // console.log(estate);
-
 
     ///Data test
 
@@ -2644,8 +2569,8 @@
         },
         xaxis: {
             type: '',
-            categories: estate
-            // categories: ['-','-','-',]
+            // categories: estate
+            categories: ['-', '-', '-', ]
         }
     };
 
@@ -2796,7 +2721,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -3040,7 +2965,7 @@
 
 
                 var arrTbody1 = filteredArray
-                console.log(arrTbody1);
+                // console.log(arrTbody1);
 
                 var tbody1 = document.getElementById('tbody1');
                 //         $('#thead1').empty()
@@ -4593,7 +4518,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -4664,7 +4589,7 @@
 
 
 
-                console.log(RekapTahunReg);
+                // console.log(RekapTahunReg);
 
 
                 var bttEST = '[';
@@ -5531,7 +5456,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -5667,7 +5592,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
