@@ -2556,7 +2556,7 @@ class emplacementsController extends Controller
                                 "komentar_temuan_ls" => $value2["komentar_temuan_ls" . $i],
                                 "komentar_ls" => $value2["komentar_ls" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
-
+                                "id" => $value2["id"]
                             );
                         }
 
@@ -2576,7 +2576,7 @@ class emplacementsController extends Controller
                 $index = 0; // Initialize index here
                 foreach ($value1 as $key2 => $value2) {
                     $index++; // Increment the index inside the loop
-
+                    // dd($value2);
                     // Group data based on "rmhX" keys
                     $number = 1;
                     $groupedData = array();
@@ -2596,6 +2596,7 @@ class emplacementsController extends Controller
                                 "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
                                 "komentar_rmh" => $value2["komentar_rmh" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
+                                "id" => $value2["id"]
 
                             );
                         }
@@ -2640,7 +2641,7 @@ class emplacementsController extends Controller
                                 "komentar_temuan_ll" => $value2["komentar_temuan_ll" . $i],
                                 "komentar_ll" => $value2["komentar_ll" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
-
+                                "id" => $value2["id"]
                             );
                         }
 
@@ -2735,6 +2736,8 @@ class emplacementsController extends Controller
                 $mergedArray_rmh = array_merge($mergedArray_rmh, $value2);
             }
         }
+
+        // dd($mergedArray_rmh);
         $mergedArray_lscp = [];
         foreach ($new_Lscp_result as $key1 => $value1) {
             foreach ($value1 as $key2 => $value2) {
@@ -2748,45 +2751,7 @@ class emplacementsController extends Controller
             }
         }
 
-        // Convert the flat array into a Laravel collection
-        $collection = new Collection($mergedArray_rmh);
-        $collection_ls = new Collection($mergedArray_lscp);
-        $collection_lkngn = new Collection($mergedArray_lkngn);
 
-        // Paginate the collection with 8 items per page
-        $perPage = 8;
-        $currentPage = Paginator::resolveCurrentPage('page');
-        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $paginatedItems = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-        $paginatedItems->setPath(request()->url());
-
-
-        $currentPageItems_ls = $collection_ls->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $paginatedItems_lscp = new LengthAwarePaginator($currentPageItems_ls, count($collection_ls), $perPage);
-        $paginatedItems_lscp->setPath(request()->url());
-
-        $currentPageItems_lkngn = $collection_lkngn->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $paginatedItems_lkngan = new LengthAwarePaginator($currentPageItems_lkngn, count($collection_lkngn), $perPage);
-        $paginatedItems_lkngan->setPath(request()->url());
-
-        // dd($paginatedItems_lscp);
-
-        // dd($paginatedItems);
-        // Send the paginated collection to the view
-
-
-
-
-        // untuk afdeling 
-
-        // $estates = array_column($queryEste, 'est');
-        // $new_est = '-';
-        // if ($est = 'NBM') {
-        //     $new_est = 'NBE';
-        // } else {
-        //     $new_est = $est;
-        // }
-        // dd($new_est);
         $prumahan_afd  = DB::connection('mysql2')->table('perumahan')
             ->select(
                 "perumahan.*",
@@ -2902,6 +2867,48 @@ class emplacementsController extends Controller
         }
 
         // dd($hitungRmh_afd);
+        $hitungRmh = array();
+
+        foreach ($prumahan_afd as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                $hitungRmh[$key][$key1] = [];
+
+                if (is_array($value2)) {
+                    foreach ($value2 as $key2 => $value3) {
+                        if (is_array($value3)) {
+                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
+                            $date = $value3['datetime'];
+                            $yearMonth = date('Y-m-d', strtotime($date));
+
+                            $foto_temuan = explode('$', $value3['foto_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $komentar = explode('$', $value3['komentar']);
+                            // dd($kom_temuan, $komentar);
+                            unset($value3['foto_temuan']);
+                            unset($value3['komentar_temuan']);
+                            unset($value3['nilai']);
+                            unset($value3['komentar']);
+
+                            $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
+                                'nilai_total_rmh' => $sumNilai,
+                                'date' => $yearMonth,
+                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
+                            ]);
+
+                            foreach ($foto_temuan as $i => $foto) {
+                                $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
+                                $komentar = isset($komentar[$i]) ? $komentar[$i] : '';
+                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto . '&' . $komn . '&' . $komentar;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($hitungRmh);
+
+
 
         $new_Rmh_afd = array();
 
@@ -2930,7 +2937,7 @@ class emplacementsController extends Controller
                                 "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
                                 "komentar_rmh" => $value2["komentar_rmh" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
-
+                                "id" => $value2["id"]
                             );
                         }
 
@@ -2945,6 +2952,8 @@ class emplacementsController extends Controller
                 }
             }
         }
+
+        // dd($new_Rmh_afd);
 
         $rmh_afd = array();
 
@@ -2975,15 +2984,11 @@ class emplacementsController extends Controller
                 $mergeAfdRmh = array_merge($mergeAfdRmh, $value2);
             }
         }
+        // dd($mergeAfdRmh);
 
 
 
-        $pagermh_afd =  new Collection($mergeAfdRmh);
-        $curent_afdrmh = $pagermh_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $pagianteafd_rmh = new LengthAwarePaginator($curent_afdrmh, count($pagermh_afd), $perPage);
-        $pagianteafd_rmh->setPath(request()->url());
-        // dd($rmh_afd, $mergeAfdRmh, $new_Rmh_result);
-        // dd($pagianteafd_rmh);
+
 
         $hitungLcp_afd = array();
         foreach ($landscape_afd as $key => $value) {
@@ -3068,7 +3073,7 @@ class emplacementsController extends Controller
                                 "komentar_temuan_lcp" => $value2["komentar_temuan_lcp" . $i],
                                 "komentar_lcp" => $value2["komentar_lcp" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
-
+                                "id" => $value2["id"]
                             );
                         }
 
@@ -3118,12 +3123,6 @@ class emplacementsController extends Controller
 
         // dd($mergeAfdlcp);
 
-        $pagelcp_afd =  new Collection($mergeAfdlcp);
-        $curent_afdlcp = $pagelcp_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $pagianteafd_lcp = new LengthAwarePaginator($curent_afdlcp, count($pagelcp_afd), $perPage);
-        $pagianteafd_lcp->setPath(request()->url());
-
-        // dd($pagianteafd_lcp);
 
         $hitungLk_afd = array();
         foreach ($lingkungan_afd as $key => $value) {
@@ -3207,7 +3206,7 @@ class emplacementsController extends Controller
                                 "komentar_temuan_lk" => $value2["komentar_temuan_lk" . $i],
                                 "komentar_lk" => $value2["komentar_lk" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
-
+                                "id" => $value2["id"]
                             );
                         }
 
@@ -3252,11 +3251,6 @@ class emplacementsController extends Controller
                 $mergeAfdlk = array_merge($mergeAfdlk, $value2);
             }
         }
-        $pagelk_afd =  new Collection($mergeAfdlk);
-        $curent_afdlk = $pagelk_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $pagianteafd_lk = new LengthAwarePaginator($curent_afdlk, count($pagelk_afd), $perPage);
-        $pagianteafd_lk->setPath(request()->url());
-
 
         $dateString = $date;
 
@@ -3276,9 +3270,8 @@ class emplacementsController extends Controller
         $arrView['li'] =  $hitungRmh;
         $arrView['Perumahan'] = $mergedArray_rmh;
 
+        // dd($mergeAfdRmh);
 
-        // afd 
-        // dd($mergeAfdRmh, $mergeAfdlcp, $mergeAfdlk);
         $arrView['rumah_afd'] = $mergeAfdRmh;
         $arrView['lcp_afd'] = $mergeAfdlcp;
         $arrView['lingkungan_afd'] = $mergeAfdlk;
@@ -4299,5 +4292,310 @@ class emplacementsController extends Controller
         $filename = 'PDF PEMERIKSAAN PERUMAHAN' . ' ' . $arrView['test'] . '.pdf';
 
         return $pdf->stream($filename);
+    }
+
+
+    public function editkom(Request $request)
+    {
+
+        $id = $request->input('id');
+        $komen = $request->input('komen');
+        $old_koment = $request->input('old_koment');
+        $dataType = $request->input('dataType');
+        // $old_koment = 'Instalasi kurang baik';
+        // dd($id, $komen, $old_koment, $dataType);
+
+        switch ($dataType) {
+            case 'perumahan':
+
+                $emplacement = DB::connection('mysql2')->table('perumahan')
+                    ->select("perumahan.*")
+                    ->where('perumahan.id', '=', $id)
+                    ->get();
+
+                $emplacement = json_decode(json_encode($emplacement), true);
+
+                // dd($emplacement);
+                $getKomen = array();
+                foreach ($emplacement as $key2 => $value3) {
+
+                    $old_koments = $old_koment; // Set the old_koments variable
+                    $komentar = explode('$', $value3['komentar']);
+                    $komentar_temuan = explode('$', $value3['komentar_temuan']);
+
+
+                    $komens = $komen;
+
+                    // Flag to check if the first "-" has been replaced
+                    $replaced = false;
+
+                    // Loop through the komentar array and update where necessary
+                    foreach ($komentar_temuan as $index => $item) {
+                        if ($item === $old_koments && !$replaced) {
+                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                            $replaced = true; // Set the flag to true after the replacement
+                        }
+                    }
+
+                    // Join the updated komentar array back into a string with '$' delimiter
+                    $updated_komentar = implode('$', $komentar_temuan);
+
+                    // Update the 'komentar' field in the original array
+                    $value3['komentar_temuan'] = $updated_komentar;
+
+                    // Add the updated value3 to the $getKomen array
+                    $getKomen[] = $value3;
+                }
+                // dd($getKomen, $emplacement);
+                foreach ($getKomen as $key => $value) {
+                    $new_komentar = $value['komentar_temuan'];
+                }
+                DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
+                    'komentar_temuan' => $new_komentar
+                ]);
+
+                break;
+            case 'landscape':
+                $emplacement = DB::connection('mysql2')->table('landscape')
+                    ->select("landscape.*")
+                    ->where('landscape.id', '=', $id)
+                    ->get();
+
+                $emplacement = json_decode(json_encode($emplacement), true);
+
+                // dd($emplacement);
+                $getKomen = array();
+                foreach ($emplacement as $key2 => $value3) {
+
+                    $old_koments = $old_koment; // Set the old_koments variable
+                    $komentar = explode('$', $value3['komentar']);
+                    $komentar_temuan = explode('$', $value3['komentar_temuan']);
+
+
+                    $komens = $komen;
+
+                    // Flag to check if the first "-" has been replaced
+                    $replaced = false;
+
+                    // Loop through the komentar array and update where necessary
+                    foreach ($komentar_temuan as $index => $item) {
+                        if ($item === $old_koments && !$replaced) {
+                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                            $replaced = true; // Set the flag to true after the replacement
+                        }
+                    }
+
+                    // Join the updated komentar array back into a string with '$' delimiter
+                    $updated_komentar = implode('$', $komentar_temuan);
+
+                    // Update the 'komentar' field in the original array
+                    $value3['komentar_temuan'] = $updated_komentar;
+
+                    // Add the updated value3 to the $getKomen array
+                    $getKomen[] = $value3;
+                }
+                // dd($getKomen, $emplacement);
+                foreach ($getKomen as $key => $value) {
+                    $new_komentar = $value['komentar_temuan'];
+                }
+                DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
+                    'komentar_temuan' => $new_komentar
+                ]);
+                break;
+            case 'lingkungan':
+                $emplacement = DB::connection('mysql2')->table('lingkungan')
+                    ->select("lingkungan.*")
+                    ->where('lingkungan.id', '=', $id)
+                    ->get();
+
+                $emplacement = json_decode(json_encode($emplacement), true);
+
+                $getKomen = array();
+                foreach ($emplacement as $key2 => $value3) {
+
+                    $old_koments = $old_koment; // Set the old_koments variable
+                    $komentar = explode('$', $value3['komentar']);
+                    $komentar_temuan = explode('$', $value3['komentar_temuan']);
+
+
+                    $komens = $komen;
+
+                    // Flag to check if the first "-" has been replaced
+                    $replaced = false;
+
+                    // Loop through the komentar array and update where necessary
+                    foreach ($komentar_temuan as $index => $item) {
+                        if ($item === $old_koments && !$replaced) {
+                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                            $replaced = true; // Set the flag to true after the replacement
+                        }
+                    }
+
+                    // Join the updated komentar array back into a string with '$' delimiter
+                    $updated_komentar = implode('$', $komentar_temuan);
+
+                    // Update the 'komentar' field in the original array
+                    $value3['komentar_temuan'] = $updated_komentar;
+
+                    // Add the updated value3 to the $getKomen array
+                    $getKomen[] = $value3;
+                }
+                // dd($getKomen, $emplacement);
+                foreach ($getKomen as $key => $value) {
+                    $new_komentar = $value['komentar_temuan'];
+                }
+                DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
+                    'komentar_temuan' => $new_komentar
+                ]);
+                break;
+            case 'perumahan_afd':
+                $emplacement = DB::connection('mysql2')->table('perumahan')
+                    ->select("perumahan.*")
+                    ->where('perumahan.id', '=', $id)
+                    ->get();
+
+                $emplacement = json_decode(json_encode($emplacement), true);
+
+                // dd($emplacement);
+
+                $getKomen = array();
+                foreach ($emplacement as $key2 => $value3) {
+
+                    $old_koments = $old_koment; // Set the old_koments variable
+                    $komentar = explode('$', $value3['komentar']);
+                    $komentar_temuan = explode('$', $value3['komentar_temuan']);
+
+
+                    $komens = $komen;
+
+                    // Flag to check if the first "-" has been replaced
+                    $replaced = false;
+
+                    // Loop through the komentar array and update where necessary
+                    foreach ($komentar_temuan as $index => $item) {
+                        if ($item === $old_koments && !$replaced) {
+                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                            $replaced = true; // Set the flag to true after the replacement
+                        }
+                    }
+
+                    // Join the updated komentar array back into a string with '$' delimiter
+                    $updated_komentar = implode('$', $komentar_temuan);
+
+                    // Update the 'komentar' field in the original array
+                    $value3['komentar_temuan'] = $updated_komentar;
+
+                    // Add the updated value3 to the $getKomen array
+                    $getKomen[] = $value3;
+                }
+                // dd($getKomen, $emplacement);
+                foreach ($getKomen as $key => $value) {
+                    $new_komentar = $value['komentar_temuan'];
+                }
+                DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
+                    'komentar_temuan' => $new_komentar
+                ]);
+                break;
+            case 'landscape_afd':
+                $emplacement = DB::connection('mysql2')->table('landscape')
+                    ->select("landscape.*")
+                    ->where('landscape.id', '=', $id)
+                    ->get();
+
+                $emplacement = json_decode(json_encode($emplacement), true);
+
+                // dd($emplacement);
+
+                $getKomen = array();
+                foreach ($emplacement as $key2 => $value3) {
+
+                    $old_koments = $old_koment; // Set the old_koments variable
+                    $komentar = explode('$', $value3['komentar']);
+                    $komentar_temuan = explode('$', $value3['komentar_temuan']);
+
+
+                    $komens = $komen;
+
+                    // Flag to check if the first "-" has been replaced
+                    $replaced = false;
+
+                    // Loop through the komentar array and update where necessary
+                    foreach ($komentar_temuan as $index => $item) {
+                        if ($item === $old_koments && !$replaced) {
+                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                            $replaced = true; // Set the flag to true after the replacement
+                        }
+                    }
+
+                    // Join the updated komentar array back into a string with '$' delimiter
+                    $updated_komentar = implode('$', $komentar_temuan);
+
+                    // Update the 'komentar' field in the original array
+                    $value3['komentar_temuan'] = $updated_komentar;
+
+                    // Add the updated value3 to the $getKomen array
+                    $getKomen[] = $value3;
+                }
+                // dd($getKomen, $emplacement);
+                foreach ($getKomen as $key => $value) {
+                    $new_komentar = $value['komentar_temuan'];
+                }
+                DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
+                    'komentar_temuan' => $new_komentar
+                ]);
+                break;
+            case 'lingkunga_afd':
+                $emplacement = DB::connection('mysql2')->table('lingkungan')
+                    ->select("lingkungan.*")
+                    ->where('lingkungan.id', '=', $id)
+                    ->get();
+
+                $emplacement = json_decode(json_encode($emplacement), true);
+
+                $getKomen = array();
+                foreach ($emplacement as $key2 => $value3) {
+
+                    $old_koments = $old_koment; // Set the old_koments variable
+                    $komentar = explode('$', $value3['komentar']);
+                    $komentar_temuan = explode('$', $value3['komentar_temuan']);
+
+
+                    $komens = $komen;
+
+                    // Flag to check if the first "-" has been replaced
+                    $replaced = false;
+
+                    // Loop through the komentar array and update where necessary
+                    foreach ($komentar_temuan as $index => $item) {
+                        if ($item === $old_koments && !$replaced) {
+                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                            $replaced = true; // Set the flag to true after the replacement
+                        }
+                    }
+
+                    // Join the updated komentar array back into a string with '$' delimiter
+                    $updated_komentar = implode('$', $komentar_temuan);
+
+                    // Update the 'komentar' field in the original array
+                    $value3['komentar_temuan'] = $updated_komentar;
+
+                    // Add the updated value3 to the $getKomen array
+                    $getKomen[] = $value3;
+                }
+                // dd($getKomen, $emplacement);
+                foreach ($getKomen as $key => $value) {
+                    $new_komentar = $value['komentar_temuan'];
+                }
+                DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
+                    'komentar_temuan' => $new_komentar
+                ]);
+                break;
+            default:
+                # code...
+                break;
+        }
+        // Perform any other actions you need based on the selected options
+
+
     }
 }

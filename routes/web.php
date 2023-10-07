@@ -100,8 +100,6 @@ Route::post('/pdfBA', [pdfgenerateController::class, 'pdfBA'])->name('pdfBA');
 Route::get('/getMapsdetail', [makemapsController::class, 'getMapsdetail'])->name('getMapsdetail');
 Route::get('/plotBlok', [makemapsController::class, 'plotBlok'])->name('plotBlok'); // Route::post('/filter', [inspectController::class, 'filter']);
 
-
-
 // end 
 
 Route::post('/fetchEstatesByRegion', [inspectController::class, 'fetchEstatesByRegion'])->name('fetchEstatesByRegion');
@@ -195,3 +193,5 @@ Route::post('/deletedetailtph', [SidaktphController::class, 'deletedetailtph'])-
 Route::get('/userqcpanel', [adminpanelController::class, 'dashboard'])->name('userqcpanel');
 Route::get('/listqc', [adminpanelController::class, 'listqc'])->name('listqc');
 Route::post('/updateUserqc', [adminpanelController::class, 'updateUserqc'])->name('updateUserqc');
+Route::get('/estAFD', [emplacementsController::class, 'estAFD'])->name('estAFD');
+Route::get('/editkom', [emplacementsController::class, 'editkom'])->name('editkom');

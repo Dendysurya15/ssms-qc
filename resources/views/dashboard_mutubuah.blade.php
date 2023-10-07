@@ -1615,13 +1615,14 @@
         // });
     });
 
+
     $("#showFinding").click(function() {
         Swal.fire({
             title: 'Loading',
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -1968,7 +1969,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -3103,7 +3104,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -4119,7 +4120,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -4272,7 +4273,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -4377,7 +4378,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -4872,7 +4873,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });
@@ -5595,7 +5596,7 @@
             html: '<span class="loading-text">Mohon Tunggu...</span>',
             allowOutsideClick: false,
             showConfirmButton: false,
-            onBeforeOpen: () => {
+            willOpen: () => {
                 Swal.showLoading();
             }
         });

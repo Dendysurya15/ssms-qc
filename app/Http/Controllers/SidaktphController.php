@@ -1600,6 +1600,8 @@ class SidaktphController extends Controller
 
     public function getBtTph(Request $request)
     {
+
+
         $regSidak = $request->get('reg');
         $queryWill = DB::connection('mysql2')
             ->table('wil')
@@ -2816,10 +2818,6 @@ class SidaktphController extends Controller
             echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
             exit();
         }
-        // dd($queryEst);
-        // dd($arrBtTPHperEst);
-
-        // }
     }
 
     public function getBtTphMonth(Request $request)
@@ -4201,6 +4199,8 @@ class SidaktphController extends Controller
             $diveden = 0;
             foreach ($value as $key1 => $value1) {
                 $estateScore += $value1['score_estate'];
+
+                // dd($value1);
                 $diveden += $value1['deviden'];
 
                 if ($diveden != 0) {
@@ -4223,9 +4223,9 @@ class SidaktphController extends Controller
             $reg_finalskor += $reg_est;
             $reg_devskor += $div_reg;
         }
-        // dd($rhEstate, $mtancakWIltab1);
+
         // Create a new array for each iteration
-        $regEstate[] = array(
+        $rhEstate[] = array(
             'est' => 'REG-1',
             'jab' => 'RH',
             'nama' => '-',
@@ -4233,7 +4233,7 @@ class SidaktphController extends Controller
             'skor' => ($reg_devskor != 0) ? round($reg_finalskor / $reg_devskor, 1) : 0
         );
 
-
+        // dd($rhEstate, $mtancakWIltab1);
         // dd($rhEstate, $mtancakWIltab1);
         // end new hitungan 
 

@@ -42,6 +42,16 @@
     .custom_background {
         background: linear-gradient(to right, #ff5733, #ff9900);
     }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 300px;
+        /* Adjust the max-width as needed */
+        margin: 0 auto;
+        /* Center the container horizontally */
+    }
 </style>
 
 
@@ -181,17 +191,16 @@
         }
 
         $('#empData').click(function() {
-            getTemuan();
-
             Swal.fire({
                 title: 'Loading',
                 html: '<span class="loading-text">Mohon Tunggu...</span>',
                 allowOutsideClick: false,
                 showConfirmButton: false,
-                onBeforeOpen: () => {
+                willOpen: () => {
                     Swal.showLoading();
                 }
             });
+            getTemuan();
 
 
         });
@@ -203,6 +212,7 @@
             const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/";
             const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
 
+            // console.log(Perumahan);
             // Check if there is data to display
             if (Perumahan.length > 0) {
                 // Create the heading
@@ -227,10 +237,10 @@
                     image.classList.add("img-thumbnail");
                     image.setAttribute("data-toggle", "modal");
                     image.setAttribute("data-target", `#myModal${id}`);
-                    image.onerror = function() {
-                        // If the image fails to load, use the default image
-                        this.src = defaultImageUrl;
-                    };
+                    // image.onerror = function() {
+                    //     // If the image fails to load, use the default image
+                    //     this.src = defaultImageUrl;
+                    // };
 
                     const card = document.createElement("div");
                     card.classList.add("col-md-6", "col-lg-3", "mb-3");
@@ -240,13 +250,13 @@
                     <div class="card-body mt-2">
                         <h5 class="card-title text-right">Est: ${data.title}</h5>
                         <p class="card-text text-left">Temuan: ${data.komentar_temuan_rmh}</p>
-                        <p class="card-text text-left">Komentar: ${data.komentar_rmh}</p>
+               
                     </div>
                     </div>
                      `;
                     rowContainer.appendChild(card);
 
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
                         const buttonContainer = document.createElement("div");
                         buttonContainer.classList.add("btn-container");
 
@@ -267,6 +277,926 @@
                         deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
                         deletes.classList.add("btn", "btn-primary", "btn-sm");
                         buttonContainer.appendChild(deletes);
+
+                        const editkoment = document.createElement("a");
+                        editkoment.href = "#"; // Set a placeholder link initially
+                        editkoment.innerHTML = '<i class="fa fa-comments" aria-hidden="true"></i> Edit Komentar';
+                        editkoment.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(editkoment);
+                        // Append the container to the card body
+                        card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                        deletes.addEventListener("click", () => {
+                            // Display a confirmation dialog
+                            Swal.fire({
+                                title: 'Delete Confirmation',
+                                text: 'Anda Yaking Ingin Menghapus Foto??',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya, Hapus',
+                                cancelButtonText: 'Tidak',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User confirmed deletion, proceed with the deletion logic
+
+                                    // Hardcode the item type as 'perumahan' (change as needed)
+                                    const itemType = 'perumahan';
+
+                                    // Construct the delete URL
+                                    const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                    // Get the filename from the image URL
+                                    const imageUrlParts = imageUrl.split('/');
+                                    const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                    // Create a FormData object to send the filename, item type, and action (delete)
+                                    const formData = new FormData();
+                                    formData.append('filename', filename); // Send the filename to be deleted
+                                    formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                    formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                    // Send a POST request to your PHP script for deletion
+                                    fetch(deleteUrl, {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(response => response.text())
+                                        .then(result => {
+                                            if (result === 'Image deleted successfully.') {
+                                                // Display a success message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Delete Success',
+                                                    text: 'The image was deleted successfully.',
+                                                });
+
+                                                // Reload the page with cache-busting
+                                                location.reload(true); // Force a hard reload (including cache)
+                                            } else {
+                                                // Display an error message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Delete Error',
+                                                    text: 'Error: ' + result, // Display the error message from the server
+                                                });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        });
+                                }
+                            });
+                        });
+                        // Add click event to trigger download
+                        downloadLink.addEventListener("click", () => {
+                            // Use the image URL to construct the download URL
+                            const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                            // Open a new tab/window to initiate the download
+                            window.open(downloadUrl, "_blank");
+                        });
+
+                        uploading.addEventListener("click", () => {
+                            Swal.fire({
+                                title: 'Select Image',
+                                input: 'file',
+                                inputAttributes: {
+                                    accept: 'image/*',
+                                    'aria-label': 'Upload your profile picture'
+                                },
+                                confirmButtonText: 'Upload',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to select an image!';
+                                    }
+                                }
+                            }).then((file) => {
+                                if (file.value) {
+                                    const selectedFile = file.value;
+
+                                    // Get the filename from the image URL
+                                    const imageUrlParts = imageUrl.split('/');
+                                    const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                    // Hardcode the item type as 'perumahan'
+                                    const itemType = 'perumahan'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                    // Construct the upload URL
+                                    const uploadUrl = 'https://srs-ssms.com/qc_inspeksi/uploadIMG.php';
+
+                                    // Create a FormData object to send the file, item type, and action (upload)
+                                    const formData = new FormData();
+                                    formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                    formData.append('itemType', itemType); // Send the item type to the PHP script
+                                    formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                    // Create a new XMLHttpRequest object
+                                    fetch(uploadUrl, {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(response => response.text())
+                                        .then(result => {
+                                            if (result === 'File uploaded successfully.') {
+                                                // Display a success message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Upload Success',
+                                                    text: 'The image was uploaded successfully.',
+                                                });
+
+                                                location.reload(true);
+                                            } else {
+                                                // Display an error message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Upload Error',
+                                                    text: 'Error: ' + result, // Display the error message from the server
+                                                });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        });
+                                }
+
+                            });
+
+                        });
+
+
+                        editkoment.addEventListener("click", () => {
+                            // Display a prompt dialog for the user to input a new comment
+
+                            const id = data.id;
+                            const komentar = data.komentar_temuan_rmh;
+                            const old_koment = data.komentar_temuan_rmh;
+
+                            let dataType = 'perumahan'
+                            Swal.fire({
+                                title: 'Edit Komentar',
+                                input: 'text',
+                                inputPlaceholder: komentar,
+                                showCancelButton: true,
+                                confirmButtonText: 'Save',
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to enter a comment!';
+                                    }
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    const newComment = result.value; // Get the user's input
+
+                                    // Create an object with the parameters you want to send
+                                    const params = {
+                                        id: id,
+                                        komen: newComment,
+                                        old_koment: old_koment,
+                                        dataType: dataType
+                                    };
+                                    var _token = $('input[name="_token"]').val();
+
+                                    $.ajax({
+                                        url: "{{ route('editkom') }}",
+                                        method: "GET",
+                                        data: params, // Use the params object here
+                                        headers: {
+                                            'X-CSRF-TOKEN': _token
+                                        },
+                                        success: function(result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil',
+                                                text: 'Komentar berhasil di update',
+                                            });
+
+                                            location.reload(true);
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Data Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+
+
+                    }
+                });
+
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Perumahan not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+        function landscapeupdate(Landscape) {
+            const container = document.getElementById("landscape");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/landscape/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (Landscape.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Landscape</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                Landscape.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_ls;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_ls;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    // image.onerror = function() {
+                    //     // If the image fails to load, use the default image
+                    //     this.src = defaultImageUrl;
+                    // };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_ls}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ls}</p>
+                    
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
+                        const buttonContainer = document.createElement("div");
+                        buttonContainer.classList.add("btn-container");
+
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = "#"; // Set a placeholder link initially
+                        downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                        downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(downloadLink);
+
+                        const uploading = document.createElement("a");
+                        uploading.href = "#"; // Set a placeholder link initially
+                        uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                        uploading.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(uploading);
+
+                        const deletes = document.createElement("a");
+                        deletes.href = "#"; // Set a placeholder link initially
+                        deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                        deletes.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(deletes);
+
+                        const editkoment = document.createElement("a");
+                        editkoment.href = "#"; // Set a placeholder link initially
+                        editkoment.innerHTML = '<i class="fa fa-comments" aria-hidden="true"></i> Edit Komentar';
+                        editkoment.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(editkoment);
+                        // Append the container to the card body
+                        card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                        deletes.addEventListener("click", () => {
+                            // Display a confirmation dialog
+                            Swal.fire({
+                                title: 'Delete Confirmation',
+                                text: 'Anda Yaking Ingin Menghapus Foto??',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya, Hapus',
+                                cancelButtonText: 'Tidak',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User confirmed deletion, proceed with the deletion logic
+
+                                    // Hardcode the item type as 'perumahan' (change as needed)
+                                    const itemType = 'landscape';
+
+                                    // Construct the delete URL
+                                    const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                    // Get the filename from the image URL
+                                    const imageUrlParts = imageUrl.split('/');
+                                    const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                    // Create a FormData object to send the filename, item type, and action (delete)
+                                    const formData = new FormData();
+                                    formData.append('filename', filename); // Send the filename to be deleted
+                                    formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                    formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                    // Send a POST request to your PHP script for deletion
+                                    fetch(deleteUrl, {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(response => response.text())
+                                        .then(result => {
+                                            if (result === 'Image deleted successfully.') {
+                                                // Display a success message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Delete Success',
+                                                    text: 'The image was deleted successfully.',
+                                                });
+
+                                                // Reload the page with cache-busting
+                                                location.reload(true); // Force a hard reload (including cache)
+                                            } else {
+                                                // Display an error message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Delete Error',
+                                                    text: 'Error: ' + result, // Display the error message from the server
+                                                });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        });
+                                }
+                            });
+                        });
+                        // Add click event to trigger download
+                        downloadLink.addEventListener("click", () => {
+                            // Use the image URL to construct the download URL
+                            const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                            // Open a new tab/window to initiate the download
+                            window.open(downloadUrl, "_blank");
+                        });
+
+                        uploading.addEventListener("click", () => {
+                            Swal.fire({
+                                title: 'Select Image',
+                                input: 'file',
+                                inputAttributes: {
+                                    accept: 'image/*',
+                                    'aria-label': 'Upload your profile picture'
+                                },
+                                confirmButtonText: 'Upload',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to select an image!';
+                                    }
+                                }
+                            }).then((file) => {
+                                if (file.value) {
+                                    const selectedFile = file.value;
+
+                                    // Get the filename from the image URL
+                                    const imageUrlParts = imageUrl.split('/');
+                                    const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                    // Hardcode the item type as 'perumahan'
+                                    const itemType = 'landscape'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                    // Construct the upload URL
+                                    const uploadUrl = 'https://srs-ssms.com/qc_inspeksi/uploadIMG.php';
+
+                                    // Create a FormData object to send the file, item type, and action (upload)
+                                    const formData = new FormData();
+                                    formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                    formData.append('itemType', itemType); // Send the item type to the PHP script
+                                    formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                    // Create a new XMLHttpRequest object
+                                    fetch(uploadUrl, {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(response => response.text())
+                                        .then(result => {
+                                            if (result === 'File uploaded successfully.') {
+                                                // Display a success message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Upload Success',
+                                                    text: 'The image was uploaded successfully.',
+                                                });
+
+                                                location.reload(true);
+                                            } else {
+                                                // Display an error message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Upload Error',
+                                                    text: 'Error: ' + result, // Display the error message from the server
+                                                });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        });
+                                }
+
+                            });
+
+                        });
+
+
+                        editkoment.addEventListener("click", () => {
+                            // Display a prompt dialog for the user to input a new comment
+
+                            const id = data.id;
+                            const komentar = data.komentar_temuan_ls;
+                            const old_koment = data.komentar_temuan_ls;
+
+                            let dataType = 'landscape'
+                            Swal.fire({
+                                title: 'Edit Komentar',
+                                input: 'text',
+                                inputPlaceholder: komentar,
+                                showCancelButton: true,
+                                confirmButtonText: 'Save',
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to enter a comment!';
+                                    }
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    const newComment = result.value; // Get the user's input
+
+                                    // Create an object with the parameters you want to send
+                                    const params = {
+                                        id: id,
+                                        komen: newComment,
+                                        old_koment: old_koment,
+                                        dataType: dataType
+                                    };
+                                    var _token = $('input[name="_token"]').val();
+
+                                    $.ajax({
+                                        url: "{{ route('editkom') }}",
+                                        method: "GET",
+                                        data: params, // Use the params object here
+                                        headers: {
+                                            'X-CSRF-TOKEN': _token
+                                        },
+                                        success: function(result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil',
+                                                text: 'Komentar berhasil di update',
+                                            });
+
+                                            location.reload(true);
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Data Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+
+
+                    }
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Landscape not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+        function lingkunganupdate(lingkungan) {
+            const container = document.getElementById("lingkungan");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+
+            // Check if there is data to display
+            if (lingkungan.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Lingkungan</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                lingkungan.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_ll;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_ll;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    // image.onerror = function() {
+                    //     // If the image fails to load, use the default image
+                    //     this.src = defaultImageUrl;
+                    // };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_ll}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ll}</p>
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
+                        const buttonContainer = document.createElement("div");
+                        buttonContainer.classList.add("btn-container");
+
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = "#"; // Set a placeholder link initially
+                        downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                        downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(downloadLink);
+
+                        const uploading = document.createElement("a");
+                        uploading.href = "#"; // Set a placeholder link initially
+                        uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
+                        uploading.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(uploading);
+
+                        const deletes = document.createElement("a");
+                        deletes.href = "#"; // Set a placeholder link initially
+                        deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
+                        deletes.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(deletes);
+
+                        const editkoment = document.createElement("a");
+                        editkoment.href = "#"; // Set a placeholder link initially
+                        editkoment.innerHTML = '<i class="fa fa-comments" aria-hidden="true"></i> Edit Komentar';
+                        editkoment.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(editkoment);
+                        // Append the container to the card body
+                        card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+                        deletes.addEventListener("click", () => {
+                            // Display a confirmation dialog
+                            Swal.fire({
+                                title: 'Delete Confirmation',
+                                text: 'Anda Yaking Ingin Menghapus Foto??',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Ya, Hapus',
+                                cancelButtonText: 'Tidak',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User confirmed deletion, proceed with the deletion logic
+
+                                    // Hardcode the item type as 'perumahan' (change as needed)
+                                    const itemType = 'lingkungan';
+
+                                    // Construct the delete URL
+                                    const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+
+                                    // Get the filename from the image URL
+                                    const imageUrlParts = imageUrl.split('/');
+                                    const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                    // Create a FormData object to send the filename, item type, and action (delete)
+                                    const formData = new FormData();
+                                    formData.append('filename', filename); // Send the filename to be deleted
+                                    formData.append('itemType', itemType); // Send the item type to the PHP script for validation
+                                    formData.append('action', 'delete'); // Specify the action as 'delete'
+
+                                    // Send a POST request to your PHP script for deletion
+                                    fetch(deleteUrl, {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(response => response.text())
+                                        .then(result => {
+                                            if (result === 'Image deleted successfully.') {
+                                                // Display a success message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Delete Success',
+                                                    text: 'The image was deleted successfully.',
+                                                });
+
+                                                // Reload the page with cache-busting
+                                                location.reload(true); // Force a hard reload (including cache)
+                                            } else {
+                                                // Display an error message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Delete Error',
+                                                    text: 'Error: ' + result, // Display the error message from the server
+                                                });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Delete Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        });
+                                }
+                            });
+                        });
+                        // Add click event to trigger download
+                        downloadLink.addEventListener("click", () => {
+                            // Use the image URL to construct the download URL
+                            const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                            // Open a new tab/window to initiate the download
+                            window.open(downloadUrl, "_blank");
+                        });
+
+                        uploading.addEventListener("click", () => {
+                            Swal.fire({
+                                title: 'Select Image',
+                                input: 'file',
+                                inputAttributes: {
+                                    accept: 'image/*',
+                                    'aria-label': 'Upload your profile picture'
+                                },
+                                confirmButtonText: 'Upload',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to select an image!';
+                                    }
+                                }
+                            }).then((file) => {
+                                if (file.value) {
+                                    const selectedFile = file.value;
+
+                                    // Get the filename from the image URL
+                                    const imageUrlParts = imageUrl.split('/');
+                                    const filename = imageUrlParts[imageUrlParts.length - 1];
+
+                                    // Hardcode the item type as 'perumahan'
+                                    const itemType = 'lingkungan'; // Change this to 'landscape' or 'lingkungan' as needed
+
+                                    // Construct the upload URL
+                                    const uploadUrl = 'https://srs-ssms.com/qc_inspeksi/uploadIMG.php';
+
+                                    // Create a FormData object to send the file, item type, and action (upload)
+                                    const formData = new FormData();
+                                    formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
+                                    formData.append('itemType', itemType); // Send the item type to the PHP script
+                                    formData.append('action', 'upload'); // Specify the action as 'upload'
+
+                                    // Create a new XMLHttpRequest object
+                                    fetch(uploadUrl, {
+                                            method: 'POST',
+                                            body: formData
+                                        })
+                                        .then(response => response.text())
+                                        .then(result => {
+                                            if (result === 'File uploaded successfully.') {
+                                                // Display a success message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Upload Success',
+                                                    text: 'The image was uploaded successfully.',
+                                                });
+
+                                                location.reload(true);
+                                            } else {
+                                                // Display an error message using SweetAlert
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Upload Error',
+                                                    text: 'Error: ' + result, // Display the error message from the server
+                                                });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            // Display an error message using SweetAlert
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Upload Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        });
+                                }
+
+                            });
+
+                        });
+
+
+                        editkoment.addEventListener("click", () => {
+                            // Display a prompt dialog for the user to input a new comment
+
+                            const id = data.id;
+                            const komentar = data.komentar_temuan_ll;
+                            const old_koment = data.komentar_temuan_ll;
+
+                            let dataType = 'lingkungan'
+                            Swal.fire({
+                                title: 'Edit Komentar',
+                                input: 'text',
+                                inputPlaceholder: komentar,
+                                showCancelButton: true,
+                                confirmButtonText: 'Save',
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to enter a comment!';
+                                    }
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    const newComment = result.value; // Get the user's input
+
+                                    // Create an object with the parameters you want to send
+                                    const params = {
+                                        id: id,
+                                        komen: newComment,
+                                        old_koment: old_koment,
+                                        dataType: dataType
+                                    };
+                                    var _token = $('input[name="_token"]').val();
+
+                                    $.ajax({
+                                        url: "{{ route('editkom') }}",
+                                        method: "GET",
+                                        data: params, // Use the params object here
+                                        headers: {
+                                            'X-CSRF-TOKEN': _token
+                                        },
+                                        success: function(result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil',
+                                                text: 'Komentar berhasil di update',
+                                            });
+
+                                            location.reload(true);
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Data Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+
+                    }
+                });
+            } else {
+                // If no data, show the "Perumahan not found" message
+                const noDataMessage = document.createElement("p");
+                noDataMessage.textContent = "Lingkungan not found.";
+                container.appendChild(noDataMessage);
+            }
+        }
+
+
+        function afd_rmh(rumah_afd) {
+            const container = document.getElementById("afd_rmh");
+            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/";
+            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
+            console.log(rumah_afd);
+            // console.log(rumah_afd);
+            // Check if there is data to display
+            if (rumah_afd.length > 0) {
+                // Create the heading
+                const heading = document.createElement("div");
+                heading.classList.add("text-center");
+                heading.innerHTML = "<h1>Foto Temuan Perumahan</h1>";
+                container.appendChild(heading);
+
+                // Create the row container
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row", "justify-content-center");
+                container.appendChild(rowContainer);
+
+                // Iterate through the array data
+                rumah_afd.forEach((item) => {
+                    const id = item[0];
+                    const data = item[1];
+                    const imageUrl = imageBaseUrl + data.foto_temuan_rmh;
+                    const image = new Image();
+                    image.src = imageUrl;
+                    image.alt = data.foto_temuan_rmh;
+                    image.classList.add("img-thumbnail");
+                    image.setAttribute("data-toggle", "modal");
+                    image.setAttribute("data-target", `#myModal${id}`);
+                    // image.onerror = function() {
+                    //     // If the image fails to load, use the default image
+                    //     this.src = defaultImageUrl;
+                    // };
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                    <div class="card">
+                    <img src="${imageUrl}" alt="${data.foto_temuan_rmh}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                    <div class="card-body mt-2">
+                        <h5 class="card-title text-right">Est: ${data.title}</h5>
+                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_rmh}</p>
+                      
+                    </div>
+                    </div>
+                     `;
+                    rowContainer.appendChild(card);
+
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
+                        const buttonContainer = document.createElement("div");
+                        buttonContainer.classList.add("btn-container");
+
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = "#"; // Set a placeholder link initially
+                        downloadLink.innerHTML = '<i class="fas fa-download"></i> Download';
+                        downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(downloadLink);
+
+                        const uploading = document.createElement("a");
+                        uploading.href = "#"; // Set a placeholder link initially
+                        uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload ';
+                        uploading.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(uploading);
+
+                        const deletes = document.createElement("a");
+                        deletes.href = "#"; // Set a placeholder link initially
+                        deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Hapus';
+                        deletes.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(deletes);
+
+
+                        const editkoment = document.createElement("a");
+                        editkoment.href = "#"; // Set a placeholder link initially
+                        editkoment.innerHTML = '<i class="fa fa-comments" aria-hidden="true"></i> Edit Komentar';
+                        editkoment.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(editkoment);
 
                         // Append the container to the card body
                         card.querySelector(".card-body").appendChild(buttonContainer);
@@ -423,559 +1353,74 @@
 
                         });
 
-                    }
-                });
+                        editkoment.addEventListener("click", () => {
+                            // Display a prompt dialog for the user to input a new comment
 
-            } else {
-                // If no data, show the "Perumahan not found" message
-                const noDataMessage = document.createElement("p");
-                noDataMessage.textContent = "Perumahan not found.";
-                container.appendChild(noDataMessage);
-            }
-        }
+                            const id = data.id;
+                            const komentar = data.komentar_temuan_rmh;
+                            const old_koment = data.komentar_temuan_rmh;
 
-        function landscapeupdate(Landscape) {
-            const container = document.getElementById("landscape");
-            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/landscape/";
-            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
-
-            // Check if there is data to display
-            if (Landscape.length > 0) {
-                // Create the heading
-                const heading = document.createElement("div");
-                heading.classList.add("text-center");
-                heading.innerHTML = "<h1>Foto Temuan Landscape</h1>";
-                container.appendChild(heading);
-
-                // Create the row container
-                const rowContainer = document.createElement("div");
-                rowContainer.classList.add("row", "justify-content-center");
-                container.appendChild(rowContainer);
-
-                // Iterate through the array data
-                Landscape.forEach((item) => {
-                    const id = item[0];
-                    const data = item[1];
-                    const imageUrl = imageBaseUrl + data.foto_temuan_ls;
-                    const image = new Image();
-                    image.src = imageUrl;
-                    image.alt = data.foto_temuan_ls;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    image.onerror = function() {
-                        // If the image fails to load, use the default image
-                        this.src = defaultImageUrl;
-                    };
-
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_ls}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ls}</p>
-                        <p class="card-text text-left">Komentar: ${data.komentar_ls}</p>
-                    </div>
-                    </div>
-                     `;
-                    rowContainer.appendChild(card);
-
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                        const buttonContainer = document.createElement("div");
-                        buttonContainer.classList.add("btn-container");
-
-                        const downloadLink = document.createElement("a");
-                        downloadLink.href = "#"; // Set a placeholder link initially
-                        downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                        downloadLink.classList.add("btn", "btn-primary", "btn-sm");
-                        buttonContainer.appendChild(downloadLink);
-
-                        const uploading = document.createElement("a");
-                        uploading.href = "#"; // Set a placeholder link initially
-                        uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
-                        uploading.classList.add("btn", "btn-primary", "btn-sm");
-                        buttonContainer.appendChild(uploading);
-
-                        const deletes = document.createElement("a");
-                        deletes.href = "#"; // Set a placeholder link initially
-                        deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
-                        deletes.classList.add("btn", "btn-primary", "btn-sm");
-                        buttonContainer.appendChild(deletes);
-
-                        // Append the container to the card body
-                        card.querySelector(".card-body").appendChild(buttonContainer);
-
-
-
-                        deletes.addEventListener("click", () => {
-                            // Display a confirmation dialog
+                            let dataType = 'perumahan_afd'
                             Swal.fire({
-                                title: 'Delete Confirmation',
-                                text: 'Anda Yaking Ingin Menghapus Foto??',
-                                icon: 'warning',
+                                title: 'Edit Komentar',
+                                input: 'text',
+                                inputPlaceholder: komentar,
                                 showCancelButton: true,
-                                confirmButtonText: 'Ya, Hapus',
-                                cancelButtonText: 'Tidak',
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // User confirmed deletion, proceed with the deletion logic
-
-                                    // Hardcode the item type as 'perumahan' (change as needed)
-                                    const itemType = 'landscape';
-
-                                    // Construct the delete URL
-                                    const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
-
-                                    // Get the filename from the image URL
-                                    const imageUrlParts = imageUrl.split('/');
-                                    const filename = imageUrlParts[imageUrlParts.length - 1];
-
-                                    // Create a FormData object to send the filename, item type, and action (delete)
-                                    const formData = new FormData();
-                                    formData.append('filename', filename); // Send the filename to be deleted
-                                    formData.append('itemType', itemType); // Send the item type to the PHP script for validation
-                                    formData.append('action', 'delete'); // Specify the action as 'delete'
-
-                                    // Send a POST request to your PHP script for deletion
-                                    fetch(deleteUrl, {
-                                            method: 'POST',
-                                            body: formData
-                                        })
-                                        .then(response => response.text())
-                                        .then(result => {
-                                            if (result === 'Image deleted successfully.') {
-                                                // Display a success message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'Delete Success',
-                                                    text: 'The image was deleted successfully.',
-                                                });
-
-                                                // Reload the page with cache-busting
-                                                location.reload(true); // Force a hard reload (including cache)
-                                            } else {
-                                                // Display an error message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    title: 'Delete Error',
-                                                    text: 'Error: ' + result, // Display the error message from the server
-                                                });
-                                            }
-                                        })
-                                        .catch(error => {
-                                            // Display an error message using SweetAlert
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Delete Error',
-                                                text: 'Error: ' + error, // Display the fetch error message
-                                            });
-                                        });
-                                }
-                            });
-                        });
-                        // Add click event to trigger download
-                        downloadLink.addEventListener("click", () => {
-                            // Use the image URL to construct the download URL
-                            const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
-
-                            // Open a new tab/window to initiate the download
-                            window.open(downloadUrl, "_blank");
-                        });
-
-                        uploading.addEventListener("click", () => {
-                            Swal.fire({
-                                title: 'Select Image',
-                                input: 'file',
-                                inputAttributes: {
-                                    accept: 'image/*',
-                                    'aria-label': 'Upload your profile picture'
-                                },
-                                confirmButtonText: 'Upload',
-                                showCancelButton: true,
+                                confirmButtonText: 'Save',
                                 cancelButtonText: 'Cancel',
                                 inputValidator: (value) => {
                                     if (!value) {
-                                        return 'You need to select an image!';
+                                        return 'You need to enter a comment!';
                                     }
                                 }
-                            }).then((file) => {
-                                if (file.value) {
-                                    const selectedFile = file.value;
-
-                                    // Get the filename from the image URL
-                                    const imageUrlParts = imageUrl.split('/');
-                                    const filename = imageUrlParts[imageUrlParts.length - 1];
-
-                                    // Hardcode the item type as 'perumahan'
-                                    const itemType = 'landscape'; // Change this to 'landscape' or 'lingkungan' as needed
-
-                                    // Construct the upload URL
-                                    const uploadUrl = 'https://srs-ssms.com/qc_inspeksi/uploadIMG.php';
-
-                                    // Create a FormData object to send the file, item type, and action (upload)
-                                    const formData = new FormData();
-                                    formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
-                                    formData.append('itemType', itemType); // Send the item type to the PHP script
-                                    formData.append('action', 'upload'); // Specify the action as 'upload'
-
-                                    // Create a new XMLHttpRequest object
-                                    fetch(uploadUrl, {
-                                            method: 'POST',
-                                            body: formData
-                                        })
-                                        .then(response => response.text())
-                                        .then(result => {
-                                            if (result === 'File uploaded successfully.') {
-                                                // Display a success message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'Upload Success',
-                                                    text: 'The image was uploaded successfully.',
-                                                });
-
-                                                location.reload(true);
-                                            } else {
-                                                // Display an error message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    title: 'Upload Error',
-                                                    text: 'Error: ' + result, // Display the error message from the server
-                                                });
-                                            }
-                                        })
-                                        .catch(error => {
-                                            // Display an error message using SweetAlert
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Upload Error',
-                                                text: 'Error: ' + error, // Display the fetch error message
-                                            });
-                                        });
-                                }
-
-                            });
-
-                        });
-
-                    }
-                });
-            } else {
-                // If no data, show the "Perumahan not found" message
-                const noDataMessage = document.createElement("p");
-                noDataMessage.textContent = "Landscape not found.";
-                container.appendChild(noDataMessage);
-            }
-        }
-
-        function lingkunganupdate(lingkungan) {
-            const container = document.getElementById("lingkungan");
-            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/";
-            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
-
-            // Check if there is data to display
-            if (lingkungan.length > 0) {
-                // Create the heading
-                const heading = document.createElement("div");
-                heading.classList.add("text-center");
-                heading.innerHTML = "<h1>Foto Temuan Lingkungan</h1>";
-                container.appendChild(heading);
-
-                // Create the row container
-                const rowContainer = document.createElement("div");
-                rowContainer.classList.add("row", "justify-content-center");
-                container.appendChild(rowContainer);
-
-                // Iterate through the array data
-                lingkungan.forEach((item) => {
-                    const id = item[0];
-                    const data = item[1];
-                    const imageUrl = imageBaseUrl + data.foto_temuan_ll;
-                    const image = new Image();
-                    image.src = imageUrl;
-                    image.alt = data.foto_temuan_ll;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    image.onerror = function() {
-                        // If the image fails to load, use the default image
-                        this.src = defaultImageUrl;
-                    };
-
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_ll}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ll}</p>
-                        <p class="card-text text-left">Komentar: ${data.komentar_ll}</p>
-                    </div>
-                    </div>
-                     `;
-                    rowContainer.appendChild(card);
-
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                        const buttonContainer = document.createElement("div");
-                        buttonContainer.classList.add("btn-container");
-
-                        const downloadLink = document.createElement("a");
-                        downloadLink.href = "#"; // Set a placeholder link initially
-                        downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                        downloadLink.classList.add("btn", "btn-primary", "btn-sm");
-                        buttonContainer.appendChild(downloadLink);
-
-                        const uploading = document.createElement("a");
-                        uploading.href = "#"; // Set a placeholder link initially
-                        uploading.innerHTML = '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Image';
-                        uploading.classList.add("btn", "btn-primary", "btn-sm");
-                        buttonContainer.appendChild(uploading);
-
-                        const deletes = document.createElement("a");
-                        deletes.href = "#"; // Set a placeholder link initially
-                        deletes.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> Delete The Image';
-                        deletes.classList.add("btn", "btn-primary", "btn-sm");
-                        buttonContainer.appendChild(deletes);
-
-                        // Append the container to the card body
-                        card.querySelector(".card-body").appendChild(buttonContainer);
-
-
-
-                        deletes.addEventListener("click", () => {
-                            // Display a confirmation dialog
-                            Swal.fire({
-                                title: 'Delete Confirmation',
-                                text: 'Anda Yaking Ingin Menghapus Foto??',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Ya, Hapus',
-                                cancelButtonText: 'Tidak',
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    // User confirmed deletion, proceed with the deletion logic
+                                    const newComment = result.value; // Get the user's input
 
-                                    // Hardcode the item type as 'perumahan' (change as needed)
-                                    const itemType = 'lingkungan';
+                                    // Create an object with the parameters you want to send
+                                    const params = {
+                                        id: id,
+                                        komen: newComment,
+                                        old_koment: old_koment,
+                                        dataType: dataType
+                                    };
+                                    var _token = $('input[name="_token"]').val();
 
-                                    // Construct the delete URL
-                                    const deleteUrl = "https://srs-ssms.com/qc_inspeksi/uploadIMG.php";
+                                    $.ajax({
+                                        url: "{{ route('editkom') }}",
+                                        method: "GET",
+                                        data: params, // Use the params object here
+                                        headers: {
+                                            'X-CSRF-TOKEN': _token
+                                        },
+                                        success: function(result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil',
+                                                text: 'Komentar berhasil di update',
+                                            });
 
-                                    // Get the filename from the image URL
-                                    const imageUrlParts = imageUrl.split('/');
-                                    const filename = imageUrlParts[imageUrlParts.length - 1];
-
-                                    // Create a FormData object to send the filename, item type, and action (delete)
-                                    const formData = new FormData();
-                                    formData.append('filename', filename); // Send the filename to be deleted
-                                    formData.append('itemType', itemType); // Send the item type to the PHP script for validation
-                                    formData.append('action', 'delete'); // Specify the action as 'delete'
-
-                                    // Send a POST request to your PHP script for deletion
-                                    fetch(deleteUrl, {
-                                            method: 'POST',
-                                            body: formData
-                                        })
-                                        .then(response => response.text())
-                                        .then(result => {
-                                            if (result === 'Image deleted successfully.') {
-                                                // Display a success message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'Delete Success',
-                                                    text: 'The image was deleted successfully.',
-                                                });
-
-                                                // Reload the page with cache-busting
-                                                location.reload(true); // Force a hard reload (including cache)
-                                            } else {
-                                                // Display an error message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    title: 'Delete Error',
-                                                    text: 'Error: ' + result, // Display the error message from the server
-                                                });
-                                            }
-                                        })
-                                        .catch(error => {
-                                            // Display an error message using SweetAlert
+                                            location.reload(true);
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
                                             Swal.fire({
                                                 icon: 'error',
-                                                title: 'Delete Error',
+                                                title: 'Data Error',
                                                 text: 'Error: ' + error, // Display the fetch error message
                                             });
-                                        });
+                                        }
+                                    });
                                 }
                             });
                         });
-                        // Add click event to trigger download
-                        downloadLink.addEventListener("click", () => {
-                            // Use the image URL to construct the download URL
-                            const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
 
-                            // Open a new tab/window to initiate the download
-                            window.open(downloadUrl, "_blank");
-                        });
 
-                        uploading.addEventListener("click", () => {
-                            Swal.fire({
-                                title: 'Select Image',
-                                input: 'file',
-                                inputAttributes: {
-                                    accept: 'image/*',
-                                    'aria-label': 'Upload your profile picture'
-                                },
-                                confirmButtonText: 'Upload',
-                                showCancelButton: true,
-                                cancelButtonText: 'Cancel',
-                                inputValidator: (value) => {
-                                    if (!value) {
-                                        return 'You need to select an image!';
-                                    }
-                                }
-                            }).then((file) => {
-                                if (file.value) {
-                                    const selectedFile = file.value;
 
-                                    // Get the filename from the image URL
-                                    const imageUrlParts = imageUrl.split('/');
-                                    const filename = imageUrlParts[imageUrlParts.length - 1];
-
-                                    // Hardcode the item type as 'perumahan'
-                                    const itemType = 'lingkungan'; // Change this to 'landscape' or 'lingkungan' as needed
-
-                                    // Construct the upload URL
-                                    const uploadUrl = 'https://srs-ssms.com/qc_inspeksi/uploadIMG.php';
-
-                                    // Create a FormData object to send the file, item type, and action (upload)
-                                    const formData = new FormData();
-                                    formData.append('image', selectedFile, filename); // Use the selected file with the correct filename
-                                    formData.append('itemType', itemType); // Send the item type to the PHP script
-                                    formData.append('action', 'upload'); // Specify the action as 'upload'
-
-                                    // Create a new XMLHttpRequest object
-                                    fetch(uploadUrl, {
-                                            method: 'POST',
-                                            body: formData
-                                        })
-                                        .then(response => response.text())
-                                        .then(result => {
-                                            if (result === 'File uploaded successfully.') {
-                                                // Display a success message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'Upload Success',
-                                                    text: 'The image was uploaded successfully.',
-                                                });
-
-                                                location.reload(true);
-                                            } else {
-                                                // Display an error message using SweetAlert
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    title: 'Upload Error',
-                                                    text: 'Error: ' + result, // Display the error message from the server
-                                                });
-                                            }
-                                        })
-                                        .catch(error => {
-                                            // Display an error message using SweetAlert
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Upload Error',
-                                                text: 'Error: ' + error, // Display the fetch error message
-                                            });
-                                        });
-                                }
-
-                            });
-
-                        });
                     }
+                    // Create a container div for the buttons
+
+
                 });
-            } else {
-                // If no data, show the "Perumahan not found" message
-                const noDataMessage = document.createElement("p");
-                noDataMessage.textContent = "Lingkungan not found.";
-                container.appendChild(noDataMessage);
-            }
-        }
-
-
-        function afd_rmh(rumah_afd) {
-            const container = document.getElementById("afd_rmh");
-            const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/";
-            const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
-
-            // Check if there is data to display
-            if (rumah_afd.length > 0) {
-                // Create the heading
-                const heading = document.createElement("div");
-                heading.classList.add("text-center");
-                heading.innerHTML = "<h1>Foto Temuan Perumahan</h1>";
-                container.appendChild(heading);
-
-                // Create the row container
-                const rowContainer = document.createElement("div");
-                rowContainer.classList.add("row", "justify-content-center");
-                container.appendChild(rowContainer);
-
-                const failedImageUrls = [];
-                const failedImageFilenames = [];
-                const promises = []; // Array to store promises for each image
-
-                rumah_afd.forEach((item) => {
-                    const id = item[0];
-                    const data = item[1];
-                    const imageUrl = imageBaseUrl + data.foto_temuan_rmh;
-                    const image = new Image();
-                    image.src = imageUrl;
-                    image.alt = data.foto_temuan_rmh;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-
-                    const promise = new Promise((resolve) => {
-                        image.onload = () => {
-                            // Image loaded successfully
-                            resolve();
-                        };
-                        image.onerror = () => {
-                            // If the image fails to load, use the default image
-                            image.src = defaultImageUrl;
-                            failedImageUrls.push(imageUrl);
-                            const filename = imageUrl.split('/').pop();
-                            failedImageFilenames.push(filename);
-                            resolve();
-                        };
-                    });
-
-                    promises.push(promise);
-
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-        <div class="card">
-            <img src="${imageUrl}" alt="${data.foto_temuan_rmh}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-            <div class="card-body mt-2">
-                <h5 class="card-title text-right">Est: ${data.title}</h5>
-                <p class="card-text text-left">Temuan: ${data.komentar_temuan_rmh}</p>
-                <p class="card-text text-left">Komentar: ${data.komentar_rmh}</p>
-            </div>
-        </div>
-    `;
-                    rowContainer.appendChild(card);
-                });
-
-                // Use Promise.all to wait for all promises to resolve
-                Promise.all(promises).then(() => {
-                    console.log("Failed Image URLs:", failedImageUrls.join("\n"));
-                    console.log("Failed Image Filenames:", failedImageFilenames.join("\n"));
-                });
-
-
             } else {
                 // If no data, show the "Perumahan not found" message
                 const noDataMessage = document.createElement("p");
@@ -1013,10 +1458,10 @@
                     image.classList.add("img-thumbnail");
                     image.setAttribute("data-toggle", "modal");
                     image.setAttribute("data-target", `#myModal${id}`);
-                    image.onerror = function() {
-                        // If the image fails to load, use the default image
-                        this.src = defaultImageUrl;
-                    };
+                    // image.onerror = function() {
+                    //     // If the image fails to load, use the default image
+                    //     this.src = defaultImageUrl;
+                    // };
 
                     const card = document.createElement("div");
                     card.classList.add("col-md-6", "col-lg-3", "mb-3");
@@ -1026,12 +1471,12 @@
                     <div class="card-body mt-2">
                         <h5 class="card-title text-right">Est: ${data.title}</h5>
                         <p class="card-text text-left">Temuan: ${data.komentar_temuan_lcp}</p>
-                        <p class="card-text text-left">Komentar: ${data.komentar_lcp}</p>
+                      
                     </div>
                     </div>
                      `;
                     rowContainer.appendChild(card);
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
                         const buttonContainer = document.createElement("div");
                         buttonContainer.classList.add("btn-container");
 
@@ -1053,6 +1498,11 @@
                         deletes.classList.add("btn", "btn-primary", "btn-sm");
                         buttonContainer.appendChild(deletes);
 
+                        const editkoment = document.createElement("a");
+                        editkoment.href = "#"; // Set a placeholder link initially
+                        editkoment.innerHTML = '<i class="fa fa-comments" aria-hidden="true"></i> Edit Komentar';
+                        editkoment.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(editkoment);
                         // Append the container to the card body
                         card.querySelector(".card-body").appendChild(buttonContainer);
 
@@ -1207,6 +1657,71 @@
                             });
 
                         });
+
+
+                        editkoment.addEventListener("click", () => {
+                            // Display a prompt dialog for the user to input a new comment
+
+                            const id = data.id;
+                            const komentar = data.komentar_temuan_lcp;
+                            const old_koment = data.komentar_temuan_lcp;
+
+                            let dataType = 'landscape_afd'
+                            Swal.fire({
+                                title: 'Edit Komentar',
+                                input: 'text',
+                                inputPlaceholder: komentar,
+                                showCancelButton: true,
+                                confirmButtonText: 'Save',
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to enter a comment!';
+                                    }
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    const newComment = result.value; // Get the user's input
+
+                                    // Create an object with the parameters you want to send
+                                    const params = {
+                                        id: id,
+                                        komen: newComment,
+                                        old_koment: old_koment,
+                                        dataType: dataType
+                                    };
+                                    var _token = $('input[name="_token"]').val();
+
+                                    $.ajax({
+                                        url: "{{ route('editkom') }}",
+                                        method: "GET",
+                                        data: params, // Use the params object here
+                                        headers: {
+                                            'X-CSRF-TOKEN': _token
+                                        },
+                                        success: function(result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil',
+                                                text: 'Komentar berhasil di update',
+                                            });
+
+                                            location.reload(true);
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Data Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+
+
                     }
                 });
             } else {
@@ -1246,10 +1761,10 @@
                     image.classList.add("img-thumbnail");
                     image.setAttribute("data-toggle", "modal");
                     image.setAttribute("data-target", `#myModal${id}`);
-                    image.onerror = function() {
-                        // If the image fails to load, use the default image
-                        this.src = defaultImageUrl;
-                    };
+                    // image.onerror = function() {
+                    //     // If the image fails to load, use the default image
+                    //     this.src = defaultImageUrl;
+                    // };
 
                     const card = document.createElement("div");
                     card.classList.add("col-md-6", "col-lg-3", "mb-3");
@@ -1259,13 +1774,12 @@
                     <div class="card-body mt-2">
                         <h5 class="card-title text-right">Est: ${data.title}</h5>
                         <p class="card-text text-left">Temuan: ${data.komentar_temuan_lk}</p>
-                        <p class="card-text text-left">Komentar: ${data.komentar_lk}</p>
                     </div>
                     </div>
                      `;
                     rowContainer.appendChild(card);
 
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
                         const buttonContainer = document.createElement("div");
                         buttonContainer.classList.add("btn-container");
 
@@ -1287,6 +1801,12 @@
                         deletes.classList.add("btn", "btn-primary", "btn-sm");
                         buttonContainer.appendChild(deletes);
 
+
+                        const editkoment = document.createElement("a");
+                        editkoment.href = "#"; // Set a placeholder link initially
+                        editkoment.innerHTML = '<i class="fa fa-comments" aria-hidden="true"></i> Edit Komentar';
+                        editkoment.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(editkoment);
                         // Append the container to the card body
                         card.querySelector(".card-body").appendChild(buttonContainer);
 
@@ -1441,6 +1961,71 @@
                             });
 
                         });
+
+
+                        editkoment.addEventListener("click", () => {
+                            // Display a prompt dialog for the user to input a new comment
+
+                            const id = data.id;
+                            const komentar = data.komentar_temuan_lk;
+                            const old_koment = data.komentar_temuan_lk;
+
+                            let dataType = 'lingkunga_afd'
+                            Swal.fire({
+                                title: 'Edit Komentar',
+                                input: 'text',
+                                inputPlaceholder: komentar,
+                                showCancelButton: true,
+                                confirmButtonText: 'Save',
+                                cancelButtonText: 'Cancel',
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'You need to enter a comment!';
+                                    }
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    const newComment = result.value; // Get the user's input
+
+                                    // Create an object with the parameters you want to send
+                                    const params = {
+                                        id: id,
+                                        komen: newComment,
+                                        old_koment: old_koment,
+                                        dataType: dataType
+                                    };
+                                    var _token = $('input[name="_token"]').val();
+
+                                    $.ajax({
+                                        url: "{{ route('editkom') }}",
+                                        method: "GET",
+                                        data: params, // Use the params object here
+                                        headers: {
+                                            'X-CSRF-TOKEN': _token
+                                        },
+                                        success: function(result) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil',
+                                                text: 'Komentar berhasil di update',
+                                            });
+
+                                            location.reload(true);
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Data Error',
+                                                text: 'Error: ' + error, // Display the fetch error message
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+
+
                     }
                 });
             } else {

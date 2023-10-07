@@ -1902,7 +1902,7 @@
         html: '<span class="loading-text">Mohon Tunggu...</span>',
         allowOutsideClick: false,
         showConfirmButton: false,
-        onBeforeOpen: () => {
+        willOpen: () => {
           Swal.showLoading();
         }
       });
@@ -1920,7 +1920,7 @@
         html: '<span class="loading-text">Mohon Tunggu...</span>',
         allowOutsideClick: false,
         showConfirmButton: false,
-        onBeforeOpen: () => {
+        willOpen: () => {
           Swal.showLoading();
         }
       });
@@ -1939,7 +1939,7 @@
         html: '<span class="loading-text">Mohon Tunggu...</span>',
         allowOutsideClick: false,
         showConfirmButton: false,
-        onBeforeOpen: () => {
+        willOpen: () => {
           Swal.showLoading();
         }
       });
@@ -1952,7 +1952,7 @@
         html: '<span class="loading-text">Mohon Tunggu...</span>',
         allowOutsideClick: false,
         showConfirmButton: false,
-        onBeforeOpen: () => {
+        willOpen: () => {
           Swal.showLoading();
         }
       });
@@ -1965,7 +1965,7 @@
         html: '<span class="loading-text">Mohon Tunggu...</span>',
         allowOutsideClick: false,
         showConfirmButton: false,
-        onBeforeOpen: () => {
+        willOpen: () => {
           Swal.showLoading();
         }
       });
@@ -1978,7 +1978,7 @@
         html: '<span class="loading-text">Mohon Tunggu...</span>',
         allowOutsideClick: false,
         showConfirmButton: false,
-        onBeforeOpen: () => {
+        willOpen: () => {
           Swal.showLoading();
         }
       });
@@ -5998,6 +5998,7 @@
             let item2 = 'RH - ' + list_skor_rh[0][0]
             let item3 = list_skor_rh[0][1]['nama']
             let item4 = hasilRh[0][1]['skor']
+            // let item4 = 'Test'
             let itemElement1 = document.createElement('td')
             let itemElement2 = document.createElement('td')
             let itemElement3 = document.createElement('td')

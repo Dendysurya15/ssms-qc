@@ -15280,7 +15280,7 @@ class inspeksidashController extends Controller
         }
 
 
-        // dd($chartBTT,$chartBuah);
+        // dd($RekapSkor, $chartBuah);
 
         $arrView = array();
 

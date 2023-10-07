@@ -197,9 +197,27 @@
     });
 
     document.getElementById('btnShow').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
         getAFD();
     }
     document.getElementById('btnShoWEst').onclick = function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
         getEST();
     }
 
@@ -225,7 +243,7 @@
                 'X-CSRF-TOKEN': _token
             },
             success: function(result) {
-
+                Swal.close();
 
                 var parseResult = JSON.parse(result)
                 var bulan = Object.entries(parseResult['bulan'])
@@ -418,7 +436,7 @@
                 'X-CSRF-TOKEN': _token
             },
             success: function(result) {
-
+                Swal.close();
 
                 var parseResult = JSON.parse(result)
                 var bulan = Object.entries(parseResult['bulan'])
@@ -428,7 +446,7 @@
                 var skoring = Object.entries(parseResult['skoring'])
                 var new_afd = Object.entries(parseResult['new_afd'])
 
-                console.log(visitArray);
+                // console.log(visitArray);
 
                 if (visitArray !== null) {
                     function createTableHeader(content) {
