@@ -2587,11 +2587,34 @@
 
                         rowData.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
-
-                            if (cellIndex === 3) {
-                                setBackgroundColor(cell, item);
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
                             }
 
+                            if (cellIndex === 3) {
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
+                            }
                             tr.appendChild(cell);
                         });
 
@@ -2617,13 +2640,34 @@
 
                     rowData.forEach((item, cellIndex) => {
                         const cell = createTableCell(item, "text-center");
-                        if (cellIndex <= 2) {
-                            cell.style.backgroundColor = "#e8ecdc";
-                            cell.style.color = "black";
-                        } else if (cellIndex === 3) {
-                            bgest(cell, item);
+                        if (cellIndex === 2) {
+                            const item3nama = dataItems.item3;
+                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                cell.style.color = "red";
+                            } else {
+                                cell.style.color = "black";
+                            }
                         }
 
+                        if (cellIndex === 3) {
+                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                            if (item4Value >= 95) {
+                                cell.style.backgroundColor = "#609cd4";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 85 && item4Value < 95) {
+                                cell.style.backgroundColor = "#08b454";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 75 && item4Value < 85) {
+                                cell.style.backgroundColor = "#fffc04";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 65 && item4Value < 75) {
+                                cell.style.backgroundColor = "#ffc404";
+                                cell.style.color = "black";
+                            } else {
+                                cell.style.backgroundColor = "red";
+                                cell.style.color = "black";
+                            }
+                        }
 
                         tr.appendChild(cell);
                     });
@@ -2677,11 +2721,33 @@
 
                 rowData.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
+                    }
+
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
                     }
 
 
@@ -2712,8 +2778,33 @@
                         rowData.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
 
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
                             if (cellIndex === 3) {
-                                setBackgroundColor(cell, item);
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tr.appendChild(cell);
@@ -2742,11 +2833,33 @@
 
                     rowData.forEach((item, cellIndex) => {
                         const cell = createTableCell(item, "text-center");
-                        if (cellIndex <= 2) {
-                            cell.style.backgroundColor = "#e8ecdc";
-                            cell.style.color = "black";
-                        } else if (cellIndex === 3) {
-                            bgest(cell, item);
+                        if (cellIndex === 2) {
+                            const item3nama = dataItems.item3;
+                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                cell.style.color = "red";
+                            } else {
+                                cell.style.color = "black";
+                            }
+                        }
+
+                        if (cellIndex === 3) {
+                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                            if (item4Value >= 95) {
+                                cell.style.backgroundColor = "#609cd4";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 85 && item4Value < 95) {
+                                cell.style.backgroundColor = "#08b454";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 75 && item4Value < 85) {
+                                cell.style.backgroundColor = "#fffc04";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 65 && item4Value < 75) {
+                                cell.style.backgroundColor = "#ffc404";
+                                cell.style.color = "black";
+                            } else {
+                                cell.style.backgroundColor = "red";
+                                cell.style.color = "black";
+                            }
                         }
 
 
@@ -2781,13 +2894,34 @@
 
                 rowDatax.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
                     }
 
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
+                    }
 
                     tx.appendChild(cell);
                 });
@@ -2817,8 +2951,33 @@
                                 rowData.forEach((item, cellIndex) => {
                                     const cell = createTableCell(item, "text-center");
 
+                                    if (cellIndex === 2) {
+                                        const item3nama = dataItems.item3;
+                                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                            cell.style.color = "red";
+                                        } else {
+                                            cell.style.color = "black";
+                                        }
+                                    }
+
                                     if (cellIndex === 3) {
-                                        setBackgroundColor(cell, item);
+                                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                        if (item4Value >= 95) {
+                                            cell.style.backgroundColor = "#609cd4";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 85 && item4Value < 95) {
+                                            cell.style.backgroundColor = "#08b454";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 75 && item4Value < 85) {
+                                            cell.style.backgroundColor = "#fffc04";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 65 && item4Value < 75) {
+                                            cell.style.backgroundColor = "#ffc404";
+                                            cell.style.color = "black";
+                                        } else {
+                                            cell.style.backgroundColor = "red";
+                                            cell.style.color = "black";
+                                        }
                                     }
 
                                     tr.appendChild(cell);
@@ -2855,11 +3014,33 @@
 
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
-                                if (cellIndex <= 2) {
-                                    cell.style.backgroundColor = "#e8ecdc";
-                                    cell.style.color = "black";
-                                } else if (cellIndex === 3) {
-                                    bgest(cell, item);
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
+                                if (cellIndex === 3) {
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -2899,11 +3080,33 @@
 
                         rowDatac.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
-                            if (cellIndex <= 2) {
-                                cell.style.backgroundColor = "#e8ecdc";
-                                cell.style.color = "black";
-                            } else if (cellIndex === 3) {
-                                bgest(cell, item);
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
+                            if (cellIndex === 3) {
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tm.appendChild(cell);
@@ -2957,8 +3160,33 @@
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
 
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
                                 if (cellIndex === 3) {
-                                    setBackgroundColor(cell, item);
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -2992,13 +3220,34 @@
 
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
-                                if (cellIndex <= 2) {
-                                    cell.style.backgroundColor = "#e8ecdc";
-                                    cell.style.color = "black";
-                                } else if (cellIndex === 3) {
-                                    bgest(cell, item);
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
                                 }
 
+                                if (cellIndex === 3) {
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
+                                }
                                 tr.appendChild(cell);
                             });
 
@@ -3036,11 +3285,33 @@
 
                         rowOm.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
-                            if (cellIndex <= 2) {
-                                cell.style.backgroundColor = "#e8ecdc";
-                                cell.style.color = "black";
-                            } else if (cellIndex === 3) {
-                                bgest(cell, item);
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
+                            if (cellIndex === 3) {
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tl.appendChild(cell);
@@ -3073,11 +3344,33 @@
                 const rowREG = Object.values(dataReg);
                 rowREG.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
+                    }
+
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
                     }
                     trreg.appendChild(cell);
                 });
@@ -3626,8 +3919,33 @@
                         rowData.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
 
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
                             if (cellIndex === 3) {
-                                setBackgroundColor(cell, item);
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tr.appendChild(cell);
@@ -3655,11 +3973,33 @@
 
                     rowData.forEach((item, cellIndex) => {
                         const cell = createTableCell(item, "text-center");
-                        if (cellIndex <= 2) {
-                            cell.style.backgroundColor = "#e8ecdc";
-                            cell.style.color = "black";
-                        } else if (cellIndex === 3) {
-                            bgest(cell, item);
+                        if (cellIndex === 2) {
+                            const item3nama = dataItems.item3;
+                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                cell.style.color = "red";
+                            } else {
+                                cell.style.color = "black";
+                            }
+                        }
+
+                        if (cellIndex === 3) {
+                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                            if (item4Value >= 95) {
+                                cell.style.backgroundColor = "#609cd4";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 85 && item4Value < 95) {
+                                cell.style.backgroundColor = "#08b454";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 75 && item4Value < 85) {
+                                cell.style.backgroundColor = "#fffc04";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 65 && item4Value < 75) {
+                                cell.style.backgroundColor = "#ffc404";
+                                cell.style.color = "black";
+                            } else {
+                                cell.style.backgroundColor = "red";
+                                cell.style.color = "black";
+                            }
                         }
 
 
@@ -3715,11 +4055,33 @@
 
                 rowData.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
+                    }
+
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
                     }
 
 
@@ -3750,8 +4112,33 @@
                         rowData.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
 
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
                             if (cellIndex === 3) {
-                                setBackgroundColor(cell, item);
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tr.appendChild(cell);
@@ -3780,13 +4167,34 @@
 
                     rowData.forEach((item, cellIndex) => {
                         const cell = createTableCell(item, "text-center");
-                        if (cellIndex <= 2) {
-                            cell.style.backgroundColor = "#e8ecdc";
-                            cell.style.color = "black";
-                        } else if (cellIndex === 3) {
-                            bgest(cell, item);
+                        if (cellIndex === 2) {
+                            const item3nama = dataItems.item3;
+                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                cell.style.color = "red";
+                            } else {
+                                cell.style.color = "black";
+                            }
                         }
 
+                        if (cellIndex === 3) {
+                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                            if (item4Value >= 95) {
+                                cell.style.backgroundColor = "#609cd4";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 85 && item4Value < 95) {
+                                cell.style.backgroundColor = "#08b454";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 75 && item4Value < 85) {
+                                cell.style.backgroundColor = "#fffc04";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 65 && item4Value < 75) {
+                                cell.style.backgroundColor = "#ffc404";
+                                cell.style.color = "black";
+                            } else {
+                                cell.style.backgroundColor = "red";
+                                cell.style.color = "black";
+                            }
+                        }
 
                         tr.appendChild(cell);
                     });
@@ -3819,13 +4227,34 @@
 
                 rowDatax.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
                     }
 
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
+                    }
 
                     tx.appendChild(cell);
                 });
@@ -3855,8 +4284,33 @@
                                 rowData.forEach((item, cellIndex) => {
                                     const cell = createTableCell(item, "text-center");
 
+                                    if (cellIndex === 2) {
+                                        const item3nama = dataItems.item3;
+                                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                            cell.style.color = "red";
+                                        } else {
+                                            cell.style.color = "black";
+                                        }
+                                    }
+
                                     if (cellIndex === 3) {
-                                        setBackgroundColor(cell, item);
+                                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                        if (item4Value >= 95) {
+                                            cell.style.backgroundColor = "#609cd4";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 85 && item4Value < 95) {
+                                            cell.style.backgroundColor = "#08b454";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 75 && item4Value < 85) {
+                                            cell.style.backgroundColor = "#fffc04";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 65 && item4Value < 75) {
+                                            cell.style.backgroundColor = "#ffc404";
+                                            cell.style.color = "black";
+                                        } else {
+                                            cell.style.backgroundColor = "red";
+                                            cell.style.color = "black";
+                                        }
                                     }
 
                                     tr.appendChild(cell);
@@ -3893,11 +4347,33 @@
 
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
-                                if (cellIndex <= 2) {
-                                    cell.style.backgroundColor = "#e8ecdc";
-                                    cell.style.color = "black";
-                                } else if (cellIndex === 3) {
-                                    bgest(cell, item);
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
+                                if (cellIndex === 3) {
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -3982,8 +4458,33 @@
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
 
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
                                 if (cellIndex === 3) {
-                                    setBackgroundColor(cell, item);
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -4017,11 +4518,33 @@
 
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
-                                if (cellIndex <= 2) {
-                                    cell.style.backgroundColor = "#e8ecdc";
-                                    cell.style.color = "black";
-                                } else if (cellIndex === 3) {
-                                    bgest(cell, item);
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
+                                if (cellIndex === 3) {
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -4061,11 +4584,33 @@
 
                         rowOm.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
-                            if (cellIndex <= 2) {
-                                cell.style.backgroundColor = "#e8ecdc";
-                                cell.style.color = "black";
-                            } else if (cellIndex === 3) {
-                                bgest(cell, item);
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
+                            if (cellIndex === 3) {
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tl.appendChild(cell);
@@ -4097,11 +4642,33 @@
                 const rowREG = Object.values(dataReg);
                 rowREG.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
+                    }
+
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
                     }
                     trreg.appendChild(cell);
                 });
@@ -5035,8 +5602,33 @@
                         rowData.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
 
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
                             if (cellIndex === 3) {
-                                setBackgroundColor(cell, item);
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tr.appendChild(cell);
@@ -5064,13 +5656,34 @@
 
                     rowData.forEach((item, cellIndex) => {
                         const cell = createTableCell(item, "text-center");
-                        if (cellIndex <= 2) {
-                            cell.style.backgroundColor = "#e8ecdc";
-                            cell.style.color = "black";
-                        } else if (cellIndex === 3) {
-                            bgest(cell, item);
+                        if (cellIndex === 2) {
+                            const item3nama = dataItems.item3;
+                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                cell.style.color = "red";
+                            } else {
+                                cell.style.color = "black";
+                            }
                         }
 
+                        if (cellIndex === 3) {
+                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                            if (item4Value >= 95) {
+                                cell.style.backgroundColor = "#609cd4";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 85 && item4Value < 95) {
+                                cell.style.backgroundColor = "#08b454";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 75 && item4Value < 85) {
+                                cell.style.backgroundColor = "#fffc04";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 65 && item4Value < 75) {
+                                cell.style.backgroundColor = "#ffc404";
+                                cell.style.color = "black";
+                            } else {
+                                cell.style.backgroundColor = "red";
+                                cell.style.color = "black";
+                            }
+                        }
 
                         tr.appendChild(cell);
                     });
@@ -5124,11 +5737,33 @@
 
                 rowData.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
+                    }
+
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
                     }
 
 
@@ -5159,8 +5794,33 @@
                         rowData.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
 
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
                             if (cellIndex === 3) {
-                                setBackgroundColor(cell, item);
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tr.appendChild(cell);
@@ -5189,13 +5849,34 @@
 
                     rowData.forEach((item, cellIndex) => {
                         const cell = createTableCell(item, "text-center");
-                        if (cellIndex <= 2) {
-                            cell.style.backgroundColor = "#e8ecdc";
-                            cell.style.color = "black";
-                        } else if (cellIndex === 3) {
-                            bgest(cell, item);
+                        if (cellIndex === 2) {
+                            const item3nama = dataItems.item3;
+                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                cell.style.color = "red";
+                            } else {
+                                cell.style.color = "black";
+                            }
                         }
 
+                        if (cellIndex === 3) {
+                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                            if (item4Value >= 95) {
+                                cell.style.backgroundColor = "#609cd4";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 85 && item4Value < 95) {
+                                cell.style.backgroundColor = "#08b454";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 75 && item4Value < 85) {
+                                cell.style.backgroundColor = "#fffc04";
+                                cell.style.color = "black";
+                            } else if (item4Value >= 65 && item4Value < 75) {
+                                cell.style.backgroundColor = "#ffc404";
+                                cell.style.color = "black";
+                            } else {
+                                cell.style.backgroundColor = "red";
+                                cell.style.color = "black";
+                            }
+                        }
 
                         tr.appendChild(cell);
                     });
@@ -5228,11 +5909,33 @@
 
                 rowDatax.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
+                    }
+
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
                     }
 
 
@@ -5264,8 +5967,33 @@
                                 rowData.forEach((item, cellIndex) => {
                                     const cell = createTableCell(item, "text-center");
 
+                                    if (cellIndex === 2) {
+                                        const item3nama = dataItems.item3;
+                                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                            cell.style.color = "red";
+                                        } else {
+                                            cell.style.color = "black";
+                                        }
+                                    }
+
                                     if (cellIndex === 3) {
-                                        setBackgroundColor(cell, item);
+                                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                        if (item4Value >= 95) {
+                                            cell.style.backgroundColor = "#609cd4";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 85 && item4Value < 95) {
+                                            cell.style.backgroundColor = "#08b454";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 75 && item4Value < 85) {
+                                            cell.style.backgroundColor = "#fffc04";
+                                            cell.style.color = "black";
+                                        } else if (item4Value >= 65 && item4Value < 75) {
+                                            cell.style.backgroundColor = "#ffc404";
+                                            cell.style.color = "black";
+                                        } else {
+                                            cell.style.backgroundColor = "red";
+                                            cell.style.color = "black";
+                                        }
                                     }
 
                                     tr.appendChild(cell);
@@ -5302,11 +6030,33 @@
 
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
-                                if (cellIndex <= 2) {
-                                    cell.style.backgroundColor = "#e8ecdc";
-                                    cell.style.color = "black";
-                                } else if (cellIndex === 3) {
-                                    bgest(cell, item);
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
+                                if (cellIndex === 3) {
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -5346,11 +6096,33 @@
 
                         rowDatac.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
-                            if (cellIndex <= 2) {
-                                cell.style.backgroundColor = "#e8ecdc";
-                                cell.style.color = "black";
-                            } else if (cellIndex === 3) {
-                                bgest(cell, item);
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
+                            if (cellIndex === 3) {
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tm.appendChild(cell);
@@ -5391,8 +6163,33 @@
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
 
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
                                 if (cellIndex === 3) {
-                                    setBackgroundColor(cell, item);
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -5426,11 +6223,33 @@
 
                             rowData.forEach((item, cellIndex) => {
                                 const cell = createTableCell(item, "text-center");
-                                if (cellIndex <= 2) {
-                                    cell.style.backgroundColor = "#e8ecdc";
-                                    cell.style.color = "black";
-                                } else if (cellIndex === 3) {
-                                    bgest(cell, item);
+                                if (cellIndex === 2) {
+                                    const item3nama = dataItems.item3;
+                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                        cell.style.color = "red";
+                                    } else {
+                                        cell.style.color = "black";
+                                    }
+                                }
+
+                                if (cellIndex === 3) {
+                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                    if (item4Value >= 95) {
+                                        cell.style.backgroundColor = "#609cd4";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 85 && item4Value < 95) {
+                                        cell.style.backgroundColor = "#08b454";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 75 && item4Value < 85) {
+                                        cell.style.backgroundColor = "#fffc04";
+                                        cell.style.color = "black";
+                                    } else if (item4Value >= 65 && item4Value < 75) {
+                                        cell.style.backgroundColor = "#ffc404";
+                                        cell.style.color = "black";
+                                    } else {
+                                        cell.style.backgroundColor = "red";
+                                        cell.style.color = "black";
+                                    }
                                 }
 
                                 tr.appendChild(cell);
@@ -5470,11 +6289,33 @@
 
                         rowOm.forEach((item, cellIndex) => {
                             const cell = createTableCell(item, "text-center");
-                            if (cellIndex <= 2) {
-                                cell.style.backgroundColor = "#e8ecdc";
-                                cell.style.color = "black";
-                            } else if (cellIndex === 3) {
-                                bgest(cell, item);
+                            if (cellIndex === 2) {
+                                const item3nama = dataItems.item3;
+                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                                    cell.style.color = "red";
+                                } else {
+                                    cell.style.color = "black";
+                                }
+                            }
+
+                            if (cellIndex === 3) {
+                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                                if (item4Value >= 95) {
+                                    cell.style.backgroundColor = "#609cd4";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 85 && item4Value < 95) {
+                                    cell.style.backgroundColor = "#08b454";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 75 && item4Value < 85) {
+                                    cell.style.backgroundColor = "#fffc04";
+                                    cell.style.color = "black";
+                                } else if (item4Value >= 65 && item4Value < 75) {
+                                    cell.style.backgroundColor = "#ffc404";
+                                    cell.style.color = "black";
+                                } else {
+                                    cell.style.backgroundColor = "red";
+                                    cell.style.color = "black";
+                                }
                             }
 
                             tl.appendChild(cell);
@@ -5508,11 +6349,33 @@
                 const rowREG = Object.values(dataReg);
                 rowREG.forEach((item, cellIndex) => {
                     const cell = createTableCell(item, "text-center");
-                    if (cellIndex <= 2) {
-                        cell.style.backgroundColor = "#e8ecdc";
-                        cell.style.color = "black";
-                    } else if (cellIndex === 3) {
-                        bgest(cell, item);
+                    if (cellIndex === 2) {
+                        const item3nama = dataItems.item3;
+                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                            cell.style.color = "red";
+                        } else {
+                            cell.style.color = "black";
+                        }
+                    }
+
+                    if (cellIndex === 3) {
+                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
+                        if (item4Value >= 95) {
+                            cell.style.backgroundColor = "#609cd4";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 85 && item4Value < 95) {
+                            cell.style.backgroundColor = "#08b454";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 75 && item4Value < 85) {
+                            cell.style.backgroundColor = "#fffc04";
+                            cell.style.color = "black";
+                        } else if (item4Value >= 65 && item4Value < 75) {
+                            cell.style.backgroundColor = "#ffc404";
+                            cell.style.color = "black";
+                        } else {
+                            cell.style.backgroundColor = "red";
+                            cell.style.color = "black";
+                        }
                     }
                     trreg.appendChild(cell);
                 });

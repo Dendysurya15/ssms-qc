@@ -445,7 +445,7 @@
                 var visitArray = Object.entries(parseResult['visit'])
                 var skoring = Object.entries(parseResult['skoring'])
                 var new_afd = Object.entries(parseResult['new_afd'])
-
+                console.log(new_afd);
                 // console.log(visitArray);
 
                 if (visitArray !== null) {

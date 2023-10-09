@@ -2995,30 +2995,41 @@
                     itemElement4.classList.add("text-center")
                     itemElement5.classList.add("text-center")
 
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
 
 
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
 
 
@@ -3084,29 +3095,43 @@
                     itemElement1.style.backgroundColor = "#e8ecdc";
                     itemElement2.style.backgroundColor = "#e8ecdc";
                     itemElement3.style.backgroundColor = "#e8ecdc";
+
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
+
 
 
                     itemElement4.innerText = item4;
@@ -3146,17 +3171,45 @@
                 itemElement1.style.backgroundColor = "#fff4cc";
                 itemElement2.style.backgroundColor = "#fff4cc";
                 itemElement3.style.backgroundColor = "#fff4cc";
+
+
+
+                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                    itemElement3.style.color = "red";
+                } else {
+                    itemElement3.style.color = "black";
+                }
+
+
                 if (item4 >= 95) {
-                    itemElement4.style.backgroundColor = "#0804fc";
+                    itemElement4.style.backgroundColor = "#609cd4";
+                    itemElement4.style.color = "black";
                 } else if (item4 >= 85 && item4 < 95) {
                     itemElement4.style.backgroundColor = "#08b454";
+                    itemElement4.style.color = "black";
                 } else if (item4 >= 75 && item4 < 85) {
                     itemElement4.style.backgroundColor = "#fffc04";
+                    itemElement4.style.color = "black";
                 } else if (item4 >= 65 && item4 < 75) {
                     itemElement4.style.backgroundColor = "#ffc404";
+                    itemElement4.style.color = "black";
                 } else {
                     itemElement4.style.backgroundColor = "red";
+                    itemElement4.style.color = "black";
                 }
+
+                if (itemElement4.style.backgroundColor === "#609cd4") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#08b454") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#fffc04") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#ffc404") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "red") {
+                    itemElement4.style.color = "black";
+                }
+
                 itemElement1.innerText = item1;
                 itemElement2.innerText = item2;
                 itemElement3.innerText = item3;
@@ -3203,29 +3256,44 @@
 
 
 
+
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
+
 
 
 
@@ -3285,29 +3353,43 @@
                     itemElement1.style.backgroundColor = "#e8ecdc";
                     itemElement2.style.backgroundColor = "#e8ecdc";
                     itemElement3.style.backgroundColor = "#e8ecdc";
+
+                    // console.log(item3);
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
+
 
 
                     itemElement4.innerText = item4;
@@ -3346,17 +3428,43 @@
                 itemsElement1.style.backgroundColor = "#fff4cc";
                 itemsElement2.style.backgroundColor = "#fff4cc";
                 itemsElement3.style.backgroundColor = "#fff4cc";
-                if (items4 >= 95) {
-                    itemsElement4.style.backgroundColor = "#0804fc";
-                } else if (items4 >= 85 && items4 < 95) {
-                    itemsElement4.style.backgroundColor = "#08b454";
-                } else if (items4 >= 75 && items4 < 85) {
-                    itemsElement4.style.backgroundColor = "#fffc04";
-                } else if (items4 >= 65 && items4 < 75) {
-                    itemsElement4.style.backgroundColor = "#ffc404";
+
+                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                    itemElement3.style.color = "red";
                 } else {
-                    itemsElement4.style.backgroundColor = "red";
+                    itemElement3.style.color = "black";
                 }
+
+
+                if (item4 >= 95) {
+                    itemElement4.style.backgroundColor = "#609cd4";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 85 && item4 < 95) {
+                    itemElement4.style.backgroundColor = "#08b454";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 75 && item4 < 85) {
+                    itemElement4.style.backgroundColor = "#fffc04";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 65 && item4 < 75) {
+                    itemElement4.style.backgroundColor = "#ffc404";
+                    itemElement4.style.color = "black";
+                } else {
+                    itemElement4.style.backgroundColor = "red";
+                    itemElement4.style.color = "black";
+                }
+
+                if (itemElement4.style.backgroundColor === "#609cd4") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#08b454") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#fffc04") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#ffc404") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "red") {
+                    itemElement4.style.color = "black";
+                }
+
                 itemsElement1.innerText = items1;
                 itemsElement2.innerText = items2;
                 itemsElement3.innerText = items3;
@@ -3403,30 +3511,43 @@
 
 
 
+
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
 
 
                     // if (item4 != 0 && item4 != 90) {
@@ -3530,28 +3651,42 @@
                     itemElement1.style.backgroundColor = "#e8ecdc";
                     itemElement2.style.backgroundColor = "#e8ecdc";
                     itemElement3.style.backgroundColor = "#e8ecdc";
+
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
 
 
@@ -3593,17 +3728,43 @@
                 itemxElement1.style.backgroundColor = "#fff4cc";
                 itemxElement2.style.backgroundColor = "#fff4cc";
                 itemxElement3.style.backgroundColor = "#fff4cc";
-                if (itemx4 >= 95) {
-                    itemxElement4.style.backgroundColor = "#0804fc";
-                } else if (itemx4 >= 85 && itemx4 < 95) {
-                    itemxElement4.style.backgroundColor = "#08b454";
-                } else if (itemx4 >= 75 && itemx4 < 85) {
-                    itemxElement4.style.backgroundColor = "#fffc04";
-                } else if (itemx4 >= 65 && itemx4 < 75) {
-                    itemxElement4.style.backgroundColor = "#ffc404";
+
+                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                    itemElement3.style.color = "red";
                 } else {
-                    itemxElement4.style.backgroundColor = "red";
+                    itemElement3.style.color = "black";
                 }
+
+
+                if (item4 >= 95) {
+                    itemElement4.style.backgroundColor = "#609cd4";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 85 && item4 < 95) {
+                    itemElement4.style.backgroundColor = "#08b454";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 75 && item4 < 85) {
+                    itemElement4.style.backgroundColor = "#fffc04";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 65 && item4 < 75) {
+                    itemElement4.style.backgroundColor = "#ffc404";
+                    itemElement4.style.color = "black";
+                } else {
+                    itemElement4.style.backgroundColor = "red";
+                    itemElement4.style.color = "black";
+                }
+
+                if (itemElement4.style.backgroundColor === "#609cd4") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#08b454") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#fffc04") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#ffc404") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "red") {
+                    itemElement4.style.color = "black";
+                }
+
                 itemxElement1.innerText = itemx1;
                 itemxElement2.innerText = itemx2;
                 itemxElement3.innerText = itemx3;
@@ -3641,17 +3802,43 @@
                 regElement1.style.backgroundColor = "#c8e4b4";
                 regElement2.style.backgroundColor = "#c8e4b4";
                 regElement3.style.backgroundColor = "#c8e4b4";
-                if (reg4 >= 95) {
-                    regElement4.style.backgroundColor = "#0804fc";
-                } else if (reg4 >= 85 && reg4 < 95) {
-                    regElement4.style.backgroundColor = "#08b454";
-                } else if (reg4 >= 75 && reg4 < 85) {
-                    regElement4.style.backgroundColor = "#fffc04";
-                } else if (reg4 >= 65 && reg4 < 75) {
-                    regElement4.style.backgroundColor = "#ffc404";
+
+                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                    itemElement3.style.color = "red";
                 } else {
-                    regElement4.style.backgroundColor = "red";
+                    itemElement3.style.color = "black";
                 }
+
+
+                if (item4 >= 95) {
+                    itemElement4.style.backgroundColor = "#609cd4";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 85 && item4 < 95) {
+                    itemElement4.style.backgroundColor = "#08b454";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 75 && item4 < 85) {
+                    itemElement4.style.backgroundColor = "#fffc04";
+                    itemElement4.style.color = "black";
+                } else if (item4 >= 65 && item4 < 75) {
+                    itemElement4.style.backgroundColor = "#ffc404";
+                    itemElement4.style.color = "black";
+                } else {
+                    itemElement4.style.backgroundColor = "red";
+                    itemElement4.style.color = "black";
+                }
+
+                if (itemElement4.style.backgroundColor === "#609cd4") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#08b454") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#fffc04") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#ffc404") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "red") {
+                    itemElement4.style.color = "black";
+                }
+
                 regElement1.innerText = reg1;
                 regElement2.innerText = reg2;
                 regElement3.innerText = reg3;
@@ -3702,29 +3889,44 @@
                     itemElement4.classList.add("text-center")
                     itemElement5.classList.add("text-center")
 
+
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
+
 
 
                     // if (item4 != 0 || item4 != 90) {
@@ -3783,29 +3985,44 @@
                     itemElement2.style.backgroundColor = "#E8ecdc";
                     itemElement3.style.backgroundColor = "#E8ecdc";
 
+
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
+
 
 
                     itemElement4.innerText = item4;
@@ -3855,28 +4072,41 @@
                     itemElement2.style.backgroundColor = "#Fff4cc";
                     itemElement3.style.backgroundColor = "#Fff4cc";
 
+
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
 
 
@@ -3897,44 +4127,6 @@
                     // }
                 });
 
-                // // jika di regional 2 dan 3 hapus pt_mua nya untuk mut ancak
-                // const arrays = [chart_btt,
-                //     chart_buah,
-                //     mtbuah_mentah,
-                //     mtbuah_masak,
-                //     mtbuah_over,
-                //     mtbuah_abnr,
-                //     mtbuah_ksong,
-                //     mtbuah_vcut,
-                // ];
-                // const elementIds = [
-                //     'pt_muabrd',
-                //     'pt_muabuah',
-                //     'pt_mua',
-                //     'pt_mua',
-                //     'pt_mua',
-                //     'pt_mua',
-                //     'pt_mua',
-                //     'pt_mua'
-                // ];
-
-                // if (regInpt === '2' || regInpt === '3') {
-                //     arrays.forEach((arr, index) => {
-                //         const elementIndex = arr.findIndex(element => element[0] === elementIds[index]);
-                //         if (elementIndex !== -1) {
-                //             arr.splice(elementIndex, 1);
-                //         }
-                //     });
-                // } else {
-                //     chart_btt;
-                //     chart_buah;
-                //     mtbuah_mentah;
-                //     mtbuah_masak;
-                //     mtbuah_over;
-                //     mtbuah_abnr;
-                //     mtbuah_ksong;
-                //     mtbuah_vcut;
-                // }
 
 
                 //chart
@@ -5809,30 +6001,41 @@
 
 
 
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
 
                     // if (item4 != 0 && item4 != 90) {
                     //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
@@ -5896,28 +6099,40 @@
                     itemElement1.style.backgroundColor = "#e8ecdc";
                     itemElement2.style.backgroundColor = "#e8ecdc";
                     itemElement3.style.backgroundColor = "#e8ecdc";
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
 
 
@@ -5958,16 +6173,40 @@
                 itemElement1.style.backgroundColor = "#fff4cc";
                 itemElement2.style.backgroundColor = "#fff4cc";
                 itemElement3.style.backgroundColor = "#fff4cc";
+                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                    itemElement3.style.color = "red";
+                } else {
+                    itemElement3.style.color = "black";
+                }
+
+
                 if (item4 >= 95) {
-                    itemElement4.style.backgroundColor = "#0804fc";
+                    itemElement4.style.backgroundColor = "#609cd4";
+                    itemElement4.style.color = "black";
                 } else if (item4 >= 85 && item4 < 95) {
                     itemElement4.style.backgroundColor = "#08b454";
+                    itemElement4.style.color = "black";
                 } else if (item4 >= 75 && item4 < 85) {
                     itemElement4.style.backgroundColor = "#fffc04";
+                    itemElement4.style.color = "black";
                 } else if (item4 >= 65 && item4 < 75) {
                     itemElement4.style.backgroundColor = "#ffc404";
+                    itemElement4.style.color = "black";
                 } else {
                     itemElement4.style.backgroundColor = "red";
+                    itemElement4.style.color = "black";
+                }
+
+                if (itemElement4.style.backgroundColor === "#609cd4") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#08b454") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#fffc04") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "#ffc404") {
+                    itemElement4.style.color = "black";
+                } else if (itemElement4.style.backgroundColor === "red") {
+                    itemElement4.style.color = "black";
                 }
                 itemElement1.innerText = item1;
                 itemElement2.innerText = item2;
@@ -6013,30 +6252,41 @@
 
 
 
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
 
 
                     // if (item4 != 0 && item4 != 90) {
@@ -6095,31 +6345,41 @@
                     itemElement1.style.backgroundColor = "#e8ecdc";
                     itemElement2.style.backgroundColor = "#e8ecdc";
                     itemElement3.style.backgroundColor = "#e8ecdc";
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
-
                     itemElement4.innerText = item4;
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
@@ -6211,30 +6471,41 @@
 
 
 
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
 
 
                     // if (item4 != 0 && item4 != 90) {
@@ -6309,30 +6580,41 @@
                     itemElement1.style.backgroundColor = "#e8ecdc";
                     itemElement2.style.backgroundColor = "#e8ecdc";
                     itemElement3.style.backgroundColor = "#e8ecdc";
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
 
                     itemElement4.innerText = item4;
                     itemElement1.innerText = item1
@@ -6518,30 +6800,41 @@
                     itemElement4.classList.add("text-center")
                     itemElement5.classList.add("text-center")
 
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
 
                     // if (item4 != 0 || item4 != 90) {
                     //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
@@ -6599,28 +6892,40 @@
                     itemElement2.style.backgroundColor = "#E8ecdc";
                     itemElement3.style.backgroundColor = "#E8ecdc";
 
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
 
 
@@ -6671,31 +6976,41 @@
                     itemElement2.style.backgroundColor = "#Fff4cc";
                     itemElement3.style.backgroundColor = "#Fff4cc";
 
+                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
+                        itemElement3.style.color = "red";
+                    } else {
+                        itemElement3.style.color = "black";
+                    }
+
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 75 && item4 < 85) {
                         itemElement4.style.backgroundColor = "#fffc04";
+                        itemElement4.style.color = "black";
                     } else if (item4 >= 65 && item4 < 75) {
                         itemElement4.style.backgroundColor = "#ffc404";
+                        itemElement4.style.color = "black";
                     } else {
                         itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#fffc04") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#ffc404") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "white";
+                        itemElement4.style.color = "black";
                     }
-
-
                     itemElement4.innerText = item4;
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
@@ -7469,25 +7784,6 @@
             localStorage.removeItem('selectedTab');
         }
     });
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     const regGrafik = document.getElementById('regGrafik');
-    //     const estData = document.getElementById('estData');
-    //     const graphFilter = document.getElementById('GraphFilter');
-
-    //     // Disable estData dropdown initially
-    //     estData.disabled = true;
-
-    //     // When the user changes the regional dropdown, disable estData until the "Show" button is clicked
-    //     regGrafik.addEventListener('change', function() {
-    //         estData.disabled = true;
-    //     });
-
-    //     // When the user clicks the "Show" button, enable estData dropdown
-    //     graphFilter.addEventListener('click', function() {
-    //         estData.disabled = false;
-    //     });
-    // });
-
 
     // filter grafik perwilayah
     // Define the group data obtained from the server

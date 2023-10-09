@@ -1205,14 +1205,47 @@ class emplacementsController extends Controller
         // dd($defaultNew, $dataPerBulan);
         $emplashmenOri = array();
 
+        // dd($defaultNew, $filteredArray);
+        // foreach ($defaultNew as $key => $value) {
+        //     foreach ($value as $key3 => $value3) {
+        //         foreach ($value3 as $key4 => $value4) {
+        //             foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
+
+        //                 $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'NKM', 'REG-1', 'MLM', 'NKM', 'SCM', 'KTM', 'SJM'];
+        //                 if (!in_array($value2['est'], $exceptKeys)) {
+        //                     $newKeys = $value2['est'] . '-' . 'EST';
+        //                 } else {
+        //                     $newKeys = $value2['est'];
+        //                 }
+        //                 // $newKeys = $value2['est'] . '-' . 'EST';
+        //                 // dd($keyToAdd);
+        //                 $emplashmenOri[$value2['nama']][$newKeys][$key3] = $value4;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // dd($emplashmenOri);
+
         // dd($defaultNew);
         foreach ($defaultNew as $key => $value) {
             foreach ($value as $key3 => $value3) {
                 foreach ($value3 as $key4 => $value4) {
-                    foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'REG-1'];
-                        $keyToAdd = in_array($key, $exceptKeys) ? $key : $key . '-EST';
-                        $emplashmenOri[$value2['nama']][$keyToAdd][$key3] = $value4;
+                    foreach ($filteredArray as $key2 => $value2) {
+                        if ($key == $value2['est']) {
+                            $exceptKeys = ['TC', 'SRS', 'SR', 'REG-1'];
+                            // Check if the key is in the exceptKeys array or contains "Mill"
+                            // dd($key4);
+                            $new_key = $value2['nama'];
+                            if (!in_array($key, $exceptKeys) && strpos($new_key, 'Mill') === false) {
+                                // If it doesn't meet any of these conditions and doesn't end with "Mill", add '-EST'
+                                $keyToAdd = $key . '-EST';
+                            } else {
+                                // Otherwise, keep the key as it is
+                                $keyToAdd = $key;
+                            }
+                            $emplashmenOri[$value2['nama']][$keyToAdd][$key3] = $value4;
+                        }
                     }
                 }
             }
@@ -1391,8 +1424,17 @@ class emplacementsController extends Controller
             foreach ($value as $key3 => $value3) {
                 foreach ($value3 as $key4 => $value4) {
                     foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'REG-1'];
-                        $keyToAdd = in_array($key, $exceptKeys) ? $key : $key . '-EST';
+                        $exceptKeys = ['TC', 'SRS', 'SR', 'REG-1'];
+                        // Check if the key is in the exceptKeys array or contains "Mill"
+                        // dd($key4);
+                        $new_key = $value2['nama'];
+                        if (!in_array($key, $exceptKeys) && strpos($new_key, 'Mill') === false) {
+                            // If it doesn't meet any of these conditions and doesn't end with "Mill", add '-EST'
+                            $keyToAdd = $key . '-EST';
+                        } else {
+                            // Otherwise, keep the key as it is
+                            $keyToAdd = $key;
+                        }
                         $landscapeOri[$value2['nama']][$keyToAdd][$key3] = $value4;
                     }
                 }
@@ -1519,16 +1561,27 @@ class emplacementsController extends Controller
             foreach ($value as $key3 => $value3) {
                 foreach ($value3 as $key4 => $value4) {
                     foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'REG-1'];
-                        $keyToAdd = in_array($key, $exceptKeys) ? $key : $key . '-EST';
+                        $exceptKeys = ['TC', 'SRS', 'SR', 'REG-1'];
+                        // Check if the key is in the exceptKeys array or contains "Mill"
+                        // dd($key4);
+                        $new_key = $value2['nama'];
+                        if (!in_array($key, $exceptKeys) && strpos($new_key, 'Mill') === false) {
+                            // If it doesn't meet any of these conditions and doesn't end with "Mill", add '-EST'
+                            $keyToAdd = $key . '-EST';
+                        } else {
+                            // Otherwise, keep the key as it is
+                            $keyToAdd = $key;
+                        }
                         $lingkuganOri[$value2['nama']][$keyToAdd][$key3] = $value4;
                     }
                 }
             }
         }
 
-        $cmbLingkungan = combineItemsByDatetime($lingkuganOri);
+        // dd($lingkuganOri);
 
+        $cmbLingkungan = combineItemsByDatetime($lingkuganOri);
+        // dd($cmbLingkungan);
         $new_lkng = array();
 
         foreach ($cmbLingkungan as $key => $value) {
@@ -1610,6 +1663,7 @@ class emplacementsController extends Controller
             }
         }
 
+        // dd($new_lkng);
         $FinalArr_LK = array();
         foreach ($new_lkng as $key1 => $value1) {
             foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
@@ -1672,7 +1726,7 @@ class emplacementsController extends Controller
         $result = mergeArray_est($FinalArr_rumah, $FinalArr_LK, $FinalArr_LS);
 
 
-        // dd($result);
+        // dd($FinalArr_rumah, $FinalArr_LK, $FinalArr_LS);
 
         //  delete index with 0 value 
         foreach ($result as $key => $months) {
@@ -1689,7 +1743,7 @@ class emplacementsController extends Controller
             }
         }
 
-
+        // dd($result);
         $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
 
         $queryAsisten = json_decode($queryAsisten, true);
@@ -1797,6 +1851,7 @@ class emplacementsController extends Controller
             $extractedData[$estate]['avg'] = $data['avg'];
         }
 
+        // dd($test);
 
         // Now $avarage array contains the counts of months with data for each estate
 
@@ -2052,7 +2107,7 @@ class emplacementsController extends Controller
 
         // dd($desiredArray, $numericSkorArray);
         // dd($numericSkorArray, $desiredArray);
-        // dd($resultArray);
+        // dd($result_skor);
         foreach ($result_skor as $key1 => $value1) {
             if (array_key_exists($key1, $resultArray)) {
                 // Merge the sub-arrays for the common key
