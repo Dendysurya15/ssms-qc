@@ -90,8 +90,9 @@ class adminpanelController extends Controller
                 $nomorHP_input = '';
                 $jabatan_input = $request->input('jabatan_input');
                 $lokasi = $request->input('lokasi');
+                $statusAkun = $request->input('statusAkun');
 
-                // dd($lokasi);
+                // dd($statusAkun);
                 $newjbtanInput = '';
                 if ($jabatan_input == 'Kosong') {
                     $newjbtanInput = '';
@@ -108,7 +109,7 @@ class adminpanelController extends Controller
                     'jabatan' => $newjbtanInput,
                     'departemen' => 'QC',
                     'afdeling' => '',
-                    'status_akun' => 1,
+                    'status_akun' => $statusAkun,
                     'nama_perusahaan' => '',
                     'akses_level' => 1,
                     'lokasi_kerja' => $lokasi

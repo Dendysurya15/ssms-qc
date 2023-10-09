@@ -403,10 +403,10 @@
 
 
                 // You can now use these values to perform your desired actions (e.g., AJAX request to add the user)
-                console.log("Username:", username);
-                console.log("Email:", email);
-                console.log("Jabatan:", jabatan);
-                console.log("Password:", password);
+                // console.log("Username:", username);
+                // console.log("Email:", email);
+                // console.log("Jabatan:", jabatan);
+                // console.log("Password:", password);
 
                 // Swal.fire({
                 //     title: 'All done!',
@@ -428,6 +428,7 @@
                         namaLengkapValue: username,
                         jabatan_input: jabatan,
                         lokasi: lokasi,
+                        statusAkun: 1,
                         actionType: actionType
                     },
                     success: function(response) {

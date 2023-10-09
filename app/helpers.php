@@ -59,7 +59,7 @@ if (!function_exists('skor_buah_tinggal')) {
 if (!function_exists('skor_buah_mentah_mb')) {
     function skor_buah_mentah_mb($skor)
     {
-        if ($skor <= 1.0) {
+        if ($skor <= 1) {
             return 10;
         } else if ($skor >= 1.0 && $skor <= 2.0) {
             return 8;
