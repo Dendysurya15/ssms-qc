@@ -1102,7 +1102,7 @@ class inspectController extends Controller
                                         }
                                         $sum_tph_sample += $innerTransportValue['total_tph'];
                                         $btr_tph = round($sum_bt / $innerTransportValue['total_tph'], 2);
-                                        $jjg_tph = round($sum_Restan / $innerTransportValue['total_tph'], 2);
+                                        $jjg_tph = round($sum_Restan / $innerTransportValue['total_tph'], 3);
                                         $tph_reg2 += $innerTransportValue['total_tph'];
                                     }
                                 }
@@ -1130,7 +1130,7 @@ class inspectController extends Controller
 
                 $dataSkor[$value1['wil']][$key]['bt_total'] = $sum_skor_bt;
                 $dataSkor[$value1['wil']][$key]['tph_sample_total'] = $sum_tph_sample;
-                $dataSkor[$value1['wil']][$key]['bt_tph_total'] = round($sum_skor_bt / $sum_tph_sample, 2);
+                $dataSkor[$value1['wil']][$key]['bt_tph_total'] = round($sum_skor_bt / $sum_tph_sample, 3);
                 $dataSkor[$value1['wil']][$key]['jjg_total'] = $sum_jjg;
                 $dataSkor[$value1['wil']][$key]['jjg_tph_total'] = round($sum_jjg / $sum_tph_sample, 3);
                 // $dataSkor[$value1['wil']][$key]['jjg_tph_total'] = 'test';
@@ -1193,7 +1193,7 @@ class inspectController extends Controller
                 } # code...
 
                 $bt_tph = ($todSam != 0) ? round($totalbt / $todSam, 2) : 0;
-                $rst_tph = ($todSam != 0) ? round($restantod / $todSam, 2) : 0;
+                $rst_tph = ($todSam != 0) ? round($restantod / $todSam, 3) : 0;
 
 
                 $testing[$key][$key1]['tph_tod'] = $todSam;
@@ -9051,6 +9051,4 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
-
-    
 }
