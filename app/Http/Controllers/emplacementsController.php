@@ -2384,7 +2384,7 @@ class emplacementsController extends Controller
         $lingkungan = json_decode(json_encode($lingkungan), true); // Convert the collection to an array
         $lingkungan = collect($lingkungan)->groupBy(['est', 'afd'])->toArray();
 
-
+        // dd($lingkungan);
         $landscape = DB::connection('mysql2')->table('landscape')
             ->select(
                 "landscape.*",
@@ -2402,7 +2402,7 @@ class emplacementsController extends Controller
         $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
         $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
 
-
+        // dd($landscape);
         // dd($date);
         // dd($emplacement, $landscape, $lingkungan);
 
@@ -2411,7 +2411,6 @@ class emplacementsController extends Controller
             foreach ($value as $key1 => $value2) {
                 // Initialize the "nilai_total" for each month to 0
                 $hitungRmh[$key][$key1] = [];
-
                 if (is_array($value2)) {
                     foreach ($value2 as $key2 => $value3) {
                         if (is_array($value3)) {
@@ -2426,42 +2425,40 @@ class emplacementsController extends Controller
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+
 
                             $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_Lngkl' => $sumNilai,
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $komentar = array_values(array_filter($komentar, function ($value) {
+                                return $value !== "-";
+                            }));
+                            // dd($kom_temuan);
+
+                            if ($kom_temuan[0] == '') {
+                                foreach ($komentar as $i => $komn) {
+
+                                    $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                                }
+                            } else {
+                                foreach ($kom_temuan as $i => $komn) {
+
+                                    $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                                }
+                            }
 
                             foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
+
                                 $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
                             }
                         }
                     }
                 }
             }
         }
-
         // dd($hitungRmh);
 
 
@@ -2484,11 +2481,7 @@ class emplacementsController extends Controller
                             $kom_temuan = explode('$', $value3['komentar_temuan']);
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+                            // dd($foto_temuan);
 
                             $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_Lngkl' => $sumNilai,
@@ -2496,24 +2489,27 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $komentar = array_values(array_filter($komentar, function ($value) {
+                                return $value !== "-";
+                            }));
+
+                            // dd($foto_temuan);
+                            if ($kom_temuan[0] == '') {
+                                foreach ($komentar as $i => $komn) {
+
+                                    $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
+                                }
+                            } else {
+                                foreach ($kom_temuan as $i => $komn) {
+
+                                    $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
+                                }
+                            }
+
                             foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
+
                                 $hitungLandscape[$key][$key1][$key2]['foto_temuan_ls' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['nilai_ls' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['komentar_ls' . ($i + 1)] = $komens;
                             }
                         }
                     }
@@ -2521,7 +2517,7 @@ class emplacementsController extends Controller
             }
         }
 
-
+        // dd($hitungLandscape, $hitungRmh);
 
         $hitungLingkungan = array();
 
@@ -2544,41 +2540,44 @@ class emplacementsController extends Controller
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+                            // dd($lingkungan);
 
                             $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_Lngkl' => $sumNilai,
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $komentar = array_values(array_filter($komentar, function ($value) {
+                                return $value !== "-";
+                            }));
+
+                            // dd($foto_temuan);
+
+
+
+                            if ($kom_temuan[0] == '') {
+                                foreach ($komentar as $i => $komn) {
+
+                                    $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
+                                }
+                            } else {
+                                foreach ($kom_temuan as $i => $komn) {
+
+                                    $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
+                                }
+                            }
 
                             foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
+
                                 $hitungLingkungan[$key][$key1][$key2]['foto_temuan_ll' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['nilai_ll' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['komentar_ll' . ($i + 1)] = $komens;
                             }
                         }
                     }
                 }
             }
         }
+        // dd($hitungLingkungan);
 
         // dd($hitungRmh, $hitungLandscape, $hitungLingkungan);
 
@@ -2603,21 +2602,23 @@ class emplacementsController extends Controller
 
 
 
-                    if ($value2['foto_temuan_ls1'] !== '') {
+                    if (!isset($value2['foto_temuan_ls1']) || empty($value2['foto_temuan_ls1'])) {
+                        // If the key foto_temuan_ls1 does not exist or is empty, then the value of $new_Lscp[$key][$key1][$key2] should be empty.
+                        $new_Lscp[$key][$key1][$key2] = '';
+                    } else {
+                        // If the key foto_temuan_ls1 exists and is not empty, then the code you have already written will be executed.
                         for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
                             $number++;
                             $groupedData[] = array(
                                 "foto_temuan_ls" => $value2["foto_temuan_ls" . $i],
                                 "komentar_temuan_ls" => $value2["komentar_temuan_ls" . $i],
-                                "komentar_ls" => $value2["komentar_ls" . $i],
+                                // "komentar_ls" => $value2["komentar_ls" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
                                 "id" => $value2["id"]
                             );
                         }
 
-                        $new_Lscp[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Lscp[$key][$key1][$key2] = '';
+                        $new_Lscp[$key][$key1][$key2] = $groupedData;
                     }
                 }
             }
@@ -2625,7 +2626,7 @@ class emplacementsController extends Controller
 
         // dd($new_Lscp);
         $new_Rmh = array();
-
+        // dd($hitungRmh);
         foreach ($hitungRmh as $key => $value) {
             foreach ($value as $key1 => $value1) {
                 $index = 0; // Initialize index here
@@ -2642,25 +2643,26 @@ class emplacementsController extends Controller
                         }
                     }
 
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_rmh1'] !== '') {
+
+                    if (!isset($value2['foto_temuan_rmh1']) || empty($value2['foto_temuan_rmh1'])) {
+                        // If the key foto_temuan_ls1 does not exist or is empty, then the value of $new_Lscp[$key][$key1][$key2] should be empty.
+                        $new_Rmh[$key][$key1][$key2] = '';
+                    } else {
+                        // If the key foto_temuan_ls1 exists and is not empty, then the code you have already written will be executed.
                         for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
                             $number++;
                             $groupedData[] = array(
                                 "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
                                 "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
-                                "komentar_rmh" => $value2["komentar_rmh" . $i],
+                                // "komentar_rmh" => $value2["komentar_temuan_rmh" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
                                 "id" => $value2["id"]
 
                             );
                         }
 
-                        $new_Rmh[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Rmh[$key][$key1][$key2] = '';
+                        $new_Rmh[$key][$key1][$key2] = $groupedData;
                     }
-
 
                     // Now, use the incremented index to create new arrays with desired keys and values
 
@@ -2688,21 +2690,24 @@ class emplacementsController extends Controller
                     }
 
 
-                    if ($value2['foto_temuan_ll1'] !== '') {
+
+                    if (!isset($value2['foto_temuan_ll1']) || empty($value2['foto_temuan_ll1'])) {
+                        // If the key foto_temuan_ls1 does not exist or is empty, then the value of $new_Lscp[$key][$key1][$key2] should be empty.
+                        $new_lkngan[$key][$key1][$key2] = '';
+                    } else {
+                        // If the key foto_temuan_ls1 exists and is not empty, then the code you have already written will be executed.
                         for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
                             $number++;
                             $groupedData[] = array(
                                 "foto_temuan_ll" => $value2["foto_temuan_ll" . $i],
                                 "komentar_temuan_ll" => $value2["komentar_temuan_ll" . $i],
-                                "komentar_ll" => $value2["komentar_ll" . $i],
+                                // "komentar_ll" => $value2["komentar_ll" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
                                 "id" => $value2["id"]
                             );
                         }
 
-                        $new_lkngan[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_lkngan[$key][$key1][$key2] = '';
+                        $new_lkngan[$key][$key1][$key2] = $groupedData;
                     }
                 }
             }
@@ -2761,27 +2766,7 @@ class emplacementsController extends Controller
             $new_lkngan_result[$key][$key1] = $new_lkngan_result[$key][$key1];
         }
 
-        // Output the result
-        // dd($new_Rmh_result);
-        // Loop through the outermost array and merge the nested arrays for each key dynamically
-        foreach ($new_Rmh_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Rmh_result[$key1][$key2] = $mergedArray;
-            }
-        }
-        foreach ($new_Lscp_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Lscp_result[$key1][$key2] = $mergedArray;
-            }
-        }
-        foreach ($new_lkngan_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_lkngan_result[$key1][$key2] = $mergedArray;
-            }
-        }
+
 
         // pagination perumahan 
         // dd($new_Rmh_result);
@@ -2885,10 +2870,7 @@ class emplacementsController extends Controller
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+
 
                             $hitungRmh_afd[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_rmh' => $sumNilai,
@@ -2896,70 +2878,38 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $komentar = array_values(array_filter($komentar, function ($value) {
+                                return $value !== "-";
+                            }));
+
+                            // dd($foto_temuan);
+
+
+
+                            if ($kom_temuan[0] == '') {
+                                foreach ($komentar as $i => $komn) {
+
+                                    $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                                }
+                            } else {
+                                foreach ($kom_temuan as $i => $komn) {
+
+                                    $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                                }
+                            }
+
                             foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
+
                                 $hitungRmh_afd[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
                             }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungRmh_afd[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungRmh_afd[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
-                            }
                         }
                     }
                 }
             }
         }
 
-        // dd($hitungRmh_afd);
-        $hitungRmh = array();
 
-        foreach ($prumahan_afd as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                $hitungRmh[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            $date = $value3['datetime'];
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $komentar = explode('$', $value3['komentar']);
-                            // dd($kom_temuan, $komentar);
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_rmh' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
-                                $komentar = isset($komentar[$i]) ? $komentar[$i] : '';
-                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto . '&' . $komn . '&' . $komentar;
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         // dd($hitungRmh);
 
@@ -2983,27 +2933,28 @@ class emplacementsController extends Controller
                         }
                     }
 
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_rmh1'] !== '') {
+
+
+
+                    if (!isset($value2['foto_temuan_rmh1']) || empty($value2['foto_temuan_rmh1'])) {
+                        // If the key foto_temuan_ls1 does not exist or is empty, then the value of $new_Lscp[$key][$key1][$key2] should be empty.
+                        $new_Rmh_afd[$key][$key1][$key2] = '';
+                    } else {
+                        // If the key foto_temuan_ls1 exists and is not empty, then the code you have already written will be executed.
                         for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
                             $number++;
                             $groupedData[] = array(
                                 "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
                                 "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
-                                "komentar_rmh" => $value2["komentar_rmh" . $i],
+                                // "komentar_rmh" => $value2["komentar_temuan_rmh" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
                                 "id" => $value2["id"]
+
                             );
                         }
 
-                        $new_Rmh_afd[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Rmh_afd[$key][$key1][$key2] = '';
+                        $new_Rmh_afd[$key][$key1][$key2] = $groupedData;
                     }
-
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-
                 }
             }
         }
@@ -3026,12 +2977,9 @@ class emplacementsController extends Controller
             $rmh_afd[$key][$key1] = $rmh_afd[$key][$key1];
         }
 
-        foreach ($rmh_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $rmh_afd[$key1][$key2] = $mergedArray;
-            }
-        }
+
+
+        // dd($rmh_afd);
 
         $mergeAfdRmh = [];
         foreach ($rmh_afd as $key1 => $value1) {
@@ -3065,10 +3013,7 @@ class emplacementsController extends Controller
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+
 
                             $hitungLcp_afd[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_lcp' => $sumNilai,
@@ -3076,30 +3021,37 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $komentar = array_values(array_filter($komentar, function ($value) {
+                                return $value !== "-";
+                            }));
+
+                            // dd($foto_temuan);
+
+
+                            if ($kom_temuan[0] == '') {
+                                foreach ($komentar as $i => $komn) {
+
+                                    $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
+                                }
+                            } else {
+                                foreach ($kom_temuan as $i => $komn) {
+
+                                    $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
+                                }
+                            }
+
                             foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
+
                                 $hitungLcp_afd[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLcp_afd[$key][$key1][$key2]['nilai_lcp' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLcp_afd[$key][$key1][$key2]['komentar_lcp' . ($i + 1)] = $komens;
                             }
                         }
                     }
                 }
             }
         }
+
+        // dd($hitungLcp_afd);
 
         $new_Lcp_afd = array();
 
@@ -3119,27 +3071,25 @@ class emplacementsController extends Controller
                         }
                     }
 
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_lcp1'] !== '') {
+
+                    if (!isset($value2['foto_temuan_lcp1']) || empty($value2['foto_temuan_lcp1'])) {
+                        // If the key foto_temuan_ls1 does not exist or is empty, then the value of $new_Lscp[$key][$key1][$key2] should be empty.
+                        $new_Lcp_afd[$key][$key1][$key2] = '';
+                    } else {
+                        // If the key foto_temuan_ls1 exists and is not empty, then the code you have already written will be executed.
                         for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
                             $number++;
                             $groupedData[] = array(
                                 "foto_temuan_lcp" => $value2["foto_temuan_lcp" . $i],
                                 "komentar_temuan_lcp" => $value2["komentar_temuan_lcp" . $i],
-                                "komentar_lcp" => $value2["komentar_lcp" . $i],
+                                // "komentar_lcp" => $value2["komentar_lcp" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
                                 "id" => $value2["id"]
                             );
                         }
 
-                        $new_Lcp_afd[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Lcp_afd[$key][$key1][$key2] = '';
+                        $new_Lcp_afd[$key][$key1][$key2] = $groupedData;
                     }
-
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-
                 }
             }
         }
@@ -3161,13 +3111,6 @@ class emplacementsController extends Controller
         }
 
 
-
-        foreach ($new_Lcp_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Lcp_afd[$key1][$key2] = $mergedArray;
-            }
-        }
 
         $mergeAfdlcp = [];
         foreach ($new_Lcp_afd as $key1 => $value1) {
@@ -3199,10 +3142,7 @@ class emplacementsController extends Controller
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+
 
                             $hitungLk_afd[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_lk' => $sumNilai,
@@ -3210,30 +3150,37 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $komentar = array_values(array_filter($komentar, function ($value) {
+                                return $value !== "-";
+                            }));
+
+                            // dd($foto_temuan);
+
+
+                            if ($kom_temuan[0] == '') {
+                                foreach ($komentar as $i => $komn) {
+
+                                    $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
+                                }
+                            } else {
+                                foreach ($kom_temuan as $i => $komn) {
+
+                                    $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
+                                }
+                            }
+
                             foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
+
                                 $hitungLk_afd[$key][$key1][$key2]['foto_temuan_lk' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLk_afd[$key][$key1][$key2]['nilai_lk' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLk_afd[$key][$key1][$key2]['komentar_lk' . ($i + 1)] = $komens;
                             }
                         }
                     }
                 }
             }
         }
+
+        // dd($hitungLk_afd);
         $new_Lk_afd = array();
 
         foreach ($hitungLk_afd as $key => $value) {
@@ -3252,30 +3199,31 @@ class emplacementsController extends Controller
                         }
                     }
 
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_lk1'] !== '') {
+
+
+                    if (!isset($value2['foto_temuan_lk1']) || empty($value2['foto_temuan_lk1'])) {
+                        // If the key foto_temuan_ls1 does not exist or is empty, then the value of $new_Lscp[$key][$key1][$key2] should be empty.
+                        $new_Lk_afd[$key][$key1][$key2] = '';
+                    } else {
+                        // If the key foto_temuan_ls1 exists and is not empty, then the code you have already written will be executed.
                         for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
                             $number++;
                             $groupedData[] = array(
                                 "foto_temuan_lk" => $value2["foto_temuan_lk" . $i],
                                 "komentar_temuan_lk" => $value2["komentar_temuan_lk" . $i],
-                                "komentar_lk" => $value2["komentar_lk" . $i],
+                                // "komentar_lk" => $value2["komentar_lk" . $i],
                                 "title" => $value2["est"] . "-" . $value2["afd"],
                                 "id" => $value2["id"]
                             );
                         }
 
-                        $new_Lk_afd[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Lk_afd[$key][$key1][$key2] = '';
+                        $new_Lk_afd[$key][$key1][$key2] = $groupedData;
                     }
-
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-
                 }
             }
         }
+
+        // dd($new_Lk_afd);
 
         foreach ($new_Lk_afd as $key => $value) if (is_array($value)) {
             foreach ($value as $key1 => $value1) if (is_array($value1)) {
@@ -3293,12 +3241,6 @@ class emplacementsController extends Controller
 
 
 
-        foreach ($new_Lk_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Lk_afd[$key1][$key2] = $mergedArray;
-            }
-        }
 
         $mergeAfdlk = [];
         foreach ($new_Lk_afd as $key1 => $value1) {
@@ -3325,7 +3267,7 @@ class emplacementsController extends Controller
         $arrView['li'] =  $hitungRmh;
         $arrView['Perumahan'] = $mergedArray_rmh;
 
-        // dd($mergeAfdRmh);
+        // dd($mergedArray_rmh);
 
         $arrView['rumah_afd'] = $mergeAfdRmh;
         $arrView['lcp_afd'] = $mergeAfdlcp;
@@ -3456,6 +3398,8 @@ class emplacementsController extends Controller
                 }
             }
         }
+
+
         // dd($hitungRmh);
 
         $nila_akhir = array();
@@ -3837,12 +3781,22 @@ class emplacementsController extends Controller
                             $yearMonth = date('Y-m-d', strtotime($date));
 
                             $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
+                            // dd($foto_temuan, $kom_temuan);
+                            // unset($value3['foto_temuan']);
+                            // unset($value3['komentar_temuan']);
                             unset($value3['nilai']);
-                            unset($value3['komentar']);
+                            // unset($value3['komentar']);
+
+                            // Remove empty values and reindex the $foto_temuan array
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $kom_temuan = array_values(array_filter($kom_temuan, function ($value) {
+                                return $value !== "-";
+                            }));
+
+
+                            // dd($foto_temuan, $kom_temuan);
 
                             $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_rmh' => $sumNilai,
@@ -3851,7 +3805,7 @@ class emplacementsController extends Controller
                             ]);
 
                             foreach ($foto_temuan as $i => $foto) {
-                                $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
+                                $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : 'Komentar tidak ada';
                                 $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto . '-' . $komn;
                             }
                         }
@@ -3861,7 +3815,8 @@ class emplacementsController extends Controller
         }
 
 
-        // dd($hitungRmh);
+
+        // dd($emplacement);
         $hitungLingkungan = array();
 
         foreach ($lingkungan as $key => $value) {
@@ -3879,30 +3834,38 @@ class emplacementsController extends Controller
                             $yearMonth = date('Y-m-d', strtotime($date));
 
                             $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar']);
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+                            // unset($value3['foto_temuan']);
+                            // unset($value3['komentar_temuan']);
+                            // unset($value3['nilai']);
+                            // unset($value3['komentar']);
 
                             $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
                                 // 'nilai_total_Lngkl' => $sumNilai,
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto;
-                            }
-
+                            // Remove empty values and reindex the $foto_temuan array
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $kom_temuan = array_values(array_filter($kom_temuan, function ($value) {
+                                return $value !== "-";
+                            }));
                             foreach ($foto_temuan as $i => $foto) {
                                 $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
                                 $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto . '-' . $komn;
                             }
+                            // foreach ($foto_temuan as $i => $foto) {
+                            //     // Create new keys for each exploded value
+                            //     $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto;
+                            // }
+
+                            // foreach ($foto_temuan as $i => $foto) {
+                            //     $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
+                            //     $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto . '-' . $komn;
+                            // }
                         }
                     }
                 }
@@ -3926,15 +3889,20 @@ class emplacementsController extends Controller
                             $yearMonth = date('Y-m-d', strtotime($date));
 
                             $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
+                            $kom_temuan = explode('$', $value3['komentar']);
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
+                            // // unset($value3['foto_temuan']);
+                            // unset($value3['komentar_temuan']);
+                            // unset($value3['nilai']);
+                            // unset($value3['komentar']);
 
+                            // Remove empty values and reindex the $foto_temuan array
+                            $foto_temuan = array_values(array_filter($foto_temuan));
+                            $kom_temuan = array_values(array_filter($kom_temuan, function ($value) {
+                                return $value !== "-";
+                            }));
                             $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
                                 // 'nilai_total_Lngkl' => $sumNilai,
                                 'date' => $yearMonth,
@@ -3942,14 +3910,19 @@ class emplacementsController extends Controller
                             ]);
 
                             foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($foto_temuan as $i => $foto) {
                                 $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
                                 $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto . '-' . $komn;
                             }
+
+                            // foreach ($foto_temuan as $i => $foto) {
+                            //     // Create new keys for each exploded value
+                            //     $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
+                            // }
+
+                            // foreach ($foto_temuan as $i => $foto) {
+                            //     $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
+                            //     $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto . '-' . $komn;
+                            // }
                         }
                     }
                 }

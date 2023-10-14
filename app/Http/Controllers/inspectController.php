@@ -450,7 +450,6 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
-
     public function changeDataInspeksi(Request $request)
     {
 
@@ -983,7 +982,8 @@ class inspectController extends Controller
                     $jml_sph = $jml_blok == 0 ? $sph : ($sph / $jml_blok);
                     $tot_brd = ($jml_brtp + $jml_brtk + $jml_brtgl);
                     $tot_jjg = ($jml_bhts + $jml_bhtm1 + $jml_bhtm2 + $jml_bhtm3);
-                    $luas_ha = round(($jml_pokok_sm / $jml_sph), 2);
+                    $luas_ha = ($jml_sph != 0) ? round(($jml_pokok_sm / $jml_sph), 2) : 0;
+
 
                     $jml_pokok_sm_est += $jml_pokok_sm;
                     $luas_ha_est += $luas_ha;
@@ -1630,7 +1630,6 @@ class inspectController extends Controller
             'plasma_tph' => $testingPlasma,
         ]);
     }
-
     public function dashboard_inspeksi(Request $request)
     {
 
@@ -9051,4 +9050,5 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
+    
 }

@@ -52,16 +52,16 @@
                 @php
                 $baseURL = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/';
                 $foto_temuan = $data['total']['data_temuan'];
-                $komentar_temuan =$data['total']['komentar_temuan'];
+                $komentar_temuan = $data['total']['komentar_temuan'];
                 $detail_temuan = $data['total']['detail_temuan'];
                 @endphp
 
-                @for ($i = 0; $i < count($foto_temuan); $i++) @php $foto_info=explode('-', $foto_temuan[$i]); $foto_name=$foto_info[0]; $foto_type=$foto_info[1]; $foto_url=$baseURL . ($foto_type==='rmh' ? 'perumahan/' : ($foto_type==='lcp' ? 'landscape/' : 'lingkungan/' )) . $foto_name; $komentar=preg_replace('/-(rmh|lkn|lcp)$/', '' , $komentar_temuan[$i]) ;$detail=$detail_temuan[$i]; // Remove the suffix @endphp @if ($i % 3===0) <tr>
+                @for ($i = 0; $i < count($foto_temuan); $i++) @php $foto_info=explode('-', $foto_temuan[$i]); $foto_name=$foto_info[0]; $foto_type=$foto_info[1]; $foto_url=$baseURL . ($foto_type==='rmh' ? 'perumahan/' : ($foto_type==='lcp' ? 'landscape/' : 'lingkungan/' )) . $foto_name; $komentar=($komentar_temuan[$i]==='Komentar tidak ada' ) ? '' : $komentar_temuan[$i]; $detail=$detail_temuan[$i]; @endphp @if ($i % 3===0) <tr>
                     @endif
 
                     <td class="align-middle" width="33%" style="position: relative; border: 1px solid black">
                         <img src="{{ $foto_url }}" style="width: 370pt; height: 250pt; object-fit: contain;">
-                        <h1 style="text-align: center; font-size: 20px; font-weight: bold;border:1px solid black">{{$detail}}</h1>
+                        <h1 style="text-align: center; font-size: 20px; font-weight: bold; border: 1px solid black">{{ $detail }}</h1>
                         <p style="text-align: center; font-size: 20px; font-weight: bold;">{{ $komentar }}</p>
                     </td>
 
@@ -70,6 +70,7 @@
                     @endif
                     @endfor
             </tbody>
+
         </table>
 
 
