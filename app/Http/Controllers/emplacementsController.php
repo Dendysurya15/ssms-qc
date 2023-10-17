@@ -2432,27 +2432,28 @@ class emplacementsController extends Controller
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $komentar = array_values(array_filter($komentar, function ($value) {
-                                return $value !== "-";
-                            }));
-                            // dd($kom_temuan);
 
-                            if ($kom_temuan[0] == '') {
-                                foreach ($komentar as $i => $komn) {
-
-                                    $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                            $apps = explode(';', $value3['app_version']);
+                            $inc = 1;
+                            $incc = 1;
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value;
+                                            $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
                             } else {
-                                foreach ($kom_temuan as $i => $komn) {
-
-                                    $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value;
+                                            $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
-                            }
-
-                            foreach ($foto_temuan as $i => $foto) {
-
-                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
                             }
                         }
                     }
@@ -2489,27 +2490,28 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $komentar = array_values(array_filter($komentar, function ($value) {
-                                return $value !== "-";
-                            }));
 
-                            // dd($foto_temuan);
-                            if ($kom_temuan[0] == '') {
-                                foreach ($komentar as $i => $komn) {
-
-                                    $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
+                            $apps = explode(';', $value3['app_version']);
+                            $inc = 1;
+                            $incc = 1;
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_ls' . $inc++] = $value;
+                                            $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
                             } else {
-                                foreach ($kom_temuan as $i => $komn) {
-
-                                    $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_ls' . $inc++] = $value;
+                                            $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
-                            }
-
-                            foreach ($foto_temuan as $i => $foto) {
-
-                                $hitungLandscape[$key][$key1][$key2]['foto_temuan_ls' . ($i + 1)] = $foto;
                             }
                         }
                     }
@@ -2517,7 +2519,7 @@ class emplacementsController extends Controller
             }
         }
 
-        // dd($hitungLandscape, $hitungRmh);
+        // dd($hitungLandscape);
 
         $hitungLingkungan = array();
 
@@ -2547,30 +2549,29 @@ class emplacementsController extends Controller
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $komentar = array_values(array_filter($komentar, function ($value) {
-                                return $value !== "-";
-                            }));
-
-                            // dd($foto_temuan);
 
 
-
-                            if ($kom_temuan[0] == '') {
-                                foreach ($komentar as $i => $komn) {
-
-                                    $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
+                            $apps = explode(';', $value3['app_version']);
+                            $inc = 1;
+                            $incc = 1;
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_ll' . $inc++] = $value;
+                                            $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
                             } else {
-                                foreach ($kom_temuan as $i => $komn) {
-
-                                    $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_ll' . $inc++] = $value;
+                                            $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
-                            }
-
-                            foreach ($foto_temuan as $i => $foto) {
-
-                                $hitungLingkungan[$key][$key1][$key2]['foto_temuan_ll' . ($i + 1)] = $foto;
                             }
                         }
                     }
@@ -2878,30 +2879,28 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $komentar = array_values(array_filter($komentar, function ($value) {
-                                return $value !== "-";
-                            }));
 
-                            // dd($foto_temuan);
-
-
-
-                            if ($kom_temuan[0] == '') {
-                                foreach ($komentar as $i => $komn) {
-
-                                    $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                            $apps = explode(';', $value3['app_version']);
+                            $inc = 1;
+                            $incc = 1;
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungRmh_afd[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value;
+                                            $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
                             } else {
-                                foreach ($kom_temuan as $i => $komn) {
-
-                                    $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungRmh_afd[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value;
+                                            $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
-                            }
-
-                            foreach ($foto_temuan as $i => $foto) {
-
-                                $hitungRmh_afd[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
                             }
                         }
                     }
@@ -3021,29 +3020,30 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $komentar = array_values(array_filter($komentar, function ($value) {
-                                return $value !== "-";
-                            }));
-
-                            // dd($foto_temuan);
 
 
-                            if ($kom_temuan[0] == '') {
-                                foreach ($komentar as $i => $komn) {
 
-                                    $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
+                            $apps = explode(';', $value3['app_version']);
+                            $inc = 1;
+                            $incc = 1;
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLcp_afd[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value;
+                                            $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
                             } else {
-                                foreach ($kom_temuan as $i => $komn) {
-
-                                    $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLcp_afd[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value;
+                                            $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
-                            }
-
-                            foreach ($foto_temuan as $i => $foto) {
-
-                                $hitungLcp_afd[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
                             }
                         }
                     }
@@ -3150,29 +3150,28 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $komentar = array_values(array_filter($komentar, function ($value) {
-                                return $value !== "-";
-                            }));
 
-                            // dd($foto_temuan);
-
-
-                            if ($kom_temuan[0] == '') {
-                                foreach ($komentar as $i => $komn) {
-
-                                    $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
+                            $apps = explode(';', $value3['app_version']);
+                            $inc = 1;
+                            $incc = 1;
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLk_afd[$key][$key1][$key2]['foto_temuan_lk' . $inc++] = $value;
+                                            $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
                             } else {
-                                foreach ($kom_temuan as $i => $komn) {
-
-                                    $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLk_afd[$key][$key1][$key2]['foto_temuan_lk' . $inc++] = $value;
+                                            $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . $incc++] = $value2;
+                                        }
+                                    }
                                 }
-                            }
-
-                            foreach ($foto_temuan as $i => $foto) {
-
-                                $hitungLk_afd[$key][$key1][$key2]['foto_temuan_lk' . ($i + 1)] = $foto;
                             }
                         }
                     }
@@ -3704,6 +3703,7 @@ class emplacementsController extends Controller
         return $pdf->stream($filename);
     }
 
+
     public function downloadPDF(Request $request)
     {
 
@@ -3782,31 +3782,35 @@ class emplacementsController extends Controller
 
                             $foto_temuan = explode('$', $value3['foto_temuan']);
                             $kom_temuan = explode('$', $value3['komentar']);
-
-                            // dd($foto_temuan, $kom_temuan);
-                            // unset($value3['foto_temuan']);
-                            // unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            // unset($value3['komentar']);
-
-                            // Remove empty values and reindex the $foto_temuan array
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $kom_temuan = array_values(array_filter($kom_temuan, function ($value) {
-                                return $value !== "-";
-                            }));
+                            $komentar_temuan = explode('$', $value3['komentar_temuan']);
 
 
-                            // dd($foto_temuan, $kom_temuan);
-
+                            // dd($apps);
                             $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
                                 'nilai_total_rmh' => $sumNilai,
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
-                            foreach ($foto_temuan as $i => $foto) {
-                                $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : 'Komentar tidak ada';
-                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto . '-' . $komn;
+
+                            $inc = 1;
+                            $apps = explode(';', $value3['app_version']);
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value . '-' . $value2;
+                                        }
+                                    }
+                                }
+                            } else {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value . '-' . $value2;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -3816,7 +3820,7 @@ class emplacementsController extends Controller
 
 
 
-        // dd($emplacement);
+        // dd($hitungRmh);
         $hitungLingkungan = array();
 
         foreach ($lingkungan as $key => $value) {
@@ -3836,7 +3840,7 @@ class emplacementsController extends Controller
                             $foto_temuan = explode('$', $value3['foto_temuan']);
                             $kom_temuan = explode('$', $value3['komentar']);
                             $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
+
 
                             // unset($value3['foto_temuan']);
                             // unset($value3['komentar_temuan']);
@@ -3848,24 +3852,26 @@ class emplacementsController extends Controller
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
-                            // Remove empty values and reindex the $foto_temuan array
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $kom_temuan = array_values(array_filter($kom_temuan, function ($value) {
-                                return $value !== "-";
-                            }));
-                            foreach ($foto_temuan as $i => $foto) {
-                                $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
-                                $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto . '-' . $komn;
+                            $komentar_temuan = explode('$', $value3['komentar_temuan']);
+                            $inc = 1;
+                            $apps = explode(';', $value3['app_version']);
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . $inc++] = $value . '-' . $value2;
+                                        }
+                                    }
+                                }
+                            } else {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . $inc++] = $value . '-' . $value2;
+                                        }
+                                    }
+                                }
                             }
-                            // foreach ($foto_temuan as $i => $foto) {
-                            //     // Create new keys for each exploded value
-                            //     $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto;
-                            // }
-
-                            // foreach ($foto_temuan as $i => $foto) {
-                            //     $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
-                            //     $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto . '-' . $komn;
-                            // }
                         }
                     }
                 }
@@ -3893,43 +3899,41 @@ class emplacementsController extends Controller
                             $nilai = explode('$', $value3['nilai']);
                             $komentar = explode('$', $value3['komentar']);
 
-                            // // unset($value3['foto_temuan']);
-                            // unset($value3['komentar_temuan']);
-                            // unset($value3['nilai']);
-                            // unset($value3['komentar']);
 
-                            // Remove empty values and reindex the $foto_temuan array
-                            $foto_temuan = array_values(array_filter($foto_temuan));
-                            $kom_temuan = array_values(array_filter($kom_temuan, function ($value) {
-                                return $value !== "-";
-                            }));
+
+
                             $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
                                 // 'nilai_total_Lngkl' => $sumNilai,
                                 'date' => $yearMonth,
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
-                            foreach ($foto_temuan as $i => $foto) {
-                                $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
-                                $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto . '-' . $komn;
+                            $komentar_temuan = explode('$', $value3['komentar_temuan']);
+                            $apps = explode(';', $value3['app_version']);
+                            if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($komentar_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value . '-' . $value2;
+                                        }
+                                    }
+                                }
+                            } else {
+                                foreach ($foto_temuan as $keyx => $value) {
+                                    foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
+                                        if ($value != '') {
+                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value . '-' . $value2;
+                                        }
+                                    }
+                                }
                             }
-
-                            // foreach ($foto_temuan as $i => $foto) {
-                            //     // Create new keys for each exploded value
-                            //     $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
-                            // }
-
-                            // foreach ($foto_temuan as $i => $foto) {
-                            //     $komn = isset($kom_temuan[$i]) ? $kom_temuan[$i] : '';
-                            //     $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto . '-' . $komn;
-                            // }
                         }
                     }
                 }
             }
         }
 
-        // dd($hitungLandscape);
+        // dd($hitungLandscape, $hitungRmh, $hitungLingkungan);
         $filter_rmh = [];
 
         foreach ($hitungRmh as $estKey => $afdArray) {
@@ -3968,37 +3972,51 @@ class emplacementsController extends Controller
             }
         }
 
-        // dd($filter_rmh, $filter_lingkungan, $filter_landscape);
         $mergedArray = array();
 
-        // Iterate through each main key in filter_rmh
-        foreach ($filter_rmh as $mainKey => $subArray) {
-            // Initialize the merged array for this main key
-            $mergedArray[$mainKey] = array();
+        if (empty($filter_rmh) && empty($filter_lingkungan)) {
+            // If both $filter_rmh and $filter_lingkungan are empty, use $filter_landscape
+            $mergedArray = $filter_landscape;
+        } elseif (empty($filter_landscape) && empty($filter_lingkungan)) {
+            // If both $filter_landscape and $filter_lingkungan are empty, use $filter_rmh
+            $mergedArray = $filter_rmh;
+        } elseif (empty($filter_rmh) && empty($filter_landscape)) {
+            // If both $filter_rmh and $filter_landscape are empty, use $filter_lingkungan
+            $mergedArray = $filter_lingkungan;
+        } else {
 
-            // Create a list of all subkeys across the arrays for this main key
-            $subKeys = array_unique(array_merge(
-                array_keys($subArray),
-                isset($filter_lingkungan[$mainKey]) ? array_keys($filter_lingkungan[$mainKey]) : [],
-                isset($filter_landscape[$mainKey]) ? array_keys($filter_landscape[$mainKey]) : []
-            ));
+            foreach ($filter_rmh as $mainKey => $subArray) {
+                // Initialize the merged array for this main key
+                $mergedArray[$mainKey] = array();
 
-            foreach ($subKeys as $subKey) {
-                $mergedArray[$mainKey][$subKey] = array();
+                // Create a list of all subkeys across the arrays for this main key
+                $subKeys = array_unique(array_merge(
+                    array_keys($subArray),
+                    isset($filter_lingkungan[$mainKey]) ? array_keys($filter_lingkungan[$mainKey]) : [],
+                    isset($filter_landscape[$mainKey]) ? array_keys($filter_landscape[$mainKey]) : []
+                ));
 
-                if (isset($filter_rmh[$mainKey][$subKey])) {
-                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_rmh[$mainKey][$subKey]);
-                }
+                foreach ($subKeys as $subKey) {
+                    $mergedArray[$mainKey][$subKey] = array();
 
-                if (isset($filter_lingkungan[$mainKey][$subKey])) {
-                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_lingkungan[$mainKey][$subKey]);
-                }
+                    if (isset($filter_rmh[$mainKey][$subKey])) {
+                        $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_rmh[$mainKey][$subKey]);
+                    }
 
-                if (isset($filter_landscape[$mainKey][$subKey])) {
-                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_landscape[$mainKey][$subKey]);
+                    if (isset($filter_lingkungan[$mainKey][$subKey])) {
+                        $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_lingkungan[$mainKey][$subKey]);
+                    }
+
+                    if (isset($filter_landscape[$mainKey][$subKey])) {
+                        $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_landscape[$mainKey][$subKey]);
+                    }
                 }
             }
         }
+
+
+        // dd($mergedArray);
+
 
         // Now $mergedArray contains the merged and combined data
         // dd($mergedArray);
@@ -4016,13 +4034,6 @@ class emplacementsController extends Controller
                 }
             }
         }
-
-
-        // dd($mergedArray);
-
-
-        // Re-index the arrays after unsetting elements
-        $yourArray = array_map('array_values', $mergedArray);
 
 
         $newArray = [];
