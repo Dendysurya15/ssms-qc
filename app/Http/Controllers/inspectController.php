@@ -237,7 +237,7 @@ class inspectController extends Controller
         }
 
 
-        // dd($dataTrans ,$datestrans);
+        // dd($datesBuah, $datestrans);
 
         $mutu_all = [];
 
@@ -394,7 +394,7 @@ class inspectController extends Controller
         }
 
         // dd($mutu_all,$groupedArray);
-        // dd($groupedArray);
+        dd($groupedArray['KTE']);
 
         $item_counts = [];
 
@@ -441,7 +441,7 @@ class inspectController extends Controller
 
         // Example usage:
 
-        // dd($dataResFind,$item_counts);
+        // dd($dataResFind, $item_counts);
         $arrView = array();
 
         $arrView['dataResFind'] = $dataResFind;
@@ -9050,5 +9050,4 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
-    
 }
