@@ -6128,50 +6128,108 @@ class inspeksidashController extends Controller
         // dd($DataEstate);
         $DataEstate = json_decode($DataEstate, true);
 
-        //menghitung buat table tampilkan pertahun
 
-        //bagian querry
-        //mutu ancak
-        $querytahun = DB::connection('mysql2')->table('mutu_ancak_new')
-            ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
-            // ->whereYear('datetime', '2023')
-            ->whereYear('datetime', $year)
-            ->orderBy('estate', 'asc')
-            ->orderBy('afdeling', 'asc')
-            ->orderBy('blok', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-        $querytahun = $querytahun->groupBy(['estate', 'afdeling']);
-        $querytahun = json_decode($querytahun, true);
-        // dd($querytahun);
-        //mutu buah
-        $queryMTbuah = DB::connection('mysql2')->table('mutu_buah')
-            ->select(
-                "mutu_buah.*",
-                DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun')
-            )
-            ->whereYear('datetime', $year)
-            ->get();
-        $queryMTbuah = $queryMTbuah->groupBy(['estate', 'afdeling']);
-        $queryMTbuah = json_decode($queryMTbuah, true);
-        // dd($queryMTbuah);
-        //MUTU ANCAK
-        $queryMTtrans = DB::connection('mysql2')->table('mutu_transport')
-            ->select(
-                "mutu_transport.*",
-                DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun')
-            )
-            ->whereYear('datetime', $year)
-            ->orderBy('estate', 'asc')
-            ->orderBy('afdeling', 'asc')
-            ->orderBy('blok', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-        $queryMTtrans = $queryMTtrans->groupBy(['estate', 'afdeling']);
-        $queryMTtrans = json_decode($queryMTtrans, true);
-        // dd($queryMTancak);
+        // dd($queryEste);
+        $querytahun = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $monthName = date('Y-m', mktime(0, 0, 0, $month, 1));
+
+            $data = DB::connection('mysql2')->table('mutu_ancak_new')
+                ->select("mutu_ancak_new.*", 'estate.*', DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+                ->join('estate', 'estate.est', '=', 'mutu_ancak_new.estate')
+                ->join('wil', 'wil.id', '=', 'estate.wil')
+                ->where('datetime', 'like', '%' . $monthName . '%')
+                ->where('wil.regional', $RegData)
+                ->orderBy('estate', 'asc')
+                ->orderBy('afdeling', 'asc')
+                ->orderBy('blok', 'asc')
+                ->orderBy('datetime', 'asc')
+                ->get();
+
+            $data = $data->groupBy(['estate', 'afdeling']);
+            $data = json_decode($data, true);
+
+            foreach ($data as $key1 => $value) {
+                foreach ($value as $key2 => $value2) {
+                    if (!isset($querytahun[$key1][$key2])) {
+                        $querytahun[$key1][$key2] = [];
+                    }
+
+                    if (!empty($value2)) {
+                        $querytahun[$key1][$key2] = array_merge($querytahun[$key1][$key2], $value2);
+                    }
+                }
+            }
+        }
+
+        $queryMTbuah = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $monthName = date('Y-m', mktime(0, 0, 0, $month, 1));
+
+            $data = DB::connection('mysql2')->table('mutu_buah')
+                ->select("mutu_buah.*", 'estate.*', DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun'))
+                ->join('estate', 'estate.est', '=', 'mutu_buah.estate')
+                ->join('wil', 'wil.id', '=', 'estate.wil')
+                ->where('datetime', 'like', '%' . $monthName . '%')
+                ->where('wil.regional', $RegData)
+                ->orderBy('estate', 'asc')
+                ->orderBy('afdeling', 'asc')
+                ->orderBy('blok', 'asc')
+                ->orderBy('datetime', 'asc')
+                ->get();
+
+            $data = $data->groupBy(['estate', 'afdeling']);
+            $data = json_decode($data, true);
+
+            foreach ($data as $key1 => $value) {
+                foreach ($value as $key2 => $value2) {
+                    if (!isset($queryMTbuah[$key1][$key2])) {
+                        $queryMTbuah[$key1][$key2] = [];
+                    }
+
+                    if (!empty($value2)) {
+                        $queryMTbuah[$key1][$key2] = array_merge($queryMTbuah[$key1][$key2], $value2);
+                    }
+                }
+            }
+        }
+
+
+        $queryMTtrans = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $monthName = date('Y-m', mktime(0, 0, 0, $month, 1));
+
+            $data = DB::connection('mysql2')->table('mutu_transport')
+                ->select("mutu_transport.*", 'estate.*', DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
+                ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
+                ->join('wil', 'wil.id', '=', 'estate.wil')
+                ->where('datetime', 'like', '%' . $monthName . '%')
+                ->where('wil.regional', $RegData)
+                ->orderBy('estate', 'asc')
+                ->orderBy('afdeling', 'asc')
+                ->orderBy('blok', 'asc')
+                ->orderBy('datetime', 'asc')
+                ->get();
+
+            $data = $data->groupBy(['estate', 'afdeling']);
+            $data = json_decode($data, true);
+
+            foreach ($data as $key1 => $value) {
+                foreach ($value as $key2 => $value2) {
+                    if (!isset($queryMTtrans[$key1][$key2])) {
+                        $queryMTtrans[$key1][$key2] = [];
+                    }
+
+                    if (!empty($value2)) {
+                        $queryMTtrans[$key1][$key2] = array_merge($queryMTtrans[$key1][$key2], $value2);
+                    }
+                }
+            }
+        }
+
 
         //afdeling
         $queryAfd = DB::connection('mysql2')->table('afdeling')
@@ -6305,7 +6363,7 @@ class inspeksidashController extends Controller
         }
 
 
-        // dd($defaultNew['CWS']);
+        // dd($defaultNew);
         //mutu buah
         $defaultMTbh = array();
         foreach ($bulan as $month) {
