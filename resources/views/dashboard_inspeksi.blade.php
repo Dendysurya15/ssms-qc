@@ -1598,7 +1598,8 @@
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
-
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.min.js"></script>
 <script>
     const estDataMapSelect = document.querySelector('#estDataMap');
     const regDataMapSelect = document.querySelector('#regDataMap');
@@ -1785,13 +1786,17 @@
 
 
     function initializeMap() {
-        var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
+        var map = L.map('map', {
+            preferCanvas: true, // Set preferCanvas to true
+        }).setView([-2.2745234, 111.61404248], 13);
 
         googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
         }).addTo(map);
         map.addControl(new L.Control.Fullscreen());
+
+
         return map;
     }
 
@@ -8686,7 +8691,7 @@
     }
 
     function convertMapToImage() {
-        const mapContainer = document.getElementById('map'); // Get the existing map container element
+        const mapContainer = document.getElementById('map');
 
         try {
             buttonimg.style.display = 'none';
@@ -8700,53 +8705,52 @@
                 }
             });
 
-            domtoimage.toJpeg(mapContainer, {
-                    quality: 1,
-                    filter: node => node.tagName !== 'style'
-                })
-                .then(function(dataUrl) {
-                    var _token = $('input[name="_token"]').val();
-                    var estData = $("#estDataMap").val();
-                    var regData = $("#regDataMap").val();
-                    // Create a FormData object to send the data as a POST request
-                    var formData = new FormData();
-                    formData.append('imgData', dataUrl);
-                    formData.append('estData', estData);
-                    formData.append('regData', regData);
-                    formData.append('_token', _token);
+            html2canvas(mapContainer).then(function(canvas) {
+                var dataURL = canvas.toDataURL('image/png');
+                console.log(dataURL);
 
-                    $.ajax({
-                        url: "{{ route('downloadMaptahun') }}",
-                        method: "post",
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(result) {
-                            if (result.message === 'Image saved successfully') {
-                                Swal.close();
+                var _token = $('input[name="_token"]').val();
+                var estData = $("#estDataMap").val();
+                var regData = $("#regDataMap").val();
 
-                                let alert = Swal.fire({
-                                    icon: 'success',
-                                    title: 'PDF siap di download',
-                                    showConfirmButton: false,
-                                    html: '<a href="/pdfPage/' + result.filename + '/' + result.est + '" class="btn btn-primary download-btn" target="_blank"><i class="nav-icon fa fa-download"></i> Download PDF</a>',
-                                });
+                // Create a FormData object to send the data as a POST request
+                var formData = new FormData();
+                formData.append('imgData', dataURL); // Fix the variable name to dataURL
+                formData.append('estData', estData);
+                formData.append('regData', regData);
+                formData.append('_token', _token);
 
-                                // Add a click event listener to the download button to close the alert
-                                document.querySelector('.download-btn').addEventListener('click', function() {
-                                    alert.close(); // Close the alert
-                                });
-                            } else {
-                                // Show a generic success alert
-                                Swal.fire('Error', 'Operation Error', 'error');
-                            }
+                // Use the $.ajax method to send the data to the server
+                $.ajax({
+                    url: "{{ route('downloadMaptahun') }}",
+                    method: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(result) {
+                        if (result.message === 'Image saved successfully') {
+                            Swal.close();
+
+                            let alert = Swal.fire({
+                                icon: 'success',
+                                title: 'PDF siap di download',
+                                showConfirmButton: false,
+                                html: '<a href="/pdfPage/' + result.filename + '/' + result.est + '" class="btn btn-primary download-btn" target="_blank"><i class="nav-icon fa fa-download"></i> Download PDF</a>',
+                            });
+
+                            document.querySelector('.download-btn').addEventListener('click', function() {
+                                alert.close();
+                            });
+                        } else {
+                            Swal.fire('Error', 'Operation Error', 'error');
                         }
-                    });
-                })
-                .catch(function(error) {
-                    console.error('Error in domtoimage.toJpeg:', error);
-                    Swal.fire('Error', 'An error occurred while creating the image.', 'error');
+                    },
+                    error: function(error) {
+                        console.error('Error in AJAX request:', error);
+                        Swal.fire('Error', 'An error occurred while sending the data.', 'error');
+                    }
                 });
+            });
         } catch (error) {
             console.error('Unexpected error:', error);
             Swal.fire('Error', 'An unexpected error occurred.', 'error');
