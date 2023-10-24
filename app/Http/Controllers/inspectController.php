@@ -394,7 +394,7 @@ class inspectController extends Controller
         }
 
         // dd($mutu_all,$groupedArray);
-        dd($groupedArray['KTE']);
+        // dd($groupedArray['KTE']);
 
         $item_counts = [];
 
@@ -450,6 +450,10 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
+
+
+
+
     public function changeDataInspeksi(Request $request)
     {
 
@@ -8116,10 +8120,6 @@ class inspectController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
-
-
-
-
 
 
     public function pdfBA_excel(Request $request)

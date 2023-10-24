@@ -1356,12 +1356,15 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary mb-3 ml-3" id="showEstMap">Show</button>
-                        </div>
 
+                        </div>
 
 
                         <div class="ml-4 mr-4 mb-3">
                             <div class="row text-center">
+                                <button class="btn btn-primary mb-3 ml-3" onclick="convertMapToImage()" id="downloadimgmap">Download As PDF</button>
+
+
                                 <div id="map" style="width: 100%; height: 700px;"></div>
                             </div>
                         </div>
@@ -1594,12 +1597,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
 
 <script>
     const estDataMapSelect = document.querySelector('#estDataMap');
     const regDataMapSelect = document.querySelector('#regDataMap');
-
+    const buttonimg = document.getElementById('downloadimgmap');
     // Add an event listener to the select element
     // Add an event listener to the select element
     function fetchEstates(region) {
@@ -1773,6 +1776,9 @@
         dashboard_tahun();
         graphFilter();
         dashboard_week();
+
+
+        buttonimg.style.display = 'none';
     });
 
 
@@ -1819,6 +1825,7 @@
     var legendVar = null;
 
     $('#showEstMap').click(function() {
+        buttonimg.style.display = 'block';
         if (map === null) {
             map = initializeMap();
         } else {
@@ -1840,6 +1847,10 @@
         removeMarkers();
         getPlotBlok();
         drawEstatePlot();
+
+
+        // button.style.display = 'none';
+
     });
 
 
@@ -8672,5 +8683,73 @@
 
             }
         });
+    }
+
+    function convertMapToImage() {
+        const mapContainer = document.getElementById('map'); // Get the existing map container element
+
+        try {
+            buttonimg.style.display = 'none';
+            Swal.fire({
+                title: 'Tunggu saat siap download PDF',
+                html: '<span class="loading-text">Mohon Tunggu...</span>',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            domtoimage.toJpeg(mapContainer, {
+                    quality: 1,
+                    filter: node => node.tagName !== 'style'
+                })
+                .then(function(dataUrl) {
+                    var _token = $('input[name="_token"]').val();
+                    var estData = $("#estDataMap").val();
+                    var regData = $("#regDataMap").val();
+                    // Create a FormData object to send the data as a POST request
+                    var formData = new FormData();
+                    formData.append('imgData', dataUrl);
+                    formData.append('estData', estData);
+                    formData.append('regData', regData);
+                    formData.append('_token', _token);
+
+                    $.ajax({
+                        url: "{{ route('downloadMaptahun') }}",
+                        method: "post",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(result) {
+                            if (result.message === 'Image saved successfully') {
+                                Swal.close();
+
+                                let alert = Swal.fire({
+                                    icon: 'success',
+                                    title: 'PDF siap di download',
+                                    showConfirmButton: false,
+                                    html: '<a href="/pdfPage/' + result.filename + '/' + result.est + '" class="btn btn-primary download-btn" target="_blank"><i class="nav-icon fa fa-download"></i> Download PDF</a>',
+                                });
+
+                                // Add a click event listener to the download button to close the alert
+                                document.querySelector('.download-btn').addEventListener('click', function() {
+                                    alert.close(); // Close the alert
+                                });
+                            } else {
+                                // Show a generic success alert
+                                Swal.fire('Error', 'Operation Error', 'error');
+                            }
+                        }
+                    });
+                })
+                .catch(function(error) {
+                    console.error('Error in domtoimage.toJpeg:', error);
+                    Swal.fire('Error', 'An error occurred while creating the image.', 'error');
+                });
+        } catch (error) {
+            console.error('Unexpected error:', error);
+            Swal.fire('Error', 'An unexpected error occurred.', 'error');
+        }
     }
 </script>

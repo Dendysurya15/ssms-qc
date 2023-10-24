@@ -12,8 +12,11 @@ use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 
 require '../app/helpers.php';
+
+use Illuminate\Support\Facades\Storage;
 
 
 class makemapsController extends Controller
@@ -932,5 +935,98 @@ class makemapsController extends Controller
             'ancak_plot' => $ancak_plot,
             'blok_sidak' => $blokSidakResult
         ]);
+    }
+
+
+
+
+    public function downloadMaptahun(Request $request)
+    {
+        $imgData = $request->input('imgData');
+        $estData = $request->input('estData');
+        $regData = $request->input('regData');
+        $decodedImage = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imgData));
+
+        // dd($estData);
+        // Generate a unique filename for the image, e.g., using a timestamp
+        $filename = 'img_map_' . time() . '.png';
+
+        // Define the public directory path
+        $publicMapPath = public_path('img_map');
+        $publicResultPath = public_path('img_result');
+
+        // Check if the "img_map" directory exists, if not, create it
+        if (!file_exists($publicMapPath)) {
+            mkdir($publicMapPath, 0755, true);
+        }
+
+        // Save the image to the "img_map" directory
+        file_put_contents($publicMapPath . '/' . $filename, $decodedImage);
+
+        $files = File::files($publicMapPath);
+
+        foreach ($files as $file) {
+            $imageInfo = getimagesize($file);
+
+            if ($imageInfo !== false) {
+                list($width, $height, $type) = $imageInfo;
+
+                $originalImage = imagecreatefromstring(file_get_contents($file));
+
+                $minX = $width;
+                $minY = $height;
+                $maxX = 0;
+                $maxY = 0;
+
+                for ($x = 0; $x < $width; $x++) {
+                    for ($y = 0; $y < $height; $y++) {
+                        $pixelColor = imagecolorat($originalImage, $x, $y);
+                        $color = imagecolorsforindex($originalImage, $pixelColor);
+                        if ($color['red'] !== 0 || $color['green'] !== 0 || $color['blue'] !== 0) {
+                            $minX = min($minX, $x);
+                            $minY = min($minY, $y);
+                            $maxX = max($maxX, $x);
+                            $maxY = max($maxY, $y);
+                        }
+                    }
+                }
+                $cropWidth = $maxX - $minX + 1;
+                $cropHeight = $maxY - $minY + 1;
+                $croppedImage = imagecrop($originalImage, ['x' => $minX, 'y' => $minY, 'width' => $cropWidth, 'height' => $cropHeight]);
+
+                $outputFile = $publicResultPath . '/' . basename($file);
+                imagejpeg($croppedImage, $outputFile);
+
+                imagedestroy($originalImage);
+                imagedestroy($croppedImage);
+
+                // Delete the original image from "img_map"
+                unlink($file);
+            }
+        }
+
+
+        // Provide the public URL for the saved image in "img_result"
+        $publicUrl = asset('img_result/' . $filename);
+
+        return response()->json(['message' => 'Image saved successfully', 'filename' => $filename, 'est' => $estData]);
+    }
+
+
+
+
+    public function pdfPage($filename, $est)
+    {
+        $url = $filename;
+        $estData = $est;
+
+        $pdf = PDF::loadView('pdfimgInspeksi', compact('url', 'estData'));
+
+        $customPaper = array(360, 360, 360, 360);
+        $pdf->set_paper('A2', 'landscape');
+
+        $filename = 'Data Map Inspeksi per Blok' . '.pdf';
+
+        return $pdf->stream($filename);
     }
 }

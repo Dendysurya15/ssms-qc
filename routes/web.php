@@ -195,3 +195,6 @@ Route::get('/listqc', [adminpanelController::class, 'listqc'])->name('listqc');
 Route::post('/updateUserqc', [adminpanelController::class, 'updateUserqc'])->name('updateUserqc');
 Route::get('/estAFD', [emplacementsController::class, 'estAFD'])->name('estAFD');
 Route::get('/editkom', [emplacementsController::class, 'editkom'])->name('editkom');
+
+Route::post('/downloadMaptahun', [makemapsController::class, 'downloadMaptahun'])->name('downloadMaptahun');
+Route::get('/pdfPage/{filename}/{est}', [makemapsController::class, 'pdfPage'])->name('pdfPage');
