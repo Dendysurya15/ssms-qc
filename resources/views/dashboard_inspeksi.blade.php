@@ -199,6 +199,7 @@
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
                             <button id="sort-est-btn">Sort by Afd</button>
                             <button id="sort-rank-btn">Sort by Rank</button>
+                            <button onclick="downloadTablesAsImages()" id="downladbulan">Download As Zip</button>
                         </div>
 
 
@@ -208,7 +209,7 @@
                                     <div class="row justify-content-center">
                                         <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab1">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" style="font-size: 13px" id="table1">
+                                                <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tabblan1">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
                                                             <th colspan="5" id="thead1" style="text-align:center">
@@ -234,7 +235,7 @@
                                         </div>
                                         <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab2">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" style="font-size: 13px" id="table2">
+                                                <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tabblan2">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
                                                             <th colspan="5" id="thead2" style="text-align:center">
@@ -260,7 +261,7 @@
                                         </div>
                                         <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab3">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" style="font-size: 13px" id="Reg3">
+                                                <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tabblan3">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
                                                             <th colspan="5" id="thead3" style="text-align:center">
@@ -285,7 +286,7 @@
                                         </div>
                                         <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab4" style="display: none;">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
+                                                <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tabblan4">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
                                                             <th colspan="5" id="thead3x" style="text-align:center">
@@ -600,6 +601,7 @@
                             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
                                 <button id="sort-afd-btnWeek">Sort by Afd</button>
                                 <button id="sort-est-btnWeek">Sort by Rank</button>
+                                <button onclick="downloadTablesAsImages2()" id="downladbulanx">Download As Zip</button>
                             </div>
                             <div id="tablesContainer">
                                 <div class="tabContainer">
@@ -607,7 +609,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs1">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="table1">
+                                                    <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tableminggu1">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads1" style="text-align:center">
@@ -632,7 +634,7 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs2">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="table2">
+                                                    <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tableminggu2">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads2" style="text-align:center">
@@ -658,7 +660,7 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs3">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="Reg3">
+                                                    <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tableminggu3">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads3" style="text-align:center">
@@ -683,7 +685,7 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs4" style="display: none;">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
+                                                    <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tableminggu4">
                                                         <thead>
                                                             <tr bgcolor="#fffc04">
                                                                 <th colspan="5" id="theads3x" style="text-align:center">
@@ -1600,6 +1602,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
 <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.0/jszip.min.js"></script>
+
 <script>
     const estDataMapSelect = document.querySelector('#estDataMap');
     const regDataMapSelect = document.querySelector('#regDataMap');
@@ -8812,6 +8816,8 @@
         });
     }
 
+
+
     function convertMapToImage() {
         const mapContainer = document.getElementById('map');
 
@@ -8877,5 +8883,137 @@
             console.error('Unexpected error:', error);
             Swal.fire('Error', 'An unexpected error occurred.', 'error');
         }
+    }
+
+    function downloadTablesAsImages() {
+        Swal.fire({
+            title: 'Tunggu saat siap download PDF',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const tables = [
+            document.getElementById('tabblan1'),
+            document.getElementById('tabblan2'),
+            document.getElementById('tabblan3'),
+            document.getElementById('tabblan4')
+        ];
+
+        let date = document.getElementById('inputDate').value;
+        let reg = document.getElementById('regionalPanen').value;
+
+        const zip = new JSZip();
+
+        const capturePromises = tables.map((table, index) => {
+            return new Promise((resolve) => {
+                const options = {
+                    scale: 10, // Increase the scale for higher resolution (adjust as needed)
+                };
+
+                html2canvas(table, options).then(canvas => {
+                    const dataURL = canvas.toDataURL('image/jpeg');
+                    zip.file(`table${index + 1}.jpeg`, dataURL.split(',')[1], {
+                        base64: true
+                    });
+                    resolve();
+                });
+            });
+        });
+
+        Promise.all(capturePromises)
+            .then(() => {
+                zip.generateAsync({
+                    type: 'blob'
+                }).then(function(content) {
+                    const url = window.URL.createObjectURL(content);
+
+                    const a = document.createElement('a');
+                    a.href = url;
+                    // Customize the download name with the date
+                    a.download = `QcInspeksi-${date}-Regional-${reg}.zip`;
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+
+                    a.click();
+
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    Swal.close(); // Close Swal after the download
+                });
+            })
+            .catch(error => {
+                console.error('An error occurred:', error);
+                Swal.close(); // Close Swal on error
+            });
+    }
+
+    function downloadTablesAsImages2() {
+        Swal.fire({
+            title: 'Tunggu saat siap download PDF',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const tables = [
+            document.getElementById('tableminggu1'),
+            document.getElementById('tableminggu2'),
+            document.getElementById('tableminggu3'),
+            document.getElementById('tableminggu4')
+        ];
+
+        let reg = document.getElementById('regionalDataweek').value;
+        let date = document.getElementById('dateWeek').value;
+
+        const zip = new JSZip();
+
+        const capturePromises = tables.map((table, index) => {
+            return new Promise((resolve) => {
+                const options = {
+                    scale: 10, // Increase the scale for higher resolution (adjust as needed)
+                };
+
+                html2canvas(table, options).then(canvas => {
+                    const dataURL = canvas.toDataURL('image/jpeg');
+                    zip.file(`table${index + 1}.jpeg`, dataURL.split(',')[1], {
+                        base64: true
+                    });
+                    resolve();
+                });
+            });
+        });
+
+        Promise.all(capturePromises)
+            .then(() => {
+                zip.generateAsync({
+                    type: 'blob'
+                }).then(function(content) {
+                    const url = window.URL.createObjectURL(content);
+
+                    const a = document.createElement('a');
+                    a.href = url;
+                    // Customize the download name with the date
+                    a.download = `QcInspeksi-${date}-Regional-${reg}.zip`;
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+
+                    a.click();
+
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    Swal.close(); // Close Swal after the download
+                });
+            })
+            .catch(error => {
+                console.error('An error occurred:', error);
+                Swal.close(); // Close Swal on error
+            });
     }
 </script>
