@@ -577,7 +577,7 @@
                           <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
                             <thead>
                               <tr bgcolor="yellow">
-                                <th colspan="5" id="thwillPlas">PLASMA</th>
+                                <th colspan="5" id="thwillPlas">PLASMAa</th>
                               </tr>
                               <tr bgcolor="#2044a4" style="color: white">
                                 <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
@@ -3803,7 +3803,7 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "none";
-        element4.style.display = "";
+        element4.style.display = "none";
         thElement1.textContent = 'WILAYAH VII';
         thElement2.textContent = 'WILAYAH VIII';
         thElement4.textContent = 'Plasma3';
@@ -3812,16 +3812,15 @@
         thElement3.classList.add("text-center");
         thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-4");
+        element1.classList.add("col-md-6", "col-lg-6");
         element2.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-4");
-        element4.classList.remove("col-md-6", "col-lg-3");
-        element4.classList.add("col-md-6", "col-lg-4");
+        element2.classList.add("col-md-6", "col-lg-6");
+
       } else if (regSidak === '1') {
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "";
+        element4.style.display = "none";
         thElement1.textContent = 'WILAYAH I';
         thElement2.textContent = 'WILAYAH II';
         thElement3.textContent = 'WILAYAH III';
@@ -3831,18 +3830,17 @@
         thElement3.classList.add("text-center");
         thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-3");
+        element1.classList.add("col-md-4", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-3");
+        element2.classList.add("col-md-4", "col-lg-4");
         element3.classList.remove("col-md-6", "col-lg-4");
-        element3.classList.add("col-md-6", "col-lg-3");
-        element4.classList.remove("col-md-6", "col-lg-4");
-        element4.classList.add("col-md-6", "col-lg-3");
+        element3.classList.add("col-md-4", "col-lg-4");
+
       } else if (regSidak === '2') {
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "";
+        element4.style.display = "mone";
         thElement1.textContent = 'WILAYAH IV';
         thElement2.textContent = 'WILAYAH V';
         thElement3.textContent = 'WILAYAH VI';
@@ -3852,13 +3850,12 @@
         thElement3.classList.add("text-center");
         thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-3");
+        element1.classList.add("col-md-6", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-3");
+        element2.classList.add("col-md-6", "col-lg-4");
         element3.classList.remove("col-md-6", "col-lg-4");
-        element3.classList.add("col-md-6", "col-lg-3");
-        element4.classList.remove("col-md-6", "col-lg-4");
-        element4.classList.add("col-md-6", "col-lg-3");
+        element3.classList.add("col-md-6", "col-lg-4");
+
       } else if (regSidak === '4') {
         element1.style.display = "";
         element2.style.display = "";
@@ -3895,7 +3892,7 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "none";
-        element4.style.display = "";
+        element4.style.display = "none";
         thElement1.textContent = 'WILAYAH VII';
         thElement2.textContent = 'WILAYAH VIII';
         thElement4.textContent = 'Plasma3';
@@ -3904,16 +3901,15 @@
         thElement3.classList.add("text-center");
         thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-4");
+        element1.classList.add("col-md-6", "col-lg-6");
         element2.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-4");
-        element4.classList.remove("col-md-6", "col-lg-3");
-        element4.classList.add("col-md-6", "col-lg-4");
+        element2.classList.add("col-md-6", "col-lg-6");
+
       } else if (regSidak === '1') {
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "";
+        element4.style.display = "none";
         thElement1.textContent = 'WILAYAH I';
         thElement2.textContent = 'WILAYAH II';
         thElement3.textContent = 'WILAYAH III';
@@ -3923,18 +3919,17 @@
         thElement3.classList.add("text-center");
         thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-3");
+        element1.classList.add("col-md-4", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-3");
+        element2.classList.add("col-md-4", "col-lg-4");
         element3.classList.remove("col-md-6", "col-lg-4");
-        element3.classList.add("col-md-6", "col-lg-3");
-        element4.classList.remove("col-md-6", "col-lg-4");
-        element4.classList.add("col-md-6", "col-lg-3");
+        element3.classList.add("col-md-4", "col-lg-4");
+
       } else if (regSidak === '2') {
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "";
+        element4.style.display = "mone";
         thElement1.textContent = 'WILAYAH IV';
         thElement2.textContent = 'WILAYAH V';
         thElement3.textContent = 'WILAYAH VI';
@@ -3944,13 +3939,12 @@
         thElement3.classList.add("text-center");
         thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-3");
+        element1.classList.add("col-md-6", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-3");
+        element2.classList.add("col-md-6", "col-lg-4");
         element3.classList.remove("col-md-6", "col-lg-4");
-        element3.classList.add("col-md-6", "col-lg-3");
-        element4.classList.remove("col-md-6", "col-lg-4");
-        element4.classList.add("col-md-6", "col-lg-3");
+        element3.classList.add("col-md-6", "col-lg-4");
+
       } else if (regSidak === '4') {
         element1.style.display = "";
         element2.style.display = "";
@@ -3992,44 +3986,56 @@
         element4.style.display = "none";
         thElement1.textContent = 'WILAYAH VII';
         thElement2.textContent = 'WILAYAH VIII';
-        // thElement3.textContent = 'WILAYAH VI';
-        element1.classList.remove("col-md-6", "col-lg-3");
+        thElement4.textContent = 'Plasma3';
+        thElement1.classList.add("text-center");
+        thElement2.classList.add("text-center");
+        thElement3.classList.add("text-center");
+        thElement4.classList.add("text-center");
+        element1.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
         element1.classList.add("col-md-6", "col-lg-6");
-        element2.classList.remove("col-md-6", "col-lg-3");
+        element2.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
         element2.classList.add("col-md-6", "col-lg-6");
+
       } else if (regSidak === '1') {
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "";
+        element4.style.display = "none";
         thElement1.textContent = 'WILAYAH I';
         thElement2.textContent = 'WILAYAH II';
         thElement3.textContent = 'WILAYAH III';
+        thElement4.textContent = 'Plasma1';
+        thElement1.classList.add("text-center");
+        thElement2.classList.add("text-center");
+        thElement3.classList.add("text-center");
+        thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-3");
+        element1.classList.add("col-md-4", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-3");
+        element2.classList.add("col-md-4", "col-lg-4");
         element3.classList.remove("col-md-6", "col-lg-4");
-        element3.classList.add("col-md-6", "col-lg-3");
-        element4.classList.remove("col-md-6", "col-lg-4");
-        element4.classList.add("col-md-6", "col-lg-3");
+        element3.classList.add("col-md-4", "col-lg-4");
+
       } else if (regSidak === '2') {
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "";
+        element4.style.display = "mone";
         thElement1.textContent = 'WILAYAH IV';
         thElement2.textContent = 'WILAYAH V';
         thElement3.textContent = 'WILAYAH VI';
         thElement4.textContent = 'Plasma2';
+        thElement1.classList.add("text-center");
+        thElement2.classList.add("text-center");
+        thElement3.classList.add("text-center");
+        thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element1.classList.add("col-md-6", "col-lg-3");
+        element1.classList.add("col-md-6", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
-        element2.classList.add("col-md-6", "col-lg-3");
+        element2.classList.add("col-md-6", "col-lg-4");
         element3.classList.remove("col-md-6", "col-lg-4");
-        element3.classList.add("col-md-6", "col-lg-3");
-        element4.classList.remove("col-md-6", "col-lg-4");
-        element4.classList.add("col-md-6", "col-lg-3");
+        element3.classList.add("col-md-6", "col-lg-4");
+
       } else if (regSidak === '4') {
         element1.style.display = "";
         element2.style.display = "";

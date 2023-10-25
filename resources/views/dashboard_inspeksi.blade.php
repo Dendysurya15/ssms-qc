@@ -283,13 +283,13 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab4">
+                                        <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab4" style="display: none;">
                                             <div class="table-responsive">
                                                 <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
                                                             <th colspan="5" id="thead3x" style="text-align:center">
-                                                                PLASMA</th>
+                                                                Plasma</th>
                                                         </tr>
                                                         <tr bgcolor="#2044a4" style="color: white">
                                                             <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
@@ -681,7 +681,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs4">
+                                            <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tabs4" style="display: none;">
                                                 <div class="table-responsive">
                                                     <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
                                                         <thead>
@@ -1652,7 +1652,44 @@
             $('#regionalData').val('2');
             $('#regDataIns').val('2');
             $('#regFind').val('2');
-            // $('#regGrafik').val('2');
+
+            const nons = document.getElementById("Tab1");
+            const nonx = document.getElementById("Tab2");
+            const llon = document.getElementById("Tab3");
+            const non = document.getElementById("Tab4");
+            const tahun1 = document.getElementById("Tabs1");
+            const tahun2 = document.getElementById("Tabs2");
+            const tahun3 = document.getElementById("Tabs3");
+            const tahun4 = document.getElementById("Tabs4");
+
+
+            function resetClassList(element) {
+                element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
+                element.classList.add("col-md-4");
+            }
+
+
+
+            nons.style.display = "";
+            nonx.style.display = "";
+            llon.style.display = "";
+            non.style.display = "none";
+            resetClassList(non);
+
+            nons.classList.add("col-lg-4");
+            nonx.classList.add("col-lg-4");
+            llon.classList.add("col-lg-4");
+
+
+            tahun1.style.display = "";
+            tahun2.style.display = "";
+            tahun3.style.display = "";
+            tahun4.style.display = "none";
+            resetClassList(tahun4);
+
+            tahun1.classList.add("col-lg-4");
+            tahun2.classList.add("col-lg-4");
+            tahun3.classList.add("col-lg-4");
 
             const thElement1 = document.getElementById('thead1');
             const thElement2 = document.getElementById('thead2');
@@ -1679,6 +1716,7 @@
             thElement2x.classList.add("text-center");
             thElement3x.classList.add("text-center");
             thElement4x.classList.add("text-center");
+
         } else if ((lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') && !isTableHeaderModified) {
             $('#regionalPanen').val('3');
             $('#regionalDataweek').val('3');
@@ -1712,6 +1750,48 @@
             thElement2x.classList.add("text-center");
             thElement3x.classList.add("text-center");
             thElement4x.classList.add("text-center");
+
+
+            const nons = document.getElementById("Tab1");
+            const nonx = document.getElementById("Tab2");
+            const llon = document.getElementById("Tab3");
+            const non = document.getElementById("Tab4");
+            const tahun1 = document.getElementById("Tabs1");
+            const tahun2 = document.getElementById("Tabs2");
+            const tahun3 = document.getElementById("Tabs3");
+            const tahun4 = document.getElementById("Tabs4");
+
+
+            function resetClassList(element) {
+                element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
+                element.classList.add("col-md-4");
+            }
+
+
+
+            nons.style.display = "";
+            nonx.style.display = "";
+            llon.style.display = "none";
+            non.style.display = "none";
+            resetClassList(llon);
+            resetClassList(non);
+
+            nons.classList.add("col-lg-6");
+            nonx.classList.add("col-lg-6");
+
+
+
+            tahun1.style.display = "";
+            tahun2.style.display = "";
+            tahun3.style.display = "none";
+            tahun4.style.display = "none";
+            resetClassList(tahun3);
+            resetClassList(tahun4);
+
+            tahun1.classList.add("col-lg-6");
+            tahun2.classList.add("col-lg-6");
+
+
         } else if ((lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') && !isTableHeaderModified) {
             $('#regionalPanen').val('4');
             $('#regionalDataweek').val('4');
@@ -1733,8 +1813,10 @@
 
             function resetClassList(element) {
                 element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
-                element.classList.add("col-md-6");
+                element.classList.add("col-md-4");
             }
+
+
 
             llon.style.display = "none";
             non.style.display = "none";
@@ -1764,6 +1846,54 @@
             thElement2.classList.add("text-center");
             thElement1x.classList.add("text-center");
             thElement2x.classList.add("text-center");
+        } else if ((lokasiKerja == 'Regional I' || lokasiKerja == 'Regional 1') && !isTableHeaderModified) {
+            $('#regionalPanen').val('1');
+            $('#regionalDataweek').val('1');
+            $('#regionalData').val('1');
+            $('#regDataIns').val('1');
+            $('#regFind').val('1');
+            // $('#regGrafik').val('4');
+
+
+            const nons = document.getElementById("Tab1");
+            const nonx = document.getElementById("Tab2");
+            const llon = document.getElementById("Tab3");
+            const non = document.getElementById("Tab4");
+            const tahun1 = document.getElementById("Tabs1");
+            const tahun2 = document.getElementById("Tabs2");
+            const tahun3 = document.getElementById("Tabs3");
+            const tahun4 = document.getElementById("Tabs4");
+
+
+            function resetClassList(element) {
+                element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
+                element.classList.add("col-md-4");
+            }
+
+
+
+            nons.style.display = "";
+            nonx.style.display = "";
+            llon.style.display = "";
+            non.style.display = "none";
+            resetClassList(non);
+
+            nons.classList.add("col-lg-4");
+            nonx.classList.add("col-lg-4");
+            llon.classList.add("col-lg-4");
+
+
+            tahun1.style.display = "";
+            tahun2.style.display = "";
+            tahun3.style.display = "";
+            tahun4.style.display = "none";
+            resetClassList(tahun4);
+
+            tahun1.classList.add("col-lg-4");
+            tahun2.classList.add("col-lg-4");
+            tahun3.classList.add("col-lg-4");
+
+
         }
 
 
@@ -2442,7 +2572,7 @@
 
     function resetClassList(element) {
         element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
-        element.classList.add("col-md-6");
+        element.classList.add("col-md-4");
     }
 
     c.addEventListener('click', function() {
@@ -2451,37 +2581,34 @@
             s.style.display = "";
             m.style.display = "";
             l.style.display = "";
-            n.style.display = "";
+            n.style.display = "none";
 
-            resetClassList(s);
-            resetClassList(m);
-            resetClassList(l);
             resetClassList(n);
+
+
 
             thElement1.textContent = 'WILAYAH I';
             thElement2.textContent = 'WILAYAH II';
-            thElement3.textContent = 'WILAYAH III';
-            thElement4.textContent = 'PLASMA I';
+            thElement4.textContent = 'WILAYAH III';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
-            thElement3.classList.add("text-center");
             thElement4.classList.add("text-center");
 
-            s.classList.add("col-lg-3");
-            m.classList.add("col-lg-3");
-            l.classList.add("col-lg-3");
-            n.classList.add("col-lg-3");
+            s.classList.add("col-lg-4");
+            m.classList.add("col-lg-4");
+            l.classList.add("col-lg-4");
         } else if (c === '2') {
+
+
             s.style.display = "";
             m.style.display = "";
             l.style.display = "";
-            n.style.display = "";
+            n.style.display = "none";
 
-            resetClassList(s);
-            resetClassList(m);
-            resetClassList(l);
             resetClassList(n);
+
+
 
 
             thElement1.textContent = 'WILAYAH IV';
@@ -2489,24 +2616,22 @@
             thElement3.textContent = 'WILAYAH VI';
             thElement4.textContent = 'PLASMA II';
 
+
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
-            thElement3.classList.add("text-center");
             thElement4.classList.add("text-center");
 
-
-            s.classList.add("col-lg-3");
-            m.classList.add("col-lg-3");
-            l.classList.add("col-lg-3");
-            n.classList.add("col-lg-3");
+            s.classList.add("col-lg-4");
+            m.classList.add("col-lg-4");
+            // n.classList.add("col-lg-4");
+            l.classList.add("col-lg-4");
         } else if (c === '3') {
             s.style.display = "";
             m.style.display = "";
             l.style.display = "none";
-            n.style.display = "";
+            n.style.display = "none";
 
-            resetClassList(s);
-            resetClassList(m);
+            resetClassList(l);
             resetClassList(n);
 
             thElement1.textContent = 'WILAYAH VII';
@@ -2517,9 +2642,9 @@
             thElement2.classList.add("text-center");
             thElement4.classList.add("text-center");
 
-            s.classList.add("col-lg-4");
-            m.classList.add("col-lg-4");
-            n.classList.add("col-lg-4");
+            s.classList.add("col-lg-6");
+            m.classList.add("col-lg-6");
+
         } else if (c === '4') {
             s.style.display = "";
             m.style.display = "";
@@ -5703,11 +5828,9 @@
             sx.style.display = "";
             mx.style.display = "";
             lx.style.display = "";
-            nx.style.display = "";
+            nx.style.display = "none";
 
-            resetClassList(sx);
-            resetClassList(mx);
-            resetClassList(lx);
+
             resetClassList(nx);
 
             thElement1x.textContent = 'WILAYAH I';
@@ -5721,43 +5844,42 @@
             thElement4x.classList.add("text-center");
 
 
-            sx.classList.add("col-lg-3");
-            mx.classList.add("col-lg-3");
-            lx.classList.add("col-lg-3");
-            nx.classList.add("col-lg-3");
+            sx.classList.add("col-lg-4");
+            mx.classList.add("col-lg-4");
+            lx.classList.add("col-lg-4");
+            // nx.classList.add("col-lg-3");
         } else if (cx === '2') {
+
             sx.style.display = "";
             mx.style.display = "";
             lx.style.display = "";
-            nx.style.display = "";
+            nx.style.display = "none";
 
-            resetClassList(sx);
-            resetClassList(mx);
-            resetClassList(lx);
+
             resetClassList(nx);
+
+            thElement1x.textContent = 'WILAYAH I';
+            thElement2x.textContent = 'WILAYAH II';
+            thElement3x.textContent = 'WILAYAH III';
 
             thElement1x.textContent = 'WILAYAH IV';
             thElement2x.textContent = 'WILAYAH V';
             thElement3x.textContent = 'WILAYAH VI';
             thElement4x.textContent = 'PLASMA II';
 
-            thElement1x.classList.add("text-center");
-            thElement2x.classList.add("text-center");
-            thElement3x.classList.add("text-center");
-            thElement4x.classList.add("text-center");
 
-            sx.classList.add("col-lg-3");
-            mx.classList.add("col-lg-3");
-            lx.classList.add("col-lg-3");
-            nx.classList.add("col-lg-3");
+
+            sx.classList.add("col-lg-4");
+            mx.classList.add("col-lg-4");
+            lx.classList.add("col-lg-4");
         } else if (cx === '3') {
             sx.style.display = "";
             mx.style.display = "";
             lx.style.display = "none";
-            nx.style.display = "";
+            nx.style.display = "none";
 
-            resetClassList(sx);
-            resetClassList(mx);
+
+            resetClassList(lx);
             resetClassList(nx);
 
             thElement1x.textContent = 'WILAYAH VII';
@@ -5768,9 +5890,9 @@
             thElement2x.classList.add("text-center");
             thElement4x.classList.add("text-center");
 
-            sx.classList.add("col-lg-4");
-            mx.classList.add("col-lg-4");
-            nx.classList.add("col-lg-4");
+            sx.classList.add("col-lg-6");
+            mx.classList.add("col-lg-6");
+
         } else if (cx === '4') {
             sx.style.display = "";
             mx.style.display = "";

@@ -1420,6 +1420,51 @@
             thElement3xx.classList.add("text-center");
             thElement4xx.classList.add("text-center");
 
+            const nons = document.getElementById("Tab1");
+            const nonx = document.getElementById("Tab2");
+            const llon = document.getElementById("Tab3");
+            const non = document.getElementById("Tab4");
+            const tahun1 = document.getElementById("Tabsx1");
+            const tahun2 = document.getElementById("Tabsx2");
+            const tahun3 = document.getElementById("Tabsx3");
+            const tahun4 = document.getElementById("Tabsx4");
+            const sbi1 = document.getElementById("Tabss1");
+            const sbi2 = document.getElementById("Tabss2");
+            const sbi3 = document.getElementById("Tabss3");
+            const sbi4 = document.getElementById("Tabss4");
+
+            function resetClassList(element) {
+                element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
+                element.classList.add("col-md-6");
+            }
+
+
+            non.style.display = "none";
+            // resetClassList(llon);
+            resetClassList(non);
+            llon.classList.add("col-lg-4");
+            nons.classList.add("col-lg-4");
+            nonx.classList.add("col-lg-4");
+
+
+            tahun4.style.display = "none";
+            // resetClassList(tahun3);
+            resetClassList(tahun4);
+            tahun3.classList.add("col-lg-4");
+            tahun1.classList.add("col-lg-4");
+            tahun2.classList.add("col-lg-4");
+
+
+
+            sbi4.style.display = "none";
+            // resetClassList(sbi3);
+            resetClassList(sbi4);
+            sbi3.classList.add("col-lg-4");
+            sbi1.classList.add("col-lg-4");
+            sbi2.classList.add("col-lg-4");
+
+
+
 
         } else if ((lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') && !isTableHeaderModified) {
             $('#regionalPanen').val('3');
@@ -1431,12 +1476,7 @@
             $('#reg_sbiThun').val('3');
             $('#regional_data').val('3');
 
-            // const thElement1 = document.getElementById('thead1');
-            // const thElement2 = document.getElementById('thead2');
-            // const thElement3 = document.getElementById('thead3');
-            // const thElement4 = document.getElementById('theadx3');
-            // const thElement1x = document.getElementById('theadsx1');
-            // const thElement2x = document.getElementById('theadsx2');
+
             const thElement3x = document.getElementById('theadsx3');
             const thElement4x = document.getElementById('theadsx4');
             const thElement1xx = document.getElementById('theads1');
@@ -1596,6 +1636,61 @@
             thElement2.classList.add("text-center");
             thElement1x.classList.add("text-center");
             thElement2x.classList.add("text-center");
+        } else if ((lokasiKerja == 'Regional I' || lokasiKerja == 'Regional 1') && !isTableHeaderModified) {
+            $('#regionalPanen').val('1');
+            $('#regionalDataweek').val('1');
+            $('#regionalData').val('1');
+            $('#regDataIns').val('1');
+            $('#regFind').val('1');
+            $('#regGrafik').val('1');
+            $('#reg_sbiThun').val('1');
+            $('#regional_data').val('1');
+
+
+
+            const nons = document.getElementById("Tab1");
+            const nonx = document.getElementById("Tab2");
+            const llon = document.getElementById("Tab3");
+            const non = document.getElementById("Tab4");
+            const tahun1 = document.getElementById("Tabsx1");
+            const tahun2 = document.getElementById("Tabsx2");
+            const tahun3 = document.getElementById("Tabsx3");
+            const tahun4 = document.getElementById("Tabsx4");
+            const sbi1 = document.getElementById("Tabss1");
+            const sbi2 = document.getElementById("Tabss2");
+            const sbi3 = document.getElementById("Tabss3");
+            const sbi4 = document.getElementById("Tabss4");
+
+            function resetClassList(element) {
+                element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
+                element.classList.add("col-md-6");
+            }
+
+
+            non.style.display = "none";
+            // resetClassList(llon);
+            resetClassList(non);
+            llon.classList.add("col-lg-4");
+            nons.classList.add("col-lg-4");
+            nonx.classList.add("col-lg-4");
+
+
+            tahun4.style.display = "none";
+            // resetClassList(tahun3);
+            resetClassList(tahun4);
+            tahun3.classList.add("col-lg-4");
+            tahun1.classList.add("col-lg-4");
+            tahun2.classList.add("col-lg-4");
+
+
+
+            sbi4.style.display = "none";
+            // resetClassList(sbi3);
+            resetClassList(sbi4);
+            sbi3.classList.add("col-lg-4");
+            sbi1.classList.add("col-lg-4");
+            sbi2.classList.add("col-lg-4");
+
         }
 
         isTableHeaderModified = true;

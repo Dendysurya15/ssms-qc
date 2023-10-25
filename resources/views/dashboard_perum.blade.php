@@ -190,6 +190,22 @@
 
 <script>
     $(document).ready(function() {
+
+        var lokasiKerja = "{{ session('lok') }}";
+        // console.log(lokasiKerja);
+        if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
+            $('#estreg').val('2');
+            $('#afdreg').val('2');
+
+        } else if (lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') {
+            $('#estreg').val('2');
+            $('#afdreg').val('2');
+        } else if (lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') {
+            $('#estreg').val('2');
+            $('#afdreg').val('2');
+        }
+
+
         //untuk table etc
         getAFD()
         getEST()
