@@ -18,6 +18,7 @@ use App\Http\Controllers\adminpanelController;
 use App\Http\Controllers\incpectcomponent\inspeksidashController;
 use App\Http\Controllers\incpectcomponent\pdfgenerateController;
 use App\Http\Controllers\incpectcomponent\makemapsController;
+use App\Http\Controllers\AbsensiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -198,3 +199,8 @@ Route::get('/editkom', [emplacementsController::class, 'editkom'])->name('editko
 
 Route::post('/downloadMaptahun', [makemapsController::class, 'downloadMaptahun'])->name('downloadMaptahun');
 Route::get('/pdfPage/{filename}/{est}', [makemapsController::class, 'pdfPage'])->name('pdfPage');
+Route::post('/getimgqc', [inspectController::class, 'getimgqc'])->name('getimgqc');
+
+
+Route::get('/dashboardabsensi', [AbsensiController::class, 'index'])->name('dashboardabsensi');
+Route::get('/absensidata', [AbsensiController::class, 'data'])->name('absensidata');

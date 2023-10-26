@@ -109,6 +109,7 @@ class inspeksidashController extends Controller
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3', 'CWS1', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $Reg)
             ->get();
@@ -4531,7 +4532,8 @@ class inspeksidashController extends Controller
 
         $queryEsta = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
-            ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3', 'CWS1', 'CWS2', 'CWS3', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM'])
+            ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3', 'CWS1', 'CWS2', 'CWS3', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM', 'SJM'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $Reg)
             // ->where('wil.regional', '3')
@@ -4539,6 +4541,8 @@ class inspeksidashController extends Controller
 
         // Convert the result into an array with numeric keys
         $queryEsta = array_values(json_decode($queryEsta, true));
+
+        // dd($queryEsta);
 
         function movePlasmaAfterUpe($array)
         {
@@ -6008,9 +6012,10 @@ class inspeksidashController extends Controller
         $chrTransbrdv2["pt_mua"] = $arrTransMentah["pt_mua"];
         $chrTransbuahv2["pt_mua"] = $arrTransMasak["pt_mua"];
 
+        // unset($chrTransbrdv2["pt_mua"]);
 
 
-
+        // dd($chrTransbuahv2);
 
         // Arrays to be modified
 
@@ -6048,6 +6053,14 @@ class inspeksidashController extends Controller
         if ($Reg != 1 && $Reg != '1') {
             unset($result_brd['pt_muabrd']);
             unset($result_buah['pt_muabuah']);
+            unset($chrTransbrdv2['pt_mua']);
+            unset($chrTransbuahv2['pt_mua']);
+            unset($chrtBuahMentahv2['pt_mua']);
+            unset($chrtBuahMskv2['pt_mua']);
+            unset($chrtBuahOverv2['pt_mua']);
+            unset($chrtBuahAbrv2['pt_mua']);
+            unset($chrtBuahKosongv2['pt_mua']);
+            unset($chrtBuahVcutv2['pt_mua']);
         }
 
 
@@ -6269,6 +6282,7 @@ class inspeksidashController extends Controller
             ->select('estate.*')
             // ->whereNotIn('estate.est', ['Plasma1', 'CWS1'])
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3', 'Plasma1', 'Plasma2', 'Plasma3'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
             ->get();
@@ -11603,6 +11617,7 @@ class inspeksidashController extends Controller
         $queryEsta = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
             // ->where('wil.regional', '3')
@@ -12842,6 +12857,7 @@ class inspeksidashController extends Controller
         $estateEST = DB::connection('mysql2')->table('estate')
             ->select('estate.est', 'estate.nama')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
             // ->where('wil.regional', '3')
@@ -13862,6 +13878,7 @@ class inspeksidashController extends Controller
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $reg)
             ->get();
@@ -14012,6 +14029,7 @@ class inspeksidashController extends Controller
             ->select('estate.*')
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->where('wil.regional', $reg)
             ->get();
 
@@ -15411,7 +15429,7 @@ class inspeksidashController extends Controller
 
         $arrView = array();
 
-
+        // dd($queryEste);
 
         $arrView['GraphBtt'] =  $chartBTT;
         $arrView['GraphBuah'] =  $chartBuah;

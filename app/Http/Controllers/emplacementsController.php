@@ -4363,35 +4363,50 @@ class emplacementsController extends Controller
                     $komentar_temuan = explode('$', $value3['komentar_temuan']);
 
 
+                    $apps = explode(';', $value3['app_version']);
+
+                    // dd($apps);
+
                     $komens = $komen;
 
                     // Flag to check if the first "-" has been replaced
                     $replaced = false;
 
-                    // Loop through the komentar array and update where necessary
-                    foreach ($komentar_temuan as $index => $item) {
-                        if ($item === $old_koments && !$replaced) {
-                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
-                            $replaced = true; // Set the flag to true after the replacement
+                    if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar_temuan as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
                         }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar_temuan);
+
+                        DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
+                            'komentar_temuan' => $updated_komentar
+                        ]);
+                    } else {
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
+                        }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar);
+
+                        DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
+                            'komentar' => $updated_komentar
+                        ]);
                     }
-
-                    // Join the updated komentar array back into a string with '$' delimiter
-                    $updated_komentar = implode('$', $komentar_temuan);
-
-                    // Update the 'komentar' field in the original array
-                    $value3['komentar_temuan'] = $updated_komentar;
-
                     // Add the updated value3 to the $getKomen array
                     $getKomen[] = $value3;
                 }
-                // dd($getKomen, $emplacement);
-                foreach ($getKomen as $key => $value) {
-                    $new_komentar = $value['komentar_temuan'];
-                }
-                DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
-                    'komentar_temuan' => $new_komentar
-                ]);
 
                 break;
             case 'landscape':
@@ -4410,36 +4425,52 @@ class emplacementsController extends Controller
                     $komentar = explode('$', $value3['komentar']);
                     $komentar_temuan = explode('$', $value3['komentar_temuan']);
 
+                    $apps = explode(';', $value3['app_version']);
+
+                    // dd($apps);
 
                     $komens = $komen;
 
                     // Flag to check if the first "-" has been replaced
                     $replaced = false;
 
-                    // Loop through the komentar array and update where necessary
-                    foreach ($komentar_temuan as $index => $item) {
-                        if ($item === $old_koments && !$replaced) {
-                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
-                            $replaced = true; // Set the flag to true after the replacement
+                    if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar_temuan as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
                         }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar_temuan);
+
+                        DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
+                            'komentar_temuan' => $updated_komentar
+                        ]);
+                    } else {
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
+                        }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar);
+
+                        DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
+                            'komentar' => $updated_komentar
+                        ]);
                     }
-
-                    // Join the updated komentar array back into a string with '$' delimiter
-                    $updated_komentar = implode('$', $komentar_temuan);
-
-                    // Update the 'komentar' field in the original array
-                    $value3['komentar_temuan'] = $updated_komentar;
 
                     // Add the updated value3 to the $getKomen array
                     $getKomen[] = $value3;
                 }
-                // dd($getKomen, $emplacement);
-                foreach ($getKomen as $key => $value) {
-                    $new_komentar = $value['komentar_temuan'];
-                }
-                DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
-                    'komentar_temuan' => $new_komentar
-                ]);
+
                 break;
             case 'lingkungan':
                 $emplacement = DB::connection('mysql2')->table('lingkungan')
@@ -4456,36 +4487,52 @@ class emplacementsController extends Controller
                     $komentar = explode('$', $value3['komentar']);
                     $komentar_temuan = explode('$', $value3['komentar_temuan']);
 
+                    $apps = explode(';', $value3['app_version']);
+
+                    // dd($apps);
 
                     $komens = $komen;
 
                     // Flag to check if the first "-" has been replaced
                     $replaced = false;
 
-                    // Loop through the komentar array and update where necessary
-                    foreach ($komentar_temuan as $index => $item) {
-                        if ($item === $old_koments && !$replaced) {
-                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
-                            $replaced = true; // Set the flag to true after the replacement
+                    if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar_temuan as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
                         }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar_temuan);
+
+                        DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
+                            'komentar_temuan' => $updated_komentar
+                        ]);
+                    } else {
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
+                        }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar);
+
+                        DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
+                            'komentar' => $updated_komentar
+                        ]);
                     }
-
-                    // Join the updated komentar array back into a string with '$' delimiter
-                    $updated_komentar = implode('$', $komentar_temuan);
-
-                    // Update the 'komentar' field in the original array
-                    $value3['komentar_temuan'] = $updated_komentar;
-
                     // Add the updated value3 to the $getKomen array
                     $getKomen[] = $value3;
                 }
                 // dd($getKomen, $emplacement);
-                foreach ($getKomen as $key => $value) {
-                    $new_komentar = $value['komentar_temuan'];
-                }
-                DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
-                    'komentar_temuan' => $new_komentar
-                ]);
+
                 break;
             case 'perumahan_afd':
                 $emplacement = DB::connection('mysql2')->table('perumahan')
@@ -4503,37 +4550,53 @@ class emplacementsController extends Controller
                     $old_koments = $old_koment; // Set the old_koments variable
                     $komentar = explode('$', $value3['komentar']);
                     $komentar_temuan = explode('$', $value3['komentar_temuan']);
+                    $apps = explode(';', $value3['app_version']);
 
+                    // dd($apps);
 
                     $komens = $komen;
 
                     // Flag to check if the first "-" has been replaced
                     $replaced = false;
 
-                    // Loop through the komentar array and update where necessary
-                    foreach ($komentar_temuan as $index => $item) {
-                        if ($item === $old_koments && !$replaced) {
-                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
-                            $replaced = true; // Set the flag to true after the replacement
+                    if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar_temuan as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
                         }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar_temuan);
+
+                        DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
+                            'komentar_temuan' => $updated_komentar
+                        ]);
+                    } else {
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
+                        }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar);
+
+                        DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
+                            'komentar' => $updated_komentar
+                        ]);
                     }
-
-                    // Join the updated komentar array back into a string with '$' delimiter
-                    $updated_komentar = implode('$', $komentar_temuan);
-
-                    // Update the 'komentar' field in the original array
-                    $value3['komentar_temuan'] = $updated_komentar;
-
                     // Add the updated value3 to the $getKomen array
                     $getKomen[] = $value3;
+
+                    // dd($getKomen, $emplacement);
                 }
-                // dd($getKomen, $emplacement);
-                foreach ($getKomen as $key => $value) {
-                    $new_komentar = $value['komentar_temuan'];
-                }
-                DB::connection('mysql2')->table('perumahan')->where('id', $id)->update([
-                    'komentar_temuan' => $new_komentar
-                ]);
+
                 break;
             case 'landscape_afd':
                 $emplacement = DB::connection('mysql2')->table('landscape')
@@ -4553,35 +4616,53 @@ class emplacementsController extends Controller
                     $komentar_temuan = explode('$', $value3['komentar_temuan']);
 
 
+                    $apps = explode(';', $value3['app_version']);
+
+                    // dd($apps);
+
                     $komens = $komen;
 
                     // Flag to check if the first "-" has been replaced
                     $replaced = false;
 
-                    // Loop through the komentar array and update where necessary
-                    foreach ($komentar_temuan as $index => $item) {
-                        if ($item === $old_koments && !$replaced) {
-                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
-                            $replaced = true; // Set the flag to true after the replacement
+
+                    if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar_temuan as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
                         }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar_temuan);
+
+                        DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
+                            'komentar_temuan' => $updated_komentar
+                        ]);
+                    } else {
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
+                        }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar);
+
+                        DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
+                            'komentar' => $updated_komentar
+                        ]);
                     }
-
-                    // Join the updated komentar array back into a string with '$' delimiter
-                    $updated_komentar = implode('$', $komentar_temuan);
-
-                    // Update the 'komentar' field in the original array
-                    $value3['komentar_temuan'] = $updated_komentar;
-
                     // Add the updated value3 to the $getKomen array
                     $getKomen[] = $value3;
                 }
                 // dd($getKomen, $emplacement);
-                foreach ($getKomen as $key => $value) {
-                    $new_komentar = $value['komentar_temuan'];
-                }
-                DB::connection('mysql2')->table('landscape')->where('id', $id)->update([
-                    'komentar_temuan' => $new_komentar
-                ]);
+
                 break;
             case 'lingkunga_afd':
                 $emplacement = DB::connection('mysql2')->table('lingkungan')
@@ -4599,35 +4680,52 @@ class emplacementsController extends Controller
                     $komentar_temuan = explode('$', $value3['komentar_temuan']);
 
 
+                    $apps = explode(';', $value3['app_version']);
+
+                    // dd($apps);
+
                     $komens = $komen;
 
                     // Flag to check if the first "-" has been replaced
                     $replaced = false;
 
-                    // Loop through the komentar array and update where necessary
-                    foreach ($komentar_temuan as $index => $item) {
-                        if ($item === $old_koments && !$replaced) {
-                            $komentar_temuan[$index] = $komens; // Update the value to the new komentar
-                            $replaced = true; // Set the flag to true after the replacement
+
+                    if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
+
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar_temuan as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar_temuan[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
                         }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar_temuan);
+
+                        DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
+                            'komentar_temuan' => $updated_komentar
+                        ]);
+                    } else {
+                        // Loop through the komentar array and update where necessary
+                        foreach ($komentar as $index => $item) {
+                            if ($item === $old_koments && !$replaced) {
+                                $komentar[$index] = $komens; // Update the value to the new komentar
+                                $replaced = true; // Set the flag to true after the replacement
+                            }
+                        }
+
+                        // Join the updated komentar array back into a string with '$' delimiter
+                        $updated_komentar = implode('$', $komentar);
+
+                        DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
+                            'komentar' => $updated_komentar
+                        ]);
                     }
-
-                    // Join the updated komentar array back into a string with '$' delimiter
-                    $updated_komentar = implode('$', $komentar_temuan);
-
-                    // Update the 'komentar' field in the original array
-                    $value3['komentar_temuan'] = $updated_komentar;
-
                     // Add the updated value3 to the $getKomen array
                     $getKomen[] = $value3;
                 }
-                // dd($getKomen, $emplacement);
-                foreach ($getKomen as $key => $value) {
-                    $new_komentar = $value['komentar_temuan'];
-                }
-                DB::connection('mysql2')->table('lingkungan')->where('id', $id)->update([
-                    'komentar_temuan' => $new_komentar
-                ]);
+
                 break;
             default:
                 # code...

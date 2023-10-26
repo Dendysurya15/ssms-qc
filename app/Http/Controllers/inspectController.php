@@ -23,6 +23,7 @@ class inspectController extends Controller
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $request->get('regional'))
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->where('estate.est', '!=', 'PLASMA')
             ->get();
 
@@ -126,6 +127,7 @@ class inspectController extends Controller
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $request->get('regional'))
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->where('estate.est', '!=', 'PLASMA')
             ->pluck('est');
 
@@ -450,9 +452,6 @@ class inspectController extends Controller
         echo json_encode($arrView);
         exit();
     }
-
-
-
 
     public function changeDataInspeksi(Request $request)
     {
@@ -1685,6 +1684,7 @@ class inspectController extends Controller
         }
         $listEst = DB::connection('mysql2')->table('estate')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->whereIn('wil', [1, 2, 3])->pluck('est');
         $listEst = json_decode($listEst, true);
         // Remove duplicates and sort the array
@@ -1697,6 +1697,7 @@ class inspectController extends Controller
 
         $filterGrafik = DB::connection('mysql2')->table('estate')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->get();
 
         $filterGrafik = json_decode($filterGrafik, true);
@@ -2054,6 +2055,7 @@ class inspectController extends Controller
 
         $EstMapVal = DB::connection('mysql2')->table('estate')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->whereIn('wil', $regArray)->pluck('est');
         $EstMapVal = json_decode($EstMapVal, true);
 
@@ -2168,6 +2170,7 @@ class inspectController extends Controller
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
             ->get();
@@ -6537,6 +6540,7 @@ class inspectController extends Controller
         $queryEsta = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
             // ->where('wil.regional', '3')
@@ -8065,6 +8069,14 @@ class inspectController extends Controller
         if ($RegData != 1 && $RegData != '1') {
             unset($result_brd['pt_muabrd']);
             unset($result_buah['pt_muabuah']);
+            unset($chrTransbrdv2['pt_mua']);
+            unset($chrTransbuahv2['pt_mua']);
+            unset($chrtBuahMentahv2['pt_mua']);
+            unset($chrtBuahMskv2['pt_mua']);
+            unset($chrtBuahOverv2['pt_mua']);
+            unset($chrtBuahAbrv2['pt_mua']);
+            unset($chrtBuahKosongv2['pt_mua']);
+            unset($chrtBuahVcutv2['pt_mua']);
         }
 
         // $queryEsta = updateKeyRecursive2($queryEsta);
@@ -9049,5 +9061,29 @@ class inspectController extends Controller
 
         echo json_encode($arrView);
         exit();
+    }
+
+    public function getimgqc(Request $request)
+    {
+        $date = $request->input('date');
+        $reg = $request->input('reg');
+        $tables = [];
+
+        // Retrieve the base64 data from the request
+        for ($i = 1; $i <= 4; $i++) {
+            $tableData = $request->input("table$i");
+            $tables["table$i"] = $tableData;
+        }
+
+        // Process the base64 data as needed
+
+        // dd($tables);
+
+        // Return a response, for example, to indicate success
+        return view('layoutimgqc', [
+            'date' => $date,
+            'reg' => $reg,
+            'tables' => $tables,
+        ]);
     }
 }

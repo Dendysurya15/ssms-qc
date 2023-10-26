@@ -1,4 +1,6 @@
 @include('layout/header')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <style>
     .tbl-fixed {
         overflow: scroll;
@@ -199,7 +201,7 @@
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
                             <button id="sort-est-btn">Sort by Afd</button>
                             <button id="sort-rank-btn">Sort by Rank</button>
-                            <button onclick="downloadTablesAsImages()" id="downladbulan">Download As Zip</button>
+                            <button onclick="openNewTabAndSendData()" id="downladbulan">Download As IMG</button>
                         </div>
 
 
@@ -286,7 +288,7 @@
                                         </div>
                                         <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab4" style="display: none;">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" style="font-size: 13px;background-color:white" id="tabblan4">
+                                                <table class="table table-bordered" style="font-size: 13px;background-color:white">
                                                     <thead>
                                                         <tr bgcolor="#fffc04">
                                                             <th colspan="5" id="thead3x" style="text-align:center">
@@ -318,16 +320,16 @@
 
 
                         <div class="col-sm-12">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="tabblan4">
                                 <thead id="theadreg">
                                     <tr>
                                         <th colspan="1">REG-I</th>
                                         <th colspan="1">RH-1</th>
                                         <th colspan="1">Akhmad Faisyal</th>
-                                        <th colspan="8"></th>
+                                        <th colspan="8" style="background-color: white;"></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style="background-color: whitesmoke">
                                     <!-- Isi tabel di sini -->
                                 </tbody>
                             </table>
@@ -3582,10 +3584,10 @@
 
 
                 if (item4 >= 95) {
-                    itemElement4.style.backgroundColor = "#609cd4";
+                    itemElement4.style.backgroundColor = "red";
                     itemElement4.style.color = "black";
                 } else if (item4 >= 85 && item4 < 95) {
-                    itemElement4.style.backgroundColor = "#08b454";
+                    itemElement4.style.backgroundColor = "red";
                     itemElement4.style.color = "black";
                 } else if (item4 >= 75 && item4 < 85) {
                     itemElement4.style.backgroundColor = "#fffc04";
@@ -3947,6 +3949,7 @@
                 regElement1.style.backgroundColor = "#c8e4b4";
                 regElement2.style.backgroundColor = "#c8e4b4";
                 regElement3.style.backgroundColor = "#c8e4b4";
+                regElement4.style.backgroundColor = "white";
 
                 if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
                     itemElement3.style.color = "red";
@@ -6886,7 +6889,7 @@
                 } else if (reg4 >= 85 && reg4 < 95) {
                     regElement4.style.backgroundColor = "#08b454";
                 } else if (reg4 >= 75 && reg4 < 85) {
-                    regElement4.style.backgroundColor = "#fffc04";
+                    regElement4.style.backgroundColor = "#red";
                 } else if (reg4 >= 65 && reg4 < 75) {
                     regElement4.style.backgroundColor = "#ffc404";
                 } else {
@@ -8885,71 +8888,90 @@
         }
     }
 
-    function downloadTablesAsImages() {
-        Swal.fire({
-            title: 'Tunggu saat siap download PDF',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
+    function openNewTabAndSendData() {
+        // Define the URL of the new page where you want to send the data
+        const newPageUrl = '/getimgqc'; // Replace with the actual URL
 
+        // Retrieve the CSRF token from the meta tag
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Create an empty form element
+        const form = document.createElement('form');
+        form.method = 'POST'; // Change the method to POST
+        form.action = newPageUrl;
+        // form.action = window.open(newPageUrl, '_blank');
+
+        // Add a hidden input field for the CSRF token
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token'; // Laravel expects the CSRF token to be named _token
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        // Add hidden input fields for your data
         const tables = [
             document.getElementById('tabblan1'),
             document.getElementById('tabblan2'),
             document.getElementById('tabblan3'),
             document.getElementById('tabblan4')
         ];
-
         let date = document.getElementById('inputDate').value;
         let reg = document.getElementById('regionalPanen').value;
 
-        const zip = new JSZip();
+        // Track how many tables have been processed
+        let tablesProcessed = 0;
 
-        const capturePromises = tables.map((table, index) => {
-            return new Promise((resolve) => {
-                const options = {
-                    scale: 10, // Increase the scale for higher resolution (adjust as needed)
-                };
+        // Function to submit the form when all tables are processed
+        function submitFormIfReady() {
+            tablesProcessed++;
+            if (tablesProcessed === tables.length) {
+                const dateInput = document.createElement('input');
+                dateInput.type = 'hidden';
+                dateInput.name = 'date';
+                dateInput.value = date;
 
-                html2canvas(table, options).then(canvas => {
-                    const dataURL = canvas.toDataURL('image/jpeg');
-                    zip.file(`table${index + 1}.jpeg`, dataURL.split(',')[1], {
-                        base64: true
-                    });
-                    resolve();
-                });
+                const regInput = document.createElement('input');
+                regInput.type = 'hidden';
+                regInput.name = 'reg';
+                regInput.value = reg;
+
+                form.appendChild(dateInput);
+                form.appendChild(regInput);
+
+                // Submit the form to open the new tab
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        tables.forEach((table, index) => {
+            const options = {
+                scale: 10, // Increase the scale for higher resolution (adjust as needed)
+            };
+
+            html2canvas(table, options).then(canvas => {
+                const dataURL = canvas.toDataURL('image/jpeg');
+                const base64Data = dataURL.split(',')[1];
+
+                // Create a hidden input field for each table's data
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = `table${index + 1}`;
+                input.value = base64Data;
+
+                form.appendChild(input);
+
+                // Check if it's the last table, then add date and reg and submit
+                if (index === tables.length - 1) {
+                    submitFormIfReady();
+                } else {
+                    submitFormIfReady();
+                }
             });
         });
-
-        Promise.all(capturePromises)
-            .then(() => {
-                zip.generateAsync({
-                    type: 'blob'
-                }).then(function(content) {
-                    const url = window.URL.createObjectURL(content);
-
-                    const a = document.createElement('a');
-                    a.href = url;
-                    // Customize the download name with the date
-                    a.download = `QcInspeksi-${date}-Regional-${reg}.zip`;
-                    a.style.display = 'none';
-                    document.body.appendChild(a);
-
-                    a.click();
-
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                    Swal.close(); // Close Swal after the download
-                });
-            })
-            .catch(error => {
-                console.error('An error occurred:', error);
-                Swal.close(); // Close Swal on error
-            });
     }
+
+
 
     function downloadTablesAsImages2() {
         Swal.fire({
