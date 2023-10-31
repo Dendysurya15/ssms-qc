@@ -204,3 +204,5 @@ Route::post('/getimgqc', [inspectController::class, 'getimgqc'])->name('getimgqc
 
 Route::get('/dashboardabsensi', [AbsensiController::class, 'index'])->name('dashboardabsensi');
 Route::get('/absensidata', [AbsensiController::class, 'data'])->name('absensidata');
+Route::get('/absenmaps', [AbsensiController::class, 'getMaps'])->name('absenmaps');
+Route::get('/absensipdf', [AbsensiController::class, 'exportPDF'])->name('absensipdf');

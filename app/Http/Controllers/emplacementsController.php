@@ -3908,6 +3908,8 @@ class emplacementsController extends Controller
                                 'est_afd' => $value3['est'] . '_' . $value3['afd'],
                             ]);
 
+                            $inc = 1;
+
                             $komentar_temuan = explode('$', $value3['komentar_temuan']);
                             $apps = explode(';', $value3['app_version']);
                             if ($apps[0] == '1.5.32' || $apps[0] == '1.5.31' || $apps[0] == '1.5.30' || $apps[0] == '1.5.29') {
@@ -3971,6 +3973,8 @@ class emplacementsController extends Controller
                 }
             }
         }
+
+        // dd($filter_landscape, $filter_lingkungan, $filter_rmh);
 
         $mergedArray = array();
 
@@ -4193,9 +4197,9 @@ class emplacementsController extends Controller
         }
         // dd($arrayMerge);
         $baseURL = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/';
-        $baseURL2 = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/PLG_2023829_112324_RGE_OB.jpg';
+        // $baseURL2 = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/PLG_2023829_112324_RGE_OB.jpg';
 
-        $testing = get_headers($baseURL2);
+        // $testing = get_headers($baseURL2);
         // dd($testing);
 
         $unavailableImages = [];

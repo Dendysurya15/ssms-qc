@@ -4,16 +4,47 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AbsensiController extends Controller
 {
     //
 
-    public function index()
+    public function index(Request $request)
     {
 
         // use Carbon\Carbon;
+
+        $lok = $request->session()->get('lok');
+
+        // dd($lok);
+        $userabsen = DB::table('pengguna')
+            ->select('pengguna.*')
+            ->where('departemen', 'QC')
+            ->where('lokasi_kerja', $lok)
+            ->where('email', 'like', '%mandor%')
+            ->get();
+
+        // You can remove the unnecessary conversion to JSON
+        // $userabsen = $userabsen->groupBy('nama_lengkap');
+        $userabsen = json_decode($userabsen, true);
+
+
+
+        $user_Data = DB::table('pengguna')
+            ->select('pengguna.*')
+            ->where('departemen', 'QC')
+            ->where('lokasi_kerja', $lok)
+            ->where('email', 'like', '%mandor%')
+            ->get();
+
+        // You can remove the unnecessary conversion to JSON
+        // $user_Data = $user_Data->groupBy('nama_lengkap');
+        $user_Data = json_decode($user_Data, true);
+
+        // dd($user_Data);
 
         $firstDayOfMonth = Carbon::now()->firstOfMonth();
         $JumlahBulan = $firstDayOfMonth->daysInMonth;
@@ -24,13 +55,19 @@ class AbsensiController extends Controller
 
         // dd($header_month);
 
-        return view('Absensi.index', ['header_month' => $header_month, 'dates' => $JumlahBulan]);
+        return view('Absensi.index', ['header_month' => $header_month, 'dates' => $JumlahBulan, 'useroption' => $user_Data]);
     }
 
     public function data(Request $request)
     {
         $regional = $request->input('regional');
         $bulan = $request->input('dateMonth');
+
+        $regs = DB::connection('mysql2')->table('reg')
+            ->where('reg.id', $regional)
+            ->pluck('nama');
+        // dd($regs);
+
 
         // Split the "2023-09" string into year and month
         list($year, $month) = explode('-', $bulan);
@@ -70,7 +107,7 @@ class AbsensiController extends Controller
         $user_Data = DB::table('pengguna')
             ->select('pengguna.*')
             ->where('departemen', 'QC')
-            ->where('lokasi_kerja', 'Regional I')
+            ->where('lokasi_kerja', $regs)
             ->where('email', 'like', '%mandor%')
             ->get();
 
@@ -79,26 +116,33 @@ class AbsensiController extends Controller
         $user_Data = json_decode($user_Data, true);
 
 
-        // dd($user_Data);
+        // dd($datesnew);
 
         $user_default = [];
 
         foreach ($user_Data as $key => $value) {
             foreach ($value as $key2 => $value2) {
-                # code...
                 $user_default[$key] = [
                     'id' => $value2['user_id'],
                     'nama' => $value2['nama_lengkap'],
-                    'total' => '-'
+                    'payroll' => '-',
                 ];
 
-                // Loop through $datenew and add each date with a default value "-"
+                // Loop through $datesnew and add each date with a default value of "-"
                 foreach ($datesnew as $date) {
-                    $user_default[$key][$date] = "";
+                    // Check if the day of the week for the date is Sunday (day number 7)
+                    if (date('N', strtotime($date)) == 7) {
+                        $user_default[$key][$date] = "minggu";
+                    } else {
+                        $user_default[$key][$date] = "";
+                    }
                 }
+                $user_default[$key]['total'] = 0;
             }
         }
 
+
+        // dd($user_default);
         $user_absensi = DB::connection('mysql2')->table('absensi_qc')
             ->select('absensi_qc.*', 'list_pekerjaan.nama as pekerjaan', DB::raw('DATE(waktu_absensi) as tanggal'),)
             ->where('waktu_absensi', 'like', '%' . $bulan . '%')
@@ -109,6 +153,9 @@ class AbsensiController extends Controller
         // $user_absensi = $user_absensi->groupBy('id_user', 'tanggal');
         $user_absensi = $user_absensi->groupBy(['id_user', 'tanggal']);
         $user_absensi = json_decode($user_absensi, true);
+
+
+        // dd($user_absensi, $bulan);
 
         $tanggal_values = []; // Create an array to store unique "tanggal" values
 
@@ -121,68 +168,93 @@ class AbsensiController extends Controller
             }
         }
 
+        $getkerja = DB::connection('mysql2')->table('list_pekerjaan')
+            ->get();
+        $getkerja = json_decode($getkerja, true);
+        // dd($getkerja);
+        // dd($tanggal_values);
 
 
         // dd($tanggal_values);
+
+        // dd($user_absensi);
+
+        $newabsensi = [];
         foreach ($user_absensi as $key => $value) {
             foreach ($value as $key2 => $value2) {
                 // dd($value2);
-
                 foreach ($value2 as $key3 => $value3) {
                     $date = $value3['waktu_absensi'];
-                    $formattedDate = date('Y-m-d', strtotime($date));
+                    $formattedTime = date('H:i:s', strtotime($date));
+
 
                     $specificValues = ['Lainnya', 'Sakit', 'Cuti', 'Izin'];
 
-                    if (!in_array($value3['pekerjaan'], $specificValues)) {
-                        $ket = 'KJ';
-                    } elseif ($value3['pekerjaan'] == 'Sakit' || $value3['pekerjaan'] == 'Ijin') {
+                    $pekerjaan = explode('$', $value3['id_pekerjaan']);
+
+
+                    // dd($date);
+                    // dd($pekerjaan);
+                    $getkerjax = $pekerjaan[0];
+
+                    $kerja = '-';
+                    foreach ($getkerja as $keyx => $valuex) {
+                        # code...
+                        // dd($value);
+
+                        if ($valuex['id'] == $getkerjax) {
+                            # code...
+                            $kerja = $valuex['nama'];
+                        }
+                    }
+
+                    $ket = '-';
+
+                    if (!in_array($kerja, $specificValues)) {
+                        $ket = 'KJ' . '$' . $formattedTime;
+                    } elseif ($kerja == 'Sakit' || $kerja == 'Ijin') {
                         $ket = 'I';
-                    } elseif ($value3['pekerjaan'] == 'Cuti') {
+                    } elseif ($kerja == 'Cuti') {
                         $ket = 'CT';
                     }
 
                     // dd($value);
-
-                    # code...
-                    $user_absensi[$key][$key2] = [
-                        'id' => $value3['id_user'],
-                        'nama' => $value3['nama_user'],
-                        'total' => '-',
-                        'date' => $date,
-                        'kerja' => $ket,
-                        'keterangan' => $value3['pekerjaan'],
-                    ];
                 }
+
+                $newabsensi[$key][$key2] = $ket;
+
 
                 // $user_absensi[$key][$formattedDate] = $ket;
             }
         }
 
+        // dd($newabsensi);
+        // dd($newabsensi);
+        $result = [];
 
-        foreach ($user_default as $key => &$value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($tanggal_values as $key3 => $value3) {
-                    if ($key2 == $key3) {
-                        // Replace the key2 with key3 value
-                        $value[$key3] = $value2;
-                        unset($value[$key2]);
-                    }
+        foreach ($user_default as $key => $user) {
+            $updatedUser = $user;
+            foreach ($tanggal_values as $date => $value) {
+                if (array_key_exists($date, $updatedUser)) {
+                    $updatedUser[$date] = $value;
                 }
             }
+            $result[$key] = $updatedUser;
         }
 
-        // Unset the reference to prevent side effects
-        unset($value);
-        // Now, $user_default contains the updated values
-        dd($user_default);
+        // The $result array contains the updated user arrays.
+
+
+
+        // dd($result);
+
 
 
         $get_data = [];
 
-        foreach ($user_default as $key => $value) {
-            if (array_key_exists($key, $user_absensi)) {
-                $get_data[$key] = array_replace($value, $user_absensi[$key]);
+        foreach ($result as $key => $value) {
+            if (array_key_exists($key, $newabsensi)) {
+                $get_data[$key] = array_replace($value, $newabsensi[$key]);
             } else {
                 // Check if the key exists in "tanggal_values," and if so, use its value
                 if (array_key_exists($key, $tanggal_values)) {
@@ -192,14 +264,604 @@ class AbsensiController extends Controller
             }
         }
 
-        dd($user_default, $tanggal_values, $get_data);
+        // dd($tanggal_values);
 
+        $user_ci = DB::connection('mysql2')->table('absensi_qc')
+            ->select('absensi_qc.*', 'list_pekerjaan.nama as pekerjaan', DB::raw('DATE(waktu_absensi) as tanggal'))
+            ->join('list_pekerjaan', 'list_pekerjaan.id', '=', 'absensi_qc.id_pekerjaan')
+            ->where('range', '!=', 0)
+            ->get();
+
+
+        // You can remove the unnecessary conversion to JSON
+        // $user_ci = $user_ci->groupBy('id_user', 'tanggal');
+        $user_ci = $user_ci->groupBy(['id_user', 'tanggal']);
+        $user_ci = json_decode($user_ci, true);
+        // dd($user_default, $tanggal_values, $get_data);
+
+
+        // nambah cuti 
+
+
+        $get_cuti = array();
+        foreach ($user_ci as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $range = $value2[0]['range'];
+                $ket = $value2[0]['pekerjaan'];
+
+                $pekerjaan = explode('$', $range);
+
+                $start = $pekerjaan[0];
+                $end = $pekerjaan[1];
+                $get_cuti[$key][$key2]['start'] = $start;
+                $get_cuti[$key][$key2]['end'] = $end;
+
+                // dd($value2);
+                // Generate dates from start to end
+                $currentDate = strtotime($start);
+                while ($currentDate <= strtotime($end)) {
+                    $date = date("Y-m-d", $currentDate);
+
+                    if (date('N', strtotime($date)) == 7) {
+                        $get_cuti[$key][$date] = "minggu";
+                    } else {
+                        if ($ket == 'Cuti') {
+                            $get_cuti[$key][$date] = 'CT';
+                        } else {
+                            $get_cuti[$key][$date] = 'I';
+                        }
+                    }
+
+                    $currentDate = strtotime("+1 day", $currentDate);
+                }
+            }
+        }
+        // dd($user_ci, $get_cuti);
+
+        $final_data = array();
+        foreach ($get_data as $key => $value) {
+            if (array_key_exists($key, $get_cuti)) {
+                // Check if the key exists in both get_data and get_cuti
+                $dataKeys = array_keys($value);
+                $cutiKeys = array_keys($get_cuti[$key]);
+
+                // Merge data when keys match
+                $final_data[$key] = array_replace($value, $get_cuti[$key]);
+
+                // Ensure there are no extra keys in get_cuti
+                $extraKeys = array_diff($cutiKeys, $dataKeys);
+                foreach ($extraKeys as $extraKey) {
+                    unset($final_data[$key][$extraKey]);
+                }
+            } else {
+                // If the key doesn't exist in get_cuti, keep the original data
+                $final_data[$key] = $value;
+            }
+        }
+        $updatedArray = [];
+
+
+
+        // Your existing code
+        foreach ($final_data as $key => $value) {
+            // Initialize the count for each entry
+            $count = 0;
+
+            // Check if the value is an array
+            if (is_array($value)) {
+                foreach ($value as $innerKey => $innerValue) {
+                    if (is_string($innerValue) && strpos($innerValue, 'KJ$') !== false) {
+                        $count++;
+                    }
+                }
+            }
+
+            // Create a new array with "total" key and count value
+            $final_data[$key]['total'] = strval($count);
+        }
+
+        $updatedArray = [];
+
+        foreach ($final_data as $subArray) {
+            $updatedSubArray = [];
+
+            foreach ($subArray as $key => $value) {
+                // Check if the value contains "KJ$"
+                if (is_string($value) && strpos($value, 'KJ$') !== false) {
+                    // Split the value by '$'
+                    $parts = explode('KJ$', $value);
+
+                    // Assign the second part to the value
+                    $updatedSubArray[$key] = $parts[1];
+                } else {
+                    // Keep the original value if it doesn't contain "KJ$"
+                    $updatedSubArray[$key] = $value;
+                }
+            }
+
+            // Add the updated sub-array to the new array
+            $updatedArray[] = $updatedSubArray;
+        }
+
+
+        // dd($updatedArray);
+
+        // 
 
         $arrView = array();
         $arrView['header_month'] = $header_month; // Ensure it's a string
         $arrView['dates'] = $result;
         $arrView['JumlahBulan'] = $JumlahBulan;
+        $arrView['data_absensi'] = $updatedArray;
 
         return response()->json($arrView); // Laravel's response to JSON
+    }
+
+    public function getMaps(Request $request)
+    {
+        $userid = $request->input('userid');
+        $date = $request->input('date');
+
+        $lok = $request->session()->get('lok');
+        // dd($userid, $date);
+
+        $data = DB::connection('mysql2')->table('absensi_qc')
+            ->select('absensi_qc.*')
+            ->where('id_user', $userid)
+            ->where('waktu_absensi', 'like', '%' . $date . '%')
+            ->get();
+        $id_kerja = DB::connection('mysql2')->table('list_pekerjaan')
+            ->select('list_pekerjaan.*')
+            ->get();
+
+
+
+        $geoJSON = [
+            'type' => 'FeatureCollection',
+            'features' => [],
+        ];
+
+        foreach ($data as $item) {
+            // dd($item);
+            $pekerjaan = '-';
+            foreach ($id_kerja as $keyx => $valuex) {
+                // dd($valuex, $item);
+                if ($keyx == $item->id_pekerjaan) {
+                    $pekerjaan = $valuex->nama;
+                }
+            }
+
+            $feature = [
+                'type' => 'Feature',
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [$item->lat, $item->lon],
+                ],
+                'properties' => [
+                    'id' => $item->id,
+                    'nama_user' => $item->nama_user,
+                    'waktu_absensi' => $item->waktu_absensi,
+                    'jenis_kerja' => $pekerjaan
+                ],
+                'images' => [
+                    'img' => $item->foto,
+                ]
+            ];
+            $geoJSON['features'][] = $feature;
+        }
+
+        // dd($geoJSON);
+
+        $estplot = DB::connection('mysql2')->table('estate_plot')
+            ->select('estate_plot.*', 'wil.*', 'reg.*', 'estate.*')
+            ->join('estate', 'estate.est', '=', 'estate_plot.est')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->join('reg', 'reg.id', '=', 'wil.regional')
+            ->where('reg.nama', '=', $lok)
+            ->get();
+        $estplot = $estplot->groupBy(['nama']);
+        $estplot = json_decode($estplot, true);
+
+
+
+        $lating = [];
+
+        foreach ($estplot as $key => $value) {
+            #dd
+
+            foreach ($value as $key2 => $value2) {
+                // dd($value2);
+
+
+                $lating[$key][$key2]['lating'] = $value2['lat'] . '$' . $value2['lon'];
+            }
+        }
+        // dd($lating);
+
+
+
+        // dd($estplot);
+        $arrView['datauser'] = $geoJSON; // Ensure it's a string
+        $arrView['GeoPlot'] = $lating; // Ensure it's a string
+
+        return response()->json($arrView); // Laravel's response to JSON
+
+    }
+
+    public function exportPDF(Request $request)
+    {
+        // Retrieve parameters from the request
+        $regional = $request->input('regional');
+        $bulan = $request->input('date');
+        $token = $request->input('_token');
+
+
+
+        $regs = DB::connection('mysql2')->table('reg')
+            ->where('reg.id', $regional)
+            ->pluck('nama');
+        // dd($regs);
+
+
+        // Split the "2023-09" string into year and month
+        list($year, $month) = explode('-', $bulan);
+
+        // Create a Carbon instance for the first day of the specified month
+        $firstDayOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
+        $JumlahBulan = $firstDayOfMonth->daysInMonth;
+
+        $carbonDate = Carbon::parse($bulan);
+
+        // Get the full name of the month
+        $monthName = $carbonDate->format('M');
+
+        $header_month = $monthName . '-' . $JumlahBulan;
+
+        // dd($monthName);
+
+
+        $endDate = $firstDayOfMonth->copy()->endOfMonth();
+
+        $datesnew = [];
+
+        while ($firstDayOfMonth->lte($endDate)) {
+            $datesnew[] = $firstDayOfMonth->toDateString();
+            $firstDayOfMonth->addDay();
+        }
+        // dd($datesnew);
+
+        // Now $dates contains all dates in October
+
+        $result = [];
+        for ($i = 1; $i <= $JumlahBulan; $i++) {
+            $result[$i - 1] = $i;
+        }
+
+        // dd($result);
+        $user_Data = DB::table('pengguna')
+            ->select('pengguna.*')
+            ->where('departemen', 'QC')
+            ->where('lokasi_kerja', $regs)
+            ->where('email', 'like', '%mandor%')
+            ->get();
+
+        // You can remove the unnecessary conversion to JSON
+        $user_Data = $user_Data->groupBy('user_id');
+        $user_Data = json_decode($user_Data, true);
+
+
+        // dd($datesnew);
+
+        $user_default = [];
+
+        foreach ($user_Data as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $user_default[$key] = [
+                    'id' => $value2['user_id'],
+                    'nama' => $value2['nama_lengkap'],
+                    'payroll' => '-',
+                ];
+
+                // Loop through $datesnew and add each date with a default value of "-"
+                foreach ($datesnew as $date) {
+                    // Check if the day of the week for the date is Sunday (day number 7)
+                    if (date('N', strtotime($date)) == 7) {
+                        $user_default[$key][$date] = "minggu";
+                    } else {
+                        $user_default[$key][$date] = "";
+                    }
+                }
+                $user_default[$key]['total'] = 0;
+            }
+        }
+
+
+        // dd($user_default);
+        $user_absensi = DB::connection('mysql2')->table('absensi_qc')
+            ->select('absensi_qc.*', 'list_pekerjaan.nama as pekerjaan', DB::raw('DATE(waktu_absensi) as tanggal'),)
+            ->where('waktu_absensi', 'like', '%' . $bulan . '%')
+            ->join('list_pekerjaan', 'list_pekerjaan.id', '=', 'absensi_qc.id_pekerjaan')
+            ->get();
+
+        // You can remove the unnecessary conversion to JSON
+        // $user_absensi = $user_absensi->groupBy('id_user', 'tanggal');
+        $user_absensi = $user_absensi->groupBy(['id_user', 'tanggal']);
+        $user_absensi = json_decode($user_absensi, true);
+
+
+        // dd($user_absensi, $bulan);
+
+        $tanggal_values = []; // Create an array to store unique "tanggal" values
+
+        foreach ($user_absensi as $key => $value) {
+            foreach ($value as $tanggal => $entries) {
+                // Check if the "tanggal" value is not already in the $tanggal_values array
+                if (!in_array($tanggal, $tanggal_values)) {
+                    $tanggal_values[$tanggal] = 'MK';
+                }
+            }
+        }
+
+        $getkerja = DB::connection('mysql2')->table('list_pekerjaan')
+            ->get();
+        $getkerja = json_decode($getkerja, true);
+        // dd($getkerja);
+        // dd($tanggal_values);
+
+
+        // dd($tanggal_values);
+
+        // dd($user_absensi);
+
+        $newabsensi = [];
+        foreach ($user_absensi as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                // dd($value2);
+                foreach ($value2 as $key3 => $value3) {
+                    $date = $value3['waktu_absensi'];
+                    $formattedTime = date('H:i:s', strtotime($date));
+
+
+                    $specificValues = ['Lainnya', 'Sakit', 'Cuti', 'Izin'];
+
+                    $pekerjaan = explode('$', $value3['id_pekerjaan']);
+
+
+                    // dd($date);
+                    // dd($pekerjaan);
+                    $getkerjax = $pekerjaan[0];
+
+                    $kerja = '-';
+                    foreach ($getkerja as $keyx => $valuex) {
+                        # code...
+                        // dd($value);
+
+                        if ($valuex['id'] == $getkerjax) {
+                            # code...
+                            $kerja = $valuex['nama'];
+                        }
+                    }
+
+                    $ket = '-';
+
+                    if (!in_array($kerja, $specificValues)) {
+                        $ket = 'KJ' . '$' . $formattedTime;
+                    } elseif ($kerja == 'Sakit' || $kerja == 'Ijin') {
+                        $ket = 'I';
+                    } elseif ($kerja == 'Cuti') {
+                        $ket = 'CT';
+                    }
+
+                    // dd($value);
+                }
+
+                $newabsensi[$key][$key2] = $ket;
+
+
+                // $user_absensi[$key][$formattedDate] = $ket;
+            }
+        }
+
+        // dd($newabsensi);
+        // dd($newabsensi);
+        $result = [];
+
+        foreach ($user_default as $key => $user) {
+            $updatedUser = $user;
+            foreach ($tanggal_values as $date => $value) {
+                if (array_key_exists($date, $updatedUser)) {
+                    $updatedUser[$date] = $value;
+                }
+            }
+            $result[$key] = $updatedUser;
+        }
+
+        // The $result array contains the updated user arrays.
+
+
+
+        // dd($result);
+
+
+
+        $get_data = [];
+
+        foreach ($result as $key => $value) {
+            if (array_key_exists($key, $newabsensi)) {
+                $get_data[$key] = array_replace($value, $newabsensi[$key]);
+            } else {
+                // Check if the key exists in "tanggal_values," and if so, use its value
+                if (array_key_exists($key, $tanggal_values)) {
+                    $value[$key] = $tanggal_values[$key];
+                }
+                $get_data[$key] = $value;
+            }
+        }
+
+        // dd($tanggal_values);
+
+        $user_ci = DB::connection('mysql2')->table('absensi_qc')
+            ->select('absensi_qc.*', 'list_pekerjaan.nama as pekerjaan', DB::raw('DATE(waktu_absensi) as tanggal'))
+            ->join('list_pekerjaan', 'list_pekerjaan.id', '=', 'absensi_qc.id_pekerjaan')
+            ->where('range', '!=', 0)
+            ->get();
+
+
+        // You can remove the unnecessary conversion to JSON
+        // $user_ci = $user_ci->groupBy('id_user', 'tanggal');
+        $user_ci = $user_ci->groupBy(['id_user', 'tanggal']);
+        $user_ci = json_decode($user_ci, true);
+        // dd($user_default, $tanggal_values, $get_data);
+
+
+        // nambah cuti 
+
+
+        $get_cuti = array();
+        foreach ($user_ci as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $range = $value2[0]['range'];
+                $ket = $value2[0]['pekerjaan'];
+
+                $pekerjaan = explode('$', $range);
+
+                $start = $pekerjaan[0];
+                $end = $pekerjaan[1];
+                $get_cuti[$key][$key2]['start'] = $start;
+                $get_cuti[$key][$key2]['end'] = $end;
+
+                // dd($value2);
+                // Generate dates from start to end
+                $currentDate = strtotime($start);
+                while ($currentDate <= strtotime($end)) {
+                    $date = date("Y-m-d", $currentDate);
+
+                    if (date('N', strtotime($date)) == 7) {
+                        $get_cuti[$key][$date] = "minggu";
+                    } else {
+                        if ($ket == 'Cuti') {
+                            $get_cuti[$key][$date] = 'CT';
+                        } else {
+                            $get_cuti[$key][$date] = 'I';
+                        }
+                    }
+
+                    $currentDate = strtotime("+1 day", $currentDate);
+                }
+            }
+        }
+        // dd($user_ci, $get_cuti);
+
+        $final_data = array();
+        foreach ($get_data as $key => $value) {
+            if (array_key_exists($key, $get_cuti)) {
+                // Check if the key exists in both get_data and get_cuti
+                $dataKeys = array_keys($value);
+                $cutiKeys = array_keys($get_cuti[$key]);
+
+                // Merge data when keys match
+                $final_data[$key] = array_replace($value, $get_cuti[$key]);
+
+                // Ensure there are no extra keys in get_cuti
+                $extraKeys = array_diff($cutiKeys, $dataKeys);
+                foreach ($extraKeys as $extraKey) {
+                    unset($final_data[$key][$extraKey]);
+                }
+            } else {
+                // If the key doesn't exist in get_cuti, keep the original data
+                $final_data[$key] = $value;
+            }
+        }
+        $updatedArray = [];
+
+
+
+        // Your existing code
+        foreach ($final_data as $key => $value) {
+            // Initialize the count for each entry
+            $count = 0;
+
+            // Check if the value is an array
+            if (is_array($value)) {
+                foreach ($value as $innerKey => $innerValue) {
+                    if (is_string($innerValue) && strpos($innerValue, 'KJ$') !== false) {
+                        $count++;
+                    }
+                }
+            }
+
+            // Create a new array with "total" key and count value
+            $final_data[$key]['total'] = strval($count);
+        }
+
+        $updatedArray = [];
+
+        foreach ($final_data as $subArray) {
+            $updatedSubArray = [];
+
+            foreach ($subArray as $key => $value) {
+                // Check if the value contains "KJ$"
+                if (is_string($value) && strpos($value, 'KJ$') !== false) {
+                    // Split the value by '$'
+                    $parts = explode('KJ$', $value);
+
+                    // Assign the second part to the value
+                    $updatedSubArray[$key] = $parts[1];
+                } else {
+                    // Keep the original value if it doesn't contain "KJ$"
+                    $updatedSubArray[$key] = $value;
+                }
+            }
+
+            // Add the updated sub-array to the new array
+            $updatedArray[] = $updatedSubArray;
+        }
+
+        // dd($updatedArray);
+
+        $newArray = [];
+
+        foreach ($updatedArray as $item) {
+            $newItem = []; // Create a new item for the modified array
+
+            // Iterate through the keys of the original item
+            foreach ($item as $key => $value) {
+                // Check if the key is in the format of "yyyy-mm-dd"
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $key)) {
+                    // Extract the day from the date and create a new key "date{day}"
+                    $day = substr($key, -2);
+                    $newKey = "date{$day}";
+
+                    // Add the new key-value pair to the new item
+                    $newItem[$newKey] = $value;
+                } else {
+                    // Keep non-date keys as they are
+                    $newItem[$key] = $value;
+                }
+            }
+
+            // Add the new item to the modified array
+            $newArray[] = $newItem;
+        }
+
+        // Now, $newArray contains the modified data with date keys renamed
+        // dd($newArray);
+
+
+        $arrView = array();
+        $arrView['Dataabsensi'] = $newArray;
+        $arrView['bulan'] = $bulan;
+        $arrView['Reg'] = $regs[0];
+        $arrView['header_month'] = $header_month;
+        $arrView['JumlahBulan'] = $JumlahBulan;
+
+        // dd($header_month, $JumlahBulan);
+
+        $pdf = PDF::loadView('Absensi.pdf', ['data' => $arrView]);
+        $pdf->setPaper('A2', 'landscape');
+
+        $filename = 'PDF Absensi' . ' ' . $arrView['bulan'] . '.pdf';
+
+        return $pdf->stream($filename);
     }
 }

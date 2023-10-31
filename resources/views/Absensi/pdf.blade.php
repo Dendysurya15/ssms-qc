@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <div style="display: flex; justify-content: center; margin-top: 3px; margin-bottom: 2px; margin-left: 3px; margin-right: 3px; border: 1px solid black; background-color: #fff4cc">
+            <h2 style="text-align: center;">ABSENSI QC</h2>
+        </div>
+
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="vertical-align: middle; padding-left: 0; width: 10%;border:0;">
+                    <div>
+                        <img src="{{ asset('img/Logo-SSS.png') }}" style="height:90px;margin-top : 10px;margin-left: 10px">
+                    </div>
+                </td>
+                <td style="width:30%;border:0;">
+
+                    <p style="text-align: left; font-size: 20px;">PT. SAWIT SUMBERMAS SARANA,TBK</p>
+                    <p style="text-align: left;">QUALITY CONTROL</p>
+
+                </td>
+                <td style=" width: 40%;border:0;">
+                </td>
+                <td style="vertical-align: middle; text-align: right;width:40%;border:0;">
+                    <div class="right-container">
+                        <div class="text-container" style="border:1px solid black">
+
+                            <div style="font-size: 20px;border:1px solid black">ESTATE: {{$data['Reg']}} </div>
+                            <div style="font-size: 20px;border:1px solid black">TANGGAL: {{$data['bulan']}}</div>
+
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size : 18px;margin-top: 10%">
+            <thead>
+                <tr>
+                    <th style="background-color: #e8ecdc;border: 1px solid black;" colspan="{{$data['JumlahBulan'] + 3}}">Absensi User QC</th>
+
+                </tr>
+                <tr>
+                    <th style="background-color: #e8ecdc;border: 1px solid black;" rowspan="2">NAMA</th>
+                    <TH style="background-color: #e8ecdc;border: 1px solid black;" rowspan="2">PAYROLL</TH>
+                    <TH style="background-color: #e8ecdc;border: 1px solid black;" colspan="{{$data['JumlahBulan']}}">{{$data['header_month']}}</TH>
+                    <TH style="background-color: #e8ecdc;border: 1px solid black;" rowspan="2">Total</TH>
+                </tr>
+                <tr>
+                    @for ($i = 1; $i <= $data['JumlahBulan']; $i++) <th style="background-color: #e8ecdc; border: 1px solid black;">{{ $i }}</th>
+                        @endfor
+                </tr>
+
+
+            </thead>
+            <tbody>
+                @foreach ($data['Dataabsensi'] as $items)
+                <tr>
+                    <td style="border-right: 1px solid black;border-bottom: 1px solid black;width:8%">{{ $items['nama'] }}</td>
+                    <td style="border-bottom: 1px solid black;text-align: center;border-right: 1px solid black;width: 10px">{{ $items['payroll'] }}</td>
+                    @php
+                    $dateFields = collect($items)->filter(function ($value, $key) {
+                    return strpos($key, 'date') === 0;
+                    });
+                    @endphp
+                    @foreach ($dateFields as $dateKey => $dateValue)
+                    @if ($dateValue === 'minggu')
+                    <td style="border-bottom: 1px solid black;text-align: center;border-right: 1px solid black;background-color: red;width:auto"></td>
+                    @else
+                    <td style="border-bottom: 1px solid black;text-align: center;border-right: 1px solid black;width:auto;">{{ $dateValue }}</td>
+                    @endif
+                    @endforeach
+                    <td style="border-bottom: 1px solid black;text-align: center;border-right: 1px solid black;">{{ $items['total'] }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <table style="margin-top: 10px;">
+            <th style="background-color: red;width:50px"></th>
+            <th>Minggu</th>
+        </table>
+
+
+
+    </div>
+</body>
+
+</html>

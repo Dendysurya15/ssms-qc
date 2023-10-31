@@ -198,11 +198,14 @@
             $('#afdreg').val('2');
 
         } else if (lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') {
-            $('#estreg').val('2');
-            $('#afdreg').val('2');
+            $('#estreg').val('3');
+            $('#afdreg').val('3');
         } else if (lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') {
-            $('#estreg').val('2');
-            $('#afdreg').val('2');
+            $('#estreg').val('4');
+            $('#afdreg').val('4');
+        } else if (lokasiKerja == 'Regional I' || lokasiKerja == 'Regional 1') {
+            $('#estreg').val('1');
+            $('#afdreg').val('1');
         }
 
 

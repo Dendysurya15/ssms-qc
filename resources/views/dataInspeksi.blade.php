@@ -364,7 +364,7 @@
             {{check_array('tot_mentah', $item)}}
         </td>
         <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_PersenBuahMentah', $item)}}
+            {{round(check_array('tot_PersenBuahMentah', $item),1)}}
         </td>
         <td style="background-color : #b0d48c; color: #000000;">
             {{skor_buah_mentah_mb(check_array('tot_PersenBuahMentah', $item))}}
@@ -662,6 +662,7 @@
     <tr style="border: none;">
         <td colspan="32" style="background-color : #fff;">&nbsp;</td>
     </tr>
+
     @foreach ($dataSkor_ancak as $key => $itemx)
     @foreach ($itemx as $key2 => $plasma)
     @foreach ($plasma as $key3 => $item2)
