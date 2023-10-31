@@ -144,30 +144,40 @@
                     <!-- tab 2  -->
                     <div class=" tab-pane fade" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
                         <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
-                            <h5><b>SUMMARY SCORE PERUMAHAN AFDELING REGIONAL - I
+                            <h5><b>Foto Absensi: {{ session('lok') }}
 
                                 </b></h5>
                         </div>
-                        <div class="content">
-                            <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
-                                <div class="row w-100">
-                                    <div class="col-md-2 offset-md-8">
-                                        {{csrf_field()}}
-                                        <select class="form-control" id="afdreg">
+                        <div class="mt-3 mb-2 ml-3 mr-3">
 
-                                        </select>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+
+                                </div>
+                                <div class="col-sm-4">
+
+                                    <div style=" display: flex; justify-content: center;padding-bottom:20px;">
+                                        <p style="text-align: center;">Foto Bukti User QC</p style="text-align: center;">
                                     </div>
 
-                                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                                        {{csrf_field()}}
-                                        <select class="form-control" id="tahunafd">
 
-                                        </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div style=" display: flex; justify-content: flex-end;padding-bottom:20px;">
+                                        {{ csrf_field() }}
+                                        <input class="form-control" value="{{ date('Y-m') }}" type="date" name="dateBukti" id="dateBukti" style="width: 200px;height:auto">
                                     </div>
                                 </div>
-                                <button class="btn btn-primary mb-3" style="float: right" id="btnShow">Show</button>
 
                             </div>
+                            <div class="flex">
+                                <div id="imgdata">
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div>
 
@@ -184,8 +194,11 @@
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 <script>
+    var currentUserName = "{{ session('jabatan') }}";
+
     $(document).ready(function() {
         var lokasiKerja = "{{ session('lok') }}";
+
 
         // console.log(lokasiKerja);
         if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
@@ -320,6 +333,8 @@
             // Open the URL in a new tab
             window.open(url, '_blank');
         });
+
+        getBuktiChange();
 
 
 
@@ -486,4 +501,120 @@
     var getDate = document.getElementById('getDate');
     userD.addEventListener('change', sendAjaxRequest);
     getDate.addEventListener('change', sendAjaxRequest);
+
+    function showimg(datauser) {
+        const container = document.getElementById("imgdata");
+        const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/absensi/";
+        const defaultImageUrl = "{{ asset('img/404img.png') }}";
+
+        // Check if the object is not empty
+        if (Object.keys(datauser).length > 0) {
+            const heading = document.createElement("div");
+            heading.classList.add("text-center");
+            // heading.innerHTML = "<h1>Foto Bukti ABsensi</h1>";
+            container.appendChild(heading);
+
+            const rowContainer = document.createElement("div");
+            rowContainer.classList.add("row", "justify-content-center");
+            container.appendChild(rowContainer);
+
+            for (const id in datauser) {
+                if (datauser.hasOwnProperty(id)) {
+                    const data = datauser[id];
+                    const imageUrl = imageBaseUrl + data.foto;
+
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+                    card.innerHTML = `
+                        <div class="card">
+                            <img src="${imageUrl}" alt="${data.foto}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
+                            <div class="card-body mt-2">
+                                <h5 class="card-title text-right">Nama: ${data.nama}</h5>
+                                <p class="card-text text-left">Pekerjaan: ${data.pekerjaan}</p>
+                                <p class="card-text text-left">Jam Masuk: ${data.jam}</p>
+                            </div>
+                        </div>
+                    `;
+                    rowContainer.appendChild(card);
+
+                    if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
+                        const buttonContainer = document.createElement("div");
+                        buttonContainer.classList.add("btn-container");
+
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = "#"; // Set a placeholder link initially
+                        downloadLink.innerHTML = '<i class="fas fa-download"></i> Download Image';
+                        downloadLink.classList.add("btn", "btn-primary", "btn-sm");
+                        buttonContainer.appendChild(downloadLink);
+
+
+                        // Append the container to the card body
+                        card.querySelector(".card-body").appendChild(buttonContainer);
+
+
+
+
+                        // Add click event to trigger download
+                        downloadLink.addEventListener("click", () => {
+                            // Use the image URL to construct the download URL
+                            const downloadUrl = "https://srs-ssms.com/qc_inspeksi/get_qcIMG.php?image=" + encodeURIComponent(imageUrl);
+
+                            // Open a new tab/window to initiate the download
+                            window.open(downloadUrl, "_blank");
+                        });
+
+
+
+
+                    }
+                }
+            }
+        } else {
+            const noDataMessage = document.createElement("p");
+            noDataMessage.textContent = "Data not found.";
+            container.appendChild(noDataMessage);
+        }
+    }
+
+    function getBuktiChange() {
+        var _token = $('input[name="_token"]').val();
+        var getDate = $("#dateBukti").val();
+
+        // Check if getDate is empty, and if so, set it to the current date
+        if (!getDate) {
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            var day = String(currentDate.getDate()).padStart(2, '0');
+            getDate = year + '-' + month + '-' + day;
+            $("#dateBukti").val(getDate);
+        }
+        $('#imgdata').empty()
+        $.ajax({
+            url: "{{ route('absensibukti') }}",
+            method: "GET",
+            data: {
+                date: getDate,
+                _token: _token
+            },
+            headers: {
+                'X-CSRF-TOKEN': _token
+            },
+            success: function(result) {
+                var datauser = result.data;
+
+
+                showimg(datauser)
+            },
+
+            error: function(jqXHR, textStatus, errorThrown) {
+                // Handle errors here.
+            }
+        });
+    }
+
+
+    var dateBukti = document.getElementById('dateBukti');
+
+    dateBukti.addEventListener('change', getBuktiChange);
 </script>

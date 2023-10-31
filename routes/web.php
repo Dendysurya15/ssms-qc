@@ -206,3 +206,4 @@ Route::get('/dashboardabsensi', [AbsensiController::class, 'index'])->name('dash
 Route::get('/absensidata', [AbsensiController::class, 'data'])->name('absensidata');
 Route::get('/absenmaps', [AbsensiController::class, 'getMaps'])->name('absenmaps');
 Route::get('/absensipdf', [AbsensiController::class, 'exportPDF'])->name('absensipdf');
+Route::get('/absensibukti', [AbsensiController::class, 'getimgBukti'])->name('absensibukti');

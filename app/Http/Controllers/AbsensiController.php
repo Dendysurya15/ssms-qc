@@ -158,16 +158,17 @@ class AbsensiController extends Controller
         // dd($user_absensi, $bulan);
 
         $tanggal_values = []; // Create an array to store unique "tanggal" values
-
+        // dd($user_absensi, $tanggal_values);
         foreach ($user_absensi as $key => $value) {
             foreach ($value as $tanggal => $entries) {
-                // Check if the "tanggal" value is not already in the $tanggal_values array
+                $dayOfWeek = date('N', strtotime($tanggal));
                 if (!in_array($tanggal, $tanggal_values)) {
-                    $tanggal_values[$tanggal] = 'MK';
+                    $tanggal_values[$tanggal] = ($dayOfWeek == 7) ? 'minggu' : 'MK';
                 }
             }
         }
 
+        // dd($tanggal_values, $user_default);
         $getkerja = DB::connection('mysql2')->table('list_pekerjaan')
             ->get();
         $getkerja = json_decode($getkerja, true);
@@ -278,7 +279,7 @@ class AbsensiController extends Controller
         $user_ci = $user_ci->groupBy(['id_user', 'tanggal']);
         $user_ci = json_decode($user_ci, true);
         // dd($user_default, $tanggal_values, $get_data);
-
+        // dd($user_ci);
 
         // nambah cuti 
 
@@ -592,15 +593,16 @@ class AbsensiController extends Controller
         // dd($user_absensi, $bulan);
 
         $tanggal_values = []; // Create an array to store unique "tanggal" values
-
+        // dd($user_absensi, $tanggal_values);
         foreach ($user_absensi as $key => $value) {
             foreach ($value as $tanggal => $entries) {
-                // Check if the "tanggal" value is not already in the $tanggal_values array
+                $dayOfWeek = date('N', strtotime($tanggal));
                 if (!in_array($tanggal, $tanggal_values)) {
-                    $tanggal_values[$tanggal] = 'MK';
+                    $tanggal_values[$tanggal] = ($dayOfWeek == 7) ? 'minggu' : 'MK';
                 }
             }
         }
+
 
         $getkerja = DB::connection('mysql2')->table('list_pekerjaan')
             ->get();
@@ -863,5 +865,68 @@ class AbsensiController extends Controller
         $filename = 'PDF Absensi' . ' ' . $arrView['bulan'] . '.pdf';
 
         return $pdf->stream($filename);
+    }
+
+    public function getimgBukti(Request $request)
+    {
+        // $userid = $request->input('userid');
+        $date = $request->input('date');
+        $lok = $request->session()->get('lok');
+        $user_Data = DB::table('pengguna')
+            ->select('pengguna.*')
+            ->where('departemen', 'QC')
+            ->where('lokasi_kerja', $lok)
+            ->where('email', 'like', '%mandor%')
+            ->pluck('user_id');
+
+
+        $user_Data = json_decode($user_Data, true);
+
+
+
+        $datauser = DB::connection('mysql2')->table('absensi_qc')
+            ->select('absensi_qc.*')
+            ->whereIN('id_user', $user_Data)
+            ->where('waktu_absensi', 'LIKE', '%' . $date . '%')
+            ->get();
+        $datauser = $datauser->groupBy(['id_user']);
+        $datauser = json_decode($datauser, true);
+
+        // dd($datauser);
+        $getkerja = DB::connection('mysql2')->table('list_pekerjaan')
+            ->get();
+        $getkerja = json_decode($getkerja, true);
+
+        $imgdata = [];
+        foreach ($datauser as $key => $value) {
+            # code...
+            foreach ($value as $key1 => $value1) {
+                # code...
+                // dd($value1);
+                $kerja = '-';
+                foreach ($getkerja as $keyx => $valuex) {
+                    # code...
+                    // dd($value);
+
+                    if ($valuex['id'] == $value1['id_pekerjaan']) {
+                        # code...
+                        $kerja = $valuex['nama'];
+                    }
+                }
+                $date = $value1['waktu_absensi'];
+                $formattedTime = date('H:i:s', strtotime($date));
+
+                $imgdata[$key]['nama'] = $value1['nama_user'];
+                $imgdata[$key]['foto'] = $value1['foto'];
+                $imgdata[$key]['jam'] = $formattedTime;
+                $imgdata[$key]['pekerjaan'] = $kerja;
+            }
+        }
+
+        // dd($imgdata);
+        // dd($datauser, $date);
+        $arrView = array();
+        $arrView['data'] = $imgdata; // Ensure it's a string
+        return response()->json($arrView); // Laravel's response to JSON
     }
 }
