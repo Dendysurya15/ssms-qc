@@ -3644,7 +3644,7 @@
                         let item2 = element[0];
                         let item3 = element[1]['status_panen'] ?? 0;
                         let item4 = element[1]['pokok_sample'] ?? 0;
-                        let item5 = (element[1]['luas_blok'] ?? [0])[0]; // Extract the first element from the array
+                        let item5 = (element[1]['luas_ha'] ?? [0])[0]; // Extract the first element from the array
 
                         let item6 = element[1]['jml_jjg_panen'] ?? 0;
                         let item7 = element[1]['akp_real'] ?? 0;
@@ -4026,12 +4026,17 @@
                     let tod = 0;
                     let ted = 0;
                     let tok = 0;
+                    let totalsph = 0;
+                    let countSph = 0;
+
                     arrTbody1.forEach(element => {
                         tr = document.createElement('tr');
+
+
                         let item1 = inc++;
                         let item2 = element[0];
                         let item3 = element[1]['pokok_sample'] ?? 0;
-                        let item4 = element[1]['luas_blok'] ?? 0
+                        let item4 = element[1]['luas_ha'] ?? 0
                         let item5 = element[1]['jml_jjg_panen'] ?? 0;
                         let item6 = element[1]['akp_real'] ?? 0;
                         let item7 = element[1]['p_ma'] ?? 0;
@@ -4163,7 +4168,12 @@
                         });
 
                         tbody1.appendChild(tr)
-                        // }
+                        let sph = element[1]['sph'] ?? 0;
+                        totalsph += sph;
+
+                        if (sph > 0) {
+                            countSph++; // Increment the count for non-zero sph values
+                        }
                     });
 
 
@@ -4293,12 +4303,14 @@
 
                     }
 
+                    let avarage = (totalsph / countSph).toFixed(2)
+
                     tr = document.createElement('tr');
-                    let item1 = 'Total';
+                    let item1 = 'Total'
                     let item2 = total;
-                    let item3 = total2.toFixed(2);
+                    let item3 = avarage
                     let item4 = total3;
-                    let item5 = total4.toFixed(2);
+                    let item5 = ((total3 / total) * 100).toFixed(2);
                     let item6 = total5;
                     let item7 = total6;
                     let item8 = total7;

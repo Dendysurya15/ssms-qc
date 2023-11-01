@@ -8683,7 +8683,7 @@ class inspectController extends Controller
             } else {
                 $first = '-';
             }
-
+            // $luasha = round($jumPokok / $sph, 2);
 
             $ancak[$key]['luas_blok'] = $first;
             $ancak[$key]['persenSamp'] = ($first != '-') ? round(($luas_ha / $first) * 100, 2) : '-';

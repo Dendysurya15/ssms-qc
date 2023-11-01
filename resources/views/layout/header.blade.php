@@ -186,14 +186,14 @@ session_start();
 
                         <li class="nav-item">
                             <a href="{{ asset('/dashboardabsensi') }}" class="nav-link">
-                                <div class="nav-icon lottie-animation" data-animation-path="{{ asset('img/homejson.json') }}">
+                                <div class="nav-icon lottie-animation" data-animation-path="https://lottie.host/237bc051-94b1-45d6-89da-3144341616a8/i4uJsopUfQ.json">
                                 </div>
-
                                 <p>
                                     Absensi QC
                                 </p>
                             </a>
                         </li>
+
 
                         <li class="nav-item">
                             <a href="{{ asset('/userqcpanel') }}" class="nav-link">
