@@ -1042,7 +1042,7 @@ class emplacementsController extends Controller
         //     'afd_rekap' => $resultArray
         // ]);
     }
-
+    
     public function estAFD(Request $request)
     {
         $regional = $request->input('reg');

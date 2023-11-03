@@ -1605,7 +1605,8 @@
 <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.0/jszip.min.js"></script>
-
+<link rel="stylesheet" href="{{asset('Leaflet.BigImage/dist/Leaflet.BigImage.min.css')}}">
+<script src="{{asset('leaflet-easyPrint/dist/bundle.js')}}"></script>
 <script>
     const estDataMapSelect = document.querySelector('#estDataMap');
     const regDataMapSelect = document.querySelector('#regDataMap');
@@ -1932,6 +1933,17 @@
         }).addTo(map);
         map.addControl(new L.Control.Fullscreen());
 
+        var printer = L.easyPrint({
+            tileLayer: googleSat,
+            sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
+            filename: 'myMap',
+            exportOnly: true,
+            hideControlContainer: true
+        }).addTo(map);
+
+        function manualPrint() {
+            printer.printMap('CurrentSize', 'MyManualPrint')
+        }
 
         return map;
     }
@@ -2170,7 +2182,7 @@
         // Remove the previous legend if it exists
 
         legendContainer = L.control({
-            position: 'topright',
+            position: 'bottomright',
         });
 
         legendContainer.onAdd = function() {

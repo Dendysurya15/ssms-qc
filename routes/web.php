@@ -19,6 +19,7 @@ use App\Http\Controllers\incpectcomponent\inspeksidashController;
 use App\Http\Controllers\incpectcomponent\pdfgenerateController;
 use App\Http\Controllers\incpectcomponent\makemapsController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\testingmapsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -207,3 +208,6 @@ Route::get('/absensidata', [AbsensiController::class, 'data'])->name('absensidat
 Route::get('/absenmaps', [AbsensiController::class, 'getMaps'])->name('absenmaps');
 Route::get('/absensipdf', [AbsensiController::class, 'exportPDF'])->name('absensipdf');
 Route::get('/absensibukti', [AbsensiController::class, 'getimgBukti'])->name('absensibukti');
+
+
+Route::get('/testmaps', [testingmapsController::class, 'index'])->name('testmaps');
