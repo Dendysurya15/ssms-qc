@@ -1605,8 +1605,7 @@
 <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.0/jszip.min.js"></script>
-<link rel="stylesheet" href="{{asset('Leaflet.BigImage/dist/Leaflet.BigImage.min.css')}}">
-<script src="{{asset('leaflet-easyPrint/dist/bundle.js')}}"></script>
+
 <script>
     const estDataMapSelect = document.querySelector('#estDataMap');
     const regDataMapSelect = document.querySelector('#regDataMap');
@@ -1933,17 +1932,7 @@
         }).addTo(map);
         map.addControl(new L.Control.Fullscreen());
 
-        var printer = L.easyPrint({
-            tileLayer: googleSat,
-            sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
-            filename: 'myMap',
-            exportOnly: true,
-            hideControlContainer: true
-        }).addTo(map);
 
-        function manualPrint() {
-            printer.printMap('CurrentSize', 'MyManualPrint')
-        }
 
         return map;
     }
@@ -2182,7 +2171,7 @@
         // Remove the previous legend if it exists
 
         legendContainer = L.control({
-            position: 'bottomright',
+            position: 'topright',
         });
 
         legendContainer.onAdd = function() {
@@ -3577,12 +3566,12 @@
                 let itemsElement1 = document.createElement('td')
                 let itemsElement2 = document.createElement('td')
                 let itemsElement3 = document.createElement('td')
-                let itemsElement4 = document.createElement('td')
+                let itemsElements4 = document.createElement('td')
                 let itemsElement5 = document.createElement('td')
                 itemsElement1.classList.add("text-center")
                 itemsElement2.classList.add("text-center")
                 itemsElement3.classList.add("text-center")
-                itemsElement4.classList.add("text-center")
+                itemsElements4.classList.add("text-center")
                 itemsElement5.classList.add("text-center")
                 itemsElement1.style.backgroundColor = "#fff4cc";
                 itemsElement2.style.backgroundColor = "#fff4cc";
@@ -3595,44 +3584,44 @@
                 }
 
 
-                if (item4 >= 95) {
-                    itemElement4.style.backgroundColor = "red";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 85 && item4 < 95) {
-                    itemElement4.style.backgroundColor = "red";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 75 && item4 < 85) {
-                    itemElement4.style.backgroundColor = "#fffc04";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 65 && item4 < 75) {
-                    itemElement4.style.backgroundColor = "#ffc404";
-                    itemElement4.style.color = "black";
+                if (items4 >= 95) {
+                    itemsElements4.style.backgroundColor = "red";
+                    itemsElements4.style.color = "black";
+                } else if (items4 >= 85 && items4 < 95) {
+                    itemsElements4.style.backgroundColor = "red";
+                    itemsElements4.style.color = "black";
+                } else if (items4 >= 75 && items4 < 85) {
+                    itemsElements4.style.backgroundColor = "#fffc04";
+                    itemsElements4.style.color = "black";
+                } else if (items4 >= 65 && items4 < 75) {
+                    itemsElements4.style.backgroundColor = "#ffc404";
+                    itemsElements4.style.color = "black";
                 } else {
-                    itemElement4.style.backgroundColor = "red";
-                    itemElement4.style.color = "black";
+                    itemsElements4.style.backgroundColor = "red";
+                    itemsElements4.style.color = "black";
                 }
 
-                if (itemElement4.style.backgroundColor === "#609cd4") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#08b454") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "red") {
-                    itemElement4.style.color = "black";
+                if (itemsElements4.style.backgroundColor === "#609cd4") {
+                    itemsElements4.style.color = "black";
+                } else if (itemsElements4.style.backgroundColor === "#08b454") {
+                    itemsElements4.style.color = "black";
+                } else if (itemsElements4.style.backgroundColor === "#fffc04") {
+                    itemsElements4.style.color = "black";
+                } else if (itemsElements4.style.backgroundColor === "#ffc404") {
+                    itemsElements4.style.color = "black";
+                } else if (itemsElements4.style.backgroundColor === "red") {
+                    itemsElements4.style.color = "black";
                 }
 
                 itemsElement1.innerText = items1;
                 itemsElement2.innerText = items2;
                 itemsElement3.innerText = items3;
-                itemsElement4.innerText = items4;
+                itemsElements4.innerText = items4;
                 itemsElement5.innerText = items5;
                 tr.appendChild(itemsElement1)
                 tr.appendChild(itemsElement2)
                 tr.appendChild(itemsElement3)
-                tr.appendChild(itemsElement4)
+                tr.appendChild(itemsElements4)
                 tr.appendChild(itemsElement5)
                 tbody2.appendChild(tr)
 
@@ -3760,6 +3749,8 @@
                     }
 
                     // Use the function
+                    const newskormua = Object.entries(parseResult['newmua']);
+                    // console.log(newskormua);
                     var est = "PT.MUA";
                     var afd = "EM";
                     var nama = getNamaByEstAndAfd(data, est, afd);
@@ -3769,7 +3760,7 @@
                         em: 'EM',
                         nama: nama,
                         rank: '-',
-                        skor: skor_ptmua[0][1]
+                        skor: newskormua[3][1]
                     });
                 } else {
                     var arrTbody3 = newData_data_Est3
@@ -3877,12 +3868,12 @@
                 let itemxElement1 = document.createElement('td')
                 let itemxElement2 = document.createElement('td')
                 let itemxElement3 = document.createElement('td')
-                let itemxElement4 = document.createElement('td')
+                let itemxElementx4 = document.createElement('td')
                 let itemxElement5 = document.createElement('td')
                 itemxElement1.classList.add("text-center")
                 itemxElement2.classList.add("text-center")
                 itemxElement3.classList.add("text-center")
-                itemxElement4.classList.add("text-center")
+                itemxElementx4.classList.add("text-center")
                 itemxElement5.classList.add("text-center")
                 itemxElement1.style.backgroundColor = "#fff4cc";
                 itemxElement2.style.backgroundColor = "#fff4cc";
@@ -3895,44 +3886,44 @@
                 }
 
 
-                if (item4 >= 95) {
-                    itemElement4.style.backgroundColor = "#609cd4";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 85 && item4 < 95) {
-                    itemElement4.style.backgroundColor = "#08b454";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 75 && item4 < 85) {
-                    itemElement4.style.backgroundColor = "#fffc04";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 65 && item4 < 75) {
-                    itemElement4.style.backgroundColor = "#ffc404";
-                    itemElement4.style.color = "black";
+                if (itemx4 >= 95) {
+                    itemxElementx4.style.backgroundColor = "#609cd4";
+                    itemxElementx4.style.color = "black";
+                } else if (itemx4 >= 85 && itemx4 < 95) {
+                    itemxElementx4.style.backgroundColor = "#08b454";
+                    itemxElementx4.style.color = "black";
+                } else if (itemx4 >= 75 && itemx4 < 85) {
+                    itemxElementx4.style.backgroundColor = "#fffc04";
+                    itemxElementx4.style.color = "black";
+                } else if (itemx4 >= 65 && itemx4 < 75) {
+                    itemxElementx4.style.backgroundColor = "#ffc404";
+                    itemxElementx4.style.color = "black";
                 } else {
-                    itemElement4.style.backgroundColor = "red";
-                    itemElement4.style.color = "black";
+                    itemxElementx4.style.backgroundColor = "red";
+                    itemxElementx4.style.color = "black";
                 }
 
-                if (itemElement4.style.backgroundColor === "#609cd4") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#08b454") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "red") {
-                    itemElement4.style.color = "black";
+                if (itemxElementx4.style.backgroundColor === "#609cd4") {
+                    itemxElementx4.style.color = "black";
+                } else if (itemxElementx4.style.backgroundColor === "#08b454") {
+                    itemxElementx4.style.color = "black";
+                } else if (itemxElementx4.style.backgroundColor === "#fffc04") {
+                    itemxElementx4.style.color = "black";
+                } else if (itemxElementx4.style.backgroundColor === "#ffc404") {
+                    itemxElementx4.style.color = "black";
+                } else if (itemxElementx4.style.backgroundColor === "red") {
+                    itemxElementx4.style.color = "black";
                 }
 
                 itemxElement1.innerText = itemx1;
                 itemxElement2.innerText = itemx2;
                 itemxElement3.innerText = itemx3;
-                itemxElement4.innerText = itemx4;
+                itemxElementx4.innerText = itemx4;
                 itemxElement5.innerText = itemx5;
                 tr.appendChild(itemxElement1)
                 tr.appendChild(itemxElement2)
                 tr.appendChild(itemxElement3)
-                tr.appendChild(itemxElement4)
+                tr.appendChild(itemxElementx4)
                 tr.appendChild(itemxElement5)
                 tbody3.appendChild(tr)
 
@@ -3970,34 +3961,24 @@
                 }
 
 
-                if (item4 >= 95) {
-                    itemElement4.style.backgroundColor = "#609cd4";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 85 && item4 < 95) {
-                    itemElement4.style.backgroundColor = "#08b454";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 75 && item4 < 85) {
-                    itemElement4.style.backgroundColor = "#fffc04";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 65 && item4 < 75) {
-                    itemElement4.style.backgroundColor = "#ffc404";
-                    itemElement4.style.color = "black";
+                if (reg4 >= 95) {
+                    regElement4.style.backgroundColor = "#609cd4";
+                    regElement4.style.color = "black";
+                } else if (reg4 >= 85 && reg4 < 95) {
+                    regElement4.style.backgroundColor = "#08b454";
+                    regElement4.style.color = "black";
+                } else if (reg4 >= 75 && reg4 < 85) {
+                    regElement4.style.backgroundColor = "#fffc04";
+                    regElement4.style.color = "black";
+                } else if (reg4 >= 65 && reg4 < 75) {
+                    regElement4.style.backgroundColor = "#ffc404";
+                    regElement4.style.color = "black";
                 } else {
-                    itemElement4.style.backgroundColor = "red";
-                    itemElement4.style.color = "black";
+                    regElement4.style.backgroundColor = "red";
+                    regElement4.style.color = "black";
                 }
 
-                if (itemElement4.style.backgroundColor === "#609cd4") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#08b454") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "red") {
-                    itemElement4.style.color = "black";
-                }
+
 
                 regElement1.innerText = reg1;
                 regElement2.innerText = reg2;
@@ -8850,7 +8831,7 @@
 
             html2canvas(mapContainer).then(function(canvas) {
                 var dataURL = canvas.toDataURL('image/png');
-                console.log(dataURL);
+                // console.log(dataURL);
 
                 var _token = $('input[name="_token"]').val();
                 var estData = $("#estDataMap").val();
