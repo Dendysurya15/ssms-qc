@@ -81,6 +81,7 @@ class mutubuahController extends Controller
         $queryEst = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
             ->get();
 
         $queryEst = json_decode($queryEst, true);
@@ -131,6 +132,7 @@ class mutubuahController extends Controller
 
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', '1')
             ->get();
@@ -725,6 +727,7 @@ class mutubuahController extends Controller
         // dd($value2['datetime'], $endDate);
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
@@ -733,6 +736,7 @@ class mutubuahController extends Controller
 
         $estev2 = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
@@ -840,12 +844,13 @@ class mutubuahController extends Controller
                     $sum_kr = 0;
                     $allSkor = 0;
                     $combination_counts = array();
-
+                    $newblok = 0;
                     foreach ($value1 as $key2 => $value2) {
                         $combination = $value2['blok'] . ' ' . $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
                             $combination_counts[$combination] = 0;
                         }
+                        $newblok = count($value1);
                         $jjg_sample += $value2['jumlah_jjg'];
                         $tnpBRD += $value2['bmt'];
                         $krgBRD += $value2['bmk'];
@@ -856,7 +861,8 @@ class mutubuahController extends Controller
                         $rd += $value2['rd'];
                         $sum_kr += $value2['alas_br'];
                     }
-                    $dataBLok = count($combination_counts);
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok = $newblok;
                     if ($sum_kr != 0) {
                         $total_kr = round($sum_kr / $dataBLok, 2);
                     } else {
@@ -1944,6 +1950,7 @@ class mutubuahController extends Controller
         // dd($startDate, $endDate);
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
@@ -1952,6 +1959,7 @@ class mutubuahController extends Controller
 
         $estev2 = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
@@ -2059,12 +2067,13 @@ class mutubuahController extends Controller
                     $sum_kr = 0;
                     $allSkor = 0;
                     $combination_counts = array();
-
+                    $newblok = 0;
                     foreach ($value1 as $key2 => $value2) {
                         $combination = $value2['blok'] . ' ' . $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
                             $combination_counts[$combination] = 0;
                         }
+                        $newblok = count($value1);
                         $jjg_sample += $value2['jumlah_jjg'];
                         $tnpBRD += $value2['bmt'];
                         $krgBRD += $value2['bmk'];
@@ -2075,7 +2084,8 @@ class mutubuahController extends Controller
                         $rd += $value2['rd'];
                         $sum_kr += $value2['alas_br'];
                     }
-                    $dataBLok = count($combination_counts);
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok = $newblok;
                     if ($sum_kr != 0) {
                         $total_kr = round($sum_kr / $dataBLok, 2);
                     } else {
@@ -3103,6 +3113,7 @@ class mutubuahController extends Controller
 
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $reg)
             ->get();
@@ -3217,12 +3228,13 @@ class mutubuahController extends Controller
                     $sum_kr = 0;
                     $allSkor = 0;
                     $combination_counts = array();
-
+                    $newblok = 0;
                     foreach ($value1 as $key2 => $value2) {
                         $combination = $value2['blok'] . ' ' . $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
                             $combination_counts[$combination] = 0;
                         }
+                        $newblok = count($value1);
                         $jjg_sample += $value2['jumlah_jjg'];
                         $tnpBRD += $value2['bmt'];
                         $krgBRD += $value2['bmk'];
@@ -3233,7 +3245,8 @@ class mutubuahController extends Controller
                         $rd += $value2['rd'];
                         $sum_kr += $value2['alas_br'];
                     }
-                    $dataBLok = count($combination_counts);
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok =  $newblok;
                     if ($sum_kr != 0) {
                         $total_kr = round($sum_kr / $dataBLok, 2);
                     } else {
@@ -3412,6 +3425,7 @@ class mutubuahController extends Controller
         // dd($startDate, $endDate);
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $reg)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
@@ -3636,6 +3650,7 @@ class mutubuahController extends Controller
 
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->get();
@@ -3756,12 +3771,13 @@ class mutubuahController extends Controller
                     $sum_kr = 0;
                     $allSkor = 0;
                     $combination_counts = array();
-
+                    $newblok = 0;
                     foreach ($value1 as $key2 => $value2) {
                         $combination = $value2['blok'] . ' ' . $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
                             $combination_counts[$combination] = 0;
                         }
+                        $newblok = count($value1);
                         $jjg_sample += $value2['jumlah_jjg'];
                         $tnpBRD += $value2['bmt'];
                         $krgBRD += $value2['bmk'];
@@ -3772,7 +3788,8 @@ class mutubuahController extends Controller
                         $rd += $value2['rd'];
                         $sum_kr += $value2['alas_br'];
                     }
-                    $dataBLok = count($combination_counts);
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok = $newblok;
                     if ($sum_kr != 0) {
                         $total_kr = round($sum_kr / $dataBLok, 2);
                     } else {
@@ -3824,9 +3841,11 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
                     $sidak_buah[$key][$key1]['TPH'] = $total_kr;
                     $sidak_buah[$key][$key1]['persen_krg'] = $per_kr;
+                    $sidak_buah[$key][$key1]['karung'] = $sum_kr;
                     $sidak_buah[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
                     $sidak_buah[$key][$key1]['All_skor'] = $allSkor;
                     $sidak_buah[$key][$key1]['kategori'] = sidak_akhir($allSkor);
+                    $sidak_buah[$key][$key1]['newblok'] = $newblok;
 
                     $totalJJG += $jjg_sample;
                     $totaltnpBRD += $tnpBRD;
@@ -3872,54 +3891,54 @@ class mutubuahController extends Controller
                 $colors = ['#b0d48c', '#b0d48c', '#b0d48c', '#b0d48c'];
                 $estateInt = intval($esatate); // Convert the estate string to an integer
                 $bgColor = $colors[$estateInt % count($colors)];
+            }
+            $totalValues = [
+                'reg' => '',
+                'pt' => '',
+                'nama_staff' => '',
+                'Jumlah_janjang' => $totalJJG,
+                'est' => $esatate,
+                'afd' => '',
+                'karung' => $totKR,
+                'blok' => $totBlok,
+                'tnp_brd' => $totaltnpBRD,
+                'krg_brd' => $totalkrgBRD,
+                'persenTNP_brd' => $TotPersenTNP,
+                'persenKRG_brd' => $TotPersenKRG,
+                'total_jjg' => $totJJG,
+                'persen_totalJjg' => $totPersenTOtaljjg,
+                'skor_total' => $totSkor_total,
+                'jjg_matang' => $totJJG_matang,
+                'persen_jjgMtang' => $totPer_jjgMtng,
+                'skor_jjgMatang' => $totSkor_jjgMtng,
+                'lewat_matang' => $totoverripe,
+                'persen_lwtMtng' => $totPer_over,
+                'skor_lewatMTng' => $totSkor_Over,
+                'janjang_kosong' => $totempty,
+                'persen_kosong' => $totPer_Empty,
+                'skor_kosong' => $totSkor_Empty,
+                'vcut' => $totVcut,
+                'vcut_persen' => $totPer_vcut,
+                'vcut_skor' => $totSkor_Vcut,
+                'abnormal' => $totalabr,
+                'abnormal_persen' => $totPer_abr,
+                'rat_dmg' => $totRD,
+                'rd_persen' => $totPer_rd,
+                'TPH' => $tot_krS,
+                'persen_krg' => $totPer_kr,
+                'skor_kr' => $totSkor_kr,
+                'All_skor' => $totALlskor,
+                'kategori' => $totKategor,
+                'background_color' => $bgColor, // Add the background color here
+            ];
 
-                $totalValues = [
-                    'reg' => '',
-                    'pt' => '',
-                    'nama_staff' => '',
-                    'Jumlah_janjang' => $totalJJG,
-                    'est' => $esatate,
-                    'afd' => '',
-                    'karung' => $totKR,
-                    'blok' => $totBlok,
-                    'tnp_brd' => $totaltnpBRD,
-                    'krg_brd' => $totalkrgBRD,
-                    'persenTNP_brd' => $TotPersenTNP,
-                    'persenKRG_brd' => $TotPersenKRG,
-                    'total_jjg' => $totJJG,
-                    'persen_totalJjg' => $totPersenTOtaljjg,
-                    'skor_total' => $totSkor_total,
-                    'jjg_matang' => $totJJG_matang,
-                    'persen_jjgMtang' => $totPer_jjgMtng,
-                    'skor_jjgMatang' => $totSkor_jjgMtng,
-                    'lewat_matang' => $totoverripe,
-                    'persen_lwtMtng' => $totPer_over,
-                    'skor_lewatMTng' => $totSkor_Over,
-                    'janjang_kosong' => $totempty,
-                    'persen_kosong' => $totPer_Empty,
-                    'skor_kosong' => $totSkor_Empty,
-                    'vcut' => $totVcut,
-                    'vcut_persen' => $totPer_vcut,
-                    'vcut_skor' => $totSkor_Vcut,
-                    'abnormal' => $totalabr,
-                    'abnormal_persen' => $totPer_abr,
-                    'rat_dmg' => $totRD,
-                    'rd_persen' => $totPer_rd,
-                    'TPH' => $tot_krS,
-                    'persen_krg' => $totPer_kr,
-                    'skor_kr' => $totSkor_kr,
-                    'All_skor' => $totALlskor,
-                    'kategori' => $totKategor,
-                    'background_color' => $bgColor, // Add the background color here
-                ];
 
-
-                if (dodo($totalValues)) {
-                    $sidak_buah[$key][$key] = $totalValues;
-                }
+            if (dodo($totalValues)) {
+                $sidak_buah[$key][$key] = $totalValues;
             }
         }
 
+        // dd($sidak_buah, $defPerbulanWil);
         $new_sidak_buah = array();
 
         foreach ($sidak_buah as $key => $value) {
@@ -4437,7 +4456,7 @@ class mutubuahController extends Controller
                     'Jumlah_janjang' => $totalJJG,
                     'est' => $estatex,
                     'afd' => '',
-                    'karung' => $totKR,
+                    'karungxx' => $totKR,
                     'blok' => $totBlok,
                     'tnp_brd' => $totaltnpBRD,
                     'krg_brd' => $totalkrgBRD,
@@ -4664,6 +4683,7 @@ class mutubuahController extends Controller
         // dd($startDate, $endDate);
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
@@ -4672,6 +4692,7 @@ class mutubuahController extends Controller
 
         $estev2 = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
@@ -4780,12 +4801,13 @@ class mutubuahController extends Controller
                     $sum_kr = 0;
                     $allSkor = 0;
                     $combination_counts = array();
-
+                    $newblok = 0;
                     foreach ($value1 as $key2 => $value2) {
                         $combination = $value2['blok'] . ' ' . $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
                             $combination_counts[$combination] = 0;
                         }
+                        $newblok = count($value1);
                         $jjg_sample += $value2['jumlah_jjg'];
                         $tnpBRD += $value2['bmt'];
                         $krgBRD += $value2['bmk'];
@@ -4796,7 +4818,8 @@ class mutubuahController extends Controller
                         $rd += $value2['rd'];
                         $sum_kr += $value2['alas_br'];
                     }
-                    $dataBLok = count($combination_counts);
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok =  $newblok;
                     if ($sum_kr != 0) {
                         $total_kr = round($sum_kr / $dataBLok, 2);
                     } else {
@@ -5451,6 +5474,7 @@ class mutubuahController extends Controller
 
         $queryEstv1 = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
             ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
@@ -5628,12 +5652,13 @@ class mutubuahController extends Controller
                     $sum_kr = 0;
                     $allSkor = 0;
                     $combination_counts = array();
-
+                    $newblok = 0;
                     foreach ($value2 as $key3 => $value3) {
                         $combination = $value3['blok'] . ' ' . $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
                             $combination_counts[$combination] = 0;
                         }
+                        $newblok = count($value1);
                         $jjg_sample += $value3['jumlah_jjg'];
                         $tnpBRD += $value3['bmt'];
                         $krgBRD += $value3['bmk'];
@@ -5644,7 +5669,8 @@ class mutubuahController extends Controller
                         $rd += $value3['rd'];
                         $sum_kr += $value3['alas_br'];
                     }
-                    $dataBLok = count($combination_counts);
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok = $newblok;
                     if ($sum_kr != 0) {
                         $total_kr = round($sum_kr / $dataBLok, 2);
                     } else {
@@ -6241,6 +6267,7 @@ class mutubuahController extends Controller
     {
         $queryEstate = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $request->get('regional'))
             ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
@@ -6575,6 +6602,7 @@ class mutubuahController extends Controller
         // dd($starDate, $endDate);
         $queryEste = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $reg)
             ->get();
@@ -6670,12 +6698,14 @@ class mutubuahController extends Controller
                     $sum_kr = 0;
                     $allSkor = 0;
                     $combination_counts = array();
+                    $newblok = 0;
                     foreach ($value2 as $key3 => $value3) {
                         if (is_array($value3)) {
                             $combination = $value3['blok'] . ' ' . $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['tph_baris'];
                             if (!isset($combination_counts[$combination])) {
                                 $combination_counts[$combination] = 0;
                             }
+                            $newblok = count($value2);
                             $jjg_sample += $value3['jumlah_jjg'];
                             $tnpBRD += $value3['bmt'];
                             $krgBRD += $value3['bmk'];
@@ -6687,7 +6717,7 @@ class mutubuahController extends Controller
                             $sum_kr += $value3['alas_br'];
                         }
                     }
-                    $dataBLok = count($combination_counts);
+                    $dataBLok =  $newblok;
                     if ($sum_kr != 0) {
                         $total_kr = round($sum_kr / $dataBLok, 2);
                     } else {
@@ -6986,6 +7016,7 @@ class mutubuahController extends Controller
         $QueryAncaksx = json_decode($QueryAncaksx, true);
         $queryEstatesss = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $reg)
             ->get();
