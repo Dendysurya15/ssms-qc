@@ -3585,10 +3585,10 @@
 
 
                 if (items4 >= 95) {
-                    itemsElements4.style.backgroundColor = "red";
+                    itemsElements4.style.backgroundColor = "#609cd4";
                     itemsElements4.style.color = "black";
                 } else if (items4 >= 85 && items4 < 95) {
-                    itemsElements4.style.backgroundColor = "red";
+                    itemsElements4.style.backgroundColor = "#08b454";
                     itemsElements4.style.color = "black";
                 } else if (items4 >= 75 && items4 < 85) {
                     itemsElements4.style.backgroundColor = "#fffc04";
@@ -3811,7 +3811,7 @@
 
 
                     if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
+                        itemElement4.style.backgroundColor = "#08b454";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
@@ -3887,7 +3887,7 @@
 
 
                 if (itemx4 >= 95) {
-                    itemxElementx4.style.backgroundColor = "#609cd4";
+                    itemxElementx4.style.backgroundColor = "#08b454";
                     itemxElementx4.style.color = "black";
                 } else if (itemx4 >= 85 && itemx4 < 95) {
                     itemxElementx4.style.backgroundColor = "#08b454";
@@ -3899,7 +3899,7 @@
                     itemxElementx4.style.backgroundColor = "#ffc404";
                     itemxElementx4.style.color = "black";
                 } else {
-                    itemxElementx4.style.backgroundColor = "red";
+                    itemxElementx4.style.backgroundColor = "black";
                     itemxElementx4.style.color = "black";
                 }
 
