@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Http;
+
+
 
 class AbsensiController extends Controller
 {
@@ -189,7 +192,7 @@ class AbsensiController extends Controller
                     $formattedTime = date('H:i:s', strtotime($date));
 
 
-                    $specificValues = ['Lainnya', 'Sakit', 'Cuti', 'Izin'];
+                    $specificValues = ['Sakit', 'Cuti', 'Izin'];
 
                     $pekerjaan = explode('$', $value3['id_pekerjaan']);
 
@@ -270,7 +273,7 @@ class AbsensiController extends Controller
         $user_ci = DB::connection('mysql2')->table('absensi_qc')
             ->select('absensi_qc.*', 'list_pekerjaan.nama as pekerjaan', DB::raw('DATE(waktu_absensi) as tanggal'))
             ->join('list_pekerjaan', 'list_pekerjaan.id', '=', 'absensi_qc.id_pekerjaan')
-            ->where('range', '!=', 0)
+            ->where('range_date', '!=', 0)
             ->get();
 
 
@@ -287,7 +290,7 @@ class AbsensiController extends Controller
         $get_cuti = array();
         foreach ($user_ci as $key => $value) {
             foreach ($value as $key2 => $value2) {
-                $range = $value2[0]['range'];
+                $range = $value2[0]['range_date'];
                 $ket = $value2[0]['pekerjaan'];
 
                 $pekerjaan = explode('$', $range);
@@ -361,7 +364,7 @@ class AbsensiController extends Controller
             $final_data[$key]['total'] = strval($count);
         }
 
-        $updatedArray = [];
+        $absensiArray = [];
 
         foreach ($final_data as $subArray) {
             $updatedSubArray = [];
@@ -381,19 +384,58 @@ class AbsensiController extends Controller
             }
 
             // Add the updated sub-array to the new array
-            $updatedArray[] = $updatedSubArray;
+            $absensiArray[] = $updatedSubArray;
         }
 
 
-        // dd($updatedArray);
+        // dd($absensiArray);
+        $apiEndpoint = "https://api-harilibur.vercel.app/api";
 
-        // 
+        // Make the API call using Laravel's HTTP client
+        $response = Http::get($apiEndpoint);
+
+        // Check if the API call was successful
+        if ($response->successful()) {
+            // Decode the JSON response
+            $apiData = $response->json();
+
+            // Check if the decoding was successful and the expected data structure is present
+            if (isset($apiData[0]['holiday_date'], $apiData[0]['is_national_holiday'], $apiData[0]['holiday_name'])) {
+                // Filter dates where is_national_holiday is true
+                $nationalHolidays = array_filter($apiData, function ($holiday) {
+                    return $holiday['is_national_holiday'] == true;
+                });
+
+                // Extract the holiday dates and names from the filtered data
+                $holidays = array_column($nationalHolidays, 'holiday_date');
+                $holidayNames = array_column($nationalHolidays, 'holiday_name');
+
+                // Now $holidays contains the list of national holidays
+                // Assume $absensiArray is your array of dates
+                foreach ($absensiArray as $key => $absensi) {
+                    foreach ($absensi as $date => $status) {
+                        if (in_array($date, $holidays)) {
+                            // Find the index of the date in $holidays and get the corresponding holiday name
+                            $index = array_search($date, $holidays);
+                            $absensiArray[$key][$date] = $holidayNames[$index];
+                        }
+                    }
+                }
+            } else {
+                return response()->json(['error' => 'Failed to decode API response or missing expected data structure.'], 500);
+            }
+        } else {
+            return response()->json(['error' => 'Failed to fetch data from the API.'], 500);
+        }
+
+
+        // dd($absensiArray);
 
         $arrView = array();
         $arrView['header_month'] = $header_month; // Ensure it's a string
         $arrView['dates'] = $result;
         $arrView['JumlahBulan'] = $JumlahBulan;
-        $arrView['data_absensi'] = $updatedArray;
+        $arrView['data_absensi'] = $absensiArray;
 
         return response()->json($arrView); // Laravel's response to JSON
     }
@@ -427,10 +469,14 @@ class AbsensiController extends Controller
             $pekerjaan = '-';
             foreach ($id_kerja as $keyx => $valuex) {
                 // dd($valuex, $item);
-                if ($keyx == $item->id_pekerjaan) {
+                $getidkerja = $item->id_pekerjaan;
+
+                // dd($getidkerja);
+                if ($valuex->id == $item->id_pekerjaan) {
                     $pekerjaan = $valuex->nama;
                 }
             }
+            // dd($id_kerja);
 
             $feature = [
                 'type' => 'Feature',
@@ -705,7 +751,7 @@ class AbsensiController extends Controller
         $user_ci = DB::connection('mysql2')->table('absensi_qc')
             ->select('absensi_qc.*', 'list_pekerjaan.nama as pekerjaan', DB::raw('DATE(waktu_absensi) as tanggal'))
             ->join('list_pekerjaan', 'list_pekerjaan.id', '=', 'absensi_qc.id_pekerjaan')
-            ->where('range', '!=', 0)
+            ->where('range_date', '!=', 0)
             ->get();
 
 
@@ -722,7 +768,7 @@ class AbsensiController extends Controller
         $get_cuti = array();
         foreach ($user_ci as $key => $value) {
             foreach ($value as $key2 => $value2) {
-                $range = $value2[0]['range'];
+                $range = $value2[0]['range_date'];
                 $ket = $value2[0]['pekerjaan'];
 
                 $pekerjaan = explode('$', $range);
