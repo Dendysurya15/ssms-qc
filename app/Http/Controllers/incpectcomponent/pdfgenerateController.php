@@ -110,7 +110,7 @@ class pdfgenerateController extends Controller
 
         $dateListAncak = array_keys($datesAncak);
 
-        // dd($dateListTrans);
+        // dd($dataMTFI1);
 
         $all_mutu = [];
 
@@ -160,7 +160,7 @@ class pdfgenerateController extends Controller
         }
 
 
-        // dd($all_mutu,$dateListTrans);
+        // dd($all_mutu, $dateListTrans);
 
 
         // dd($all_mutu);
@@ -237,29 +237,82 @@ class pdfgenerateController extends Controller
         });
 
 
+        // dd($all_mutu);
+        foreach ($all_mutu as $outerKey => $value) {
+            // Check if the key contains "KTE OE"
+            if (strpos($outerKey, "KTE OE") !== false) {
+                // Update the "visit" value to 1 in "mutu_transport"
+                if (isset($value['mutu_transport']) && is_array($value['mutu_transport'])) {
+                    foreach ($value['mutu_transport'] as $innerKey => &$transport) {
+                        if (isset($transport['visit'])) {
+                            $dateTime = new DateTime($transport['datetime']);
 
-        // function getGroupLetter($key)
-        // {
-        //     return substr($key, 4, 2);
-        // }
-        // uksort($all_mutu, function ($a, $b) {
-        //     $groupLetterA = getGroupLetter($a);
-        //     $groupLetterB = getGroupLetter($b);
+                            // Format the DateTime object to "yyyy-mm-dd"
+                            $formattedDate = $dateTime->format("Y-m-d");
 
-        //     if ($groupLetterA === $groupLetterB) {
-        //         return strcmp($a, $b); // If the group letters are the same, compare the full keys
-        //     }
+                            // Array of check dates
+                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
+                            // Check if the formatted date is in the array
+                            if (in_array($formattedDate, $checkdata, true)) {
+                                $all_mutu[$outerKey]['mutu_transport'][$innerKey]['visit'] = 1;
+                            } else {
+                                $all_mutu[$outerKey]['mutu_transport'][$innerKey]['visit'] = $transport['visit'];
+                            }
+                        }
+                    }
+                }
 
-        //     return strcmp($groupLetterA, $groupLetterB); // Compare the group letters
-        // });
+
+                // Update the "visit" value to 1 in "mutu_ancak"
+                if (isset($value['mutu_ancak']) && is_array($value['mutu_ancak'])) {
+                    foreach ($value['mutu_ancak'] as $innerKey => &$ancak) {
+                        if (isset($ancak['visit'])) {
+
+                            // dd($ancak);
+
+                            $dateTime = new DateTime($ancak['waktu_temuan']);
+
+                            // Format the DateTime object to "yyyy-mm-dd"
+                            $formattedDate = $dateTime->format("Y-m-d");
+
+                            // Array of check dates
+                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
+                            // Check if the formatted date is in the array
+                            if (in_array($formattedDate, $checkdata, true)) {
+                                $all_mutu[$outerKey]['mutu_ancak'][$innerKey]['visit'] = 1;
+                            } else {
+                                $all_mutu[$outerKey]['mutu_ancak'][$innerKey]['visit'] = $ancak['visit'];
+                            }
+                        }
+                    }
+                }
+
+                // Update the "visit" value to 1 in "mutu_buah"
+                if (isset($value['mutu_buah']) && is_array($value['mutu_buah'])) {
+                    foreach ($value['mutu_buah'] as $innerKey => &$buah) {
+                        if (isset($buah['visit'])) {
+                            $dateTime = new DateTime($buah['datetime']);
+
+                            // Format the DateTime object to "yyyy-mm-dd"
+                            $formattedDate = $dateTime->format("Y-m-d");
+
+                            // Array of check dates
+                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
+                            // Check if the formatted date is in the array
+                            if (in_array($formattedDate, $checkdata, true)) {
+                                $all_mutu[$outerKey]['mutu_buah'][$innerKey]['visit'] = 1;
+                            } else {
+                                $all_mutu[$outerKey]['mutu_buah'][$innerKey]['visit'] = $buah['visit'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         // dd($all_mutu);
-
-        ////
-
-
-
-        // print_r($all_mutu);
 
 
         $pdf = pdf::loadview('cetakFI', [

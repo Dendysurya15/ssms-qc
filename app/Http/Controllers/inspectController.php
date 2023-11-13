@@ -16,111 +16,7 @@ class inspectController extends Controller
 
     public function getFindData(Request $request)
     {
-        // $test = $request->get('date');
 
-        $queryEstate = DB::connection('mysql2')->table('estate')
-            ->select('estate.*')
-            ->join('wil', 'wil.id', '=', 'estate.wil')
-            ->where('wil.regional', $request->get('regional'))
-            ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
-            ->where('estate.emp', '!=', 1)
-            ->where('estate.est', '!=', 'PLASMA')
-            ->get();
-
-        $queryEstate = json_decode($queryEstate, true);
-
-        // dd($queryEstate);
-        $dataFinding = array();
-        $dataResFind = array();
-        foreach ($queryEstate as $value1) {
-            $queryMTFI = DB::connection('mysql2')->table('mutu_transport')
-                ->select("mutu_transport.*")
-                ->where('estate', $value1['est'])
-                ->where('datetime', 'like', '%' . $request->get('date') . '%')
-                // ->where('estate', 'not like', '%Plasma%')
-                ->get();
-            $dataMTFI = $queryMTFI->groupBy('estate');
-            $dataMTFI = json_decode($dataMTFI, true);
-
-            // dd($dataMTFI);
-
-            $queryMAFI = DB::connection('mysql2')->table('mutu_ancak_new')
-                ->select("mutu_ancak_new.*")
-                ->where('estate', $value1['est'])
-                ->where('datetime', 'like', '%' . $request->get('date') . '%')
-                ->where('estate', 'not like', '%Plasma%')
-                ->get();
-            $dataMAFI = $queryMAFI->groupBy('estate');
-            $dataMAFI = json_decode($dataMAFI, true);
-
-            $queryNew = DB::connection('mysql2')->table('follow_up_ma')
-                ->select("follow_up_ma.*")
-                ->where('estate', 'not like', '%Plasma%')
-                ->get();
-            $queryNew = json_decode($queryNew, true);
-
-
-            foreach ($dataMTFI as $key => $value) {
-                $total_temuan = array();
-                $tuntas = array();
-                $no_tuntas = array();
-                foreach ($value as $key2 => $value2) {
-                    if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $total_temuan)) {
-                        $total_temuan[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
-                        if (!empty($value2['foto_fu'])) {
-                            $tuntas[] = $value2['foto_fu'];
-                        } else {
-                            $no_tuntas[] = $value2['foto_fu'];
-                        }
-                    }
-                    $tot_temuan = count($total_temuan);
-                    $tot_tuntas = count($tuntas);
-                    $tot_no_tuntas = count($no_tuntas);
-                }
-                $dataFinding[$value1['wil']][$key]['total_temuan'] = $tot_temuan;
-                $dataFinding[$value1['wil']][$key]['tuntas'] = $tot_tuntas;
-                $dataFinding[$value1['wil']][$key]['no_tuntas'] = $tot_no_tuntas;
-            }
-
-            // dd($dataFinding);
-            foreach ($dataMAFI as $key => $value) {
-                $total_temuan = array();
-                $tuntas = array();
-                $no_tuntas = array();
-                foreach ($value as $key2 => $value2) {
-                    foreach ($queryNew as $key3 => $value3) {
-                        // dd($value3);
-                        if ($value2['estate'] == $value3['estate'] && $value2['afdeling'] == $value3['afdeling'] && $value2['blok'] == $value3['blok'] && $value2['br1'] == $value3['br1'] && $value2['br2'] == $value3['br2']) {
-                            if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $total_temuan)) {
-                                $total_temuan[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
-                                if (!empty($value3['foto_fu1'])) {
-                                    $tuntas[] = $value3['foto_fu1'];
-                                } else {
-                                    $no_tuntas[] = $value3['foto_fu1'];
-                                }
-                            }
-                        }
-
-                        $tot_temuan = count($total_temuan);
-                        $tot_tuntas = count($tuntas);
-                        $tot_no_tuntas = count($no_tuntas);
-                    }
-                }
-                $dataFinding[$value1['wil']][$key]['total_temuan_ma'] = $tot_temuan;
-                $dataFinding[$value1['wil']][$key]['tuntas_ma'] = $tot_tuntas;
-                $dataFinding[$value1['wil']][$key]['no_tuntas_ma'] = $tot_no_tuntas;
-            }
-            // dd($dataFinding);
-            foreach ($dataFinding as $key => $value) {
-                foreach ($value as $key1 => $value1) {
-                    $dataResFind[$key][$key1]['total_temuan'] = check_array('total_temuan', $value1) + check_array('total_temuan_ma', $value1);
-                    $dataResFind[$key][$key1]['tuntas'] = check_array('tuntas', $value1) + check_array('tuntas_ma', $value1);
-                    $dataResFind[$key][$key1]['no_tuntas'] = check_array('no_tuntas', $value1) + check_array('no_tuntas_ma', $value1);
-                    $dataResFind[$key][$key1]['perTuntas'] = count_percent((check_array('tuntas', $value1) + check_array('tuntas_ma', $value1)), (check_array('total_temuan', $value1) + check_array('total_temuan_ma', $value1)));
-                    $dataResFind[$key][$key1]['perNoTuntas'] = count_percent((check_array('no_tuntas', $value1) + check_array('no_tuntas_ma', $value1)), (check_array('total_temuan', $value1) + check_array('total_temuan_ma', $value1)));
-                }
-            }
-        }
         //refvisi
         $estatex = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
@@ -239,7 +135,7 @@ class inspectController extends Controller
         }
 
 
-        // dd($datesBuah, $datestrans);
+        // dd($datesBuah, $datestrans, $datesAncak);
 
         $mutu_all = [];
 
@@ -257,7 +153,7 @@ class inspectController extends Controller
                 $date = substr($item['datetime'], 0, 10);
 
 
-                $visit_count = 0; // Initialize visit count to 0
+                $visit_count = 1; // Initialize visit count to 0
 
                 // Get visit count from datestrans array
                 if (isset($datestrans[$keyOnly])) {
@@ -305,11 +201,11 @@ class inspectController extends Controller
                 $date = substr($item['waktu_temuan'], 0, 10);
 
 
-                $visit_count = 0; // Initialize visit count to 0
+                $visit_count = 1; // Initialize visit count to 0
 
                 // Get visit count from datestrans array
-                if (isset($datestrans[$keyOnly])) {
-                    $visit = array_search($date, $datestrans[$keyOnly]);
+                if (isset($datesAncak[$keyOnly])) {
+                    $visit = array_search($date, $datesAncak[$keyOnly]);
                     if ($visit !== false) {
                         $visit_count = $visit + 1; // Update visit count
                     }
@@ -335,11 +231,11 @@ class inspectController extends Controller
 
             foreach ($items as $item) {
                 $date = substr($item['datetime'], 0, 10);
-                $visit_count = 0; // Initialize visit count to 0
+                $visit_count = 1; // Initialize visit count to 0
 
                 // Get visit count from datestrans array
-                if (isset($datestrans[$keyOnly])) {
-                    $visit = array_search($date, $datestrans[$keyOnly]);
+                if (isset($datesBuah[$keyOnly])) {
+                    $visit = array_search($date, $datesBuah[$keyOnly]);
                     if ($visit !== false) {
                         $visit_count = $visit + 1; // Update visit count
                     }
@@ -370,6 +266,83 @@ class inspectController extends Controller
             return !empty($item['mutu_transport']) || !empty($item['mutu_ancak']) || !empty($item['mutu_buah']);
         });
 
+
+
+        // dd($mutu_all);
+
+        foreach ($mutu_all as $outerKey => $value) {
+            // Check if the key contains "KTE OE"
+            if (strpos($outerKey, "KTE OE") !== false) {
+                // Update the "visit" value to 1 in "mutu_transport"
+                if (isset($value['mutu_transport']) && is_array($value['mutu_transport'])) {
+                    foreach ($value['mutu_transport'] as $innerKey => &$transport) {
+                        if (isset($transport['visit'])) {
+                            $dateTime = new DateTime($transport['datetime']);
+
+                            // Format the DateTime object to "yyyy-mm-dd"
+                            $formattedDate = $dateTime->format("Y-m-d");
+
+                            // Array of check dates
+                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
+                            // Check if the formatted date is in the array
+                            if (in_array($formattedDate, $checkdata, true)) {
+                                $mutu_all[$outerKey]['mutu_transport'][$innerKey]['visit'] = 1;
+                            } else {
+                                $mutu_all[$outerKey]['mutu_transport'][$innerKey]['visit'] = $transport['visit'];
+                            }
+                        }
+                    }
+                }
+
+
+                // Update the "visit" value to 1 in "mutu_ancak"
+                if (isset($value['mutu_ancak']) && is_array($value['mutu_ancak'])) {
+                    foreach ($value['mutu_ancak'] as $innerKey => &$ancak) {
+                        if (isset($ancak['visit'])) {
+
+                            // dd($ancak);
+
+                            $dateTime = new DateTime($ancak['waktu_temuan']);
+
+                            // Format the DateTime object to "yyyy-mm-dd"
+                            $formattedDate = $dateTime->format("Y-m-d");
+
+                            // Array of check dates
+                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
+                            // Check if the formatted date is in the array
+                            if (in_array($formattedDate, $checkdata, true)) {
+                                $mutu_all[$outerKey]['mutu_ancak'][$innerKey]['visit'] = 1;
+                            } else {
+                                $mutu_all[$outerKey]['mutu_ancak'][$innerKey]['visit'] = $ancak['visit'];
+                            }
+                        }
+                    }
+                }
+
+                // Update the "visit" value to 1 in "mutu_buah"
+                if (isset($value['mutu_buah']) && is_array($value['mutu_buah'])) {
+                    foreach ($value['mutu_buah'] as $innerKey => &$buah) {
+                        if (isset($buah['visit'])) {
+                            $dateTime = new DateTime($buah['datetime']);
+
+                            // Format the DateTime object to "yyyy-mm-dd"
+                            $formattedDate = $dateTime->format("Y-m-d");
+
+                            // Array of check dates
+                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
+                            // Check if the formatted date is in the array
+                            if (in_array($formattedDate, $checkdata, true)) {
+                                $mutu_all[$outerKey]['mutu_buah'][$innerKey]['visit'] = 1;
+                            } else {
+                                $mutu_all[$outerKey]['mutu_buah'][$innerKey]['visit'] = $buah['visit'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
         $groupedArray = array();
 
         foreach ($mutu_all as $key => $value) {
@@ -396,7 +369,7 @@ class inspectController extends Controller
         }
 
         // dd($mutu_all,$groupedArray);
-        // dd($groupedArray['KTE']);
+        // dd($groupedArray);
 
         $item_counts = [];
 
@@ -443,10 +416,10 @@ class inspectController extends Controller
 
         // Example usage:
 
-        // dd($dataResFind, $item_counts);
+        // dd($item_counts);
         $arrView = array();
 
-        $arrView['dataResFind'] = $dataResFind;
+        // $arrView['dataResFind'] = $dataResFind;
         $arrView['dataResFindes'] = $item_counts;
 
         echo json_encode($arrView);
