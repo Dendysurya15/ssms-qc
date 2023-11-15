@@ -1010,10 +1010,10 @@ class inspectController extends Controller
                 $dataSkor[$value1['wil']][$key]['tot_jml_jjg_panen_ma'] = $jml_jjg_panen_est;
                 $dataSkor[$value1['wil']][$key]['akp_real_est'] = count_percent($jml_jjg_panen_est, $jml_pokok_sm_est);
                 $dataSkor[$value1['wil']][$key]['p_ma_est'] = $jml_brtp_est;
-                $dataSkor[$value1['wil']][$key]['k_ma_est'] = $jml_brtk_est;
+                $dataSkor[$value1['wil']][$key]['k_ma_est'] = 99;
                 $dataSkor[$value1['wil']][$key]['gl_ma_est'] = $jml_brtgl_est;
                 $dataSkor[$value1['wil']][$key]['total_brd_ma_est'] = $tot_brd_est;
-                $dataSkor[$value1['wil']][$key]['btr_jjg_ma_est'] = $jml_jjg_panen_est == 0 ? $tot_brd_est : round(($tot_brd_est / $jml_jjg_panen_est), 2);
+                $dataSkor[$value1['wil']][$key]['btr_jjg_ma_est'] = $jml_jjg_panen_est == 0 ? $tot_brd_est : round(($tot_brd_est / $jml_jjg_panen_est), 3);
                 $dataSkor[$value1['wil']][$key]['bhts_ma_est'] = $jml_bhts_est;
                 $dataSkor[$value1['wil']][$key]['bhtm1_ma_est'] = $jml_bhtm1_est;
                 $dataSkor[$value1['wil']][$key]['bhtm2_ma_est'] = $jml_bhtm2_est;
@@ -1523,8 +1523,8 @@ class inspectController extends Controller
             }
         }
         // dd($dataSkor[5]['BTE'],$transport);  
-        // dd($transNewdata['MRE']);
-
+        // dd($dataSkor_ancak['PLE']);
+        // dd($dataSkor_ancak);
         // dd($dataSkor_trans ,$transNewdata);
         $testingPlasma = [];
 
@@ -1606,6 +1606,8 @@ class inspectController extends Controller
             'plasma_tph' => $testingPlasma,
         ]);
     }
+
+
     public function dashboard_inspeksi(Request $request)
     {
 

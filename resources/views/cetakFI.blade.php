@@ -267,14 +267,15 @@
                     <tbody>
                         @if($id == 1 || $id == 2 || $id == 3 || $id == '1' || $id == '2' || $id == '3' )
                         <?php $counter = 1; ?>
-                        @foreach ($newResult as $key => $items)
+                        @foreach ($newResult as $keyx => $items)
+                        @foreach($items as $key => $itemsx)
                         <?php
                         $key_parts = explode(' ', $key);
                         $estate = $key_parts[0];
                         $afdeling = $key_parts[1];
                         $blok = $key_parts[2];
                         ?>
-                        @foreach ($items as $category => $category_items)
+                        @foreach ($itemsx as $category => $category_items)
                         @foreach ($category_items as $mutu)
                         <?php
                         $komentar = $mutu['komentar'] ?? '';
@@ -381,16 +382,18 @@
                         @endforeach
                         @endforeach
                         @endforeach
+                        @endforeach
                         @else
                         <?php $counter = 1; ?>
                         @foreach ($newResult as $key => $items)
+                        @foreach($items as $key => $itemsx)
                         <?php
                         $key_parts = explode(' ', $key);
                         $estate = $key_parts[0];
                         $afdeling = $key_parts[1];
                         $blok = $key_parts[2];
                         ?>
-                        @foreach ($items as $category => $category_items)
+                        @foreach ($itemsx as $category => $category_items)
                         @foreach ($category_items as $mutu)
                         <?php
                         $komentar = $mutu['komentar'] ?? '';
@@ -494,6 +497,7 @@
                         </tr>
 
                         @endif
+                        @endforeach
                         @endforeach
                         @endforeach
                         @endforeach

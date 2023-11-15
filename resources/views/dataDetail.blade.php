@@ -4028,6 +4028,7 @@
                     let tok = 0;
                     let totalsph = 0;
                     let countSph = 0;
+                    let totalluas = 0;
 
                     arrTbody1.forEach(element => {
                         tr = document.createElement('tr');
@@ -4169,7 +4170,9 @@
 
                         tbody1.appendChild(tr)
                         let sph = element[1]['sph'] ?? 0;
+                        let luas = element[1]['luas_ha'] ?? 0;
                         totalsph += sph;
+                        totalluas += luas;
 
                         if (sph > 0) {
                             countSph++; // Increment the count for non-zero sph values
@@ -4308,7 +4311,8 @@
                     tr = document.createElement('tr');
                     let item1 = 'Total'
                     let item2 = total;
-                    let item3 = avarage
+                    // let item3 = avarage
+                    let item3 = totalluas.toFixed(2)
                     let item4 = total3;
                     let item5 = ((total3 / total) * 100).toFixed(2);
                     let item6 = total5;

@@ -312,6 +312,19 @@ class pdfgenerateController extends Controller
 
 
 
+        $newarr = [];
+        foreach ($all_mutu as $key => $value) {
+            # code...
+
+            // dd($key);
+
+            $oldkey = explode(" ", $key);
+
+            $newkey = $oldkey[0] . ' ' . $oldkey[1];
+
+            $newarr[$newkey][$key] = $value;
+        }
+        // dd($newarr, $all_mutu);
         // dd($all_mutu);
 
 
@@ -320,7 +333,7 @@ class pdfgenerateController extends Controller
             'date' => $tgl,
             'est' => $est,
             // 'dataResult' => $resultData,
-            'newResult' => $all_mutu,
+            'newResult' => $newarr,
         ]);
 
         $customPaper = array(360, 360, 360, 360);
