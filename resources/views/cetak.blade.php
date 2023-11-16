@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Document</title>
 
 </head>
@@ -58,16 +57,12 @@
                 <td style="border: 1px solid white"></td>
                 @if ($data->skor_total >= 95)
                 <td class="table-primary text-center" style="border:2px solid black">EXCELLENT</td>
-                @elseif($data->skor_total >= 85 && $data->skor_total <95) <td class="table-success text-center"
-                    style="border:2px solid black">
+                @elseif($data->skor_total >= 85 && $data->skor_total <95) <td class="table-success text-center" style="border:2px solid black">
                     Good</td>
-                    @elseif($data->skor_total >= 75 && $data->skor_total <85) <td class="table text-center"
-                        style="background-color: yellow;border:2px solid black">Satisfactory</td>
-                        @elseif($data->skor_total >= 65 && $data->skor_total <75) <td class="table-warning text-center"
-                            style="border:2px solid black">
+                    @elseif($data->skor_total >= 75 && $data->skor_total <85) <td class="table text-center" style="background-color: yellow;border:2px solid black">Satisfactory</td>
+                        @elseif($data->skor_total >= 65 && $data->skor_total <75) <td class="table-warning text-center" style="border:2px solid black">
                             Fair</td>
-                            @elseif($data->skor_total <75) <td class="table text-center"
-                                style="background-color: red;border:2px solid black">
+                            @elseif($data->skor_total <75) <td class="table text-center" style="background-color: red;border:2px solid black">
                                 Poor
                                 </td>
                                 @endif
@@ -146,9 +141,7 @@
                     ''))))) }}
                 </td>
 
-                <td class="my-cell " style="width:150px"><span><img
-                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}"
-                            class="img-fluid modal-image"></span></td>
+                <td class="my-cell " style="width:150px"><span><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}" class="img-fluid modal-image"></span></td>
 
                 <td class="my-cell" rowspan="2">
                     {{ $data->kesesuaian_ppro == 25 ? 'Tidak ditemukan selisih'
@@ -163,32 +156,22 @@
                     : ($data->kesesuaian_ppro == 0 ? 'Ditemukan Selisih >3% dari total sample' :
                     ''))))) }}
                 </td>
-                <td class="my-cell" style="width:150px"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}"
-                        class="img-fluid  modal-image"></td>
+                <td class="my-cell" style="width:150px"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}" class="img-fluid  modal-image"></td>
 
                 <td class="my-cell" rowspan="2">
                     {{ $data->barang_nonstok == 5 ? 'Tidak ada barang non-stock'
                     : ($data->barang_nonstok == 0 ? 'Ada barang non-stock' : '') }}
                 </td>
-                <td class="my-cell" style="width:150px"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell" style="width:150px"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}" class="img-fluid modal-image"></td>
 
             </tr>
 
             <tr>
-                <td class="my-cell "><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell "><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}" class="img-fluid modal-image"></td>
 
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}" class="img-fluid modal-image"></td>
 
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}" class="img-fluid modal-image"></td>
 
             </tr>
 
@@ -232,9 +215,7 @@
                     }}
                 </td>
                 @if ($data->foto_mr_ditandatangani_1)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -243,10 +224,7 @@
                     $data->peletakan_bincard + $data->rak_ditutup + $data->cat_sesuai}}
                 </td>
                 @if ($data->foto_kebersihan_gudang_1)
-                <td class="my-cell"><img
-                        data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -255,9 +233,7 @@
                     : ($data->inspeksi_ktu == 0 ? ') Logbook tidak todate ' : '') }}
                 </td>
                 @if ($data->foto_inspeksi_ktu_1)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -265,23 +241,17 @@
             </tr>
             <tr>
                 @if ($data->foto_mr_ditandatangani_2)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
                 @if ($data->foto_kebersihan_gudang_2)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
                 @if ($data->foto_inspeksi_ktu_2)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -338,9 +308,7 @@
                     :''))}}
                 </td>
 
-                <td class="my-cell " style="width:150px"><span><img
-                            src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}"
-                            class="img-fluid modal-image"></span></td>
+                <td class="my-cell " style="width:150px"><span><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_1}}" class="img-fluid modal-image"></span></td>
 
                 <td class="my-cell" rowspan="2">
                     {{$data->kesesuaian_ppro == 20 ? 'Sesuai'
@@ -348,33 +316,23 @@
                     : ($data->kesesuaian_ppro == 5 ? 'Tidak Sesuai / Selisih >1 item barang'
                     :''))}}
                 </td>
-                <td class="my-cell" style="width:150px"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}"
-                        class="img-fluid  modal-image"></td>
+                <td class="my-cell" style="width:150px"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_1}}" class="img-fluid  modal-image"></td>
 
                 <td class="my-cell" rowspan="2">{{$data->chemical_expired == 15 ? 'Tidak ada
                     chemical expired'
                     :($data->chemical_expired == 10 ? '< 10% jenis chemical expired '
                                             : ($data->chemical_expired == 5 ? '>= 10% jenis chemical expired' :''))}}
                 </td>
-                <td class="my-cell" style="width:150px"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell" style="width:150px"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_1}}" class="img-fluid modal-image"></td>
 
             </tr>
 
             <tr>
-                <td class="my-cell "><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell "><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_bincard_2}}" class="img-fluid modal-image"></td>
 
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kesesuaian_ppro_2}}" class="img-fluid modal-image"></td>
 
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_chemical_expired_2}}" class="img-fluid modal-image"></td>
 
             </tr>
 
@@ -413,9 +371,7 @@
                     }}
                 </td>
                 @if ($data->foto_barang_nonstok_1)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_1}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -428,10 +384,7 @@
                     ''))}}
                 </td>
                 @if ($data->foto_mr_ditandatangani_1)
-                <td class="my-cell"><img
-                        data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img data-original-src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_1}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -440,9 +393,7 @@
                     $data->peletakan_bincard + $data->rak_ditutup + $data->cat_sesuai}}
                 </td>
                 @if ($data->foto_kebersihan_gudang_1)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -450,23 +401,17 @@
             </tr>
             <tr>
                 @if ($data->foto_barang_nonstok_2)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_barang_nonstok_2}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
                 @if ($data->foto_mr_ditandatangani_2)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_mr_ditandatangani_2}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
                 @if ($data->foto_kebersihan_gudang_2)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_2}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
@@ -482,51 +427,127 @@
                 </td>
 
             </tr>
-            <tr class="">
 
-                <th class="my-cell table-primary text-center" colspan="2">7. BUKU INSPEKSI KTU</th>
-                <th style="border-left: 1px solid black;border-top:1px solid black"></th>
-                <th style="border-bottom:1px solid black"></th>
-                <th style="border-bottom:1px solid black;border-top:1px solid black"></th>
-                <th style="border-top:1px solid black"></th>
+            @if ($data->foto_kebersihan_gudang_count == 6)
+            <tr class="table-primary">
 
+                <th class="my-cell text-center" colspan="2">7. BUKU INSPEKSI KTU</th>
+                <th class="my-cell text-center" colspan="2">7. FOTO GUDANG</th>
+                <th class="my-cell text-center" colspan="2">7. FOTO GUDANG</th>
             </tr>
             <tr>
-                <td class="my-cell text-center">HASIL</td>
-                <td class="my-cell text-center">FOTO</td>
-                <td style="border-left: 1px solid black"></td>
+                <td class="my-cell">HASIL</td>
+                <td class="my-cell">FOTO</td>
+
+                <!-- GUDANG  -->
+                <td class="my-cell">HASIL</td>
+                <td class="my-cell">FOTO</td>
+
+                <td class="my-cell">HASIL</td>
+                <td class="my-cell">FOTO</td>
 
             </tr>
             <tr>
                 <td class="my-cell" rowspan="2">
                     {{($data->inspeksi_ktu == 5) ? 'Logbook todate & lengkap ' :
-                    (($data->inspeksi_ktu == 0) ? ' Logbook tidak todate' : '')}}
+    (($data->inspeksi_ktu == 0) ? ' Logbook tidak todate' : '')}}
                 </td>
                 @if ($data->foto_inspeksi_ktu_1)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
-                <td style="border-left: 1px solid black"></td>
+
+                <!-- GUDANG  -->
+
+                <td class="my-cell" rowspan="2">Gudang Foto Temuan </td>
+                @if ($data->foto_kebersihan_gudang_3)
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_3}}" class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+
+                <td class="my-cell" rowspan="2">Gudang Foto Temuan </td>
+                </td>
+                @if ($data->foto_kebersihan_gudang_4)
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_4}}" class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
             </tr>
             <tr>
+
                 @if ($data->foto_inspeksi_ktu_2)
-                <td class="my-cell"><img
-                        src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}"
-                        class="img-fluid modal-image"></td>
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
-                <td style="border-left: 1px solid black"></td>
+
+                <!-- GUDANG  -->
+                @if ($data->foto_kebersihan_gudang_5)
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_5}}" class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+
+                @if ($data->foto_kebersihan_gudang_6)
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_6}}" class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
             </tr>
             <tr>
                 <td colspan="2" class="text-center my-cell">{{ $data->komentar_inspeksi_ktu }}
                 </td>
-                <td style="border-left: 1px solid black"></td>
+                <td colspan="2" class="text-center my-cell">Temuan Gudang
+                </td>
+                <td colspan="2" class="text-center my-cell">Temuan Gudang
+                </td>
 
             </tr>
+
+
+
+            @else
+            <tr class="table-primary">
+
+                <th class="my-cell text-center" colspan="2">7. BUKU INSPEKSI KTU</th>
+
+            </tr>
+            <tr>
+                <td class="my-cell">HASIL</td>
+                <td class="my-cell">FOTO</td>
+
+
+            </tr>
+            <tr>
+                <td class="my-cell" rowspan="2">
+                    {{($data->inspeksi_ktu == 5) ? 'Logbook todate & lengkap ' :
+    (($data->inspeksi_ktu == 0) ? ' Logbook tidak todate' : '')}}
+                </td>
+                @if ($data->foto_inspeksi_ktu_1)
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_1}}" class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+
+
+            </tr>
+            <tr>
+                @if ($data->foto_inspeksi_ktu_2)
+                <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_inspeksi_ktu_2}}" class="img-fluid modal-image"></td>
+                @else
+                <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
+                @endif
+
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center my-cell">{{ $data->komentar_inspeksi_ktu }}
+                </td>
+
+            </tr>
+
+            @endif
 
         </tbody>
     </table>

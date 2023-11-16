@@ -1451,17 +1451,25 @@ class unitController extends Controller
         if ($query->foto_kebersihan_gudang != null) {
             if (str_contains($query->foto_kebersihan_gudang, ';')) {
                 $exp_foto_kebersihan_gudang = explode(';', $query->foto_kebersihan_gudang);
-                $query->foto_kebersihan_gudang_1 = $exp_foto_kebersihan_gudang[0];
-                $query->foto_kebersihan_gudang_2 = $exp_foto_kebersihan_gudang[1];
+
+                // Loop through the exploded image filenames and create variables
+                foreach ($exp_foto_kebersihan_gudang as $index => $filename) {
+                    $variableName = 'foto_kebersihan_gudang_' . ($index + 1);
+                    $query->$variableName = trim($filename);
+                }
+
+                // Count the number of values in the array and store it in a variable
+                $query->foto_kebersihan_gudang_count = count($exp_foto_kebersihan_gudang);
             } else {
+                // If there's only one image, create a single variable
                 $query->foto_kebersihan_gudang_1 = $query->foto_kebersihan_gudang;
-                $query->foto_kebersihan_gudang_2 = '';
+                $query->foto_kebersihan_gudang_count = 1; // Set count to 1 for a single image
             }
         } else {
+            // Handle the case when there are no images
             $query->foto_kebersihan_gudang_1 = 0;
-            $query->foto_kebersihan_gudang_2 = 0;
+            $query->foto_kebersihan_gudang_count = 0; // Set count to 0 for no images
         }
-
         if ($query->foto_mr_ditandatangani != null) {
             if (str_contains($query->foto_mr_ditandatangani, ';')) {
                 $exp_foto_mr_ditandatangani = explode(';', $query->foto_mr_ditandatangani);
@@ -1489,8 +1497,10 @@ class unitController extends Controller
             $query->foto_inspeksi_ktu_1 = 0;
             $query->foto_inspeksi_ktu_2 = 0;
         }
+        // dd($query);
 
-        $pdf = pdf::loadview('cetak', ['data' => $query]);
+        $pdf = PDF::loadView('cetak', ['data' => $query]);
+        // $pdf = pdf::loadview('cetak', ['data' => $query]);
         // $customPaper = array(360, 360, 360, 360);
         // $pdf->set_paper('A2', 'potrait');
         $customPaper = array(0, 0, 1300, 2200);

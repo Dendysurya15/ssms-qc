@@ -112,11 +112,11 @@
 
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <select name="userdata" id="userdata" style="height:37px;width:auto">
+                                    <!-- <select name="userdata" id="userdata" style="height:37px;width:auto">
                                         @foreach ($useroption as $item)
                                         <option value="{{$item['user_id']}}"> {{$item['nama_lengkap']}}</option>
                                         @endforeach
-                                    </select>
+                                    </select> -->
                                 </div>
                                 <div class="col-sm-4">
 
@@ -458,7 +458,7 @@
 
     function sendAjaxRequest() {
         var _token = $('input[name="_token"]').val();
-        var user_id = $("#userdata").val();
+        // var user_id = $("#userdata").val();
         var getDate = $("#getDate").val();
 
         // Check if getDate is empty, and if so, set it to the current date
@@ -475,7 +475,7 @@
             url: "{{ route('absenmaps') }}",
             method: "GET",
             data: {
-                userid: user_id,
+
                 date: getDate,
                 _token: _token
             },
@@ -499,7 +499,7 @@
     // $("#userdata").on('change', sendAjaxRequest);
     var userD = document.getElementById('userdata');
     var getDate = document.getElementById('getDate');
-    userD.addEventListener('change', sendAjaxRequest);
+    // userD.addEventListener('change', sendAjaxRequest);
     getDate.addEventListener('change', sendAjaxRequest);
 
     function showimg(datauser) {

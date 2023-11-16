@@ -442,15 +442,23 @@ class AbsensiController extends Controller
 
     public function getMaps(Request $request)
     {
-        $userid = $request->input('userid');
+        // $userid = $request->input('userid');
         $date = $request->input('date');
 
         $lok = $request->session()->get('lok');
-        // dd($userid, $date);
+        // dd($lok);
+
+        $userlist = DB::table('pengguna')
+            ->select('pengguna.*')
+            ->where('lokasi_kerja', $lok)
+            ->where('email', 'like', '%mandor%')
+            ->pluck('user_id');
+
+        // dd($userlist);
 
         $data = DB::connection('mysql2')->table('absensi_qc')
             ->select('absensi_qc.*')
-            ->where('id_user', $userid)
+            ->whereIn('id_user', $userlist)
             ->where('waktu_absensi', 'like', '%' . $date . '%')
             ->get();
         $id_kerja = DB::connection('mysql2')->table('list_pekerjaan')
@@ -458,6 +466,7 @@ class AbsensiController extends Controller
             ->get();
 
 
+        // dd($data, $date);
 
         $geoJSON = [
             'type' => 'FeatureCollection',
