@@ -72,10 +72,28 @@
                                     padding: 0;
                                     /* Adjust padding as needed */
                                 }
+
+                                /* Sticky styles for the first th and td */
+                                th:first-child,
+                                td:first-child {
+                                    position: sticky;
+                                    left: 0;
+                                    background-color: #fff;
+                                    /* Set the background color to match the table background */
+                                    z-index: 1;
+                                    /* Give a lower stack order to keep them behind other elements */
+                                }
+
+                                /* Other th and td styles */
+                                th,
+                                td {
+                                    position: sticky;
+                                    background-color: #fff;
+                                }
                             </style>
 
 
-                            <div class="table-container">
+                            <div class="table-container" style="overflow-x: auto; width: 100%;">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
