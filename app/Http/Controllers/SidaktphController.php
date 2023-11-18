@@ -7935,126 +7935,6 @@ class SidaktphController extends Controller
         // dd($blokPerEstate);
 
 
-        $result_list_blok = array();
-        foreach ($list_blok as $key => $value) {
-            foreach ($value as $key2 => $data) {
-
-                if ($est == "SJE") {
-                    if (strlen($data) == 8 || strlen($data) == 7) {
-                        $sliced = substr($data, 0, -3);
-                        // $result_list_blok[$key][$data]  = substr($sliced, 0, 1) . substr($sliced, 2);
-                        $result_list_blok[$key][$data]  = str_replace("0", "", $sliced);
-                    }
-                    $length = strlen($data);
-                    if ($length < 6) {
-                        $sliced = substr($data, 0, -3);
-                        // $result_list_blok[$key][$data]  = substr($sliced, 0, 1) . substr($sliced, 2);
-                        $result_list_blok[$key][$data]  = str_replace("0", "", $sliced);
-                    }
-                } else if ($est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE") {
-                    if (strlen($data) == 6  && substr($data, 0, 1) == 'H') {
-                        $sliced = substr($data, 0, -2);
-                        $result_list_blok[$key][$data]  = substr($sliced, 0, 1) . substr($sliced, 2);
-                    } elseif (strlen($data) == 6) {
-                        $result_list_blok[$key][$data]  = substr($data, 0, -3);
-                    }
-                } else if (strlen($data) == 8) {
-                    $replace = substr_replace($data, '', 1, 1);
-                    $sliced = substr($replace, 0, -2);
-                    $result_list_blok[$key][$data]  = substr($data, 0, -3);
-                } else if (strlen($data) == 7) {
-                    $replace = substr_replace($data, '', 1, 1);
-                    $sliced = substr($replace, 0, -2);
-                    $result_list_blok[$key][$data]  = substr($data, 0, -3);
-                } else if (strlen($data) == 6) {
-                    $replace = substr_replace($data, '', 1, 1);
-                    $sliced = substr($replace, 0, -2);
-                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
-                } else if (strlen($data) == 4) {
-                    $result_list_blok[$key][$data]  = $data;
-                } else if (strlen($data) == 5) {
-                    $sliced = substr($data, 0, -2);
-                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
-                } else if (strpos($data, 'SSMSCBI') !== false && strlen($data) == 14) {
-                    $result_list_blok[$key][$data]  = substr($data, 0, -10);
-                } else if (strpos($data, 'CBI') !== false && strlen($data) == 9) {
-                    $sliced = substr($data, 0, -6);
-                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
-                } else if (strpos($data, 'CBI') !== false && strlen($data) == 10) {
-                    $result_list_blok[$key][$data]  = substr($data, 0, -6);
-                } else if (strpos($data, 'CBI') !== false) {
-                    $result_list_blok[$key][$data]  = substr($data, 0, -4);
-                } else if (strpos($data, 'CB') !== false) {
-                    $replace = substr_replace($data, '', 1, 1);
-                    $sliced = substr($replace, 0, -3);
-                    $result_list_blok[$key][$data]  = substr_replace($sliced, '0', 1, 0);
-                } else if (strlen($data) == 3) {
-                    $result_list_blok[$key][$data]  = $data;
-                } else if (strpos($data, 'SSMSC') !== false && strlen($data) == 10) {
-                    $result_list_blok[$key][$data]  = substr($data, 0, -6);
-                }
-            }
-        }
-
-        $result_list_all_blok = array();
-        foreach ($blokPerEstate as $key2 => $value) {
-            foreach ($value as $key3 => $afd) {
-                foreach ($afd as $key4 => $data) {
-
-                    $result_list_all_blok[$key2][] = substr_replace($data, '', 1, 1);
-                }
-            }
-        }
-        // dd($result_list_all_blok, $result_list_blok);
-
-        // //bandingkan list blok query dan list all blok dan get hanya blok yang cocok
-        $result_blok = array();
-        if (array_key_exists($est, $result_list_all_blok)) {
-            $query = array_unique($result_list_all_blok[$est]);
-            $result_blok[$est] = array_intersect($result_list_blok[$est], $query);
-        }
-        // dd($result_list_blok, $result_blok, $listIdAfd);
-
-
-        //get lat lang dan key $result_blok atau semua list_blok
-
-        $blokLatLn = array();
-
-        foreach ($result_list_blok as $key => $value) {
-            $inc = 0;
-            foreach ($value as $key2 => $data) {
-                $newData = substr_replace($data, '0', 1, 0);
-                $query = '';
-                $query = DB::connection('mysql2')->table('blok')
-                    ->select('blok.*')
-                    // ->where('blok.nama', $newData)
-                    // ->orWhere('blok.nama', $data)
-                    ->whereIn('blok.afdeling', $listIdAfd)
-                    ->get();
-
-                // dd($newData, $data);
-
-                $latln = '';
-                foreach ($query as $key3 => $val) {
-                    if ($val->nama == $newData || $val->nama == $data) {
-                        $latln .= '[' . $val->lon . ',' . $val->lat . '],';
-                    }
-                }
-
-                $estate = DB::connection('mysql2')->table('estate')
-                    ->select('estate.*')
-                    ->where('estate.est', $est)
-                    ->first();
-
-                $nama_estate = $estate->nama;
-
-                $blokLatLn[$inc]['blok'] = $key2;
-                $blokLatLn[$inc]['estate'] = $nama_estate;
-                $blokLatLn[$inc]['latln'] = rtrim($latln, ',');
-                $inc++;
-            }
-        }
-        // dd($est, $afd);
 
 
 
@@ -8093,10 +7973,149 @@ class SidaktphController extends Controller
         }
         // dd($imgNew);
 
-        // dd($blokLatLn);
+        function isPointInPolygon($point, $polygon)
+        {
+            $splPoint = explode(',', $point);
+            $x = $splPoint[0];
+            $y = $splPoint[1];
+
+            $vertices = array_map(function ($vertex) {
+                return explode(',', $vertex);
+            }, explode('$', $polygon));
+
+            $numVertices = count($vertices);
+            $isInside = false;
+
+            for ($i = 0, $j = $numVertices - 1; $i < $numVertices; $j = $i++) {
+                $xi = $vertices[$i][0];
+                $yi = $vertices[$i][1];
+                $xj = $vertices[$j][0];
+                $yj = $vertices[$j][1];
+
+                $intersect = (($yi > $y) != ($yj > $y)) && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
+
+                if ($intersect) {
+                    $isInside = !$isInside;
+                }
+            }
+
+            return $isInside;
+        }
+
+        $estateQuery = DB::connection('mysql2')->table('estate')
+            ->select('*')
+            ->join('afdeling', 'afdeling.estate', '=', 'estate.id')
+            ->where('estate.est', $est)
+            ->get();
+        $estateQuery = json_decode($estateQuery, true);
+
+        $listIdAfd = array();
+        foreach ($estateQuery as $key => $value) {
+            $listIdAfd[] = $value['id'];
+        }
+
+        $blokEstate = DB::connection('mysql2')->table('blok')
+            ->select(DB::raw('DISTINCT nama, MIN(id) as id, afdeling'))
+            ->whereIn('afdeling', $listIdAfd)
+            ->groupBy('nama', 'afdeling')
+            ->get();
+        $blokEstate = json_decode($blokEstate, true);
+
+        $blokEstateFix = array();
+        foreach ($blokEstate as $key => $value) {
+            $blokEstateFix[$value['afdeling']][] = $value['nama'];
+        }
+
+        // dd($blokEstateFix);
+        $qrAfd = DB::connection('mysql2')->table('afdeling')
+            ->select('*')
+            ->get();
+        $qrAfd = json_decode($qrAfd, true);
+
+        $blokEstNewFix = array();
+        foreach ($blokEstateFix as $key => $value) {
+            foreach ($qrAfd as $key1 => $value1) {
+                if ($value1['id'] == $key) {
+                    $afdelingNama = $value1['nama'];
+                }
+            }
+            $blokEstNewFix[$afdelingNama] = $value;
+        }
+
+        $queryBlok = DB::connection('mysql2')->table('blok')
+            ->select('*')
+            ->whereIn('afdeling', $listIdAfd)
+            ->get();
+        $queryBlok = json_decode($queryBlok, true);
+
+        $blokLatLnEw = array();
+        $inc = 0;
+        foreach ($blokEstNewFix as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $latln = '';
+                $latln2 = '';
+                foreach ($queryBlok as $key3 => $value4) {
+                    if ($value4['nama'] == $value1) {
+                        $latln .= $value4['lat'] . ',' . $value4['lon'] . '$';
+                        $latln2 .= '[' . $value4['lon'] . ',' . $value4['lat'] . '],';
+                    }
+                }
+
+                $blokLatLnEw[$inc]['afd'] = $key;
+                $blokLatLnEw[$inc]['blok'] = $value1;
+                $blokLatLnEw[$inc]['latln'] = rtrim($latln, '$');
+                $blokLatLnEw[$inc]['latinnew'] = rtrim($latln2, ',');
+                $inc++;
+            }
+        }
+        // dd($blokLatLnEw);
+        $dtQuery = DB::connection('mysql2')->table('sidak_tph')
+            ->select('*')
+            ->where('est', $est)
+            ->where('datetime', 'LiKE', '%' . $date . '%')
+            ->get();
+        $dtQuery = json_decode($dtQuery, true);
+
+        $pkLatLn = array();
+        $incr = 0;
+        foreach ($dtQuery as $key => $value) {
+            $pkLatLn[$incr]['id'] = $value['id'];
+            $pkLatLn[$incr]['latln'] = $value['lat'] . ',' . $value['lon'];
+            $incr++;
+        }
+
+        // dd($blokLatLnEw, $pkLatLn);
+
+        // Define an associative array to track unique combinations
+        $uniqueCombinations = [];
+
+        foreach ($blokLatLnEw as $value) {
+            foreach ($pkLatLn as $marker) {
+                if (isPointInPolygon($marker['latln'], $value['latln'])) {
+                    // Create a unique key based on nama, estate, and latin
+                    $key = $value['blok'] . '_' . $est . '_' . $value['latln'];
+
+                    // $latln .= '[' . $val->lon . ',' . $val->lat . '],';
+
+                    // Check if the combination already exists
+                    if (!isset($uniqueCombinations[$key])) {
+                        $uniqueCombinations[$key] = true; // Mark the combination as encountered
+                        $messageResponse[] = [
+                            'blok' => $value['blok'],
+                            'estate' => $est,
+                            'latln' => $value['latinnew']
+                        ];
+                    }
+                }
+            }
+        }
+
+        // dd($messageResponse);
+
+        // dd($blokLatLn, $messageResponse);
         $plot['plot'] = $plotTitik;
         $plot['marker'] = $plotMarker;
-        $plot['blok'] = $blokLatLn;
+        $plot['blok'] = $messageResponse;
         $plot['img'] = $imgNew;
         // dd($plot);
         echo json_encode($plot);

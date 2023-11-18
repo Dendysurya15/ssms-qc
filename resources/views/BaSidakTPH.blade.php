@@ -1197,12 +1197,6 @@
                 });
 
 
-
-
-
-
-
-
                 drawBlok(blokResult)
 
                 drawTemuan(markerResult);

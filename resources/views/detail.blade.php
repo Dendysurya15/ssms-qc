@@ -466,9 +466,22 @@
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
+                                    @php
+                                    $total_gudang = $data->kebersihan_gudang + $data->gudang_pupuk + $data->bincard_terbungkus +
+                                    $data->peletakan_bincard + $data->rak_ditutup + $data->cat_sesuai;
+
+                                    $kondisigd = "-";
+
+                                    if ($total_gudang >= 30) {
+                                    $kondisigd = "Cukup Baik";
+                                    } else {
+                                    $kondisigd = "Kurang Baik";
+                                    }
+
+                                    @endphp
+
                                     <td class="my-cell" rowspan="2">
-                                        {{$data->kebersihan_gudang + $data->gudang_pupuk + $data->bincard_terbungkus +
-                                        $data->peletakan_bincard + $data->rak_ditutup + $data->cat_sesuai}}
+                                        {{$total_gudang}}
                                     </td>
                                     @if ($data->foto_kebersihan_gudang_1)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
@@ -510,8 +523,8 @@
                                 <tr class="table-primary">
 
                                     <th class="my-cell text-center" colspan="2">7. BUKU INSPEKSI KTU</th>
-                                    <th class="my-cell text-center" colspan="2">7. FOTO GUDANG</th>
-                                    <th class="my-cell text-center" colspan="2">7. FOTO GUDANG</th>
+                                    <th class="my-cell text-center" colspan="2">Dokumentasi Lainnya</th>
+                                    <th class="my-cell text-center" colspan="2">Dokumentasi Lainnya</th>
                                 </tr>
                                 <tr>
                                     <td class="my-cell">HASIL</td>
@@ -537,14 +550,14 @@
                                     @endif
 
                                     <!-- GUDANG  -->
-                                    <td class="my-cell" rowspan="2">Gudang Foto Temuan </td>
+                                    <td class="my-cell" rowspan="2"> {{$kondisigd}} </td>
                                     @if ($data->foto_kebersihan_gudang_3)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_3}}" class="img-fluid modal-image"></td>
                                     @else
                                     <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                                     @endif
 
-                                    <td class="my-cell" rowspan="2">Gudang Foto Temuan </td>
+                                    <td class="my-cell" rowspan="2"> {{$kondisigd}} </td>
                                     </td>
                                     @if ($data->foto_kebersihan_gudang_4)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_4}}" class="img-fluid modal-image"></td>
