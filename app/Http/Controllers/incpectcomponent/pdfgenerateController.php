@@ -23,309 +23,174 @@ class pdfgenerateController extends Controller
             $est = 'Plasma1';
         }
         $date = Carbon::parse($tgl)->format('F Y');
-        $queryMTFI = DB::connection('mysql2')->table('mutu_transport')
-            ->select("mutu_transport.*")
+
+
+        // buat baru  
+
+
+        $mtTrans = DB::connection('mysql2')->table('mutu_transport')
+            ->selectRaw("mutu_transport.*, DATE_FORMAT(datetime, '%Y-%m-%d') AS formatted_date")
             ->where('estate', $est)
             ->where('datetime', 'like', '%' . $tgl . '%')
+            ->where('foto_temuan', '!=', ' ')
+            ->orderBy('formatted_date', 'asc')
             ->orderBy('estate', 'asc')
             ->orderBy('afdeling', 'asc')
             ->orderBy('blok', 'asc')
-            ->orderBy('datetime', 'asc')
+
             ->get();
-        $dataMTFI1 = $queryMTFI->groupBy(function ($item) {
-            return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
-        });
-        $dataMTFI1 = json_decode($dataMTFI1, true);
+        // dd($mtTrans);
 
-        // dd($dataMTFI1);
+        $mtTrans = $mtTrans->groupBy(['formatted_date', 'afdeling', 'blok']);
+        $mtTrans = json_decode($mtTrans, true);
 
-        $queryMBFI = DB::connection('mysql2')->table('mutu_buah')
-            ->select("mutu_buah.*")
+
+        $mtbuah = DB::connection('mysql2')->table('mutu_buah')
+            ->selectRaw("mutu_buah.*, DATE_FORMAT(datetime, '%Y-%m-%d') AS formatted_date")
             ->where('estate', $est)
             ->where('datetime', 'like', '%' . $tgl . '%')
+            ->where('foto_temuan', '!=', ' ')
+            ->orderBy('formatted_date', 'asc')
             ->orderBy('estate', 'asc')
             ->orderBy('afdeling', 'asc')
             ->orderBy('blok', 'asc')
-            ->orderBy('datetime', 'asc')
+
             ->get();
-        $queryMBFI = $queryMBFI->groupBy(function ($item) {
-            return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
-        });
-        $queryMBFI = json_decode($queryMBFI, true);
+
+        $mtbuah = $mtbuah->groupBy(['formatted_date', 'afdeling', 'blok']);
+        $mtbuah = json_decode($mtbuah, true);
 
 
-        $queryNew = DB::connection('mysql2')->table('follow_up_ma')
-            ->select("follow_up_ma.*")
+
+        $mtancak = DB::connection('mysql2')->table('follow_up_ma')
+            ->selectRaw("follow_up_ma.*, DATE_FORMAT(waktu_temuan, '%Y-%m-%d') AS formatted_date")
+            ->where('estate', $est)
             ->where('waktu_temuan', 'like', '%' . $tgl . '%')
-            ->where('estate', '=', $est)
-            ->where('estate', 'not like', '%Plasma%')
+            ->orderBy('formatted_date', 'asc')
             ->orderBy('estate', 'asc')
             ->orderBy('afdeling', 'asc')
             ->orderBy('blok', 'asc')
-            ->orderBy('waktu_temuan', 'asc')
             ->get();
 
-        $queryNew = $queryNew->groupBy(function ($item) {
-            return $item->estate . ' ' . $item->afdeling . ' ' . $item->blok;
-        });
-        $queryNew = json_decode($queryNew, true);
-        // dd( $queryNew);
+        $mtancak = $mtancak->groupBy(['formatted_date', 'afdeling', 'blok']);
+        $mtancak = json_decode($mtancak, true);
 
-        $dates = [];
+        // dd($mtbuah, $mtancak, $mtTrans);
 
-        foreach ($dataMTFI1 as $subarray) {
-            foreach ($subarray as $item) {
-                if (isset($item['datetime'])) {
-                    $date = date('Y-m-d', strtotime($item['datetime']));
-                    $dates[$date] = true;
-                }
-            }
+        // $inc = 1;
+        $allDates = [];
+
+        foreach ($mtTrans as $key => $value) {
+            $allDates[$key] = ['dates' => $key];
         }
 
-        $dateListTrans = array_keys($dates);
-
-        $datesbh = [];
-
-        foreach ($queryMBFI as $subarray) {
-            foreach ($subarray as $item) {
-                if (isset($item['datetime'])) {
-                    $date = date('Y-m-d', strtotime($item['datetime']));
-                    $datesbh[$date] = true;
-                }
-            }
+        foreach ($mtancak as $key => $value) {
+            $allDates[$key] = ['dates' => $key];
         }
 
-        $dateListBuah = array_keys($datesbh);
-
-        $datesAncak = [];
-
-        foreach ($queryNew as $subarray) {
-            foreach ($subarray as $item) {
-                if (isset($item['waktu_temuan'])) {
-                    $date = date('Y-m-d', strtotime($item['waktu_temuan']));
-                    $datesAncak[$date] = true;
-                }
-            }
+        foreach ($mtbuah as $key => $value) {
+            $allDates[$key] = ['dates' => $key];
         }
 
-        $dateListAncak = array_keys($datesAncak);
+        // To remove duplicate dates and reindex the array keys
+        $uniqueDates = array_values(array_unique(array_column($allDates, 'dates')));
 
-        // dd($dataMTFI1);
+        // dd($uniqueDates);
 
-        $all_mutu = [];
-
-        foreach ($dataMTFI1 as $key => $items) {
-            if (!array_key_exists($key, $all_mutu)) {
-                $all_mutu[$key] = [
-                    'mutu_transport' => [],
-                    'mutu_ancak' => [],
-                    'mutu_buah' => [],
-                ];
-            }
-
-            $visit_count = 1; // Initialize visit count to 1
-
-            foreach ($items as &$item) {
-                $date = substr($item['datetime'], 0, 10);
-
-                // Get visit count from datelisttrans array
-                $visit = array_search($date, $dateListTrans);
-                if ($visit !== false) {
-                    $visit_count = $visit + 1; // Update visit count
-                }
-
-                $item['visit'] = $visit_count;
-
-                // Check if foto_temuan or foto_fu is not empty and process them
-                if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
-
-                    // Remove brackets and explode the strings into arrays
-                    $foto_temuan = explode(',', str_replace(['[', ']'], '', $item['foto_temuan']));
-                    $komentar = explode(',', str_replace(['[', ']'], '', $item['komentar']));
-
-                    // Loop through each foto_temuan and komentar
-                    for ($i = 0; $i < count($foto_temuan); $i++) {
-                        // Copy the item
-                        $new_item = $item;
-
-                        // Replace foto_temuan and komentar with their respective values
-                        $new_item['foto_temuan'] = trim($foto_temuan[$i]); // trim is used to remove any unwanted spaces
-                        $new_item['komentar'] = trim($komentar[$i]); // trim is used to remove any unwanted spaces
-
-                        // Add the new item to the all_mutu array
-                        $all_mutu[$key]['mutu_transport'][] = $new_item;
-                    }
-                }
-            }
-        }
-
-
-        // dd($all_mutu, $dateListTrans);
-
-
-        // dd($all_mutu);
-        foreach ($queryNew as $key => $items) {
-            if (!array_key_exists($key, $all_mutu)) {
-                $all_mutu[$key] = [
-                    'mutu_transport' => [],
-                    'mutu_ancak' => [],
-                    'mutu_buah' => [],
-                ];
-            }
-            $visit_count = 1; // Initialize visit count to 1
-
-            foreach ($items as $item) {
-                $date = substr($item['waktu_temuan'], 0, 10);
-                $visit = array_search($date, $dateListAncak);
-                if ($visit !== false) {
-                    $visit_count = $visit + 1; // Update visit count
-                }
-
-                $item['visit'] = $visit_count;
-                if (!empty($item['foto_temuan1']) || !empty($item['foto_fu1']) || !empty($item['komentar'])) {
-                    $all_mutu[$key]['mutu_ancak'][] = $item;
-                }
-            }
-        }
-
-        // dd($all_mutu);
-        foreach ($queryMBFI as $key => $items) {
-            if (!array_key_exists($key, $all_mutu)) {
-                $all_mutu[$key] = [
-                    'mutu_transport' => [],
-                    'mutu_ancak' => [],
-                    'mutu_buah' => [],
-                ];
-            }
-
-            $visit_count = 1; // Initialize visit count to 1
-
-            foreach ($items as $item) {
-                $date = substr($item['datetime'], 0, 10);
-                $visit = array_search($date, $dateListBuah);
-                if ($visit !== false) {
-                    $visit_count = $visit + 1; // Update visit count
-                }
-
-                $item['visit'] = $visit_count;
-
-                // Check if foto_temuan or foto_fu is not empty and process them
-                if (!empty($item['foto_temuan']) || !empty($item['foto_fu'])) {
-                    // Remove brackets and explode the strings into arrays
-                    $foto_temuan = explode(';', str_replace(' ', '', $item['foto_temuan']));
-                    $komentar = explode(';', $item['komentar']);
-
-                    // Loop through each foto_temuan and komentar
-                    for ($i = 0; $i < count($foto_temuan); $i++) {
-                        // Copy the item
-                        $new_item = $item;
-
-                        // Replace foto_temuan and komentar with their respective values
-                        $new_item['foto_temuan'] = trim($foto_temuan[$i]);
-                        $new_item['komentar'] = trim($komentar[$i]);
-
-                        // Add the new item to the all_mutu array
-                        $all_mutu[$key]['mutu_buah'][] = $new_item;
-                    }
-                }
-            }
-        }
-
-
-        $all_mutu = array_filter($all_mutu, function ($item) {
-            return !empty($item['mutu_transport']) || !empty($item['mutu_ancak']) || !empty($item['mutu_buah']);
-        });
-
-
-        // dd($all_mutu);
-        foreach ($all_mutu as $outerKey => $value) {
-            // Check if the key contains "KTE OE"
-            if (strpos($outerKey, "KTE OE") !== false) {
-                // Update the "visit" value to 1 in "mutu_transport"
-                if (isset($value['mutu_transport']) && is_array($value['mutu_transport'])) {
-                    foreach ($value['mutu_transport'] as $innerKey => &$transport) {
-                        if (isset($transport['visit'])) {
-                            $dateTime = new DateTime($transport['datetime']);
-
-                            // Format the DateTime object to "yyyy-mm-dd"
-                            $formattedDate = $dateTime->format("Y-m-d");
-
-                            // Array of check dates
-                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
-                            // Check if the formatted date is in the array
-                            if (in_array($formattedDate, $checkdata, true)) {
-                                $all_mutu[$outerKey]['mutu_transport'][$innerKey]['visit'] = 1;
-                            } else {
-                                $all_mutu[$outerKey]['mutu_transport'][$innerKey]['visit'] = $transport['visit'];
-                            }
-                        }
-                    }
-                }
-
-
-                // Update the "visit" value to 1 in "mutu_ancak"
-                if (isset($value['mutu_ancak']) && is_array($value['mutu_ancak'])) {
-                    foreach ($value['mutu_ancak'] as $innerKey => &$ancak) {
-                        if (isset($ancak['visit'])) {
-
-                            // dd($ancak);
-
-                            $dateTime = new DateTime($ancak['waktu_temuan']);
-
-                            // Format the DateTime object to "yyyy-mm-dd"
-                            $formattedDate = $dateTime->format("Y-m-d");
-
-                            // Array of check dates
-                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
-                            // Check if the formatted date is in the array
-                            if (in_array($formattedDate, $checkdata, true)) {
-                                $all_mutu[$outerKey]['mutu_ancak'][$innerKey]['visit'] = 1;
-                            } else {
-                                $all_mutu[$outerKey]['mutu_ancak'][$innerKey]['visit'] = $ancak['visit'];
-                            }
-                        }
-                    }
-                }
-
-                // Update the "visit" value to 1 in "mutu_buah"
-                if (isset($value['mutu_buah']) && is_array($value['mutu_buah'])) {
-                    foreach ($value['mutu_buah'] as $innerKey => &$buah) {
-                        if (isset($buah['visit'])) {
-                            $dateTime = new DateTime($buah['datetime']);
-
-                            // Format the DateTime object to "yyyy-mm-dd"
-                            $formattedDate = $dateTime->format("Y-m-d");
-
-                            // Array of check dates
-                            $checkdata = ['2023-11-08', '2023-11-09', '2023-11-10'];
-                            // Check if the formatted date is in the array
-                            if (in_array($formattedDate, $checkdata, true)) {
-                                $all_mutu[$outerKey]['mutu_buah'][$innerKey]['visit'] = 1;
-                            } else {
-                                $all_mutu[$outerKey]['mutu_buah'][$innerKey]['visit'] = $buah['visit'];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        $newarr = [];
-        foreach ($all_mutu as $key => $value) {
+        $inc = 1;
+        foreach ($uniqueDates as $key => $value) {
             # code...
-
-            // dd($key);
-
-            $oldkey = explode(" ", $key);
-
-            $newkey = $oldkey[0] . ' ' . $oldkey[1];
-
-            $newarr[$newkey][$key] = $value;
+            $getdate[$value] = $inc++;
         }
-        // dd($newarr, $all_mutu);
-        // dd($all_mutu);
+
+        // dd($getdate);
+
+        // dd($mtTrans, $mtancak, $mtbuah);
+
+        $newtrans = array();
+
+        foreach ($mtTrans as $date => $items) {
+            foreach ($items as $category => $categoryItems) {
+                foreach ($categoryItems as $itemKey => $itemData) {
+                    foreach ($itemData as $key => $value) {
+
+                        $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
+
+                        // Create the 'visit' array based on the date
+                        foreach ($getdate as $key2 => $value2) {
+                            if ($key2 == $date) {
+                                $value['visit'] = $value2;
+                            }
+                        }
+
+                        $newtrans[$value['estate'] . ' ' . $value['afdeling']][$newkeyafd]['mutu_transport'][] = $value;
+                    }
+                }
+            }
+        }
+
+        $newBuah = array();
+
+        foreach ($mtbuah as $date => $items) {
+            foreach ($items as $category => $categoryItems) {
+                foreach ($categoryItems as $itemKey => $itemData) {
+                    foreach ($itemData as $key => $value) {
+
+                        $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
+
+                        // Create the 'visit' array based on the date
+                        foreach ($getdate as $key2 => $value2) {
+                            if ($key2 == $date) {
+                                $value['visit'] = $value2;
+                            }
+                        }
+
+                        $newBuah[$value['estate'] . ' ' . $value['afdeling']][$newkeyafd]['mutu_buah'][] = $value;
+                    }
+                }
+            }
+        }
+
+        $newAncak = array();
+
+        foreach ($mtancak as $date => $items) {
+            foreach ($items as $category => $categoryItems) {
+                foreach ($categoryItems as $itemKey => $itemData) {
+                    foreach ($itemData as $key => $value) {
+
+                        $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
+
+                        // Create the 'visit' array based on the date
+                        foreach ($getdate as $key2 => $value2) {
+                            if ($key2 == $date) {
+                                $value['visit'] = $value2;
+                            }
+                        }
+
+                        $newAncak[$value['estate'] . ' ' . $value['afdeling']][$newkeyafd]['mutu_ancak'][] = $value;
+                    }
+                }
+            }
+        }
+
+
+        // Merge arrays into one
+        $mergedArrays = array_merge_recursive($newtrans, $newAncak, $newBuah);
+
+        // Iterate through the merged array and fill missing keys with empty arrays
+        foreach ($mergedArrays as $estate => &$estateData) {
+            foreach ($estateData as $category => &$categoryData) {
+                // Ensure all necessary keys exist, else set them as empty arrays
+                $categoryData += [
+                    'mutu_transport' => [],
+                    'mutu_ancak' => [],
+                    'mutu_buah' => [],
+                ];
+            }
+        }
+
+        // Unset references
+        unset($estateData, $categoryData);
 
 
         $pdf = pdf::loadview('cetakFI', [
@@ -333,7 +198,7 @@ class pdfgenerateController extends Controller
             'date' => $tgl,
             'est' => $est,
             // 'dataResult' => $resultData,
-            'newResult' => $newarr,
+            'newResult' => $mergedArrays,
         ]);
 
         $customPaper = array(360, 360, 360, 360);

@@ -371,9 +371,204 @@ class inspectController extends Controller
         // dd($mutu_all,$groupedArray);
         // dd($groupedArray);
 
+        $mtTrans = DB::connection('mysql2')->table('mutu_transport')
+            ->selectRaw("mutu_transport.*, DATE_FORMAT(datetime, '%Y-%m-%d') AS formatted_date")
+            ->whereIn('estate', $estatex)
+            ->where('datetime', 'like', '%' . $request->get('date') . '%')
+            ->where('foto_temuan', '!=', ' ')
+            ->orderBy('formatted_date', 'asc')
+            ->orderBy('estate', 'asc')
+            ->orderBy('afdeling', 'asc')
+            ->orderBy('blok', 'asc')
+
+            ->get();
+        // dd($mtTrans);
+
+        $mtTrans = $mtTrans->groupBy(['estate', 'formatted_date', 'afdeling']);
+        $mtTrans = json_decode($mtTrans, true);
+
+
+        $mtbuah = DB::connection('mysql2')->table('mutu_buah')
+            ->selectRaw("mutu_buah.*, DATE_FORMAT(datetime, '%Y-%m-%d') AS formatted_date")
+            ->whereIn('estate', $estatex)
+            ->where('datetime', 'like', '%' . $request->get('date') . '%')
+            ->where('foto_temuan', '!=', ' ')
+            ->orderBy('formatted_date', 'asc')
+            ->orderBy('estate', 'asc')
+            ->orderBy('afdeling', 'asc')
+            ->orderBy('blok', 'asc')
+
+            ->get();
+
+        $mtbuah = $mtbuah->groupBy(['estate', 'formatted_date', 'afdeling']);
+        $mtbuah = json_decode($mtbuah, true);
+
+
+
+        $mtancak = DB::connection('mysql2')->table('follow_up_ma')
+            ->selectRaw("follow_up_ma.*, DATE_FORMAT(waktu_temuan, '%Y-%m-%d') AS formatted_date")
+            ->whereIn('estate', $estatex)
+            ->where('waktu_temuan', 'like', '%' . $request->get('date') . '%')
+            ->orderBy('formatted_date', 'asc')
+            ->orderBy('estate', 'asc')
+            ->orderBy('afdeling', 'asc')
+            ->orderBy('blok', 'asc')
+            ->get();
+
+        $mtancak = $mtancak->groupBy(['estate', 'formatted_date', 'afdeling']);
+        $mtancak = json_decode($mtancak, true);
+
+        $allDatestrans = [];
+
+        // dd($mtTrans, $mtbuah, $mtancak);
+        foreach ($mtTrans as $key => $value) {
+            foreach ($value as $dateKey => $dateValue) {
+                // dd($dateValue);
+                $allDatestrans[$key][$dateKey] = ['dates' => $dateKey];
+            }
+        }
+
+        $allDatesancak = [];
+
+        foreach ($mtancak as $key => $value) {
+            foreach ($value as $dateKey => $dateValue) {
+                $allDatesancak[$key][$dateKey] = ['dates' => $dateKey];
+            }
+        }
+
+        $allDatesbuah = [];
+
+        foreach ($mtbuah as $key => $value) {
+            foreach ($value as $dateKey => $dateValue) {
+                $allDatesbuah[$key][$dateKey] = ['dates' => $dateKey];
+            }
+        }
+
+        $mergedDates = array_merge_recursive($allDatestrans, $allDatesancak, $allDatesbuah);
+
+        // Sort the merged array
+        foreach ($mergedDates as $estate => $estateDates) {
+            uksort($mergedDates[$estate], function ($a, $b) {
+                return strtotime($a) - strtotime($b);
+            });
+        }
+
+        // Displaying the sorted merged dates
+        // dd($mergedDates);
+
+
+        foreach ($mergedDates as $key => $value) {
+            // dd($value);
+            $inc = 1;
+            foreach ($value as $ke2 => $value2) {
+                # code...
+                $getdate[$key][$ke2] = $inc++;
+
+                // break;
+            }
+        }
+
+        $newtrans = array();
+
+        // dd($mtTrans, $getdate);
+
+        foreach ($mtTrans as $date => $items) {
+            foreach ($items as $category => $categoryItems) {
+                foreach ($categoryItems as $itemKey => $itemData) {
+                    foreach ($itemData as $key => $value) {
+                        $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
+
+                        // Create the 'visit' array based on the date
+                        foreach ($getdate as $key2 => $value2) {
+                            if ($key2 == $date) {
+                                foreach ($value2 as $key3 => $value3) if ($key3 == $category) {
+                                    # code...
+                                    $value['visit'] = $value3;
+                                }
+                            }
+                        }
+
+                        $newtrans[$value['estate']][$newkeyafd]['mutu_transport'][] = $value;
+                    }
+                }
+            }
+        }
+        $newBuah = array();
+
+        // dd($mtTrans, $getdate);
+
+        foreach ($mtbuah as $date => $items) {
+            foreach ($items as $category => $categoryItems) {
+                foreach ($categoryItems as $itemKey => $itemData) {
+                    foreach ($itemData as $key => $value) {
+                        $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
+
+                        // Create the 'visit' array based on the date
+                        foreach ($getdate as $key2 => $value2) {
+                            if ($key2 == $date) {
+                                foreach ($value2 as $key3 => $value3) if ($key3 == $category) {
+                                    # code...
+                                    $value['visit'] = $value3;
+                                }
+                            }
+                        }
+
+                        $newBuah[$value['estate']][$newkeyafd]['mutu_transport'][] = $value;
+                    }
+                }
+            }
+        }
+
+
+        // dd($mtTrans, $getdate);
+        $newAncak = array();
+
+        foreach ($mtancak as $date => $items) {
+            foreach ($items as $category => $categoryItems) {
+                foreach ($categoryItems as $itemKey => $itemData) {
+                    foreach ($itemData as $key => $value) {
+                        $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
+
+                        // Create the 'visit' array based on the date
+                        foreach ($getdate as $key2 => $value2) {
+                            if ($key2 == $date) {
+                                foreach ($value2 as $key3 => $value3) if ($key3 == $category) {
+                                    # code...
+                                    $value['visit'] = $value3;
+                                }
+                            }
+                        }
+
+                        $newAncak[$value['estate']][$newkeyafd]['mutu_transport'][] = $value;
+                    }
+                }
+            }
+        }
+
+        $mergedArrays = array_merge_recursive($newtrans, $newAncak, $newBuah);
+
+
+        // dd($mergedArrays['KTE'], $getdate);
+        // Iterate through the merged array and fill missing keys with empty arrays
+        foreach ($mergedArrays as $estate => &$estateData) {
+            foreach ($estateData as $category => &$categoryData) {
+                // Ensure all necessary keys exist, else set them as empty arrays
+                $categoryData += [
+                    'mutu_transport' => [],
+                    'mutu_ancak' => [],
+                    'mutu_buah' => [],
+                ];
+            }
+        }
+
+        unset($estateData, $categoryData);
+
+        // dd($mergedArrays);
+        // dd($mergedArrays['BHE'], $getdate);
+        // dd($mergedArrays['KTE'], $groupedArray);
         $item_counts = [];
 
-        foreach ($groupedArray as $key => $value) {
+        foreach ($mergedArrays as $key => $value) {
             $count = 0;
             $total_foto_temuan = 0;
             $total_followUP = 0;
