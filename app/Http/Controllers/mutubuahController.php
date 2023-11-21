@@ -20,32 +20,20 @@ class mutubuahController extends Controller
     public function dashboard_mutubuah(Request $request)
     {
 
-        function findFraction($targetValue, $maxDenominator = 100)
-        {
-            $closestNumerator = 0;
-            $closestDenominator = 1;
-            $minDifference = PHP_INT_MAX;
 
-            for ($denominator = 1; $denominator <= $maxDenominator; $denominator++) {
-                $numerator = round($targetValue * $denominator);
-                $currentValue = $numerator / $denominator;
-                $difference = abs($targetValue - $currentValue);
+        $check = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select('sidak_mutu_buah.*')
+            ->whereIn('id', [69198, 69200])
+            ->get();
 
-                if ($difference < $minDifference) {
-                    $minDifference = $difference;
-                    $closestNumerator = $numerator;
-                    $closestDenominator = $denominator;
-                }
-            }
+        $check = json_decode($check, true);
 
-            return [
-                'numerator' => $closestNumerator,
-                'denominator' => $closestDenominator,
-            ];
-        }
+        $differences = call_user_func_array('array_diff_assoc', $check);
 
-        $targetValue = 0.75;
-        $fraction = findFraction($targetValue);
+        // Finding similarities between arrays
+        $similarities = call_user_func_array('array_intersect_assoc', $check);
+
+        // dd($differences, $similarities, $check);
 
         // dd($fraction);
 

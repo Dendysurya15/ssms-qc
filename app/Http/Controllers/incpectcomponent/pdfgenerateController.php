@@ -25,8 +25,16 @@ class pdfgenerateController extends Controller
         $date = Carbon::parse($tgl)->format('F Y');
 
 
+
         // buat baru  
 
+        // dd($est);
+
+        $getwill = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->where('est', $est)
+            ->get();
+        // dd($getwill);
 
         $mtTrans = DB::connection('mysql2')->table('mutu_transport')
             ->selectRaw("mutu_transport.*, DATE_FORMAT(datetime, '%Y-%m-%d') AS formatted_date")
@@ -95,17 +103,45 @@ class pdfgenerateController extends Controller
         // To remove duplicate dates and reindex the array keys
         $uniqueDates = array_values(array_unique(array_column($allDates, 'dates')));
 
-        // dd($uniqueDates);
 
-        $inc = 1;
-        foreach ($uniqueDates as $key => $value) {
+        usort($uniqueDates, function ($a, $b) {
+            return strtotime($a) - strtotime($b);
+        });
+        // dd($uniqueDates[0]);
+
+
+
+        // dd($uniqueDates);
+        // dd($getwill[0]->wil);
+        if ($getwill[0]->wil == 7 || $getwill[0]->wil == 8) {
             # code...
-            $getdate[$value] = $inc++;
+            $start_date = Carbon::createFromDate($uniqueDates[0]); // Replace this with your dynamic date
+            $current_date = $start_date->copy();
+
+            $month = $start_date->month;
+            $week_number = 1;
+
+            $getdate = [];
+
+            while ($current_date->month == $month) {
+                $getdate[$current_date->format('Y-m-d')] = $week_number;
+
+                $current_date->addDay();
+
+                // Increment week number after every 7 days
+                if ($current_date->diffInDays($start_date) % 7 === 0) {
+                    $week_number++;
+                }
+            }
+        } else {
+            $inc = 1;
+            foreach ($uniqueDates as $key => $value) {
+                # code...
+                $getdate[$value] = $inc++;
+            }
         }
 
         // dd($getdate);
-
-        // dd($mtTrans, $mtancak, $mtbuah);
 
         $newtrans = array();
 
@@ -191,7 +227,7 @@ class pdfgenerateController extends Controller
 
         // Unset references
         unset($estateData, $categoryData);
-
+        // dd($mergedArrays);
 
         $pdf = pdf::loadview('cetakFI', [
             'id' => $id,

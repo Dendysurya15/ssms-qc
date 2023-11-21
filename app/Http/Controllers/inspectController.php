@@ -456,17 +456,69 @@ class inspectController extends Controller
         // Displaying the sorted merged dates
         // dd($mergedDates);
 
+        $regs =   $request->get('regional');
+        // dd($regs);
 
-        foreach ($mergedDates as $key => $value) {
-            // dd($value);
-            $inc = 1;
-            foreach ($value as $ke2 => $value2) {
-                # code...
-                $getdate[$key][$ke2] = $inc++;
+        if ($regs == 3) {
+            foreach ($mergedDates as $key => $value) {
+                // dd($value);
+                $inc = 1;
+                foreach ($value as $ke2 => $value2) {
+                    # code...
+                    $getdate[$key][$ke2] = $inc++;
 
-                // break;
+                    // break;
+                }
+            }
+
+            $dateArr = [];
+
+            foreach ($getdate as $key => $value) {
+                foreach ($value as $date => $number) {
+                    if ($number === 1) {
+                        $dateArr[$key][$date] = $number;
+                        break; // Stop the loop after finding the value equal to 1
+                    }
+                }
+            }
+
+
+            foreach ($dateArr as $key => $value) {
+                foreach ($value as $key2 => $value2) {
+                    $startDate = $key2;
+                    $endDate = date("Y-m-t", strtotime($startDate)); // Get the last day of the month
+
+                    $currentDate = $startDate;
+                    $counter = 1;
+                    while ($currentDate <= $endDate) {
+                        if (!isset($dateArr[$key][$currentDate])) {
+                            $dateArr[$key][$currentDate] = $value2;
+                        } else {
+                            $dateArr[$key][$currentDate] = $counter;
+                        }
+
+                        $currentDate = date("Y-m-d", strtotime($currentDate . " +1 day"));
+                        if ($counter % 7 === 0) {
+                            $value2 += 1;
+                        }
+                        $counter++;
+                    }
+                }
+            }
+        } else {
+            foreach ($mergedDates as $key => $value) {
+                // dd($value);
+                $inc = 1;
+                foreach ($value as $ke2 => $value2) {
+                    # code...
+                    $dateArr[$key][$ke2] = $inc++;
+
+                    // break;
+                }
             }
         }
+
+        // dd($dateArr);
 
         $newtrans = array();
 
@@ -479,7 +531,7 @@ class inspectController extends Controller
                         $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
 
                         // Create the 'visit' array based on the date
-                        foreach ($getdate as $key2 => $value2) {
+                        foreach ($dateArr as $key2 => $value2) {
                             if ($key2 == $date) {
                                 foreach ($value2 as $key3 => $value3) if ($key3 == $category) {
                                     # code...
@@ -495,7 +547,7 @@ class inspectController extends Controller
         }
         $newBuah = array();
 
-        // dd($mtTrans, $getdate);
+        // dd($mtTrans, $dateArr);
 
         foreach ($mtbuah as $date => $items) {
             foreach ($items as $category => $categoryItems) {
@@ -504,7 +556,7 @@ class inspectController extends Controller
                         $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
 
                         // Create the 'visit' array based on the date
-                        foreach ($getdate as $key2 => $value2) {
+                        foreach ($dateArr as $key2 => $value2) {
                             if ($key2 == $date) {
                                 foreach ($value2 as $key3 => $value3) if ($key3 == $category) {
                                     # code...
@@ -520,7 +572,7 @@ class inspectController extends Controller
         }
 
 
-        // dd($mtTrans, $getdate);
+        // dd($mtTrans, $dateArr);
         $newAncak = array();
 
         foreach ($mtancak as $date => $items) {
@@ -530,7 +582,7 @@ class inspectController extends Controller
                         $newkeyafd = $value['estate'] . ' ' . $value['afdeling'] . ' ' . $value['blok'];
 
                         // Create the 'visit' array based on the date
-                        foreach ($getdate as $key2 => $value2) {
+                        foreach ($dateArr as $key2 => $value2) {
                             if ($key2 == $date) {
                                 foreach ($value2 as $key3 => $value3) if ($key3 == $category) {
                                     # code...
