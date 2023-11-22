@@ -1042,7 +1042,7 @@ class emplacementsController extends Controller
         //     'afd_rekap' => $resultArray
         // ]);
     }
-    
+
     public function estAFD(Request $request)
     {
         $regional = $request->input('reg');
@@ -3799,7 +3799,7 @@ class emplacementsController extends Controller
                                 foreach ($foto_temuan as $keyx => $value) {
                                     foreach ($komentar_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
                                         if ($value != '') {
-                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value . '-' . $value2;
+                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value . '@' . $value2;
                                         }
                                     }
                                 }
@@ -3807,7 +3807,7 @@ class emplacementsController extends Controller
                                 foreach ($foto_temuan as $keyx => $value) {
                                     foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
                                         if ($value != '') {
-                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value . '-' . $value2;
+                                            $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . $inc++] = $value . '@' . $value2;
                                         }
                                     }
                                 }
@@ -3859,7 +3859,7 @@ class emplacementsController extends Controller
                                 foreach ($foto_temuan as $keyx => $value) {
                                     foreach ($komentar_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
                                         if ($value != '') {
-                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . $inc++] = $value . '-' . $value2;
+                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . $inc++] = $value . '@' . $value2;
                                         }
                                     }
                                 }
@@ -3867,7 +3867,7 @@ class emplacementsController extends Controller
                                 foreach ($foto_temuan as $keyx => $value) {
                                     foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
                                         if ($value != '') {
-                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . $inc++] = $value . '-' . $value2;
+                                            $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . $inc++] = $value . '@' . $value2;
                                         }
                                     }
                                 }
@@ -3916,7 +3916,7 @@ class emplacementsController extends Controller
                                 foreach ($foto_temuan as $keyx => $value) {
                                     foreach ($komentar_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
                                         if ($value != '') {
-                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value . '-' . $value2;
+                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value . '@' . $value2;
                                         }
                                     }
                                 }
@@ -3924,7 +3924,7 @@ class emplacementsController extends Controller
                                 foreach ($foto_temuan as $keyx => $value) {
                                     foreach ($kom_temuan as $keyx2 => $value2) if ($keyx == $keyx2) {
                                         if ($value != '') {
-                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value . '-' . $value2;
+                                            $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . $inc++] = $value . '@' . $value2;
                                         }
                                     }
                                 }
@@ -4055,17 +4055,17 @@ class emplacementsController extends Controller
                     // dd($indexData);
                     foreach ($indexData as $key => $value) {
                         if (strpos($key, 'foto_temuan_rmh') === 0) {
-                            $combinedIndex['foto_temuan'][] = $value . "-" . "rmh";
+                            $combinedIndex['foto_temuan'][] = $value . "@" . "rmh";
                         }
                     }
                     foreach ($indexData as $key => $value) {
                         if (strpos($key, 'foto_temuan_lcp') === 0) {
-                            $combinedIndex['foto_temuan'][] = $value . "-" . "lcp";
+                            $combinedIndex['foto_temuan'][] = $value . "@" . "lcp";
                         }
                     }
                     foreach ($indexData as $key => $value) {
                         if (strpos($key, 'foto_temuan_lkng') === 0) {
-                            $combinedIndex['foto_temuan'][] = $value . "-" . "lkn";
+                            $combinedIndex['foto_temuan'][] = $value . "@" . "lkn";
                         }
                     }
                 }
@@ -4185,7 +4185,7 @@ class emplacementsController extends Controller
 
             $data_temuan = [];
             foreach ($item['foto_temuan'] as $foto) {
-                $parts = explode('-', $foto);
+                $parts = explode('@', $foto);
                 // dd($parts);
                 if (count($parts) > 2) {
 
@@ -4295,7 +4295,7 @@ class emplacementsController extends Controller
                 $parts = explode('_', $foto);
 
                 if (count($parts) > 4) {
-                    $detail_parts = explode('-', $parts[4]);
+                    $detail_parts = explode('@', $parts[4]);
 
                     if (count($detail_parts) > 1) {
                         $komentar_temuan[] = $detail_parts[1];
@@ -4308,7 +4308,7 @@ class emplacementsController extends Controller
 
             $data_temuan = [];
             foreach ($item['foto_temuan'] as $foto) {
-                $parts = explode('-', $foto);
+                $parts = explode('@', $foto);
                 // dd($parts);
                 if (count($parts) > 2) {
 
