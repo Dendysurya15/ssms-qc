@@ -189,10 +189,10 @@
                                 <th rowspan="3">Nomor Blok</th>
                                 <th rowspan="3">Luas Blok (Ha)</th>
                                 <th rowspan="3">SPH</th>
-                                <th rowspan="3">Jum Pokok Sampel</th>
+                                <th rowspan="3">Jumlah Pokok Sampel</th>
                                 <th rowspan="3">Luas Sampel (Ha)</th>
                                 <th rowspan="3">Persen Sampel (%)</th>
-                                <th rowspan="3">Jum Janjang Panen</th>
+                                <th rowspan="3">Jumlah Janjang Panen</th>
                                 <th rowspan="3">AKP Realisasi</th>
 
                             </tr>
@@ -200,7 +200,7 @@
                                 <th colspan="5">Brondolan Tinggal</th>
 
                                 <th colspan="6">Buah Tinggal</th>
-                                <th colspan="2">Pelepah Sengkleh</th>
+                                <th colspan="2">Pelepah Sengklek</th>
                                 <th rowspan="2">TPH Sample</th>
                                 <th colspan="2">Brondolan Tinggal</th>
                                 <th colspan="2">Buah Tinggal</th>
@@ -610,10 +610,10 @@
                                 <th colspan="2" rowspan="3">Ancak Pemanen</th>
                                 <th rowspan="3">Luas Blok (Ha)</th>
                                 <th rowspan="3">SPH</th>
-                                <th rowspan="3">Jum Pokok Sampel</th>
+                                <th rowspan="3">Jumlah Pokok Sampel</th>
                                 <th rowspan="3">Luas Sampel (Ha)</th>
                                 <th rowspan="3">Persen Sampel (%)</th>
-                                <th rowspan="3">Jum Janjang Panen</th>
+                                <th rowspan="3">Jumlah Janjang Panen</th>
                                 <th rowspan="3">AKP Realisasi</th>
 
 
@@ -622,7 +622,7 @@
                                 <th colspan="5">Brondolan Tinggal</th>
 
                                 <th colspan="6">Buah Tinggal</th>
-                                <th colspan="2">Palepah Sengkleh</th>
+                                <th colspan="2">Palepah Sengklek</th>
                                 <th rowspan="2">TPH Sample</th>
                                 <th colspan="2">Brondolan Tinggal</th>
                                 <th colspan="2">Buah Tinggal</th>

@@ -6245,9 +6245,21 @@ class inspeksidashController extends Controller
 
         // dd($FormatTable1);
 
+        function unsetPlasmaKeys(&$array)
+        {
+            $keydel = ['Plasma1', 'Plasma2', 'Plasma3', 'Plasma4']; // Array of keys to delete
+
+            foreach ($array as $key => $value) {
+                if (in_array($key, $keydel)) {
+                    unset($array[$key]); // Unset the key if it exists in $keydel
+                }
+            }
+        }
+        unsetPlasmaKeys($result_brd);
+        unsetPlasmaKeys($result_buah);
 
         $arrView = array();
-        // dd($FormatTabEst1);
+        // dd($result_brd,$chrtBuahMentahv2);
         $arrView['chart_brd'] = $result_brd;
         $arrView['chart_buah'] = $result_buah;
         $arrView['chart_brdwil'] =  $chartPerwil;
@@ -6274,6 +6286,14 @@ class inspeksidashController extends Controller
 
         // grafik mutu buah
         // dd($chrtBuahMentahv2);
+
+        unsetPlasmaKeys($chrtBuahMentahv2);
+        unsetPlasmaKeys($chrtBuahMskv2);
+        unsetPlasmaKeys($chrtBuahOverv2);
+        unsetPlasmaKeys($chrtBuahAbrv2);
+        unsetPlasmaKeys($chrtBuahKosongv2);
+        unsetPlasmaKeys($chrtBuahVcutv2);
+
         $arrView['mtbuah_mentah'] =  $chrtBuahMentahv2;
         $arrView['mtbuah_masak'] =  $chrtBuahMskv2;
         $arrView['mtbuah_over'] =  $chrtBuahOverv2;
@@ -6288,6 +6308,10 @@ class inspeksidashController extends Controller
         $arrView['willBuah_Kosong'] =  $willBuah_Kosong;
         $arrView['willBuah_Vcut'] =  $willBuah_Vcut;
         // grafik mutu transport
+
+        unsetPlasmaKeys($chrTransbrdv2);
+        unsetPlasmaKeys($chrTransbuahv2);
+ 
         $arrView['mttrans_brd'] =  $chrTransbrdv2;
         $arrView['mttrans_buah'] =  $chrTransbuahv2;
         $arrView['mttrans_wilbrd'] =  $WilTransBRD;

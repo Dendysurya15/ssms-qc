@@ -1230,7 +1230,7 @@ class inspectController extends Controller
                     $dataSkor[$value1['wil']][$key][$key2]['gl_ma'] = $jml_brtgl;
                     $dataSkor[$value1['wil']][$key][$key2]['total_brd_ma'] = $tot_brd;
                     if ($jml_jjg_panen != 0) {
-                        $dataSkor[$value1['wil']][$key][$key2]['btr_jjg_ma'] = round(($tot_brd / $jml_jjg_panen), 2);
+                        $dataSkor[$value1['wil']][$key][$key2]['btr_jjg_ma'] = round(($tot_brd / $jml_jjg_panen), 3);
                     } else {
                         $dataSkor[$value1['wil']][$key][$key2]['btr_jjg_ma'] = 0;
                     }
@@ -1241,7 +1241,7 @@ class inspectController extends Controller
                     $dataSkor[$value1['wil']][$key][$key2]['bhtm3_ma'] = $jml_bhtm3;
                     $dataSkor[$value1['wil']][$key][$key2]['tot_jjg_ma'] = $tot_jjg;
                     if ($tot_jjg != 0) {
-                        $dataSkor[$value1['wil']][$key][$key2]['jjg_tgl_ma'] = round(($tot_jjg / ($jml_jjg_panen + $tot_jjg)) * 100, 2);
+                        $dataSkor[$value1['wil']][$key][$key2]['jjg_tgl_ma'] = round(($tot_jjg / ($jml_jjg_panen + $tot_jjg)) * 100, 3);
                     } else {
                         $dataSkor[$value1['wil']][$key][$key2]['jjg_tgl_ma'] = 0;
                     }
