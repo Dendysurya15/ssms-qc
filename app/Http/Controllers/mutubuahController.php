@@ -7221,136 +7221,277 @@ class mutubuahController extends Controller
         $afd = $request->input('afd');
         // dd($date, $est, $afd);
 
-        $queryPlotEst = DB::connection('mysql2')->table('estate_plot')
-            ->select("estate_plot.*")
-            ->where('est', $est)
-            ->get();
-        // $queryPlotEst = $queryPlotEst->groupBy(['estate', 'afdeling']);
-        $queryPlotEst = json_decode($queryPlotEst, true);
-
-        // dd($queryPlotEst);
-
-        $convertedCoords = [];
-        foreach ($queryPlotEst as $coord) {
-            $convertedCoords[] = [$coord['lat'], $coord['lon']];
-        }
-
-        $afd = $request->input('afd');
-        $queryAfd = DB::connection('mysql2')->table('afdeling')
-            ->select(
-                'afdeling.id',
-                'afdeling.nama',
-                'estate.est'
-            ) //buat mengambil data di estate db dan willayah db
-            ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
-            ->where('est', '=', $est)
-            ->where('afdeling.nama', '=', $afd)
-            ->get();
-        $queryAfd = json_decode($queryAfd, true);
-
-
-        // dd($queryAfd);
-        $id = $queryAfd[0]['id'];
-
-        $queryBlokMA = DB::connection('mysql2')->table('sidak_mutu_buah')
-            ->select('sidak_mutu_buah.*', 'sidak_mutu_buah.blok as nama_blok')
-            ->whereDate('sidak_mutu_buah.datetime', $date)
-            ->where('estate', $est)
-            ->where('afdeling', $afd)
-            ->orderBy('sidak_mutu_buah.datetime', 'desc')
-            ->groupBy('nama_blok')
-            ->pluck('blok');
-        $queryBlokMA = json_decode($queryBlokMA, true);
-
-        // dd($queryBlokMA);
-
-        $blokSidak = array();
-        foreach ($queryBlokMA as $value) {
-            $length = strlen($value);
-            $blokSidak[] = substr($value, 0, $length - 3);
-            $modifiedStr2  = substr($value, 0, $length - 2);
-            $blokSidak[] = substr($value, 0, $length - 2);
-            $blokSidak[] =  substr_replace($modifiedStr2, "0", 1, 0);
-        }
-        // dd($blokSidak);
-
-        $blokSidakResult = DB::connection('mysql2')
-            ->table('blok')
-            ->select('blok.nama as nama_blok_visit')
-            ->where('afdeling', $id)
-            ->whereIn('nama', $blokSidak)
-            ->groupBy('nama_blok_visit')
-            ->pluck('nama_blok_visit');
-
-        $queryBlok = DB::connection('mysql2')->table('blok')
-            ->select("blok.*")
-            ->where('afdeling', '=', $id)
-            ->get();
-        $queryBlok = json_decode($queryBlok, true);
-        $bloks_afd = array_reduce($queryBlok, function ($carry, $item) {
-            $carry[$item['nama']][] = $item;
-            return $carry;
-        }, []);
-
-        $plotBlokAll = [];
-        foreach ($bloks_afd as $key => $coord) {
-            foreach ($coord as $key2 => $value) {
-                $plotBlokAll[$key][] = [$value['lat'], $value['lon']];
-            }
-        }
-
-        $queryTrans = DB::connection('mysql2')->table("sidak_mutu_buah")
-            ->select("sidak_mutu_buah.*", "estate.wil")
-            ->join('estate', 'estate.est', '=', 'sidak_mutu_buah.estate')
+        $query = DB::connection('mysql2')->Table('sidak_mutu_buah')
+            ->select('sidak_mutu_buah.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.est', '=', 'sidak_mutu_buah.estate') //kemudian di join untuk mengambil est perwilayah
             ->where('sidak_mutu_buah.estate', $est)
             ->where('sidak_mutu_buah.afdeling', $afd)
             ->where('datetime', 'like', '%' . $date . '%')
-            ->where('sidak_mutu_buah.afdeling', '!=', 'Pla')
+            // ->where('sidak_tph.datetime', $date)
             ->get();
-        $queryTrans = json_decode($queryTrans, true);
 
-        $groupedTrans = array_reduce($queryTrans, function ($carry, $item) {
-            $carry[$item['blok']][] = $item;
-            return $carry;
-        }, []);
+        $query = $query->groupBy(function ($item) {
+            return $item->blok;
+        });
 
+        // dd($query);
 
-        // dd($groupedTrans);
-        $trans_plot = [];
-        foreach ($groupedTrans as $blok => $coords) {
-            foreach ($coords as $coord) {
-                $datetime = $coord['datetime'];
-                $time = date('H:i:s', strtotime($datetime));
-
-                $trans_plot[$blok][] = [
-                    'blok' => $blok,
-                    'lat' => $coord['lat'],
-                    'lon' => $coord['lon'],
-                    'bmt' => $coord['bmt'],
-                    'bmk' => $coord['bmk'],
-                    'overripe' => $coord['overripe'],
-                    'empty_bunch' => $coord['empty_bunch'],
-                    'abnormal' => $coord['abnormal'],
-                    'rd' => $coord['rd'],
-                    'vcut' => $coord['vcut'],
-                    'alas_br' => $coord['alas_br'],
-                    'foto_temuan' => $coord['foto_temuan'],
-                    'komentar' => $coord['komentar'],
-                    'bmt' => $coord['bmt'],
-                    'bmk' => $coord['bmk'],
-                    'time' => $time,
-                ];
+        $datas = array();
+        $img = array();
+        foreach ($query as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $datas[] = $value2;
+                if (!empty($value2->foto_temuan)) {
+                    $img[] = $value2->foto_temuan;
+                }
             }
         }
-        // dd($blokSidakResult);
-        return response()->json([
-            // 'plot_line'=> $plotLine,             
-            'coords' => $convertedCoords,
-            'plot_blok_all' => $plotBlokAll,
-            'trans_plot' => $trans_plot,
-            // 'buah_plot' => $buah_plot,
-            // 'ancak_plot' => $ancak_plot,
-            'blok_sidak' => $blokSidakResult
-        ]);
+
+        $plotTitik = array();
+        $plotMarker = array();
+        $inc = 0;
+        // dd($datas);
+        foreach ($datas as $key => $value) {
+            if (!empty($value->lat)) {
+                $time = date('H:i:s', strtotime($value->datetime));
+
+                $plotTitik[] = '[' . $value->lon . ',' . $value->lat . ']';
+                $plotMarker[$inc]['latln'] = '[' . $value->lat . ',' . $value->lon . ']';
+                $plotMarker[$inc]['bmt'] = $value->bmt;
+                $plotMarker[$inc]['bmk'] = $value->bmk;
+                $plotMarker[$inc]['overripe'] = $value->overripe;
+                $plotMarker[$inc]['empty_bunch'] = $value->empty_bunch;
+                $plotMarker[$inc]['abnormal'] = $value->abnormal;
+                $plotMarker[$inc]['rd'] = $value->rd;
+                $plotMarker[$inc]['vcut'] = $value->vcut;
+                $plotMarker[$inc]['alas_br'] = $value->alas_br;
+                $plotMarker[$inc]['foto_temuan'] = $value->foto_temuan;
+                $plotMarker[$inc]['komentar'] = $value->komentar;
+                $plotMarker[$inc]['time'] = $time;
+
+
+                $fotoTemuan = explode('; ', $value->foto_temuan);
+                $komentar = explode('; ', $value->komentar);
+
+                // If the number of items is the same for both arrays
+                if (count($fotoTemuan) == count($komentar)) {
+                    for ($i = 0; $i < count($fotoTemuan); $i++) {
+                        $plotMarker[$inc]['foto_temuan' . ($i + 1)] = $fotoTemuan[$i];
+                        $plotMarker[$inc]['komentar' . ($i + 1)] = $komentar[$i];
+                        $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                    }
+                } else {
+
+
+                    $plotMarker[$inc]['foto_temuan'] = $fotoTemuan[0];
+                    $plotMarker[$inc]['komentar'] = $komentar[0];
+                    $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                }
+
+                $inc++;
+            }
+        }
+
+        $list_blok = array();
+        foreach ($datas as $key => $value) {
+            $list_blok[$est][] = $value->blok;
+        }
+
+        // dd($list_blok);
+
+        $blokPerEstate = array();
+        $estateQuery = DB::connection('mysql2')->Table('estate')
+            ->join('afdeling', 'afdeling.estate', 'estate.id')
+            ->where('est', $est)->get();
+
+        $listIdAfd = array();
+        // dd($estateQuery);
+
+        foreach ($estateQuery as $key => $value) {
+
+            $blokPerEstate[$est][$value->nama] =  DB::connection('mysql2')->Table('blok')
+                // ->join('blok', 'blok.afdeling', 'afdeling.id')
+                // ->where('afdeling.estate', $value->id)->get();
+                ->where('afdeling', $value->id)->pluck('nama', 'id');
+            $listIdAfd[] = $value->id;
+        }
+
+        // dd($blokPerEstate);
+
+
+
+
+
+        $query2 = DB::connection('mysql2')->Table('sidak_mutu_buah')
+            ->select('sidak_mutu_buah.*', 'estate.wil') //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.est', '=', 'sidak_mutu_buah.estate') //kemudian di join untuk mengambil est perwilayah
+            ->where('sidak_mutu_buah.estate', $est)
+            ->where('sidak_mutu_buah.afdeling', $afd)
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->get();
+
+        $query2 = $query2->groupBy(function ($item) {
+            return $item->blok;
+        });
+
+
+        $datas = array();
+
+
+        function isPointInPolygon($point, $polygon)
+        {
+            $splPoint = explode(',', $point);
+            $x = $splPoint[0];
+            $y = $splPoint[1];
+
+            $vertices = array_map(function ($vertex) {
+                return explode(',', $vertex);
+            }, explode('$', $polygon));
+
+            $numVertices = count($vertices);
+            $isInside = false;
+
+            for ($i = 0, $j = $numVertices - 1; $i < $numVertices; $j = $i++) {
+                $xi = $vertices[$i][0];
+                $yi = $vertices[$i][1];
+                $xj = $vertices[$j][0];
+                $yj = $vertices[$j][1];
+
+                $intersect = (($yi > $y) != ($yj > $y)) && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
+
+                if ($intersect) {
+                    $isInside = !$isInside;
+                }
+            }
+
+            return $isInside;
+        }
+
+        $estateQuery = DB::connection('mysql2')->table('estate')
+            ->select('*')
+            ->join('afdeling', 'afdeling.estate', '=', 'estate.id')
+            ->where('estate.est', $est)
+            ->where('afdeling.nama', $afd)
+            ->get();
+        $estateQuery = json_decode($estateQuery, true);
+
+        // dd($estateQuery);
+        $listIdAfd = array();
+        foreach ($estateQuery as $key => $value) {
+            $listIdAfd[] = $value['id'];
+        }
+
+        // dd($listIdAfd);
+
+        $blokEstate = DB::connection('mysql2')->table('blok')
+            ->select(DB::raw('DISTINCT nama, MIN(id) as id, afdeling'))
+            ->whereIn('afdeling', $listIdAfd)
+            ->groupBy('nama', 'afdeling')
+            ->get();
+        $blokEstate = json_decode($blokEstate, true);
+
+        // dd($blokEstate);
+
+        $blokEstateFix = array();
+        foreach ($blokEstate as $key => $value) {
+            $blokEstateFix[$value['afdeling']][] = $value['nama'];
+        }
+
+        // dd($blokEstateFix);
+        $qrAfd = DB::connection('mysql2')->table('afdeling')
+            ->select('*')
+            ->get();
+        $qrAfd = json_decode($qrAfd, true);
+
+        $blokEstNewFix = array();
+        foreach ($blokEstateFix as $key => $value) {
+            foreach ($qrAfd as $key1 => $value1) {
+                if ($value1['id'] == $key) {
+                    $afdelingNama = $value1['nama'];
+                }
+            }
+            $blokEstNewFix[$afdelingNama] = $value;
+        }
+
+        $queryBlok = DB::connection('mysql2')->table('blok')
+            ->select('*')
+            ->whereIn('afdeling', $listIdAfd)
+            ->get();
+        $queryBlok = json_decode($queryBlok, true);
+
+        $blokLatLnEw = array();
+        $inc = 0;
+        foreach ($blokEstNewFix as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $latln = '';
+                $latln2 = '';
+                foreach ($queryBlok as $key3 => $value4) {
+                    if ($value4['nama'] == $value1) {
+                        $latln .= $value4['lat'] . ',' . $value4['lon'] . '$';
+                        $latln2 .= '[' . $value4['lon'] . ',' . $value4['lat'] . '],';
+                    }
+                }
+
+                $blokLatLnEw[$inc]['afd'] = $key;
+                $blokLatLnEw[$inc]['blok'] = $value1;
+                $blokLatLnEw[$inc]['latln'] = rtrim($latln, '$');
+                $blokLatLnEw[$inc]['latinnew'] = rtrim($latln2, ',');
+                $inc++;
+            }
+        }
+        // dd($blokLatLnEw);
+        $dtQuery = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select('*', DB::raw("DATE_FORMAT(datetime, '%H:%i:%s') AS time"))
+            ->where('estate', $est)
+            ->where('afdeling', $afd)
+            ->where('datetime', 'LiKE', '%' . $date . '%')
+            ->orderBy('time', 'asc')
+            ->get();
+        $dtQuery = json_decode($dtQuery, true);
+
+        // dd($dtQuery);
+
+        $pkLatLn = array();
+        $incr = 0;
+        foreach ($dtQuery as $key => $value) {
+            $pkLatLn[$incr]['id'] = $value['id'];
+            $pkLatLn[$incr]['latln'] = $value['lat'] . ',' . $value['lon'];
+            $incr++;
+        }
+
+        // dd($pkLatLn);
+
+        // Define an associative array to track unique combinations
+        $uniqueCombinations = [];
+
+        foreach ($blokLatLnEw as $value) {
+            foreach ($pkLatLn as $marker) {
+                if (isPointInPolygon($marker['latln'], $value['latln'])) {
+                    // Create a unique key based on nama, estate, and latin
+                    $key = $value['blok'] . '_' . $est . '_' . $value['latln'];
+
+                    // $latln .= '[' . $val->lon . ',' . $val->lat . '],';
+
+                    // Check if the combination already exists
+                    if (!isset($uniqueCombinations[$key])) {
+                        $uniqueCombinations[$key] = true; // Mark the combination as encountered
+                        $messageResponse[] = [
+                            'blok' => $value['blok'],
+                            'estate' => $est,
+                            'latln' => $value['latinnew']
+                        ];
+                    }
+                }
+            }
+        }
+
+        // dd($plotMarker);
+
+        $plot['plot'] = $plotTitik;
+        $plot['marker'] = $plotMarker;
+        $plot['blok'] = $messageResponse;
+        $plot['plotarrow'] = $pkLatLn;
+        // dd($plot);
+        echo json_encode($plot);
     }
 }

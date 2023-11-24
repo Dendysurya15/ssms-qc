@@ -1096,15 +1096,10 @@
         localStorage.setItem('selectedTab', 'nav-data-tab');
 
         // Redirect to the target page
-        window.location.href = "http://ssms-qc.test/dashboardtph";
+        window.location.href = "https://qc-apps.srs-ssms.com/dashboardtph";
     }
 
     var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
-
-    // googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
-    //     maxZoom: 20,
-    //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    // }).addTo(map);
     var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
     var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
@@ -1159,6 +1154,7 @@
                 const markerResult = Object.entries(plot['marker']);
                 const blokResult = Object.entries(plot['blok']);
                 var imgArray = Object.entries(plot['img']);
+                const plotarrow = Object.entries(plot['plotarrow']);
                 $('#foto_temuan').empty();
 
                 // Add the header and horizontal rule
@@ -1197,12 +1193,18 @@
                 });
 
 
+
+
+
+
+
+
                 drawBlok(blokResult)
 
                 drawTemuan(markerResult);
                 drawLegend(markerResult)
 
-
+                drawArrow(plotarrow)
             },
             error: function(xhr, status, error) {
                 console.log("An error occurred:", error);
@@ -1422,5 +1424,37 @@
         };
 
         legendContainer.addTo(map);
+    }
+
+    function drawArrow(plotarrow) {
+        const latLngArray = plotarrow.map((item) => {
+            const latLng = item[1].latln.split(','); // Split the latlng string into latitude and longitude
+            return [parseFloat(latLng[0]), parseFloat(latLng[1])]; // Convert strings to numbers
+        });
+
+
+        for (let i = 0; i < latLngArray.length - 1; i++) {
+            const startLatLng = latLngArray[i];
+            const endLatLng = latLngArray[i + 1];
+
+            const arrow = L.polyline([startLatLng, endLatLng], {
+                color: 'red',
+                weight: 2
+            }).addTo(map);
+
+            const arrowHead = L.polylineDecorator(arrow, {
+                patterns: [{
+                    offset: '50%',
+                    repeat: 50,
+                    symbol: L.Symbol.arrowHead({
+                        pixelSize: 12,
+                        polygon: false,
+                        pathOptions: {
+                            color: 'yellow'
+                        }
+                    })
+                }]
+            }).addTo(map);
+        }
     }
 </script>

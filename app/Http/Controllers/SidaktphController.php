@@ -7893,11 +7893,7 @@ class SidaktphController extends Controller
                         $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
                     }
                 } else {
-                    // Handle the case where the number of items is different
-                    // This assumes that the number of items in `foto_temuan` and `komentar` will always match
-                    // If they don't match, you'll need to handle it accordingly
-                    // For example, you can ignore the extra items or take specific action
-                    // In this code, it simply uses the first item of each array and ignores the rest
+
 
                     $plotMarker[$inc]['foto_temuan'] = $fotoTemuan[0];
                     $plotMarker[$inc]['komentar'] = $komentar[0];
@@ -8070,11 +8066,14 @@ class SidaktphController extends Controller
         }
         // dd($blokLatLnEw);
         $dtQuery = DB::connection('mysql2')->table('sidak_tph')
-            ->select('*')
+            ->select('*', DB::raw("DATE_FORMAT(datetime, '%H:%i:%s') AS time"))
             ->where('est', $est)
             ->where('datetime', 'LiKE', '%' . $date . '%')
+            ->orderBy('time', 'asc')
             ->get();
         $dtQuery = json_decode($dtQuery, true);
+
+        // dd($dtQuery);
 
         $pkLatLn = array();
         $incr = 0;
@@ -8084,7 +8083,7 @@ class SidaktphController extends Controller
             $incr++;
         }
 
-        // dd($blokLatLnEw, $pkLatLn);
+        // dd($pkLatLn);
 
         // Define an associative array to track unique combinations
         $uniqueCombinations = [];
@@ -8117,6 +8116,7 @@ class SidaktphController extends Controller
         $plot['marker'] = $plotMarker;
         $plot['blok'] = $messageResponse;
         $plot['img'] = $imgNew;
+        $plot['plotarrow'] = $pkLatLn;
         // dd($plot);
         echo json_encode($plot);
     }

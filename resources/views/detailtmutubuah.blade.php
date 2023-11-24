@@ -1582,13 +1582,36 @@
             });
     }
 
+    var map = L.map('map').setView([-2.2745234, 111.61404248], 13);
+    var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+    var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    map.addControl(new L.Control.Fullscreen());
+    var baseMaps = {
+        "Google Street": googleStreet,
+        "Google Satellite": googleSatellite
+    };
+    L.control.layers(baseMaps).addTo(map);
+
+
+    var blokLayer, temuanLayer, legendContainer; // Define layer and legend variables
 
 
     function getmapsbuah() {
 
-        var map = L.map('map');
-        map.remove();
 
+        if (blokLayer) {
+            map.removeLayer(blokLayer);
+        }
+        if (temuanLayer) {
+            map.removeLayer(temuanLayer);
+        }
+        if (legendContainer) {
+            legendContainer.remove(map);
+        }
 
         var Tanggal = document.getElementById('inputDate').value;
         var est = document.getElementById('est').value;
@@ -1605,237 +1628,268 @@
                 _token: _token
             },
             success: function(result) {
-
-                var polygonCoords = result.coords;
-                var plot_blok_all = result.plot_blok_all;
-                var trans_plot = result.trans_plot;
-                var blok_sidak = result.blok_sidak;
-
-                var mapContainer = L.DomUtil.get('map');
-                if (mapContainer != null) {
-                    mapContainer._leaflet_id = null;
-                }
-                // Initialize the new map instance
-
-
-                var map = L.map('map');
-
-                var googleStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-
-                var googleSatellite = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
-                    maxZoom: 30,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                });
-                map.addControl(new L.Control.Fullscreen());
-                var baseMaps = {
-                    "Google Street": googleStreet,
-                    "Google Satellite": googleSatellite
-                };
-                L.control.layers(baseMaps).addTo(map);
-
-                var bounds = L.latLngBounds(polygonCoords.concat(plot_blok_all)); // Assuming polygonCoords and plot_blok_all are arrays of LatLng coordinates
-
-                map.fitBounds(bounds, {
-                    padding: [40, 40],
-                    maxZoom: 30
-                });
-                // Adjust the padding and maxZoom values as per your preference
-
-
-
-                for (var blockName in plot_blok_all) {
-                    // Get the coordinates array for the current block
-                    var coordinates = plot_blok_all[blockName];
-
-                    // Create a polygon for the current block
-                    var polygonOptions = {
-                        color: 'rgba(39, 138, 216, 0.5)',
-                        fillColor: '#278ad8',
-                        fillOpacity: 0.5
-                    };
-                    var textIcon;
-
-                    if (blok_sidak.includes(blockName)) {
-                        polygonOptions.color = 'green';
-                        polygonOptions.fillColor = 'green';
-                        polygonOptions.fillOpacity = 0.5;
-
-                        textIcon = L.divIcon({
-                            className: 'blok_visit',
-                            html: blockName,
-                            iconSize: [100, 20],
-                            iconAnchor: [50, 10]
-                        });
-                    } else {
-                        textIcon = L.divIcon({
-                            className: 'blok_all',
-                            html: blockName,
-                            iconSize: [100, 20],
-                            iconAnchor: [50, 10]
-                        });
-                    }
-
-                    var plotBlokPolygon = L.polygon(coordinates, polygonOptions)
-                        .addTo(map)
-                        .bindPopup('<strong>Afdeling:</strong>' + blockName);
-
-                    var bounds = plotBlokPolygon.getBounds();
-                    var center = bounds.getCenter();
-
-                    // Create a custom HTML icon with text and modified class name
-
-
-                    // Place the text icon in the center of the polygon
-                    L.marker(center, {
-                        icon: textIcon
-                    }).addTo(map);
-                }
-
-                var transGroup = L.layerGroup();
-                // var buahGroup = L.layerGroup();
-                // var ancakGroup = L.layerGroup();
-                var transIconUrl = '{{ asset("img/placeholder.png") }}';
-                var transicon = L.icon({
-                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png",
-                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-                    iconSize: [14, 21],
-                    iconAnchor: [7, 22],
-                    popupAnchor: [1, -34],
-                    shadowSize: [28, 20],
-
-                });
-
-                var transTmuanUrl = '{{ asset("img/placeholder2.png") }}';
-                var transtemuan = L.icon({
-                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png",
-                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
-                    iconSize: [14, 21],
-                    iconAnchor: [7, 22],
-                    popupAnchor: [1, -34],
-                    shadowSize: [28, 20],
-                });
-
-                function trans() {
-                    for (var key in trans_plot) {
-                        if (trans_plot.hasOwnProperty(key)) {
-                            var plots = trans_plot[key];
-                            // var latLngs = []; // Array to store latitudes and longitudes for drawing lines
-
-                            for (var i = 0; i < plots.length; i++) {
-                                var plot = plots[i];
-                                var lat = parseFloat(plot.lat);
-                                var lon = parseFloat(plot.lon);
-                                var blok = plot.blok;
-                                var foto_temuan = plot.foto_temuan;
-                                var overripe = plot.overripe;
-                                var empty_bunch = plot.empty_bunch;
-                                var abnormal = plot.abnormal;
-                                var rd = plot.rd;
-                                var vcut = plot.vcut;
-                                var alas_br = plot.alas_br;
-                                var bmt = plot.bmt;
-                                var bmk = plot.bmk;
-
-
-                                var komentar = plot.komentar;
-
-                                var time = plot.time;
-
-                                var markerIcon = foto_temuan ? transtemuan : transicon;
-
-                                var popupContent = `<strong>Sidak Mutu Buah: </strong>${blok}<br/>`;
-
-
-                                popupContent += `<strong>Mentah: </strong>${bmt}<br/>`;
-                                popupContent += `<strong>Matang: </strong>${bmk}<br/>`;
-                                popupContent += `<strong>Lewat Matang: </strong>${overripe}<br/>`;
-                                popupContent += `<strong>Janjang Kosong: </strong>${empty_bunch}<br/>`;
-                                popupContent += `<strong>Abnormal: </strong>${abnormal}<br/>`;
-                                popupContent += `<strong>Rat Damage: </strong>${rd}<br/>`;
-                                popupContent += `<strong>Tidak Standar Vcut: </strong>${vcut}<br/>`;
-                                popupContent += `<strong>Alas Brondol: </strong>${alas_br}<br/>`;
-
-                                popupContent += `<strong>Sidak: </strong>${time}<br/>`;
-
-
-                                if (foto_temuan) {
-                                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${foto_temuan}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${komentar}')"><br/>`;
-                                }
-
-                                if (!isNaN(lat) && !isNaN(lon)) { // Check if lat and lon are valid numbers
-                                    var marker = L.marker([lat, lon], {
-                                        icon: markerIcon
-                                    });
-
-                                    marker.bindPopup(popupContent);
-
-                                    transGroup.addLayer(marker);
-
-
-                                }
-                            }
-                        }
-                    }
-                }
-                trans();
-                // buah();
-                // ancak();
-
-                // Add the Layer Groups to the map
-                transGroup.addTo(map);
-                // buahGroup.addTo(map);
-                // ancakGroup.addTo(map);
-                var legend = L.control({
-                    position: 'bottomright'
-                });
-
-                var estateIcon = '{{ asset("img/brazil.png") }}';
-                var Estatecon = L.icon({
-                    iconUrl: estateIcon,
-                    iconSize: [30, 80],
-                    iconAnchor: [30, 80],
-                    popupAnchor: [-3, -76],
-                    shadowUrl: estateIcon,
-                    shadowSize: [30, 80],
-                    shadowAnchor: [30, 80],
-                });
-                var afdIcon = '{{ asset("img/territory.png") }}';
-                var afdCon = L.icon({
-                    iconUrl: afdIcon,
-                    iconSize: [30, 80],
-                    iconAnchor: [30, 80],
-                    popupAnchor: [-3, -76],
-                    shadowUrl: afdIcon,
-                    shadowSize: [30, 80],
-                    shadowAnchor: [30, 80],
-                });
-
-
-                legend.onAdd = function(map) {
-
-                    var div = L.DomUtil.create("div", "legend");
-                    div.innerHTML += "<h4>Keterangan :</h4>";
-                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png" style="width:12pt;height:13pt" >  Foto Temuan';
-                    div.innerHTML += '</div>';
-                    div.innerHTML += '<div>  <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png" style="width:12pt;height:13pt" >  Mutu Sidak Buah';
-                    div.innerHTML += '</div>';
-
-
-                    div.innerHTML += '<div><i style="background: #88b87a;width:15px;height:15px;margin-top:5px;border:1px solid green"></i> Blok yang dikunjungi';
-                    div.innerHTML += '</div>';
-
-
-
-                    return div;
-                };
-
-                legend.addTo(map);
-
+                var plot = JSON.parse(result);
+                const blokResult = Object.entries(plot['blok']);
+                const markerResult = Object.entries(plot['marker']);
+                const plotarrow = Object.entries(plot['plotarrow']);
+                drawBlok(blokResult)
+                drawTemuan(markerResult);
+                drawLegend(markerResult)
+                drawArrow(plotarrow)
             },
+
+
+
             error: function() {
 
             }
         });
+
+        function drawBlok(blok) {
+
+            var getPlotStr = '{"type"'
+            getPlotStr += ":"
+            getPlotStr += '"FeatureCollection",'
+            getPlotStr += '"features"'
+            getPlotStr += ":"
+            getPlotStr += '['
+
+            // console.log(blok)
+            for (let i = 0; i < blok.length; i++) {
+                getPlotStr += '{"type"'
+                getPlotStr += ":"
+                getPlotStr += '"Feature",'
+                getPlotStr += '"properties"'
+                getPlotStr += ":"
+                getPlotStr += '{"blok"'
+                getPlotStr += ":"
+                getPlotStr += '"' + blok[i][1]['blok'] + '",'
+                getPlotStr += '"estate"'
+                getPlotStr += ":"
+                getPlotStr += '"' + blok[i][1]['estate'] + '"'
+                getPlotStr += '},'
+                getPlotStr += '"geometry"'
+                getPlotStr += ":"
+                getPlotStr += '{"coordinates"'
+                getPlotStr += ":"
+                getPlotStr += '[['
+                getPlotStr += blok[i][1]['latln']
+                getPlotStr += ']],"type"'
+                getPlotStr += ":"
+                getPlotStr += '"Polygon"'
+                getPlotStr += '}},'
+            }
+            getPlotStr = getPlotStr.substring(0, getPlotStr.length - 1);
+            getPlotStr += ']}'
+
+
+            var blok = JSON.parse(getPlotStr)
+
+            var test = L.geoJSON(blok, {
+                    onEachFeature: function(feature, layer) {
+
+                        layer.myTag = 'BlokMarker'
+                        var label = L.marker(layer.getBounds().getCenter(), {
+                            icon: L.divIcon({
+                                className: 'label-bidang',
+                                html: feature.properties.blok,
+                                iconSize: [50, 10]
+                            })
+                        }).addTo(map);
+
+                        layer.addTo(map);
+                    },
+                    style: function(feature) {
+                        switch (feature.properties.afdeling) {
+                            case 'OA':
+                                return {
+                                    fillColor: "#ff1744",
+                                        color: 'white',
+                                        fillOpacity: 0.4,
+                                        opacity: 0.4,
+                                };
+                            case 'OB':
+                                return {
+                                    fillColor: "#d500f9",
+                                        color: 'white',
+                                        fillOpacity: 0.4,
+                                        opacity: 0.4,
+                                };
+                            case 'OC':
+                                return {
+                                    fillColor: "#ffa000",
+                                        color: 'white',
+                                        fillOpacity: 0.4,
+                                        opacity: 0.4,
+                                };
+                            case 'OD':
+                                return {
+                                    fillColor: "#00b0ff",
+                                        color: 'white',
+                                        fillOpacity: 0.4,
+                                        opacity: 0.4,
+                                };
+
+                            case 'OE':
+                                return {
+                                    fillColor: "#67D98A",
+                                        color: 'white',
+                                        fillOpacity: 0.4,
+                                        opacity: 0.4,
+
+                                };
+                            case 'OF':
+                                return {
+                                    fillColor: "#666666",
+                                        color: 'white',
+                                        fillOpacity: 0.4,
+                                        opacity: 0.4,
+
+                                };
+                        }
+                    }
+                })
+                .addTo(map);
+
+            blokLayer = test; // Store the reference to the new blokLayer
+
+            map.fitBounds(test.getBounds());
+
+            // map.remove();
+        }
+
+        function drawTemuan(markerResult) {
+
+            // console.log(markerResult);
+
+            temuanLayer = L.layerGroup();
+
+            for (let i = 0; i < markerResult.length; i++) {
+                let latlng = JSON.parse(markerResult[i][1]['latln']);
+                // Define the custom icons
+                let numberIcon = L.icon({
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
+                });
+
+                let fotoTemuanIcon = L.icon({
+                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconSize: [14, 21],
+                    iconAnchor: [7, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [28, 20],
+                });
+
+                let markerIcon = numberIcon; // Default icon
+
+                if (markerResult[i][1]['foto_temuan1'] || markerResult[i][1]['foto_temuan2']) {
+                    markerIcon = fotoTemuanIcon; // Use fotoTemuanIcon if either foto_temuan1 or foto_temuan2 exists
+                }
+
+                let marker = L.marker(latlng, {
+                    icon: markerIcon
+                });
+
+
+                var popupContent = `<strong>Jam Sidak: </strong>${markerResult[i][1]['time']}<br/>`;
+                popupContent += `<strong>Mentah: </strong>${markerResult[i][1]['bmt']}<br/>`;
+                popupContent += `<strong>Matang: </strong>${markerResult[i][1]['bmk']}<br/>`;
+                popupContent += `<strong>Lewat Matang: </strong>${markerResult[i][1]['overripe']}<br/>`;
+                popupContent += `<strong>Janjang Kosong: </strong>${markerResult[i][1]['empty_bunch']}<br/>`;
+                popupContent += `<strong>Abnormal: </strong>${markerResult[i][1]['abnormal']}<br/>`;
+                popupContent += `<strong> Rat Damage: </strong>${markerResult[i][1]['rd']}<br/>`;
+                popupContent += `<strong>Tidak Standar Vcut: </strong>${markerResult[i][1]['vcut']}<br/>`;
+                popupContent += `<strong>Alas Brondol: </strong>${markerResult[i][1]['alas_br']}<br/>`;
+
+                if (markerResult[i][1]['foto_temuan1']) {
+                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['foto_temuan1']}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar1']}')"><br/>`;
+                }
+                if (markerResult[i][1]['foto_temuan2']) {
+                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['foto_temuan2']}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar2']}')"><br/>`;
+                }
+
+                marker.bindPopup(popupContent);
+
+                // Add the marker to the map
+                marker.addTo(temuanLayer);
+
+            }
+            // Adjust the map's bounds to fit all markers
+            if (markerResult.length > 0) {
+                let latlngs = markerResult.map(item => JSON.parse(item[1]['latln']));
+                let bounds = L.latLngBounds(latlngs);
+                map.fitBounds(bounds);
+            }
+
+            temuanLayer.addTo(map); // Add the entire layer group to the map
+        }
+
+        function drawLegend(markerResult) {
+
+
+            legendContainer = L.control({
+                position: 'bottomright'
+            });
+
+            legendContainer.onAdd = function(map) {
+                var div = L.DomUtil.create('div', 'legend');
+                div.innerHTML = '<h4 style="text-align: center;">Info</h4>';
+
+                var temuanCount = 0;
+                for (let i = 0; i < markerResult.length; i++) {
+                    if (markerResult[i][1]['foto_temuan1'] || markerResult[i][1]['foto_temuan2']) {
+                        temuanCount++;
+                    }
+                }
+
+                var totalItemsCount = markerResult.length;
+                // div.innerHTML += '<div class="legend-item">Total Sidak TPH: ' + totalItemsCount + '</div>'; // Added the legend item for total items count
+
+                div.innerHTML += '<div class="legend-item"><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png" class="legend-icon"> Temuan (' + temuanCount + ')</div>';
+
+                return div;
+            };
+
+            legendContainer.addTo(map);
+        }
+
+        function drawArrow(plotarrow) {
+            const latLngArray = plotarrow.map((item) => {
+                const latLng = item[1].latln.split(','); // Split the latlng string into latitude and longitude
+                return [parseFloat(latLng[0]), parseFloat(latLng[1])]; // Convert strings to numbers
+            });
+
+
+            for (let i = 0; i < latLngArray.length - 1; i++) {
+                const startLatLng = latLngArray[i];
+                const endLatLng = latLngArray[i + 1];
+
+                const arrow = L.polyline([startLatLng, endLatLng], {
+                    color: 'red',
+                    weight: 2
+                }).addTo(map);
+
+                const arrowHead = L.polylineDecorator(arrow, {
+                    patterns: [{
+                        offset: '50%',
+                        repeat: 50,
+                        symbol: L.Symbol.arrowHead({
+                            pixelSize: 12,
+                            polygon: false,
+                            pathOptions: {
+                                color: 'yellow'
+                            }
+                        })
+                    }]
+                }).addTo(map);
+            }
+        }
+
     }
 
     $("#show-button").click(function() {

@@ -466,7 +466,7 @@
         }
 
         // Fit the map to the bounds of all polygons
-        // map.fitBounds(bounds);
+        map.fitBounds(bounds);
     }
 
 
