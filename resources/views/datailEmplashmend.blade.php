@@ -117,8 +117,30 @@
         </div>
         <br>
 
+        <div class="d-flex justify-content-end mr-3">
+            <button class="btn btn-primary ms-auto" id="toggleButton">Preview Penilaian</button>
+        </div>
+
+
+        <div class="mt-3 text-center" id="content" style="display: none; width: 100%;">
+
+            <p>Table Perumahan</p>
+            <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
+                <table class="table table-primary" id="tabPerum">
+                    <thead>
+                        <!-- Your table header content -->
+                    </thead>
+                    <tbody>
+                        <!-- Your table body content -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
 
         <div class="card table_wrapper">
+
+
             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark  custom_background">
                 <h2>Temuan ESTATE</h2>
             </div>
@@ -173,13 +195,104 @@
                 /* Adjust the spacing between buttons as needed */
             }
         </style>
+
+
+
+        <!-- Button to trigger the modal -->
+        <!-- <button class="edit-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit Nilai</button> -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Nilai</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                        <form id="editForm">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3" style="margin:10px">
+                                        <input type="hidden" class="form-control" id="id">
+                                        <input type="hidden" class="form-control" id="type">
+                                        <p style="text-align:center">Instalasi Air</p>
+                                        <label for="nilai_1" class="form-label">Lancar Masuk (air dapat mengalir dengan lancar 24 jam ke dalam rumah) </label>
+                                        <input type="number" class="form-control" id="nilai_1">
+                                        <label for="nilai_2" class="form-label">Kontrol (Setiap bak mandi menggunakan pelampung)</label>
+                                        <input type="number" class="form-control" id="nilai_2">
+                                        <label for="nilai_3" class="form-label">Lancar Keluar (saluran pembuangan air lancar)</label>
+                                        <input type="number" class="form-control" id="nilai_3">
+                                    </div>
+
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Kebersihan di dalam rumah</p>
+                                        <label for="nilai_1" class="form-label">Kaca & ventilasi (bersih dan tidak rusak) </label>
+                                        <input type="number" class="form-control" id="nilai_4">
+                                        <label for="nilai_2" class="form-label">Plafon (bersih dan tidak rusak) </label>
+                                        <input type="number" class="form-control" id="nilai_5">
+                                        <label for="nilai_3" class="form-label">Dinding (bersih dan tidak rusak)</label>
+                                        <input type="number" class="form-control" id="nilai_6">
+                                        <label for="nilai_3" class="form-label">Lantai (bersih dan tidak rusak) </label>
+                                        <input type="number" class="form-control" id="nilai_7">
+                                        <label for="nilai_3" class="form-label">Kamar Mandi (bersih dan tidak rusak) </label>
+                                        <input type="number" class="form-control" id="nilai_8">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Listrik</p>
+                                        <label for="nilai_1" class="form-label">Instalasi (aman dan rapi) </label>
+                                        <input type="number" class="form-control" id="nilai_9">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Alat Pemadam Api Ringan (APAR) </p>
+                                        <label for="nilai_1" class="form-label">G2 -> 1 Unit; G4 -> 1 Unit; G6 -> 2 Unit; G10 -> 3 Unit </label>
+                                        <input type="number" class="form-control" id="nilai_10">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Halaman Rumah</p>
+                                        <label for="nilai_1" class="form-label">Bersih</label>
+                                        <input type="number" class="form-control" id="nilai_11">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Jemuran</p>
+                                        <label for="nilai_1" class="form-label">Rapi dan seragam </label>
+                                        <input type="number" class="form-control" id="nilai_12">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Estetika</p>
+                                        <label for="nilai_1" class="form-label">Ditanami Bunga, Buah & sayur mayur </label>
+                                        <input type="number" class="form-control" id="nilai_13">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
     @include('layout/footer')
 
-    <!-- Using a CDN link -->
-
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggleButton');
+            const content = document.getElementById('content');
+
+            toggleButton.addEventListener('click', function() {
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+
         var currentUserName = "{{ session('jabatan') }}";
 
         function goBack() {
@@ -2048,6 +2161,10 @@
             $('#afd_rmh').empty();
             $('#afd_landscape').empty();
             $('#afd_lingkungan').empty();
+
+            if ($.fn.DataTable.isDataTable('#tabPerum')) {
+                $('#tabPerum').DataTable().destroy();
+            }
             $.ajax({
                 url: "{{ route('getTemuan') }}",
                 method: "get",
@@ -2077,6 +2194,153 @@
                     afd_rmh(rumah_afd);
                     afd_landscape(lcp_afd);
                     afd_lingkungan(lingkungan_afd);
+
+
+                    var dataPerum = $('#tabPerum').DataTable({
+                        columns: [{
+                                title: 'ID',
+                                data: 'id'
+                            },
+                            {
+                                title: 'Estate',
+                                data: 'est'
+                            },
+                            {
+                                title: 'Afdeling',
+                                data: 'afd'
+                            },
+                            {
+                                title: 'Petugas',
+                                data: 'petugas'
+                            },
+                            {
+                                title: 'Pendamping',
+                                data: 'pendamping'
+                            },
+                            {
+                                title: 'Penghuni',
+                                data: 'penghuni'
+                            },
+                            {
+                                title: 'Tipe Rumah',
+                                data: 'tipe_rumah'
+                            },
+                            {
+                                title: 'Total Penilaian',
+                                data: 'total_nilai'
+                            },
+
+                            {
+                                // -1 targets the last column
+                                title: 'Aksi',
+                                visible: (currentUserName === 'Askep' || currentUserName === 'Asisten' || currentUserName === 'Manager'),
+                                render: function(data, type, row, meta) {
+                                    var buttons =
+                                        '<button class="edit-btn">Edit Nilai</button>'
+                                    return buttons;
+                                }
+                            }
+                        ],
+                    });
+
+                    dataPerum.clear().rows.add(parseResult['tabPerum']).draw();
+
+                    $('#tabPerum').on('click', '.edit-btn', function() {
+                        var rowData = dataPerum.row($(this).closest('tr')).data();
+
+                        $('#nilai_1').val(rowData.nilai_1);
+                        $('#nilai_2').val(rowData.nilai_2);
+                        $('#nilai_3').val(rowData.nilai_3);
+                        $('#nilai_4').val(rowData.nilai_4);
+                        $('#nilai_5').val(rowData.nilai_5);
+                        $('#nilai_6').val(rowData.nilai_6);
+                        $('#nilai_7').val(rowData.nilai_7);
+                        $('#nilai_8').val(rowData.nilai_8);
+                        $('#nilai_9').val(rowData.nilai_9);
+                        $('#nilai_10').val(rowData.nilai_10);
+                        $('#nilai_11').val(rowData.nilai_11);
+                        $('#nilai_12').val(rowData.nilai_12);
+                        $('#nilai_13').val(rowData.nilai_13);
+
+                        $('#id').val(rowData.id);
+                        $('#type').val('perumahan');
+
+                        var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+                        myModal.show();
+                        // Handle form submission
+                        $('#editForm').submit(function(e) {
+                            e.preventDefault(); // Prevent the default form submission
+
+                            // Show SweetAlert confirmation
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: 'Proceeding will save changes!',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, proceed!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    sendData(); // Call function to send AJAX request
+                                }
+                            });
+                        });
+
+                        // Function to send AJAX request with form data
+                        function sendData() {
+                            var nilaiArray = []; // Initialize an empty array
+
+                            // Loop through nilai_1 to nilai_13 and push their values into the array
+                            for (var i = 1; i <= 13; i++) {
+                                nilaiArray.push($('#nilai_' + i).val());
+                            }
+                            var _token = $('input[name="_token"]').val();
+                            var formData = {
+                                nilai: nilaiArray, // Include the array in formData
+                                id: $('#id').val(),
+                                type: $('#type').val(),
+                                _token: _token
+                            };
+
+                            // AJAX request
+                            $.ajax({
+                                type: 'post', // Change the method if needed
+                                url: "{{ route('editNilai') }}",
+                                data: formData,
+                                success: function(response) {
+                                    if (response.status === 'success') {
+                                        // Handle success with SweetAlert
+                                        Swal.fire({
+                                            title: 'Success',
+                                            text: 'Nilai berhasil diupdate',
+                                            icon: 'success'
+                                        }).then(function() {
+                                            location.reload(); // Reload the page after success
+                                        });
+                                    } else {
+                                        // Handle error with SweetAlert
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: response.message || 'Failed to update nilai',
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(error) {
+                                    // Handle AJAX error
+                                    console.error('Error sending data:', error);
+                                    Swal.fire('Error', 'Failed to update nilai', 'error');
+                                }
+                            });
+
+
+
+
+                        }
+                    });
+
+
 
                 },
                 error: function(xhr, status, error) {

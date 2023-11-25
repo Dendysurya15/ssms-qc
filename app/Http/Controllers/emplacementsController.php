@@ -2258,14 +2258,7 @@ class emplacementsController extends Controller
         $lkl_dates = json_decode(json_encode($lkl_dates), true);
 
 
-        // dd($uniqueDates);
-        // $new_est = '-';
-        // if ($est = 'NBM') {
-        //     $new_est = 'NBE';
-        // } else {
-        //     $new_est = $est;
-        // }
-        // dd($new_est);
+
 
 
         $prafd_dates = DB::connection('mysql2')->table('perumahan')
@@ -2302,6 +2295,8 @@ class emplacementsController extends Controller
             ->get();
 
         $lkafd_dates = json_decode(json_encode($lkafd_dates), true);
+
+        // dd($lcafd_dates);
 
         $combinedArray = array_merge(
             $prum_dates,
@@ -3248,6 +3243,83 @@ class emplacementsController extends Controller
             }
         }
 
+
+
+        // dd($lingkungan);
+        $tabLanscape = DB::connection('mysql2')->table('landscape')
+            ->select(
+                "landscape.*",
+                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
+            )
+            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
+            ->where('landscape.est', $est)
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+        $tabLanscape = json_decode($tabLanscape, true);
+
+
+        $tabPerum = DB::connection('mysql2')->table('perumahan')
+            ->select(
+                "perumahan.*",
+                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
+            )
+            ->where('perumahan.datetime', 'like', '%' . $tanggal . '%')
+            ->where('perumahan.est', $est)
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $tabPerum = json_decode($tabPerum, true);
+
+
+        $tabLingkn = DB::connection('mysql2')->table('lingkungan')
+            ->select(
+                "lingkungan.*",
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
+            )
+            ->where('lingkungan.datetime', 'like', '%' . $tanggal . '%')
+            ->where('lingkungan.est', $est)
+            ->orderBy('est', 'asc')
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $tabLingkn = json_decode($tabLingkn, true);
+
+
+
+        // dd($tabLanscape, $tabLingkn, $tabPerum);
+        $coount = 0;
+        foreach ($tabPerum as $key => $value) {
+            # code...
+
+            $nilai = explode('$', $value['nilai']);
+            $komentar = explode('$', $value['komentar']);
+
+            $coount = count($nilai);
+
+            // dd($nilai);
+
+            for ($i = 0; $i < $coount; $i++) {
+                $tabPerum[$key]["nilai_" . ($i + 1)] = $nilai[$i];
+                $tabPerum[$key]["komen_" . ($i + 1)] = $komentar[$i];
+            }
+
+            $tabPerum[$key]["total_nilai"] = array_sum($nilai);
+            // $tabPerum[$key][]
+        }
+
+        // dd($tabPerum);
+
+
+
+
         $dateString = $date;
 
         // Convert the string to a DateTime object
@@ -3271,6 +3343,9 @@ class emplacementsController extends Controller
         $arrView['rumah_afd'] = $mergeAfdRmh;
         $arrView['lcp_afd'] = $mergeAfdlcp;
         $arrView['lingkungan_afd'] = $mergeAfdlk;
+
+
+        $arrView['tabPerum'] = $tabPerum;
         // dd($paginatedItems);
 
         echo json_encode($arrView);
@@ -4738,5 +4813,44 @@ class emplacementsController extends Controller
         // Perform any other actions you need based on the selected options
 
 
+    }
+
+
+    public function editNilai(Request $request)
+    {
+        $id = $request->input('id');
+        $type = $request->input('type');
+        $nilaiArray = $request->input('nilai');
+
+        switch ($type) {
+            case 'perumahan':
+                $result = implode('$', $nilaiArray);
+
+                try {
+                    DB::connection('mysql2')->table('perumahan')
+                        ->where('id', $id)
+                        ->update([
+                            'nilai' => $result
+                        ]);
+
+                    return response()->json(['status' => 'success']);
+                } catch (\Throwable $th) {
+                    return response()->json(['status' => 'error', 'message' => 'Error updating nilai']);
+                }
+
+                break;
+            case 'lingkungan':
+
+
+
+
+                break;
+            case 'landscape':
+
+                break;
+            default:
+                // Handle default case or any other type
+                break;
+        }
     }
 }

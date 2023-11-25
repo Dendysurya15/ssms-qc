@@ -211,3 +211,4 @@ Route::get('/absensibukti', [AbsensiController::class, 'getimgBukti'])->name('ab
 
 
 Route::get('/testmaps', [testingmapsController::class, 'index'])->name('testmaps');
+Route::post('/editNilai', [emplacementsController::class, 'editNilai'])->name('editNilai');
