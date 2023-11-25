@@ -123,19 +123,64 @@
 
 
         <div class="mt-3 text-center" id="content" style="display: none; width: 100%;">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="perumahanx-tab" data-toggle="tab" href="#perumahanx" role="tab" aria-controls="perumahanx" aria-selected="true">Perumahan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="landscapex-tab" data-toggle="tab" href="#landscapex" role="tab" aria-controls="landscapex" aria-selected="false">Landscape</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="lingkunganx-tab" data-toggle="tab" href="#lingkunganx" role="tab" aria-controls="lingkunganx" aria-selected="false">Lingkungan</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="perumahanx" role="tabpanel" aria-labelledby="perumahanx-tab">
+                    <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
 
-            <p>Table Perumahan</p>
-            <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
-                <table class="table table-primary" id="tabPerum">
-                    <thead>
-                        <!-- Your table header content -->
-                    </thead>
-                    <tbody>
-                        <!-- Your table body content -->
-                    </tbody>
-                </table>
+                        <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
+                            <table class="table table-primary" id="tabPerum">
+                                <thead>
+                                    <!-- Your table header content -->
+                                </thead>
+                                <tbody>
+                                    <!-- Your table body content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="landscapex" role="tabpanel" aria-labelledby="landscapex-tab">
+                    <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
+
+                        <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
+                            <table class="table table-primary" id="tablangscape">
+                                <thead>
+                                    <!-- Your table header content -->
+                                </thead>
+                                <tbody>
+                                    <!-- Your table body content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="lingkunganx" role="tabpanel" aria-labelledby="lingkunganx-tab">
+                    <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
+
+                        <div class="d-flex justify-content-center mt-3 mb-2 border border-dark">
+                            <table class="table table-primary" id="tablingk">
+                                <thead>
+                                    <!-- Your table header content -->
+                                </thead>
+                                <tbody>
+                                    <!-- Your table body content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
 
         <div class="card table_wrapper">
@@ -263,6 +308,128 @@
                                         <p style="text-align:center">Estetika</p>
                                         <label for="nilai_1" class="form-label">Ditanami Bunga, Buah & sayur mayur </label>
                                         <input type="number" class="form-control" id="nilai_13">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="editModallandscape" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Nilai</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                        <form id="editFormlandcsape">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3" style="margin:10px">
+                                        <input type="hidden" class="form-control" id="id">
+                                        <input type="hidden" class="form-control" id="type">
+                                        <p style="text-align:center">Material</p>
+                                        <label for="nilai_1" class="form-label">Ornamen-ornamen penghias taman </label>
+                                        <input type="number" class="form-control" id="nilai_l1">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Komposisi Tanaman</p>
+                                        <label for="nilai_2" class="form-label">Jumlah Tanaman Hias (diharapkan >5 jenis tanaman hias)</label>
+                                        <input type="number" class="form-control" id="nilai_l2">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Kondisi Fisik Tanaman</p>
+                                        <label for="nilai_3" class="form-label">Kondisi Fisik Tanaman</label>
+                                        <input type="number" class="form-control" id="nilai_l3">
+                                        <label for="nilai_1" class="form-label">Kebersihan Lingkungan </label>
+                                        <input type="number" class="form-control" id="nilai_l4">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Design</p>
+                                        <label for="nilai_2" class="form-label">Bentuk Taman: Simetris (1), Lengkung (2), Vertikal (3) </label>
+                                        <input type="number" class="form-control" id="nilai_l5">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="editModallkungan" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Nilai</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                        <form id="editFormlingkn">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3" style="margin:10px">
+                                        <input type="hidden" class="form-control" id="id">
+                                        <input type="hidden" class="form-control" id="type">
+                                        <p style="text-align:center">Filter Air </p>
+                                        <label for="nilai_1" class="form-label">Tersedia 1 Unit untuk afdeling/estate yang tidak dialiri air bersih dari Pabrik </label>
+                                        <input type="number" class="form-control" id="nilai_k1">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Profil Tank</p>
+                                        <label for="nilai_2" class="form-label">Kapasitas minimal setara 200 Liter untuk 1 pintu </label>
+                                        <input type="number" class="form-control" id="nilai_k2">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Tempat Penitipan Anak</p>
+                                        <label for="nilai_3" class="form-label">Karpet (Kecuali TPA dengan Keramik) </label>
+                                        <input type="number" class="form-control" id="nilai_k3">
+                                        <label for="nilai_1" class="form-label">Mainan </label>
+                                        <input type="number" class="form-control" id="nilai_k4">
+                                        <label for="nilai_1" class="form-label">Pagar </label>
+                                        <input type="number" class="form-control" id="nilai_k5">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Musholla/Masjid</p>
+                                        <label for="nilai_2" class="form-label">Ketersediaan air</label>
+                                        <input type="number" class="form-control" id="nilai_k6">
+                                        <label for="nilai_2" class="form-label">Saluran Pembuangan air </label>
+                                        <input type="number" class="form-control" id="nilai_k7">
+                                        <label for="nilai_2" class="form-label">Kebersihan lingkungan </label>
+                                        <input type="number" class="form-control" id="nilai_k8">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Drainase</p>
+                                        <label for="nilai_2" class="form-label">Bersihir</label>
+                                        <input type="number" class="form-control" id="nilai_k9">
+                                        <label for="nilai_2" class="form-label">Lancar </label>
+                                        <input type="number" class="form-control" id="nilai_k10">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Ketersediaan Tong Sampah</p>
+                                        <label for="nilai_2" class="form-label">Sedikitnya tersedia 1 tong sampah untuk 1 kopel rumah</label>
+                                        <input type="number" class="form-control" id="nilai_k11">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Tempat Pembuangan Akhir</p>
+                                        <label for="nilai_2" class="form-label">Tidak ada ceceran sampah</label>
+                                        <input type="number" class="form-control" id="nilai_k12">
+                                        <label for="nilai_2" class="form-label">Tidak ada penumpukan sampah</label>
+                                        <input type="number" class="form-control" id="nilai_k13">
+                                    </div>
+                                    <div class="mb-3" style="margin:10px">
+                                        <p style="text-align:center">Parkir Motor</p>
+                                        <label for="nilai_2" class="form-label">Tersedia bangunan khusus</label>
+                                        <input type="number" class="form-control" id="nilai_k14">
                                     </div>
                                 </div>
                             </div>
@@ -1237,7 +1404,7 @@
             const container = document.getElementById("afd_rmh");
             const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/";
             const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
-            console.log(rumah_afd);
+            // console.log(rumah_afd);
             // console.log(rumah_afd);
             // Check if there is data to display
             if (rumah_afd.length > 0) {
@@ -2165,6 +2332,10 @@
             if ($.fn.DataTable.isDataTable('#tabPerum')) {
                 $('#tabPerum').DataTable().destroy();
             }
+
+            if ($.fn.DataTable.isDataTable('#tablangscape')) {
+                $('#tablangscape').DataTable().destroy();
+            }
             $.ajax({
                 url: "{{ route('getTemuan') }}",
                 method: "get",
@@ -2273,13 +2444,13 @@
 
                             // Show SweetAlert confirmation
                             Swal.fire({
-                                title: 'Are you sure?',
-                                text: 'Proceeding will save changes!',
+                                title: 'Simpan Data?',
+                                text: 'Pastikan nilai benar sebelum menyimpan!',
                                 icon: 'warning',
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
-                                confirmButtonText: 'Yes, proceed!'
+                                confirmButtonText: 'Yes!'
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     sendData(); // Call function to send AJAX request
@@ -2340,6 +2511,270 @@
                         }
                     });
 
+
+
+                    var dataLcp = $('#tablangscape').DataTable({
+                        columns: [{
+                                title: 'ID',
+                                data: 'id'
+                            },
+                            {
+                                title: 'Estate',
+                                data: 'est'
+                            },
+                            {
+                                title: 'Afdeling',
+                                data: 'afd'
+                            },
+                            {
+                                title: 'Petugas',
+                                data: 'petugas'
+                            },
+                            {
+                                title: 'Pendamping',
+                                data: 'pendamping'
+                            },
+                            {
+                                title: 'Total Penilaian',
+                                data: 'total_nilai'
+                            },
+
+                            {
+                                // -1 targets the last column
+                                title: 'Aksi',
+                                visible: (currentUserName === 'Askep' || currentUserName === 'Asisten' || currentUserName === 'Manager'),
+                                render: function(data, type, row, meta) {
+                                    var buttons =
+                                        '<button class="edit-btn">Edit Nilai</button>'
+                                    return buttons;
+                                }
+                            }
+                        ],
+                    });
+
+                    dataLcp.clear().rows.add(parseResult['tabLanscape']).draw();
+
+
+
+                    $('#tablangscape').on('click', '.edit-btn', function() {
+                        var rowData = dataLcp.row($(this).closest('tr')).data();
+
+                        $('#nilai_l1').val(rowData.nilai_1);
+                        $('#nilai_l2').val(rowData.nilai_2);
+                        $('#nilai_l3').val(rowData.nilai_3);
+                        $('#nilai_l4').val(rowData.nilai_4);
+                        $('#nilai_l5').val(rowData.nilai_5);
+
+                        $('#id').val(rowData.id);
+                        $('#type').val('landscape');
+
+                        var myModal = new bootstrap.Modal(document.getElementById('editModallandscape'));
+                        myModal.show();
+                        // Handle form submission
+                        $('#editFormlandcsape').submit(function(e) {
+                            e.preventDefault(); // Prevent the default form submission
+
+                            // Show SweetAlert confirmation
+                            Swal.fire({
+                                title: 'Simpan Data?',
+                                text: 'Pastikan nilai benar sebelum menyimpan!',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    sendData(); // Call function to send AJAX request
+                                }
+                            });
+                        });
+
+                        // Function to send AJAX request with form data
+                        function sendData() {
+                            var nilaiArray = []; // Initialize an empty array
+
+                            // Loop through nilai_1 to nilai_13 and push their values into the array
+                            for (var i = 1; i <= 5; i++) {
+                                nilaiArray.push($('#nilai_l' + i).val());
+                            }
+                            var _token = $('input[name="_token"]').val();
+                            var formData = {
+                                nilai: nilaiArray, // Include the array in formData
+                                id: $('#id').val(),
+                                type: $('#type').val(),
+                                _token: _token
+                            };
+
+                            // AJAX request
+                            $.ajax({
+                                type: 'post', // Change the method if needed
+                                url: "{{ route('editNilai') }}",
+                                data: formData,
+                                success: function(response) {
+                                    if (response.status === 'success') {
+                                        // Handle success with SweetAlert
+                                        Swal.fire({
+                                            title: 'Success',
+                                            text: 'Nilai berhasil diupdate',
+                                            icon: 'success'
+                                        }).then(function() {
+                                            location.reload(); // Reload the page after success
+                                        });
+                                    } else {
+                                        // Handle error with SweetAlert
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: response.message || 'Failed to update nilai',
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(error) {
+                                    // Handle AJAX error
+                                    console.error('Error sending data:', error);
+                                    Swal.fire('Error', 'Failed to update nilai', 'error');
+                                }
+                            });
+                        }
+                    });
+
+
+                    var dataLkn = $('#tablingk').DataTable({
+                        columns: [{
+                                title: 'ID',
+                                data: 'id'
+                            },
+                            {
+                                title: 'Estate',
+                                data: 'est'
+                            },
+                            {
+                                title: 'Afdeling',
+                                data: 'afd'
+                            },
+                            {
+                                title: 'Petugas',
+                                data: 'petugas'
+                            },
+                            {
+                                title: 'Pendamping',
+                                data: 'pendamping'
+                            },
+                            {
+                                title: 'Total Penilaian',
+                                data: 'total_nilai'
+                            },
+
+                            {
+                                // -1 targets the last column
+                                title: 'Aksi',
+                                visible: (currentUserName === 'Askep' || currentUserName === 'Asisten' || currentUserName === 'Manager'),
+                                render: function(data, type, row, meta) {
+                                    var buttons =
+                                        '<button class="edit-btn">Edit Nilai</button>'
+                                    return buttons;
+                                }
+                            }
+                        ],
+                    });
+
+                    dataLkn.clear().rows.add(parseResult['tabLingkn']).draw();
+
+                    $('#tablingk').on('click', '.edit-btn', function() {
+                        var rowData = dataLkn.row($(this).closest('tr')).data();
+
+                        $('#nilai_k1').val(rowData.nilai_1);
+                        $('#nilai_k2').val(rowData.nilai_2);
+                        $('#nilai_k3').val(rowData.nilai_3);
+                        $('#nilai_k4').val(rowData.nilai_4);
+                        $('#nilai_k5').val(rowData.nilai_5);
+                        $('#nilai_k6').val(rowData.nilai_6);
+                        $('#nilai_k7').val(rowData.nilai_7);
+                        $('#nilai_k8').val(rowData.nilai_8);
+                        $('#nilai_k9').val(rowData.nilai_9);
+                        $('#nilai_k10').val(rowData.nilai_10);
+                        $('#nilai_k11').val(rowData.nilai_11);
+                        $('#nilai_k12').val(rowData.nilai_12);
+                        $('#nilai_k13').val(rowData.nilai_13);
+                        $('#nilai_k14').val(rowData.nilai_14);
+
+
+                        $('#id').val(rowData.id);
+                        $('#type').val('lingkungan');
+
+
+
+                        var myModal = new bootstrap.Modal(document.getElementById('editModallkungan'));
+                        myModal.show();
+                        // Handle form submission
+                        $('#editFormlingkn').submit(function(e) {
+                            e.preventDefault(); // Prevent the default form submission
+
+                            // Show SweetAlert confirmation
+                            Swal.fire({
+                                title: 'Simpan Data?',
+                                text: 'Pastikan nilai benar sebelum menyimpan!',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    sendData(); // Call function to send AJAX request
+                                }
+                            });
+                        });
+
+                        // Function to send AJAX request with form data
+                        function sendData() {
+                            var nilaiArray = []; // Initialize an empty array
+
+                            // Loop through nilai_1 to nilai_13 and push their values into the array
+                            for (var i = 1; i <= 14; i++) {
+                                nilaiArray.push($('#nilai_k' + i).val());
+                            }
+                            var _token = $('input[name="_token"]').val();
+                            var formData = {
+                                nilai: nilaiArray, // Include the array in formData
+                                id: $('#id').val(),
+                                type: $('#type').val(),
+                                _token: _token
+                            };
+
+                            // AJAX request
+                            $.ajax({
+                                type: 'post', // Change the method if needed
+                                url: "{{ route('editNilai') }}",
+                                data: formData,
+                                success: function(response) {
+                                    if (response.status === 'success') {
+                                        // Handle success with SweetAlert
+                                        Swal.fire({
+                                            title: 'Success',
+                                            text: 'Nilai berhasil diupdate',
+                                            icon: 'success'
+                                        }).then(function() {
+                                            location.reload(); // Reload the page after success
+                                        });
+                                    } else {
+                                        // Handle error with SweetAlert
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: response.message || 'Failed to update nilai',
+                                            icon: 'error'
+                                        });
+                                    }
+                                },
+                                error: function(error) {
+                                    // Handle AJAX error
+                                    console.error('Error sending data:', error);
+                                    Swal.fire('Error', 'Failed to update nilai', 'error');
+                                }
+                            });
+                        }
+                    });
 
 
                 },

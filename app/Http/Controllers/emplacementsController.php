@@ -3315,7 +3315,47 @@ class emplacementsController extends Controller
             // $tabPerum[$key][]
         }
 
-        // dd($tabPerum);
+
+        foreach ($tabLanscape as $key => $value) {
+            # code...
+
+            $nilai = explode('$', $value['nilai']);
+            $komentar = explode('$', $value['komentar']);
+
+            $coount = count($nilai);
+
+            // dd($nilai);
+
+            for ($i = 0; $i < $coount; $i++) {
+                $tabLanscape[$key]["nilai_" . ($i + 1)] = $nilai[$i];
+                $tabLanscape[$key]["komen_" . ($i + 1)] = $komentar[$i];
+            }
+
+            $tabLanscape[$key]["total_nilai"] = array_sum($nilai);
+            // $tabLanscape[$key][]
+        }
+
+        foreach ($tabLingkn as $key => $value) {
+            # code...
+
+            $nilai = explode('$', $value['nilai']);
+            $komentar = explode('$', $value['komentar']);
+
+            $coount = count($nilai);
+
+            // dd($nilai);
+
+            for ($i = 0; $i < $coount; $i++) {
+                $tabLingkn[$key]["nilai_" . ($i + 1)] = $nilai[$i];
+                $tabLingkn[$key]["komen_" . ($i + 1)] = $komentar[$i];
+            }
+
+            $tabLingkn[$key]["total_nilai"] = array_sum($nilai);
+            // $tabLanscape[$key][]
+        }
+
+
+        // dd($tabLingkn);
 
 
 
@@ -3346,6 +3386,8 @@ class emplacementsController extends Controller
 
 
         $arrView['tabPerum'] = $tabPerum;
+        $arrView['tabLanscape'] = $tabLanscape;
+        $arrView['tabLingkn'] = $tabLingkn;
         // dd($paginatedItems);
 
         echo json_encode($arrView);
@@ -4841,12 +4883,37 @@ class emplacementsController extends Controller
                 break;
             case 'lingkungan':
 
+                $result = implode('$', $nilaiArray);
 
+                try {
+                    DB::connection('mysql2')->table('lingkungan')
+                        ->where('id', $id)
+                        ->update([
+                            'nilai' => $result
+                        ]);
+
+                    return response()->json(['status' => 'success']);
+                } catch (\Throwable $th) {
+                    return response()->json(['status' => 'error', 'message' => 'Error updating nilai']);
+                }
 
 
                 break;
             case 'landscape':
 
+                $result = implode('$', $nilaiArray);
+
+                try {
+                    DB::connection('mysql2')->table('landscape')
+                        ->where('id', $id)
+                        ->update([
+                            'nilai' => $result
+                        ]);
+
+                    return response()->json(['status' => 'success']);
+                } catch (\Throwable $th) {
+                    return response()->json(['status' => 'error', 'message' => 'Error updating nilai']);
+                }
                 break;
             default:
                 // Handle default case or any other type
