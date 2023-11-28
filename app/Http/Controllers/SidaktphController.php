@@ -580,7 +580,8 @@ class SidaktphController extends Controller
             ->Table('asisten_qc')
             ->get();
         $asisten_qc = json_decode($asisten_qc, true);
-
+        // dd($newDefaultWeek);
+        $devest = 0;
         foreach ($newDefaultWeek as $key => $value) {
             $dividen_afd = 0;
             $total_skoreest = 0;
@@ -589,13 +590,20 @@ class SidaktphController extends Controller
             $new_dvdAfdest = 0;
             $total_estkors = 0;
             $total_skoreafd = 0;
+
+            $deviden = 0;
+            $devest = count($value);
+            // dd($devest);
+
             foreach ($value as $key1 => $value2)  if (is_array($value2)) {
-                $deviden = 0;
+
                 $tot_afdscore = 0;
                 $totskor_brd1 = 0;
                 $totskor_janjang1 = 0;
                 $total_skoreest = 0;
                 foreach ($value2 as $key2 => $value3) {
+
+
                     $total_brondolan = 0;
                     $total_janjang = 0;
                     $tod_brd = 0;
@@ -604,6 +612,7 @@ class SidaktphController extends Controller
                     $totskor_janjang = 0;
                     $tot_brdxm = 0;
                     $tod_janjangxm = 0;
+
                     foreach ($value3 as $key3 => $value4) if (is_array($value4)) {
                         $tph1 = 0;
                         $jalan1 = 0;
@@ -611,6 +620,7 @@ class SidaktphController extends Controller
                         $karung1 = 0;
                         $buah1 = 0;
                         $restan1 = 0;
+
                         foreach ($value4 as $key4 => $value5) if (is_array($value5)) {
                             $tph = 0;
                             $jalan = 0;
@@ -766,6 +776,7 @@ class SidaktphController extends Controller
                 }
 
                 $deviden = count($value2);
+
                 $new_dvd = $dividen_x;
                 $new_dvdest = $devidenEst_x;
                 if ($new_dvd != 0) {
@@ -781,6 +792,9 @@ class SidaktphController extends Controller
                 $newSidak[$key][$key1]['new_deviden'] = $new_dvd;
                 $newSidak[$key][$key1]['asisten'] = $namaGM;
                 $newSidak[$key][$key1]['total_skor'] = $total_skoreest;
+                $newSidak[$key][$key1]['est'] = $key;
+                $newSidak[$key][$key1]['afd'] = $key1;
+                $newSidak[$key][$key1]['devidenest'] = $devest;
 
                 $tot_estAFd += $tot_afdscore;
                 $new_dvdAfd += $new_dvd;
@@ -840,6 +854,7 @@ class SidaktphController extends Controller
             $est_brd = 0;
             $total_weeks = 0;
             $deviden = 0;
+            $devnew = 0;
             $skor_akhir = 0;
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week1'])) {
@@ -910,12 +925,14 @@ class SidaktphController extends Controller
                     }
                     $total_weeks += round($week1Data['all_score'], 1);
                     $deviden += $subValue['new_deviden'];
+                    $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week1[] = $week1Flat;
                 }
             }
-            if ($deviden != 0) {
-                $skor_akhir = round($total_weeks / $deviden, 1);
+            if ($devnew != 0) {
+                // $skor_akhir = round($total_weeks / $deviden, 1);
+                $skor_akhir = round($total_weeks / $devnew, 1);
             } else {
                 $skor_akhir = 0;
             }
@@ -963,6 +980,7 @@ class SidaktphController extends Controller
             $total_weeks = 0;
             $deviden = 0;
             $skor_akhir = 0;
+            $devnew = 0;
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week2'])) {
                     $week1Data = $subValue['week2']; // Access "week1" data
@@ -1032,12 +1050,14 @@ class SidaktphController extends Controller
                     }
                     $total_weeks += round($week1Data['all_score'], 1);
                     $deviden += $subValue['new_deviden'];
+                    $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week2[] = $week1Flat;
                 }
             }
-            if ($deviden != 0) {
-                $skor_akhir = round($total_weeks / $deviden, 1);
+            if ($devnew != 0) {
+                // $skor_akhir = round($total_weeks / $deviden, 1);
+                $skor_akhir = round($total_weeks / $devnew, 1);
             } else {
                 $skor_akhir = 0;
             }
@@ -1084,6 +1104,7 @@ class SidaktphController extends Controller
             $total_weeks = 0;
             $deviden = 0;
             $skor_akhir = 0;
+            $devnew = 0;
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week3'])) {
                     $week1Data = $subValue['week3']; // Access "week1" data
@@ -1153,16 +1174,17 @@ class SidaktphController extends Controller
                     }
                     $total_weeks += round($week1Data['all_score'], 1);
                     $deviden += $subValue['new_deviden'];
+                    $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week3[] = $week1Flat;
                 }
             }
-            if ($deviden != 0) {
-                $skor_akhir = round($total_weeks / $deviden, 1);
+            if ($devnew != 0) {
+                // $skor_akhir = round($total_weeks / $deviden, 1);
+                $skor_akhir = round($total_weeks / $devnew, 1);
             } else {
                 $skor_akhir = 0;
             }
-
             // week for estate 
             $weekestate = [
                 'est' => $key,
@@ -1203,6 +1225,7 @@ class SidaktphController extends Controller
             $est_brd = 0;
             $total_weeks = 0;
             $deviden = 0;
+            $devnew = 0;
             $skor_akhir = 0;
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week4'])) {
@@ -1273,15 +1296,18 @@ class SidaktphController extends Controller
                     }
                     $total_weeks += round($week1Data['all_score'], 1);
                     $deviden += $subValue['new_deviden'];
+                    $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week4[] = $week1Flat;
                 }
             }
-            if ($deviden != 0) {
-                $skor_akhir = round($total_weeks / $deviden, 1);
+            if ($devnew != 0) {
+                // $skor_akhir = round($total_weeks / $deviden, 1);
+                $skor_akhir = round($total_weeks / $devnew, 1);
             } else {
                 $skor_akhir = 0;
             }
+            // dd
 
             // week for estate 
             $weekestate = [
@@ -1317,6 +1343,8 @@ class SidaktphController extends Controller
             $week4[] = $weekestate;
         }
 
+
+
         $week5 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
             $estateValues = []; // Initialize an array to accumulate values for estate
@@ -1324,6 +1352,7 @@ class SidaktphController extends Controller
             $total_weeks = 0;
             $deviden = 0;
             $skor_akhir = 0;
+            $devnew = 0;
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week5'])) {
                     $week1Data = $subValue['week5']; // Access "week1" data
@@ -1339,6 +1368,8 @@ class SidaktphController extends Controller
                         'kategori' => 'Test',
 
                     ];
+
+                    // dd($subValue);
 
                     // Extract tphx values for keys 1 to 8 and flatten them
                     for ($i = 1; $i <= 8; $i++) {
@@ -1393,16 +1424,18 @@ class SidaktphController extends Controller
                     }
                     $total_weeks += round($week1Data['all_score'], 1);
                     $deviden += $subValue['new_deviden'];
+                    $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week5[] = $week1Flat;
                 }
             }
-            if ($deviden != 0) {
-                $skor_akhir = round($total_weeks / $deviden, 1);
+            if ($devnew != 0) {
+                // $skor_akhir = round($total_weeks / $deviden, 1);
+                $skor_akhir = round($total_weeks / $devnew, 1);
             } else {
                 $skor_akhir = 0;
             }
-
+            // dd($total_weeks);
             // week for estate 
             $weekestate = [
                 'est' => $key,
@@ -1438,7 +1471,7 @@ class SidaktphController extends Controller
         }
 
 
-        // dd($week2);
+        // dd($week5);
         $arrView = array();
         $arrView['week1'] = $week1;
         $arrView['week2'] = $week2;
