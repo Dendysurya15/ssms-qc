@@ -52,9 +52,11 @@ class AbsensiController extends Controller
         $firstDayOfMonth = Carbon::now()->firstOfMonth();
         $JumlahBulan = $firstDayOfMonth->daysInMonth;
         $bulanNow = Carbon::now()->format('M');
+        $Yearnow = Carbon::now()->format('Y');
+
         // dd($bulanNow);
 
-        $header_month = $bulanNow . '-' . $JumlahBulan;
+        $header_month = $bulanNow . '-' . $Yearnow;
 
         // dd($header_month);
 
@@ -78,13 +80,14 @@ class AbsensiController extends Controller
         // Create a Carbon instance for the first day of the specified month
         $firstDayOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
         $JumlahBulan = $firstDayOfMonth->daysInMonth;
+        $Yearnow = Carbon::now()->format('Y');
 
         $carbonDate = Carbon::parse($bulan);
 
         // Get the full name of the month
         $monthName = $carbonDate->format('M');
 
-        $header_month = $monthName . '-' . $JumlahBulan;
+        $header_month = $monthName . '-' . $Yearnow;
 
         // dd($monthName);
 
@@ -566,14 +569,14 @@ class AbsensiController extends Controller
         $firstDayOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
         $JumlahBulan = $firstDayOfMonth->daysInMonth;
 
+        $Yearnow = Carbon::now()->format('Y');
+
         $carbonDate = Carbon::parse($bulan);
 
         // Get the full name of the month
         $monthName = $carbonDate->format('M');
 
-        $header_month = $monthName . '-' . $JumlahBulan;
-
-        // dd($monthName);
+        $header_month = $monthName . '-' . $Yearnow;
 
 
         $endDate = $firstDayOfMonth->copy()->endOfMonth();
@@ -679,7 +682,7 @@ class AbsensiController extends Controller
                     $formattedTime = date('H:i:s', strtotime($date));
 
 
-                    $specificValues = ['Lainnya', 'Sakit', 'Cuti', 'Izin'];
+                    $specificValues = ['Sakit', 'Cuti', 'Izin'];
 
                     $pekerjaan = explode('$', $value3['id_pekerjaan']);
 
@@ -850,8 +853,29 @@ class AbsensiController extends Controller
             // Create a new array with "total" key and count value
             $final_data[$key]['total'] = strval($count);
         }
-
         $updatedArray = [];
+
+
+
+        // Your existing code
+        foreach ($final_data as $key => $value) {
+            // Initialize the count for each entry
+            $count = 0;
+
+            // Check if the value is an array
+            if (is_array($value)) {
+                foreach ($value as $innerKey => $innerValue) {
+                    if (is_string($innerValue) && strpos($innerValue, 'KJ$') !== false) {
+                        $count++;
+                    }
+                }
+            }
+
+            // Create a new array with "total" key and count value
+            $final_data[$key]['total'] = strval($count);
+        }
+
+        $absensiArray = [];
 
         foreach ($final_data as $subArray) {
             $updatedSubArray = [];
@@ -871,14 +895,54 @@ class AbsensiController extends Controller
             }
 
             // Add the updated sub-array to the new array
-            $updatedArray[] = $updatedSubArray;
+            $absensiArray[] = $updatedSubArray;
         }
 
+
+        // dd($absensiArray);
+        $apiEndpoint = "https://api-harilibur.vercel.app/api";
+
+        // Make the API call using Laravel's HTTP client
+        $response = Http::get($apiEndpoint);
+
+        // Check if the API call was successful
+        if ($response->successful()) {
+            // Decode the JSON response
+            $apiData = $response->json();
+
+            // Check if the decoding was successful and the expected data structure is present
+            if (isset($apiData[0]['holiday_date'], $apiData[0]['is_national_holiday'], $apiData[0]['holiday_name'])) {
+                // Filter dates where is_national_holiday is true
+                $nationalHolidays = array_filter($apiData, function ($holiday) {
+                    return $holiday['is_national_holiday'] == true;
+                });
+
+                // Extract the holiday dates and names from the filtered data
+                $holidays = array_column($nationalHolidays, 'holiday_date');
+                $holidayNames = array_column($nationalHolidays, 'holiday_name');
+
+                // Now $holidays contains the list of national holidays
+                // Assume $absensiArray is your array of dates
+                foreach ($absensiArray as $key => $absensi) {
+                    foreach ($absensi as $date => $status) {
+                        if (in_array($date, $holidays)) {
+                            // Find the index of the date in $holidays and get the corresponding holiday name
+                            $index = array_search($date, $holidays);
+                            $absensiArray[$key][$date] = $holidayNames[$index];
+                        }
+                    }
+                }
+            } else {
+                return response()->json(['error' => 'Failed to decode API response or missing expected data structure.'], 500);
+            }
+        } else {
+            return response()->json(['error' => 'Failed to fetch data from the API.'], 500);
+        }
         // dd($updatedArray);
 
         $newArray = [];
 
-        foreach ($updatedArray as $item) {
+        foreach ($absensiArray as $item) {
             $newItem = []; // Create a new item for the modified array
 
             // Iterate through the keys of the original item
