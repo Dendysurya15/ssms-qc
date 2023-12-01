@@ -5697,7 +5697,7 @@
         //             y: 95,
         //             y2: 100,
         //             borderColor: '#000',
-        //             fillColor: '#4874c4',
+        //             fillColor: '#96be25',
         //             opacity: 0.4,
         //             label: {
         //                 text: ' '
@@ -8206,7 +8206,7 @@
                                 y: 95,
                                 y2: 100,
                                 borderColor: '#000',
-                                fillColor: '#4874c4',
+                                fillColor: '#96be25',
                                 opacity: 0.4,
                                 label: {
                                     text: ' '
@@ -8318,6 +8318,7 @@
 
                 ])
                 chartScoreBron.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8343,7 +8344,7 @@
                             y: 0,
                             y2: 1,
                             borderColor: '#000',
-                            fillColor: '#4874c4',
+                            fillColor: '#96be25',
                             opacity: 0.4,
                             label: {
                                 text: ' '
@@ -8368,6 +8369,7 @@
 
                 ])
                 chatScoreJan.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8393,7 +8395,7 @@
                             y: -10,
                             y2: 0,
                             borderColor: '#000',
-                            fillColor: '#4874c4',
+                            fillColor: '#96be25',
                             opacity: 0.4,
                             label: {
                                 text: ' '
@@ -8415,6 +8417,7 @@
                     data: mths
                 }, ])
                 GraphBhmth.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8450,7 +8453,7 @@
                             y: -10,
                             y2: 1,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'
@@ -8465,6 +8468,7 @@
 
                 ])
                 GraphBhMsak.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8500,7 +8504,7 @@
                             y: 90,
                             y2: 100,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'
@@ -8515,6 +8519,7 @@
 
                 ])
                 GraphBhOver.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8550,7 +8555,7 @@
                             y: 0,
                             y2: 2,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'
@@ -8565,6 +8570,7 @@
 
                 ])
                 GraphBhEmpty.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8600,7 +8606,7 @@
                             y: -10,
                             y2: 1,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'
@@ -8613,6 +8619,7 @@
                     data: vcuts
                 }, ])
                 GraphBhvcute.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8649,7 +8656,7 @@
                             y: -10,
                             y2: 2,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'
@@ -8664,6 +8671,7 @@
 
                 ])
                 GraphBhAbnrl.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8699,7 +8707,7 @@
                             y: -10,
                             y2: 1,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'
@@ -8714,6 +8722,7 @@
                     data: trbrd
                 }, ])
                 GraphTranBrd.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8749,7 +8758,7 @@
                             y: 0,
                             y2: 3,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'
@@ -8765,6 +8774,7 @@
 
                 ])
                 GraphTranBH.updateOptions({
+                    colors: ['#041014'],
                     yaxis: [{
                         axisTicks: {
                             show: true
@@ -8800,7 +8810,7 @@
                             y: -10,
                             y2: 0,
                             borderColor: '#000',
-                            fillColor: '#4874c4', //biru
+                            fillColor: '#96be25', //biru
                             opacity: 0.4,
                             label: {
                                 text: 'Standar QC'

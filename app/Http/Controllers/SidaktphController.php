@@ -8106,6 +8106,7 @@ class SidaktphController extends Controller
             ->get();
         $dtQuery = json_decode($dtQuery, true);
 
+
         // dd($dtQuery);
 
         $pkLatLn = array();
@@ -8143,13 +8144,39 @@ class SidaktphController extends Controller
         }
 
         // dd($messageResponse);
+        // dd($blokLatLnEw);
+        $newArr = DB::connection('mysql2')->table('sidak_tph')
+            ->select('*', DB::raw("DATE_FORMAT(datetime, '%H:%i:%s') AS time"))
+            ->where('est', $est)
+            ->where('datetime', 'LiKE', '%' . $date . '%')
+            ->orderBy('time', 'asc')
+            ->get();
+        $newArr = $newArr->groupBy(['afd']);
+        $newArr = json_decode($newArr, true);
+
+        $pkLatLnnew = array();
+        $incr = 0;
+        foreach ($newArr as $key => $value) {
+            $latln2 = '';
+            foreach ($value as $value2) {
+                # code...
+                // dd($value2);
+                $latln2 .= '[' . $value2['lon'] . ',' . $value2['lat'] . '],';
+                $pkLatLnnew[$key]['afd'] = $value2['afd'];
+                $pkLatLnnew[$key]['latln'] = $latln2;
+            }
+        }
+
+        // dd($newArr, $pkLatLnnew);
+
+
 
         // dd($blokLatLn, $messageResponse);
         $plot['plot'] = $plotTitik;
         $plot['marker'] = $plotMarker;
         $plot['blok'] = $messageResponse;
         $plot['img'] = $imgNew;
-        $plot['plotarrow'] = $pkLatLn;
+        $plot['plotarrow'] = $pkLatLnnew;
         // dd($plot);
         echo json_encode($plot);
     }

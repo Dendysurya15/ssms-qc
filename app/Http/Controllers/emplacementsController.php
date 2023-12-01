@@ -4358,21 +4358,24 @@ class emplacementsController extends Controller
                 }
             }
         }
-        // dd($fullURL);
-        foreach ($delArr['key'] as $keyToDelete) {
-            // Unset the keys in arrayMerge2 based on the value from delArr
-            unset(
-                $arrayMerge2['foto_temuan'][$keyToDelete],
-                $arrayMerge2['detail_temuan'][$keyToDelete],
-                $arrayMerge2['komentar_temuan'][$keyToDelete],
-                $arrayMerge2['data_temuan'][$keyToDelete]
-            );
-        }
+        // dd($delArr);
 
-        $arrayMerge2['foto_temuan'] = array_values($arrayMerge2['foto_temuan']);
-        $arrayMerge2['detail_temuan'] = array_values($arrayMerge2['detail_temuan']);
-        $arrayMerge2['komentar_temuan'] = array_values($arrayMerge2['komentar_temuan']);
-        $arrayMerge2['data_temuan'] = array_values($arrayMerge2['data_temuan']);
+        if ($delArr !== []) {
+            foreach ($delArr['key'] as $keyToDelete) {
+                // Unset the keys in arrayMerge2 based on the value from delArr
+                unset(
+                    $arrayMerge2['foto_temuan'][$keyToDelete],
+                    $arrayMerge2['detail_temuan'][$keyToDelete],
+                    $arrayMerge2['komentar_temuan'][$keyToDelete],
+                    $arrayMerge2['data_temuan'][$keyToDelete]
+                );
+            }
+
+            $arrayMerge2['foto_temuan'] = array_values($arrayMerge2['foto_temuan']);
+            $arrayMerge2['detail_temuan'] = array_values($arrayMerge2['detail_temuan']);
+            $arrayMerge2['komentar_temuan'] = array_values($arrayMerge2['komentar_temuan']);
+            $arrayMerge2['data_temuan'] = array_values($arrayMerge2['data_temuan']);
+        }
 
         // dd($arrayMerge2);
         // dd($arrayMerge2);

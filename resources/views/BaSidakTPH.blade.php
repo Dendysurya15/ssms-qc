@@ -1427,34 +1427,47 @@
     }
 
     function drawArrow(plotarrow) {
+        console.log(plotarrow);
         const latLngArray = plotarrow.map((item) => {
-            const latLng = item[1].latln.split(','); // Split the latlng string into latitude and longitude
-            return [parseFloat(latLng[0]), parseFloat(latLng[1])]; // Convert strings to numbers
+            const latLngString = item[1].latln;
+            const coordinates = latLngString.match(/\[(.*?)\]/g);
+            if (coordinates) {
+                return coordinates.map((coord) => {
+                    const [longitude, latitude] = coord
+                        .replace('[', '')
+                        .replace(']', '')
+                        .split(',')
+                        .map(parseFloat);
+                    return [latitude, longitude]; // Reversed to follow [lat, lon] format
+                });
+            }
+            return [];
         });
 
+        latLngArray.forEach((coordinates) => {
+            for (let i = 0; i < coordinates.length - 1; i++) {
+                const startLatLng = coordinates[i];
+                const endLatLng = coordinates[i + 1];
 
-        for (let i = 0; i < latLngArray.length - 1; i++) {
-            const startLatLng = latLngArray[i];
-            const endLatLng = latLngArray[i + 1];
+                const arrow = L.polyline([startLatLng, endLatLng], {
+                    color: 'red',
+                    weight: 2
+                }).addTo(map);
 
-            const arrow = L.polyline([startLatLng, endLatLng], {
-                color: 'red',
-                weight: 2
-            }).addTo(map);
-
-            const arrowHead = L.polylineDecorator(arrow, {
-                patterns: [{
-                    offset: '50%',
-                    repeat: 50,
-                    symbol: L.Symbol.arrowHead({
-                        pixelSize: 12,
-                        polygon: false,
-                        pathOptions: {
-                            color: 'yellow'
-                        }
-                    })
-                }]
-            }).addTo(map);
-        }
+                const arrowHead = L.polylineDecorator(arrow, {
+                    patterns: [{
+                        offset: '50%',
+                        repeat: 50,
+                        symbol: L.Symbol.arrowHead({
+                            pixelSize: 12,
+                            polygon: false,
+                            pathOptions: {
+                                color: 'yellow'
+                            }
+                        })
+                    }]
+                }).addTo(map);
+            }
+        });
     }
 </script>
