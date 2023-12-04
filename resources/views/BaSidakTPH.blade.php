@@ -1444,15 +1444,24 @@
             return [];
         });
 
-        latLngArray.forEach((coordinates) => {
+        latLngArray.forEach((coordinates, index) => {
             for (let i = 0; i < coordinates.length - 1; i++) {
                 const startLatLng = coordinates[i];
                 const endLatLng = coordinates[i + 1];
+                const name = plotarrow[index][0]; // Get the name from plotarrow at the corresponding index
 
                 const arrow = L.polyline([startLatLng, endLatLng], {
                     color: 'red',
                     weight: 2
                 }).addTo(map);
+
+                arrow.on('click', function() {
+                    const popupContent = `<strong>Petugas QC: </strong>${name}<br/><strong>`;
+                    L.popup()
+                        .setLatLng(startLatLng) // or any suitable position
+                        .setContent(popupContent)
+                        .openOn(map);
+                });
 
                 const arrowHead = L.polylineDecorator(arrow, {
                     patterns: [{

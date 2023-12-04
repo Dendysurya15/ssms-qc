@@ -58,11 +58,11 @@ Route::get('/changeDataTph', [SidaktphController::class, 'changeDataTph'])->name
 
 Route::get('/getBtTphMonth', [SidaktphController::class, 'getBtTphMonth'])->name('getBtTphMonth');
 
-Route::post('/getBtTphYear', [SidaktphController::class, 'getBtTphYear'])->name('getBtTphYear');
+Route::get('/getBtTphYear', [SidaktphController::class, 'getBtTphYear'])->name('getBtTphYear');
 
-Route::post('/graphFilterYear', [SidaktphController::class, 'graphFilterYear'])->name('graphFilterYear');
+Route::get('/graphFilterYear', [SidaktphController::class, 'graphFilterYear'])->name('graphFilterYear');
 // Route::get('/404', [SidaktphController::class, 'notfound'])->name('404');
-Route::post('/getDataByYear', [unitController::class, 'getDataByYear'])->name('getDataByYear');
+Route::get('/getDataByYear', [unitController::class, 'getDataByYear'])->name('getDataByYear');
 
 Route::get('/tambah', [unitController::class, 'tambah']);
 Route::post('/store', [unitController::class, 'store']);

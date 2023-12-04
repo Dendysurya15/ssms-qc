@@ -477,7 +477,7 @@ class unitController extends Controller
             }
         }
 
-
+        // dd($dataResult);
 
         $bulanKey = $bulanKe - 1;
 
@@ -513,20 +513,22 @@ class unitController extends Controller
                         $dataResult[$key]['status'] = 'Poor';
                     }
                 } else {
-                    if ($bulan[$bulanKe] == 'January' || $bulan[$bulanKe] == 'December') {
-                        $divided = $bulan[$bulanKe] == 'January' ? 1 : 12;
-                        $skor_tahunan = round($sum_skor  / $divided, 2);
-                        $dataResult[$key]['skor_tahunan'] = $skor_tahunan;
-                        if ($skor_tahunan >= 95) {
-                            $dataResult[$key]['status'] = 'Excellent';
-                        } else if ($skor_tahunan >= 85 && $skor_tahunan < 95) {
-                            $dataResult[$key]['status'] = 'Good';
-                        } else if ($skor_tahunan >= 75 && $skor_tahunan < 85) {
-                            $dataResult[$key]['status'] = 'Satisfactory';
-                        } else if ($skor_tahunan >= 65 && $skor_tahunan < 75) {
-                            $dataResult[$key]['status'] = 'Fair';
-                        } else if ($skor_tahunan < 65) {
-                            $dataResult[$key]['status'] = 'Poor';
+                    if (isset($bulan[$bulanKe])) {
+                        if ($bulan[$bulanKe] == 'January' || $bulan[$bulanKe] == 'December') {
+                            $divided = $bulan[$bulanKe] == 'January' ? 1 : 12;
+                            $skor_tahunan = round($sum_skor  / $divided, 2);
+                            $dataResult[$key]['skor_tahunan'] = $skor_tahunan;
+                            if ($skor_tahunan >= 95) {
+                                $dataResult[$key]['status'] = 'Excellent';
+                            } else if ($skor_tahunan >= 85 && $skor_tahunan < 95) {
+                                $dataResult[$key]['status'] = 'Good';
+                            } else if ($skor_tahunan >= 75 && $skor_tahunan < 85) {
+                                $dataResult[$key]['status'] = 'Satisfactory';
+                            } else if ($skor_tahunan >= 65 && $skor_tahunan < 75) {
+                                $dataResult[$key]['status'] = 'Fair';
+                            } else if ($skor_tahunan < 65) {
+                                $dataResult[$key]['status'] = 'Poor';
+                            }
                         }
                     } else {
 

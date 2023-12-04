@@ -214,7 +214,7 @@
 
         $.ajax({
             url: "{{ route('getDataByYear') }}",
-            method: "POST",
+            method: "GET",
             data: {
                 year: value,
                 _token: _token,

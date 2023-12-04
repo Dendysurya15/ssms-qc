@@ -6549,6 +6549,8 @@ class SidaktphController extends Controller
                 unset($arrBHest[$key]);
                 unset($arrRSest[$key]);
             }
+
+            // dd($arrBtTPHperEst);
             // masukan ke array data penjumlahan dari estate
             $arrView['val_bt_tph'] = $arrBtTPHperEst; //data jsen brondolan tinggal di tph
             $arrView['val_kr_tph'] = $arrKRest; //data jsen karung yang berisi buah
@@ -8151,7 +8153,7 @@ class SidaktphController extends Controller
             ->where('datetime', 'LiKE', '%' . $date . '%')
             ->orderBy('time', 'asc')
             ->get();
-        $newArr = $newArr->groupBy(['afd']);
+        $newArr = $newArr->groupBy(['qc']);
         $newArr = json_decode($newArr, true);
 
         $pkLatLnnew = array();
@@ -8162,7 +8164,7 @@ class SidaktphController extends Controller
                 # code...
                 // dd($value2);
                 $latln2 .= '[' . $value2['lon'] . ',' . $value2['lat'] . '],';
-                $pkLatLnnew[$key]['afd'] = $value2['afd'];
+                $pkLatLnnew[$key]['qc'] = $value2['qc'];
                 $pkLatLnnew[$key]['latln'] = $latln2;
             }
         }

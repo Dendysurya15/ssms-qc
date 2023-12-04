@@ -6522,7 +6522,7 @@
       var regSidak = document.getElementById('regionalSidakYear').value
       $.ajax({
         url: "{{ route('getBtTphYear') }}",
-        method: "POST",
+        method: "get",
         data: {
           year: yearSidak,
           reg: regSidak,
@@ -7465,6 +7465,9 @@
 
             // }
           }
+        },
+        error: function() {
+          Swal.close();
         }
       })
     }
@@ -7476,7 +7479,7 @@
       var _token = $('input[name="_token"]').val()
       $.ajax({
         url: "{{ route('graphFilterYear') }}",
-        method: "POST",
+        method: "get",
         data: {
           est: est,
           yearGraph: yearGraph,
@@ -7542,6 +7545,9 @@
             name: 'Restan/Blok  Tidak dilaporkan',
             data: rstJson
           }])
+        },
+        error: function() {
+          Swal.close();
         }
       });
     }
