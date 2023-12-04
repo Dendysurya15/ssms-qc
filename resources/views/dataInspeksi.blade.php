@@ -99,17 +99,17 @@
         <td>{{check_array('k_ma', $value)}}</td>
         <td>{{check_array('gl_ma', $value)}}</td>
         <td>{{check_array('total_brd_ma', $value)}}</td>
-        <td>{{check_array('btr_jjg_ma', $value)}}</td>
+        <td>{{round(check_array('btr_jjg_ma', $value),2)}}</td>
         <td>{{skor_brd_ma(check_array('btr_jjg_ma', $value))}}</td>
         <td>{{check_array('bhts_ma', $value)}}</td>
         <td>{{check_array('bhtm1_ma', $value)}}</td>
         <td>{{check_array('bhtm2_ma', $value)}}</td>
         <td>{{check_array('bhtm3_ma', $value)}}</td>
         <td>{{check_array('tot_jjg_ma', $value)}}</td>
-        <td>{{check_array('jjg_tgl_ma', $value)}}</td>
+        <td>{{round (check_array('jjg_tgl_ma', $value),2)}}</td>
         <td>{{skor_buah_Ma(check_array('jjg_tgl_ma', $value))}}</td>
         <td>{{check_array('ps_ma', $value)}}</td>
-        <td>{{check_array('PerPSMA', $value)}}</td>
+        <td>{{round(check_array('PerPSMA', $value),2)}}</td>
         <td>{{skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
         <td>{{skor_brd_ma(check_array('btr_jjg_ma', $value)) + skor_buah_Ma(check_array('jjg_tgl_ma', $value)) + skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
 
@@ -122,40 +122,40 @@
         @if($keys2 == $key2)
         <td>{{$value2['tph_sample']}}</td>
         <td>{{$value2['bt_total']}}</td>
-        <td>{{$value2['skor']}}</td>
+        <td>{{round ($value2['skor'],2)}}</td>
         <td>{{skor_brd_tinggal($value2['skor'])}}</td>
         <td>{{$value2['restan_total']}}</td>
-        <td>{{$value2['skor_restan']}}</td>
+        <td>{{skor ($value2['skor_restan'],2)}}</td>
         <td>{{skor_buah_tinggal($value2['skor_restan'])}}</td>
         <td>{{skor_buah_tinggal($value2['skor_restan']) + skor_brd_tinggal($value2['skor'])}}</td>
 
         <td>{{$value2['blok_mb'] ?? 0}}</td>
         <td>{{$value2['jml_janjang'] ?? 0}}</td>
         <td>{{$value2['jml_mentah']?? 0}}</td>
-        <td>{{$value2['PersenBuahMentah']?? 0}}</td>
+        <td>{{round ($value2['PersenBuahMentah']?? 0,2)}}</td>
         <td>{{skor_buah_mentah_mb($value2['PersenBuahMentah']?? 0 )}}</td>
 
         <td>{{$value2['jml_masak']?? 0}}</td>
-        <td>{{$value2['PersenBuahMasak']?? 0}}</td>
+        <td>{{round($value2['PersenBuahMasak']?? 0,2)}}</td>
         <td>{{skor_buah_masak_mb($value2['PersenBuahMasak']?? 0)}}</td>
 
         <td>{{$value2['jml_over']?? 0}}</td>
-        <td>{{$value2['PersenBuahOver']?? 0}}</td>
+        <td>{{round($value2['PersenBuahOver']?? 0,2)}}</td>
         <td>{{skor_buah_over_mb($value2['PersenBuahOver']?? 0)}}</td>
 
         <td>{{$value2['jml_empty']?? 0}}</td>
-        <td>{{$value2['PersenPerJanjang']?? 0}}</td>
+        <td>{{round ($value2['PersenPerJanjang']?? 0,2)}}</td>
         <td>{{skor_jangkos_mb($value2['PersenPerJanjang']?? 0)}}</td>
 
         <td>{{$value2['jml_vcut']?? 0}}</td>
-        <td>{{$value2['PersenVcut']?? 0}}</td>
+        <td>{{round ($value2['PersenVcut']?? 0,2)}}</td>
         <td>{{skor_buah_over_mb($value2['PersenVcut']?? 0)}}</td>
 
         <td>{{$value2['jml_abnormal']?? 0}}</td>
         <td>{{$value2['PersenAbr']?? 0}}</td>
 
         <td>{{$value2['alas_mb']?? 0}} / {{$value2['blok_mb']?? 0}}</td>
-        <td>{{$value2['PersenKrgBrd']?? 0}}</td>
+        <td>{{round ($value2['PersenKrgBrd']?? 0,2)}}</td>
         <td>{{skor_abr_mb($value2['PersenKrgBrd']?? 0)}}</td>
 
         <td>{{
@@ -177,10 +177,10 @@
         @else
         <td>{{check_array('tph_sample', $value)}}</td>
         <td>{{check_array('bt_total', $value)}}</td>
-        <td>{{check_array('skor', $value)}}</td>
+        <td>{{ round(check_array('skor', $value),2)}}</td>
         <td>{{skor_brd_tinggal(check_array('skor', $value))}}</td>
         <td>{{check_array('restan_total', $value)}}</td>
-        <td>{{check_array('skor_restan', $value)}}</td>
+        <td>{{round (check_array('skor_restan', $value),2)}}</td>
         <td>{{skor_buah_tinggal(check_array('skor_restan', $value))}}</td>
         <td>{{ skor_brd_tinggal(check_array('skor', $value)) + skor_buah_tinggal(check_array('skor_restan', $value)) }}</td>
 
@@ -188,23 +188,23 @@
         <td>{{check_array('blok_mb', $value)}}</td>
         <td>{{check_array('jml_janjang', $value)}}</td>
         <td>{{check_array('jml_mentah', $value)}}</td>
-        <td>{{check_array('PersenBuahMentah', $value)}}</td>
+        <td>{{round (check_array('PersenBuahMentah', $value),2)}}</td>
         <td>{{skor_buah_mentah_mb(check_array('PersenBuahMentah', $value))}}</td>
         {{-- Bagian Mutu Buah - Buah Matang --}}
         <td>{{check_array('jml_masak', $value)}}</td>
-        <td>{{check_array('PersenBuahMasak', $value)}}</td>
+        <td>{{round (check_array('PersenBuahMasak', $value),2)}}</td>
         <td>{{skor_buah_masak_mb(check_array('PersenBuahMasak', $value))}}</td>
         {{-- Bagian Mutu Buah - Lewat Matang --}}
         <td>{{check_array('jml_over', $value)}}</td>
-        <td>{{check_array('PersenBuahOver', $value)}}</td>
+        <td>{{round (check_array('PersenBuahOver', $value),2)}}</td>
         <td>{{skor_buah_over_mb(check_array('PersenBuahOver', $value))}}</td>
         {{-- Bagian Mutu Buah - Jangkos --}}
         <td>{{check_array('jml_empty', $value)}}</td>
-        <td>{{check_array('PersenPerJanjang', $value)}}</td>
+        <td>{{round(check_array('PersenPerJanjang', $value),2)}}</td>
         <td>{{skor_jangkos_mb(check_array('PersenPerJanjang', $value))}}</td>
         {{-- Bagian Mutu Buah - Tidak Standar V-Cut --}}
         <td>{{check_array('jml_vcut', $value)}}</td>
-        <td>{{check_array('PersenVcut', $value)}}</td>
+        <td>{{round (check_array('PersenVcut', $value),2)}}</td>
         <td>{{skor_buah_over_mb(check_array('PersenVcut', $value))}}</td>
         {{-- Bagian Mutu Buah - Abnormal --}}
         <td>{{check_array('jml_abnormal', $value)}}</td>
@@ -253,7 +253,7 @@
         @endif
         @endforeach
         @else
-        <td bgcolor="{{ $skor_kategori_akhir[0] }}">{{ $totalSkorAkhir }}</td>
+        <td bgcolor="{{ $skor_kategori_akhir[0] }}">{{ round ($totalSkorAkhir,2) }}</td>
         @endif
 
         <td bgcolor="{{ $skor_kategori_akhir[0] }}">{{ $skor_kategori_akhir[1] }}</td>
@@ -285,17 +285,17 @@
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('k_ma_est', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('gl_ma_est', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('total_brd_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('btr_jjg_ma_est', $item)}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{ round(check_array('btr_jjg_ma_est', $item),2)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{skor_brd_ma(check_array('btr_jjg_ma_est', $item))}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhts_ma_est', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhtm1_ma_est', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhtm2_ma_est', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhtm3_ma_est', $item)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('tot_jjg_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('jjg_tgl_ma_est', $item)}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{ round (check_array('jjg_tgl_ma_est', $item),2)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{skor_buah_Ma(check_array('jjg_tgl_ma_est', $item))}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{check_array('ps_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('PerPSMA_est', $item)}}</td>
+        <td style="background-color : #b0d48c; color: #000000;">{{ round(check_array('PerPSMA_est', $item),2)}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
         <td style="background-color : #b0d48c; color: #000000;">{{skor_brd_ma(check_array('btr_jjg_ma_est', $item)) + skor_buah_Ma(check_array('jjg_tgl_ma_est', $item)) + skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
 
@@ -337,7 +337,7 @@
             {{check_array('jjg_total', $item)}}
         </td>
         <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('jjg_tph_total', $item)}}
+            {{round (check_array('jjg_tph_total', $item),2)}}
         </td>
         <td style="background-color : #b0d48c; color: #000000;">
             {{skor_buah_tinggal(check_array('jjg_tph_total', $item)) }}

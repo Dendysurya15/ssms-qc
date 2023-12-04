@@ -584,7 +584,7 @@ class inspeksidashController extends Controller
                                 $tph_sample = $value4[0]['tph_baris'];
                                 $sum_bt = $value4[0]['bt'];
                             } else {
-                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3, 2);
+                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3, 3);
                             }
                         } else {
                             $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = $tph_sample;
@@ -609,7 +609,7 @@ class inspeksidashController extends Controller
                             $transNewdata[$key][$key1][$key2][$key3] = $value3;
 
                             if ($value3['status_panen'] <= 3) {
-                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($value3['luas_blok']) * 1.3, 2);
+                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($value3['luas_blok']) * 1.3, 3);
                             } else {
                                 $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = 0;
                             }
@@ -749,20 +749,20 @@ class inspeksidashController extends Controller
                     $skor_bTinggal = $totalP_panen + $totalK_panen + $totalPTgl_panen;
 
                     if ($totalPanen != 0) {
-                        $brdPerjjg = round($skor_bTinggal / $totalPanen, 2);
+                        $brdPerjjg = round($skor_bTinggal / $totalPanen, 3);
                     } else {
                         $brdPerjjg = 0;
                     }
 
                     $sumBH = $totalbhts_panen +  $totalbhtm1_panen +  $totalbhtm2_panen +  $totalbhtm3_oanen;
                     if ($sumBH != 0) {
-                        $sumPerBH = round($sumBH / ($totalPanen + $sumBH) * 100, 2);
+                        $sumPerBH = round($sumBH / ($totalPanen + $sumBH) * 100, 3);
                     } else {
                         $sumPerBH = 0;
                     }
 
                     if ($totalpelepah_s != 0) {
-                        $perPl = round(($totalpelepah_s / $totalPokok) * 100, 2);
+                        $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
                     } else {
                         $perPl = 0;
                     }
@@ -805,7 +805,7 @@ class inspeksidashController extends Controller
                     $mtancaktab1Wil[$key][$key1][$key2]['bhtm3'] = $totalbhtm3_oanen;
                     $mtancaktab1Wil[$key][$key1][$key2]['buah/jjg'] = $sumPerBH;
 
-                    $mtancaktab1Wil[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 2);
+                    $mtancaktab1Wil[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
                     // data untuk pelepah sengklek
 
                     $mtancaktab1Wil[$key][$key1][$key2]['palepah_pokok'] = $totalpelepah_s;
@@ -851,7 +851,7 @@ class inspeksidashController extends Controller
                     $mtancaktab1Wil[$key][$key1][$key2]['bhtm2'] = 0;
                     $mtancaktab1Wil[$key][$key1][$key2]['bhtm3'] = 0;
 
-                    // $mtancaktab1Wil[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 2);
+                    // $mtancaktab1Wil[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
                     // data untuk pelepah sengklek
 
                     $mtancaktab1Wil[$key][$key1][$key2]['palepah_pokok'] = 0;
@@ -867,13 +867,13 @@ class inspeksidashController extends Controller
                 $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
                 // dd($sumBHEst);
                 if ($pokok_panenEst != 0) {
-                    $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 2);
+                    $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
                 } else {
                     $akpEst = 0;
                 }
 
                 if ($janjang_panenEst != 0) {
-                    $brdPerjjgEst = round($totalPKT / $janjang_panenEst, 2);
+                    $brdPerjjgEst = round($totalPKT / $janjang_panenEst, 3);
                 } else {
                     $brdPerjjgEst = 0;
                 }
@@ -882,13 +882,13 @@ class inspeksidashController extends Controller
 
                 // dd($sumBHEst);
                 if ($sumBHEst != 0) {
-                    $sumPerBHEst = round($sumBHEst / ($janjang_panenEst + $sumBHEst) * 100, 2);
+                    $sumPerBHEst = round($sumBHEst / ($janjang_panenEst + $sumBHEst) * 100, 3);
                 } else {
                     $sumPerBHEst = 0;
                 }
 
                 if ($pokok_panenEst != 0) {
-                    $perPlEst = round(($pelepah_sEST / $pokok_panenEst) * 100, 2);
+                    $perPlEst = round(($pelepah_sEST / $pokok_panenEst) * 100, 3);
                 } else {
                     $perPlEst = 0;
                 }
@@ -983,24 +983,24 @@ class inspeksidashController extends Controller
                 $akpWil = 0;
             } else {
 
-                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
+                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 3);
             }
 
             if ($totalPKTwil != 0) {
-                $brdPerwil = round($totalPKTwil / $janjang_panenWil, 2);
+                $brdPerwil = round($totalPKTwil / $janjang_panenWil, 3);
             } else {
                 $brdPerwil = 0;
             }
 
             // dd($sumBHEst);
             if ($sumBHWil != 0) {
-                $sumPerBHWil = round($sumBHWil / ($janjang_panenWil + $sumBHWil) * 100, 2);
+                $sumPerBHWil = round($sumBHWil / ($janjang_panenWil + $sumBHWil) * 100, 3);
             } else {
                 $sumPerBHWil = 0;
             }
 
             if ($pokok_panenWil != 0) {
-                $perPiWil = round(($pelepah_swil / $pokok_panenWil) * 100, 2);
+                $perPiWil = round(($pelepah_swil / $pokok_panenWil) * 100, 3);
             } else {
                 $perPiWil = 0;
             }
@@ -1039,7 +1039,7 @@ class inspeksidashController extends Controller
             $mtancaktab1Wil[$key]['bhtm3'] = $bhtm3_oanenWil;
             $mtancaktab1Wil[$key]['total_buah'] = $sumBHWil;
             $mtancaktab1Wil[$key]['total_buah_per'] = $sumPerBHWil;
-            $mtancaktab1Wil[$key]['jjgperBuah'] = number_format($sumPerBH, 2);
+            $mtancaktab1Wil[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
             // data untuk pelepah sengklek
             $mtancaktab1Wil[$key]['palepah_pokok'] = $pelepah_swil;
 
@@ -1066,7 +1066,7 @@ class inspeksidashController extends Controller
             $mtancaktab1Wil[$key]['bhtm1'] = 0;
             $mtancaktab1Wil[$key]['bhtm2'] = 0;
             $mtancaktab1Wil[$key]['bhtm3'] = 0;
-            // $mtancaktab1Wil[$key]['jjgperBuah'] = number_format($sumPerBH, 2);
+            // $mtancaktab1Wil[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
             // data untuk pelepah sengklek
             $mtancaktab1Wil[$key]['palepah_pokok'] = 0;
             // total skor akhir
@@ -1119,13 +1119,13 @@ class inspeksidashController extends Controller
 
                     if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
-                            $brdPertph = round($sum_bt / $tot_sample, 2);
+                            $brdPertph = round($sum_bt / $tot_sample, 3);
                         } else {
                             $brdPertph = 0;
                         }
                     } else {
                         if ($dataBLok != 0) {
-                            $brdPertph = round($sum_bt / $dataBLok, 2);
+                            $brdPertph = round($sum_bt / $dataBLok, 3);
                         } else {
                             $brdPertph = 0;
                         }
@@ -1133,13 +1133,13 @@ class inspeksidashController extends Controller
 
                     if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
-                            $buahPerTPH = round($sum_rst / $tot_sample, 2);
+                            $buahPerTPH = round($sum_rst / $tot_sample, 3);
                         } else {
                             $buahPerTPH = 0;
                         }
                     } else {
                         if ($dataBLok != 0) {
-                            $buahPerTPH = round($sum_rst / $dataBLok, 2);
+                            $buahPerTPH = round($sum_rst / $dataBLok, 3);
                         } else {
                             $buahPerTPH = 0;
                         }
@@ -1179,13 +1179,13 @@ class inspeksidashController extends Controller
                     $sum_rstEst += $sum_rst;
 
                     if ($dataBLokEst != 0) {
-                        $brdPertphEst = round($sum_btEst / $dataBLokEst, 2);
+                        $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
                     } else {
                         $brdPertphEst = 0;
                     }
 
                     if ($dataBLokEst != 0) {
-                        $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 2);
+                        $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
                     } else {
                         $buahPerTPHEst = 0;
                     }
@@ -1231,12 +1231,12 @@ class inspeksidashController extends Controller
                 $sum_rstWil += $sum_rstEst;
 
                 if ($dataBLokWil != 0) {
-                    $brdPertphWil = round($sum_btWil / $dataBLokWil, 2);
+                    $brdPertphWil = round($sum_btWil / $dataBLokWil, 3);
                 } else {
                     $brdPertphWil = 0;
                 }
                 if ($dataBLokWil != 0) {
-                    $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 2);
+                    $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 3);
                 } else {
                     $buahPerTPHWil = 0;
                 }
@@ -1327,13 +1327,13 @@ class inspeksidashController extends Controller
 
                     if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
-                            $brdPertph = round($sum_bt / $tot_sample, 2);
+                            $brdPertph = round($sum_bt / $tot_sample, 3);
                         } else {
                             $brdPertph = 0;
                         }
                     } else {
                         if ($dataBLok != 0) {
-                            $brdPertph = round($sum_bt / $dataBLok, 2);
+                            $brdPertph = round($sum_bt / $dataBLok, 3);
                         } else {
                             $brdPertph = 0;
                         }
@@ -1341,13 +1341,13 @@ class inspeksidashController extends Controller
 
                     if ($Reg == '2' || $Reg == 2) {
                         if ($dataBLok != 0) {
-                            $buahPerTPH = round($sum_rst / $tot_sample, 2);
+                            $buahPerTPH = round($sum_rst / $tot_sample, 3);
                         } else {
                             $buahPerTPH = 0;
                         }
                     } else {
                         if ($dataBLok != 0) {
-                            $buahPerTPH = round($sum_rst / $dataBLok, 2);
+                            $buahPerTPH = round($sum_rst / $dataBLok, 3);
                         } else {
                             $buahPerTPH = 0;
                         }
@@ -1389,12 +1389,12 @@ class inspeksidashController extends Controller
                     $sum_rstEst += $sum_rst;
 
                     if ($dataBLokEst != 0) {
-                        $brdPertphEst = round($sum_btEst / $dataBLokEst, 2);
+                        $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
                     } else {
                         $brdPertphEst = 0;
                     }
                     if ($dataBLokEst != 0) {
-                        $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 2);
+                        $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
                     } else {
                         $buahPerTPHEst = 0;
                     }
@@ -1426,12 +1426,12 @@ class inspeksidashController extends Controller
                 $sum_rstWil += $sum_rstEst;
 
                 if ($dataBLokWil != 0) {
-                    $brdPertphWil = round($sum_btWil / $dataBLokWil, 2);
+                    $brdPertphWil = round($sum_btWil / $dataBLokWil, 3);
                 } else {
                     $brdPertphWil = 0;
                 }
                 if ($dataBLokWil != 0) {
-                    $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 2);
+                    $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 3);
                 } else {
                     $buahPerTPHWil = 0;
                 }
@@ -1542,41 +1542,41 @@ class inspeksidashController extends Controller
                     $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
 
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
 
 
-                    $per_kr = round($total_kr * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
                     if ($jml_mth != 0) {
-                        $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $PerMth = 0;
                     }
                     if ($jml_mtg != 0) {
-                        $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $PerMsk = 0;
                     }
                     if ($sum_over != 0) {
-                        $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $PerOver = 0;
                     }
                     if ($sum_kosongjjg != 0) {
-                        $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $Perkosongjjg = 0;
                     }
                     if ($sum_vcut != 0) {
-                        $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 2);
+                        $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
                     } else {
                         $PerVcut = 0;
                     }
 
                     if ($sum_abnor != 0) {
-                        $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 2);
+                        $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
                     } else {
                         $PerAbr = 0;
                     }
@@ -1675,50 +1675,50 @@ class inspeksidashController extends Controller
                 $no_VcutEst = $sum_SamplejjgEst - $sum_vcutEst;
 
                 if ($sum_krEst != 0) {
-                    $total_krEst = round($sum_krEst / $jum_haEst, 2);
+                    $total_krEst = round($sum_krEst / $jum_haEst, 3);
                 } else {
                     $total_krEst = 0;
                 }
                 // if ($sum_kr != 0) {
-                //     $total_kr = round($sum_kr / $dataBLok, 2);
+                //     $total_kr = round($sum_kr / $dataBLok, 3);
                 // } else {
                 //     $total_kr = 0;
                 // }
 
                 if ($sum_bmtEst != 0) {
-                    $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerMthEst = 0;
                 }
 
                 if ($sum_bmkEst != 0) {
-                    $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerMskEst = 0;
                 }
 
                 if ($sum_overEst != 0) {
-                    $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerOverEst = 0;
                 }
                 if ($sum_kosongjjgEst != 0) {
-                    $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerkosongjjgEst = 0;
                 }
                 if ($sum_vcutEst != 0) {
-                    $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 2);
+                    $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
                 } else {
                     $PerVcutest = 0;
                 }
                 if ($sum_abnorEst != 0) {
-                    $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 2);
+                    $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
                 } else {
                     $PerAbrest = 0;
                 }
                 // $per_kr = round($sum_kr * 100);
-                $per_krEst = round($total_krEst * 100, 2);
+                $per_krEst = round($total_krEst * 100, 3);
 
 
                 $nonZeroValues = array_filter([$sum_SamplejjgEst, $sum_bmtEst, $sum_bmkEst, $sum_overEst, $sum_abnorEst, $sum_kosongjjgEst, $sum_vcutEst]);
@@ -1811,44 +1811,44 @@ class inspeksidashController extends Controller
             }
 
             if ($sum_krWil != 0) {
-                $total_krWil = round($sum_krWil / $jum_haWil, 2);
+                $total_krWil = round($sum_krWil / $jum_haWil, 3);
             } else {
                 $total_krWil = 0;
             }
 
             if ($sum_bmtWil != 0) {
-                $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerMthWil = 0;
             }
 
 
             if ($sum_bmkWil != 0) {
-                $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerMskWil = 0;
             }
             if ($sum_overWil != 0) {
-                $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerOverWil = 0;
             }
             if ($sum_kosongjjgWil != 0) {
-                $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerkosongjjgWil = 0;
             }
             if ($sum_vcutWil != 0) {
-                $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 2);
+                $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 3);
             } else {
                 $PerVcutWil = 0;
             }
             if ($sum_abnorWil != 0) {
-                $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 2);
+                $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 3);
             } else {
                 $PerAbrWil = 0;
             }
-            $per_krWil = round($total_krWil * 100, 2);
+            $per_krWil = round($total_krWil * 100, 3);
 
             $nonZeroValues = array_filter([$sum_SamplejjgWil, $sum_bmtWil, $sum_bmkWil, $sum_overWil, $sum_abnorWil, $sum_kosongjjgWil, $sum_vcutWil]);
 
@@ -2002,41 +2002,41 @@ class inspeksidashController extends Controller
                     $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
 
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
 
 
-                    $per_kr = round($total_kr * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
                     if ($jml_mth != 0) {
-                        $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $PerMth = 0;
                     }
                     if ($jml_mtg != 0) {
-                        $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $PerMsk = 0;
                     }
                     if ($sum_over != 0) {
-                        $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $PerOver = 0;
                     }
                     if ($sum_kosongjjg != 0) {
-                        $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                        $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                     } else {
                         $Perkosongjjg = 0;
                     }
                     if ($sum_vcut != 0) {
-                        $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 2);
+                        $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
                     } else {
                         $PerVcut = 0;
                     }
 
                     if ($sum_abnor != 0) {
-                        $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 2);
+                        $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
                     } else {
                         $PerAbr = 0;
                     }
@@ -2115,50 +2115,50 @@ class inspeksidashController extends Controller
                 $no_VcutEst = $sum_SamplejjgEst - $sum_vcutEst;
 
                 if ($sum_krEst != 0) {
-                    $total_krEst = round($sum_krEst / $jum_haEst, 2);
+                    $total_krEst = round($sum_krEst / $jum_haEst, 3);
                 } else {
                     $total_krEst = 0;
                 }
                 // if ($sum_kr != 0) {
-                //     $total_kr = round($sum_kr / $dataBLok, 2);
+                //     $total_kr = round($sum_kr / $dataBLok, 3);
                 // } else {
                 //     $total_kr = 0;
                 // }
 
                 if ($sum_bmtEst != 0) {
-                    $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerMthEst = 0;
                 }
 
                 if ($sum_bmkEst != 0) {
-                    $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerMskEst = 0;
                 }
 
                 if ($sum_overEst != 0) {
-                    $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerOverEst = 0;
                 }
                 if ($sum_kosongjjgEst != 0) {
-                    $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                    $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
                 } else {
                     $PerkosongjjgEst = 0;
                 }
                 if ($sum_vcutEst != 0) {
-                    $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 2);
+                    $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
                 } else {
                     $PerVcutest = 0;
                 }
                 if ($sum_abnorEst != 0) {
-                    $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 2);
+                    $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
                 } else {
                     $PerAbrest = 0;
                 }
                 // $per_kr = round($sum_kr * 100);
-                $per_krEst = round($total_krEst * 100, 2);
+                $per_krEst = round($total_krEst * 100, 3);
 
                 $totalSkorEst =   skor_buah_mentah_mb($PerMthEst) + skor_buah_masak_mb($PerMskEst) + skor_buah_over_mb($PerOverEst) + skor_jangkos_mb($PerkosongjjgEst) + skor_vcut_mb($PerVcutest) + skor_abr_mb($per_krEst);
                 $mtBuahtab1Wil_reg[$key][$key1]['tph_baris_blok'] = $jum_haEst;
@@ -2230,44 +2230,44 @@ class inspeksidashController extends Controller
             }
 
             if ($sum_krWil != 0) {
-                $total_krWil = round($sum_krWil / $jum_haWil, 2);
+                $total_krWil = round($sum_krWil / $jum_haWil, 3);
             } else {
                 $total_krWil = 0;
             }
 
             if ($sum_bmtWil != 0) {
-                $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerMthWil = 0;
             }
 
 
             if ($sum_bmkWil != 0) {
-                $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerMskWil = 0;
             }
             if ($sum_overWil != 0) {
-                $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerOverWil = 0;
             }
             if ($sum_kosongjjgWil != 0) {
-                $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+                $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
             } else {
                 $PerkosongjjgWil = 0;
             }
             if ($sum_vcutWil != 0) {
-                $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 2);
+                $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 3);
             } else {
                 $PerVcutWil = 0;
             }
             if ($sum_abnorWil != 0) {
-                $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 2);
+                $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 3);
             } else {
                 $PerAbrWil = 0;
             }
-            $per_krWil = round($total_krWil * 100, 2);
+            $per_krWil = round($total_krWil * 100, 3);
             $totalSkorWil =  skor_buah_mentah_mb($PerMthWil) + skor_buah_masak_mb($PerMskWil) + skor_buah_over_mb($PerOverWil) + skor_jangkos_mb($PerkosongjjgWil) + skor_vcut_mb($PerVcutWil) + skor_abr_mb($per_krWil);
             $mtBuahtab1Wil_reg[$key]['tph_baris_blok'] = $jum_haWil;
             $mtBuahtab1Wil_reg[$key]['sampleJJG_total'] = $sum_SamplejjgWil;
@@ -2448,7 +2448,7 @@ class inspeksidashController extends Controller
                     }
 
                     if ($totalpelepah_s != 0) {
-                        $perPl = round(($totalpelepah_s / $totalPokok) * 100, 2);
+                        $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
                     } else {
                         $perPl = 0;
                     }
@@ -2476,7 +2476,7 @@ class inspeksidashController extends Controller
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm3'] = $totalbhtm3_oanen;
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['buah/jjg'] = $sumPerBH;
 
-                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 2);
+                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
                     // data untuk pelepah sengklek
 
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['palepah_pokok'] = $totalpelepah_s;
@@ -2523,7 +2523,7 @@ class inspeksidashController extends Controller
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm2'] = 0;
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm3'] = 0;
 
-                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 2);
+                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
                     // data untuk pelepah sengklek
 
                     $mtancaktab1Wil_reg[$key][$key1][$key2]['palepah_pokok'] = 0;
@@ -2539,7 +2539,7 @@ class inspeksidashController extends Controller
                 $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
                 // dd($sumBHEst);
                 if ($pokok_panenEst != 0) {
-                    $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 2);
+                    $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
                 } else {
                     $akpEst = 0;
                 }
@@ -2639,24 +2639,24 @@ class inspeksidashController extends Controller
                 $akpWil = 0;
             } else {
 
-                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
+                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 3);
             }
 
             if ($totalPKTwil != 0) {
-                $brdPerwil = round($totalPKTwil / $janjang_panenWil, 2);
+                $brdPerwil = round($totalPKTwil / $janjang_panenWil, 3);
             } else {
                 $brdPerwil = 0;
             }
 
             // dd($sumBHEst);
             if ($sumBHWil != 0) {
-                $sumPerBHWil = round($sumBHWil / ($janjang_panenWil + $sumBHWil) * 100, 2);
+                $sumPerBHWil = round($sumBHWil / ($janjang_panenWil + $sumBHWil) * 100, 3);
             } else {
                 $sumPerBHWil = 0;
             }
 
             if ($pokok_panenWil != 0) {
-                $perPiWil = round(($pelepah_swil / $pokok_panenWil) * 100, 2);
+                $perPiWil = round(($pelepah_swil / $pokok_panenWil) * 100, 3);
             } else {
                 $perPiWil = 0;
             }
@@ -2680,7 +2680,7 @@ class inspeksidashController extends Controller
             $mtancaktab1Wil_reg[$key]['bhtm1'] = $bhtm1_panenWil;
             $mtancaktab1Wil_reg[$key]['bhtm2'] = $bhtm2_panenWil;
             $mtancaktab1Wil_reg[$key]['bhtm3'] = $bhtm3_oanenWil;
-            // $mtancaktab1Wil_reg[$key]['jjgperBuah'] = number_format($sumPerBH, 2);
+            // $mtancaktab1Wil_reg[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
             // data untuk pelepah sengklek
             $mtancaktab1Wil_reg[$key]['palepah_pokok'] = $pelepah_swil;
 
@@ -2707,7 +2707,7 @@ class inspeksidashController extends Controller
             $mtancaktab1Wil_reg[$key]['bhtm1'] = 0;
             $mtancaktab1Wil_reg[$key]['bhtm2'] = 0;
             $mtancaktab1Wil_reg[$key]['bhtm3'] = 0;
-            // $mtancaktab1Wil_reg[$key]['jjgperBuah'] = number_format($sumPerBH, 2);
+            // $mtancaktab1Wil_reg[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
             // data untuk pelepah sengklek
             $mtancaktab1Wil_reg[$key]['palepah_pokok'] = 0;
             // total skor akhir
@@ -2752,13 +2752,13 @@ class inspeksidashController extends Controller
             $akpWil = 0;
         } else {
 
-            $akpWil = round(($panen / $pkok) * 100, 2);
+            $akpWil = round(($panen / $pkok) * 100, 3);
         }
 
         $totalPKTwil = $p + $k + $tgl;
 
         if ($totalPKTwil != 0) {
-            $brdPerwil = round($totalPKTwil / $panen, 2);
+            $brdPerwil = round($totalPKTwil / $panen, 3);
         } else {
             $brdPerwil = 0;
         }
@@ -2766,14 +2766,14 @@ class inspeksidashController extends Controller
         $sumBHWil = $bhts +  $bhtm1 +  $bhtm2 +  $bhtm3;
 
         if ($sumBHWil != 0) {
-            $sumPerBHWil = round($sumBHWil / ($panen + $sumBHWil) * 100, 2);
+            $sumPerBHWil = round($sumBHWil / ($panen + $sumBHWil) * 100, 3);
         } else {
             $sumPerBHWil = 0;
         }
 
 
         if ($pkok != 0) {
-            $perPiWil = round(($palepah / $pkok) * 100, 2);
+            $perPiWil = round(($palepah / $pkok) * 100, 3);
         } else {
             $perPiWil = 0;
         }
@@ -2799,7 +2799,7 @@ class inspeksidashController extends Controller
         $mtancakReg['reg']['brd/jjgwil'] = $brdPerwil;
         $mtancakReg['reg']['perPalepah'] = $perPiWil;
         $mtancakReg['reg']['buah/jjgwil'] = $sumPerBHWil;
-        // $mtancakReg['reg']['jjgperBuah'] = number_format($sumPerBH, 2);
+        // $mtancakReg['reg']['jjgperBuah'] = number_format($sumPerBH, 3);
         // data untuk pelepah sengklek
 
         // total skor akhir
@@ -2848,39 +2848,39 @@ class inspeksidashController extends Controller
 
         $dataBLok = $jum_ha;
         if ($sum_kr != 0) {
-            $total_kr = round($sum_kr / $dataBLok, 2);
+            $total_kr = round($sum_kr / $dataBLok, 3);
         } else {
             $total_kr = 0;
         }
 
-        $per_kr = round($total_kr * 100, 2);
+        $per_kr = round($total_kr * 100, 3);
         if ($sum_bmt != 0) {
-            $PerMth = round(($sum_bmt / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+            $PerMth = round(($sum_bmt / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
         } else {
             $PerMth = 0;
         }
         if ($sum_bmk != 0) {
-            $PerMsk = round(($sum_bmk / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+            $PerMsk = round(($sum_bmk / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
         } else {
             $PerMsk = 0;
         }
         if ($sum_over != 0) {
-            $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+            $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
         } else {
             $PerOver = 0;
         }
         if ($sum_kosongjjg != 0) {
-            $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+            $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
         } else {
             $Perkosongjjg = 0;
         }
         if ($sum_Samplejjg != 0) {
-            $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 2);
+            $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
         } else {
             $PerVcut = 0;
         }
         if ($sum_abnor != 0) {
-            $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 2);
+            $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
         } else {
             $PerAbr = 0;
         }
@@ -2930,12 +2930,12 @@ class inspeksidashController extends Controller
             $sum_rst += $value['total_buah'];
         }
         if ($dataBLok != 0) {
-            $brdPertph = round($sum_bt / $dataBLok, 2);
+            $brdPertph = round($sum_bt / $dataBLok, 3);
         } else {
             $brdPertph = 0;
         }
         if ($dataBLok != 0) {
-            $buahPerTPH = round($sum_rst / $dataBLok, 2);
+            $buahPerTPH = round($sum_rst / $dataBLok, 3);
         } else {
             $buahPerTPH = 0;
         }
@@ -3166,7 +3166,7 @@ class inspeksidashController extends Controller
                 }
 
                 if ($totalpelepah_s != 0) {
-                    $perPl = round(($totalpelepah_s / $totalPokok) * 100, 2);
+                    $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
                 } else {
                     $perPl = 0;
                 }
@@ -3206,7 +3206,7 @@ class inspeksidashController extends Controller
                 $mtAncakMua[$key][$key1]['bhtm3'] = $totalbhtm3_oanen;
                 $mtAncakMua[$key][$key1]['buah/jjg'] = $sumPerBH;
 
-                $mtAncakMua[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 2);
+                $mtAncakMua[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
                 // data untuk pelepah sengklek
 
                 $mtAncakMua[$key][$key1]['palepah_pokok'] = $totalpelepah_s;
@@ -3251,7 +3251,7 @@ class inspeksidashController extends Controller
                 $mtAncakMua[$key][$key1]['bhtm2'] = 0;
                 $mtAncakMua[$key][$key1]['bhtm3'] = 0;
 
-                // $mtAncakMua[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 2);
+                // $mtAncakMua[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
                 // data untuk pelepah sengklek
 
                 $mtAncakMua[$key][$key1]['palepah_pokok'] = 0;
@@ -3266,7 +3266,7 @@ class inspeksidashController extends Controller
             $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
             // dd($sumBHEst);
             if ($pokok_panenEst != 0) {
-                $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 2);
+                $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
             } else {
                 $akpEst = 0;
             }
@@ -3378,7 +3378,7 @@ class inspeksidashController extends Controller
             $akpWil = 0;
         } else {
 
-            $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 2);
+            $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 3);
         }
 
         if ($totalPKTwil != 0) {
@@ -3433,7 +3433,7 @@ class inspeksidashController extends Controller
         $mtAncakMua['bhtm1'] = $bhtm1_panenWil;
         $mtAncakMua['bhtm2'] = $bhtm2_panenWil;
         $mtAncakMua['bhtm3'] = $bhtm3_oanenWil;
-        $mtAncakMua['jjgperBuah'] = number_format($sumPerBH, 2);
+        $mtAncakMua['jjgperBuah'] = number_format($sumPerBH, 3);
         // data untuk pelepah sengklek
         $mtAncakMua['palepah_pokok'] = $pelepah_swil;
 
@@ -3515,41 +3515,41 @@ class inspeksidashController extends Controller
                 $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
 
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
 
 
-                $per_kr = round($total_kr * 100, 2);
+                $per_kr = round($total_kr * 100, 3);
                 if ($jml_mth != 0) {
-                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerMth = 0;
                 }
                 if ($jml_mtg != 0) {
-                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerMsk = 0;
                 }
                 if ($sum_over != 0) {
-                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerOver = 0;
                 }
                 if ($sum_kosongjjg != 0) {
-                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $Perkosongjjg = 0;
                 }
                 if ($sum_vcut != 0) {
-                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 2);
+                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
                 } else {
                     $PerVcut = 0;
                 }
 
                 if ($sum_abnor != 0) {
-                    $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 2);
+                    $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
                 } else {
                     $PerAbr = 0;
                 }
@@ -3647,50 +3647,50 @@ class inspeksidashController extends Controller
             $no_VcutEst = $sum_SamplejjgEst - $sum_vcutEst;
 
             if ($sum_krEst != 0) {
-                $total_krEst = round($sum_krEst / $jum_haEst, 2);
+                $total_krEst = round($sum_krEst / $jum_haEst, 3);
             } else {
                 $total_krEst = 0;
             }
             // if ($sum_kr != 0) {
-            //     $total_kr = round($sum_kr / $dataBLok, 2);
+            //     $total_kr = round($sum_kr / $dataBLok, 3);
             // } else {
             //     $total_kr = 0;
             // }
 
             if ($sum_bmtEst != 0) {
-                $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerMthEst = 0;
             }
 
             if ($sum_bmkEst != 0) {
-                $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerMskEst = 0;
             }
 
             if ($sum_overEst != 0) {
-                $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerOverEst = 0;
             }
             if ($sum_kosongjjgEst != 0) {
-                $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerkosongjjgEst = 0;
             }
             if ($sum_vcutEst != 0) {
-                $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 2);
+                $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
             } else {
                 $PerVcutest = 0;
             }
             if ($sum_abnorEst != 0) {
-                $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 2);
+                $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
             } else {
                 $PerAbrest = 0;
             }
             // $per_kr = round($sum_kr * 100);
-            $per_krEst = round($total_krEst * 100, 2);
+            $per_krEst = round($total_krEst * 100, 3);
 
             $nonZeroValues = array_filter([$sum_SamplejjgEst, $PerMthEst, $PerMskEst, $PerOverEst, $sum_abnorEst, $sum_kosongjjgEst, $sum_vcutEst]);
 
@@ -3781,44 +3781,44 @@ class inspeksidashController extends Controller
         }
 
         if ($sum_krWil != 0) {
-            $total_krWil = round($sum_krWil / $jum_haWil, 2);
+            $total_krWil = round($sum_krWil / $jum_haWil, 3);
         } else {
             $total_krWil = 0;
         }
 
         if ($sum_bmtWil != 0) {
-            $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+            $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
         } else {
             $PerMthWil = 0;
         }
 
 
         if ($sum_bmkWil != 0) {
-            $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+            $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
         } else {
             $PerMskWil = 0;
         }
         if ($sum_overWil != 0) {
-            $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+            $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
         } else {
             $PerOverWil = 0;
         }
         if ($sum_kosongjjgWil != 0) {
-            $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 2);
+            $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
         } else {
             $PerkosongjjgWil = 0;
         }
         if ($sum_vcutWil != 0) {
-            $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 2);
+            $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 3);
         } else {
             $PerVcutWil = 0;
         }
         if ($sum_abnorWil != 0) {
-            $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 2);
+            $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 3);
         } else {
             $PerAbrWil = 0;
         }
-        $per_krWil = round($total_krWil * 100, 2);
+        $per_krWil = round($total_krWil * 100, 3);
 
 
         $nonZeroValuesBuah = array_filter([$sum_SamplejjgWil, $PerMthWil, $PerMskWil, $PerOverWil, $sum_abnorWil, $sum_kosongjjgWil, $sum_vcutWil]);
@@ -3897,12 +3897,12 @@ class inspeksidashController extends Controller
                 }
 
                 if ($dataBLok != 0) {
-                    $brdPertph = round($sum_bt / $dataBLok, 2);
+                    $brdPertph = round($sum_bt / $dataBLok, 3);
                 } else {
                     $brdPertph = 0;
                 }
                 if ($dataBLok != 0) {
-                    $buahPerTPH = round($sum_rst / $dataBLok, 2);
+                    $buahPerTPH = round($sum_rst / $dataBLok, 3);
                 } else {
                     $buahPerTPH = 0;
                 }
@@ -3937,12 +3937,12 @@ class inspeksidashController extends Controller
                 $sum_rstEst += $sum_rst;
 
                 if ($dataBLokEst != 0) {
-                    $brdPertphEst = round($sum_btEst / $dataBLokEst, 2);
+                    $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
                 } else {
                     $brdPertphEst = 0;
                 }
                 if ($dataBLokEst != 0) {
-                    $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 2);
+                    $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
                 } else {
                     $buahPerTPHEst = 0;
                 }
@@ -3989,12 +3989,12 @@ class inspeksidashController extends Controller
             $sum_rstWil += $sum_rstEst;
 
             if ($dataBLokWil != 0) {
-                $brdPertphWil = round($sum_btWil / $dataBLokWil, 2);
+                $brdPertphWil = round($sum_btWil / $dataBLokWil, 3);
             } else {
                 $brdPertphWil = 0;
             }
             if ($dataBLokWil != 0) {
-                $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 2);
+                $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 3);
             } else {
                 $buahPerTPHWil = 0;
             }
@@ -4088,7 +4088,7 @@ class inspeksidashController extends Controller
                 // dd($value['bhts_s']);
                 $sumBH = $value['bhts_s'] +  $value['bhtm1'] +  $value['bhtm2'] +  $value['bhtm3'];
                 if ($sumBH != 0) {
-                    $sumPerBH = round($sumBH / ($value['jumlah_panen'] + $sumBH) * 100, 2);
+                    $sumPerBH = round($sumBH / ($value['jumlah_panen'] + $sumBH) * 100, 3);
                 } else {
                     $sumPerBH = 0;
                 }
@@ -4098,7 +4098,7 @@ class inspeksidashController extends Controller
                 $skor_bTinggal = $value['p'] + $value['k'] + $value['tgl'];
 
                 if ($totalPanen != 0) {
-                    $brdPerjjg = round($skor_bTinggal / $value['jumlah_panen'], 2);
+                    $brdPerjjg = round($skor_bTinggal / $value['jumlah_panen'], 3);
                 } else {
                     $brdPerjjg = 0;
                 }
@@ -4106,7 +4106,7 @@ class inspeksidashController extends Controller
 
 
                 if ($totalpelepah_s != 0) {
-                    $perPl = round(($value['palepah_pokok'] / $value['pokok_sample']) * 100, 2);
+                    $perPl = round(($value['palepah_pokok'] / $value['pokok_sample']) * 100, 3);
                 } else {
                     $perPl = 0;
                 }
@@ -4127,12 +4127,12 @@ class inspeksidashController extends Controller
                 $sum_rst += $value['total_buah'];
 
                 if ($dataBLok != 0) {
-                    $brdPertph = round($sum_bt / $dataBLok, 2);
+                    $brdPertph = round($sum_bt / $dataBLok, 3);
                 } else {
                     $brdPertph = 0;
                 }
                 if ($dataBLok != 0) {
-                    $buahPerTPH = round($sum_rst / $dataBLok, 2);
+                    $buahPerTPH = round($sum_rst / $dataBLok, 3);
                 } else {
                     $buahPerTPH = 0;
                 }
@@ -4158,39 +4158,39 @@ class inspeksidashController extends Controller
                 $sum_kr =  $value['jum_kr'];
                 $dataBLok =  $value['tph_baris_blok'];
                 if ($jml_mth != 0) {
-                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerMth = 0;
                 }
 
 
                 if ($jml_mtg != 0) {
-                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerMsk = 0;
                 }
                 if ($sum_over != 0) {
-                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerOver = 0;
                 }
                 if ($sum_vcut != 0) {
-                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 2);
+                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
                 } else {
                     $PerVcut = 0;
                 }
                 if ($sum_kosongjjg != 0) {
-                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $Perkosongjjg = 0;
                 }
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
 
-                $per_kr = round($total_kr * 100, 2);
+                $per_kr = round($total_kr * 100, 3);
 
 
 
@@ -4939,13 +4939,13 @@ class inspeksidashController extends Controller
 
                 if ($Reg == '2' || $Reg == 2) {
                     if ($dataBLok != 0) {
-                        $brdPertph = round($sum_bt / $tot_sample, 2);
+                        $brdPertph = round($sum_bt / $tot_sample, 3);
                     } else {
                         $brdPertph = 0;
                     }
                 } else {
                     if ($dataBLok != 0) {
-                        $brdPertph = round($sum_bt / $dataBLok, 2);
+                        $brdPertph = round($sum_bt / $dataBLok, 3);
                     } else {
                         $brdPertph = 0;
                     }
@@ -4953,13 +4953,13 @@ class inspeksidashController extends Controller
 
                 if ($Reg == '2' || $Reg == 2) {
                     if ($dataBLok != 0) {
-                        $buahPerTPH = round($sum_rst / $tot_sample, 2);
+                        $buahPerTPH = round($sum_rst / $tot_sample, 3);
                     } else {
                         $buahPerTPH = 0;
                     }
                 } else {
                     if ($dataBLok != 0) {
-                        $buahPerTPH = round($sum_rst / $dataBLok, 2);
+                        $buahPerTPH = round($sum_rst / $dataBLok, 3);
                     } else {
                         $buahPerTPH = 0;
                     }
@@ -5007,12 +5007,12 @@ class inspeksidashController extends Controller
                 $sum_rstEst += $sum_rst;
 
                 if ($dataBLokEst != 0) {
-                    $brdPertphEst = round($sum_btEst / $dataBLokEst, 2);
+                    $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
                 } else {
                     $brdPertphEst = 0;
                 }
                 if ($dataBLokEst != 0) {
-                    $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 2);
+                    $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
                 } else {
                     $buahPerTPHEst = 0;
                 }
@@ -5118,41 +5118,41 @@ class inspeksidashController extends Controller
                 $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
                 // $dataBLok = count($combination_counts);
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dtBlok, 2);
+                    $total_kr = round($sum_kr / $dtBlok, 3);
                 } else {
                     $total_kr = 0;
                 }
 
 
-                $per_kr = round($total_kr * 100, 2);
+                $per_kr = round($total_kr * 100, 3);
                 if ($jml_mth != 0) {
-                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerMth = 0;
                 }
                 if ($jml_mtg != 0) {
-                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerMsk = 0;
                 }
                 if ($sum_over != 0) {
-                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $PerOver = 0;
                 }
                 if ($sum_kosongjjg != 0) {
-                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 2);
+                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
                 } else {
                     $Perkosongjjg = 0;
                 }
                 if ($sum_vcut != 0) {
-                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 2);
+                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
                 } else {
                     $PerVcut = 0;
                 }
 
                 if ($sum_abnor != 0) {
-                    $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 2);
+                    $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
                 } else {
                     $PerAbr = 0;
                 }
@@ -5250,50 +5250,50 @@ class inspeksidashController extends Controller
             }
 
             if ($sum_krEst != 0) {
-                $total_krEst = round($sum_krEst / $jum_haEst, 2);
+                $total_krEst = round($sum_krEst / $jum_haEst, 3);
             } else {
                 $total_krEst = 0;
             }
             // if ($sum_kr != 0) {
-            //     $total_kr = round($sum_kr / $dataBLok, 2);
+            //     $total_kr = round($sum_kr / $dataBLok, 3);
             // } else {
             //     $total_kr = 0;
             // }
 
             if ($sum_bmtEst != 0) {
-                $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerMthEst = 0;
             }
 
             if ($sum_bmkEst != 0) {
-                $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerMskEst = 0;
             }
 
             if ($sum_overEst != 0) {
-                $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerOverEst = 0;
             }
             if ($sum_kosongjjgEst != 0) {
-                $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 2);
+                $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
             } else {
                 $PerkosongjjgEst = 0;
             }
             if ($sum_vcutEst != 0) {
-                $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 2);
+                $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
             } else {
                 $PerVcutest = 0;
             }
             if ($sum_abnorEst != 0) {
-                $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 2);
+                $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
             } else {
                 $PerAbrest = 0;
             }
             // $per_kr = round($sum_kr * 100);
-            $per_krEst = round($total_krEst * 100, 2);
+            $per_krEst = round($total_krEst * 100, 3);
 
             $nonZeroValues = array_filter([$sum_SamplejjgEst, $sum_bmtEst, $sum_bmkEst, $sum_overEst, $sum_abnorEst, $sum_kosongjjgEst, $sum_vcutEst]);
 
@@ -5460,7 +5460,7 @@ class inspeksidashController extends Controller
                 }
 
                 if ($totalpelepah_s != 0) {
-                    $perPl = round(($totalpelepah_s / $totalPokok) * 100, 2);
+                    $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
                 } else {
                     $perPl = 0;
                 }
@@ -5499,7 +5499,7 @@ class inspeksidashController extends Controller
                 $mtPLAancak[$key][$key1]['bhtm3'] = $totalbhtm3_oanen;
                 $mtPLAancak[$key][$key1]['buah/jjg'] = $sumPerBH;
 
-                $mtPLAancak[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 2);
+                $mtPLAancak[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
                 // data untuk pelepah sengklek
 
                 $mtPLAancak[$key][$key1]['palepah_pokok'] = $totalpelepah_s;
@@ -5544,7 +5544,7 @@ class inspeksidashController extends Controller
                 $mtPLAancak[$key][$key1]['bhtm2'] = 0;
                 $mtPLAancak[$key][$key1]['bhtm3'] = 0;
 
-                // $mtPLAancak[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 2);
+                // $mtPLAancak[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
                 // data untuk pelepah sengklek
 
                 $mtPLAancak[$key][$key1]['palepah_pokok'] = 0;
@@ -5559,7 +5559,7 @@ class inspeksidashController extends Controller
             $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
             // dd($sumBHEst);
             if ($pokok_panenEst != 0) {
-                $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 2);
+                $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
             } else {
                 $akpEst = 0;
             }
@@ -6311,7 +6311,7 @@ class inspeksidashController extends Controller
 
         unsetPlasmaKeys($chrTransbrdv2);
         unsetPlasmaKeys($chrTransbuahv2);
- 
+
         $arrView['mttrans_brd'] =  $chrTransbrdv2;
         $arrView['mttrans_buah'] =  $chrTransbuahv2;
         $arrView['mttrans_wilbrd'] =  $WilTransBRD;
@@ -6322,7 +6322,6 @@ class inspeksidashController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
-
 
     public function filterTahun(Request $request)
     {

@@ -889,7 +889,7 @@ class inspectController extends Controller
 
                         $tot_brd = ($jml_brtp + $jml_brtk + $jml_brtgl);
                         $tot_jjg = ($jml_bhts + $jml_bhtm1 + $jml_bhtm2 + $jml_bhtm3);
-                        // $luas_ha = round(($jumPokok / $jml_sph), 2);
+                        // $luas_ha = round(($jumPokok / $jml_sph), 3);
 
 
                         $ancak[$key][$key1][$key2][$key3]['luas_blok'] = $first;
@@ -908,7 +908,7 @@ class inspectController extends Controller
                         $ancak[$key][$key1][$key2][$key3]['gl_ma'] = $jml_brtgl;
                         $ancak[$key][$key1][$key2][$key3]['total_brd_ma'] = $tot_brd;
                         if ($jml_jjg_panen != 0) {
-                            $ancak[$key][$key1][$key2][$key3]['btr_jjg_ma'] = round(($tot_brd / $jml_jjg_panen), 2);
+                            $ancak[$key][$key1][$key2][$key3]['btr_jjg_ma'] = round(($tot_brd / $jml_jjg_panen), 3);
                         } else {
                             $ancak[$key][$key1][$key2][$key3]['btr_jjg_ma'] = 0;
                         }
@@ -919,7 +919,7 @@ class inspectController extends Controller
                         $ancak[$key][$key1][$key2][$key3]['bhtm3_ma'] = $jml_bhtm3;
                         $ancak[$key][$key1][$key2][$key3]['tot_jjg_ma'] = $tot_jjg;
                         if ($tot_jjg != 0) {
-                            $ancak[$key][$key1][$key2][$key3]['jjg_tgl_ma'] = round(($tot_jjg / ($jml_jjg_panen + $tot_jjg)) * 100, 2);
+                            $ancak[$key][$key1][$key2][$key3]['jjg_tgl_ma'] = round(($tot_jjg / ($jml_jjg_panen + $tot_jjg)) * 100, 3);
                         } else {
                             $ancak[$key][$key1][$key2][$key3]['jjg_tgl_ma'] = 0;
                         }
@@ -967,7 +967,7 @@ class inspectController extends Controller
                                 $tph_sample = $value4[0]['tph_baris'];
                                 $sum_bt = $value4[0]['bt'];
                             } else {
-                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3, 2);
+                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3, 3);
                             }
                         } else {
                             $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = $tph_sample;
@@ -988,12 +988,13 @@ class inspectController extends Controller
             foreach ($value as $key1 => $value1) {
 
                 foreach ($value1 as $key2 => $value2) {
+                    $tph_tod = 0;
                     foreach ($value2 as $key3 => $value3) {
                         if (!isset($transNewdata[$key][$key1][$key2][$key3])) {
                             $transNewdata[$key][$key1][$key2][$key3] = $value3;
 
                             if ($value3['status_panen'] <= 3) {
-                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($value3['luas_blok'] * 1.3), 2);
+                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($value3['luas_blok'] * 1.3), 3);
                             } else {
                                 $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = 0;
                             }
@@ -1098,13 +1099,13 @@ class inspectController extends Controller
                     $dataSkor[$value1['wil']][$key][$key2]['jml_empty'] = $Jjg_Empty;
                     $dataSkor[$value1['wil']][$key][$key2]['jml_abnormal'] = $Jjg_Abr;
                     $dataSkor[$value1['wil']][$key][$key2]['jml_vcut'] = $Jjg_Vcut;
-                    $dataSkor[$value1['wil']][$key][$key2]['jml_krg_brd'] = $dtBlok == 0 ? $Jjg_Als : round($Jjg_Als / $dtBlok, 2);
+                    $dataSkor[$value1['wil']][$key][$key2]['jml_krg_brd'] = $dtBlok == 0 ? $Jjg_Als : round($Jjg_Als / $dtBlok, 3);
                     $denom = ($janjang - $Jjg_Abr) != 0 ? ($janjang - $Jjg_Abr) : 1;
 
-                    $dataSkor[$value1['wil']][$key][$key2]['PersenBuahMentah'] = $denom != 0 ? round(($jml_mth / $denom) * 100, 2) : 0;
-                    $dataSkor[$value1['wil']][$key][$key2]['PersenBuahMasak'] = $denom != 0 ? round(($jml_mtg / $denom) * 100, 2) : 0;
-                    $dataSkor[$value1['wil']][$key][$key2]['PersenBuahOver'] = $denom != 0 ? round(($Jjg_Over / $denom) * 100, 2) : 0;
-                    $dataSkor[$value1['wil']][$key][$key2]['PersenPerJanjang'] = $denom != 0 ? round(($Jjg_Empty / $denom) * 100, 2) : 0;
+                    $dataSkor[$value1['wil']][$key][$key2]['PersenBuahMentah'] = $denom != 0 ? round(($jml_mth / $denom) * 100, 3) : 0;
+                    $dataSkor[$value1['wil']][$key][$key2]['PersenBuahMasak'] = $denom != 0 ? round(($jml_mtg / $denom) * 100, 3) : 0;
+                    $dataSkor[$value1['wil']][$key][$key2]['PersenBuahOver'] = $denom != 0 ? round(($Jjg_Over / $denom) * 100, 3) : 0;
+                    $dataSkor[$value1['wil']][$key][$key2]['PersenPerJanjang'] = $denom != 0 ? round(($Jjg_Empty / $denom) * 100, 3) : 0;
 
                     $dataSkor[$value1['wil']][$key][$key2]['PersenVcut'] = count_percent($Jjg_Vcut, $janjang);
                     $dataSkor[$value1['wil']][$key][$key2]['PersenAbr'] = count_percent($Jjg_Abr, $janjang);
@@ -1122,11 +1123,11 @@ class inspectController extends Controller
                 $dataSkor[$value1['wil']][$key]['tot_empty'] = $sum_jjg_empty;
                 $dataSkor[$value1['wil']][$key]['tot_abr'] = $sum_jjg_abnormal;
                 $dataSkor[$value1['wil']][$key]['tot_vcut'] = $sum_jjg_vcut;
-                $dataSkor[$value1['wil']][$key]['tot_krg_brd'] = $sum_blok == 0 ? $sum_jjg_als : round($sum_jjg_als / $sum_blok, 2);
+                $dataSkor[$value1['wil']][$key]['tot_krg_brd'] = $sum_blok == 0 ? $sum_jjg_als : round($sum_jjg_als / $sum_blok, 3);
                 $dataSkor[$value1['wil']][$key]['tot_PersenBuahMentah'] = round(($jml_mth_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
-                $dataSkor[$value1['wil']][$key]['tot_PersenBuahMasak'] = round(($jml_mtg_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-                $dataSkor[$value1['wil']][$key]['tot_PersenBuahOver'] = round(($sum_jjg_over / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-                $dataSkor[$value1['wil']][$key]['tot_PersenPerJanjang'] = round(($sum_jjg_empty / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
+                $dataSkor[$value1['wil']][$key]['tot_PersenBuahMasak'] = round(($jml_mtg_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
+                $dataSkor[$value1['wil']][$key]['tot_PersenBuahOver'] = round(($sum_jjg_over / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
+                $dataSkor[$value1['wil']][$key]['tot_PersenPerJanjang'] = round(($sum_jjg_empty / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
                 $dataSkor[$value1['wil']][$key]['tot_PersenVcut'] = count_percent($sum_jjg_vcut, $sum_janjang);
                 $dataSkor[$value1['wil']][$key]['tot_PersenAbr'] = count_percent($sum_jjg_abnormal, $sum_janjang);
                 $dataSkor[$value1['wil']][$key]['tot_PersenKrgBrd'] = count_percent($sum_jjg_als, $sum_blok);
@@ -1205,7 +1206,7 @@ class inspectController extends Controller
                     $jml_sph = $jml_blok == 0 ? $sph : ($sph / $jml_blok);
                     $tot_brd = ($jml_brtp + $jml_brtk + $jml_brtgl);
                     $tot_jjg = ($jml_bhts + $jml_bhtm1 + $jml_bhtm2 + $jml_bhtm3);
-                    $luas_ha = ($jml_sph != 0) ? round(($jml_pokok_sm / $jml_sph), 2) : 0;
+                    $luas_ha = ($jml_sph != 0) ? round(($jml_pokok_sm / $jml_sph), 3) : 0;
 
 
                     $jml_pokok_sm_est += $jml_pokok_sm;
@@ -1266,7 +1267,7 @@ class inspectController extends Controller
                 $dataSkor[$value1['wil']][$key]['bhtm2_ma_est'] = $jml_bhtm2_est;
                 $dataSkor[$value1['wil']][$key]['bhtm3_ma_est'] = $jml_bhtm3_est;
                 $dataSkor[$value1['wil']][$key]['tot_jjg_ma_est'] = $tot_jjg_est;
-                $dataSkor[$value1['wil']][$key]['jjg_tgl_ma_est'] = ($jml_jjg_panen_est + $tot_jjg_est) == 0 ? $tot_jjg_est : round(($tot_jjg_est / ($jml_jjg_panen_est + $tot_jjg_est)) * 100, 2);
+                $dataSkor[$value1['wil']][$key]['jjg_tgl_ma_est'] = ($jml_jjg_panen_est + $tot_jjg_est) == 0 ? $tot_jjg_est : round(($tot_jjg_est / ($jml_jjg_panen_est + $tot_jjg_est)) * 100, 3);
                 $dataSkor[$value1['wil']][$key]['ps_ma_est'] = $jml_ps_est;
                 $dataSkor[$value1['wil']][$key]['PerPSMA_est'] = count_percent($jml_ps_est, $jml_pokok_sm_est);
             }
@@ -1324,7 +1325,7 @@ class inspectController extends Controller
                                             $dataSkor[$value1['wil']][$key][$key2]['tph_sample'] = $innerTransportValue['total_tph'];
                                         }
                                         $sum_tph_sample += $innerTransportValue['total_tph'];
-                                        $btr_tph = round($sum_bt / $innerTransportValue['total_tph'], 2);
+                                        $btr_tph = round($sum_bt / $innerTransportValue['total_tph'], 3);
                                         $jjg_tph = round($sum_Restan / $innerTransportValue['total_tph'], 3);
                                         $tph_reg2 += $innerTransportValue['total_tph'];
                                     }
@@ -1334,7 +1335,7 @@ class inspectController extends Controller
                     } else {
                         $dataSkor[$value1['wil']][$key][$key2]['tph_sample'] = $tph_sample;
                         $sum_tph_sample += $tph_sample;
-                        $btr_tph = round($sum_bt / $tph_sample, 2);
+                        $btr_tph = round($sum_bt / $tph_sample, 3);
                         $jjg_tph = round($sum_Restan / $tph_sample, 3);
                     }
 
@@ -1415,7 +1416,7 @@ class inspectController extends Controller
                     $restantod += $value2['restan_total'];
                 } # code...
 
-                $bt_tph = ($todSam != 0) ? round($totalbt / $todSam, 2) : 0;
+                $bt_tph = ($todSam != 0) ? round($totalbt / $todSam, 3) : 0;
                 $rst_tph = ($todSam != 0) ? round($restantod / $todSam, 3) : 0;
 
 
@@ -1432,8 +1433,8 @@ class inspectController extends Controller
                 $rst_est += $restantod;
                 $sample += $todSam;
             }
-            $bt_esttph = round($bt_est / $sample, 2);
-            $rst_esttph = round($rst_est / $sample, 2);
+            $bt_esttph = round($bt_est / $sample, 3);
+            $rst_esttph = round($rst_est / $sample, 3);
 
             $testing[$key]['tph_tod'] = $sample;
             $testing[$key]['total_bt'] = $bt_est;
@@ -1498,8 +1499,8 @@ class inspectController extends Controller
                                             $dataSkor_trans[$value1['wil']][$key][$key2]['tph_sample'] = $innerTransportValue['total_tph'];
                                         }
                                         $sum_tph_sample += $innerTransportValue['total_tph'];
-                                        $btr_tph = round($sum_bt / $innerTransportValue['total_tph'], 2);
-                                        $jjg_tph = round($sum_Restan / $innerTransportValue['total_tph'], 2);
+                                        $btr_tph = round($sum_bt / $innerTransportValue['total_tph'], 3);
+                                        $jjg_tph = round($sum_Restan / $innerTransportValue['total_tph'], 3);
                                         $tph_reg2 += $innerTransportValue['total_tph'];
                                     }
                                 }
@@ -1508,7 +1509,7 @@ class inspectController extends Controller
                     } else {
                         $dataSkor_trans[$value1['wil']][$key][$key2]['tph_sample'] = $tph_sample;
                         $sum_tph_sample += $tph_sample;
-                        $btr_tph = round($sum_bt / $tph_sample, 2);
+                        $btr_tph = round($sum_bt / $tph_sample, 3);
                         $jjg_tph = round($sum_Restan / $tph_sample, 3);
                     }
 
@@ -1527,9 +1528,9 @@ class inspectController extends Controller
                 }
                 $dataSkor_trans[$value1['wil']][$key]['bt_total'] = $sum_skor_bt;
                 $dataSkor_trans[$value1['wil']][$key]['tph_sample_total'] = $sum_tph_sample;
-                $dataSkor_trans[$value1['wil']][$key]['bt_tph_total'] = round($sum_skor_bt / $sum_tph_sample, 2);
+                $dataSkor_trans[$value1['wil']][$key]['bt_tph_total'] = round($sum_skor_bt / $sum_tph_sample, 3);
                 $dataSkor_trans[$value1['wil']][$key]['jjg_total'] = $sum_jjg;
-                $dataSkor_trans[$value1['wil']][$key]['jjg_tph_total'] = round($sum_jjg / $sum_tph_sample, 2);
+                $dataSkor_trans[$value1['wil']][$key]['jjg_tph_total'] = round($sum_jjg / $sum_tph_sample, 3);
             }
         }
 
@@ -1606,13 +1607,13 @@ class inspectController extends Controller
                     $dataSkor_buah[$value1['wil']][$key][$key2]['jml_empty'] = $Jjg_Empty;
                     $dataSkor_buah[$value1['wil']][$key][$key2]['jml_abnormal'] = $Jjg_Abr;
                     $dataSkor_buah[$value1['wil']][$key][$key2]['jml_vcut'] = $Jjg_Vcut;
-                    $dataSkor_buah[$value1['wil']][$key][$key2]['jml_krg_brd'] = $dtBlok == 0 ? $Jjg_Als : round($Jjg_Als / $dtBlok, 2);
+                    $dataSkor_buah[$value1['wil']][$key][$key2]['jml_krg_brd'] = $dtBlok == 0 ? $Jjg_Als : round($Jjg_Als / $dtBlok, 3);
                     $denom = ($janjang - $Jjg_Abr) != 0 ? ($janjang - $Jjg_Abr) : 1;
 
-                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenBuahMentah'] = $denom != 0 ? round(($jml_mth / $denom) * 100, 2) : 0;
-                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenBuahMasak'] = $denom != 0 ? round(($jml_mtg / $denom) * 100, 2) : 0;
-                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenBuahOver'] = $denom != 0 ? round(($Jjg_Over / $denom) * 100, 2) : 0;
-                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenPerJanjang'] = $denom != 0 ? round(($Jjg_Empty / $denom) * 100, 2) : 0;
+                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenBuahMentah'] = $denom != 0 ? round(($jml_mth / $denom) * 100, 3) : 0;
+                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenBuahMasak'] = $denom != 0 ? round(($jml_mtg / $denom) * 100, 3) : 0;
+                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenBuahOver'] = $denom != 0 ? round(($Jjg_Over / $denom) * 100, 3) : 0;
+                    $dataSkor_buah[$value1['wil']][$key][$key2]['PersenPerJanjang'] = $denom != 0 ? round(($Jjg_Empty / $denom) * 100, 3) : 0;
                     $dataSkor_buah[$value1['wil']][$key][$key2]['PersenVcut'] = count_percent($Jjg_Vcut, $janjang);
                     $dataSkor_buah[$value1['wil']][$key][$key2]['PersenAbr'] = count_percent($Jjg_Abr, $janjang);
                     $dataSkor_buah[$value1['wil']][$key][$key2]['PersenKrgBrd'] = count_percent($Jjg_Als, $dtBlok);
@@ -1629,11 +1630,11 @@ class inspectController extends Controller
                 $dataSkor_buah[$value1['wil']][$key]['tot_empty'] = $sum_jjg_empty;
                 $dataSkor_buah[$value1['wil']][$key]['tot_abr'] = $sum_jjg_abnormal;
                 $dataSkor_buah[$value1['wil']][$key]['tot_vcut'] = $sum_jjg_vcut;
-                $dataSkor_buah[$value1['wil']][$key]['tot_krg_brd'] = $sum_blok == 0 ? $sum_jjg_als : round($sum_jjg_als / $sum_blok, 2);
-                $dataSkor_buah[$value1['wil']][$key]['tot_PersenBuahMentah'] = round(($jml_mth_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-                $dataSkor_buah[$value1['wil']][$key]['tot_PersenBuahMasak'] = round(($jml_mtg_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-                $dataSkor_buah[$value1['wil']][$key]['tot_PersenBuahOver'] = round(($sum_jjg_over / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
-                $dataSkor_buah[$value1['wil']][$key]['tot_PersenPerJanjang'] = round(($sum_jjg_empty / ($sum_janjang - $sum_jjg_abnormal)) * 100, 2);
+                $dataSkor_buah[$value1['wil']][$key]['tot_krg_brd'] = $sum_blok == 0 ? $sum_jjg_als : round($sum_jjg_als / $sum_blok, 3);
+                $dataSkor_buah[$value1['wil']][$key]['tot_PersenBuahMentah'] = round(($jml_mth_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
+                $dataSkor_buah[$value1['wil']][$key]['tot_PersenBuahMasak'] = round(($jml_mtg_est / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
+                $dataSkor_buah[$value1['wil']][$key]['tot_PersenBuahOver'] = round(($sum_jjg_over / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
+                $dataSkor_buah[$value1['wil']][$key]['tot_PersenPerJanjang'] = round(($sum_jjg_empty / ($sum_janjang - $sum_jjg_abnormal)) * 100, 3);
                 $dataSkor_buah[$value1['wil']][$key]['tot_PersenVcut'] = count_percent($sum_jjg_vcut, $sum_janjang);
                 $dataSkor_buah[$value1['wil']][$key]['tot_PersenAbr'] = count_percent($sum_jjg_abnormal, $sum_janjang);
                 $dataSkor_buah[$value1['wil']][$key]['tot_PersenKrgBrd'] = count_percent($sum_jjg_als, $sum_blok);
@@ -1703,7 +1704,7 @@ class inspectController extends Controller
                     $jml_sph = $jml_blok == 0 ? $sph : ($sph / $jml_blok);
                     $tot_brd = ($jml_brtp + $jml_brtk + $jml_brtgl);
                     $tot_jjg = ($jml_bhts + $jml_bhtm1 + $jml_bhtm2 + $jml_bhtm3);
-                    $luas_ha = ($jml_sph != 0) ? round(($jml_pokok_sm / $jml_sph), 2) : 0;
+                    $luas_ha = ($jml_sph != 0) ? round(($jml_pokok_sm / $jml_sph), 3) : 0;
 
 
                     $jml_pokok_sm_est += $jml_pokok_sm;
@@ -1718,8 +1719,8 @@ class inspectController extends Controller
                     $jml_bhtm3_est += $jml_bhtm3;
                     $jml_ps_est += $jml_ps;
 
-                    $brd_jjg = ($jml_jjg_panen != 0) ? round(($tot_brd / $jml_jjg_panen), 2) : 0;
-                    $buah_jjg = (($jml_jjg_panen + $tot_jjg) != 0) ? round(($tot_jjg / ($jml_jjg_panen + $tot_jjg)) * 100, 2) : 0;
+                    $brd_jjg = ($jml_jjg_panen != 0) ? round(($tot_brd / $jml_jjg_panen), 3) : 0;
+                    $buah_jjg = (($jml_jjg_panen + $tot_jjg) != 0) ? round(($tot_jjg / ($jml_jjg_panen + $tot_jjg)) * 100, 3) : 0;
 
 
 
@@ -1757,13 +1758,13 @@ class inspectController extends Controller
                 $dataSkor_ancak[$value1['wil']][$key]['k_ma_est'] = $jml_brtk_est;
                 $dataSkor_ancak[$value1['wil']][$key]['gl_ma_est'] = $jml_brtgl_est;
                 $dataSkor_ancak[$value1['wil']][$key]['total_brd_ma_est'] = $tot_brd_est;
-                $dataSkor_ancak[$value1['wil']][$key]['btr_jjg_ma_est'] = $jml_jjg_panen_est == 0 ? $tot_brd_est : round(($tot_brd_est / $jml_jjg_panen_est), 2);
+                $dataSkor_ancak[$value1['wil']][$key]['btr_jjg_ma_est'] = $jml_jjg_panen_est == 0 ? $tot_brd_est : round(($tot_brd_est / $jml_jjg_panen_est), 3);
                 $dataSkor_ancak[$value1['wil']][$key]['bhts_ma_est'] = $jml_bhts_est;
                 $dataSkor_ancak[$value1['wil']][$key]['bhtm1_ma_est'] = $jml_bhtm1_est;
                 $dataSkor_ancak[$value1['wil']][$key]['bhtm2_ma_est'] = $jml_bhtm2_est;
                 $dataSkor_ancak[$value1['wil']][$key]['bhtm3_ma_est'] = $jml_bhtm3_est;
                 $dataSkor_ancak[$value1['wil']][$key]['tot_jjg_ma_est'] = $tot_jjg_est;
-                $dataSkor_ancak[$value1['wil']][$key]['jjg_tgl_ma_est'] = ($jml_jjg_panen_est + $tot_jjg_est) == 0 ? $tot_jjg_est : round(($tot_jjg_est / ($jml_jjg_panen_est + $tot_jjg_est)) * 100, 2);
+                $dataSkor_ancak[$value1['wil']][$key]['jjg_tgl_ma_est'] = ($jml_jjg_panen_est + $tot_jjg_est) == 0 ? $tot_jjg_est : round(($tot_jjg_est / ($jml_jjg_panen_est + $tot_jjg_est)) * 100, 3);
                 $dataSkor_ancak[$value1['wil']][$key]['ps_ma_est'] = $jml_ps_est;
                 $dataSkor_ancak[$value1['wil']][$key]['PerPSMA_est'] = count_percent($jml_ps_est, $jml_pokok_sm_est);
                 $dataSkor_ancak[$value1['wil']][$key]['Skor_ps_est'] = skor_palepah_ma(count_percent($jml_ps_est, $jml_pokok_sm_est));
@@ -1823,8 +1824,8 @@ class inspectController extends Controller
                     $restantod += $value2['restan_total'];
                 } # code...
 
-                $bt_tph = round($totalbt / $todSam, 2);
-                $rst_tph = round($restantod / $todSam, 2);
+                $bt_tph = round($totalbt / $todSam, 3);
+                $rst_tph = round($restantod / $todSam, 3);
 
                 $testingPlasma[$key][$key1]['tph_tod'] = $todSam;
                 $testingPlasma[$key][$key1]['total_bt'] = $totalbt;
@@ -1853,7 +1854,6 @@ class inspectController extends Controller
             'plasma_tph' => $testingPlasma,
         ]);
     }
-
 
     public function dashboard_inspeksi(Request $request)
     {

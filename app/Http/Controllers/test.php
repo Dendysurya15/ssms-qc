@@ -17,122 +17,80 @@ require '../app/helpers.php';
 
 class emplacementsController extends Controller
 {
-    public function dashboard_perum(Request $request)
+    public function filterv2(Request $request)
     {
 
+        $date = $request->input('date');
 
-        $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        // dd($bulan);
-        $shortMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'AVE', 'STATUS'];
+        $Reg = $request->input('reg');
 
-        $arrHeader = ['No', 'Estate', 'Kode', 'Estate Manager'];
-        $arrHeader =  array_merge($arrHeader, $shortMonth);
-        // array_push($arrHeader, date('Y'));
-
-        $arrHeaderSc = ['WILAYAH', 'Group Manager'];
-        $arrHeaderSc = array_merge($arrHeaderSc, $shortMonth);
-        // array_push($arrHeaderSc, date('Y'));
-
-        $arrHeaderReg = ['Region', 'Region Head'];
-        $arrHeaderReg = array_merge($arrHeaderReg, $shortMonth);
-
-        $arrHeaderTrd = ['No', 'Estate', 'Afdeling', 'Nama Asisten'];
-        $arrHeaderTrd =  array_merge($arrHeaderTrd, $shortMonth);
-        // array_push($arrHeaderTrd, date('Y'));
-
-        $queryAsisten = DB::connection('mysql2')->table('asisten_qc')
-            ->select('asisten_qc.*')
+        $QueryMTancakWil = DB::connection('mysql2')->table('mutu_ancak_new')
+            ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+            // ->whereYear('datetime', '2023')
+            // ->where('datetime', 'like', '%' . $getDate . '%')
+            ->where('datetime', 'like', '%' . $date . '%')
+            // ->whereYear('datetime', $year)
             ->get();
+        $QueryMTancakWil = $QueryMTancakWil->groupBy(['estate', 'afdeling']);
+        $QueryMTancakWil = json_decode($QueryMTancakWil, true);
 
-        $queryAsisten = json_decode($queryAsisten, true);
-
-        // dd($mutu_buahs, $sidak_buah);
-        // $arrView['list_bulan'] =  $bulan;
-        return view('dashboard_perum', [
-            'arrHeader' => $arrHeader,
-            'arrHeaderSc' => $arrHeaderSc,
-            'arrHeaderTrd' => $arrHeaderTrd,
-            'arrHeaderReg' => $arrHeaderReg,
-            'list_bulan' => $bulan,
-            'shortMonth' => $shortMonth,
-        ]);
-    }
-
-    public function getAFD(Request $request)
-    {
-        $regional = $request->input('reg');
-        $bulan = $request->input('tahun');
-
-        // dd($regional, $bulan);
-
-        $queryEste = DB::connection('mysql2')->table('estate')
-            ->select('estate.*')
-            ->join('wil', 'wil.id', '=', 'estate.wil')
-            ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3', 'SRS', 'TC', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'])
-            ->get();
-        $queryEste = json_decode($queryEste, true);
-
-
-        $estates = array_column($queryEste, 'est');
-        // dd($estates);
-        $emplacement = DB::connection('mysql2')->table('perumahan')
+        foreach ($QueryMTancakWil as $estate => $afdelingArray) {
+            $modifiedAfdelingArray = $afdelingArray;
+            foreach ($afdelingArray as $afdeling => $data) {
+                if ($estate === $afdeling) {
+                    $modifiedAfdelingArray["OA"] = $data;
+                    unset($modifiedAfdelingArray[$afdeling]);
+                }
+            }
+            $QueryMTancakWil[$estate] = $modifiedAfdelingArray;
+        }
+        //mutu buah
+        $QueryMTbuahWil = DB::connection('mysql2')->table('mutu_buah')
             ->select(
-                "perumahan.*",
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
+                "mutu_buah.*",
+                DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun')
             )
-            ->where('perumahan.datetime', 'like', '%' . $bulan . '%')
-            ->whereIn('est', $estates)
-            // ->whereNotIn('perumahan.est', 'REG%')
-            ->whereNotIn('perumahan.afd', ['est', 'es'])
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
+            ->where('datetime', 'like', '%' . $date . '%')
             ->get();
-
-        $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
-        $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
-
-        $lingkungan = DB::connection('mysql2')->table('lingkungan')
+        $QueryMTbuahWil = $QueryMTbuahWil->groupBy(['estate', 'afdeling']);
+        $QueryMTbuahWil = json_decode($QueryMTbuahWil, true);
+        foreach ($QueryMTbuahWil as $estate => $afdelingArray) {
+            $modifiedAfdelingArray = $afdelingArray;
+            foreach ($afdelingArray as $afdeling => $data) {
+                if ($estate === $afdeling) {
+                    $modifiedAfdelingArray["OA"] = $data;
+                    unset($modifiedAfdelingArray[$afdeling]);
+                }
+            }
+            $QueryMTbuahWil[$estate] = $modifiedAfdelingArray;
+        }
+        // dd($QueryMTbuahWil);
+        //MUTU ANCAK
+        $QueryTransWil = DB::connection('mysql2')->table('mutu_transport')
             ->select(
-                "lingkungan.*",
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
+                "mutu_transport.*",
+                DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun')
             )
-            ->where('lingkungan.datetime', 'like', '%' . $bulan . '%')
-            ->whereIn('est', $estates)
-            // ->whereNotIn('lingkungan.est', 'REG%')
-            ->whereNotIn('lingkungan.afd', ['est', 'es'])
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
+            ->where('datetime', 'like', '%' . $date . '%')
+            // ->whereYear('datetime', $year)
             ->get();
+        $QueryTransWil = $QueryTransWil->groupBy(['estate', 'afdeling']);
+        $QueryTransWil = json_decode($QueryTransWil, true);
+        // dd($queryMTancak);
+        foreach ($QueryTransWil as $estate => $afdelingArray) {
+            $modifiedAfdelingArray = $afdelingArray;
+            foreach ($afdelingArray as $afdeling => $data) {
+                if ($estate === $afdeling) {
+                    $modifiedAfdelingArray["OA"] = $data;
+                    unset($modifiedAfdelingArray[$afdeling]);
+                }
+            }
+            $QueryTransWil[$estate] = $modifiedAfdelingArray;
+        }
 
-        $lingkungan = json_decode(json_encode($lingkungan), true); // Convert the collection to an array
-        $lingkungan = collect($lingkungan)->groupBy(['est', 'afd'])->toArray();
-
-
-        $landscape = DB::connection('mysql2')->table('landscape')
-            ->select(
-                "landscape.*",
-                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
-            )
-            ->where('landscape.datetime', 'like', '%' . $bulan . '%')
-            ->whereIn('est', $estates)
-            ->whereNotIn('landscape.afd', ['est', 'es'])
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
-        $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
-
-        // dd($emplacement, $landscape, $lingkungan);
-
-
+        //afdeling
         $queryAfd = DB::connection('mysql2')->table('afdeling')
             ->select(
                 'afdeling.id',
@@ -142,4060 +100,6226 @@ class emplacementsController extends Controller
             ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
             ->get();
         $queryAfd = json_decode($queryAfd, true);
-        $filteredArray = array_filter($queryAfd, function ($item) {
-            return $item['nama'] !== 'EST';
-        });
+        //estate
 
-        // dd($filteredArray);
-        $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-        // untuk perumahan 
-        $dataPerBulan = array();
-        foreach ($emplacement as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $month = date('F', strtotime($value3['datetime']));
-                    if (!array_key_exists($month, $dataPerBulan)) {
-                        $dataPerBulan[$month] = array();
-                    }
-                    if (!array_key_exists($key, $dataPerBulan[$month])) {
-                        $dataPerBulan[$month][$key] = array();
-                    }
-                    if (!array_key_exists($key2, $dataPerBulan[$month][$key])) {
-                        $dataPerBulan[$month][$key][$key2] = array();
-                    }
-                    $dataPerBulan[$month][$key][$key2][$key3] = $value3;
-                }
-            }
-        }
-
-
-        $defaultNew = array();
-        foreach ($bulan as $month) {
-            foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
-                    if ($est['est'] == $afd['est']) {
-                        $defaultNew[$est['est']][$month][$afd['nama']] = 0;
-                    }
-                }
-            }
-        }
-        dd($defaultNew);
-        foreach ($defaultNew as $key => $estValue) {
-            foreach ($estValue as $monthKey => $monthValue) {
-                foreach ($dataPerBulan as $dataKey => $dataValue) {
-                    if ($dataKey == $monthKey) {
-                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
-                            if ($dataEstKey == $key) {
-                                $defaultNew[$key][$monthKey] = array_merge($monthValue, $dataEstValue);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($defaultNew);
-
-
-        foreach ($defaultNew as $key => $value) {
-            // dd($key);
-            foreach ($queryEste as $key2 => $value2) if ($key == $value2['est']) {
-                $emplashmenOri[$value2['nama']] = $value;
-            }
-        }
-        // dd($emplashmenOri);
-        // untuk li dd($defaultNew);ngkungan 
-        $perbulan_lingkungan = array();
-        foreach ($lingkungan as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $month = date('F', strtotime($value3['datetime']));
-                    if (!array_key_exists($month, $perbulan_lingkungan)) {
-                        $perbulan_lingkungan[$month] = array();
-                    }
-                    if (!array_key_exists($key, $perbulan_lingkungan[$month])) {
-                        $perbulan_lingkungan[$month][$key] = array();
-                    }
-                    if (!array_key_exists($key2, $perbulan_lingkungan[$month][$key])) {
-                        $perbulan_lingkungan[$month][$key][$key2] = array();
-                    }
-                    $perbulan_lingkungan[$month][$key][$key2][$key3] = $value3;
-                }
-            }
-        }
-
-        $def_lingkungan = array();
-        foreach ($bulan as $month) {
-            foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
-                    if ($est['est'] == $afd['est']) {
-                        $def_lingkungan[$est['est']][$month][$afd['nama']] = 0;
-                    }
-                }
-            }
-        }
-
-        foreach ($def_lingkungan as $key => $estValue) {
-            foreach ($estValue as $monthKey => $monthValue) {
-                foreach ($perbulan_lingkungan as $dataKey => $dataValue) {
-                    if ($dataKey == $monthKey) {
-                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
-                            if ($dataEstKey == $key) {
-                                $def_lingkungan[$key][$monthKey] = array_merge($monthValue, $dataEstValue);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($def_lingkungan);
-        foreach ($def_lingkungan as $key => $value) {
-            // dd($key);
-            foreach ($queryEste as $key2 => $value2) if ($key == $value2['est']) {
-                $lingkunganOri[$value2['nama']] = $value;
-            }
-        }
-
-        // dd($lingkunganOri);
-
-        // untuk landscape 
-        $perbulan_landscape = array();
-        foreach ($landscape as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $month = date('F', strtotime($value3['datetime']));
-                    if (!array_key_exists($month, $perbulan_landscape)) {
-                        $perbulan_landscape[$month] = array();
-                    }
-                    if (!array_key_exists($key, $perbulan_landscape[$month])) {
-                        $perbulan_landscape[$month][$key] = array();
-                    }
-                    if (!array_key_exists($key2, $perbulan_landscape[$month][$key])) {
-                        $perbulan_landscape[$month][$key][$key2] = array();
-                    }
-                    $perbulan_landscape[$month][$key][$key2][$key3] = $value3;
-                }
-            }
-        }
-
-        $def_lanscape = array();
-        foreach ($bulan as $month) {
-            foreach ($queryEste as $est) {
-                foreach ($filteredArray as $afd) {
-                    if ($est['est'] == $afd['est']) {
-                        $def_lanscape[$est['est']][$month][$afd['nama']] = 0;
-                    }
-                }
-            }
-        }
-
-        foreach ($def_lanscape as $key => $estValue) {
-            foreach ($estValue as $monthKey => $monthValue) {
-                foreach ($perbulan_landscape as $dataKey => $dataValue) {
-                    if ($dataKey == $monthKey) {
-                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
-                            if ($dataEstKey == $key) {
-                                $def_lanscape[$key][$monthKey] = array_merge($monthValue, $dataEstValue);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        foreach ($def_lanscape as $key => $value) {
-            foreach ($queryEste as $key2 => $value2) if ($key == $value2['est']) {
-                $landscapeOri[$value2['nama']] = $value;
-            }
-        }
-        // dd($dataPerBulan);
-        function grupwaktu($data)
-        {
-            $groupedArray = [];
-
-            foreach ($data as $bulan => $locations) {
-                if (is_array($locations)) {
-                    foreach ($locations as $location => $estAfdData) {
-                        foreach ($estAfdData as $estAfd => $items) if (is_array($items)) {
-                            $groupedItems = [];
-
-                            foreach ($items as $item) {
-                                $key = $item['est'] . '-' . $item['afd'] . '-' . $item['petugas'] . '-' . $item['pendamping'] . '-' . substr($item['datetime'], 0, 10);
-
-                                if (!isset($groupedItems[$key])) {
-                                    $groupedItems[$key] = $item;
-                                } else {
-                                    $existingItem = $groupedItems[$key];
-                                    $index = 1;
-
-                                    // Find the next available index
-                                    while (isset($existingItem['nilai' . $index])) {
-                                        $index++;
-                                    }
-
-                                    // Set the new index for the current item
-                                    foreach ($item as $field => $value) {
-                                        $existingItem[$field . $index] = $value;
-                                    }
-
-                                    $groupedItems[$key] = $existingItem;
-                                }
-                            }
-
-                            $groupedArray[$bulan][$location][$estAfd] = array_values($groupedItems);
-                        }
-                    }
-                } else {
-                    $groupedArray[$bulan] = 0;
-                }
-            }
-
-            return $groupedArray;
-        }
-
-        $groupedArray = grupwaktu($emplashmenOri);
-        $groupedArray_lcp = grupwaktu($landscapeOri);
-        $groupedArray_lkn = grupwaktu($lingkunganOri);
-
-        // dd($groupedArray, $emplashmenOri);
-
-
-        // dd($emplashmenOri);
-        $hitungRmh = array();
-        foreach ($groupedArray as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungRmh[$key][$key1] = [];
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            // Initialize the "nilai_total" for each index (OA, OB, OC, OD) to 0
-                            $hitungRmh[$key][$key1][$key2] = [];
-
-                            foreach ($value3 as $key3 => $value4) {
-                                $avg_nilai = 0;
-                                if (is_array($value4)) {
-                                    $totalNilai = 0;
-                                    $nilaiKeys = [];
-                                    // Check if the "nilai" key exists, otherwise set it to 0
-                                    $sumNilai = isset($value4['nilai']) ? array_sum(array_map('intval', explode('$', $value4['nilai']))) : 0;
-                                    // Store the sum in the "nilai_total" key of the corresponding index
-                                    $date = $value4['datetime'];
-                                    // Get the year and month from the datetime
-                                    $yearMonth = date('Y-m-d', strtotime($date));
-                                    foreach ($value4 as $innerKey => $innerValue) {
-                                        if (strpos($innerKey, 'nilai') === 0) {
-                                            $nilaiKeys[] = $innerKey;
-                                            $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                            $totalNilai += array_sum($nilaiValues);
-                                        }
-                                    }
-
-                                    $dividen = 0;
-                                    foreach ($value4 as $key4 => $item) {
-                                        if (strpos($key4, 'nilai') === 0) {
-                                            $dividen++;
-                                        }
-                                    }
-
-                                    if ($dividen != 1) {
-                                        $avg_nilai = round($totalNilai / $dividen, 2);
-                                    } else {
-                                        $avg_nilai = $totalNilai;
-                                    }
-                                    $hitungRmh[$key][$key1][$key2][$key3]['nilai_total'] = $avg_nilai;
-                                    $hitungRmh[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
-                                    $hitungRmh[$key][$key1][$key2][$key3]['dividen'] = $dividen;
-
-                                    $hitungRmh[$key][$key1][$key2][$key3]['date'] = $yearMonth;
-                                    $hitungRmh[$key][$key1][$key2][$key3]['est'] = $value4['est'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['afd'] = $value4['afd'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['petugas'] = $value4['petugas'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['pendamping'] = $value4['pendamping'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['penghuni'] = $value4['penghuni'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['tipe_rumah'] = $value4['tipe_rumah'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['foto_temuan'] = $value4['foto_temuan'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['komentar_temuan'] = $value4['komentar_temuan'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['nilai'] = $value4['nilai'];
-                                    $hitungRmh[$key][$key1][$key2][$key3]['komentar'] = $value4['komentar'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($hitungRmh);
-
-        foreach ($emplashmenOri as $location => $months) {
-            foreach ($months as $month => $values) {
-                if (isset($hitungRmh[$location][$month])) {
-                    // Merge the values from hitungRmh if the month exists in both arrays
-                    foreach ($values as $key => $value) {
-                        if (is_array($value) && isset($hitungRmh[$location][$month][$key])) {
-                            $emplashmenOri[$location][$month][$key] = $hitungRmh[$location][$month][$key];
-                        }
-                    }
-                } else {
-                    // If the month does not exist in hitungRmh, set default values as 0
-                    $emplashmenOri[$location][$month] = array_fill_keys(array_keys($values), 0);
-                }
-            }
-        }
-
-        // Resulting merged array with values from hitungRmh
-        $mergedArray_rmh = $emplashmenOri;
-
-        // dd($mergedArray_rmh);
-        // Now, the "nilai" values will be updated with their respective sums in the $emplacement array.
-
-
-        // dd($mergedArray_rmh, $hitungRmh);
-
-        $FinalArr_rumah = array();
-        foreach ($mergedArray_rmh as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        foreach ($value3 as $value4) {
-                            $FinalArr_rumah[$key1][$key2][$key3][$value4['date']] = $value4;
-                        }
-                    } else {
-                        // For the innermost arrays that are not arrays themselves, just copy them as is
-                        $FinalArr_rumah[$key1][$key2][$key3] = $value3;
-                    }
-                }
-            }
-        }
-        // dd($FinalArr_rumah, $mergedArray_rmh);
-        // dd($mergedArray_rmh, $FinalArr_rumah);
-
-        // untuk landscape 
-        $hitungLandscape = array();
-        foreach ($groupedArray_lcp as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLandscape[$key][$key1] = [];
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            // Initialize the "nilai_total" for each index (OA, OB, OC, OD) to 0
-                            $hitungLandscape[$key][$key1][$key2] = [];
-                            foreach ($value3 as $key3 => $value4) {
-                                $avg_nilai = 0;
-                                if (is_array($value4)) {
-                                    $totalNilai = 0;
-                                    $nilaiKeys = [];
-                                    // Check if the "nilai" key exists, otherwise set it to 0
-                                    $sumNilai = isset($value4['nilai']) ? array_sum(array_map('intval', explode('$', $value4['nilai']))) : 0;
-                                    // Store the sum in the "nilai_total" key of the corresponding index
-                                    $date = $value4['datetime'];
-                                    // Get the year and month from the datetime
-                                    $yearMonth = date('Y-m-d', strtotime($date));
-
-                                    foreach ($value4 as $innerKey => $innerValue) {
-                                        if (strpos($innerKey, 'nilai') === 0) {
-                                            $nilaiKeys[] = $innerKey;
-                                            $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                            $totalNilai += array_sum($nilaiValues);
-                                        }
-                                    }
-
-                                    $dividen = 0;
-                                    foreach ($value4 as $key4 => $item) {
-                                        if (strpos($key4, 'nilai') === 0) {
-                                            $dividen++;
-                                        }
-                                    }
-
-                                    if ($dividen != 1) {
-                                        $avg_nilai = round($totalNilai / $dividen, 2);
-                                    } else {
-                                        $avg_nilai = $totalNilai;
-                                    }
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['nilai_total_LP'] = $avg_nilai;
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['date'] = $yearMonth;
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['est_LP'] = $value4['est'];
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['afd_LP'] = $value4['afd'];
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['petugas_LP'] = $value4['petugas'];
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['pendamping_LP'] = $value4['pendamping'];
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['foto_temuan_LP'] = $value4['foto_temuan'];
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['komentar_temuan_LP'] = $value4['komentar_temuan'];
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['nilai_LP'] = $value4['nilai'];
-                                    $hitungLandscape[$key][$key1][$key2][$key3]['komentar_LP'] = $value4['komentar'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        foreach ($landscapeOri as $location => $months) {
-            foreach ($months as $month => $values) {
-                if (isset($hitungLandscape[$location][$month])) {
-                    // Merge the values from hitungLandscape if the month exists in both arrays
-                    foreach ($values as $key => $value) {
-                        if (is_array($value) && isset($hitungLandscape[$location][$month][$key])) {
-                            $landscapeOri[$location][$month][$key] = $hitungLandscape[$location][$month][$key];
-                        }
-                    }
-                } else {
-                    // If the month does not exist in hitungRmh, set default values as 0
-                    $landscapeOri[$location][$month] = array_fill_keys(array_keys($values), 0);
-                }
-            }
-        }
-
-        // Resulting merged array with values from hitungRmh
-        $mergedArray_lp = $landscapeOri;
-
-        $FinalArr_LP = array();
-        foreach ($mergedArray_lp as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        foreach ($value3 as $value4) {
-                            $FinalArr_LP[$key1][$key2][$key3][$value4['date']] = $value4;
-                        }
-                    } else {
-                        // For the innermost arrays that are not arrays themselves, just copy them as is
-                        $FinalArr_LP[$key1][$key2][$key3] = $value3;
-                    }
-                }
-            }
-        }
-
-        // dd($FinalArr_LP);
-
-        // hitungan lingkungan 
-
-        $hitungLingkungan = array();
-        foreach ($groupedArray_lkn as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLingkungan[$key][$key1] = [];
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            // Initialize the "nilai_total" for each index (OA, OB, OC, OD) to 0
-                            $hitungLingkungan[$key][$key1][$key2] = [];
-                            foreach ($value3 as $key3 => $value4) {
-                                $avg_nilai = 0;
-                                if (is_array($value4)) {
-                                    $totalNilai = 0;
-                                    $nilaiKeys = [];
-                                    // Check if the "nilai" key exists, otherwise set it to 0
-                                    $sumNilai = isset($value4['nilai']) ? array_sum(array_map('intval', explode('$', $value4['nilai']))) : 0;
-                                    // Store the sum in the "nilai_total" key of the corresponding index
-                                    $date = $value4['datetime'];
-                                    // Get the year and month from the datetime
-                                    $yearMonth = date('Y-m-d', strtotime($date));
-
-                                    foreach ($value4 as $innerKey => $innerValue) {
-                                        if (strpos($innerKey, 'nilai') === 0) {
-                                            $nilaiKeys[] = $innerKey;
-                                            $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                            $totalNilai += array_sum($nilaiValues);
-                                        }
-                                    }
-
-                                    $dividen = 0;
-                                    foreach ($value4 as $key4 => $item) {
-                                        if (strpos($key4, 'nilai') === 0) {
-                                            $dividen++;
-                                        }
-                                    }
-
-                                    if ($dividen != 1) {
-                                        $avg_nilai = round($totalNilai / $dividen, 2);
-                                    } else {
-                                        $avg_nilai = $totalNilai;
-                                    }
-
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_total_Lngkl'] = $avg_nilai;
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['date'] = $yearMonth;
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['est_Lngkl'] = $value4['est'];
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['afd_Lngkl'] = $value4['afd'];
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['petugas_Lngkl'] = $value4['petugas'];
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['pendamping_Lngkl'] = $value4['pendamping'];
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['foto_temuan_Lngkl'] = $value4['foto_temuan'];
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['komentar_temuan_Lngkl'] = $value4['komentar_temuan'];
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_Lngkl'] = $value4['nilai'];
-                                    $hitungLingkungan[$key][$key1][$key2][$key3]['komentar_Lngkl'] = $value4['komentar'];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        foreach ($lingkunganOri as $location => $months) {
-            foreach ($months as $month => $values) {
-                if (isset($hitungLingkungan[$location][$month])) {
-                    // Merge the values from hitungLingkungan if the month exists in both arrays
-                    foreach ($values as $key => $value) {
-                        if (is_array($value) && isset($hitungLingkungan[$location][$month][$key])) {
-                            $lingkunganOri[$location][$month][$key] = $hitungLingkungan[$location][$month][$key];
-                        }
-                    }
-                } else {
-                    // If the month does not exist in hitungRmh, set default values as 0
-                    $lingkunganOri[$location][$month] = array_fill_keys(array_keys($values), 0);
-                }
-            }
-        }
-
-        // Resulting merged array with values from hitungRmh
-        $mrg_lingkn = $lingkunganOri;
-
-        $FinalArr_Lingkn = array();
-        foreach ($mrg_lingkn as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        foreach ($value3 as $value4) {
-                            $FinalArr_Lingkn[$key1][$key2][$key3][$value4['date']] = $value4;
-                        }
-                    } else {
-                        // For the innermost arrays that are not arrays themselves, just copy them as is
-                        $FinalArr_Lingkn[$key1][$key2][$key3] = $value3;
-                    }
-                }
-            }
-        }
-
-        // dd($FinalArr_rumah, $FinalArr_LP, $FinalArr_Lingkn);
-
-        function mergeArrays($arr1, $arr2, $arr3)
-        {
-            foreach ($arr1 as $key => $value) {
-                if (isset($arr2[$key])) {
-                    $arr1[$key] = array_merge_recursive($value, $arr2[$key]);
-                }
-                if (isset($arr3[$key])) {
-                    $arr1[$key] = mergeArraysRecursive($arr1[$key] ?? [], $arr3[$key]);
-                }
-            }
-
-            return $arr1;
-        }
-
-        function mergeArraysRecursive($arr1, $arr2)
-        {
-            foreach ($arr2 as $key => $value) {
-                if (is_array($value)) {
-                    $arr1[$key] = mergeArraysRecursive($arr1[$key] ?? [], $value);
-                } else {
-                    $arr1[$key] = $value ?? 0;
-                }
-            }
-
-            return $arr1;
-        }
-
-        $result = mergeArrays($FinalArr_rumah, $FinalArr_LP, $FinalArr_Lingkn);
-
-
-
-        foreach ($result as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value2) {
-                    if (is_array($value2)) {
-                        $containsNonZeroValue = false;
-                        foreach ($value2 as $innerValue) {
-                            if (!is_array($innerValue) && $innerValue === 0) {
-                                $containsNonZeroValue = true;
-                                break;
-                            }
-                        }
-
-                        if ($containsNonZeroValue) {
-                            $filteredValue = array_filter($value2, function ($val) {
-                                return !(is_numeric($val) && $val === 0);
-                            });
-
-                            $result[$key][$key1][$key2] = $filteredValue;
-                            if (empty($filteredValue)) {
-                                unset($result[$key][$key1][$key2]);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
-
-        $queryAsisten = json_decode($queryAsisten, true);
-
-
-        $final_result = array();
-
-        foreach ($result as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value2) {
-                    $inc = 1;
-                    if (is_array($value2)) {
-                        foreach ($value2 as $key3 => $value3) {
-                            $EM = 'GM';
-                            $nama = '-';
-                            foreach ($queryAsisten as $value4) {
-                                if ($value4['est'] == ($value3['est'] ?? $value3['est_LP'] ??  $value3['est_Lngkl'] ?? null) && $value4['afd'] == $key2) {
-                                    $nama = $value4['nama'];
-                                    break;
-                                }
-                            }
-                            $total_skor = ($value3['nilai_total'] ?? 0) + ($value3['nilai_total_LP'] ?? 0) + ($value3['nilai_total_Lngkl'] ?? 0);
-                            $final_result[$key][$key1][$key2][$key3]['skor_total'] = $total_skor;
-                            $final_result[$key][$key1][$key2][$key3]['visit'] = $inc++;
-                            $final_result[$key][$key1][$key2][$key3]['est'] = $value3['est'] ?? $value3['est_LP'] ??  $value3['est_Lngkl'] ?? null;
-                            $final_result[$key][$key1][$key2][$key3]['afd'] = $key2;
-                            $final_result[$key][$key1][$key2][$key3]['asisten'] = $nama;
-                            $final_result[$key][$key1][$key2][$key3]['date'] = $key3;
-                        }
-                    } else {
-                        // If it's not an array, it means it's a direct value (e.g., February, March, etc.)
-                        // Set default value of 0 for missing months
-                        $final_result[$key][$key1][$key2] = $value2;
-                    }
-                }
-            }
-        }
-
-
-
-        $resultArray = [];
-
-        // Loop through the original array
-        foreach ($final_result as $estate => $months) {
-            foreach ($months as $month => $afdelings) {
-                foreach ($afdelings as $afdeling => $data) {
-                    $resultArray[$estate][$afdeling][$month] = $data;
-                }
-            }
-        }
-        // dd($resultArray);
-        // dd($final_result, $resultArray);
-        foreach ($resultArray as $estate => $months) {
-            foreach ($months as $afdeling => $data) {
-                foreach ($data as $month => $visits) {
-                    if (is_array($visits)) {
-                        $visitsWithoutDates = []; // Array to store visit data without individual dates
-                        foreach ($visits as $date => $visitData) {
-                            if (is_array($visitData)) { // Check if $visitData is an array (not an individual date)
-                                $visitKey = 'visit' . (count($visitsWithoutDates) + 1);
-
-                                $visitsWithoutDates[$visitKey] = $visitData;
-                            }
-                        }
-                        // dd($visitData);
-
-                        // Add default visit data for months with no visits (empty $visitsWithoutDates)
-                        if (empty($visitsWithoutDates)) {
-                            $visitsWithoutDates['visit1'] = [
-                                'skor_total' => 0,
-                                'visit' => 1,
-                                'est' => $estate,
-                                'afd' => $afdeling,
-
-                                'date' => '-'
-                            ];
-                        }
-
-                        // After the loop, set the resultArray to the updated visits without dates
-                        $resultArray[$estate][$afdeling][$month] = $visitsWithoutDates;
-                    } else {
-                        $nama = '-';
-                        foreach ($queryAsisten as $value4) {
-                            if ($value4['est'] == $estate && $value4['afd'] == $afdeling) {
-                                $nama = $value4['nama'];
-                                break;
-                            }
-                        }
-                        $resultArray[$estate][$afdeling][$month] = [
-                            'visit1' => [
-                                'skor_total' => 0,
-                                'visit' => 1,
-                                'est' => $estate,
-                                'afd' => $afdeling,
-                                'asisten' => $nama,
-                                'date' => '-'
-                            ]
-                        ];
-                    }
-                }
-            }
-        }
-
-        // dd($resultArray);
-        $avarage = array();
-        foreach ($resultArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $avg = 0;
-                foreach ($value1 as $key2 => $value2) {
-                    $avg = count($value2);
-                    $totalNil = 0;
-                    foreach ($value2 as $key3 => $value3) {
-                        $totalNil += $value3['skor_total'];
-                    }
-
-                    // $tod_nilai = round($totalNil / $avg, 1);
-
-                    if ($avg != 1) {
-                        $avarage[$key][$key1][$key2]['dividen'] = $avg;
-                    } else {
-                        $avarage[$key][$key1][$key2]['dividen'] = 0;
-                    }
-
-                    $avarage[$key][$key1][$key2]['total'] = $totalNil;
-                } # code...
-            } # code...
-        }
-        // dd($avarage);
-
-        $averages = array();
-        $regAvg = array();
-
-        foreach ($avarage as $key => $value) {
-            $estAvg = array();
-
-            foreach ($value as $key1 => $value1) {
-                $allAvg = array(); // Initialize an array to store all the averages for each key2
-                $totalNil = 0;
-                $avgCount = 0;
-                $todNilai = 0;
-                foreach ($value1 as $key2 => $value2) {
-
-                    // dd($value2);
-                    $totalNil += $value2['total'];
-                    $avgCount  += $value2['dividen'];
-                }
-
-                if ($avgCount != 0) {
-                    $todNilai = round($totalNil / $avgCount, 1);
-                } else {
-                    $todNilai = $totalNil;
-                }
-
-
-                $averages[$key][$key1]['avgafd'] = $todNilai;
-                $estAvg[] = $todNilai;
-            }
-
-            if (!empty($estAvg)) {
-                $regAvg = array_merge($regAvg, $estAvg); // Merge the calculated averages
-                // $averages[$key]['avgEst'] = $estAvg;
-            }
-        }
-        // $averages['avgReg'] = $regAvg;
-        // dd($avarage, $averages);
-
-
-        $get_cell = array();
-        foreach ($resultArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value2) {
-                    $visit = count($value2);
-                    $get_cell[$key2][$key][$key1]['visit'] = $visit;
-                }
-            }
-        }
-
-        $max_visit = array();
-        foreach ($get_cell as $month => $monthData) {
-            $max_visitEst = 0;
-            foreach ($monthData as $location => $locationData) {
-                $maxVisit = 0;
-                foreach ($locationData as $visitData) {
-                    // Check if the current visit value is greater than the current maximum visit
-                    if (isset($visitData['visit']) && $visitData['visit'] > $maxVisit) {
-                        // Update the maximum visit for this location
-                        $maxVisit = $visitData['visit'];
-                    }
-                }
-                // Add the maximum visit for this location to the $max_visit array
-                $max_visit[$month][$location]['max_visit'] = $maxVisit;
-
-                // Calculate the overall maximum visit for the entire array
-                if ($maxVisit > $max_visitEst) {
-                    $max_visitEst = $maxVisit;
-                }
-            }
-            // Add the overall maximum visit for this month to the $max_visit array
-            $max_visit[$month]['max_visitEst'] = $max_visitEst;
-        }
-
-        $header_cell = array();
-        foreach ($max_visit as $key => $value) {
-            $header_cell[$key] = $value['max_visitEst'];
-        }
-
-        function createEmptyVisit($visitNumber)
-        {
-            return [
-                "skor_total" => 0,
-                "visit" => $visitNumber,
-                "est" => "Kenambui", // Replace with the appropriate value
-                "afd" => "OB", // Replace with the appropriate value
-                "asisten" => "-",
-                "date" => "-",
-            ];
-        }
-
-
-        foreach ($resultArray as $key1 => &$level1) {
-            foreach ($level1 as $key2 => &$level2) {
-                foreach ($level2 as $month => &$visits) {
-                    if (isset($header_cell[$month])) {
-                        $requiredVisits = $header_cell[$month];
-                        $currentVisits = count($visits);
-
-                        // Add empty visits if required
-                        for ($i = $currentVisits + 1; $i <= $requiredVisits; $i++) {
-                            $visits["visit" . $i] = createEmptyVisit($i);
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        $sum_header = [
-            "head" => array_sum($header_cell) + 2,
-        ];
-
-        // $AfdFinals = array();
-        // foreach ($resultArray as $key => $value) {
-        //     foreach ($value as $key1 => $value1) {
-        //         foreach ($value1 as $key2 => $value2) {
-        //             foreach ($averages as $key3 => $value3) if ($key3 == $key) {
-
-        //                 foreach ($value3 as $key4 => $value4) if ($key4 == $key1) {
-        //                     // dd($key4 == $key1);
-        //                     foreach ($value4 as $key5 => $value5) {
-        //                         $AfdFinals[$key][$key1]['afd'] = $value5;
-        //                         $AfdFinals[$key][$key1] = $value1;
-        //                     } # code...
-        //                 } # code...
-        //             }
-        //         }
-        //     }
-        // }
-        $AfdFinals = array();
-
-        foreach ($resultArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $AfdFinals[$key][$key1] = array(); // Initialize the sub-array
-                foreach ($value1 as $key2 => $value2) {
-                    $AfdFinals[$key][$key1][$key2] = $value2;
-                }
-                if (isset($averages[$key][$key1]['avgafd'])) {
-                    $AfdFinals[$key][$key1]['afd'] = $averages[$key][$key1]['avgafd'];
-                }
-            }
-        }
-
-
-        // dd($resultArray, $averages, $AfdFinals);
-        // dd($resultArray, $sum_header);
-        $arrView = array();
-        $arrView['reg'] =  $regional;
-        $arrView['bulan'] =  $bulan;
-        $arrView['afd_rekap'] =  $AfdFinals;
-        $arrView['header_cell'] =  $header_cell;
-        $arrView['header_head'] =  $sum_header;
-        $arrView['avg'] =  $averages;
-
-
-        echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
-        exit();
-
-        // return view('dashboard_perum', [
-        //     'afd_rekap' => $resultArray
-        // ]);
-    }
-
-    public function estAFD(Request $request)
-    {
-        $regional = $request->input('reg');
-        $bulan = $request->input('tahun');
-
-        $queryEste = DB::connection('mysql2')->table('estate')
-            ->select('estate.*')
-            ->join('wil', 'wil.id', '=', 'estate.wil')
-            ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
-            ->get();
-        $queryEste = json_decode($queryEste, true);
+        // $queryEste = DB::connection('mysql2')->table('estate')
+        //     ->whereIn('wil', [1, 2, 3])->get();
 
         // dd($queryEste);
-
-
-        $est_emp = DB::connection('mysql2')->table('estate_emp')
-            ->select(
-                'estate_emp.id',
-                'estate_emp.nama',
-                'estate.nama',
-                'estate.est',
-                'estate_emp.wil',
-            )
-            ->join('wil', 'wil.id', '=', 'estate_emp.wil')
-            ->where('wil.regional', $regional)
-            ->join('estate', 'estate.id', '=', 'estate_emp.estate')
+        $queryEste = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3', 'CWS1', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM'])
+            ->where('estate.emp', '!=', 1)
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $Reg)
             ->get();
-        $est_emp = json_decode($est_emp, true);
-
-        $filteredArray = array_filter($est_emp, function ($item) {
-            $excludedEstValues = ['LDE', 'SRE', 'SKE'];
-            return !in_array($item['nama'], $excludedEstValues);
-        });
-
-        $estates = array_column($filteredArray, 'est');
-        // dd($estates);
-        $emplacement = DB::connection('mysql2')->table('perumahan')
-            ->select(
-                "perumahan.*",
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
-            )
-            ->where('perumahan.datetime', 'like', '%' . $bulan . '%')
-            ->whereIn('est', $estates)
-            // ->where('est', '=', 'NBM')
-            // ->whereIn('perumahan.afd', ['EST', 'WIL'])
-            ->where('perumahan.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
+        $queryEste = json_decode($queryEste, true);
+        $queryEstereg = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            // ->whereNotIn('estate.est', ['Plasma1'])
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $Reg)
+            ->get();
+        $queryEstereg = json_decode($queryEstereg, true);
+        $queryEstePla = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->whereIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3'])
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $Reg)
             ->get();
 
-        $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
-        $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
+        $queryEstePla = json_decode($queryEstePla, true);
+        // dd($queryEstePla);
 
-        // dd($emplacement, $estates);
-
-        $lingkungan = DB::connection('mysql2')->table('lingkungan')
-            ->select(
-                "lingkungan.*",
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
-            )
-            ->where('lingkungan.datetime', 'like', '%' . $bulan . '%')
-            ->whereIn('est', $estates)
-            // ->where('est', '=', 'NBM')
-            // ->whereIn('lingkungan.afd', ['EST', 'WIL'])
-            ->where('lingkungan.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $lingkungan = json_decode(json_encode($lingkungan), true); // Convert the collection to an array
-        $lingkungan = collect($lingkungan)->groupBy(['est', 'afd'])->toArray();
-
-
-        $landscape = DB::connection('mysql2')->table('landscape')
-            ->select(
-                "landscape.*",
-                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
-            )
-            ->where('landscape.datetime', 'like', '%' . $bulan . '%')
-            ->whereIn('est', $estates)
-            // ->where('est', '=', 'NBM')
-            // ->whereIn('landscape.afd', ['EST', 'WIL'])
-            ->where('landscape.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
-        $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
-
-        // dd($landscape, $emplacement, $lingkungan);
-
-
-
-        // dd($est_emp);
-
-        // check date yang sama  helper
-        function countEntriesWithSameDate($data, $est)
-        {
-            $count = 0;
-            $targetDate = null;
-            $sameDateIds = [];
-
-            foreach (['EST', 'WIL'] as $subEst) {
-                foreach ($data[$est][$subEst] ?? [] as $entry) {
-                    // Extract the year-month-date from the "datetime" value
-                    $dateTime = explode(" ", $entry['datetime']);
-                    $date = $dateTime[0]; // "2023-01-10"
-
-                    // If it's the first entry or the date matches the target date, continue counting
-                    if ($targetDate === null || $date === $targetDate) {
-                        $count++;
-                        $sameDateIds[] = $entry['id']; // Add the ID to the list
-                    } else {
-                        // If the dates are not the same, break the loop (since entries are sorted by date)
-                        break;
-                    }
-
-                    $targetDate = $date; // Update the target date with the current date
-                }
-            }
-
-            return [
-                'count' => $count,
-                'ids' => $sameDateIds,
-            ];
-        }
-
-
-        // ngisi nilai defaull jika bulan kosong 
-        function addMissingMonths(&$array1, $array2)
-        {
-            $monthsOrder = [
-                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-            ];
-
-            foreach ($array1 as $location => &$locationData) {
-                $existingMonths = array_keys($locationData);
-                $missingMonths = array_diff($monthsOrder, $existingMonths);
-
-                if (!empty($missingMonths)) {
-                    foreach ($missingMonths as $month) {
-                        $locationData[$month] = $array2[$location][$month];
-                    }
-                }
-
-                // Sort the months in the desired order
-                uksort($locationData, function ($a, $b) use ($monthsOrder) {
-                    return array_search($a, $monthsOrder) - array_search($b, $monthsOrder);
-                });
-            }
-        }
-        // Sample data (replace this with your actual array)
-
-
-        // Call the function for each "est" key and get the count
-        $samedateCounts = [];
-
-        foreach ($landscape as $estKey => $estValue) {
-            $count = countEntriesWithSameDate($landscape, $estKey);
-            $samedateCounts[$estKey] = $count;
-        }
-
-        // dd($samedateCounts);
-
+        $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
+        // dd($QueryMTbuahWil);
+        //end query
+        $queryAsisten = json_decode($queryAsisten, true);
         $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        // nilai default perbulan 
+        //membuat array estate -> bulan -> afdeling
+        //mutu Trans mengambil nilai
+        $dataMTTrans = array();
+        foreach ($QueryTransWil as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    $dataMTTrans[$key][$key2][$key3] = $value3;
+                }
+            }
+        }
+        // dd($dataMTTrans);
+        //membuat nilai default mutu Trans
+        $defaultMtTrans = array();
+        foreach ($queryEste as $est) {
+            // dd($est);
+            foreach ($queryAfd as $afd) {
+                // dd($afd);
+                if ($est['est'] == $afd['est']) {
+                    $defaultMtTrans[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
 
-        // dd($queryEste, $est_emp);
-        // $defaultNew = array();
-        // foreach ($bulan as $month) {
-        //     foreach ($queryEste as $est) {
+        $defaultMtTransReg = array();
+        foreach ($queryEstereg as $est) {
+            // dd($est);
+            foreach ($queryAfd as $afd) {
+                // dd($afd);
+                if ($est['est'] == $afd['est']) {
+                    $defaultMtTransReg[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
 
 
-        //         $defaultNew[$est['nama']][$month] = 0;
+        // dd($defPLAtrans, $defaultMtTrans);
+        //mutu buah mengambil nilai
+        $dataMTBuah = array();
+        foreach ($QueryMTbuahWil as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    $dataMTBuah[$key][$key2][$key3] = $value3;
+                }
+            }
+        }
+
+
+        //membuat nilai default mutu buah
+        $defaultMTbuah = array();
+        foreach ($queryEste as $est) {
+            foreach ($queryAfd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $defaultMTbuah[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+
+        $defaultMTbuahReg = array();
+        foreach ($queryEstereg as $est) {
+            foreach ($queryAfd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $defaultMTbuahReg[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+        // dd($defaultMTbuah, $dataMTBuah);
+        // mutu ancak
+        $dataPerBulan = array();
+        foreach ($QueryMTancakWil as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    $dataPerBulan[$key][$key2][$key3] = $value3;
+                }
+            }
+        }
+        $defaultNew = array();
+        foreach ($queryEste as $est) {
+            foreach ($queryAfd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $defaultNew[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+
+        $defaultNew_reg = array();
+        foreach ($queryEstereg as $est) {
+            foreach ($queryAfd as $afd) {
+                if ($est['est'] == $afd['est']) {
+                    $defaultNew_reg[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+        // menimpa mutu trans nilai default dengan nilaiyang ada
+        $mutuAncakMerge = array();
+        foreach ($defaultMtTrans as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataMTTrans)) {
+                    if (array_key_exists($afdKey, $dataMTTrans[$estKey])) {
+                        if (!empty($dataMTTrans[$estKey][$afdKey])) {
+                            $mutuAncakMerge[$estKey][$afdKey] = $dataMTTrans[$estKey][$afdKey];
+                        } else {
+                            $mutuAncakMerge[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mutuAncakMerge[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mutuAncakMerge[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+
+        $mutuAncakMergeReg = array();
+        foreach ($defaultMtTransReg as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataMTTrans)) {
+                    if (array_key_exists($afdKey, $dataMTTrans[$estKey])) {
+                        if (!empty($dataMTTrans[$estKey][$afdKey])) {
+                            $mutuAncakMergeReg[$estKey][$afdKey] = $dataMTTrans[$estKey][$afdKey];
+                        } else {
+                            $mutuAncakMergeReg[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mutuAncakMergeReg[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mutuAncakMergeReg[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+
+        // dd($mutuAncakMerge);
+        // menimpa mutu buah nilai default dengan nilaiyang ada
+        $mutuBuahMerge = array();
+        foreach ($defaultMTbuah as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataMTBuah)) {
+                    if (array_key_exists($afdKey, $dataMTBuah[$estKey])) {
+                        if (!empty($dataMTBuah[$estKey][$afdKey])) {
+                            $mutuBuahMerge[$estKey][$afdKey] = $dataMTBuah[$estKey][$afdKey];
+                        } else {
+                            $mutuBuahMerge[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mutuBuahMerge[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mutuBuahMerge[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+
+        $mutuBuahMergeReg = array();
+        foreach ($defaultMTbuahReg as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataMTBuah)) {
+                    if (array_key_exists($afdKey, $dataMTBuah[$estKey])) {
+                        if (!empty($dataMTBuah[$estKey][$afdKey])) {
+                            $mutuBuahMergeReg[$estKey][$afdKey] = $dataMTBuah[$estKey][$afdKey];
+                        } else {
+                            $mutuBuahMergeReg[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mutuBuahMergeReg[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mutuBuahMergeReg[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+        // dd($mutuBuahMerge);
+        // menimpa mutu ancak nilai default dengan nilaiyang ada
+        $mergedData = array();
+        foreach ($defaultNew as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataPerBulan)) {
+                    if (array_key_exists($afdKey, $dataPerBulan[$estKey])) {
+                        if (!empty($dataPerBulan[$estKey][$afdKey])) {
+                            $mergedData[$estKey][$afdKey] = $dataPerBulan[$estKey][$afdKey];
+                        } else {
+                            $mergedData[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mergedData[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mergedData[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+
+        $mergedData_reg = array();
+        foreach ($defaultNew_reg as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataPerBulan)) {
+                    if (array_key_exists($afdKey, $dataPerBulan[$estKey])) {
+                        if (!empty($dataPerBulan[$estKey][$afdKey])) {
+                            $mergedData_reg[$estKey][$afdKey] = $dataPerBulan[$estKey][$afdKey];
+                        } else {
+                            $mergedData_reg[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mergedData_reg[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mergedData_reg[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+        // dd($mergedData_reg);
+        // //membuat data mutu ancak berdasarakan wilayah 1,2,3
+        $mtancakWIltab1 = array();
+        foreach ($queryEste as $key => $value) {
+            foreach ($mergedData as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtancakWIltab1[$value['wil']][$key2] = array_merge($mtancakWIltab1[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+        // dd($mtancakWIltab1);
+        $mtBuahWIltab1 = array();
+        foreach ($queryEste as $key => $value) {
+            foreach ($mutuBuahMerge as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtBuahWIltab1[$value['wil']][$key2] = array_merge($mtBuahWIltab1[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+        $mtTransWiltab1 = array();
+        foreach ($queryEste as $key => $value) {
+            foreach ($mutuAncakMerge as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtTransWiltab1[$value['wil']][$key2] = array_merge($mtTransWiltab1[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+        ///untuk regional
+        $mtTransWiltab1_reg = array();
+        foreach ($queryEstereg as $key => $value) {
+            foreach ($mutuAncakMergeReg as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtTransWiltab1_reg[$value['wil']][$key2] = array_merge($mtTransWiltab1_reg[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+        $mtBuahWIltab1_reg = array();
+        foreach ($queryEstereg as $key => $value) {
+            foreach ($mutuBuahMergeReg as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtBuahWIltab1_reg[$value['wil']][$key2] = array_merge($mtBuahWIltab1_reg[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+        $mtancakWIltab1_reg = array();
+        foreach ($queryEstereg as $key => $value) {
+            foreach ($mergedData_reg as $key2 => $value2) {
+                if ($value['est'] == $key2) {
+                    $mtancakWIltab1_reg[$value['wil']][$key2] = array_merge($mtancakWIltab1_reg[$value['wil']][$key2] ?? [], $value2);
+                }
+            }
+        }
+
+
+
+        $TranscakReg2 = DB::connection('mysql2')->table('mutu_transport')
+            ->select(
+                "mutu_transport.*",
+                DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y-%m-%d") as date')
+            )
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->orderBy('datetime', 'DESC')
+            ->orderBy(DB::raw('SECOND(datetime)'), 'DESC')
+            ->get();
+        $AncakCakReg2 = DB::connection('mysql2')->table('mutu_ancak_new')
+            ->select(
+                "mutu_ancak_new.*",
+                DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y-%m-%d") as date')
+            )
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->orderBy('datetime', 'DESC')
+            ->orderBy(DB::raw('SECOND(datetime)'), 'DESC')
+            ->get();
+
+        $DataTransGroupReg2 = [];
+        foreach ($TranscakReg2 as $item) {
+            $estate = $item->estate;
+            $afdeling = $item->afdeling;
+            $datetime = $item->datetime;
+            $blok = $item->blok;
+            $date = $item->date;
+
+            if (!isset($DataTransGroupReg2[$estate])) {
+                $DataTransGroupReg2[$estate] = [];
+            }
+            if (!isset($DataTransGroupReg2[$estate][$afdeling])) {
+                $DataTransGroupReg2[$estate][$afdeling] = [];
+            }
+            if (!isset($DataTransGroupReg2[$estate][$afdeling][$date])) {
+                $DataTransGroupReg2[$estate][$afdeling][$date] = [];
+            }
+            if (!isset($DataTransGroupReg2[$estate][$afdeling][$date][$blok])) {
+                $DataTransGroupReg2[$estate][$afdeling][$date][$blok] = [];
+            }
+
+            $DataTransGroupReg2[$estate][$afdeling][$date][$blok][] = $item;
+        }
+
+        $DataTransGroupReg2 = json_decode(json_encode($DataTransGroupReg2), true);
+
+        $groupedDataAcnakreg2 = [];
+        foreach ($AncakCakReg2 as $item) {
+            $estate = $item->estate;
+            $afdeling = $item->afdeling;
+            $datetime = $item->datetime;
+            $blok = $item->blok;
+            $date = $item->date;
+
+            if (!isset($groupedDataAcnakreg2[$estate])) {
+                $groupedDataAcnakreg2[$estate] = [];
+            }
+            if (!isset($groupedDataAcnakreg2[$estate][$afdeling])) {
+                $groupedDataAcnakreg2[$estate][$afdeling] = [];
+            }
+            if (!isset($groupedDataAcnakreg2[$estate][$afdeling][$date])) {
+                $groupedDataAcnakreg2[$estate][$afdeling][$date] = [];
+            }
+            if (!isset($groupedDataAcnakreg2[$estate][$afdeling][$date][$blok])) {
+                $groupedDataAcnakreg2[$estate][$afdeling][$date][$blok] = [];
+            }
+
+            $groupedDataAcnakreg2[$estate][$afdeling][$date][$blok][] = $item;
+        }
+
+        $groupedDataAcnakreg2 = json_decode(json_encode($groupedDataAcnakreg2), true);
+
+        $dataMTTransRegs2 = array();
+        foreach ($DataTransGroupReg2 as $key => $value) {
+            foreach ($queryEstereg as $est => $estval)
+                if ($estval['est'] === $key) {
+                    foreach ($value as $key2 => $value2) {
+                        foreach ($queryAfd as $afd => $afdval)
+                            if ($afdval['est'] === $key && $afdval['nama'] === $key2) {
+                                foreach ($value2 as $key3 => $value3) {
+
+                                    foreach ($value3 as $key4 => $value4) {
+
+                                        $dataMTTransRegs2[$afdval['est']][$afdval['nama']][$key3][$key4] = $value4;
+                                    }
+                                }
+                            }
+                    }
+                }
+        }
+        $dataAncaksRegs2 = array();
+        foreach ($groupedDataAcnakreg2 as $key => $value) {
+            foreach ($queryEstereg as $est => $estval)
+                if ($estval['est'] === $key) {
+                    foreach ($value as $key2 => $value2) {
+                        foreach ($queryAfd as $afd => $afdval)
+                            if ($afdval['est'] === $key && $afdval['nama'] === $key2) {
+                                foreach ($value2 as $key3 => $value3) {
+                                    foreach ($value3 as $key4 => $value4) {
+                                        $dataAncaksRegs2[$afdval['est']][$afdval['nama']][$key3][$key4] = $value4;
+                                    }
+                                }
+                            }
+                    }
+                }
+        }
+        // dd($dataAncaksRegs2);
+        $ancakRegss2 = array();
+
+        foreach ($dataAncaksRegs2 as $key => $value) {
+            foreach ($value as $key1 => $value2) {
+                foreach ($value2 as $key2 => $value3) {
+                    $sum = 0; // Initialize sum variable
+                    $count = 0; // Initialize count variable
+                    foreach ($value3 as $key3 => $value4) {
+                        $listBlok = array();
+                        $firstEntry = $value4[0];
+                        foreach ($value4 as $key4 => $value5) {
+                            // dd($value5['sph']);
+                            if (!in_array($value5['estate'] . ' ' . $value5['afdeling'] . ' ' . $value5['blok'], $listBlok)) {
+                                if ($value5['sph'] != 0) {
+                                    $listBlok[] = $value5['estate'] . ' ' . $value5['afdeling'] . ' ' . $value5['blok'];
+                                }
+                            }
+                            $jml_blok = count($listBlok);
+
+                            if ($firstEntry['luas_blok'] != 0) {
+                                $first = $firstEntry['luas_blok'];
+                            } else {
+                                $first = '-';
+                            }
+                        }
+                        if ($first != '-') {
+                            $sum += $first;
+                            $count++;
+                        }
+                        $ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'] = $first;
+                        if ($Reg === '2') {
+                            $status_panen = explode(",", $value5['status_panen']);
+                            $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'] = $status_panen[0];
+                        } else {
+                            $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'] = $value5['status_panen'];
+                        }
+                    }
+                }
+            }
+        }
+        $transNewdata = array();
+        foreach ($dataMTTransRegs2 as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+
+                foreach ($value1 as $key2 => $value2) {
+
+                    foreach ($value2 as $key3 => $value3) {
+                        $sum_bt = 0;
+                        $sum_Restan = 0;
+                        $tph_sample = 0;
+                        $listBlokPerAfd = array();
+                        foreach ($value3 as $key4 => $value4) {
+                            $listBlokPerAfd[] = $value4['estate'] . ' ' . $value4['afdeling'] . ' ' . $value4['blok'];
+                            $sum_Restan += $value4['rst'];
+                            $tph_sample = count($listBlokPerAfd);
+                            $sum_bt += $value4['bt'];
+                        }
+                        $panenKey = 0;
+                        $LuasKey = 0;
+                        if (isset($ancakRegss2[$key][$key1][$key2][$key3]['status_panen'])) {
+                            $transNewdata[$key][$key1][$key2][$key3]['status_panen'] = $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'];
+                            $panenKey = $ancakRegss2[$key][$key1][$key2][$key3]['status_panen'];
+                        }
+                        if (isset($ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'])) {
+                            $transNewdata[$key][$key1][$key2][$key3]['luas_blok'] = $ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'];
+                            $LuasKey = $ancakRegss2[$key][$key1][$key2][$key3]['luas_blok'];
+                        }
+
+
+                        if ($panenKey !== 0 && $panenKey <= 3) {
+                            if (count($value4) == 1 && $value4[0]['blok'] == '0') {
+                                $tph_sample = $value4[0]['tph_baris'];
+                                $sum_bt = $value4[0]['bt'];
+                            } else {
+                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($LuasKey) * 1.3, 3);
+                            }
+                        } else {
+                            $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = $tph_sample;
+                        }
+
+
+
+                        $transNewdata[$key][$key1][$key2][$key3]['estate'] = $value4['estate'];
+                        $transNewdata[$key][$key1][$key2][$key3]['afdeling'] = $value4['afdeling'];
+                        $transNewdata[$key][$key1][$key2][$key3]['estate'] = $value4['estate'];
+                    }
+                }
+            }
+        }
+        foreach ($ancakRegss2 as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+
+                foreach ($value1 as $key2 => $value2) {
+                    $tph_tod = 0;
+                    foreach ($value2 as $key3 => $value3) {
+                        if (!isset($transNewdata[$key][$key1][$key2][$key3])) {
+                            $transNewdata[$key][$key1][$key2][$key3] = $value3;
+
+                            if ($value3['status_panen'] <= 3) {
+                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = round(floatval($value3['luas_blok']) * 1.3, 3);
+                            } else {
+                                $transNewdata[$key][$key1][$key2][$key3]['tph_sample'] = 0;
+                            }
+                        }
+                        // If 'tph_sample' key exists, add its value to $tph_tod
+                        if (isset($value3['tph_sample'])) {
+                            $tph_tod += $value3['tph_sample'];
+                        }
+                    }
+                }
+                // Store total_tph for each $key1 after iterating all $key2
+
+            }
+        }
+        foreach ($transNewdata as $key => &$value) {
+            foreach ($value as $key1 => &$value1) {
+                $tph_sample_total = 0; // initialize the total
+                foreach ($value1 as $key2 => $value2) {
+                    if (is_array($value2)) {
+                        foreach ($value2 as $key3 => $value3) {
+                            if (isset($value3['tph_sample'])) {
+                                $tph_sample_total += $value3['tph_sample'];
+                            }
+                        }
+                    }
+                }
+                $value1['total_tph'] = $tph_sample_total;
+            }
+        }
+        unset($value); // unset the reference
+        unset($value1); // unset the reference
+        // dd($transNewdata);
+
+
+        $mtancaktab1Wil = array();
+        foreach ($mtancakWIltab1 as $key => $value) if (!empty($value)) {
+            $pokok_panenWil = 0;
+            $jum_haWil = 0;
+            $janjang_panenWil = 0;
+            $p_panenWil = 0;
+            $k_panenWil = 0;
+            $brtgl_panenWil = 0;
+            $bhts_panenWil = 0;
+            $bhtm1_panenWil = 0;
+            $bhtm2_panenWil = 0;
+            $bhtm3_oanenWil = 0;
+            $pelepah_swil = 0;
+            $totalPKTwil = 0;
+            $sumBHWil = 0;
+            $akpWil = 0;
+            $brdPerwil = 0;
+            $sumPerBHWil = 0;
+            $perPiWil = 0;
+            $totalWil = 0;
+            foreach ($value as $key1 => $value1) if (!empty($value2)) {
+                $pokok_panenEst = 0;
+                $jum_haEst =  0;
+                $janjang_panenEst =  0;
+                $akpEst =  0;
+                $p_panenEst =  0;
+                $k_panenEst =  0;
+                $brtgl_panenEst = 0;
+                $skor_bTinggalEst =  0;
+                $brdPerjjgEst =  0;
+                $bhtsEST = 0;
+                $bhtm1EST = 0;
+                $bhtm2EST = 0;
+                $bhtm3EST = 0;
+                $pelepah_sEST = 0;
+
+                $skor_bhEst =  0;
+                $skor_brdPerjjgEst =  0;
+
+                foreach ($value1 as $key2 => $value2) if (!empty($value2)) {
+
+                    $akp = 0;
+                    $skor_bTinggal = 0;
+                    $brdPerjjg = 0;
+                    $pokok_panen = 0;
+                    $janjang_panen = 0;
+                    $p_panen = 0;
+                    $k_panen = 0;
+                    $bhts_panen  = 0;
+                    $bhtm1_panen  = 0;
+                    $bhtm2_panen  = 0;
+                    $bhtm3_oanen  = 0;
+                    $ttlSkorMA = 0;
+                    $listBlokPerAfd = array();
+                    $jum_ha = 0;
+                    $pelepah_s = 0;
+                    $skor_brdPerjjg = 0;
+                    $skor_bh = 0;
+                    $skor_perPl = 0;
+                    $totalPokok = 0;
+                    $totalPanen = 0;
+                    $totalP_panen = 0;
+                    $totalK_panen = 0;
+                    $totalPTgl_panen = 0;
+                    $totalbhts_panen = 0;
+                    $totalbhtm1_panen = 0;
+                    $totalbhtm2_panen = 0;
+                    $totalbhtm3_oanen = 0;
+                    $totalpelepah_s = 0;
+                    $total_brd = 0;
+                    $check_input = 'kosong';
+                    $nilai_input = 0;
+                    foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+                        if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
+                            $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
+                        }
+                        $jum_ha = count($listBlokPerAfd);
+
+                        $totalPokok += $value3["sample"];
+                        $totalPanen +=  $value3["jjg"];
+                        $totalP_panen += $value3["brtp"];
+                        $totalK_panen += $value3["brtk"];
+                        $totalPTgl_panen += $value3["brtgl"];
+
+                        $totalbhts_panen += $value3["bhts"];
+                        $totalbhtm1_panen += $value3["bhtm1"];
+                        $totalbhtm2_panen += $value3["bhtm2"];
+                        $totalbhtm3_oanen += $value3["bhtm3"];
+
+                        $totalpelepah_s += $value3["ps"];
+                        $check_input = $value3["jenis_input"];
+                        $nilai_input = $value3["skor_akhir"];
+                    }
+
+
+                    if ($totalPokok != 0) {
+                        $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                    } else {
+                        $akp = 0;
+                    }
+
+
+                    $skor_bTinggal = $totalP_panen + $totalK_panen + $totalPTgl_panen;
+
+                    if ($totalPanen != 0) {
+                        $brdPerjjg = round($skor_bTinggal / $totalPanen, 3);
+                    } else {
+                        $brdPerjjg = 0;
+                    }
+
+                    $sumBH = $totalbhts_panen +  $totalbhtm1_panen +  $totalbhtm2_panen +  $totalbhtm3_oanen;
+                    if ($sumBH != 0) {
+                        $sumPerBH = round($sumBH / ($totalPanen + $sumBH) * 100, 3);
+                    } else {
+                        $sumPerBH = 0;
+                    }
+
+                    if ($totalpelepah_s != 0) {
+                        $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
+                    } else {
+                        $perPl = 0;
+                    }
+
+
+
+
+
+                    $nonZeroValues = array_filter([$totalP_panen, $totalK_panen, $totalPTgl_panen, $totalbhts_panen, $totalbhtm1_panen, $totalbhtm2_panen, $totalbhtm3_oanen]);
+
+                    if (!empty($nonZeroValues)) {
+                        $mtancaktab1Wil[$key][$key1][$key2]['check_data'] = 'ada';
+                        // $mtancaktab1Wil[$key][$key1][$key2]['skor_brd'] = $skor_brd = skor_brd_ma($brdPerjjg);
+                        // $mtancaktab1Wil[$key][$key1][$key2]['skor_ps'] = $skor_ps = skor_palepah_ma($perPl);
+                    } else {
+                        $mtancaktab1Wil[$key][$key1][$key2]['check_data'] = 'kosong';
+                        // $mtancaktab1Wil[$key][$key1][$key2]['skor_brd'] = $skor_brd = 0;
+                        // $mtancaktab1Wil[$key][$key1][$key2]['skor_ps'] = $skor_ps = 0;
+                    }
+
+                    // $ttlSkorMA = $skor_bh + $skor_brd + $skor_ps;
+                    $ttlSkorMA = $skor_bh = skor_buah_Ma($sumPerBH) + $skor_brd = skor_brd_ma($brdPerjjg) + $skor_ps = skor_palepah_ma($perPl);
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['pokok_sample'] = $totalPokok;
+                    $mtancaktab1Wil[$key][$key1][$key2]['ha_sample'] = $jum_ha;
+                    $mtancaktab1Wil[$key][$key1][$key2]['jumlah_panen'] = $totalPanen;
+                    $mtancaktab1Wil[$key][$key1][$key2]['akp_rl'] = $akp;
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['p'] = $totalP_panen;
+                    $mtancaktab1Wil[$key][$key1][$key2]['k'] = $totalK_panen;
+                    $mtancaktab1Wil[$key][$key1][$key2]['tgl'] = $totalPTgl_panen;
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['total_brd'] = $skor_bTinggal;
+                    $mtancaktab1Wil[$key][$key1][$key2]['brd/jjg'] = $brdPerjjg;
+
+                    // data untuk buah tinggal
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhts_s'] = $totalbhts_panen;
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhtm1'] = $totalbhtm1_panen;
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhtm2'] = $totalbhtm2_panen;
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhtm3'] = $totalbhtm3_oanen;
+                    $mtancaktab1Wil[$key][$key1][$key2]['buah/jjg'] = $sumPerBH;
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
+                    // data untuk pelepah sengklek
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['palepah_pokok'] = $totalpelepah_s;
+                    $mtancaktab1Wil[$key][$key1][$key2]['palepah_per'] = $perPl;
+                    // total skor akhir
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['skor_akhir'] = $ttlSkorMA;
+                    $mtancaktab1Wil[$key][$key1][$key2]['check_input'] = $check_input;
+                    $mtancaktab1Wil[$key][$key1][$key2]['nilai_input'] = $nilai_input;
+
+                    $pokok_panenEst += $totalPokok;
+
+                    $jum_haEst += $jum_ha;
+                    $janjang_panenEst += $totalPanen;
+
+                    $p_panenEst += $totalP_panen;
+                    $k_panenEst += $totalK_panen;
+                    $brtgl_panenEst += $totalPTgl_panen;
+
+                    // bagian buah tinggal
+                    $bhtsEST   += $totalbhts_panen;
+                    $bhtm1EST += $totalbhtm1_panen;
+                    $bhtm2EST   += $totalbhtm2_panen;
+                    $bhtm3EST   += $totalbhtm3_oanen;
+                    // data untuk pelepah sengklek
+                    $pelepah_sEST += $totalpelepah_s;
+                } else {
+                    $mtancaktab1Wil[$key][$key1][$key2]['pokok_sample'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['ha_sample'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['jumlah_panen'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['akp_rl'] =  0;
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['p'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['k'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['tgl'] = 0;
+
+                    // $mtancaktab1Wil[$key][$key1][$key2]['total_brd'] = $skor_bTinggal;
+                    $mtancaktab1Wil[$key][$key1][$key2]['brd/jjg'] = 0;
+
+                    // data untuk buah tinggal
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhts_s'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhtm1'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhtm2'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['bhtm3'] = 0;
+
+                    // $mtancaktab1Wil[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
+                    // data untuk pelepah sengklek
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['palepah_pokok'] = 0;
+                    // total skor akhi0;
+
+                    $mtancaktab1Wil[$key][$key1][$key2]['skor_bh'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['skor_brd'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['skor_ps'] = 0;
+                    $mtancaktab1Wil[$key][$key1][$key2]['skor_akhir'] = 0;
+                }
+
+                $sumBHEst = $bhtsEST +  $bhtm1EST +  $bhtm2EST +  $bhtm3EST;
+                $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
+                // dd($sumBHEst);
+                if ($pokok_panenEst != 0) {
+                    $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
+                } else {
+                    $akpEst = 0;
+                }
+
+                if ($janjang_panenEst != 0) {
+                    $brdPerjjgEst = round($totalPKT / $janjang_panenEst, 3);
+                } else {
+                    $brdPerjjgEst = 0;
+                }
+
+
+
+                // dd($sumBHEst);
+                if ($sumBHEst != 0) {
+                    $sumPerBHEst = round($sumBHEst / ($janjang_panenEst + $sumBHEst) * 100, 3);
+                } else {
+                    $sumPerBHEst = 0;
+                }
+
+                if ($pokok_panenEst != 0) {
+                    $perPlEst = round(($pelepah_sEST / $pokok_panenEst) * 100, 3);
+                } else {
+                    $perPlEst = 0;
+                }
+
+
+                $nonZeroValues = array_filter([$p_panenEst, $k_panenEst, $brtgl_panenEst, $bhtsEST, $bhtm1EST, $bhtm2EST, $bhtm3EST]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtancaktab1Wil[$key][$key1]['check_data'] = 'ada';
+                    // $mtancaktab1Wil[$key][$key1]['skor_brd'] = $skor_brd = skor_brd_ma($brdPerjjgEst);
+                    // $mtancaktab1Wil[$key][$key1]['skor_ps'] = $skor_ps = skor_palepah_ma($perPlEst);
+                } else {
+                    $mtancaktab1Wil[$key][$key1]['check_data'] = 'kosong';
+                    // $mtancaktab1Wil[$key][$key1]['skor_brd'] = $skor_brd = 0;
+                    // $mtancaktab1Wil[$key][$key1]['skor_ps'] = $skor_ps = 0;
+                }
+
+                // $totalSkorEst = $skor_bh + $skor_brd + $skor_ps;
+
+                $totalSkorEst =  skor_brd_ma($brdPerjjgEst) + skor_buah_Ma($sumPerBHEst) + skor_palepah_ma($perPlEst);
+                //PENAMPILAN UNTUK PERESTATE
+                $mtancaktab1Wil[$key][$key1]['skor_bh'] = $skor_bh = skor_buah_Ma($sumPerBHEst);
+                $mtancaktab1Wil[$key][$key1]['skor_brd'] = $skor_brd = skor_brd_ma($brdPerjjgEst);
+                $mtancaktab1Wil[$key][$key1]['skor_ps'] = $skor_ps = skor_palepah_ma($perPlEst);
+                $mtancaktab1Wil[$key][$key1]['pokok_sample'] = $pokok_panenEst;
+                $mtancaktab1Wil[$key][$key1]['ha_sample'] =  $jum_haEst;
+                $mtancaktab1Wil[$key][$key1]['jumlah_panen'] = $janjang_panenEst;
+                $mtancaktab1Wil[$key][$key1]['akp_rl'] =  $akpEst;
+
+                $mtancaktab1Wil[$key][$key1]['p'] = $p_panenEst;
+                $mtancaktab1Wil[$key][$key1]['k'] = $k_panenEst;
+                $mtancaktab1Wil[$key][$key1]['tgl'] = $brtgl_panenEst;
+
+                $mtancaktab1Wil[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtancaktab1Wil[$key][$key1]['brd/jjgest'] = $brdPerjjgEst;
+                $mtancaktab1Wil[$key][$key1]['buah/jjg'] = $sumPerBHEst;
+
+                // data untuk buah tinggal
+                $mtancaktab1Wil[$key][$key1]['bhts_s'] = $bhtsEST;
+                $mtancaktab1Wil[$key][$key1]['bhtm1'] = $bhtm1EST;
+                $mtancaktab1Wil[$key][$key1]['bhtm2'] = $bhtm2EST;
+                $mtancaktab1Wil[$key][$key1]['bhtm3'] = $bhtm3EST;
+                $mtancaktab1Wil[$key][$key1]['palepah_pokok'] = $pelepah_sEST;
+                $mtancaktab1Wil[$key][$key1]['palepah_per'] = $perPlEst;
+                // total skor akhir
+
+                $mtancaktab1Wil[$key][$key1]['skor_akhir'] = $totalSkorEst;
+
+                //perhitungn untuk perwilayah
+
+                $pokok_panenWil += $pokok_panenEst;
+                $jum_haWil += $jum_haEst;
+                $janjang_panenWil += $janjang_panenEst;
+                $p_panenWil += $p_panenEst;
+                $k_panenWil += $k_panenEst;
+                $brtgl_panenWil += $brtgl_panenEst;
+                // bagian buah tinggal
+                $bhts_panenWil += $bhtsEST;
+                $bhtm1_panenWil += $bhtm1EST;
+                $bhtm2_panenWil += $bhtm2EST;
+                $bhtm3_oanenWil += $bhtm3EST;
+                $pelepah_swil += $pelepah_sEST;
+            } else {
+                $mtancaktab1Wil[$key][$key1]['pokok_sample'] = 0;
+                $mtancaktab1Wil[$key][$key1]['ha_sample'] =  0;
+                $mtancaktab1Wil[$key][$key1]['jumlah_panen'] = 0;
+                $mtancaktab1Wil[$key][$key1]['akp_rl'] =  0;
+
+                $mtancaktab1Wil[$key][$key1]['p'] = 0;
+                $mtancaktab1Wil[$key][$key1]['k'] = 0;
+                $mtancaktab1Wil[$key][$key1]['tgl'] = 0;
+
+                // $mtancaktab1Wil[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtancaktab1Wil[$key][$key1]['brd/jjgest'] = 0;
+                $mtancaktab1Wil[$key][$key1]['buah/jjg'] = 0;
+                // data untuk buah tinggal
+                $mtancaktab1Wil[$key][$key1]['bhts_s'] = 0;
+                $mtancaktab1Wil[$key][$key1]['bhtm1'] = 0;
+                $mtancaktab1Wil[$key][$key1]['bhtm2'] = 0;
+                $mtancaktab1Wil[$key][$key1]['bhtm3'] = 0;
+                $mtancaktab1Wil[$key][$key1]['palepah_pokok'] = 0;
+                // total skor akhir
+                $mtancaktab1Wil[$key][$key1]['skor_bh'] =  0;
+                $mtancaktab1Wil[$key][$key1]['skor_brd'] = 0;
+                $mtancaktab1Wil[$key][$key1]['skor_ps'] = 0;
+                $mtancaktab1Wil[$key][$key1]['skor_akhir'] = 0;
+            }
+            $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
+            $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
+
+            if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
+                $akpWil = 0;
+            } else {
+
+                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 3);
+            }
+
+            if ($totalPKTwil != 0) {
+                $brdPerwil = round($totalPKTwil / $janjang_panenWil, 3);
+            } else {
+                $brdPerwil = 0;
+            }
+
+            // dd($sumBHEst);
+            if ($sumBHWil != 0) {
+                $sumPerBHWil = round($sumBHWil / ($janjang_panenWil + $sumBHWil) * 100, 3);
+            } else {
+                $sumPerBHWil = 0;
+            }
+
+            if ($pokok_panenWil != 0) {
+                $perPiWil = round(($pelepah_swil / $pokok_panenWil) * 100, 3);
+            } else {
+                $perPiWil = 0;
+            }
+
+            $nonZeroValues = array_filter([$p_panenWil, $k_panenWil, $brtgl_panenWil, $bhts_panenWil, $bhtm1_panenWil, $bhtm2_panenWil, $bhtm3_oanenWil]);
+
+            if (!empty($nonZeroValues)) {
+                $mtancaktab1Wil[$key]['check_data'] = 'ada';
+                // $mtancaktab1Wil[$key]['skor_brd'] = $skor_brd = skor_brd_ma($brdPerwil);
+                // $mtancaktab1Wil[$key]['skor_ps'] = $skor_ps = skor_palepah_ma($perPiWil);
+            } else {
+                $mtancaktab1Wil[$key]['check_data'] = 'kosong';
+                // $mtancaktab1Wil[$key]['skor_brd'] = $skor_brd = 0;
+                // $mtancaktab1Wil[$key]['skor_ps'] = $skor_ps = 0;
+            }
+
+            // $totalWil = $skor_bh + $skor_brd + $skor_ps;
+            $totalWil = skor_brd_ma($brdPerwil) + skor_buah_Ma($sumPerBHWil) + skor_palepah_ma($perPiWil);
+
+            $mtancaktab1Wil[$key]['pokok_sample'] = $pokok_panenWil;
+            $mtancaktab1Wil[$key]['ha_sample'] =  $jum_haWil;
+            $mtancaktab1Wil[$key]['jumlah_panen'] = $janjang_panenWil;
+            $mtancaktab1Wil[$key]['akp_rl'] =  $akpWil;
+
+            $mtancaktab1Wil[$key]['p'] = $p_panenWil;
+            $mtancaktab1Wil[$key]['k'] = $k_panenWil;
+            $mtancaktab1Wil[$key]['tgl'] = $brtgl_panenWil;
+            $mtancaktab1Wil[$key]['total_brd'] = $totalPKTwil;
+
+            $mtancaktab1Wil[$key]['total_brd'] = $skor_bTinggal;
+            $mtancaktab1Wil[$key]['brd/jjgwil'] = $brdPerwil;
+            $mtancaktab1Wil[$key]['buah/jjgwil'] = $sumPerBHWil;
+            $mtancaktab1Wil[$key]['bhts_s'] = $bhts_panenWil;
+            $mtancaktab1Wil[$key]['bhtm1'] = $bhtm1_panenWil;
+            $mtancaktab1Wil[$key]['bhtm2'] = $bhtm2_panenWil;
+            $mtancaktab1Wil[$key]['bhtm3'] = $bhtm3_oanenWil;
+            $mtancaktab1Wil[$key]['total_buah'] = $sumBHWil;
+            $mtancaktab1Wil[$key]['total_buah_per'] = $sumPerBHWil;
+            $mtancaktab1Wil[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
+            // data untuk pelepah sengklek
+            $mtancaktab1Wil[$key]['palepah_pokok'] = $pelepah_swil;
+
+            $mtancaktab1Wil[$key]['palepah_per'] = $perPiWil;
+            // total skor akhir
+            $mtancaktab1Wil[$key]['skor_bh'] = skor_buah_Ma($sumPerBHWil);
+            $mtancaktab1Wil[$key]['skor_brd'] = skor_brd_ma($brdPerwil);
+            $mtancaktab1Wil[$key]['skor_ps'] = skor_palepah_ma($perPiWil);
+            $mtancaktab1Wil[$key]['skor_akhir'] = $totalWil;
+        } else {
+            $mtancaktab1Wil[$key]['pokok_sample'] = 0;
+            $mtancaktab1Wil[$key]['ha_sample'] =  0;
+            $mtancaktab1Wil[$key]['jumlah_panen'] = 0;
+            $mtancaktab1Wil[$key]['akp_rl'] =  0;
+
+            $mtancaktab1Wil[$key]['p'] = 0;
+            $mtancaktab1Wil[$key]['k'] = 0;
+            $mtancaktab1Wil[$key]['tgl'] = 0;
+
+            // $mtancaktab1Wil[$key]['total_brd'] = $skor_bTinggal;
+            $mtancaktab1Wil[$key]['brd/jjgwil'] = 0;
+            $mtancaktab1Wil[$key]['buah/jjgwil'] = 0;
+            $mtancaktab1Wil[$key]['bhts_s'] = 0;
+            $mtancaktab1Wil[$key]['bhtm1'] = 0;
+            $mtancaktab1Wil[$key]['bhtm2'] = 0;
+            $mtancaktab1Wil[$key]['bhtm3'] = 0;
+            // $mtancaktab1Wil[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
+            // data untuk pelepah sengklek
+            $mtancaktab1Wil[$key]['palepah_pokok'] = 0;
+            // total skor akhir
+            $mtancaktab1Wil[$key]['skor_bh'] = 0;
+            $mtancaktab1Wil[$key]['skor_brd'] = 0;
+            $mtancaktab1Wil[$key]['skor_ps'] = 0;
+            $mtancaktab1Wil[$key]['skor_akhir'] = 0;
+        }
+
+        // dd($queryEstereg);
+        //perhitungan untuk mutu trans perwilaya,estate dan afd
+        $mtTranstab1Wil = array();
+        foreach ($mtTransWiltab1 as $key => $value) if (!empty($value)) {
+            $dataBLokWil = 0;
+            $sum_btWil = 0;
+            $sum_rstWil = 0;
+            foreach ($value as $key1 => $value1) if (!empty($value1)) {
+                $dataBLokEst = 0;
+                $sum_btEst = 0;
+                $sum_rstEst = 0;
+                foreach ($value1 as $key2 => $value2) if (!empty($value2)) {
+                    $sum_bt = 0;
+                    $sum_rst = 0;
+                    $brdPertph = 0;
+                    $buahPerTPH = 0;
+                    $totalSkor = 0;
+                    $dataBLok = 0;
+                    $listBlokPerAfd = array();
+                    foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+
+                        // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
+                        $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
+                        // }
+                        $dataBLok = count($listBlokPerAfd);
+                        $sum_bt += $value3['bt'];
+                        $sum_rst += $value3['rst'];
+                    }
+                    $tot_sample = 0;  // Define the variable outside of the foreach loop
+
+                    foreach ($transNewdata as $keys => $trans) {
+                        if ($keys == $key1) {
+                            foreach ($trans as $keys2 => $trans2) {
+                                if ($keys2 == $key2) {
+                                    $mtTranstab1Wil[$key][$key1][$key2]['tph_sampleNew'] = $trans2['total_tph'];
+                                    $tot_sample = $trans2['total_tph'];
+                                }
+                            }
+                        }
+                    }
+
+                    if ($Reg == '2' || $Reg == 2) {
+                        if ($dataBLok != 0) {
+                            $brdPertph = round($sum_bt / $tot_sample, 3);
+                        } else {
+                            $brdPertph = 0;
+                        }
+                    } else {
+                        if ($dataBLok != 0) {
+                            $brdPertph = round($sum_bt / $dataBLok, 3);
+                        } else {
+                            $brdPertph = 0;
+                        }
+                    }
+
+                    if ($Reg == '2' || $Reg == 2) {
+                        if ($dataBLok != 0) {
+                            $buahPerTPH = round($sum_rst / $tot_sample, 3);
+                        } else {
+                            $buahPerTPH = 0;
+                        }
+                    } else {
+                        if ($dataBLok != 0) {
+                            $buahPerTPH = round($sum_rst / $dataBLok, 3);
+                        } else {
+                            $buahPerTPH = 0;
+                        }
+                    }
+
+
+                    $nonZeroValues = array_filter([$sum_bt, $sum_rst]);
+
+                    if (!empty($nonZeroValues)) {
+                        $mtTranstab1Wil[$key][$key1][$key2]['check_data'] = 'ada';
+                    } else {
+                        $mtTranstab1Wil[$key][$key1][$key2]['check_data'] = "kosong";
+                    }
+                    // dd($transNewdata);
+
+
+
+
+                    $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+
+                    $mtTranstab1Wil[$key][$key1][$key2]['tph_sample'] = $dataBLok;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_brd'] = $sum_bt;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_brd/TPH'] = $brdPertph;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_buah'] = $sum_rst;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_buahPerTPH'] = $buahPerTPH;
+
+                    $mtTranstab1Wil[$key][$key1][$key2]['totalSkor'] = $totalSkor;
+
+                    //PERHITUNGAN PERESTATE
+                    if ($Reg == '2' || $Reg == 2) {
+                        $dataBLokEst += $tot_sample;
+                    } else {
+                        $dataBLokEst += $dataBLok;
+                    }
+
+                    $sum_btEst += $sum_bt;
+                    $sum_rstEst += $sum_rst;
+
+                    if ($dataBLokEst != 0) {
+                        $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
+                    } else {
+                        $brdPertphEst = 0;
+                    }
+
+                    if ($dataBLokEst != 0) {
+                        $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
+                    } else {
+                        $buahPerTPHEst = 0;
+                    }
+
+                    // dd($mtTranstab1Wil);
+                    $totalSkorEst = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+                } else {
+                    $mtTranstab1Wil[$key][$key1][$key2]['tph_sample'] = 0;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_brd'] = 0;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_brd/TPH'] = 0;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_buah'] = 0;
+                    $mtTranstab1Wil[$key][$key1][$key2]['total_buahPerTPH'] = 0;
+                    $mtTranstab1Wil[$key][$key1][$key2]['skor_brdPertph'] = 0;
+                    $mtTranstab1Wil[$key][$key1][$key2]['skor_buahPerTPH'] = 0;
+                    $mtTranstab1Wil[$key][$key1][$key2]['totalSkor'] = 0;
+                }
+
+                $nonZeroValues = array_filter([$sum_btEst, $sum_rstEst]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtTranstab1Wil[$key][$key1]['check_data'] = 'ada';
+                    // $mtTranstab1Wil[$key][$key1]['skor_buahPerTPH'] = $skor_buah =  skor_buah_tinggal($buahPerTPHEst);
+                } else {
+                    $mtTranstab1Wil[$key][$key1]['check_data'] = 'kosong';
+                    // $mtTranstab1Wil[$key][$key1]['skor_buahPerTPH'] = $skor_buah = 0;
+                }
+
+                // $totalSkorEst = $skor_brd + $skor_buah ;
+
+
+                $mtTranstab1Wil[$key][$key1]['tph_sample'] = $dataBLokEst;
+                $mtTranstab1Wil[$key][$key1]['total_brd'] = $sum_btEst;
+                $mtTranstab1Wil[$key][$key1]['total_brd/TPH'] = $brdPertphEst;
+                $mtTranstab1Wil[$key][$key1]['total_buah'] = $sum_rstEst;
+                $mtTranstab1Wil[$key][$key1]['total_buahPerTPH'] = $buahPerTPHEst;
+                $mtTranstab1Wil[$key][$key1]['skor_brdPertph'] = skor_brd_tinggal($brdPertphEst);
+                $mtTranstab1Wil[$key][$key1]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPHEst);
+                $mtTranstab1Wil[$key][$key1]['totalSkor'] = $totalSkorEst;
+
+                //perhitungan per wil
+                $dataBLokWil += $dataBLokEst;
+                $sum_btWil += $sum_btEst;
+                $sum_rstWil += $sum_rstEst;
+
+                if ($dataBLokWil != 0) {
+                    $brdPertphWil = round($sum_btWil / $dataBLokWil, 3);
+                } else {
+                    $brdPertphWil = 0;
+                }
+                if ($dataBLokWil != 0) {
+                    $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 3);
+                } else {
+                    $buahPerTPHWil = 0;
+                }
+
+                $totalSkorWil =   skor_brd_tinggal($brdPertphWil) + skor_buah_tinggal($buahPerTPHWil);
+            } else {
+                $mtTranstab1Wil[$key][$key1]['tph_sample'] = 0;
+                $mtTranstab1Wil[$key][$key1]['total_brd'] = 0;
+                $mtTranstab1Wil[$key][$key1]['total_brd/TPH'] = 0;
+                $mtTranstab1Wil[$key][$key1]['total_buah'] = 0;
+                $mtTranstab1Wil[$key][$key1]['total_buahPerTPH'] = 0;
+                $mtTranstab1Wil[$key][$key1]['skor_brdPertph'] = 0;
+                $mtTranstab1Wil[$key][$key1]['skor_buahPerTPH'] = 0;
+                $mtTranstab1Wil[$key][$key1]['totalSkor'] = 0;
+            }
+
+            $nonZeroValues = array_filter([$sum_btWil, $sum_rstWil]);
+
+
+            if (!empty($nonZeroValues)) {
+                $mtTranstab1Wil[$key]['check_data'] = 'ada';
+                // $mtTranstab1Wil[$key]['skor_brd'] = $skor_brd = skor_brd_ma($brdPerwil);
+                // $mtTranstab1Wil[$key]['skor_ps'] = $skor_ps = skor_palepah_ma($perPiWil);
+            } else {
+                $mtTranstab1Wil[$key]['check_data'] = 'kosong';
+                // $mtTranstab1Wil[$key]['skor_brd'] = $skor_brd = 0;
+                // $mtTranstab1Wil[$key]['skor_ps'] = $skor_ps = 0;
+            }
+            $mtTranstab1Wil[$key]['tph_sample'] = $dataBLokWil;
+            $mtTranstab1Wil[$key]['total_brd'] = $sum_btWil;
+            $mtTranstab1Wil[$key]['total_brd/TPH'] = $brdPertphWil;
+            $mtTranstab1Wil[$key]['total_buah'] = $sum_rstWil;
+            $mtTranstab1Wil[$key]['total_buahPerTPH'] = $buahPerTPHWil;
+            $mtTranstab1Wil[$key]['skor_brdPertph'] =   skor_brd_tinggal($brdPertphWil);
+            $mtTranstab1Wil[$key]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPHWil);
+            $mtTranstab1Wil[$key]['totalSkor'] = $totalSkorWil;
+        } else {
+            $mtTranstab1Wil[$key]['tph_sample'] = 0;
+            $mtTranstab1Wil[$key]['total_brd'] = 0;
+            $mtTranstab1Wil[$key]['total_brd/TPH'] = 0;
+            $mtTranstab1Wil[$key]['total_buah'] = 0;
+            $mtTranstab1Wil[$key]['total_buahPerTPH'] = 0;
+            $mtTranstab1Wil[$key]['skor_brdPertph'] = 0;
+            $mtTranstab1Wil[$key]['skor_buahPerTPH'] = 0;
+            $mtTranstab1Wil[$key]['totalSkor'] = 0;
+        }
+
+        // dd($mtTranstab1Wil);
+
+        $mtTranstab1Wil_reg = array();
+        foreach ($mtTransWiltab1_reg as $key => $value) if (!empty($value)) {
+            $dataBLokWil = 0;
+            $sum_btWil = 0;
+            $sum_rstWil = 0;
+            foreach ($value as $key1 => $value1) if (!empty($value1)) {
+                $dataBLokEst = 0;
+                $sum_btEst = 0;
+                $sum_rstEst = 0;
+                foreach ($value1 as $key2 => $value2) if (!empty($value2)) {
+                    $sum_bt = 0;
+                    $sum_rst = 0;
+                    $brdPertph = 0;
+                    $buahPerTPH = 0;
+                    $totalSkor = 0;
+                    $dataBLok = 0;
+                    $listBlokPerAfd = array();
+                    foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+
+                        // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
+                        $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
+                        // }
+                        $dataBLok = count($listBlokPerAfd);
+                        $sum_bt += $value3['bt'];
+                        $sum_rst += $value3['rst'];
+                    }
+                    $tot_sample = 0;  // Define the variable outside of the foreach loop
+
+                    foreach ($transNewdata as $keys => $trans) {
+                        if ($keys == $key1) {
+                            foreach ($trans as $keys2 => $trans2) {
+                                if ($keys2 == $key2) {
+                                    $mtTranstab1Wil_reg[$key][$key1][$key2]['tph_sampleNew'] = $trans2['total_tph'];
+                                    $tot_sample = $trans2['total_tph'];
+                                }
+                            }
+                        }
+                    }
+
+                    if ($Reg == '2' || $Reg == 2) {
+                        if ($dataBLok != 0) {
+                            $brdPertph = round($sum_bt / $tot_sample, 3);
+                        } else {
+                            $brdPertph = 0;
+                        }
+                    } else {
+                        if ($dataBLok != 0) {
+                            $brdPertph = round($sum_bt / $dataBLok, 3);
+                        } else {
+                            $brdPertph = 0;
+                        }
+                    }
+
+                    if ($Reg == '2' || $Reg == 2) {
+                        if ($dataBLok != 0) {
+                            $buahPerTPH = round($sum_rst / $tot_sample, 3);
+                        } else {
+                            $buahPerTPH = 0;
+                        }
+                    } else {
+                        if ($dataBLok != 0) {
+                            $buahPerTPH = round($sum_rst / $dataBLok, 3);
+                        } else {
+                            $buahPerTPH = 0;
+                        }
+                    }
+
+
+                    $nonZeroValues = array_filter([$sum_bt, $sum_rst]);
+
+                    if (!empty($nonZeroValues)) {
+                        $mtTranstab1Wil_reg[$key][$key1][$key2]['check_data'] = 'ada';
+                    } else {
+                        $mtTranstab1Wil_reg[$key][$key1][$key2]['check_data'] = "kosong";
+                    }
+                    // dd($transNewdata);
+
+
+
+
+                    $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['tph_sample'] = $dataBLok;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_brd'] = $sum_bt;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_brd/TPH'] = $brdPertph;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_buah'] = $sum_rst;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_buahPerTPH'] = $buahPerTPH;
+
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['totalSkor'] = $totalSkor;
+
+                    //PERHITUNGAN PERESTATE
+                    if ($Reg == '2' || $Reg == 2) {
+                        $dataBLokEst += $tot_sample;
+                    } else {
+                        $dataBLokEst += $dataBLok;
+                    }
+
+                    //PERHITUNGAN PERESTATE
+
+                    $sum_btEst += $sum_bt;
+                    $sum_rstEst += $sum_rst;
+
+                    if ($dataBLokEst != 0) {
+                        $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
+                    } else {
+                        $brdPertphEst = 0;
+                    }
+                    if ($dataBLokEst != 0) {
+                        $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
+                    } else {
+                        $buahPerTPHEst = 0;
+                    }
+
+                    $totalSkorEst = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+                } else {
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['tph_sample'] = 0;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_brd'] = 0;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_brd/TPH'] = 0;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_buah'] = 0;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['total_buahPerTPH'] = 0;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['skor_brdPertph'] = 0;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['skor_buahPerTPH'] = 0;
+                    $mtTranstab1Wil_reg[$key][$key1][$key2]['totalSkor'] = 0;
+                }
+
+                $mtTranstab1Wil_reg[$key][$key1]['tph_sample'] = $dataBLokEst;
+                $mtTranstab1Wil_reg[$key][$key1]['total_brd'] = $sum_btEst;
+                $mtTranstab1Wil_reg[$key][$key1]['total_brd/TPH'] = $brdPertphEst;
+                $mtTranstab1Wil_reg[$key][$key1]['total_buah'] = $sum_rstEst;
+                $mtTranstab1Wil_reg[$key][$key1]['total_buahPerTPH'] = $buahPerTPHEst;
+                $mtTranstab1Wil_reg[$key][$key1]['skor_brdPertph'] = skor_brd_tinggal($brdPertphEst);
+                $mtTranstab1Wil_reg[$key][$key1]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPHEst);
+                $mtTranstab1Wil_reg[$key][$key1]['totalSkor'] = $totalSkorEst;
+
+                //perhitungan per wil
+                $dataBLokWil += $dataBLokEst;
+                $sum_btWil += $sum_btEst;
+                $sum_rstWil += $sum_rstEst;
+
+                if ($dataBLokWil != 0) {
+                    $brdPertphWil = round($sum_btWil / $dataBLokWil, 3);
+                } else {
+                    $brdPertphWil = 0;
+                }
+                if ($dataBLokWil != 0) {
+                    $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 3);
+                } else {
+                    $buahPerTPHWil = 0;
+                }
+
+                $totalSkorWil =   skor_brd_tinggal($brdPertphWil) + skor_buah_tinggal($buahPerTPHWil);
+            } else {
+                $mtTranstab1Wil_reg[$key][$key1]['tph_sample'] = 0;
+                $mtTranstab1Wil_reg[$key][$key1]['total_brd'] = 0;
+                $mtTranstab1Wil_reg[$key][$key1]['total_brd/TPH'] = 0;
+                $mtTranstab1Wil_reg[$key][$key1]['total_buah'] = 0;
+                $mtTranstab1Wil_reg[$key][$key1]['total_buahPerTPH'] = 0;
+                $mtTranstab1Wil_reg[$key][$key1]['skor_brdPertph'] = 0;
+                $mtTranstab1Wil_reg[$key][$key1]['skor_buahPerTPH'] = 0;
+                $mtTranstab1Wil_reg[$key][$key1]['totalSkor'] = 0;
+            }
+            $mtTranstab1Wil_reg[$key]['tph_sample'] = $dataBLokWil;
+            $mtTranstab1Wil_reg[$key]['total_brd'] = $sum_btWil;
+            $mtTranstab1Wil_reg[$key]['total_brd/TPH'] = $brdPertphWil;
+            $mtTranstab1Wil_reg[$key]['total_buah'] = $sum_rstWil;
+            $mtTranstab1Wil_reg[$key]['total_buahPerTPH'] = $buahPerTPHWil;
+            $mtTranstab1Wil_reg[$key]['skor_brdPertph'] =   skor_brd_tinggal($brdPertphWil);
+            $mtTranstab1Wil_reg[$key]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPHWil);
+            $mtTranstab1Wil_reg[$key]['totalSkor'] = $totalSkorWil;
+        } else {
+            $mtTranstab1Wil_reg[$key]['tph_sample'] = 0;
+            $mtTranstab1Wil_reg[$key]['total_brd'] = 0;
+            $mtTranstab1Wil_reg[$key]['total_brd/TPH'] = 0;
+            $mtTranstab1Wil_reg[$key]['total_buah'] = 0;
+            $mtTranstab1Wil_reg[$key]['total_buahPerTPH'] = 0;
+            $mtTranstab1Wil_reg[$key]['skor_brdPertph'] = 0;
+            $mtTranstab1Wil_reg[$key]['skor_buahPerTPH'] = 0;
+            $mtTranstab1Wil_reg[$key]['totalSkor'] = 0;
+        }
+        // dd($mtTranstab1Wil_reg);
+        //perhitungan untuk mutu buah wilayah,estate dan afd
+        $mtBuahtab1Wil = array();
+        foreach ($mtBuahWIltab1 as $key => $value) if (is_array($value)) {
+            $jum_haWil = 0;
+            $sum_SamplejjgWil = 0;
+            $sum_bmtWil = 0;
+            $sum_bmkWil = 0;
+            $sum_overWil = 0;
+            $sum_abnorWil = 0;
+            $sum_kosongjjgWil = 0;
+            $sum_vcutWil = 0;
+            $sum_krWil = 0;
+            $no_Vcutwil = 0;
+
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $jum_haEst  = 0;
+                $sum_SamplejjgEst = 0;
+                $sum_bmtEst = 0;
+                $sum_bmkEst = 0;
+                $sum_overEst = 0;
+                $sum_abnorEst = 0;
+                $sum_kosongjjgEst = 0;
+                $sum_vcutEst = 0;
+                $sum_krEst = 0;
+                $no_VcutEst = 0;
+
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    $sum_bmt = 0;
+                    $sum_bmk = 0;
+                    $sum_over = 0;
+                    $dataBLok = 0;
+                    $sum_Samplejjg = 0;
+                    $PerMth = 0;
+                    $PerMsk = 0;
+                    $PerOver = 0;
+                    $sum_abnor = 0;
+                    $sum_kosongjjg = 0;
+                    $Perkosongjjg = 0;
+                    $sum_vcut = 0;
+                    $PerVcut = 0;
+                    $PerAbr = 0;
+                    $sum_kr = 0;
+                    $total_kr = 0;
+                    $per_kr = 0;
+                    $totalSkor = 0;
+                    $jum_ha = 0;
+                    $no_Vcut = 0;
+                    $jml_mth = 0;
+                    $jml_mtg = 0;
+                    $dataBLok = 0;
+                    $listBlokPerAfd = [];
+                    $dtBlok = 0;
+                    // $combination_counts = array();
+                    foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+                        $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] . ' ' . $value3['tph_baris'];
+                        $dtBlok = count($listBlokPerAfd);
+
+                        // $jum_ha = count($listBlokPerAfd);
+                        $sum_bmt += $value3['bmt'];
+                        $sum_bmk += $value3['bmk'];
+                        $sum_over += $value3['overripe'];
+                        $sum_kosongjjg += $value3['empty_bunch'];
+                        $sum_vcut += $value3['vcut'];
+                        $sum_kr += $value3['alas_br'];
+
+
+                        $sum_Samplejjg += $value3['jumlah_jjg'];
+                        $sum_abnor += $value3['abnormal'];
+                    }
+
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok = $dtBlok;
+                    $jml_mth = ($sum_bmt + $sum_bmk);
+                    $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
+
+                    if ($sum_kr != 0) {
+                        $total_kr = round($sum_kr / $dataBLok, 3);
+                    } else {
+                        $total_kr = 0;
+                    }
+
+
+                    $per_kr = round($total_kr * 100, 3);
+                    if ($jml_mth != 0) {
+                        $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $PerMth = 0;
+                    }
+                    if ($jml_mtg != 0) {
+                        $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $PerMsk = 0;
+                    }
+                    if ($sum_over != 0) {
+                        $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $PerOver = 0;
+                    }
+                    if ($sum_kosongjjg != 0) {
+                        $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $Perkosongjjg = 0;
+                    }
+                    if ($sum_vcut != 0) {
+                        $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
+                    } else {
+                        $PerVcut = 0;
+                    }
+
+                    if ($sum_abnor != 0) {
+                        $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
+                    } else {
+                        $PerAbr = 0;
+                    }
+
+                    $nonZeroValues = array_filter([$sum_Samplejjg, $jml_mth, $jml_mtg, $sum_over, $sum_abnor, $sum_kosongjjg, $sum_vcut, $dataBLok]);
+
+                    if (!empty($nonZeroValues)) {
+                        $mtBuahtab1Wil[$key][$key1][$key2]['check_data'] = 'ada';
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMsk);
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_over'] = $skor_over =  skor_buah_over_mb($PerOver);
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($Perkosongjjg);
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcut);
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_kr'] = $skor_kr =  skor_abr_mb($per_kr);
+                    } else {
+                        $mtBuahtab1Wil[$key][$key1][$key2]['check_data'] = 'kosong';
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_masak'] = $skor_masak = 0;
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_over'] = $skor_over = 0;
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_jjgKosong'] = $skor_jjgKosong = 0;
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_vcut'] = $skor_vcut =  0;
+                        // $mtBuahtab1Wil[$key][$key1][$key2]['skor_kr'] = $skor_kr = 0;
+                    }
+
+                    // $totalSkor = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+
+
+                    $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+                    $mtBuahtab1Wil[$key][$key1][$key2]['tph_baris_bloks'] = $dataBLok;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['sampleJJG_total'] = $sum_Samplejjg;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_mentah'] = $jml_mth;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perMentah'] = $PerMth;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_masak'] = $jml_mtg;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perMasak'] = $PerMsk;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_over'] = $sum_over;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perOver'] = $PerOver;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_abnormal'] = $sum_abnor;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['perAbnormal'] = $PerAbr;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_jjgKosong'] = $sum_kosongjjg;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perKosongjjg'] = $Perkosongjjg;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_vcut'] = $sum_vcut;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['perVcut'] = $PerVcut;
+
+                    $mtBuahtab1Wil[$key][$key1][$key2]['jum_kr'] = $sum_kr;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_kr'] = $total_kr;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['persen_kr'] = $per_kr;
+
+                    // skoring
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_mentah'] = skor_buah_mentah_mb($PerMth);
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_masak'] = skor_buah_masak_mb($PerMsk);
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_over'] = skor_buah_over_mb($PerOver);
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_jjgKosong'] = skor_jangkos_mb($Perkosongjjg);
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_vcut'] = skor_vcut_mb($PerVcut);
+
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_kr'] = skor_abr_mb($per_kr);
+                    $mtBuahtab1Wil[$key][$key1][$key2]['TOTAL_SKOR'] = $totalSkor;
+
+                    //perhitungan estate
+                    $jum_haEst += $dataBLok;
+                    $sum_SamplejjgEst += $sum_Samplejjg;
+                    $sum_bmtEst += $jml_mth;
+                    $sum_bmkEst += $jml_mtg;
+                    $sum_overEst += $sum_over;
+                    $sum_abnorEst += $sum_abnor;
+                    $sum_kosongjjgEst += $sum_kosongjjg;
+                    $sum_vcutEst += $sum_vcut;
+                    $sum_krEst += $sum_kr;
+                } else {
+                    $mtBuahtab1Wil[$key][$key1][$key2]['tph_baris_blok'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['sampleJJG_total'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_mentah'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perMentah'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_masak'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perMasak'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_over'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perOver'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_abnormal'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['perAbnormal'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_jjgKosong'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_perKosongjjg'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_vcut'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['perVcut'] = 0;
+
+                    $mtBuahtab1Wil[$key][$key1][$key2]['jum_kr'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['total_kr'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['persen_kr'] = 0;
+
+                    // skoring
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_mentah'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_masak'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_over'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_jjgKosong'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_vcut'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_abnormal'] = 0;;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['skor_kr'] = 0;
+                    $mtBuahtab1Wil[$key][$key1][$key2]['TOTAL_SKOR'] = 0;
+                }
+                $no_VcutEst = $sum_SamplejjgEst - $sum_vcutEst;
+
+                if ($sum_krEst != 0) {
+                    $total_krEst = round($sum_krEst / $jum_haEst, 3);
+                } else {
+                    $total_krEst = 0;
+                }
+                // if ($sum_kr != 0) {
+                //     $total_kr = round($sum_kr / $dataBLok, 3);
+                // } else {
+                //     $total_kr = 0;
+                // }
+
+                if ($sum_bmtEst != 0) {
+                    $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerMthEst = 0;
+                }
+
+                if ($sum_bmkEst != 0) {
+                    $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerMskEst = 0;
+                }
+
+                if ($sum_overEst != 0) {
+                    $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerOverEst = 0;
+                }
+                if ($sum_kosongjjgEst != 0) {
+                    $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerkosongjjgEst = 0;
+                }
+                if ($sum_vcutEst != 0) {
+                    $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
+                } else {
+                    $PerVcutest = 0;
+                }
+                if ($sum_abnorEst != 0) {
+                    $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
+                } else {
+                    $PerAbrest = 0;
+                }
+                // $per_kr = round($sum_kr * 100);
+                $per_krEst = round($total_krEst * 100, 3);
+
+
+                $nonZeroValues = array_filter([$sum_SamplejjgEst, $sum_bmtEst, $sum_bmkEst, $sum_overEst, $sum_abnorEst, $sum_kosongjjgEst, $sum_vcutEst]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtBuahtab1Wil[$key][$key1]['check_data'] = 'ada';
+                    // $mtBuahtab1Wil[$key][$key1]['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMskEst);
+                    // $mtBuahtab1Wil[$key][$key1]['skor_over'] = $skor_over =  skor_buah_over_mb($PerOverEst);
+                    // $mtBuahtab1Wil[$key][$key1]['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($PerkosongjjgEst);
+                    // $mtBuahtab1Wil[$key][$key1]['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcutest);
+                    // $mtBuahtab1Wil[$key][$key1]['skor_kr'] = $skor_kr =  skor_abr_mb($per_krEst);
+                } else {
+                    $mtBuahtab1Wil[$key][$key1]['check_data'] = 'kosong';
+                    // $mtBuahtab1Wil[$key][$key1]['skor_masak'] = $skor_masak = 0;
+                    // $mtBuahtab1Wil[$key][$key1]['skor_over'] = $skor_over = 0;
+                    // $mtBuahtab1Wil[$key][$key1]['skor_jjgKosong'] = $skor_jjgKosong = 0;
+                    // $mtBuahtab1Wil[$key][$key1]['skor_vcut'] = $skor_vcut =  0;
+                    // $mtBuahtab1Wil[$key][$key1]['skor_kr'] = $skor_kr = 0;
+                }
+
+                // $totalSkorEst = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+
+                $totalSkorEst =   skor_buah_mentah_mb($PerMthEst) + skor_buah_masak_mb($PerMskEst) + skor_buah_over_mb($PerOverEst) + skor_jangkos_mb($PerkosongjjgEst) + skor_vcut_mb($PerVcutest) + skor_abr_mb($per_krEst);
+                $mtBuahtab1Wil[$key][$key1]['tph_baris_blok'] = $jum_haEst;
+                $mtBuahtab1Wil[$key][$key1]['sampleJJG_total'] = $sum_SamplejjgEst;
+                $mtBuahtab1Wil[$key][$key1]['total_mentah'] = $sum_bmtEst;
+                $mtBuahtab1Wil[$key][$key1]['total_perMentah'] = $PerMthEst;
+                $mtBuahtab1Wil[$key][$key1]['total_masak'] = $sum_bmkEst;
+                $mtBuahtab1Wil[$key][$key1]['total_perMasak'] = $PerMskEst;
+                $mtBuahtab1Wil[$key][$key1]['total_over'] = $sum_overEst;
+                $mtBuahtab1Wil[$key][$key1]['total_perOver'] = $PerOverEst;
+                $mtBuahtab1Wil[$key][$key1]['total_abnormal'] = $sum_abnorEst;
+                $mtBuahtab1Wil[$key][$key1]['total_perabnormal'] = $PerAbrest;
+                $mtBuahtab1Wil[$key][$key1]['total_jjgKosong'] = $sum_kosongjjgEst;
+                $mtBuahtab1Wil[$key][$key1]['total_perKosongjjg'] = $PerkosongjjgEst;
+                $mtBuahtab1Wil[$key][$key1]['total_vcut'] = $sum_vcutEst;
+                $mtBuahtab1Wil[$key][$key1]['perVcut'] = $PerVcutest;
+                $mtBuahtab1Wil[$key][$key1]['jum_kr'] = $sum_krEst;
+                $mtBuahtab1Wil[$key][$key1]['kr_blok'] = $total_krEst;
+
+                $mtBuahtab1Wil[$key][$key1]['persen_kr'] = $per_krEst;
+
+                // skoring
+                $mtBuahtab1Wil[$key][$key1]['skor_mentah'] =  skor_buah_mentah_mb($PerMthEst);
+                $mtBuahtab1Wil[$key][$key1]['skor_masak'] = skor_buah_masak_mb($PerMskEst);
+                $mtBuahtab1Wil[$key][$key1]['skor_over'] = skor_buah_over_mb($PerOverEst);;
+                $mtBuahtab1Wil[$key][$key1]['skor_jjgKosong'] = skor_jangkos_mb($PerkosongjjgEst);
+                $mtBuahtab1Wil[$key][$key1]['skor_vcut'] = skor_vcut_mb($PerVcutest);
+                $mtBuahtab1Wil[$key][$key1]['skor_kr'] = skor_abr_mb($per_krEst);
+                $mtBuahtab1Wil[$key][$key1]['TOTAL_SKOR'] = $totalSkorEst;
+
+                //hitung perwilayah
+                $jum_haWil += $jum_haEst;
+                $sum_SamplejjgWil += $sum_SamplejjgEst;
+                $sum_bmtWil += $sum_bmtEst;
+                $sum_bmkWil += $sum_bmkEst;
+                $sum_overWil += $sum_overEst;
+                $sum_abnorWil += $sum_abnorEst;
+                $sum_kosongjjgWil += $sum_kosongjjgEst;
+                $sum_vcutWil += $sum_vcutEst;
+                $sum_krWil += $sum_krEst;
+            } else {
+                $mtBuahtab1Wil[$key][$key1]['tph_baris_blok'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['sampleJJG_total'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_mentah'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_perMentah'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_masak'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_perMasak'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_over'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_perOver'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_abnormal'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_perabnormal'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_jjgKosong'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_perKosongjjg'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['total_vcut'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['perVcut'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['jum_kr'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['kr_blok'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['persen_kr'] = 0;
+
+                // skoring
+                $mtBuahtab1Wil[$key][$key1]['skor_mentah'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['skor_masak'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['skor_over'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['skor_jjgKosong'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['skor_vcut'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['skor_abnormal'] = 0;;
+                $mtBuahtab1Wil[$key][$key1]['skor_kr'] = 0;
+                $mtBuahtab1Wil[$key][$key1]['TOTAL_SKOR'] = 0;
+            }
+
+            if ($sum_krWil != 0) {
+                $total_krWil = round($sum_krWil / $jum_haWil, 3);
+            } else {
+                $total_krWil = 0;
+            }
+
+            if ($sum_bmtWil != 0) {
+                $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerMthWil = 0;
+            }
+
+
+            if ($sum_bmkWil != 0) {
+                $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerMskWil = 0;
+            }
+            if ($sum_overWil != 0) {
+                $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerOverWil = 0;
+            }
+            if ($sum_kosongjjgWil != 0) {
+                $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerkosongjjgWil = 0;
+            }
+            if ($sum_vcutWil != 0) {
+                $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 3);
+            } else {
+                $PerVcutWil = 0;
+            }
+            if ($sum_abnorWil != 0) {
+                $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 3);
+            } else {
+                $PerAbrWil = 0;
+            }
+            $per_krWil = round($total_krWil * 100, 3);
+
+            $nonZeroValues = array_filter([$sum_SamplejjgWil, $sum_bmtWil, $sum_bmkWil, $sum_overWil, $sum_abnorWil, $sum_kosongjjgWil, $sum_vcutWil]);
+
+            if (!empty($nonZeroValues)) {
+                $mtBuahtab1Wil[$key]['check_data'] = 'ada';
+                // $mtBuahtab1Wil[$key]['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMskWil);
+                // $mtBuahtab1Wil[$key]['skor_over'] = $skor_over =  skor_buah_over_mb($PerOverWil);
+                // $mtBuahtab1Wil[$key]['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($PerkosongjjgWil);
+                // $mtBuahtab1Wil[$key]['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcutWil);
+                // $mtBuahtab1Wil[$key]['skor_kr'] = $skor_kr =  skor_abr_mb($per_krWil);
+            } else {
+                $mtBuahtab1Wil[$key]['check_data'] = 'kosong';
+                // $mtBuahtab1Wil[$key]['skor_masak'] = $skor_masak = 0;
+                // $mtBuahtab1Wil[$key]['skor_over'] = $skor_over = 0;
+                // $mtBuahtab1Wil[$key]['skor_jjgKosong'] = $skor_jjgKosong = 0;
+                // $mtBuahtab1Wil[$key]['skor_vcut'] = $skor_vcut =  0;
+                // $mtBuahtab1Wil[$key]['skor_kr'] = $skor_kr = 0;
+            }
+
+            // $totalSkorWil = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+
+
+            $totalSkorWil =  skor_buah_mentah_mb($PerMthWil) + skor_buah_masak_mb($PerMskWil) + skor_buah_over_mb($PerOverWil) + skor_jangkos_mb($PerkosongjjgWil) + skor_vcut_mb($PerVcutWil) + skor_abr_mb($per_krWil);
+            $mtBuahtab1Wil[$key]['tph_baris_blok'] = $jum_haWil;
+            $mtBuahtab1Wil[$key]['sampleJJG_total'] = $sum_SamplejjgWil;
+            $mtBuahtab1Wil[$key]['total_mentah'] = $sum_bmtWil;
+            $mtBuahtab1Wil[$key]['total_perMentah'] = $PerMthWil;
+            $mtBuahtab1Wil[$key]['total_masak'] = $sum_bmkWil;
+            $mtBuahtab1Wil[$key]['total_perMasak'] = $PerMskWil;
+            $mtBuahtab1Wil[$key]['total_over'] = $sum_overWil;
+            $mtBuahtab1Wil[$key]['total_perOver'] = $PerOverWil;
+            $mtBuahtab1Wil[$key]['total_abnormal'] = $sum_abnorWil;
+            $mtBuahtab1Wil[$key]['total_perabnormal'] = $PerAbrWil;
+            $mtBuahtab1Wil[$key]['total_jjgKosong'] = $sum_kosongjjgWil;
+            $mtBuahtab1Wil[$key]['total_perKosongjjg'] = $PerkosongjjgWil;
+            $mtBuahtab1Wil[$key]['total_vcut'] = $sum_vcutWil;
+            $mtBuahtab1Wil[$key]['per_vcut'] = $PerVcutWil;
+            $mtBuahtab1Wil[$key]['jum_kr'] = $sum_krWil;
+            $mtBuahtab1Wil[$key]['kr_blok'] = $total_krWil;
+
+            $mtBuahtab1Wil[$key]['persen_kr'] = $per_krWil;
+
+            // skoring
+            $mtBuahtab1Wil[$key]['skor_mentah'] = skor_buah_mentah_mb($PerMthWil);
+            $mtBuahtab1Wil[$key]['skor_masak'] = skor_buah_masak_mb($PerMskWil);
+            $mtBuahtab1Wil[$key]['skor_over'] = skor_buah_over_mb($PerOverWil);;
+            $mtBuahtab1Wil[$key]['skor_jjgKosong'] = skor_jangkos_mb($PerkosongjjgWil);
+            $mtBuahtab1Wil[$key]['skor_vcut'] = skor_vcut_mb($PerVcutWil);
+            $mtBuahtab1Wil[$key]['skor_kr'] = skor_abr_mb($per_krWil);
+            $mtBuahtab1Wil[$key]['TOTAL_SKOR'] = $totalSkorWil;
+        } else {
+            $mtBuahtab1Wil[$key]['tph_baris_blok'] = 0;
+            $mtBuahtab1Wil[$key]['sampleJJG_total'] = 0;
+            $mtBuahtab1Wil[$key]['total_mentah'] = 0;
+            $mtBuahtab1Wil[$key]['total_perMentah'] = 0;
+            $mtBuahtab1Wil[$key]['total_masak'] = 0;
+            $mtBuahtab1Wil[$key]['total_perMasak'] = 0;
+            $mtBuahtab1Wil[$key]['total_over'] = 0;
+            $mtBuahtab1Wil[$key]['total_perOver'] = 0;
+            $mtBuahtab1Wil[$key]['total_abnormal'] = 0;
+            $mtBuahtab1Wil[$key]['total_perabnormal'] = 0;
+            $mtBuahtab1Wil[$key]['total_jjgKosong'] = 0;
+            $mtBuahtab1Wil[$key]['total_perKosongjjg'] = 0;
+            $mtBuahtab1Wil[$key]['total_vcut'] = 0;
+            $mtBuahtab1Wil[$key]['per_vcut'] = 0;
+            $mtBuahtab1Wil[$key]['jum_kr'] = 0;
+            $mtBuahtab1Wil[$key]['kr_blok'] = 0;
+
+            $mtBuahtab1Wil[$key]['persen_kr'] = 0;
+
+            // skoring
+            $mtBuahtab1Wil[$key]['skor_mentah'] = 0;
+            $mtBuahtab1Wil[$key]['skor_masak'] = 0;
+            $mtBuahtab1Wil[$key]['skor_over'] = 0;
+            $mtBuahtab1Wil[$key]['skor_jjgKosong'] = 0;
+            $mtBuahtab1Wil[$key]['skor_vcut'] = 0;
+
+            $mtBuahtab1Wil[$key]['skor_kr'] = 0;
+            $mtBuahtab1Wil[$key]['TOTAL_SKOR'] = 0;
+        }
+        // dd($mtBuahtab1Wil['1']);
+        $mtBuahtab1Wil_reg = array();
+        foreach ($mtBuahWIltab1_reg as $key => $value) if (is_array($value)) {
+            $jum_haWil = 0;
+            $sum_SamplejjgWil = 0;
+            $sum_bmtWil = 0;
+            $sum_bmkWil = 0;
+            $sum_overWil = 0;
+            $sum_abnorWil = 0;
+            $sum_kosongjjgWil = 0;
+            $sum_vcutWil = 0;
+            $sum_krWil = 0;
+            $no_Vcutwil = 0;
+
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $jum_haEst  = 0;
+                $sum_SamplejjgEst = 0;
+                $sum_bmtEst = 0;
+                $sum_bmkEst = 0;
+                $sum_overEst = 0;
+                $sum_abnorEst = 0;
+                $sum_kosongjjgEst = 0;
+                $sum_vcutEst = 0;
+                $sum_krEst = 0;
+                $no_VcutEst = 0;
+
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    $sum_bmt = 0;
+                    $sum_bmk = 0;
+                    $sum_over = 0;
+                    $dataBLok = 0;
+                    $sum_Samplejjg = 0;
+                    $PerMth = 0;
+                    $PerMsk = 0;
+                    $PerOver = 0;
+                    $sum_abnor = 0;
+                    $sum_kosongjjg = 0;
+                    $Perkosongjjg = 0;
+                    $sum_vcut = 0;
+                    $PerVcut = 0;
+                    $PerAbr = 0;
+                    $sum_kr = 0;
+                    $total_kr = 0;
+                    $per_kr = 0;
+                    $totalSkor = 0;
+                    $jum_ha = 0;
+                    $no_Vcut = 0;
+                    $jml_mth = 0;
+                    $jml_mtg = 0;
+                    $combination_counts = array();
+                    foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+                        $combination = $value3['blok'] . ' ' . $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['tph_baris'];
+                        if (!isset($combination_counts[$combination])) {
+                            $combination_counts[$combination] = 0;
+                        }
+                        $jum_ha = count($listBlokPerAfd);
+                        $sum_bmt += $value3['bmt'];
+                        $sum_bmk += $value3['bmk'];
+                        $sum_over += $value3['overripe'];
+                        $sum_kosongjjg += $value3['empty_bunch'];
+                        $sum_vcut += $value3['vcut'];
+                        $sum_kr += $value3['alas_br'];
+
+
+                        $sum_Samplejjg += $value3['jumlah_jjg'];
+                        $sum_abnor += $value3['abnormal'];
+                    }
+
+                    $dataBLok = count($combination_counts);
+                    $jml_mth = ($sum_bmt + $sum_bmk);
+                    $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
+
+                    if ($sum_kr != 0) {
+                        $total_kr = round($sum_kr / $dataBLok, 3);
+                    } else {
+                        $total_kr = 0;
+                    }
+
+
+                    $per_kr = round($total_kr * 100, 3);
+                    if ($jml_mth != 0) {
+                        $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $PerMth = 0;
+                    }
+                    if ($jml_mtg != 0) {
+                        $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $PerMsk = 0;
+                    }
+                    if ($sum_over != 0) {
+                        $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $PerOver = 0;
+                    }
+                    if ($sum_kosongjjg != 0) {
+                        $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                    } else {
+                        $Perkosongjjg = 0;
+                    }
+                    if ($sum_vcut != 0) {
+                        $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
+                    } else {
+                        $PerVcut = 0;
+                    }
+
+                    if ($sum_abnor != 0) {
+                        $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
+                    } else {
+                        $PerAbr = 0;
+                    }
+
+
+                    $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['tph_baris_bloks'] = $dataBLok;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['sampleJJG_total'] = $sum_Samplejjg;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_mentah'] = $jml_mth;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perMentah'] = $PerMth;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_masak'] = $jml_mtg;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perMasak'] = $PerMsk;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_over'] = $sum_over;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perOver'] = $PerOver;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_abnormal'] = $sum_abnor;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['perAbnormal'] = $PerAbr;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_jjgKosong'] = $sum_kosongjjg;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perKosongjjg'] = $Perkosongjjg;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_vcut'] = $sum_vcut;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['perVcut'] = $PerVcut;
+
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['jum_kr'] = $sum_kr;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_kr'] = $total_kr;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['persen_kr'] = $per_kr;
+
+                    // skoring
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_mentah'] = skor_buah_mentah_mb($PerMth);
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_masak'] = skor_buah_masak_mb($PerMsk);
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_over'] = skor_buah_over_mb($PerOver);
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_jjgKosong'] = skor_jangkos_mb($Perkosongjjg);
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_vcut'] = skor_vcut_mb($PerVcut);
+
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_kr'] = skor_abr_mb($per_kr);
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['TOTAL_SKOR'] = $totalSkor;
+
+                    //perhitungan estate
+                    $jum_haEst += $dataBLok;
+                    $sum_SamplejjgEst += $sum_Samplejjg;
+                    $sum_bmtEst += $jml_mth;
+                    $sum_bmkEst += $jml_mtg;
+                    $sum_overEst += $sum_over;
+                    $sum_abnorEst += $sum_abnor;
+                    $sum_kosongjjgEst += $sum_kosongjjg;
+                    $sum_vcutEst += $sum_vcut;
+                    $sum_krEst += $sum_kr;
+                } else {
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['tph_baris_blok'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['sampleJJG_total'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_mentah'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perMentah'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_masak'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perMasak'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_over'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perOver'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_abnormal'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['perAbnormal'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_jjgKosong'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perKosongjjg'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_vcut'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['perVcut'] = 0;
+
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['jum_kr'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_kr'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['persen_kr'] = 0;
+
+                    // skoring
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_mentah'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_masak'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_over'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_jjgKosong'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_vcut'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_abnormal'] = 0;;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['skor_kr'] = 0;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['TOTAL_SKOR'] = 0;
+                }
+                $no_VcutEst = $sum_SamplejjgEst - $sum_vcutEst;
+
+                if ($sum_krEst != 0) {
+                    $total_krEst = round($sum_krEst / $jum_haEst, 3);
+                } else {
+                    $total_krEst = 0;
+                }
+                // if ($sum_kr != 0) {
+                //     $total_kr = round($sum_kr / $dataBLok, 3);
+                // } else {
+                //     $total_kr = 0;
+                // }
+
+                if ($sum_bmtEst != 0) {
+                    $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerMthEst = 0;
+                }
+
+                if ($sum_bmkEst != 0) {
+                    $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerMskEst = 0;
+                }
+
+                if ($sum_overEst != 0) {
+                    $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerOverEst = 0;
+                }
+                if ($sum_kosongjjgEst != 0) {
+                    $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+                } else {
+                    $PerkosongjjgEst = 0;
+                }
+                if ($sum_vcutEst != 0) {
+                    $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
+                } else {
+                    $PerVcutest = 0;
+                }
+                if ($sum_abnorEst != 0) {
+                    $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
+                } else {
+                    $PerAbrest = 0;
+                }
+                // $per_kr = round($sum_kr * 100);
+                $per_krEst = round($total_krEst * 100, 3);
+
+                $totalSkorEst =   skor_buah_mentah_mb($PerMthEst) + skor_buah_masak_mb($PerMskEst) + skor_buah_over_mb($PerOverEst) + skor_jangkos_mb($PerkosongjjgEst) + skor_vcut_mb($PerVcutest) + skor_abr_mb($per_krEst);
+                $mtBuahtab1Wil_reg[$key][$key1]['tph_baris_blok'] = $jum_haEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['sampleJJG_total'] = $sum_SamplejjgEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_mentah'] = $sum_bmtEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perMentah'] = $PerMthEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_masak'] = $sum_bmkEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perMasak'] = $PerMskEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_over'] = $sum_overEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perOver'] = $PerOverEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_abnormal'] = $sum_abnorEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perabnormal'] = $PerAbrest;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_jjgKosong'] = $sum_kosongjjgEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perKosongjjg'] = $PerkosongjjgEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_vcut'] = $sum_vcutEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['perVcut'] = $PerVcutest;
+                $mtBuahtab1Wil_reg[$key][$key1]['jum_kr'] = $sum_krEst;
+                $mtBuahtab1Wil_reg[$key][$key1]['kr_blok'] = $total_krEst;
+
+                $mtBuahtab1Wil_reg[$key][$key1]['persen_kr'] = $per_krEst;
+
+                // skoring
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_mentah'] =  skor_buah_mentah_mb($PerMthEst);
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_masak'] = skor_buah_masak_mb($PerMskEst);
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_over'] = skor_buah_over_mb($PerOverEst);;
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_jjgKosong'] = skor_jangkos_mb($PerkosongjjgEst);
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_vcut'] = skor_vcut_mb($PerVcutest);
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_kr'] = skor_abr_mb($per_krEst);
+                $mtBuahtab1Wil_reg[$key][$key1]['TOTAL_SKOR'] = $totalSkorEst;
+
+                //hitung perwilayah
+                $jum_haWil += $jum_haEst;
+                $sum_SamplejjgWil += $sum_SamplejjgEst;
+                $sum_bmtWil += $sum_bmtEst;
+                $sum_bmkWil += $sum_bmkEst;
+                $sum_overWil += $sum_overEst;
+                $sum_abnorWil += $sum_abnorEst;
+                $sum_kosongjjgWil += $sum_kosongjjgEst;
+                $sum_vcutWil += $sum_vcutEst;
+                $sum_krWil += $sum_krEst;
+            } else {
+                $mtBuahtab1Wil_reg[$key][$key1]['tph_baris_blok'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['sampleJJG_total'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_mentah'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perMentah'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_masak'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perMasak'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_over'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perOver'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_abnormal'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perabnormal'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_jjgKosong'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_perKosongjjg'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['total_vcut'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['perVcut'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['jum_kr'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['kr_blok'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['persen_kr'] = 0;
+
+                // skoring
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_mentah'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_masak'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_over'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_jjgKosong'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_vcut'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_abnormal'] = 0;;
+                $mtBuahtab1Wil_reg[$key][$key1]['skor_kr'] = 0;
+                $mtBuahtab1Wil_reg[$key][$key1]['TOTAL_SKOR'] = 0;
+            }
+
+            if ($sum_krWil != 0) {
+                $total_krWil = round($sum_krWil / $jum_haWil, 3);
+            } else {
+                $total_krWil = 0;
+            }
+
+            if ($sum_bmtWil != 0) {
+                $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerMthWil = 0;
+            }
+
+
+            if ($sum_bmkWil != 0) {
+                $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerMskWil = 0;
+            }
+            if ($sum_overWil != 0) {
+                $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerOverWil = 0;
+            }
+            if ($sum_kosongjjgWil != 0) {
+                $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+            } else {
+                $PerkosongjjgWil = 0;
+            }
+            if ($sum_vcutWil != 0) {
+                $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 3);
+            } else {
+                $PerVcutWil = 0;
+            }
+            if ($sum_abnorWil != 0) {
+                $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 3);
+            } else {
+                $PerAbrWil = 0;
+            }
+            $per_krWil = round($total_krWil * 100, 3);
+            $totalSkorWil =  skor_buah_mentah_mb($PerMthWil) + skor_buah_masak_mb($PerMskWil) + skor_buah_over_mb($PerOverWil) + skor_jangkos_mb($PerkosongjjgWil) + skor_vcut_mb($PerVcutWil) + skor_abr_mb($per_krWil);
+            $mtBuahtab1Wil_reg[$key]['tph_baris_blok'] = $jum_haWil;
+            $mtBuahtab1Wil_reg[$key]['sampleJJG_total'] = $sum_SamplejjgWil;
+            $mtBuahtab1Wil_reg[$key]['total_mentah'] = $sum_bmtWil;
+            $mtBuahtab1Wil_reg[$key]['total_perMentah'] = $PerMthWil;
+            $mtBuahtab1Wil_reg[$key]['total_masak'] = $sum_bmkWil;
+            $mtBuahtab1Wil_reg[$key]['total_perMasak'] = $PerMskWil;
+            $mtBuahtab1Wil_reg[$key]['total_over'] = $sum_overWil;
+            $mtBuahtab1Wil_reg[$key]['total_perOver'] = $PerOverWil;
+            $mtBuahtab1Wil_reg[$key]['total_abnormal'] = $sum_abnorWil;
+            $mtBuahtab1Wil_reg[$key]['total_perabnormal'] = $PerAbrWil;
+            $mtBuahtab1Wil_reg[$key]['total_jjgKosong'] = $sum_kosongjjgWil;
+            $mtBuahtab1Wil_reg[$key]['total_perKosongjjg'] = $PerkosongjjgWil;
+            $mtBuahtab1Wil_reg[$key]['total_vcut'] = $sum_vcutWil;
+            $mtBuahtab1Wil_reg[$key]['per_vcut'] = $PerVcutWil;
+            $mtBuahtab1Wil_reg[$key]['jum_kr'] = $sum_krWil;
+            $mtBuahtab1Wil_reg[$key]['kr_blok'] = $total_krWil;
+
+            $mtBuahtab1Wil_reg[$key]['persen_kr'] = $per_krWil;
+
+            // skoring
+            $mtBuahtab1Wil_reg[$key]['skor_mentah'] = skor_buah_mentah_mb($PerMthWil);
+            $mtBuahtab1Wil_reg[$key]['skor_masak'] = skor_buah_masak_mb($PerMskWil);
+            $mtBuahtab1Wil_reg[$key]['skor_over'] = skor_buah_over_mb($PerOverWil);;
+            $mtBuahtab1Wil_reg[$key]['skor_jjgKosong'] = skor_jangkos_mb($PerkosongjjgWil);
+            $mtBuahtab1Wil_reg[$key]['skor_vcut'] = skor_vcut_mb($PerVcutWil);
+            $mtBuahtab1Wil_reg[$key]['skor_kr'] = skor_abr_mb($per_krWil);
+            $mtBuahtab1Wil_reg[$key]['TOTAL_SKOR'] = $totalSkorWil;
+        } else {
+            $mtBuahtab1Wil_reg[$key]['tph_baris_blok'] = 0;
+            $mtBuahtab1Wil_reg[$key]['sampleJJG_total'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_mentah'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_perMentah'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_masak'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_perMasak'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_over'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_perOver'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_abnormal'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_perabnormal'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_jjgKosong'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_perKosongjjg'] = 0;
+            $mtBuahtab1Wil_reg[$key]['total_vcut'] = 0;
+            $mtBuahtab1Wil_reg[$key]['per_vcut'] = 0;
+            $mtBuahtab1Wil_reg[$key]['jum_kr'] = 0;
+            $mtBuahtab1Wil_reg[$key]['kr_blok'] = 0;
+
+            $mtBuahtab1Wil_reg[$key]['persen_kr'] = 0;
+
+            // skoring
+            $mtBuahtab1Wil_reg[$key]['skor_mentah'] = 0;
+            $mtBuahtab1Wil_reg[$key]['skor_masak'] = 0;
+            $mtBuahtab1Wil_reg[$key]['skor_over'] = 0;
+            $mtBuahtab1Wil_reg[$key]['skor_jjgKosong'] = 0;
+            $mtBuahtab1Wil_reg[$key]['skor_vcut'] = 0;
+
+            $mtBuahtab1Wil_reg[$key]['skor_kr'] = 0;
+            $mtBuahtab1Wil_reg[$key]['TOTAL_SKOR'] = 0;
+        }
+        // dd($mtBuahtab1Wil[1]['KNE']['OD']);
+
+        // dd($mtancakWIltab1_reg);
+        $mtancaktab1Wil_reg = array();
+        foreach ($mtancakWIltab1_reg as $key => $value) if (!empty($value)) {
+            $pokok_panenWil = 0;
+            $jum_haWil = 0;
+            $janjang_panenWil = 0;
+            $p_panenWil = 0;
+            $k_panenWil = 0;
+            $brtgl_panenWil = 0;
+            $bhts_panenWil = 0;
+            $bhtm1_panenWil = 0;
+            $bhtm2_panenWil = 0;
+            $bhtm3_oanenWil = 0;
+            $pelepah_swil = 0;
+            $totalPKTwil = 0;
+            $sumBHWil = 0;
+            $akpWil = 0;
+            $brdPerwil = 0;
+            $sumPerBHWil = 0;
+            $perPiWil = 0;
+            $totalWil = 0;
+            foreach ($value as $key1 => $value1) if (!empty($value2)) {
+                $pokok_panenEst = 0;
+                $jum_haEst =  0;
+                $janjang_panenEst =  0;
+                $akpEst =  0;
+                $p_panenEst =  0;
+                $k_panenEst =  0;
+                $brtgl_panenEst = 0;
+                $skor_bTinggalEst =  0;
+                $brdPerjjgEst =  0;
+                $bhtsEST = 0;
+                $bhtm1EST = 0;
+                $bhtm2EST = 0;
+                $bhtm3EST = 0;
+                $pelepah_sEST = 0;
+
+                $skor_bhEst =  0;
+                $skor_brdPerjjgEst =  0;
+
+                foreach ($value1 as $key2 => $value2) if (!empty($value2)) {
+
+                    $akp = 0;
+                    $skor_bTinggal = 0;
+                    $brdPerjjg = 0;
+                    $pokok_panen = 0;
+                    $janjang_panen = 0;
+                    $p_panen = 0;
+                    $k_panen = 0;
+                    $bhts_panen  = 0;
+                    $bhtm1_panen  = 0;
+                    $bhtm2_panen  = 0;
+                    $bhtm3_oanen  = 0;
+                    $ttlSkorMA = 0;
+                    $listBlokPerAfd = array();
+                    $jum_ha = 0;
+                    $pelepah_s = 0;
+                    $skor_brdPerjjg = 0;
+                    $skor_bh = 0;
+                    $skor_perPl = 0;
+                    $totalPokok = 0;
+                    $totalPanen = 0;
+                    $totalP_panen = 0;
+                    $totalK_panen = 0;
+                    $totalPTgl_panen = 0;
+                    $totalbhts_panen = 0;
+                    $totalbhtm1_panen = 0;
+                    $totalbhtm2_panen = 0;
+                    $totalbhtm3_oanen = 0;
+                    $totalpelepah_s = 0;
+                    $total_brd = 0;
+                    $tod_ah = 'kosong';
+                    $skor_input = 0;
+                    foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
+
+                        if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
+                            $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
+                        }
+                        $jum_ha = count($listBlokPerAfd);
+
+                        $totalPokok += $value3["sample"];
+                        $totalPanen +=  $value3["jjg"];
+                        $totalP_panen += $value3["brtp"];
+                        $totalK_panen += $value3["brtk"];
+                        $totalPTgl_panen += $value3["brtgl"];
+
+                        $totalbhts_panen += $value3["bhts"];
+                        $totalbhtm1_panen += $value3["bhtm1"];
+                        $totalbhtm2_panen += $value3["bhtm2"];
+                        $totalbhtm3_oanen += $value3["bhtm3"];
+
+                        $totalpelepah_s += $value3["ps"];
+                        $tod_ah = $value3['jenis_input'];
+                        $skor_input = $value3['skor_akhir'];
+                    }
+
+
+                    if ($totalPokok != 0) {
+                        $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                    } else {
+                        $akp = 0;
+                    }
+
+
+                    $skor_bTinggal = $totalP_panen + $totalK_panen + $totalPTgl_panen;
+
+                    if ($totalPanen != 0) {
+                        $brdPerjjg = round($skor_bTinggal / $totalPanen, 1);
+                    } else {
+                        $brdPerjjg = 0;
+                    }
+
+                    $sumBH = $totalbhts_panen +  $totalbhtm1_panen +  $totalbhtm2_panen +  $totalbhtm3_oanen;
+                    if ($sumBH != 0) {
+                        $sumPerBH = round($sumBH / ($totalPanen + $sumBH) * 100, 1);
+                    } else {
+                        $sumPerBH = 0;
+                    }
+
+                    if ($totalpelepah_s != 0) {
+                        $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
+                    } else {
+                        $perPl = 0;
+                    }
+
+
+
+                    $ttlSkorMA = skor_brd_ma($brdPerjjg) + skor_buah_Ma($sumPerBH) + skor_palepah_ma($perPl);
+
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['pokok_sample'] = $totalPokok;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['ha_sample'] = $jum_ha;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['jumlah_panen'] = $totalPanen;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['akp_rl'] = $akp;
+
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['p'] = $totalP_panen;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['k'] = $totalK_panen;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['tgl'] = $totalPTgl_panen;
+
+                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['total_brd'] = $skor_bTinggal;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['brd/jjg'] = $brdPerjjg;
+
+                    // data untuk buah tinggal
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhts_s'] = $totalbhts_panen;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm1'] = $totalbhtm1_panen;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm2'] = $totalbhtm2_panen;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm3'] = $totalbhtm3_oanen;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['buah/jjg'] = $sumPerBH;
+
+                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
+                    // data untuk pelepah sengklek
+
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['palepah_pokok'] = $totalpelepah_s;
+                    // total skor akhir
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_bh'] = skor_brd_ma($brdPerjjg);
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_brd'] = skor_buah_Ma($sumPerBH);
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_ps'] = skor_palepah_ma($perPl);
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_akhir'] = $ttlSkorMA;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['check_input'] = $tod_ah;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_input'] = $skor_input;
+
+                    $pokok_panenEst += $totalPokok;
+
+                    $jum_haEst += $jum_ha;
+                    $janjang_panenEst += $totalPanen;
+
+                    $p_panenEst += $totalP_panen;
+                    $k_panenEst += $totalK_panen;
+                    $brtgl_panenEst += $totalPTgl_panen;
+
+                    // bagian buah tinggal
+                    $bhtsEST   += $totalbhts_panen;
+                    $bhtm1EST += $totalbhtm1_panen;
+                    $bhtm2EST   += $totalbhtm2_panen;
+                    $bhtm3EST   += $totalbhtm3_oanen;
+                    // data untuk pelepah sengklek
+                    $pelepah_sEST += $totalpelepah_s;
+                } else {
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['pokok_sample'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['ha_sample'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['jumlah_panen'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['akp_rl'] =  0;
+
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['p'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['k'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['tgl'] = 0;
+
+                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['total_brd'] = $skor_bTinggal;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['brd/jjg'] = 0;
+
+                    // data untuk buah tinggal
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhts_s'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm1'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm2'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['bhtm3'] = 0;
+
+                    // $mtancaktab1Wil_reg[$key][$key1][$key2]['jjgperBuah'] = number_format($sumPerBH, 3);
+                    // data untuk pelepah sengklek
+
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['palepah_pokok'] = 0;
+                    // total skor akhi0;
+
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_bh'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_brd'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_ps'] = 0;
+                    $mtancaktab1Wil_reg[$key][$key1][$key2]['skor_akhir'] = 0;
+                }
+
+                $sumBHEst = $bhtsEST +  $bhtm1EST +  $bhtm2EST +  $bhtm3EST;
+                $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
+                // dd($sumBHEst);
+                if ($pokok_panenEst != 0) {
+                    $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
+                } else {
+                    $akpEst = 0;
+                }
+
+                if ($janjang_panenEst != 0) {
+                    $brdPerjjgEst = round($totalPKT / $janjang_panenEst, 1);
+                } else {
+                    $brdPerjjgEst = 0;
+                }
+
+
+
+                // dd($sumBHEst);
+                if ($sumBHEst != 0) {
+                    $sumPerBHEst = round($sumBHEst / ($janjang_panenEst + $sumBHEst) * 100, 1);
+                } else {
+                    $sumPerBHEst = 0;
+                }
+
+                if ($pokok_panenEst != 0) {
+                    $perPlEst = round(($pelepah_sEST / $pokok_panenEst) * 100, 1);
+                } else {
+                    $perPlEst = 0;
+                }
+
+                $totalSkorEst =  skor_brd_ma($brdPerjjgEst) + skor_buah_Ma($sumPerBHEst) + skor_palepah_ma($perPlEst);
+                //PENAMPILAN UNTUK PERESTATE
+                $mtancaktab1Wil_reg[$key][$key1]['pokok_sample'] = $pokok_panenEst;
+                $mtancaktab1Wil_reg[$key][$key1]['ha_sample'] =  $jum_haEst;
+                $mtancaktab1Wil_reg[$key][$key1]['jumlah_panen'] = $janjang_panenEst;
+                $mtancaktab1Wil_reg[$key][$key1]['akp_rl'] =  $akpEst;
+
+                $mtancaktab1Wil_reg[$key][$key1]['p'] = $p_panenEst;
+                $mtancaktab1Wil_reg[$key][$key1]['k'] = $k_panenEst;
+                $mtancaktab1Wil_reg[$key][$key1]['tgl'] = $brtgl_panenEst;
+
+                // $mtancaktab1Wil_reg[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtancaktab1Wil_reg[$key][$key1]['brd/jjgest'] = $brdPerjjgEst;
+                $mtancaktab1Wil_reg[$key][$key1]['buah/jjg'] = $sumPerBHEst;
+
+                // data untuk buah tinggal
+                $mtancaktab1Wil_reg[$key][$key1]['bhts_s'] = $bhtsEST;
+                $mtancaktab1Wil_reg[$key][$key1]['bhtm1'] = $bhtm1EST;
+                $mtancaktab1Wil_reg[$key][$key1]['bhtm2'] = $bhtm2EST;
+                $mtancaktab1Wil_reg[$key][$key1]['bhtm3'] = $bhtm3EST;
+                $mtancaktab1Wil_reg[$key][$key1]['palepah_pokok'] = $pelepah_sEST;
+                $mtancaktab1Wil_reg[$key][$key1]['palepah_per'] = $perPlEst;
+                // total skor akhir
+                $mtancaktab1Wil_reg[$key][$key1]['skor_bh'] =  skor_brd_ma($brdPerjjgEst);
+                $mtancaktab1Wil_reg[$key][$key1]['skor_brd'] = skor_buah_Ma($sumPerBHEst);
+                $mtancaktab1Wil_reg[$key][$key1]['skor_ps'] = skor_palepah_ma($perPlEst);
+                $mtancaktab1Wil_reg[$key][$key1]['skor_akhir'] = $totalSkorEst;
+
+                //perhitungn untuk perwilayah
+
+                $pokok_panenWil += $pokok_panenEst;
+                $jum_haWil += $jum_haEst;
+                $janjang_panenWil += $janjang_panenEst;
+                $p_panenWil += $p_panenEst;
+                $k_panenWil += $k_panenEst;
+                $brtgl_panenWil += $brtgl_panenEst;
+                // bagian buah tinggal
+                $bhts_panenWil += $bhtsEST;
+                $bhtm1_panenWil += $bhtm1EST;
+                $bhtm2_panenWil += $bhtm2EST;
+                $bhtm3_oanenWil += $bhtm3EST;
+                $pelepah_swil += $pelepah_sEST;
+            } else {
+                $mtancaktab1Wil_reg[$key][$key1]['pokok_sample'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['ha_sample'] =  0;
+                $mtancaktab1Wil_reg[$key][$key1]['jumlah_panen'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['akp_rl'] =  0;
+
+                $mtancaktab1Wil_reg[$key][$key1]['p'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['k'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['tgl'] = 0;
+
+                // $mtancaktab1Wil_reg[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtancaktab1Wil_reg[$key][$key1]['brd/jjgest'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['buah/jjg'] = 0;
+                // data untuk buah tinggal
+                $mtancaktab1Wil_reg[$key][$key1]['bhts_s'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['bhtm1'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['bhtm2'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['bhtm3'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['palepah_pokok'] = 0;
+                // total skor akhir
+                $mtancaktab1Wil_reg[$key][$key1]['skor_bh'] =  0;
+                $mtancaktab1Wil_reg[$key][$key1]['skor_brd'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['skor_ps'] = 0;
+                $mtancaktab1Wil_reg[$key][$key1]['skor_akhir'] = 0;
+            }
+            $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
+            $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
+
+            if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
+                $akpWil = 0;
+            } else {
+
+                $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 3);
+            }
+
+            if ($totalPKTwil != 0) {
+                $brdPerwil = round($totalPKTwil / $janjang_panenWil, 3);
+            } else {
+                $brdPerwil = 0;
+            }
+
+            // dd($sumBHEst);
+            if ($sumBHWil != 0) {
+                $sumPerBHWil = round($sumBHWil / ($janjang_panenWil + $sumBHWil) * 100, 3);
+            } else {
+                $sumPerBHWil = 0;
+            }
+
+            if ($pokok_panenWil != 0) {
+                $perPiWil = round(($pelepah_swil / $pokok_panenWil) * 100, 3);
+            } else {
+                $perPiWil = 0;
+            }
+
+
+            $totalWil = skor_brd_ma($brdPerwil) + skor_buah_Ma($sumPerBHWil) + skor_palepah_ma($perPiWil);
+
+            $mtancaktab1Wil_reg[$key]['pokok_sample'] = $pokok_panenWil;
+            $mtancaktab1Wil_reg[$key]['ha_sample'] =  $jum_haWil;
+            $mtancaktab1Wil_reg[$key]['jumlah_panen'] = $janjang_panenWil;
+            $mtancaktab1Wil_reg[$key]['akp_rl'] =  $akpWil;
+
+            $mtancaktab1Wil_reg[$key]['p'] = $p_panenWil;
+            $mtancaktab1Wil_reg[$key]['k'] = $k_panenWil;
+            $mtancaktab1Wil_reg[$key]['tgl'] = $brtgl_panenWil;
+
+            // $mtancaktab1Wil_reg[$key]['total_brd'] = $skor_bTinggal;
+            $mtancaktab1Wil_reg[$key]['brd/jjgwil'] = $brdPerwil;
+            $mtancaktab1Wil_reg[$key]['buah/jjgwil'] = $sumPerBHWil;
+            $mtancaktab1Wil_reg[$key]['bhts_s'] = $bhts_panenWil;
+            $mtancaktab1Wil_reg[$key]['bhtm1'] = $bhtm1_panenWil;
+            $mtancaktab1Wil_reg[$key]['bhtm2'] = $bhtm2_panenWil;
+            $mtancaktab1Wil_reg[$key]['bhtm3'] = $bhtm3_oanenWil;
+            // $mtancaktab1Wil_reg[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
+            // data untuk pelepah sengklek
+            $mtancaktab1Wil_reg[$key]['palepah_pokok'] = $pelepah_swil;
+
+            $mtancaktab1Wil_reg[$key]['palepah_per'] = $perPiWil;
+            // total skor akhir
+            $mtancaktab1Wil_reg[$key]['skor_bh'] = skor_brd_ma($brdPerwil);
+            $mtancaktab1Wil_reg[$key]['skor_brd'] = skor_buah_Ma($sumPerBHWil);
+            $mtancaktab1Wil_reg[$key]['skor_ps'] = skor_palepah_ma($perPiWil);
+            $mtancaktab1Wil_reg[$key]['skor_akhir'] = $totalWil;
+        } else {
+            $mtancaktab1Wil_reg[$key]['pokok_sample'] = 0;
+            $mtancaktab1Wil_reg[$key]['ha_sample'] =  0;
+            $mtancaktab1Wil_reg[$key]['jumlah_panen'] = 0;
+            $mtancaktab1Wil_reg[$key]['akp_rl'] =  0;
+
+            $mtancaktab1Wil_reg[$key]['p'] = 0;
+            $mtancaktab1Wil_reg[$key]['k'] = 0;
+            $mtancaktab1Wil_reg[$key]['tgl'] = 0;
+
+            // $mtancaktab1Wil_reg[$key]['total_brd'] = $skor_bTinggal;
+            $mtancaktab1Wil_reg[$key]['brd/jjgwil'] = 0;
+            $mtancaktab1Wil_reg[$key]['buah/jjgwil'] = 0;
+            $mtancaktab1Wil_reg[$key]['bhts_s'] = 0;
+            $mtancaktab1Wil_reg[$key]['bhtm1'] = 0;
+            $mtancaktab1Wil_reg[$key]['bhtm2'] = 0;
+            $mtancaktab1Wil_reg[$key]['bhtm3'] = 0;
+            // $mtancaktab1Wil_reg[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
+            // data untuk pelepah sengklek
+            $mtancaktab1Wil_reg[$key]['palepah_pokok'] = 0;
+            // total skor akhir
+            $mtancaktab1Wil_reg[$key]['skor_bh'] = 0;
+            $mtancaktab1Wil_reg[$key]['skor_brd'] = 0;
+            $mtancaktab1Wil_reg[$key]['skor_ps'] = 0;
+            $mtancaktab1Wil_reg[$key]['skor_akhir'] = 0;
+        }
+
+        // dd($mtancaktab1Wil_reg);
+        //Ancak regional
+        $mtancakReg = array();
+        $pkok = 0;
+        $ha_sample = 0;
+        $panen = 0;
+        $p = 0;
+        $k = 0;
+        $tgl = 0;
+        $bhts = 0;
+        $bhtm1 = 0;
+        $bhtm2 = 0;
+        $bhtm3 = 0;
+        $palepah = 0;
+        foreach ($mtancaktab1Wil_reg as $key => $value) {
+            $pkok += $value['pokok_sample'];
+            $ha_sample += $value['ha_sample'];
+            $panen += $value['jumlah_panen'];
+            $p += $value['p'];
+            $k += $value['k'];
+            $tgl += $value['tgl'];
+            $bhts += $value['bhts_s'];
+            $bhtm1 += $value['bhtm1'];
+            $bhtm2 += $value['bhtm2'];
+            $bhtm3 += $value['bhtm3'];
+            $palepah += $value['palepah_pokok'];
+        }
+
+        //
+
+        if ($panen == 0 || $pkok  == 0) {
+
+            $akpWil = 0;
+        } else {
+
+            $akpWil = round(($panen / $pkok) * 100, 3);
+        }
+
+        $totalPKTwil = $p + $k + $tgl;
+
+        if ($totalPKTwil != 0) {
+            $brdPerwil = round($totalPKTwil / $panen, 3);
+        } else {
+            $brdPerwil = 0;
+        }
+
+        $sumBHWil = $bhts +  $bhtm1 +  $bhtm2 +  $bhtm3;
+
+        if ($sumBHWil != 0) {
+            $sumPerBHWil = round($sumBHWil / ($panen + $sumBHWil) * 100, 3);
+        } else {
+            $sumPerBHWil = 0;
+        }
+
+
+        if ($pkok != 0) {
+            $perPiWil = round(($palepah / $pkok) * 100, 3);
+        } else {
+            $perPiWil = 0;
+        }
+
+
+        $totalWil = skor_brd_ma($brdPerwil) + skor_buah_Ma($sumPerBHWil) + skor_palepah_ma($perPiWil);
+
+        $mtancakReg['reg']['pokok_sample'] = $pkok;
+        $mtancakReg['reg']['ha_sample'] =  $ha_sample;
+        $mtancakReg['reg']['jumlah_panen'] = $panen;
+        $mtancakReg['reg']['akp_rl'] =  $akpWil;
+
+        $mtancakReg['reg']['p'] = $p;
+        $mtancakReg['reg']['k'] = $k;
+        $mtancakReg['reg']['tgl'] = $tgl;
+
+        // $mtancakReg['reg']['total_brd'] = $skor_bTinggal;
+        $mtancakReg['reg']['palepah_pokok'] = $palepah;
+        $mtancakReg['reg']['bhts_s'] = $bhts;
+        $mtancakReg['reg']['bhtm1'] = $bhtm1;
+        $mtancakReg['reg']['bhtm2'] = $bhtm2;
+        $mtancakReg['reg']['bhtm3'] = $bhtm3;
+        $mtancakReg['reg']['brd/jjgwil'] = $brdPerwil;
+        $mtancakReg['reg']['perPalepah'] = $perPiWil;
+        $mtancakReg['reg']['buah/jjgwil'] = $sumPerBHWil;
+        // $mtancakReg['reg']['jjgperBuah'] = number_format($sumPerBH, 3);
+        // data untuk pelepah sengklek
+
+        // total skor akhir
+        $mtancakReg['reg']['skor_bh'] = skor_brd_ma($brdPerwil);
+        $mtancakReg['reg']['skor_brd'] = skor_buah_Ma($sumPerBHWil);
+        $mtancakReg['reg']['skor_ps'] = skor_palepah_ma($perPiWil);
+        $mtancakReg['reg']['skor_akhir'] = $totalWil;
+
+        // dd($mtBuahtab1Wil);
+        //endancak regional
+        //Buah Regional
+        $mtBuahreg = array();
+        $sum_bmt = 0;
+        $sum_bmk = 0;
+        $sum_over = 0;
+        $dataBLok = 0;
+        $sum_Samplejjg = 0;
+        $PerMth = 0;
+        $PerMsk = 0;
+        $PerOver = 0;
+        $sum_abnor = 0;
+        $sum_kosongjjg = 0;
+        $Perkosongjjg = 0;
+        $sum_vcut = 0;
+        $PerVcut = 0;
+        $PerAbr = 0;
+        $sum_kr = 0;
+        $total_kr = 0;
+        $per_kr = 0;
+        $totalSkor = 0;
+        $jum_ha  = 0;
+        $no_Vcut = 0;
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            $jum_ha += $value['tph_baris_blok'];
+            $sum_bmt += $value['total_mentah'];
+            $sum_bmk += $value['total_masak'];
+            $sum_over += $value['total_over'];
+            $sum_kosongjjg += $value['total_jjgKosong'];
+            $sum_vcut += $value['total_vcut'];
+            $sum_kr += $value['jum_kr'];
+            $sum_Samplejjg += $value['sampleJJG_total'];
+            $sum_abnor += $value['total_abnormal'];
+        }
+        // dd($sum_vcut);
+        // $no_Vcut = $sum_Samplejjg - $sum_vcut;
+
+        $dataBLok = $jum_ha;
+        if ($sum_kr != 0) {
+            $total_kr = round($sum_kr / $dataBLok, 3);
+        } else {
+            $total_kr = 0;
+        }
+
+        $per_kr = round($total_kr * 100, 3);
+        if ($sum_bmt != 0) {
+            $PerMth = round(($sum_bmt / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+        } else {
+            $PerMth = 0;
+        }
+        if ($sum_bmk != 0) {
+            $PerMsk = round(($sum_bmk / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+        } else {
+            $PerMsk = 0;
+        }
+        if ($sum_over != 0) {
+            $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+        } else {
+            $PerOver = 0;
+        }
+        if ($sum_kosongjjg != 0) {
+            $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+        } else {
+            $Perkosongjjg = 0;
+        }
+        if ($sum_Samplejjg != 0) {
+            $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
+        } else {
+            $PerVcut = 0;
+        }
+        if ($sum_abnor != 0) {
+            $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
+        } else {
+            $PerAbr = 0;
+        }
+
+
+        $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+        $mtBuahreg['reg']['tph_baris_blok'] = $dataBLok;
+        $mtBuahreg['reg']['sampleJJG_total'] = $sum_Samplejjg;
+        $mtBuahreg['reg']['total_mentah'] = $sum_bmt;
+        $mtBuahreg['reg']['total_perMentah'] = $PerMth;
+        $mtBuahreg['reg']['total_masak'] = $sum_bmk;
+        $mtBuahreg['reg']['total_perMasak'] = $PerMsk;
+        $mtBuahreg['reg']['total_over'] = $sum_over;
+        $mtBuahreg['reg']['total_perOver'] = $PerOver;
+        $mtBuahreg['reg']['total_abnormal'] = $sum_abnor;
+        $mtBuahreg['reg']['total_jjgKosong'] = $sum_kosongjjg;
+        $mtBuahreg['reg']['total_perKosongjjg'] = $Perkosongjjg;
+        $mtBuahreg['reg']['total_vcut'] = $sum_vcut;
+
+        $mtBuahreg['reg']['jum_kr'] = $sum_kr;
+        $mtBuahreg['reg']['total_kr'] = $total_kr;
+        $mtBuahreg['reg']['persen_kr'] = $per_kr;
+
+        // skoring
+        $mtBuahreg['reg']['skor_mentah'] = skor_buah_mentah_mb($PerMth);
+        $mtBuahreg['reg']['skor_masak'] = skor_buah_masak_mb($PerMsk);
+        $mtBuahreg['reg']['skor_over'] = skor_buah_over_mb($PerOver);
+        $mtBuahreg['reg']['skor_jjgKosong'] = skor_jangkos_mb($Perkosongjjg);
+        $mtBuahreg['reg']['skor_vcut'] = skor_vcut_mb($PerVcut);
+
+        $mtBuahreg['reg']['skor_kr'] = skor_abr_mb($per_kr);
+        $mtBuahreg['reg']['TOTAL_SKOR'] = $totalSkor;
+
+        // dd($mtBuahreg);
+        //EndBuah regional
+        //mutu trans reg
+        $mttransReg = array();
+        $sum_bt = 0;
+        $sum_rst = 0;
+        $brdPertph = 0;
+        $buahPerTPH = 0;
+        $totalSkor = 0;
+        $dataBLok = 0;
+        foreach ($mtTranstab1Wil_reg as $key => $value) {
+            $dataBLok += $value['tph_sample'];
+            $sum_bt += $value['total_brd'];
+            $sum_rst += $value['total_buah'];
+        }
+        if ($dataBLok != 0) {
+            $brdPertph = round($sum_bt / $dataBLok, 3);
+        } else {
+            $brdPertph = 0;
+        }
+        if ($dataBLok != 0) {
+            $buahPerTPH = round($sum_rst / $dataBLok, 3);
+        } else {
+            $buahPerTPH = 0;
+        }
+
+
+        $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+
+        $mttransReg['reg']['tph_sample'] = $dataBLok;
+        $mttransReg['reg']['total_brd'] = $sum_bt;
+        $mttransReg['reg']['total_brd/TPH'] = $brdPertph;
+        $mttransReg['reg']['total_buah'] = $sum_rst;
+        $mttransReg['reg']['total_buahPerTPH'] = $buahPerTPH;
+        $mttransReg['reg']['skor_brdPertph'] = skor_brd_tinggal($brdPertph);
+        $mttransReg['reg']['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPH);
+        $mttransReg['reg']['totalSkor'] = $totalSkor;
+
+
+        // dd($mttransReg, $mtancakReg, $mtBuahreg);
+
+        $RekapRegTable = array();
+        foreach ($mttransReg as $key => $value) {
+            foreach ($mtancakReg as $key1 => $value2) {
+                foreach ($mtBuahreg as $key2 => $value3) if ($key == $key1 && $key1 == $key2) {
+                    $RekapRegTable[$key] = $value['totalSkor'] + $value2['skor_akhir'] + $value3['TOTAL_SKOR'];
+                }
+            }
+        }
+
+        // dd($RekapRegTable);
+        //endMututrans reg
+        // dd($mtancaktab1Wil['1']['PLE']['skor_akhir'], $mtTranstab1Wil['1']['PLE']['totalSkor'], $mtBuahtab1Wil['1']['PLE']['TOTAL_SKOR']);
+        $ptmuaAncak = DB::connection('mysql2')->table('mutu_ancak_new')
+            ->select(
+                "mutu_ancak_new.*",
+                DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun')
+            )
+            // ->whereBetween('mutu_ancak_new.datetime', ['2023-04-06', '2023-04-12'])
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->whereIn('estate', ['LDE', 'SKE', 'SRE'])
+            ->get();
+
+        $ptmuaAncak = $ptmuaAncak->groupBy(['estate', 'afdeling']);
+        $ptmuaAncak = json_decode($ptmuaAncak, true);
+
+        // dd($ptmuaAncak);
+        $ptMuaBuah = DB::connection('mysql2')->table('mutu_buah')
+            ->select(
+                "mutu_buah.*",
+                DB::raw('DATE_FORMAT(mutu_buah.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(mutu_buah.datetime, "%Y") as tahun')
+            )
+            // ->whereBetween('mutu_buah.datetime', ['2023-04-06', '2023-04-12'])
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->whereIn('estate', ['LDE', 'SKE', 'SRE'])
+            ->get();
+
+        $ptMuaBuah = $ptMuaBuah->groupBy(['estate', 'afdeling']);
+        $ptMuaBuah = json_decode($ptMuaBuah, true);
+
+        $ptMuaTrans = DB::connection('mysql2')->table('mutu_transport')
+            ->select(
+                "mutu_transport.*",
+                DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'),
+                DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun')
+            )
+            // ->whereBetween('mutu_transport.datetime', ['2023-04-06', '2023-04-12'])
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->whereIn('estate', ['LDE', 'SKE', 'SRE'])
+            ->get();
+
+        $ptMuaTrans = $ptMuaTrans->groupBy(['estate', 'afdeling']);
+        $ptMuaTrans = json_decode($ptMuaTrans, true);
+        // dd($ptmuaAncak, $ptMuaTrans, $ptMuaBuah);
+        //merubah jika key estate and afdeling same maka jadikan key afdeling jadi OA
+        $modifiedPtmuaAncak = [];
+        foreach ($ptmuaAncak as $estate => $afdelings) {
+            foreach ($afdelings as $afdeling => $data) {
+                if ($estate == $afdeling) {
+                    $modifiedPtmuaAncak[$estate]['OA'] = $data;
+                } else {
+                    $modifiedPtmuaAncak[$estate][$afdeling] = $data;
+                }
+            }
+        }
+
+        $ptmuaAncak = $modifiedPtmuaAncak;
+
+        $modifiedPtmuaBuah = [];
+        foreach ($ptMuaBuah as $estate => $afdelings) {
+            foreach ($afdelings as $afdeling => $data) {
+                if ($estate == $afdeling) {
+                    $modifiedPtmuaBuah[$estate]['OA'] = $data;
+                } else {
+                    $modifiedPtmuaBuah[$estate][$afdeling] = $data;
+                }
+            }
+        }
+
+        $ptmuaBuah = $modifiedPtmuaBuah;
+
+        $modifiedPtmuaTrans = [];
+        foreach ($ptMuaTrans as $estate => $afdelings) {
+            foreach ($afdelings as $afdeling => $data) {
+                if ($estate == $afdeling) {
+                    $modifiedPtmuaTrans[$estate]['OA'] = $data;
+                } else {
+                    $modifiedPtmuaTrans[$estate][$afdeling] = $data;
+                }
+            }
+        }
+
+        $ptmuaTrans = $modifiedPtmuaTrans;
+
+
+        // dd($ptmuaAncak, $ptmuaTrans, $ptmuaBuah);
+
+
+
+
+        $mtAncakMua = array();
+        $pokok_panenWil = 0;
+        $jum_haWil = 0;
+        $janjang_panenWil = 0;
+        $p_panenWil = 0;
+        $k_panenWil = 0;
+        $brtgl_panenWil = 0;
+        $bhts_panenWil = 0;
+        $bhtm1_panenWil = 0;
+        $bhtm2_panenWil = 0;
+        $bhtm3_oanenWil = 0;
+        $pelepah_swil = 0;
+        $totalPKTwil = 0;
+        $sumBHWil = 0;
+        $akpWil = 0;
+        $brdPerwil = 0;
+        $sumPerBHWil = 0;
+        $perPiWil = 0;
+        $totalWil = 0;
+        foreach ($ptmuaAncak as $key => $value)  if (!empty($value)) {
+            $pokok_panenEst = 0;
+            $jum_haEst =  0;
+            $janjang_panenEst =  0;
+            $akpEst =  0;
+            $p_panenEst =  0;
+            $k_panenEst =  0;
+            $brtgl_panenEst = 0;
+            $skor_bTinggalEst =  0;
+            $brdPerjjgEst =  0;
+            $bhtsEST = 0;
+            $bhtm1EST = 0;
+            $bhtm2EST = 0;
+            $bhtm3EST = 0;
+            $pelepah_sEST = 0;
+
+            $skor_bhEst =  0;
+            $skor_brdPerjjgEst =  0;
+            foreach ($value as $key1 => $value1) if (!empty($value1)) {
+                $akp = 0;
+                $skor_bTinggal = 0;
+                $brdPerjjg = 0;
+                $pokok_panen = 0;
+                $janjang_panen = 0;
+                $p_panen = 0;
+                $k_panen = 0;
+                $bhts_panen  = 0;
+                $bhtm1_panen  = 0;
+                $bhtm2_panen  = 0;
+                $bhtm3_oanen  = 0;
+                $ttlSkorMA = 0;
+                $listBlokPerAfd = array();
+                $jum_ha = 0;
+                $pelepah_s = 0;
+                $skor_brdPerjjg = 0;
+                $skor_bh = 0;
+                $skor_perPl = 0;
+                $totalPokok = 0;
+                $totalPanen = 0;
+                $totalP_panen = 0;
+                $totalK_panen = 0;
+                $totalPTgl_panen = 0;
+                $totalbhts_panen = 0;
+                $totalbhtm1_panen = 0;
+                $totalbhtm2_panen = 0;
+                $totalbhtm3_oanen = 0;
+                $totalpelepah_s = 0;
+                $total_brd = 0;
+                foreach ($value1 as $key2 => $value2) if (!empty($value2)) {
+                    // dd($value2);
+                    if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $listBlokPerAfd)) {
+                        $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
+                    }
+                    $jum_ha = count($listBlokPerAfd);
+                    $totalPokok += $value2["sample"];
+                    $totalPanen +=  $value2["jjg"];
+                    $totalP_panen += $value2["brtp"];
+                    $totalK_panen += $value2["brtk"];
+                    $totalPTgl_panen += $value2["brtgl"];
+
+                    $totalbhts_panen += $value2["bhts"];
+                    $totalbhtm1_panen += $value2["bhtm1"];
+                    $totalbhtm2_panen += $value2["bhtm2"];
+                    $totalbhtm3_oanen += $value2["bhtm3"];
+
+                    $totalpelepah_s += $value2["ps"];
+                }
+
+                if ($totalPokok != 0) {
+                    $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                } else {
+                    $akp = 0;
+                }
+
+
+                $skor_bTinggal = $totalP_panen + $totalK_panen + $totalPTgl_panen;
+
+                if ($totalPanen != 0) {
+                    $brdPerjjg = round($skor_bTinggal / $totalPanen, 1);
+                } else {
+                    $brdPerjjg = 0;
+                }
+
+                $sumBH = $totalbhts_panen +  $totalbhtm1_panen +  $totalbhtm2_panen +  $totalbhtm3_oanen;
+                if ($sumBH != 0) {
+                    $sumPerBH = round($sumBH / ($totalPanen + $sumBH) * 100, 1);
+                } else {
+                    $sumPerBH = 0;
+                }
+
+                if ($totalpelepah_s != 0) {
+                    $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
+                } else {
+                    $perPl = 0;
+                }
+
+
+                $nonZeroValues = array_filter([$totalP_panen, $totalK_panen, $totalPTgl_panen, $totalbhts_panen, $totalbhtm1_panen, $totalbhtm2_panen, $totalbhtm3_oanen]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtAncakMua[$key][$key1]['check_data'] = 'ada';
+                    // $mtAncakMua[$key][$key1]['skor_brd'] = $skor_brd = skor_brd_ma($sumPerBH);
+                    // $mtAncakMua[$key][$key1]['skor_ps'] = $skor_ps = skor_palepah_ma($perPl);
+                } else {
+                    $mtAncakMua[$key][$key1]['check_data'] = 'kosong';
+                    // $mtAncakMua[$key][$key1]['skor_brd'] = $skor_brd = 0;
+                    // $mtAncakMua[$key][$key1]['skor_ps'] = $skor_ps = 0;
+                }
+
+                // $ttlSkorMA = $skor_bh + $skor_brd + $skor_ps;
+                $ttlSkorMA = skor_brd_ma($brdPerjjg) + skor_buah_Ma($sumPerBH) + skor_palepah_ma($perPl);
+
+                $mtAncakMua[$key][$key1]['pokok_sample'] = $totalPokok;
+                $mtAncakMua[$key][$key1]['ha_sample'] = $jum_ha;
+                $mtAncakMua[$key][$key1]['jumlah_panen'] = $totalPanen;
+                $mtAncakMua[$key][$key1]['akp_rl'] = $akp;
+
+                $mtAncakMua[$key][$key1]['p'] = $totalP_panen;
+                $mtAncakMua[$key][$key1]['k'] = $totalK_panen;
+                $mtAncakMua[$key][$key1]['tgl'] = $totalPTgl_panen;
+
+                $mtAncakMua[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtAncakMua[$key][$key1]['brd/jjg'] = $brdPerjjg;
+
+                // data untuk buah tinggal
+                $mtAncakMua[$key][$key1]['bhts_s'] = $totalbhts_panen;
+                $mtAncakMua[$key][$key1]['bhtm1'] = $totalbhtm1_panen;
+                $mtAncakMua[$key][$key1]['bhtm2'] = $totalbhtm2_panen;
+                $mtAncakMua[$key][$key1]['bhtm3'] = $totalbhtm3_oanen;
+                $mtAncakMua[$key][$key1]['buah/jjg'] = $sumPerBH;
+
+                $mtAncakMua[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
+                // data untuk pelepah sengklek
+
+                $mtAncakMua[$key][$key1]['palepah_pokok'] = $totalpelepah_s;
+                // total skor akhir
+                $mtAncakMua[$key][$key1]['skor_bh'] = skor_brd_ma($brdPerjjg);
+                $mtAncakMua[$key][$key1]['skor_brd'] = skor_buah_Ma($sumPerBH);
+                $mtAncakMua[$key][$key1]['skor_ps'] = skor_palepah_ma($perPl);
+                $mtAncakMua[$key][$key1]['skor_akhir'] = $ttlSkorMA;
+
+                $pokok_panenEst += $totalPokok;
+
+                $jum_haEst += $jum_ha;
+                $janjang_panenEst += $totalPanen;
+
+                $p_panenEst += $totalP_panen;
+                $k_panenEst += $totalK_panen;
+                $brtgl_panenEst += $totalPTgl_panen;
+
+                // bagian buah tinggal
+                $bhtsEST   += $totalbhts_panen;
+                $bhtm1EST += $totalbhtm1_panen;
+                $bhtm2EST   += $totalbhtm2_panen;
+                $bhtm3EST   += $totalbhtm3_oanen;
+                // data untuk pelepah sengklek
+                $pelepah_sEST += $totalpelepah_s;
+            } else {
+                $mtAncakMua[$key][$key1]['pokok_sample'] = 0;
+                $mtAncakMua[$key][$key1]['ha_sample'] = 0;
+                $mtAncakMua[$key][$key1]['jumlah_panen'] = 0;
+                $mtAncakMua[$key][$key1]['akp_rl'] =  0;
+
+                $mtAncakMua[$key][$key1]['p'] = 0;
+                $mtAncakMua[$key][$key1]['k'] = 0;
+                $mtAncakMua[$key][$key1]['tgl'] = 0;
+
+                // $mtAncakMua[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtAncakMua[$key][$key1]['brd/jjg'] = 0;
+
+                // data untuk buah tinggal
+                $mtAncakMua[$key][$key1]['bhts_s'] = 0;
+                $mtAncakMua[$key][$key1]['bhtm1'] = 0;
+                $mtAncakMua[$key][$key1]['bhtm2'] = 0;
+                $mtAncakMua[$key][$key1]['bhtm3'] = 0;
+
+                // $mtAncakMua[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
+                // data untuk pelepah sengklek
+
+                $mtAncakMua[$key][$key1]['palepah_pokok'] = 0;
+                // total skor akhi0;
+
+                $mtAncakMua[$key][$key1]['skor_bh'] = 0;
+                $mtAncakMua[$key][$key1]['skor_brd'] = 0;
+                $mtAncakMua[$key][$key1]['skor_ps'] = 0;
+                $mtAncakMua[$key][$key1]['skor_akhir'] = 0;
+            }
+            $sumBHEst = $bhtsEST +  $bhtm1EST +  $bhtm2EST +  $bhtm3EST;
+            $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
+            // dd($sumBHEst);
+            if ($pokok_panenEst != 0) {
+                $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
+            } else {
+                $akpEst = 0;
+            }
+
+            if ($janjang_panenEst != 0) {
+                $brdPerjjgEst = round($totalPKT / $janjang_panenEst, 1);
+            } else {
+                $brdPerjjgEst = 0;
+            }
+
+
+
+            // dd($sumBHEst);
+            if ($sumBHEst != 0) {
+                $sumPerBHEst = round($sumBHEst / ($janjang_panenEst + $sumBHEst) * 100, 1);
+            } else {
+                $sumPerBHEst = 0;
+            }
+
+            if ($pokok_panenEst != 0) {
+                $perPlEst = round(($pelepah_sEST / $pokok_panenEst) * 100, 1);
+            } else {
+                $perPlEst = 0;
+            }
+
+            $nonZeroValues = array_filter([$p_panenEst, $k_panenEst, $brtgl_panenEst, $bhtsEST, $bhtm1EST, $bhtm2EST, $bhtm3EST]);
+
+            if (!empty($nonZeroValues)) {
+                $mtAncakMua[$key]['check_data'] = 'ada';
+                // $mtAncakMua[$key]['skor_brd'] = $skor_brd = skor_brd_ma($sumPerBHEst);
+                // $mtAncakMua[$key]['skor_ps'] = $skor_ps = skor_palepah_ma($perPlEst);
+            } else {
+                $mtAncakMua[$key]['check_data'] = 'kosong';
+                // $mtAncakMua[$key]['skor_brd'] = $skor_brd = 0;
+                // $mtAncakMua[$key]['skor_ps'] = $skor_ps = 0;
+            }
+
+            // $totalSkorEst = $skor_bh + $skor_brd + $skor_ps;
+            $totalSkorEst =  skor_brd_ma($brdPerjjgEst) + skor_buah_Ma($sumPerBHEst) + skor_palepah_ma($perPlEst);
+            //PENAMPILAN UNTUK PERESTATE
+            $mtAncakMua[$key]['pokok_sample'] = $pokok_panenEst;
+            $mtAncakMua[$key]['ha_sample'] =  $jum_haEst;
+            $mtAncakMua[$key]['jumlah_panen'] = $janjang_panenEst;
+            $mtAncakMua[$key]['akp_rl'] =  $akpEst;
+
+            $mtAncakMua[$key]['p'] = $p_panenEst;
+            $mtAncakMua[$key]['k'] = $k_panenEst;
+            $mtAncakMua[$key]['tgl'] = $brtgl_panenEst;
+
+            $mtAncakMua[$key]['total_brd'] = $skor_bTinggal;
+            $mtAncakMua[$key]['brd/jjgest'] = $brdPerjjgEst;
+            $mtAncakMua[$key]['buah/jjg'] = $sumPerBHEst;
+
+            // data untuk buah tinggal
+            $mtAncakMua[$key]['bhts_s'] = $bhtsEST;
+            $mtAncakMua[$key]['bhtm1'] = $bhtm1EST;
+            $mtAncakMua[$key]['bhtm2'] = $bhtm2EST;
+            $mtAncakMua[$key]['bhtm3'] = $bhtm3EST;
+            $mtAncakMua[$key]['palepah_pokok'] = $pelepah_sEST;
+            $mtAncakMua[$key]['palepah_per'] = $perPlEst;
+            // total skor akhir
+            $mtAncakMua[$key]['skor_bh'] =  skor_brd_ma($brdPerjjgEst);
+            $mtAncakMua[$key]['skor_brd'] = skor_buah_Ma($sumPerBHEst);
+            $mtAncakMua[$key]['skor_ps'] = skor_palepah_ma($perPlEst);
+            $mtAncakMua[$key]['skor_akhir'] = $totalSkorEst;
+
+
+            $pokok_panenWil += $pokok_panenEst;
+            $jum_haWil += $jum_haEst;
+            $janjang_panenWil += $janjang_panenEst;
+            $p_panenWil += $p_panenEst;
+            $k_panenWil += $k_panenEst;
+            $brtgl_panenWil += $brtgl_panenEst;
+            // bagian buah tinggal
+            $bhts_panenWil += $bhtsEST;
+            $bhtm1_panenWil += $bhtm1EST;
+            $bhtm2_panenWil += $bhtm2EST;
+            $bhtm3_oanenWil += $bhtm3EST;
+            $pelepah_swil += $pelepah_sEST;
+        } else {
+            $value[$key]['pokok_sample'] = 0;
+            $value[$key]['ha_sample'] =  0;
+            $value[$key]['jumlah_panen'] = 0;
+            $value[$key]['akp_rl'] =  0;
+
+            $value[$key]['p'] = 0;
+            $value[$key]['k'] = 0;
+            $value[$key]['tgl'] = 0;
+
+            // $value[$key]['total_brd'] = $skor_bTinggal;
+            $value[$key]['brd/jjgest'] = 0;
+            $value[$key]['buah/jjg'] = 0;
+            // data untuk buah tinggal
+            $value[$key]['bhts_s'] = 0;
+            $value[$key]['bhtm1'] = 0;
+            $value[$key]['bhtm2'] = 0;
+            $value[$key]['bhtm3'] = 0;
+            $value[$key]['palepah_pokok'] = 0;
+            // total skor akhir
+            $value[$key]['skor_bh'] =  0;
+            $value[$key]['skor_brd'] = 0;
+            $value[$key]['skor_ps'] = 0;
+            $value[$key]['skor_akhir'] = 0;
+        }
+        $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
+        $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
+
+        if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
+            $akpWil = 0;
+        } else {
+
+            $akpWil = round(($janjang_panenWil / $pokok_panenWil) * 100, 3);
+        }
+
+        if ($totalPKTwil != 0) {
+            $brdPerwil = round($totalPKTwil / $janjang_panenWil, 1);
+        } else {
+            $brdPerwil = 0;
+        }
+
+        // dd($sumBHEst);
+        if ($sumBHWil != 0) {
+            $sumPerBHWil = round($sumBHWil / ($janjang_panenWil + $sumBHWil) * 100, 1);
+        } else {
+            $sumPerBHWil = 0;
+        }
+
+        if ($pokok_panenWil != 0) {
+            $perPiWil = round(($pelepah_swil / $pokok_panenWil) * 100, 1);
+        } else {
+            $perPiWil = 0;
+        }
+
+
+        $nonZeroValuesAncak = array_filter([$p_panenWil, $k_panenWil, $brtgl_panenWil, $bhts_panenWil, $bhtm1_panenWil, $bhtm2_panenWil, $bhtm3_oanenWil]);
+
+        if (!empty($nonZeroValuesAncak)) {
+            $mtAncakMua['check_data'] = 'ada';
+            // $mtAncakMua['skor_brd'] = $skor_brd = skor_brd_ma($sumPerBHEst);
+            // $mtAncakMua['skor_ps'] = $skor_ps = skor_palepah_ma($perPlEst);
+        } else {
+            $mtAncakMua['check_data'] = 'kosong';
+            // $mtAncakMua['skor_brd'] = $skor_brd = 0;
+            // $mtAncakMua['skor_ps'] = $skor_ps = 0;
+        }
+
+        // $totalWil = $skor_bh + $skor_brd + $skor_ps;
+
+        $totalWil = skor_brd_ma($brdPerwil) + skor_buah_Ma($sumPerBHWil) + skor_palepah_ma($perPiWil);
+
+        $mtAncakMua['pokok_sample'] = $pokok_panenWil;
+        $mtAncakMua['ha_sample'] =  $jum_haWil;
+        $mtAncakMua['jumlah_panen'] = $janjang_panenWil;
+        $mtAncakMua['akp_rl'] =  $akpWil;
+
+        $mtAncakMua['p'] = $p_panenWil;
+        $mtAncakMua['k'] = $k_panenWil;
+        $mtAncakMua['tgl'] = $brtgl_panenWil;
+
+        $mtAncakMua['total_brd'] = $skor_bTinggal;
+        $mtAncakMua['brd/jjgwil'] = $brdPerwil;
+        $mtAncakMua['buah/jjgwil'] = $sumPerBHWil;
+        $mtAncakMua['bhts_s'] = $bhts_panenWil;
+        $mtAncakMua['bhtm1'] = $bhtm1_panenWil;
+        $mtAncakMua['bhtm2'] = $bhtm2_panenWil;
+        $mtAncakMua['bhtm3'] = $bhtm3_oanenWil;
+        $mtAncakMua['jjgperBuah'] = number_format($sumPerBH, 3);
+        // data untuk pelepah sengklek
+        $mtAncakMua['palepah_pokok'] = $pelepah_swil;
+
+        $mtAncakMua['palepah_per'] = $perPiWil;
+        // total skor akhir
+        $mtAncakMua['skor_bh'] = skor_brd_ma($brdPerwil);
+        $mtAncakMua['skor_brd'] = skor_buah_Ma($sumPerBHWil);
+        $mtAncakMua['skor_ps'] = skor_palepah_ma($perPiWil);
+        $mtAncakMua['skor_akhir'] = $totalWil;
+        // dd($mtAncakMua);
+        // const sum_pokok_sample = array["SKE"]["pokok_sample"] + array["LDE"]["pokok_sample"];
+
+        $mtBuahMua = array();
+        $jum_haWil = 0;
+        $sum_SamplejjgWil = 0;
+        $sum_bmtWil = 0;
+        $sum_bmkWil = 0;
+        $sum_overWil = 0;
+        $sum_abnorWil = 0;
+        $sum_kosongjjgWil = 0;
+        $sum_vcutWil = 0;
+        $sum_krWil = 0;
+        $no_Vcutwil = 0;
+        foreach ($ptmuaBuah as $key => $value) if (is_array($value)) {
+            $jum_haEst  = 0;
+            $sum_SamplejjgEst = 0;
+            $sum_bmtEst = 0;
+            $sum_bmkEst = 0;
+            $sum_overEst = 0;
+            $sum_abnorEst = 0;
+            $sum_kosongjjgEst = 0;
+            $sum_vcutEst = 0;
+            $sum_krEst = 0;
+            $no_VcutEst = 0;
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $sum_bmt = 0;
+                $sum_bmk = 0;
+                $sum_over = 0;
+                $dataBLok = 0;
+                $sum_Samplejjg = 0;
+                $PerMth = 0;
+                $PerMsk = 0;
+                $PerOver = 0;
+                $sum_abnor = 0;
+                $sum_kosongjjg = 0;
+                $Perkosongjjg = 0;
+                $sum_vcut = 0;
+                $PerVcut = 0;
+                $PerAbr = 0;
+                $sum_kr = 0;
+                $total_kr = 0;
+                $per_kr = 0;
+                $totalSkor = 0;
+                $jum_ha = 0;
+                $no_Vcut = 0;
+                $jml_mth = 0;
+                $jml_mtg = 0;
+                $combination_counts = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    $combination = $value2['blok'] . ' ' . $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['tph_baris'];
+                    if (!isset($combination_counts[$combination])) {
+                        $combination_counts[$combination] = 0;
+                    }
+                    $jum_ha = count($listBlokPerAfd);
+                    $sum_bmt += $value2['bmt'];
+                    $sum_bmk += $value2['bmk'];
+                    $sum_over += $value2['overripe'];
+                    $sum_kosongjjg += $value2['empty_bunch'];
+                    $sum_vcut += $value2['vcut'];
+                    $sum_kr += $value2['alas_br'];
+
+
+                    $sum_Samplejjg += $value2['jumlah_jjg'];
+                    $sum_abnor += $value2['abnormal'];
+                }
+
+                $dataBLok = count($combination_counts);
+                $jml_mth = ($sum_bmt + $sum_bmk);
+                $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
+
+                if ($sum_kr != 0) {
+                    $total_kr = round($sum_kr / $dataBLok, 3);
+                } else {
+                    $total_kr = 0;
+                }
+
+
+                $per_kr = round($total_kr * 100, 3);
+                if ($jml_mth != 0) {
+                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerMth = 0;
+                }
+                if ($jml_mtg != 0) {
+                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerMsk = 0;
+                }
+                if ($sum_over != 0) {
+                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerOver = 0;
+                }
+                if ($sum_kosongjjg != 0) {
+                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $Perkosongjjg = 0;
+                }
+                if ($sum_vcut != 0) {
+                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
+                } else {
+                    $PerVcut = 0;
+                }
+
+                if ($sum_abnor != 0) {
+                    $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
+                } else {
+                    $PerAbr = 0;
+                }
+                $nonZeroValues = array_filter([$sum_Samplejjg, $PerMth, $PerMsk, $PerOver, $sum_abnor, $sum_kosongjjg, $sum_vcut]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtBuahMua[$key][$key1]['check_data'] = 'ada';
+                    // $mtBuahMua[$key][$key1]['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMsk);
+                    // $mtBuahMua[$key][$key1]['skor_over'] = $skor_over =  skor_buah_over_mb($PerOver);
+                    // $mtBuahMua[$key][$key1]['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($Perkosongjjg);
+                    // $mtBuahMua[$key][$key1]['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcut);
+                    // $mtBuahMua[$key][$key1]['skor_kr'] = $skor_kr =  skor_abr_mb($per_kr);
+                } else {
+                    $mtBuahMua[$key][$key1]['check_data'] = 'kosong';
+                    // $mtBuahMua[$key][$key1]['skor_masak'] = $skor_masak = 0;
+                    // $mtBuahMua[$key][$key1]['skor_over'] = $skor_over = 0;
+                    // $mtBuahMua[$key][$key1]['skor_jjgKosong'] = $skor_jjgKosong = 0;
+                    // $mtBuahMua[$key][$key1]['skor_vcut'] = $skor_vcut =  0;
+                    // $mtBuahMua[$key][$key1]['skor_kr'] = $skor_kr = 0;
+                }
+
+                // $totalSkor = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+
+
+                $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+                $mtBuahMua[$key][$key1]['tph_baris_bloks'] = $dataBLok;
+                $mtBuahMua[$key][$key1]['sampleJJG_total'] = $sum_Samplejjg;
+                $mtBuahMua[$key][$key1]['total_mentah'] = $jml_mth;
+                $mtBuahMua[$key][$key1]['total_perMentah'] = $PerMth;
+                $mtBuahMua[$key][$key1]['total_masak'] = $jml_mtg;
+                $mtBuahMua[$key][$key1]['total_perMasak'] = $PerMsk;
+                $mtBuahMua[$key][$key1]['total_over'] = $sum_over;
+                $mtBuahMua[$key][$key1]['total_perOver'] = $PerOver;
+                $mtBuahMua[$key][$key1]['total_abnormal'] = $sum_abnor;
+                $mtBuahMua[$key][$key1]['perAbnormal'] = $PerAbr;
+                $mtBuahMua[$key][$key1]['total_jjgKosong'] = $sum_kosongjjg;
+                $mtBuahMua[$key][$key1]['total_perKosongjjg'] = $Perkosongjjg;
+                $mtBuahMua[$key][$key1]['total_vcut'] = $sum_vcut;
+                $mtBuahMua[$key][$key1]['perVcut'] = $PerVcut;
+
+                $mtBuahMua[$key][$key1]['jum_kr'] = $sum_kr;
+                $mtBuahMua[$key][$key1]['total_kr'] = $total_kr;
+                $mtBuahMua[$key][$key1]['persen_kr'] = $per_kr;
+
+                // skoring
+                $mtBuahMua[$key][$key1]['skor_mentah'] = skor_buah_mentah_mb($PerMth);
+                $mtBuahMua[$key][$key1]['skor_masak'] = skor_buah_masak_mb($PerMsk);
+                $mtBuahMua[$key][$key1]['skor_over'] = skor_buah_over_mb($PerOver);
+                $mtBuahMua[$key][$key1]['skor_jjgKosong'] = skor_jangkos_mb($Perkosongjjg);
+                $mtBuahMua[$key][$key1]['skor_vcut'] = skor_vcut_mb($PerVcut);
+                $mtBuahMua[$key][$key1]['skor_kr'] = skor_abr_mb($per_kr);
+
+                $mtBuahMua[$key][$key1]['TOTAL_SKOR'] = $totalSkor;
+
+                //perhitungan estate
+                $jum_haEst += $dataBLok;
+                $sum_SamplejjgEst += $sum_Samplejjg;
+                $sum_bmtEst += $jml_mth;
+                $sum_bmkEst += $jml_mtg;
+                $sum_overEst += $sum_over;
+                $sum_abnorEst += $sum_abnor;
+                $sum_kosongjjgEst += $sum_kosongjjg;
+                $sum_vcutEst += $sum_vcut;
+                $sum_krEst += $sum_kr;
+            } else {
+                $mtBuahMua[$key][$key1]['tph_baris_blok'] = 0;
+                $mtBuahMua[$key][$key1]['sampleJJG_total'] = 0;
+                $mtBuahMua[$key][$key1]['total_mentah'] = 0;
+                $mtBuahMua[$key][$key1]['total_perMentah'] = 0;
+                $mtBuahMua[$key][$key1]['total_masak'] = 0;
+                $mtBuahMua[$key][$key1]['total_perMasak'] = 0;
+                $mtBuahMua[$key][$key1]['total_over'] = 0;
+                $mtBuahMua[$key][$key1]['total_perOver'] = 0;
+                $mtBuahMua[$key][$key1]['total_abnormal'] = 0;
+                $mtBuahMua[$key][$key1]['perAbnormal'] = 0;
+                $mtBuahMua[$key][$key1]['total_jjgKosong'] = 0;
+                $mtBuahMua[$key][$key1]['total_perKosongjjg'] = 0;
+                $mtBuahMua[$key][$key1]['total_vcut'] = 0;
+                $mtBuahMua[$key][$key1]['perVcut'] = 0;
+
+                $mtBuahMua[$key][$key1]['jum_kr'] = 0;
+                $mtBuahMua[$key][$key1]['total_kr'] = 0;
+                $mtBuahMua[$key][$key1]['persen_kr'] = 0;
+
+                // skoring
+                $mtBuahMua[$key][$key1]['skor_mentah'] = 0;
+                $mtBuahMua[$key][$key1]['skor_masak'] = 0;
+                $mtBuahMua[$key][$key1]['skor_over'] = 0;
+                $mtBuahMua[$key][$key1]['skor_jjgKosong'] = 0;
+                $mtBuahMua[$key][$key1]['skor_vcut'] = 0;
+                $mtBuahMua[$key][$key1]['skor_abnormal'] = 0;;
+                $mtBuahMua[$key][$key1]['skor_kr'] = 0;
+                $mtBuahMua[$key][$key1]['TOTAL_SKOR'] = 0;
+            }
+            $no_VcutEst = $sum_SamplejjgEst - $sum_vcutEst;
+
+            if ($sum_krEst != 0) {
+                $total_krEst = round($sum_krEst / $jum_haEst, 3);
+            } else {
+                $total_krEst = 0;
+            }
+            // if ($sum_kr != 0) {
+            //     $total_kr = round($sum_kr / $dataBLok, 3);
+            // } else {
+            //     $total_kr = 0;
+            // }
+
+            if ($sum_bmtEst != 0) {
+                $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerMthEst = 0;
+            }
+
+            if ($sum_bmkEst != 0) {
+                $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerMskEst = 0;
+            }
+
+            if ($sum_overEst != 0) {
+                $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerOverEst = 0;
+            }
+            if ($sum_kosongjjgEst != 0) {
+                $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerkosongjjgEst = 0;
+            }
+            if ($sum_vcutEst != 0) {
+                $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
+            } else {
+                $PerVcutest = 0;
+            }
+            if ($sum_abnorEst != 0) {
+                $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
+            } else {
+                $PerAbrest = 0;
+            }
+            // $per_kr = round($sum_kr * 100);
+            $per_krEst = round($total_krEst * 100, 3);
+
+            $nonZeroValues = array_filter([$sum_SamplejjgEst, $PerMthEst, $PerMskEst, $PerOverEst, $sum_abnorEst, $sum_kosongjjgEst, $sum_vcutEst]);
+
+            if (!empty($nonZeroValues)) {
+                $mtBuahMua[$key]['check_data'] = 'ada';
+                // $mtBuahMua[$key]['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMskEst);
+                // $mtBuahMua[$key]['skor_over'] = $skor_over =  skor_buah_over_mb($PerOverEst);
+                // $mtBuahMua[$key]['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($PerkosongjjgEst);
+                // $mtBuahMua[$key]['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcutest);
+                // $mtBuahMua[$key]['skor_kr'] = $skor_kr =  skor_abr_mb($per_krEst);
+            } else {
+                $mtBuahMua[$key]['check_data'] = 'kosong';
+                // $mtBuahMua[$key]['skor_masak'] = $skor_masak = 0;
+                // $mtBuahMua[$key]['skor_over'] = $skor_over = 0;
+                // $mtBuahMua[$key]['skor_jjgKosong'] = $skor_jjgKosong = 0;
+                // $mtBuahMua[$key]['skor_vcut'] = $skor_vcut =  0;
+                // $mtBuahMua[$key]['skor_kr'] = $skor_kr = 0;
+            }
+
+            // $totalSkorEst = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+            $totalSkorEst =   skor_buah_mentah_mb($PerMthEst) + skor_buah_masak_mb($PerMskEst) + skor_buah_over_mb($PerOverEst) + skor_jangkos_mb($PerkosongjjgEst) + skor_vcut_mb($PerVcutest) + skor_abr_mb($per_krEst);
+            $mtBuahMua[$key]['tph_baris_blok'] = $jum_haEst;
+            $mtBuahMua[$key]['sampleJJG_total'] = $sum_SamplejjgEst;
+            $mtBuahMua[$key]['total_mentah'] = $sum_bmtEst;
+            $mtBuahMua[$key]['total_perMentah'] = $PerMthEst;
+            $mtBuahMua[$key]['total_masak'] = $sum_bmkEst;
+            $mtBuahMua[$key]['total_perMasak'] = $PerMskEst;
+            $mtBuahMua[$key]['total_over'] = $sum_overEst;
+            $mtBuahMua[$key]['total_perOver'] = $PerOverEst;
+            $mtBuahMua[$key]['total_abnormal'] = $sum_abnorEst;
+            $mtBuahMua[$key]['total_perabnormal'] = $PerAbrest;
+            $mtBuahMua[$key]['total_jjgKosong'] = $sum_kosongjjgEst;
+            $mtBuahMua[$key]['total_perKosongjjg'] = $PerkosongjjgEst;
+            $mtBuahMua[$key]['total_vcut'] = $sum_vcutEst;
+            $mtBuahMua[$key]['perVcut'] = $PerVcutest;
+            $mtBuahMua[$key]['jum_kr'] = $sum_krEst;
+            $mtBuahMua[$key]['kr_blok'] = $total_krEst;
+
+            $mtBuahMua[$key]['persen_kr'] = $per_krEst;
+
+            // skoring
+            $mtBuahMua[$key]['skor_mentah'] =  skor_buah_mentah_mb($PerMthEst);
+            $mtBuahMua[$key]['skor_masak'] = skor_buah_masak_mb($PerMskEst);
+            $mtBuahMua[$key]['skor_over'] = skor_buah_over_mb($PerOverEst);;
+            $mtBuahMua[$key]['skor_jjgKosong'] = skor_jangkos_mb($PerkosongjjgEst);
+            $mtBuahMua[$key]['skor_vcut'] = skor_vcut_mb($PerVcutest);
+            $mtBuahMua[$key]['skor_kr'] = skor_abr_mb($per_krEst);
+            $mtBuahMua[$key]['TOTAL_SKOR'] = $totalSkorEst;
+
+            //hitung perwilayah
+            $jum_haWil += $jum_haEst;
+            $sum_SamplejjgWil += $sum_SamplejjgEst;
+            $sum_bmtWil += $sum_bmtEst;
+            $sum_bmkWil += $sum_bmkEst;
+            $sum_overWil += $sum_overEst;
+            $sum_abnorWil += $sum_abnorEst;
+            $sum_kosongjjgWil += $sum_kosongjjgEst;
+            $sum_vcutWil += $sum_vcutEst;
+            $sum_krWil += $sum_krEst;
+        } else {
+            $mtBuahMua[$key]['tph_baris_blok'] = 0;
+            $mtBuahMua[$key]['sampleJJG_total'] = 0;
+            $mtBuahMua[$key]['total_mentah'] = 0;
+            $mtBuahMua[$key]['total_perMentah'] = 0;
+            $mtBuahMua[$key]['total_masak'] = 0;
+            $mtBuahMua[$key]['total_perMasak'] = 0;
+            $mtBuahMua[$key]['total_over'] = 0;
+            $mtBuahMua[$key]['total_perOver'] = 0;
+            $mtBuahMua[$key]['total_abnormal'] = 0;
+            $mtBuahMua[$key]['total_perabnormal'] = 0;
+            $mtBuahMua[$key]['total_jjgKosong'] = 0;
+            $mtBuahMua[$key]['total_perKosongjjg'] = 0;
+            $mtBuahMua[$key]['total_vcut'] = 0;
+            $mtBuahMua[$key]['perVcut'] = 0;
+            $mtBuahMua[$key]['jum_kr'] = 0;
+            $mtBuahMua[$key]['kr_blok'] = 0;
+            $mtBuahMua[$key]['persen_kr'] = 0;
+
+            // skoring
+            $mtBuahMua[$key]['skor_mentah'] = 0;
+            $mtBuahMua[$key]['skor_masak'] = 0;
+            $mtBuahMua[$key]['skor_over'] = 0;
+            $mtBuahMua[$key]['skor_jjgKosong'] = 0;
+            $mtBuahMua[$key]['skor_vcut'] = 0;
+            $mtBuahMua[$key]['skor_abnormal'] = 0;;
+            $mtBuahMua[$key]['skor_kr'] = 0;
+            $mtBuahMua[$key]['TOTAL_SKOR'] = 0;
+        }
+
+        if ($sum_krWil != 0) {
+            $total_krWil = round($sum_krWil / $jum_haWil, 3);
+        } else {
+            $total_krWil = 0;
+        }
+
+        if ($sum_bmtWil != 0) {
+            $PerMthWil = round(($sum_bmtWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+        } else {
+            $PerMthWil = 0;
+        }
+
+
+        if ($sum_bmkWil != 0) {
+            $PerMskWil = round(($sum_bmkWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+        } else {
+            $PerMskWil = 0;
+        }
+        if ($sum_overWil != 0) {
+            $PerOverWil = round(($sum_overWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+        } else {
+            $PerOverWil = 0;
+        }
+        if ($sum_kosongjjgWil != 0) {
+            $PerkosongjjgWil = round(($sum_kosongjjgWil / ($sum_SamplejjgWil - $sum_abnorWil)) * 100, 3);
+        } else {
+            $PerkosongjjgWil = 0;
+        }
+        if ($sum_vcutWil != 0) {
+            $PerVcutWil = round(($sum_vcutWil / $sum_SamplejjgWil) * 100, 3);
+        } else {
+            $PerVcutWil = 0;
+        }
+        if ($sum_abnorWil != 0) {
+            $PerAbrWil = round(($sum_abnorWil / $sum_SamplejjgWil) * 100, 3);
+        } else {
+            $PerAbrWil = 0;
+        }
+        $per_krWil = round($total_krWil * 100, 3);
+
+
+        $nonZeroValuesBuah = array_filter([$sum_SamplejjgWil, $PerMthWil, $PerMskWil, $PerOverWil, $sum_abnorWil, $sum_kosongjjgWil, $sum_vcutWil]);
+
+        if (!empty($nonZeroValuesBuah)) {
+            $mtBuahMua['check_data'] = 'ada';
+            // $mtBuahMua['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMskWil);
+            // $mtBuahMua['skor_over'] = $skor_over =  skor_buah_over_mb($PerOverWil);
+            // $mtBuahMua['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($PerkosongjjgWil);
+            // $mtBuahMua['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcutWil);
+            // $mtBuahMua['skor_kr'] = $skor_kr =  skor_abr_mb($per_krWil);
+        } else {
+            $mtBuahMua['check_data'] = 'kosong';
+            // $mtBuahMua['skor_masak'] = $skor_masak = 0;
+            // $mtBuahMua['skor_over'] = $skor_over = 0;
+            // $mtBuahMua['skor_jjgKosong'] = $skor_jjgKosong = 0;
+            // $mtBuahMua['skor_vcut'] = $skor_vcut =  0;
+            // $mtBuahMua['skor_kr'] = $skor_kr = 0;
+        }
+
+        // $totalSkorWil = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+        $totalSkorWil =  skor_buah_mentah_mb($PerMthWil) + skor_buah_masak_mb($PerMskWil) + skor_buah_over_mb($PerOverWil) + skor_jangkos_mb($PerkosongjjgWil) + skor_vcut_mb($PerVcutWil) + skor_abr_mb($per_krWil);
+        $mtBuahMua['tph_baris_blok'] = $jum_haWil;
+        $mtBuahMua['sampleJJG_total'] = $sum_SamplejjgWil;
+        $mtBuahMua['total_mentah'] = $sum_bmtWil;
+        $mtBuahMua['total_perMentah'] = $PerMthWil;
+        $mtBuahMua['total_masak'] = $sum_bmkWil;
+        $mtBuahMua['total_perMasak'] = $PerMskWil;
+        $mtBuahMua['total_over'] = $sum_overWil;
+        $mtBuahMua['total_perOver'] = $PerOverWil;
+        $mtBuahMua['total_abnormal'] = $sum_abnorWil;
+        $mtBuahMua['total_perabnormal'] = $PerAbrWil;
+        $mtBuahMua['total_jjgKosong'] = $sum_kosongjjgWil;
+        $mtBuahMua['total_perKosongjjg'] = $PerkosongjjgWil;
+        $mtBuahMua['total_vcut'] = $sum_vcutWil;
+        $mtBuahMua['per_vcut'] = $PerVcutWil;
+        $mtBuahMua['jum_kr'] = $sum_krWil;
+        $mtBuahMua['kr_blok'] = $total_krWil;
+
+        $mtBuahMua['persen_kr'] = $per_krWil;
+
+        // skoring
+        $mtBuahMua['skor_mentah'] = skor_buah_mentah_mb($PerMthWil);
+        $mtBuahMua['skor_masak'] = skor_buah_masak_mb($PerMskWil);
+        $mtBuahMua['skor_over'] = skor_buah_over_mb($PerOverWil);;
+        $mtBuahMua['skor_jjgKosong'] = skor_jangkos_mb($PerkosongjjgWil);
+        $mtBuahMua['skor_vcut'] = skor_vcut_mb($PerVcutWil);
+        $mtBuahMua['skor_kr'] = skor_abr_mb($per_krWil);
+        $mtBuahMua['TOTAL_SKOR'] = $totalSkorWil;
+
+        // dd($mtBuahMua);
+        $mtTransMua = array();
+        $dataBLokWil = 0;
+        $sum_btWil = 0;
+        $sum_rstWil = 0;
+        foreach ($ptmuaTrans as $key => $value) if (!empty($value)) {
+            $dataBLokEst = 0;
+            $sum_btEst = 0;
+            $sum_rstEst = 0;
+            foreach ($value as $key1 => $value1) if (!empty($value1)) {
+                $sum_bt = 0;
+                $sum_rst = 0;
+                $brdPertph = 0;
+                $buahPerTPH = 0;
+                $totalSkor = 0;
+                $dataBLok = 0;
+                $listBlokPerAfd = array();
+                foreach ($value1 as $key2 => $value2) if (!empty($value2)) {
+
+                    // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
+                    $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
+                    // }
+                    $dataBLok = count($listBlokPerAfd);
+                    $sum_bt += $value2['bt'];
+                    $sum_rst += $value2['rst'];
+                }
+
+                if ($dataBLok != 0) {
+                    $brdPertph = round($sum_bt / $dataBLok, 3);
+                } else {
+                    $brdPertph = 0;
+                }
+                if ($dataBLok != 0) {
+                    $buahPerTPH = round($sum_rst / $dataBLok, 3);
+                } else {
+                    $buahPerTPH = 0;
+                }
+
+
+                $nonZeroValues = array_filter([$sum_bt, $sum_rst]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtTransMua[$key][$key1]['check_data'] = 'ada';
+                    // $mtTransMua[$key][$key1]['skor_buahPerTPH'] = $skor_buah =  skor_buah_tinggal($buahPerTPH);
+                } else {
+                    $mtTransMua[$key][$key1]['check_data'] = 'kosong';
+                    // $mtTransMua[$key][$key1]['skor_buahPerTPH'] = $skor_buah = 0;
+                }
+
+                // $totalSkor = $skor_brd + $skor_buah ;
+
+                $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+
+                $mtTransMua[$key][$key1]['tph_sample'] = $dataBLok;
+                $mtTransMua[$key][$key1]['total_brd'] = $sum_bt;
+                $mtTransMua[$key][$key1]['total_brd/TPH'] = $brdPertph;
+                $mtTransMua[$key][$key1]['total_buah'] = $sum_rst;
+                $mtTransMua[$key][$key1]['total_buahPerTPH'] = $buahPerTPH;
+                $mtTransMua[$key][$key1]['skor_brdPertph'] = skor_brd_tinggal($brdPertph);
+                $mtTransMua[$key][$key1]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPH);
+                $mtTransMua[$key][$key1]['totalSkor'] = $totalSkor;
+
+                //PERHITUNGAN PERESTATE
+                $dataBLokEst += $dataBLok;
+                $sum_btEst += $sum_bt;
+                $sum_rstEst += $sum_rst;
+
+                if ($dataBLokEst != 0) {
+                    $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
+                } else {
+                    $brdPertphEst = 0;
+                }
+                if ($dataBLokEst != 0) {
+                    $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
+                } else {
+                    $buahPerTPHEst = 0;
+                }
+
+                // $totalSkorEst = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+
+
+            } else {
+                $mtTransMua[$key][$key1]['tph_sample'] = 0;
+                $mtTransMua[$key][$key1]['total_brd'] = 0;
+                $mtTransMua[$key][$key1]['total_brd/TPH'] = 0;
+                $mtTransMua[$key][$key1]['total_buah'] = 0;
+                $mtTransMua[$key][$key1]['total_buahPerTPH'] = 0;
+                $mtTransMua[$key][$key1]['skor_brdPertph'] = 0;
+                $mtTransMua[$key][$key1]['skor_buahPerTPH'] = 0;
+                $mtTransMua[$key][$key1]['totalSkor'] = 0;
+            }
+
+            $nonZeroValues = array_filter([$sum_btEst, $sum_rstEst]);
+
+            if (!empty($nonZeroValues)) {
+                $mtTransMua[$key]['check_data'] = 'ada';
+                // $mtTransMua[$key]['skor_buahPerTPH'] = $skor_buah =  skor_buah_tinggal($buahPerTPHEst);
+            } else {
+                $mtTransMua[$key]['check_data'] = 'kosong';
+                // $mtTransMua[$key]['skor_buahPerTPH'] = $skor_buah = 0;
+            }
+
+            // $totalSkorEst = $skor_brd + $skor_buah ;
+            $totalSkorEst = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+
+            $mtTransMua[$key]['tph_sample'] = $dataBLokEst;
+            $mtTransMua[$key]['total_brd'] = $sum_btEst;
+            $mtTransMua[$key]['total_brd/TPH'] = $brdPertphEst;
+            $mtTransMua[$key]['total_buah'] = $sum_rstEst;
+            $mtTransMua[$key]['total_buahPerTPH'] = $buahPerTPHEst;
+            $mtTransMua[$key]['skor_brdPertph'] = skor_brd_tinggal($brdPertphEst);
+            $mtTransMua[$key]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPHEst);
+            $mtTransMua[$key]['totalSkor'] = $totalSkorEst;
+
+            //perhitungan per wil
+            $dataBLokWil += $dataBLokEst;
+            $sum_btWil += $sum_btEst;
+            $sum_rstWil += $sum_rstEst;
+
+            if ($dataBLokWil != 0) {
+                $brdPertphWil = round($sum_btWil / $dataBLokWil, 3);
+            } else {
+                $brdPertphWil = 0;
+            }
+            if ($dataBLokWil != 0) {
+                $buahPerTPHWil = round($sum_rstWil / $dataBLokWil, 3);
+            } else {
+                $buahPerTPHWil = 0;
+            }
+
+            $totalSkorWil =   skor_brd_tinggal($brdPertphWil) + skor_buah_tinggal($buahPerTPHWil);
+        } else {
+            $mtTransMua[$key]['tph_sample'] = 0;
+            $mtTransMua[$key]['total_brd'] = 0;
+            $mtTransMua[$key]['total_brd/TPH'] = 0;
+            $mtTransMua[$key]['total_buah'] = 0;
+            $mtTransMua[$key]['total_buahPerTPH'] = 0;
+            $mtTransMua[$key]['skor_brdPertph'] = 0;
+            $mtTransMua[$key]['skor_buahPerTPH'] = 0;
+            $mtTransMua[$key]['totalSkor'] = 0;
+        }
+
+        $nonZeroValuesTrans = array_filter([$sum_btWil, $sum_rstWil]);
+
+        // if (!empty($nonZeroValuesTrans)) {
+        //     $mtTransMua[$key]['skor_brdPertph'] = $skor_brd =  skor_brd_tinggal($brdPertphWil);
+        //     $mtTransMua[$key]['skor_buahPerTPH'] = $skor_buah =  skor_buah_tinggal($buahPerTPHWil);
+        // } else {
+        //     $mtTransMua[$key]['skor_brdPertph'] = $skor_brd = 0;
+        //     $mtTransMua[$key]['skor_buahPerTPH'] = $skor_buah = 0;
+        // }
+
+        // $totalSkorWil = $skor_brd + $skor_buah ;
+        $mtTransMua['tph_sample'] = $dataBLokWil;
+        $mtTransMua['total_brd'] = $sum_btWil;
+        $mtTransMua['total_brd/TPH'] = $brdPertphWil;
+        $mtTransMua['total_buah'] = $sum_rstWil;
+        $mtTransMua['total_buahPerTPH'] = $buahPerTPHWil;
+        $mtTransMua['skor_brdPertph'] =   skor_brd_tinggal($brdPertphWil);
+        $mtTransMua['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPHWil);
+        $mtTransMua['totalSkor'] = $totalSkorWil;
+
+        $mtBuahMuaTotalSkor = $mtBuahMua['TOTAL_SKOR'];
+        $mtAncakMuaSkorAkhir = $mtAncakMua['skor_akhir'];
+        $mtTransMuaTotalSkor = $mtTransMua['totalSkor'];
+
+        $sumOfAllScores = $mtBuahMuaTotalSkor + $mtAncakMuaSkorAkhir + $mtTransMuaTotalSkor;
+        // dd($mtTranstab1Wil[5]['BTE']);
+
+        //menggabunugkan smua total skor di mutu ancak transport dan buah jadi satu array
+        $RekapWIlTabel = array();
+        // dd($mtancaktab1Wil[4]['MRE'], $mtTranstab1Wil[4]['MRE'],$mtBuahtab1Wil[4]['MRE']);
+        // dd($mtancaktab1Wil[3]['LDE']);
+
+        // dd($mtancaktab1Wil[3], $mtBuahtab1Wil[3], $mtTranstab1Wil[3]);
+        if ($Reg == 1 || $Reg == '1') {
+            $newmua_ancak = [
+                'Ancak' => [
+                    'pokok_sample' => $mtancaktab1Wil[3]['LDE']['pokok_sample'] + $mtancaktab1Wil[3]['SRE']['pokok_sample'] + $mtancaktab1Wil[3]['SKE']['pokok_sample'],
+                    'ha_sample' => $mtancaktab1Wil[3]['LDE']['ha_sample'] + $mtancaktab1Wil[3]['SRE']['ha_sample'] + $mtancaktab1Wil[3]['SKE']['ha_sample'],
+                    'jumlah_panen' => $mtancaktab1Wil[3]['LDE']['jumlah_panen'] + $mtancaktab1Wil[3]['SRE']['jumlah_panen'] + $mtancaktab1Wil[3]['SKE']['jumlah_panen'],
+                    'p' => $mtancaktab1Wil[3]['LDE']['p'] + $mtancaktab1Wil[3]['SRE']['p'] + $mtancaktab1Wil[3]['SKE']['p'],
+                    'k' => $mtancaktab1Wil[3]['LDE']['k'] + $mtancaktab1Wil[3]['SRE']['k'] + $mtancaktab1Wil[3]['SKE']['k'],
+                    'tgl' => $mtancaktab1Wil[3]['LDE']['tgl'] + $mtancaktab1Wil[3]['SRE']['tgl'] + $mtancaktab1Wil[3]['SKE']['tgl'],
+                    'bhts_s' => $mtancaktab1Wil[3]['LDE']['bhts_s'] + $mtancaktab1Wil[3]['SRE']['bhts_s'] + $mtancaktab1Wil[3]['SKE']['bhts_s'],
+                    'bhtm1' => $mtancaktab1Wil[3]['LDE']['bhtm1'] + $mtancaktab1Wil[3]['SRE']['bhtm1'] + $mtancaktab1Wil[3]['SKE']['bhtm1'],
+                    'bhtm2' => $mtancaktab1Wil[3]['LDE']['bhtm2'] + $mtancaktab1Wil[3]['SRE']['bhtm2'] + $mtancaktab1Wil[3]['SKE']['bhtm2'],
+                    'bhtm3' => $mtancaktab1Wil[3]['LDE']['bhtm3'] + $mtancaktab1Wil[3]['SRE']['bhtm3'] + $mtancaktab1Wil[3]['SKE']['bhtm3'],
+                    'palepah_pokok' => $mtancaktab1Wil[3]['LDE']['palepah_pokok'] + $mtancaktab1Wil[3]['SRE']['OA']['palepah_pokok'] + $mtancaktab1Wil[3]['SKE']['OA']['palepah_pokok'],
+                ]
+            ];
+            $newmua_buah = [
+                'Buah' => [
+                    'tph_baris_blok' => $mtBuahtab1Wil[3]['LDE']['tph_baris_blok'] + $mtBuahtab1Wil[3]['SRE']['tph_baris_blok'] + $mtBuahtab1Wil[3]['SKE']['tph_baris_blok'],
+                    'sampleJJG_total' => $mtBuahtab1Wil[3]['LDE']['sampleJJG_total'] + $mtBuahtab1Wil[3]['SRE']['sampleJJG_total'] + $mtBuahtab1Wil[3]['SKE']['sampleJJG_total'],
+                    'total_mentah' => $mtBuahtab1Wil[3]['LDE']['total_mentah'] + $mtBuahtab1Wil[3]['SRE']['total_mentah'] + $mtBuahtab1Wil[3]['SKE']['total_mentah'],
+                    'total_masak' => $mtBuahtab1Wil[3]['LDE']['total_masak'] + $mtBuahtab1Wil[3]['SRE']['total_masak'] + $mtBuahtab1Wil[3]['SKE']['total_masak'],
+                    'total_over' => $mtBuahtab1Wil[3]['LDE']['total_over'] + $mtBuahtab1Wil[3]['SRE']['total_over'] + $mtBuahtab1Wil[3]['SKE']['total_over'],
+                    'total_abnormal' => $mtBuahtab1Wil[3]['LDE']['total_abnormal'] + $mtBuahtab1Wil[3]['SRE']['total_abnormal'] + $mtBuahtab1Wil[3]['SKE']['total_abnormal'],
+                    'total_jjgKosong' => $mtBuahtab1Wil[3]['LDE']['total_jjgKosong'] + $mtBuahtab1Wil[3]['SRE']['total_jjgKosong'] + $mtBuahtab1Wil[3]['SKE']['total_jjgKosong'],
+                    'total_vcut' => $mtBuahtab1Wil[3]['LDE']['total_vcut'] + $mtBuahtab1Wil[3]['SRE']['total_vcut'] + $mtBuahtab1Wil[3]['SKE']['total_vcut'],
+                    'jum_kr' => $mtBuahtab1Wil[3]['LDE']['jum_kr'] + $mtBuahtab1Wil[3]['SRE']['jum_kr'] + $mtBuahtab1Wil[3]['SKE']['jum_kr'],
+                ]
+            ];
+            $newmua_trans = [
+                'Trans' => [
+                    'tph_sample' => $mtTranstab1Wil[3]['LDE']['tph_sample'] + $mtTranstab1Wil[3]['SRE']['tph_sample'] + $mtTranstab1Wil[3]['SKE']['tph_sample'],
+                    'total_brd' => $mtTranstab1Wil[3]['LDE']['total_brd'] + $mtTranstab1Wil[3]['SRE']['total_brd'] + $mtTranstab1Wil[3]['SKE']['total_brd'],
+                    'total_buah' => $mtTranstab1Wil[3]['LDE']['total_buah'] + $mtTranstab1Wil[3]['SRE']['total_buah'] + $mtTranstab1Wil[3]['SKE']['total_buah'],
+                ]
+            ];
+
+
+            $muacak = [];
+            foreach ($newmua_ancak as $key => $value) {
+                # code...
+                // dd($value['bhts_s']);
+                $sumBH = $value['bhts_s'] +  $value['bhtm1'] +  $value['bhtm2'] +  $value['bhtm3'];
+                if ($sumBH != 0) {
+                    $sumPerBH = round($sumBH / ($value['jumlah_panen'] + $sumBH) * 100, 3);
+                } else {
+                    $sumPerBH = 0;
+                }
+
+
+
+                $skor_bTinggal = $value['p'] + $value['k'] + $value['tgl'];
+
+                if ($totalPanen != 0) {
+                    $brdPerjjg = round($skor_bTinggal / $value['jumlah_panen'], 3);
+                } else {
+                    $brdPerjjg = 0;
+                }
+
+
+
+                if ($totalpelepah_s != 0) {
+                    $perPl = round(($value['palepah_pokok'] / $value['pokok_sample']) * 100, 3);
+                } else {
+                    $perPl = 0;
+                }
+                $skor_bh = skor_buah_Ma($sumPerBH);
+                $skor_brd = skor_brd_ma($brdPerjjg);
+                $skor_ps = skor_palepah_ma($perPl);
+                $ttlSkorMA = $skor_bh + $skor_brd + $skor_ps;
+                $muacak[$key]['Skorancak'] = $ttlSkorMA;
+                $muacak[$key]['skorbuah'] = $skor_bh;
+                $muacak[$key]['skorbrd'] = $skor_brd;
+                $muacak[$key]['skorps'] = $skor_ps;
+            }
+
+            $muatrans = [];
+            foreach ($newmua_trans as $key => $value) {
+                $dataBLok += $value['tph_sample'];
+                $sum_bt += $value['total_brd'];
+                $sum_rst += $value['total_buah'];
+
+                if ($dataBLok != 0) {
+                    $brdPertph = round($sum_bt / $dataBLok, 3);
+                } else {
+                    $brdPertph = 0;
+                }
+                if ($dataBLok != 0) {
+                    $buahPerTPH = round($sum_rst / $dataBLok, 3);
+                } else {
+                    $buahPerTPH = 0;
+                }
+
+                $skor_bh = skor_brd_tinggal($brdPertphEst);
+                $skor_brd = skor_buah_tinggal($buahPerTPH);
+
+                $ttlSkorMA = $skor_bh + $skor_brd;
+                $muatrans[$key]['skorTrans'] = $ttlSkorMA;
+                $muatrans[$key]['skorbuah'] = $skor_bh;
+                $muatrans[$key]['skorbrd'] = $skor_brd;
+            }
+            $muabuah = [];
+            foreach ($newmua_buah as $key => $value) {
+
+                $jml_mth = $value['total_mentah'];
+                $jml_mtg = $value['total_masak'];
+                $sum_Samplejjg = $value['sampleJJG_total'];
+                $sum_abnor =  $value['total_abnormal'];
+                $sum_over =  $value['total_over'];
+                $sum_vcut =  $value['total_vcut'];
+                $sum_kosongjjg =  $value['total_jjgKosong'];
+                $sum_kr =  $value['jum_kr'];
+                $dataBLok =  $value['tph_baris_blok'];
+                if ($jml_mth != 0) {
+                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerMth = 0;
+                }
+
+
+                if ($jml_mtg != 0) {
+                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerMsk = 0;
+                }
+                if ($sum_over != 0) {
+                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerOver = 0;
+                }
+                if ($sum_vcut != 0) {
+                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
+                } else {
+                    $PerVcut = 0;
+                }
+                if ($sum_kosongjjg != 0) {
+                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $Perkosongjjg = 0;
+                }
+                if ($sum_kr != 0) {
+                    $total_kr = round($sum_kr / $dataBLok, 3);
+                } else {
+                    $total_kr = 0;
+                }
+
+                $per_kr = round($total_kr * 100, 3);
+
+
+
+                $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+
+                $muabuah[$key]['skorbuah'] = $totalSkor;
+            }
+            // dd($muabuah);
+            $totalestatemua = $muabuah['Buah']['skorbuah'] + $muatrans['Trans']['skorTrans'] + $muacak['Ancak']['Skorancak'];
+
+            $newmua = [
+                'ancak' => 0,
+                'buah' => 0,
+                'trans' => 0,
+                'totalestmua' => $totalestatemua
+            ];
+        } else {
+            $newmua = [
+                'ancak' => 0,
+                'buah' => 0,
+                'trans' => 0,
+                'totalestmua' => 0
+            ];
+        }
+        // dd($newmua_ancak, $newmua_buah, $newmua_trans, $muacak, $muabuah, $muatrans,);
+
+
+
+        foreach ($mtancaktab1Wil as $key => $value) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    foreach ($mtBuahtab1Wil as $bh => $buah) {
+                        foreach ($buah as $bh1 => $buah1) if (is_array($buah1)) {
+                            foreach ($buah1 as $bh2 => $buah2) if (is_array($buah2)) {
+                                foreach ($mtTranstab1Wil as $tr => $trans) {
+                                    foreach ($trans as $tr1 => $trans1) if (is_array($trans1)) {
+                                        foreach ($trans1 as $tr2 => $trans2) if (is_array($trans2))
+                                            if (
+                                                $bh == $key
+                                                && $bh == $tr
+                                                && $bh1 == $key1
+                                                && $bh1 == $tr1
+                                                && $bh2 == $key2
+                                                && $bh2 == $tr2
+                                            ) {
+                                                // dd($trans2);
+                                                // dd($key);
+                                                if ($value2['check_input'] == 'manual' && $value2['nilai_input'] != 0) {
+                                                    $RekapWIlTabel[$key][$key1][$key2]['data'] = 'ada';
+                                                } else if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                    $RekapWIlTabel[$key][$key1][$key2]['data'] = 'kosong';
+                                                }
+
+                                                if ($value2['check_input'] == 'manual') {
+                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['nilai_input'];
+                                                } else  if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = 0;
+                                                } else {
+                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['skor_akhir'] + $buah2['TOTAL_SKOR'] + $trans2['totalSkor'];
+                                                }
+
+
+                                                if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                    $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = 0;
+                                                } else {
+                                                    $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = $value1['skor_akhir'] + $buah1['TOTAL_SKOR'] + $trans1['totalSkor'];
+                                                }
+
+
+                                                if ($value1['check_data'] == 'kosong' && $buah1['check_data'] === 'kosong' && $trans1['check_data'] === 'kosong') {
+                                                    $RekapWIlTabel[$key][$key1]['dataEst'] = 'kosong';
+                                                }
+
+                                                // dd($value,$buah,$trans);
+                                                if ($trans['check_data'] == 'kosong' && $buah['check_data'] === 'kosong' && $value['check_data'] === 'kosong') {
+                                                    $RekapWIlTabel[$key]['TotalSkorWil'] = 0;
+                                                } else {
+                                                    $RekapWIlTabel[$key]['TotalSkorWil'] = $value['skor_akhir'] + $buah['TOTAL_SKOR'] + $trans['totalSkor'];
+                                                }
+
+
+
+                                                // if ($key1 === 'SKE' || $key1 === 'LDE' || $key1 === 'SRE') {
+                                                //     unset($RekapWIlTabel[$key][$key1]['OA']['TotalSkorEST']);
+                                                // }
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // dd($mtBuahMua, $mtAncakMua, $mtTransMua, $RekapWIlTabel);
+        // dd($RekapWIlTabel);
+
+        foreach ($RekapWIlTabel as $key1 => $estates)  if (is_array($estates)) {
+            $sortedData = array();
+            $sortedDataEst = array();
+
+            foreach ($estates as $estateName => $data) {
+                if (is_array($data)) {
+                    $sortedDataEst[] = array(
+                        'key1' => $key1,
+                        'estateName' => $estateName,
+                        'data' => $data
+                    );
+                    foreach ($data as $key2 => $scores) {
+                        if (is_array($scores)) {
+                            $sortedData[] = array(
+                                'estateName' => $estateName,
+                                'key2' => $key2,
+                                'scores' => $scores
+                            );
+                        }
+                    }
+                }
+            }
+
+            //mengurutkan untuk nilai afd
+            usort($sortedData, function ($a, $b) {
+                return $b['scores']['TotalSkor'] - $a['scores']['TotalSkor'];
+            });
+            //mengurutkan untuk nilai estate
+            usort($sortedDataEst, function ($a, $b) {
+                return $b['data']['TotalSkorEST'] - $a['data']['TotalSkorEST'];
+            });
+
+            //menambahkan nilai rank ke dalam afd
+            $rank = 1;
+            foreach ($sortedData as $sortedEstate) {
+                $RekapWIlTabel[$key1][$sortedEstate['estateName']][$sortedEstate['key2']]['rankAFD'] = $rank;
+                $rank++;
+            }
+
+            //menambahkan nilai rank ke dalam estate
+            $rank = 1;
+            foreach ($sortedDataEst as $sortedest) {
+                $RekapWIlTabel[$key1][$sortedest['estateName']]['rankEST'] = $rank;
+                $rank++;
+            }
+
+
+            unset($sortedData, $sortedDataEst);
+        }
+
+        // dd($RekapWIlTabel);
+        $RankingFinal = $RekapWIlTabel;
+
+        $sortedArray = [];
+
+        foreach ($RankingFinal as $key => $value) {
+            $sortedArray[$key] = $value['TotalSkorWil'];
+        }
+
+        arsort($sortedArray);
+
+        $rank = 1;
+        foreach ($sortedArray as $key => $value) {
+            $RankingFinal[$key]['rankWil'] = $rank++;
+        }
+
+
+
+
+
+        // Update key name from "KTE4" to "KTE" recursively
+        // updateKeyRecursive($RankingFinal, "KTE4", "KTE");
+
+        // Output the updated array
+        // dd($RankingFinal);
+
+        // dd($RankingFinal);
+
+
+        $Wil1 = $RankingFinal[1] ?? $RankingFinal[4] ?? $RankingFinal[7] ?? $RankingFinal[10];
+        $Wil2 = $RankingFinal[2] ?? $RankingFinal[5] ?? $RankingFinal[8] ?? $RankingFinal[11];
+        $Wil3 = $RankingFinal[3] ?? $RankingFinal[6] ?? $RankingFinal[8] ?? $RankingFinal[11];
+
+
+        // dd($Wil3);
+
+        //buat tabel plasma 
+
+        // dd($RankingFinal[1] && [2]);
+        $GmWil1['skorwil_1'] = $Wil1['TotalSkorWil'];
+        $GmWil2['skorwil_2'] = $Wil2['TotalSkorWil'];
+        $GmWil3['skorwil_3'] = $Wil3['TotalSkorWil'];
+        // foreach ($Wil1 as $key => $value) {
+        // dd($GMperwil1);
+        // penambahan GM dan WIlayah untuk di ambil namanya
+        function processWil($Wil, $estValues)
+        {
+            $processedWil = array();
+            $processedWil['Skor'] = $Wil['TotalSkorWil'];
+            $processedWil['key'] = array_diff(array_keys($Wil), ['TotalSkorWil', 'rankWil']);
+            $processedWil['est'] = '';
+            $processedWil['afd'] = 'GM';
+
+
+            //cek jika ada kunci yang sama
+            $key_counts = array_count_values(array_keys($Wil));
+            foreach ($key_counts as $key => $count) {
+                if ($count > 1) {
+                    //jika kunci ada buat array baru
+                    $new_array = [
+                        'Skor' => $Wil['TotalSkorWil'],
+                        'key' => [$key],
+                        'est' => '',
+                        'afd' => 'GM',
+                    ];
+                    //tamhahkan array ke dalam procesedwil
+                    $processedWil[] = $new_array;
+                }
+            }
+            // dd($processedWil);
+            //tambah key est bedasarkan key value
+            if (array_key_exists($processedWil['key'][0], $estValues)) {
+                $processedWil['est'] = $estValues[$processedWil['key'][0]];
+            }
+
+            return $processedWil;
+        }
+
+        $estValues = [
+            'KNE' => 'WIL-I',
+            'MRE' => 'WIL-IV',
+            'BDE' => 'WIL-VII',
+            'BKE' => 'WIL-II',
+            'BTE' => 'WIL-V',
+            'BHE' => 'WIL-VIII',
+            'BGE' => 'WIL-III',
+            'MLE' => 'WIL-VI',
+            'SJE' => 'WIL-IX',
+            'LM1' => 'WIL-X',
+        ];
+
+        $WilGMsatu = processWil($Wil1, $estValues);
+        $wilGM2 = processWil($Wil2, $estValues);
+        $wilGM3 = processWil($Wil3, $estValues);
+
+
+        $GMarr = array();
+
+        $GMarr['0'] = $WilGMsatu;
+        $GMarr['1'] = $wilGM2;
+        $GMarr['2'] = $wilGM3;
+
+
+        //mencocokan afd dan est yang di ubah menjadi wil untuk mendapatkan nama
+        $RHGM = array();
+        foreach ($GMarr as $key => $value) if (is_array($value)) {
+            // dd($key);
+            // dd($value);
+            $est = $value['est'];
+            $skor = $value['Skor'];
+            $EM = 'GM';
+            $nama = '-';
+            foreach ($queryAsisten as $value4) {
+                if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
+                    $nama = $value4['nama'];
+                    break;
+                }
+            }
+
+            $RHGM[] = array(
+                'est' => $est,
+                'skor' => $skor,
+                'EM' => $EM,
+                'nama' => $nama
+            );
+        }
+
+        $RHGM = array_values($RHGM);
+
+        // dd($RHGM);
+
+        //     foreach ($value as $key1 => $value2) {
+        //         $GmWil1['skor'] = $value2['TotalSkorWil'];
         //     }
         // }
 
-        // dd($queryEste, $est_emp);
-        $defaultNew = array();
-        foreach ($bulan as $month) {
-            foreach ($filteredArray as $est) {
 
-
-                $defaultNew[$est['nama']][$month] = 0;
-            }
-        }
-        // dd($emplacement);
-
-        // perhitungan perumahan 
-
-        $dataPerBulan = [];
-        foreach ($bulan as $month) {
-            foreach ($emplacement as $estKey => $estValue) {
-                foreach ($estValue['EST'] as $entry) {
-                    // Get the month and year from the "datetime" field
-                    $entryMonth = date('F', strtotime($entry['datetime']));
-                    $year = date('Y', strtotime($entry['datetime']));
-
-                    if ($entryMonth === $month) {
-                        // Group the data by "nama" value
-                        if (!isset($dataPerBulan[$month])) {
-                            $dataPerBulan[$month] = [];
-                        }
-
-                        // Find the corresponding "nama" value from the "queryEste" array
-                        $nama = '';
-                        foreach ($filteredArray as $namaData) {
-                            // dd($namaData);
-                            if ($namaData['est'] === $estKey) {
-                                $nama = $namaData['nama'];
-                                break;
-                            }
-                        }
-
-                        // Handle keys that should not have the "-EST" suffix
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'];
-                        $keyToAdd = in_array($estKey, $exceptKeys) ? $estKey : $estKey . '-EST';
-
-                        // Group the data by "nama" value and "est" key
-                        if (!isset($dataPerBulan[$month][$nama][$keyToAdd])) {
-                            $dataPerBulan[$month][$nama][$keyToAdd] = [];
-                        }
-
-                        // Add the data to the result array
-                        $dataPerBulan[$month][$nama][$keyToAdd][] = $entry;
-                    }
+        // $FormatTabEst1 = array_values($FormatTabEst1);
+        // dd($FormatTabEst1);
+        //table untuk bagian EM estate wil1
+        $FormatTabEst1 = array();
+        foreach ($Wil1 as $key => $value) if (is_array($value)) {
+            $inc = 0;
+            $est = $key;
+            $skor = $value['TotalSkorEST'];
+            $EM = 'EM';
+            $rank = $value['rankEST'];
+            $nama = '-';
+            foreach ($queryAsisten as $key4 => $value4) {
+                if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
+                    $nama = $value4['nama'];
+                    break;
                 }
             }
-
-            // Check if the month has no data and set its value to 0
-            if (!isset($dataPerBulan[$month])) {
-                $dataPerBulan[$month] = 0;
-            }
+            $FormatTabEst1[] = array(
+                'est' => $est,
+                'skor' => $skor,
+                'EM' => $EM,
+                'rank' => $rank,
+                'nama' => $nama
+            );
+            $inc++;
         }
 
-        // dd($dataPerBulan);
-        function groupArrayByDatetime($data)
-        {
-            $groupedArray = [];
-
-            foreach ($data as $bulan => $locations) {
-                if (is_array($locations)) {
-                    foreach ($locations as $location => $estAfdData) {
-                        foreach ($estAfdData as $estAfd => $items) {
-                            $groupedItems = [];
-
-                            foreach ($items as $item) {
-                                $key = $item['est'] . '-' . $item['afd'] . '-' . $item['petugas'] . '-' . $item['pendamping'] . '-' . substr($item['datetime'], 0, 10);
-
-                                if (!isset($groupedItems[$key])) {
-                                    $groupedItems[$key] = $item;
-                                } else {
-                                    $existingItem = $groupedItems[$key];
-                                    $index = 1;
-
-                                    // Find the next available index
-                                    while (isset($existingItem['nilai' . $index])) {
-                                        $index++;
-                                    }
-
-                                    // Set the new index for the current item
-                                    foreach ($item as $field => $value) {
-                                        $existingItem[$field . $index] = $value;
-                                    }
-
-                                    $groupedItems[$key] = $existingItem;
-                                }
-                            }
-
-                            $groupedArray[$bulan][$location][$estAfd] = array_values($groupedItems);
-                        }
-                    }
-                } else {
-                    $groupedArray[$bulan] = 0;
+        $FormatTabEst1 = array_values($FormatTabEst1);
+        // dd($FormatTabEst1);
+        usort($FormatTabEst1, function ($a, $b) {
+            return $a['rank'] - $b['rank'];
+        });
+        //table untuk bagian EM estate wil2
+        $FormatTabEst2 = array();
+        foreach ($Wil2 as $key => $value) if (is_array($value)) {
+            $inc = 0;
+            $est = $key;
+            $skor = $value['TotalSkorEST'];
+            $EM = 'EM';
+            $rank = $value['rankEST'];
+            $nama = '-';
+            foreach ($queryAsisten as $key4 => $value4) {
+                if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
+                    $nama = $value4['nama'];
+                    break;
                 }
             }
-
-            return $groupedArray;
+            $FormatTabEst2[] = array(
+                'est' => $est,
+                'skor' => $skor,
+                'EM' => $EM,
+                'rank' => $rank,
+                'nama' => $nama
+            );
+            $inc++;
         }
 
-        $groupedArray = groupArrayByDatetime($dataPerBulan);
+        $FormatTabEst2 = array_values($FormatTabEst2);
+        //    dd($FormatTabEst1);
+        usort($FormatTabEst2, function ($a, $b) {
+            return $a['rank'] - $b['rank'];
+        });
+        //table untuk bagian EM estate wil3
+        $FormatTabEst3 = array();
+        foreach ($Wil3 as $key => $value) if (is_array($value)) {
+            $inc = 0;
+            $est = $key;
+            $skor = $value['TotalSkorEST'];
+            $EM = 'EM';
+            $rank = $value['rankEST'];
+            $nama = '-';
+            foreach ($queryAsisten as $key4 => $value4) {
+                if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
+                    $nama = $value4['nama'];
+                    break;
+                }
+            }
+            $FormatTabEst3[] = array(
+                'est' => $est,
+                'skor' => $skor,
+                'EM' => $EM,
+                'rank' => $rank,
+                'nama' => $nama
+            );
+            $inc++;
+        }
 
-        // dd($groupedArray, $dataPerBulan);
-        // $hitungRmh = array();
+        $FormatTabEst3 = array_values($FormatTabEst3);
+        // dd($FormatTabEst1);
+        usort($FormatTabEst3, function ($a, $b) {
+            return $a['rank'] - $b['rank'];
+        });
 
-        foreach ($groupedArray as $key => $value) {
+        //bagian unutk afdeling
+        // dd($Wil1);
+        $FormatTable1 = array();
+        foreach ($Wil1 as $key => $value) {
             if (is_array($value)) {
-                foreach ($value as $key1 => $value2) {
+                $inc = 0;
+                foreach ($value as $key2 => $value2) {
                     if (is_array($value2)) {
-                        foreach ($value2 as $key2 => $value3) {
-                            if (is_array($value3)) {
-                                foreach ($value3 as $key3 => $value4) {
-                                    $avg_nilai = 0;
-                                    if (is_array($value4)) {
-
-                                        $totalNilai = 0;
-                                        $nilaiKeys = [];
-
-                                        foreach ($value4 as $innerKey => $innerValue) {
-                                            if (strpos($innerKey, 'nilai') === 0) {
-                                                $nilaiKeys[] = $innerKey;
-                                                $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                                $totalNilai += array_sum($nilaiValues);
-                                            }
-                                        }
-
-                                        $dividen = 0;
-                                        foreach ($value4 as $key4 => $item) {
-                                            if (strpos($key4, 'nilai') === 0) {
-                                                $dividen++;
-                                            }
-                                        }
-
-                                        if ($dividen != 1) {
-                                            $avg_nilai = round($totalNilai / $dividen, 2);
-                                        } else {
-                                            $avg_nilai = $totalNilai;
-                                        }
-
-                                        $date = $value4['datetime'];
-                                        $yearMonth = date('Y-m-d', strtotime($date));
-
-                                        $hitungRmh[$key][$key1][$key2][$key3]['nilai_total'] = $avg_nilai;
-                                        $hitungRmh[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
-                                        $hitungRmh[$key][$key1][$key2][$key3]['dividen'] = $dividen;
-
-                                        $hitungRmh[$key][$key1][$key2][$key3]['date'] = $yearMonth;
-                                        $hitungRmh[$key][$key1][$key2][$key3]['est'] = $value4['est'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['afd'] = $value4['afd'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['petugas'] = $value4['petugas'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['pendamping'] = $value4['pendamping'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['penghuni'] = $value4['penghuni'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['tipe_rumah'] = $value4['tipe_rumah'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['foto_temuan'] = $value4['foto_temuan'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['komentar_temuan'] = $value4['komentar_temuan'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['nilai'] = $value4['nilai'];
-                                        $hitungRmh[$key][$key1][$key2][$key3]['komentar'] = $value4['komentar'];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-
-
-        // dd($hitungRmh, $groupedArray);
-
-        $dataPerBulan = array_fill_keys($bulan, 0);
-
-        // Populate $dataPerBulan with actual data
-        foreach ($bulan as $month) {
-            if (isset($hitungRmh[$month])) {
-                $dataPerBulan[$month] = $hitungRmh[$month];
-            }
-        }
-
-
-
-        $resultArray = [];
-        foreach ($dataPerBulan as $estate => $months) if (is_array($months)) {
-            foreach ($months as $month => $afdelings) if (is_array($afdelings)) {
-                foreach ($afdelings as $afdeling => $data) if (is_array($data)) {
-                    $resultArray[$month][$estate][$afdeling] = $data;
-                }
-            }
-        }
-
-
-
-
-
-        $FinalArr_rumah = array();
-        foreach ($resultArray as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        foreach ($value3 as $value4) {
-                            $FinalArr_rumah[$key1][$key2][$key3][$value4['date']] = $value4;
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($FinalArr_rumah);
-        // addMissingMonths($FinalArr_rumah, $defaultNew);
-        // dd($FinalArr_rumah);
-
-        // perhitungan landscape 
-
-        $dataPerBulan_Ls = [];
-        foreach ($bulan as $month) {
-            foreach ($landscape as $estKey => $estValue) {
-                foreach ($estValue['EST'] as $entry) {
-                    // Get the month and year from the "datetime" field
-                    $entryMonth = date('F', strtotime($entry['datetime']));
-                    $year = date('Y', strtotime($entry['datetime']));
-
-                    if ($entryMonth === $month) {
-                        // Group the data by "nama" value
-                        if (!isset($dataPerBulan_Ls[$month])) {
-                            $dataPerBulan_Ls[$month] = [];
-                        }
-
-                        // Find the corresponding "nama" value from the "queryEste" array
-                        $nama = '';
-                        foreach ($queryEste as $namaData) {
-                            if ($namaData['est'] === $estKey) {
-                                $nama = $namaData['nama'];
-                                break;
-                            }
-                        }
-
-                        // Handle keys that should not have the "-EST" suffix
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'];
-                        $keyToAdd = in_array($estKey, $exceptKeys) ? $estKey : $estKey . '-EST';
-
-                        // Group the data by "nama" value and "est" key
-                        if (!isset($dataPerBulan_Ls[$month][$nama][$keyToAdd])) {
-                            $dataPerBulan_Ls[$month][$nama][$keyToAdd] = [];
-                        }
-
-                        // Add the data to the result array
-                        $dataPerBulan_Ls[$month][$nama][$keyToAdd][] = $entry;
-                    }
-                }
-            }
-
-            // Check if the month has no data and set its value to 0
-            if (!isset($dataPerBulan_Ls[$month])) {
-                $dataPerBulan_Ls[$month] = 0;
-            }
-        }
-
-        $groupedArray_LS = groupArrayByDatetime($dataPerBulan_Ls);
-
-        // dd($groupedArray_LS, $dataPerBulan_Ls);
-
-        $hitungLandscape = array();
-
-        foreach ($groupedArray_LS as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $key1 => $value2) {
-                    if (is_array($value2)) {
-                        foreach ($value2 as $key2 => $value3) {
-                            if (is_array($value3)) {
-                                foreach ($value3 as $key3 => $value4) {
-                                    $avg_nilai = 0;
-                                    if (is_array($value4)) {
-
-                                        $totalNilai = 0;
-                                        $nilaiKeys = [];
-
-                                        foreach ($value4 as $innerKey => $innerValue) {
-                                            if (strpos($innerKey, 'nilai') === 0) {
-                                                $nilaiKeys[] = $innerKey;
-                                                $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                                $totalNilai += array_sum($nilaiValues);
-                                            }
-                                        }
-
-                                        $dividen = 0;
-                                        foreach ($value4 as $key4 => $item) {
-                                            if (strpos($key4, 'nilai') === 0) {
-                                                $dividen++;
-                                            }
-                                        }
-
-                                        if ($dividen != 1) {
-                                            $avg_nilai = round($totalNilai / $dividen, 2);
-                                        } else {
-                                            $avg_nilai = $totalNilai;
-                                        }
-
-                                        $date = $value4['datetime'];
-                                        $yearMonth = date('Y-m-d', strtotime($date));
-
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['nilai_total_LP'] = $avg_nilai;
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['dividen'] = $dividen;
-
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['date'] = $yearMonth;
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['est_LP'] = $value4['est'];
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['afd_LP'] = $value4['afd'];
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['petugas_LP'] = $value4['petugas'];
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['pendamping_LP'] = $value4['pendamping'];
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['foto_temuan_LP'] = $value4['foto_temuan'];
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['komentar_temuan_LP'] = $value4['komentar_temuan'];
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['nilai_LP'] = $value4['nilai'];
-                                        $hitungLandscape[$key][$key1][$key2][$key3]['komentar_LP'] = $value4['komentar'];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        // dd($hitungLandscape);
-        $dataPerBulan_Ls = array_fill_keys($bulan, 0);
-        foreach ($bulan as $month) {
-            if (isset($hitungLandscape[$month])) {
-                $dataPerBulan_Ls[$month] = $hitungLandscape[$month];
-            }
-        }
-
-
-        $resultArray_Ls = [];
-        foreach ($dataPerBulan_Ls as $estate => $months) if (is_array($months)) {
-            foreach ($months as $month => $afdelings) if (is_array($afdelings)) {
-                foreach ($afdelings as $afdeling => $data) if (is_array($data)) {
-                    $resultArray_Ls[$month][$estate][$afdeling] = $data;
-                }
-            }
-        }
-
-
-
-
-
-
-        $FinalArr_LS = array();
-        foreach ($resultArray_Ls as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        foreach ($value3 as $value4) {
-                            $FinalArr_LS[$key1][$key2][$key3][$value4['date']] = $value4;
-                        }
-                    }
-                }
-            }
-        }
-
-        addMissingMonths($FinalArr_LS, $defaultNew);
-
-        // dd($FinalArr_LS);
-        //perhitungan lingkungan
-
-        $dataPerBulan_LK = [];
-        foreach ($bulan as $month) {
-            foreach ($lingkungan as $estKey => $estValue) {
-                foreach ($estValue['EST'] as $entry) {
-                    // Get the month and year from the "datetime" field
-                    $entryMonth = date('F', strtotime($entry['datetime']));
-                    $year = date('Y', strtotime($entry['datetime']));
-
-                    if ($entryMonth === $month) {
-                        // Group the data by "nama" value
-                        if (!isset($dataPerBulan_LK[$month])) {
-                            $dataPerBulan_LK[$month] = [];
-                        }
-
-                        // Find the corresponding "nama" value from the "queryEste" array
-                        $nama = '';
-                        foreach ($queryEste as $namaData) {
-                            if ($namaData['est'] === $estKey) {
-                                $nama = $namaData['nama'];
-                                break;
-                            }
-                        }
-
-                        // Handle keys that should not have the "-EST" suffix
-                        $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'];
-                        $keyToAdd = in_array($estKey, $exceptKeys) ? $estKey : $estKey . '-EST';
-
-                        // Group the data by "nama" value and "est" key
-                        if (!isset($dataPerBulan_LK[$month][$nama][$keyToAdd])) {
-                            $dataPerBulan_LK[$month][$nama][$keyToAdd] = [];
-                        }
-
-                        // Add the data to the result array
-                        $dataPerBulan_LK[$month][$nama][$keyToAdd][] = $entry;
-                    }
-                }
-            }
-
-            // Check if the month has no data and set its value to 0
-            if (!isset($dataPerBulan_LK[$month])) {
-                $dataPerBulan_LK[$month] = 0;
-            }
-        }
-
-        $groupedArray_LK = groupArrayByDatetime($dataPerBulan_LK);
-
-        $hitungLingkungan = array();
-
-
-        foreach ($groupedArray_LK as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $key1 => $value2) {
-                    if (is_array($value2)) {
-                        foreach ($value2 as $key2 => $value3) {
-                            if (is_array($value3)) {
-                                foreach ($value3 as $key3 => $value4) {
-                                    $avg_nilai = 0;
-                                    if (is_array($value4)) {
-
-                                        $totalNilai = 0;
-                                        $nilaiKeys = [];
-
-                                        foreach ($value4 as $innerKey => $innerValue) {
-                                            if (strpos($innerKey, 'nilai') === 0) {
-                                                $nilaiKeys[] = $innerKey;
-                                                $nilaiValues = array_map('intval', explode('$', $innerValue));
-                                                $totalNilai += array_sum($nilaiValues);
-                                            }
-                                        }
-
-                                        $dividen = 0;
-                                        foreach ($value4 as $key4 => $item) {
-                                            if (strpos($key4, 'nilai') === 0) {
-                                                $dividen++;
-                                            }
-                                        }
-
-                                        if ($dividen != 1) {
-                                            $avg_nilai = round($totalNilai / $dividen, 2);
-                                        } else {
-                                            $avg_nilai = $totalNilai;
-                                        }
-
-                                        $date = $value4['datetime'];
-                                        $yearMonth = date('Y-m-d', strtotime($date));
-
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_total_Lngkl'] = $avg_nilai;
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['total_nilai'] = $totalNilai;
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['dividen'] = $dividen;
-
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['date'] = $yearMonth;
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['est_Lngkl'] = $value4['est'];
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['afd_Lngkl'] = $value4['afd'];
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['petugas_Lngkl'] = $value4['petugas'];
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['pendamping_Lngkl'] = $value4['pendamping'];
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['foto_temuan_Lngkl'] = $value4['foto_temuan'];
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['komentar_temuan_Lngkl'] = $value4['komentar_temuan'];
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['nilai_Lngkl'] = $value4['nilai'];
-                                        $hitungLingkungan[$key][$key1][$key2][$key3]['komentar_Lngkl'] = $value4['komentar'];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $dataPerBulan_LK = array_fill_keys($bulan, 0);
-        foreach ($bulan as $month) {
-            if (isset($hitungLingkungan[$month])) {
-                $dataPerBulan_LK[$month] = $hitungLingkungan[$month];
-            }
-        }
-
-
-        $resultArray_LK = [];
-        foreach ($dataPerBulan_LK as $estate => $months) if (is_array($months)) {
-            foreach ($months as $month => $afdelings) if (is_array($afdelings)) {
-                foreach ($afdelings as $afdeling => $data) if (is_array($data)) {
-                    $resultArray_LK[$month][$estate][$afdeling] = $data;
-                }
-            }
-        }
-
-
-
-        // dd($dataPerBulan_LK);
-
-
-        $FinalArr_LK = array();
-        foreach ($resultArray_LK as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                foreach ($value2 as $key3 => $value3) {
-                    if (is_array($value3)) {
-                        foreach ($value3 as $value4) {
-                            $FinalArr_LK[$key1][$key2][$key3][$value4['date']] = $value4;
-                        }
-                    }
-                }
-            }
-        }
-        // dd($FinalArr_LK);
-        addMissingMonths($FinalArr_LK, $defaultNew);
-
-        dd($FinalArr_LK, $FinalArr_rumah, $FinalArr_LS);
-
-
-        function mergeArray_est($arr1, $arr2, $arr3)
-        {
-            $allKeys = array_unique(array_merge(array_keys($arr1), array_keys($arr2), array_keys($arr3)));
-            $result = [];
-
-            foreach ($allKeys as $key) {
-                $result[$key] = mergeArraysRecursive_est($arr1[$key] ?? [], $arr2[$key] ?? [], $arr3[$key] ?? []);
-            }
-
-            return $result;
-        }
-
-        function mergeArraysRecursive_est(...$arrays)
-        {
-            $result = [];
-            foreach ($arrays as $array) {
-                if (is_array($array)) {
-                    foreach ($array as $key => $value) {
-                        if (is_array($value)) {
-                            $result[$key] = mergeArraysRecursive_est($result[$key] ?? [], $value);
-                        } else {
-                            $result[$key] = $value ?? 0;
-                        }
-                    }
-                }
-            }
-
-            return $result;
-        }
-
-
-        $result = mergeArray_est($FinalArr_rumah, $FinalArr_LK, $FinalArr_LS);
-
-        dd($result);
-
-        //  delete index with 0 value 
-        foreach ($result as $key => $months) {
-            foreach ($months as $month => $value) {
-                if (is_array($value)) {
-                    // Check if the value is an array
-                    $filteredValues = array_filter($value, function ($item) {
-                        return $item !== 0; // Filter out entries with value 0
-                    });
-
-                    // Reassign the filtered array to the original array
-                    $result[$key][$month] = $filteredValues;
-                }
-            }
-        }
-
-        // dd($result);
-        $queryAsisten =  DB::connection('mysql2')->Table('asisten_qc')->get();
-
-        $queryAsisten = json_decode($queryAsisten, true);
-        // Now $result will have the entries with value 0 removed from nested arrays
-        $final_result = array();
-
-        foreach ($result as $key => $value) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    $inc = 1;
-                    if (is_array($value2)) {
-                        foreach ($value2 as $key3 => $value3) {
-                            // dd($value3);
-                            $EM = 'GM';
-                            $nama = '-';
-                            foreach ($queryAsisten as $value4) {
-                                if ($value4['est'] == ($value3['est'] ?? $value3['est_LP'] ??  $value3['est_Lngkl'] ?? null) && $value4['afd'] == $key2) {
-                                    $nama = $value4['nama'];
-                                    break;
-                                }
-                            }
-                            $total_skor = ($value3['nilai_total'] ?? 0) + ($value3['nilai_total_LP'] ?? 0) + ($value3['nilai_total_Lngkl'] ?? 0);
-                            $final_result[$key][$key1][$key2][$key3]['skor_total'] = $total_skor;
-                            $final_result[$key][$key1][$key2][$key3]['visit'] = $inc++;
-                            $final_result[$key][$key1][$key2][$key3]['est'] = $value3['est'] ?? $value3['est_LP'] ??  $value3['est_Lngkl'] ?? null;
-                            $final_result[$key][$key1][$key2][$key3]['afd'] = $key2;
-                            $final_result[$key][$key1][$key2][$key3]['asisten'] = $nama;
-                            $final_result[$key][$key1][$key2][$key3]['date'] = $key3;
-                        }
-
-                        // dd($value1);
-                    }
-                }
-            } else {
-
-                $final_result[$key][$key1] = $value1;
-            }
-        }
-
-        // dd($final_result);
-
-
-        $avarage = array();
-
-        foreach ($final_result as $estate => $months) {
-            $countMth = 0; // Initialize the month count with zero
-            $est_avg = 0;
-            $avg_tod = 0;
-            foreach ($months as $month => $value) {
-                if (is_array($value)) {
-                    // If the month has data, increase the count
-                    $countMth++;
-                    $total_avg = 0;
-                    foreach ($value as $key2 => $value2) {
-                        $count = count($value2);
-                        $total_val = 0;
-                        $avg = 0;
-                        foreach ($value2 as $key3 => $value3) {
-                            // dd($value3);
-                            $total_val += $value3['skor_total'];
-                        }
-                        $avg = round($total_val / $count, 1);
-
-                        $avarage[$estate][$month][$key2]['test_tod'] = $count;
-                        $avarage[$estate][$month][$key2]['total_nilai'] = $total_val;
-                        $avarage[$estate][$month][$key2]['est'] = $value3['est'];
-                        $avarage[$estate][$month][$key2]['afd'] = $value3['afd'];
-                        $avarage[$estate][$month][$key2]['rata_rata'] = $avg;
-
-                        $total_avg += $avg;
-                    }
-
-                    $avarage[$estate][$month]['tot_avg'] = $total_avg;
-
-                    $est_avg += $total_avg;
-                }
-            }
-
-            $avg_tod = round($est_avg / $countMth, 1);
-            $avarage[$estate]['tot_avg'] = $est_avg;
-            $avarage[$estate]['bulan'] = $countMth;
-            $avarage[$estate]['est'] = $value3['est'];
-            $avarage[$estate]['afd'] = $value3['afd'];
-            $avarage[$estate]['avg'] = $avg_tod;
-        }
-        // "est" => "BKE"
-        // "afd" => "BKE-EST"
-        // "avg" => 28.5
-        // dd($avarage);
-        $extractedData = [];
-        foreach ($avarage as $estate => $data) {
-            $extractedData[$estate]['est'] = $data['est'];
-            $extractedData[$estate]['afd'] = $data['afd'];
-            $extractedData[$estate]['avg'] = $data['avg'];
-        }
-
-
-        // Now $avarage array contains the counts of months with data for each estate
-
-        // dd($avarage, $extractedData);
-        $resultArray = [];
-
-        // Loop through the original array
-        foreach ($final_result as $estate => $months) {
-            // Initialize the data for the estate and afdeling
-            $resultArray[$estate] = [];
-
-            foreach ($months as $month => $afdelings) if (is_array($afdelings)) {
-                // Initialize the data for the afdeling
-                foreach ($afdelings as $afdeling => $data) {
-                    $resultArray[$estate][$afdeling][$month] = $data;
-                }
-
-                // Handle the default months with value 0
-                $monthsList = [
-                    "January", "February", "March", "April", "May", "June", "July", "August",
-                    "September", "October", "November", "December"
-                ];
-
-                foreach ($monthsList as $defaultMonth) {
-                    if (!isset($resultArray[$estate][$afdeling][$defaultMonth])) {
-                        $resultArray[$estate][$afdeling][$defaultMonth] = 0;
-                    }
-                }
-            }
-        }
-
-
-
-        // dd($resultArray);
-
-
-        foreach ($resultArray as $estate => $months) {
-            foreach ($months as $afdeling => $data) {
-                foreach ($data as $month => $visits) {
-                    if (is_array($visits)) {
-                        $visitsWithoutDates = []; // Array to store visit data without individual dates
-                        foreach ($visits as $date => $visitData) {
-                            if (is_array($visitData)) { // Check if $visitData is an array (not an individual date)
-                                $visitKey = 'visit' . (count($visitsWithoutDates) + 1);
-                                $visitsWithoutDates[$visitKey] = $visitData;
-                            }
-                        }
-                        // dd($visitData);
-
-                        // Add default visit data for months with no visits (empty $visitsWithoutDates)
-                        if (empty($visitsWithoutDates)) {
-                            $visitsWithoutDates['visit1'] = [
-                                'skor_total' => 0,
-                                'visit' => 1,
-                                'est' => $estate,
-                                'afd' => $afdeling,
-                                'date' => '-',
-                            ];
-                        }
-
-                        // After the loop, set the resultArray to the updated visits without dates
-                        $resultArray[$estate][$afdeling][$month] = $visitsWithoutDates;
-                    } else {
+                        $est = $key;
+                        $afd = $key2;
+                        $skor = $value2['TotalSkor'];
+                        $EM = 'EM';
+                        $rank = $value2['rankAFD'];
                         $nama = '-';
-                        foreach ($queryAsisten as $value4) {
-                            if ($value4['est'] == $estate && $value4['afd'] == $afdeling) {
+                        $data = isset($value2['data']) ? $value2['data'] : 'ada'; // Check if 'data' key exists, otherwise use 'ada'
+                        foreach ($queryAsisten as $key4 => $value4) {
+                            if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $afd) {
                                 $nama = $value4['nama'];
                                 break;
                             }
                         }
-                        $resultArray[$estate][$afdeling][$month] = [
-                            'visit1' => [
-                                'skor_total' => 0,
-                                'visit' => 1,
-                                'est' => $estate,
-                                'afd' => $afdeling,
-                                'asisten' => $nama,
-                                'date' => '-'
-                            ]
-                        ];
+                        $FormatTable1[] = array(
+                            'est' => $est,
+                            'afd' => $afd,
+                            'skor' => $skor,
+                            'EM' => $EM,
+                            'rank' => $rank,
+                            'nama' => $nama,
+                            'data' => $data
+                        );
+                        $inc++;
                     }
                 }
             }
         }
-        // dd($resultArray);
 
 
+        $FormatTable1 = array_values($FormatTable1);
 
+        // Sort the array based on the 'rank' key
+        usort($FormatTable1, function ($a, $b) {
+            return $a['rank'] - $b['rank'];
+        });
 
-        $result_skor = array();
+        // // Print the sorted array
+        // print_r($FormatTable1);
 
-        foreach ($resultArray as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                foreach ($value2 as $key2 => $value3) {
-                    $tot_skor = 0;
-                    $avarage = count($value3);
-                    $tot_avg = 0;
-                    foreach ($value3 as $key3 => $value4) {
-                        if ($value4['skor_total'] != 0) {
-                            $tot_skor += $value4['skor_total'];
-                        } else {
-                            $tot_skor = 0;
-                        }
-                    }
-                    $tot_avg = $tot_skor / $avarage;
-                    $result_skor[$key][$key1][$key2]['total_avg'] = $tot_avg;
-                } # code...
-            }   # code...
-        }
-
-        // Assuming $array1 and $array2 are the two arrays you have
-
-
-
-        // dd($result_skor, $resultArray);
-        // The $array2 now contains the combined values
-
-
-        // dd($resultArray, $result_skor);
-
-        $get_cell = array();
-        foreach ($resultArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value2) {
-                    $visit = count($value2);
-                    $get_cell[$key2][$key][$key1]['visit'] = $visit;
-                }
-            }
-        }
-
-        // dd($get_cell);
-
-        $max_visit = array();
-        foreach ($get_cell as $month => $monthData) {
-            $max_visitEst = 0;
-            foreach ($monthData as $location => $locationData) {
-                $maxVisit = 0;
-                foreach ($locationData as $visitData) {
-                    // Check if the current visit value is greater than the current maximum visit
-                    if (isset($visitData['visit']) && $visitData['visit'] > $maxVisit) {
-                        // Update the maximum visit for this location
-                        $maxVisit = $visitData['visit'];
-                    }
-                }
-                // Add the maximum visit for this location to the $max_visit array
-                $max_visit[$month][$location]['max_visit'] = $maxVisit;
-
-                // Calculate the overall maximum visit for the entire array
-                if ($maxVisit > $max_visitEst) {
-                    $max_visitEst = $maxVisit;
-                }
-            }
-            // Add the overall maximum visit for this month to the $max_visit array
-            $max_visit[$month]['max_visitEst'] = $max_visitEst;
-        }
-
-        // Create an array with the correct order of months
-        $allMonths = array(
-            "January", "February", "March", "April", "May", "June", "July",
-            "August", "September", "October", "November", "December"
-        );
-
-        // Initialize the $header_cell array with all months set to 1 visit
-        $header_cell = array_fill_keys($allMonths, 1);
-
-        // Update the visits count based on the $max_visit array
-        foreach ($max_visit as $key => $value) {
-            if (in_array($key, $allMonths)) {
-                $header_cell[$key] = $value['max_visitEst'];
-            }
-        }
-        $header_cell2 = array_fill_keys($allMonths, 1);
-        // dd($max_visit);
-        // Update the visits count based on the $max_visit array
-        // Check if $max_visit is empty
-        if (empty($max_visit)) {
-            // If it's empty, update $header_cell2 for all months
-            foreach ($allMonths as $key) {
-                $header_cell2[$key] = 2;
-            }
-        } else {
-            // If it's not empty, update $header_cell2 based on $max_visit
-            foreach ($max_visit as $key => $value) {
-                if (in_array($key, $allMonths)) {
-                    $header_cell2[$key] = $value['max_visitEst'] + 1;
-                }
-            }
-        }
-
-
-        // dd($header_cell2);
-
-        function createEmptyVisit2($visitNumber)
-        {
-            return [
-                "skor_total" => 0,
-                "visit" => $visitNumber,
-                "est" => "Kenambui", // Replace with the appropriate value
-                "afd" => "OB", // Replace with the appropriate value
-                "asisten" => "-",
-                "date" => "-",
-            ];
-        }
-
-
-        // foreach ($resultArray as $key1 => &$level1) {
-        //     foreach ($level1 as $key2 => &$level2) {
-        //         foreach ($level2 as $month => &$visits) {
-        //             if (isset($header_cell[$month])) {
-        //                 $requiredVisits = $header_cell[$month];
-        //                 $currentVisits = count($visits);
-
-        //                 // Add empty visits if required
-        //                 for ($i = $currentVisits + 1; $i <= $requiredVisits; $i++) {
-        //                     $visits["visit" . $i] = createEmptyVisit2($i);
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        // dd($resultArray);
-        // dd($visit);
-        // dd($resultArray);
-        $sum_header = [
-            "head" => array_sum($header_cell2) + 2,
-        ];
-        // dd($header_cell, $sum_header);
-        // dd($resultArray);
-
-
-        function generateArray($inputArray)
-        {
-            $resultArray = [];
-
-            foreach ($inputArray as $month => $value) {
-                for ($i = 1; $i <= $value; $i++) {
-                    $resultArray[] = $i;
-                }
-                $resultArray[] = 'Skor';
-            }
-
-            return $resultArray;
-        }
-        // dd($resultArray);
-
-
-        // Function to adjust the last element to "Skor" in each month's section
-        function adjustLastElementToSkor($inputArray)
-        {
-            $resultArray = [];
-
-            foreach ($inputArray as $key => $value) {
-                if ($value !== 'Skor') {
-                    if (isset($inputArray[$key + 1]) && $inputArray[$key + 1] === 'Skor') {
-                        $resultArray[] = 'Skor';
-                    } else {
-                        $resultArray[] = $value;
-                    }
-                }
-            }
-
-            return $resultArray;
-        }
-        // dd($resultArray);
-        // Generate the array with numeric values and "Skor" as the last element for each month
-        $numericSkorArray = generateArray($header_cell);
-
-        // Adjust the last element to "Skor" for each month's section
-        $desiredArray = adjustLastElementToSkor($numericSkorArray);
-
-        // dd($desiredArray, $numericSkorArray);
-        // dd($numericSkorArray, $desiredArray);
-        // dd($resultArray);
-        foreach ($result_skor as $key1 => $value1) {
-            if (array_key_exists($key1, $resultArray)) {
-                // Merge the sub-arrays for the common key
-                $resultArray[$key1] = array_merge_recursive($resultArray[$key1], $value1);
-            } else {
-                // Add the new key and its value to the $resultArray
-                $resultArray[$key1] = $value1;
-            }
-        }
-
-        // dd($resultArray);
-
-        $new_array = array();
-        $inc = 1;
-
-        // dd($resultArray);
-
-        // Initialize an associative array to store 'skor_total_array' values for each month
-        $skor_total_per_month = array();
-
-        foreach ($resultArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $avg_per_month = array(); // Initialize an associative array to store 'total_avg' values for each month
-                $max_values = max($header_cell); // Get the maximum number of values for any month from the $header_cell array
-
-                foreach ($value1 as $key2 => $value2) {
-                    if (in_array($key2, $allMonths)) { // Assuming $allMonths contains all the months in the correct order
-                        $skor_total_array = array();
-                        $dates_per_month_array = array(); // Initialize an array to store dates for each visit
-                        // Create an array to store 'skor_total' values for each visit
-                        foreach ($value2 as $key3 => $value3) {
-                            if (strpos($key3, 'visit') === 0 && isset($value3['skor_total'])) {
-                                $skor_total_array[] = $value3['skor_total'];
-
-                                $date_str = $value3['date'];
-                                $year_month = substr($date_str, 0, 7); // Extract year and month (e.g., "2023-08")
-                                $dates_per_month_array[] = $year_month;
+        // dd($FormatTable1);
+        //wil2
+        $FormatTable2 = array();
+        foreach ($Wil2 as $key => $value) {
+            if (is_array($value)) {
+                $inc = 0;
+                foreach ($value as $key2 => $value2) {
+                    if (is_array($value2)) {
+                        $est = $key;
+                        $afd = $key2;
+                        $skor = $value2['TotalSkor'];
+                        $EM = 'EM';
+                        $rank = $value2['rankAFD'];
+                        $nama = '-';
+                        $data = isset($value2['data']) ? $value2['data'] : 'ada'; // Check if 'data' key exists, otherwise use 'ada'
+                        foreach ($queryAsisten as $key4 => $value4) {
+                            if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $afd) {
+                                $nama = $value4['nama'];
+                                break;
                             }
                         }
-                        $skor_total_per_month[$key2] = $skor_total_array;
-                        $dates_per_month[$key2] = $dates_per_month_array;
-                        $avg_per_month[$key2] = $value2['total_avg'];
+                        $FormatTable2[] = array(
+                            'est' => $est,
+                            'afd' => $afd,
+                            'skor' => $skor,
+                            'EM' => $EM,
+                            'rank' => $rank,
+                            'nama' => $nama,
+                            'data' => $data
+                        );
+                        $inc++;
                     }
                 }
-
-                // Now, use the $skor_total_per_month and $avg_per_month arrays to populate 'January', 'February', etc. in $new_array
-                $new_row = array(
-                    'no' => $inc++,
-                    'unit_kerja' => $key,
-                    'kode' => $key1,
-                    'pic' => '-',
-                );
-
-                // Loop through each month and add the corresponding number of values and dates
-                foreach ($allMonths as $month) {
-                    $values = $skor_total_per_month[$month] ?? array();
-                    $dates = $dates_per_month[$month] ?? array();
-                    $avg = $avg_per_month[$month] ?? 0;
-                    if (isset($header_cell[$month]) && $header_cell[$month] === 1 && count($values) === 1 && $values[0] === 0) {
-                        $values = $values;
-                    } else {
-                        $values = array_pad($values, $max_values, 0);
-                    }
-
-                    $new_row[$month] = $values;
-                    $new_row[$month . '_avg'] = $avg;
-                    $new_row[$month . '_dates'] = $dates; // Add the dates for the month
-                }
-
-                // Add the row to the $new_array
-                $new_array[] = $new_row;
             }
+        }
+
+        $FormatTable2 = array_values($FormatTable2);
+        usort($FormatTable2, function ($a, $b) {
+            return $a['rank'] - $b['rank'];
+        });
+        // dd($FormatTable2);
+        //wil3
+        $FormatTable3 = array();
+        foreach ($Wil3 as $key => $value) {
+            if (is_array($value)) {
+                $inc = 0;
+                foreach ($value as $key2 => $value2) {
+                    if (is_array($value2)) {
+                        $est = $key;
+                        $afd = $key2;
+                        $skor = $value2['TotalSkor'];
+                        $EM = 'EM';
+                        $rank = $value2['rankAFD'];
+                        $nama = '-';
+                        $data = isset($value2['data']) ? $value2['data'] : 'ada'; // Check if 'data' key exists, otherwise use 'ada'
+                        foreach ($queryAsisten as $key4 => $value4) {
+                            if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $afd) {
+                                $nama = $value4['nama'];
+                                break;
+                            }
+                        }
+                        $FormatTable3[] = array(
+                            'est' => $est,
+                            'afd' => $afd,
+                            'skor' => $skor,
+                            'EM' => $EM,
+                            'rank' => $rank,
+                            'nama' => $nama,
+                            'data' => $data
+                        );
+                        $inc++;
+                    }
+                }
+            }
+        }
+
+        $FormatTable3 = array_values($FormatTable3);
+        usort($FormatTable3, function ($a, $b) {
+            return $a['rank'] - $b['rank'];
+        });
+
+
+        // dd($FormatTable1);
+        // dd($mtancaktab1Wil);
+        // dd($DataTable1);
+        // $queryEsta = DB::connection('mysql2')->table('estate')
+        //     ->where('est', '!=', 'CWS')
+        //     ->whereIn('wil', [1, 2, 3])->pluck('est');
+        // $queryEsta = json_decode($queryEsta, true);
+
+        $queryEsta = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3', 'CWS1', 'CWS2', 'CWS3', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM', 'SJM'])
+            ->where('estate.emp', '!=', 1)
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $Reg)
+            // ->where('wil.regional', '3')
+            ->pluck('est');
+
+        // Convert the result into an array with numeric keys
+        $queryEsta = array_values(json_decode($queryEsta, true));
+
+        // dd($queryEsta);
+
+        function movePlasmaAfterUpe($array)
+        {
+            // Find the index of "UPE"
+            $indexUpe = array_search("UPE", $array);
+
+            // Find the index of "PLASMA"
+            $indexPlasma = array_search("Plasma1", $array);
+
+            // Move "PLASMA" after "UPE"
+            if ($indexUpe !== false && $indexPlasma !== false && $indexPlasma < $indexUpe) {
+                $plasma = $array[$indexPlasma];
+                array_splice($array, $indexPlasma, 1);
+                array_splice($array, $indexUpe, 0, [$plasma]);
+            }
+
+            return $array;
+        }
+
+        // Usage:
+
+        $queryEsta = movePlasmaAfterUpe($queryEsta);
+        // dd($queryEsta);
+
+
+
+        // Display the updated array
+        // dd($reyEst);
+
+
+
+        // dd($mtancaktab1Wil);
+        $chartBTT = array();
+        foreach ($mtancaktab1Wil as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                if (is_array($value2)) {
+                    $chartBTT[$key2] = $value2['brd/jjgest'];
+                }
+            }
+        }
+        $array = $chartBTT;
+
+        // Find the index of "UPE"
+        $index = array_search("UPE", array_keys($array));
+
+        // Move "PLASMA" after "UPE"
+        if ($index !== false && isset($array["Plasma1"])) {
+            $plasma = $array["Plasma1"];
+            unset($array["Plasma1"]);
+            $array = array_slice($array, 0, $index + 1, true) + ["Plasma1" => $plasma] + array_slice($array, $index + 1, null, true);
+        }
+
+        // Find the index of "UPE"
+
+        // $arrayEst now contains the modified array
+
+
+        // dd($chartBTT);
+        //     "brd/jjgwil" => "0.24"
+        // "buah/jjgwil" => "0.00"
+        // // dd($RankingFinal, $chartBTT);
+        // dd($mtancaktab1Wil);
+        $chartBuahTT = array();
+        foreach ($mtancaktab1Wil as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chartBuahTT[$key2] = $value2['buah/jjg'];
+            }
+        }
+        $arrBuahBTT = $chartBuahTT;
+
+        // dd($arrBuahBTT);
+        // Find the index of "UPE"
+        $index = array_search("UPE", array_keys($arrBuahBTT));
+
+        // Move "PLASMA" after "UPE"
+        if ($index !== false && isset($arrBuahBTT["Plasma1"])) {
+            $plasma = $arrBuahBTT["Plasma1"];
+            unset($arrBuahBTT["Plasma1"]);
+            $arrBuahBTT = array_slice($arrBuahBTT, 0, $index + 1, true) + ["Plasma1" => $plasma] + array_slice($arrBuahBTT, $index + 1, null, true);
         }
 
 
 
 
-        dd($resultArray, $new_array);
-        // Return a JSON response
+        //table perbulan 
+        // dd($queryEstePla);
+
+        //untuk plasma tabel
+        //transport
+        $defPLAtrans = array();
+        foreach ($queryEstePla as $est) {
+            // dd($est);
+            foreach ($queryAfd as $afd) {
+                // dd($afd);
+                if ($est['est'] == $afd['est']) {
+                    $defPLAtrans[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+        $mutuTransPLAmerge = array();
+        foreach ($defPLAtrans as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataMTTrans)) {
+                    if (array_key_exists($afdKey, $dataMTTrans[$estKey])) {
+                        if (!empty($dataMTTrans[$estKey][$afdKey])) {
+                            $mutuTransPLAmerge[$estKey][$afdKey] = $dataMTTrans[$estKey][$afdKey];
+                        } else {
+                            $mutuTransPLAmerge[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mutuTransPLAmerge[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mutuTransPLAmerge[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+        //buah
+        $defPlaBuah = array();
+        foreach ($queryEstePla as $est) {
+            // dd($est);
+            foreach ($queryAfd as $afd) {
+                // dd($afd);
+                if ($est['est'] == $afd['est']) {
+                    $defPlaBuah[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+        // dd($mutuTransPLAmerge);
+        $mtBuahPlasma = array();
+        foreach ($defPlaBuah as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataMTBuah)) {
+                    if (array_key_exists($afdKey, $dataMTBuah[$estKey])) {
+                        if (!empty($dataMTBuah[$estKey][$afdKey])) {
+                            $mtBuahPlasma[$estKey][$afdKey] = $dataMTBuah[$estKey][$afdKey];
+                        } else {
+                            $mtBuahPlasma[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mtBuahPlasma[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mtBuahPlasma[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+        // dd($mtBuahPlasma);
+        //ancak
+        $defAncakPlasma = array();
+        foreach ($queryEstePla as $est) {
+            // dd($est);
+            foreach ($queryAfd as $afd) {
+                // dd($afd);
+                if ($est['est'] == $afd['est']) {
+                    $defAncakPlasma[$est['est']][$afd['nama']]['null'] = 0;
+                }
+            }
+        }
+        $mtAncakPlasma = array();
+        foreach ($defPlaBuah as $estKey => $afdArray) {
+            foreach ($afdArray as $afdKey => $afdValue) {
+                if (array_key_exists($estKey, $dataPerBulan)) {
+                    if (array_key_exists($afdKey, $dataPerBulan[$estKey])) {
+                        if (!empty($dataPerBulan[$estKey][$afdKey])) {
+                            $mtAncakPlasma[$estKey][$afdKey] = $dataPerBulan[$estKey][$afdKey];
+                        } else {
+                            $mtAncakPlasma[$estKey][$afdKey] = $afdValue;
+                        }
+                    } else {
+                        $mtAncakPlasma[$estKey][$afdKey] = $afdValue;
+                    }
+                } else {
+                    $mtAncakPlasma[$estKey][$afdKey] = $afdValue;
+                }
+            }
+        }
+        // dd($transNewdata);
+        //perhitungan mutu transport
+        $mtPLA = array();
+        foreach ($mutuTransPLAmerge as $key => $value) if (!empty($value)) {
+            $dataBLokEst = 0;
+            $sum_btEst = 0;
+            $sum_rstEst = 0;
+            foreach ($value as $key1 => $value1) if (!empty($value1)) {
+                $sum_bt = 0;
+                $sum_rst = 0;
+                $brdPertph = 0;
+                $buahPerTPH = 0;
+                $totalSkor = 0;
+                $dataBLok = 0;
+                $listBlokPerAfd = array();
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+
+                    // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] , $listBlokPerAfd)) {
+                    $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
+                    // }
+                    $dataBLok = count($listBlokPerAfd);
+                    $sum_bt += $value2['bt'];
+                    $sum_rst += $value2['rst'];
+                }
+
+
+                $tot_sample = 0;  // Define the variable outside of the foreach loop
+
+                foreach ($transNewdata as $keys => $trans) {
+                    if ($keys == $key) {
+                        foreach ($trans as $keys2 => $trans2) {
+                            if ($keys2 == $key1) {
+                                // $mtPLA[$key][$key1][$key2]['tph_sampleNew'] = $trans2['total_tph'];
+                                $tot_sample = $trans2['total_tph'];
+                            }
+                        }
+                    }
+                }
+
+                if ($Reg == '2' || $Reg == 2) {
+                    if ($dataBLok != 0) {
+                        $brdPertph = round($sum_bt / $tot_sample, 3);
+                    } else {
+                        $brdPertph = 0;
+                    }
+                } else {
+                    if ($dataBLok != 0) {
+                        $brdPertph = round($sum_bt / $dataBLok, 3);
+                    } else {
+                        $brdPertph = 0;
+                    }
+                }
+
+                if ($Reg == '2' || $Reg == 2) {
+                    if ($dataBLok != 0) {
+                        $buahPerTPH = round($sum_rst / $tot_sample, 3);
+                    } else {
+                        $buahPerTPH = 0;
+                    }
+                } else {
+                    if ($dataBLok != 0) {
+                        $buahPerTPH = round($sum_rst / $dataBLok, 3);
+                    } else {
+                        $buahPerTPH = 0;
+                    }
+                }
+
+
+                $nonZeroValues = array_filter([$sum_bt, $sum_rst]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtPLA[$key][$key1]['check_data'] = 'ada';
+                    // $mtPLA[$key][$key1]['skor_buahPerTPH'] = $skor_buah = skor_buah_tinggal($buahPerTPH);
+
+                } else {
+                    $mtPLA[$key][$key1]['check_data'] = 'kosong';
+                    // $mtPLA[$key][$key1]['skor_buahPerTPH'] = $skor_buah = 0;
+
+                }
+
+                // $totalSkor = $skor_brd + $skor_buah ;
+
+                $totalSkor =   skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
+
+                if ($Reg == 2) {
+                    $mtPLA[$key][$key1]['tph_sample'] = $tot_sample;
+                } else {
+                    $mtPLA[$key][$key1]['tph_sample'] = $dataBLok;
+                }
+                $mtPLA[$key][$key1]['total_brd'] = $sum_bt;
+                $mtPLA[$key][$key1]['total_brd/TPH'] = $brdPertph;
+                $mtPLA[$key][$key1]['total_buah'] = $sum_rst;
+                $mtPLA[$key][$key1]['total_buahPerTPH'] = $buahPerTPH;
+                $mtPLA[$key][$key1]['skor_brdPertph'] = skor_brd_tinggal($brdPertph);
+                $mtPLA[$key][$key1]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPH);
+                $mtPLA[$key][$key1]['skorWil'] = $totalSkor;
+
+                //PERHITUNGAN PERESTATE
+                if ($Reg == '2' || $Reg == 2) {
+                    $dataBLokEst += $tot_sample;
+                } else {
+                    $dataBLokEst += $dataBLok;
+                }
+
+                // $dataBLokEst += $dataBLok;
+                $sum_btEst += $sum_bt;
+                $sum_rstEst += $sum_rst;
+
+                if ($dataBLokEst != 0) {
+                    $brdPertphEst = round($sum_btEst / $dataBLokEst, 3);
+                } else {
+                    $brdPertphEst = 0;
+                }
+                if ($dataBLokEst != 0) {
+                    $buahPerTPHEst = round($sum_rstEst / $dataBLokEst, 3);
+                } else {
+                    $buahPerTPHEst = 0;
+                }
+
+                $nonZeroValues = array_filter([$sum_btEst, $sum_rstEst]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtPLA[$key]['check_data'] = 'ada';
+                    // $mtPLA[$key]['skor_buahPerTPH'] = $skor_buah = skor_buah_tinggal($buahPerTPHEst);
+
+                } else {
+                    $mtPLA[$key]['check_data'] = 'kosong';
+                    // $mtPLA[$key]['skor_buahPerTPH'] = $skor_buah = 0;
+
+                }
+
+                // $totalSkorEst = $skor_brd + $skor_buah ;
+                $totalSkorEst = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+            } else {
+                $mtPLA[$key][$key1]['tph_sample'] = 0;
+                $mtPLA[$key][$key1]['total_brd'] = 0;
+                $mtPLA[$key][$key1]['total_brd/TPH'] = 0;
+                $mtPLA[$key][$key1]['total_buah'] = 0;
+                $mtPLA[$key][$key1]['total_buahPerTPH'] = 0;
+                $mtPLA[$key][$key1]['skor_brdPertph'] = 0;
+                $mtPLA[$key][$key1]['skor_buahPerTPH'] = 0;
+                $mtPLA[$key][$key1]['skorWil'] = 0;
+            }
+            $mtPLA[$key]['tph_sample'] = $dataBLokEst;
+            $mtPLA[$key]['total_brd'] = $sum_btEst;
+            $mtPLA[$key]['total_brd/TPH'] = $brdPertphEst;
+            $mtPLA[$key]['total_buah'] = $sum_rstEst;
+            $mtPLA[$key]['total_buahPerTPH'] = $buahPerTPHEst;
+            // $mtPLA[$key]['skor_brdPertph'] = skor_brd_tinggal($brdPertphEst);
+            // $mtPLA[$key]['skor_buahPerTPH'] = skor_buah_tinggal($buahPerTPHEst);
+            $mtPLA[$key]['skorPlasma'] = $totalSkorEst;
+        } else {
+            $mtPLA[$key]['tph_sample'] = 0;
+            $mtPLA[$key]['total_brd'] = 0;
+            $mtPLA[$key]['total_brd/TPH'] = 0;
+            $mtPLA[$key]['total_buah'] = 0;
+            $mtPLA[$key]['total_buahPerTPH'] = 0;
+            $mtPLA[$key]['skor_brdPertph'] = 0;
+            $mtPLA[$key]['skor_buahPerTPH'] = 0;
+            $mtPLA[$key]['skorPlasma'] = 0;
+        }
+
+
+        // dd($mtPLA);
+        //perhitungan mutu buah
+        $mtPLABuah = array();
+
+        foreach ($mtBuahPlasma as $key => $value) if (is_array($value)) {
+            $jum_haEst  = 0;
+            $sum_SamplejjgEst = 0;
+            $sum_bmtEst = 0;
+            $sum_bmkEst = 0;
+            $sum_overEst = 0;
+            $sum_abnorEst = 0;
+            $sum_kosongjjgEst = 0;
+            $sum_vcutEst = 0;
+            $sum_krEst = 0;
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                $sum_bmt = 0;
+                $sum_bmk = 0;
+                $sum_over = 0;
+                $dataBLok = 0;
+                $sum_Samplejjg = 0;
+                $PerMth = 0;
+                $PerMsk = 0;
+                $PerOver = 0;
+                $sum_abnor = 0;
+                $sum_kosongjjg = 0;
+                $Perkosongjjg = 0;
+                $sum_vcut = 0;
+                $PerVcut = 0;
+                $PerAbr = 0;
+                $sum_kr = 0;
+                $total_kr = 0;
+                $per_kr = 0;
+                $totalSkor = 0;
+                $jum_ha = 0;
+                $no_Vcut = 0;
+                $jml_mth = 0;
+                $jml_mtg = 0;
+                $listBlokPerAfd = [];
+                foreach ($value1 as $key2 => $value2)  if (is_array($value2)) {
+
+                    // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'] . ' ' . $value3['tph_baris'], $listBlokPerAfd)) {
+                    $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'] . ' ' . $value2['tph_baris'];
+                    // }
+                    $dtBlok = count($listBlokPerAfd);
+                    $sum_bmt += $value2['bmt'];
+                    $sum_bmk += $value2['bmk'];
+                    $sum_over += $value2['overripe'];
+                    $sum_kosongjjg += $value2['empty_bunch'];
+                    $sum_vcut += $value2['vcut'];
+                    $sum_kr += $value2['alas_br'];
+                    $sum_Samplejjg += $value2['jumlah_jjg'];
+                    $sum_abnor += $value2['abnormal'];
+                }
+                $jml_mth = ($sum_bmt + $sum_bmk);
+                $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
+                // $dataBLok = count($combination_counts);
+                if ($sum_kr != 0) {
+                    $total_kr = round($sum_kr / $dtBlok, 3);
+                } else {
+                    $total_kr = 0;
+                }
+
+
+                $per_kr = round($total_kr * 100, 3);
+                if ($jml_mth != 0) {
+                    $PerMth = round(($jml_mth / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerMth = 0;
+                }
+                if ($jml_mtg != 0) {
+                    $PerMsk = round(($jml_mtg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerMsk = 0;
+                }
+                if ($sum_over != 0) {
+                    $PerOver = round(($sum_over / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $PerOver = 0;
+                }
+                if ($sum_kosongjjg != 0) {
+                    $Perkosongjjg = round(($sum_kosongjjg / ($sum_Samplejjg - $sum_abnor)) * 100, 3);
+                } else {
+                    $Perkosongjjg = 0;
+                }
+                if ($sum_vcut != 0) {
+                    $PerVcut = round(($sum_vcut / $sum_Samplejjg) * 100, 3);
+                } else {
+                    $PerVcut = 0;
+                }
+
+                if ($sum_abnor != 0) {
+                    $PerAbr = round(($sum_abnor / $sum_Samplejjg) * 100, 3);
+                } else {
+                    $PerAbr = 0;
+                }
+
+                $nonZeroValues = array_filter([$sum_Samplejjg, $jml_mth, $jml_mtg, $sum_over, $sum_abnor, $sum_kosongjjg, $sum_vcut]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtPLABuah[$key][$key1]['check_data'] = 'ada';
+                    // $mtPLABuah[$key][$key1]['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMsk);
+                    // $mtPLABuah[$key][$key1]['skor_over'] = $skor_over =  skor_buah_over_mb($PerOver);
+                    // $mtPLABuah[$key][$key1]['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($Perkosongjjg);
+                    // $mtPLABuah[$key][$key1]['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcut);
+                    // $mtPLABuah[$key][$key1]['skor_kr'] = $skor_kr =  skor_abr_mb($per_kr);
+                } else {
+                    $mtPLABuah[$key][$key1]['check_data'] = 'kosong';
+                    // $mtPLABuah[$key][$key1]['skor_masak'] = $skor_masak = 0;
+                    // $mtPLABuah[$key][$key1]['skor_over'] = $skor_over = 0;
+                    // $mtPLABuah[$key][$key1]['skor_jjgKosong'] = $skor_jjgKosong = 0;
+                    // $mtPLABuah[$key][$key1]['skor_vcut'] = $skor_vcut =  0;
+                    // $mtPLABuah[$key][$key1]['skor_kr'] = $skor_kr = 0;
+                }
+
+                // $totalSkor = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+
+
+                $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+                $mtPLABuah[$key][$key1]['tph_baris_blok'] = $dtBlok;
+                $mtPLABuah[$key][$key1]['sampleJJG_total'] = $sum_Samplejjg;
+                $mtPLABuah[$key][$key1]['total_mentah'] = $jml_mth;
+                $mtPLABuah[$key][$key1]['total_perMentah'] = $PerMth;
+                $mtPLABuah[$key][$key1]['total_masak'] = $jml_mtg;
+                $mtPLABuah[$key][$key1]['total_perMasak'] = $PerMsk;
+                $mtPLABuah[$key][$key1]['total_over'] = $sum_over;
+                $mtPLABuah[$key][$key1]['total_perOver'] = $PerOver;
+                $mtPLABuah[$key][$key1]['total_abnormal'] = $sum_abnor;
+                $mtPLABuah[$key][$key1]['perAbnormal'] = $PerAbr;
+                $mtPLABuah[$key][$key1]['total_jjgKosong'] = $sum_kosongjjg;
+                $mtPLABuah[$key][$key1]['total_perKosongjjg'] = $Perkosongjjg;
+                $mtPLABuah[$key][$key1]['total_vcut'] = $sum_vcut;
+                $mtPLABuah[$key][$key1]['perVcut'] = $PerVcut;
+
+                $mtPLABuah[$key][$key1]['jum_kr'] = $sum_kr;
+                $mtPLABuah[$key][$key1]['total_kr'] = $total_kr;
+                $mtPLABuah[$key][$key1]['persen_kr'] = $per_kr;
+
+                // skoring
+                $mtPLABuah[$key][$key1]['skor_mentah'] = skor_buah_mentah_mb($PerMth);
+                $mtPLABuah[$key][$key1]['skor_masak'] = skor_buah_masak_mb($PerMsk);
+                $mtPLABuah[$key][$key1]['skor_over'] = skor_buah_over_mb($PerOver);
+                $mtPLABuah[$key][$key1]['skor_jjgKosong'] = skor_jangkos_mb($Perkosongjjg);
+                $mtPLABuah[$key][$key1]['skor_vcut'] = skor_vcut_mb($PerVcut);
+
+                $mtPLABuah[$key][$key1]['skor_kr'] = skor_abr_mb($per_kr);
+                $mtPLABuah[$key][$key1]['skorWil'] = $totalSkor;
+
+                //perhitungan estate
+                $jum_haEst += $dtBlok;
+                $sum_SamplejjgEst += $sum_Samplejjg;
+                $sum_bmtEst += $jml_mth;
+                $sum_bmkEst += $jml_mtg;
+                $sum_overEst += $sum_over;
+                $sum_abnorEst += $sum_abnor;
+                $sum_kosongjjgEst += $sum_kosongjjg;
+                $sum_vcutEst += $sum_vcut;
+                $sum_krEst += $sum_kr;
+            } else {
+                $mtPLABuah[$key][$key1]['tph_baris_blok'] = 0;
+                $mtPLABuah[$key][$key1]['sampleJJG_total'] = 0;
+                $mtPLABuah[$key][$key1]['total_mentah'] = 0;
+                $mtPLABuah[$key][$key1]['total_perMentah'] = 0;
+                $mtPLABuah[$key][$key1]['total_masak'] = 0;
+                $mtPLABuah[$key][$key1]['total_perMasak'] = 0;
+                $mtPLABuah[$key][$key1]['total_over'] = 0;
+                $mtPLABuah[$key][$key1]['total_perOver'] = 0;
+                $mtPLABuah[$key][$key1]['total_abnormal'] = 0;
+                $mtPLABuah[$key][$key1]['perAbnormal'] = 0;
+                $mtPLABuah[$key][$key1]['total_jjgKosong'] = 0;
+                $mtPLABuah[$key][$key1]['total_perKosongjjg'] = 0;
+                $mtPLABuah[$key][$key1]['total_vcut'] = 0;
+                $mtPLABuah[$key][$key1]['perVcut'] = 0;
+
+                $mtPLABuah[$key][$key1]['jum_kr'] = 0;
+                $mtPLABuah[$key][$key1]['total_kr'] = 0;
+                $mtPLABuah[$key][$key1]['persen_kr'] = 0;
+
+                // skoring
+                $mtPLABuah[$key][$key1]['skor_mentah'] = 0;
+                $mtPLABuah[$key][$key1]['skor_masak'] = 0;
+                $mtPLABuah[$key][$key1]['skor_over'] = 0;
+                $mtPLABuah[$key][$key1]['skor_jjgKosong'] = 0;
+                $mtPLABuah[$key][$key1]['skor_vcut'] = 0;
+                $mtPLABuah[$key][$key1]['skor_abnormal'] = 0;;
+                $mtPLABuah[$key][$key1]['skor_kr'] = 0;
+                $mtPLABuah[$key][$key1]['skorWil'] = 0;
+            }
+
+            if ($sum_krEst != 0) {
+                $total_krEst = round($sum_krEst / $jum_haEst, 3);
+            } else {
+                $total_krEst = 0;
+            }
+            // if ($sum_kr != 0) {
+            //     $total_kr = round($sum_kr / $dataBLok, 3);
+            // } else {
+            //     $total_kr = 0;
+            // }
+
+            if ($sum_bmtEst != 0) {
+                $PerMthEst = round(($sum_bmtEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerMthEst = 0;
+            }
+
+            if ($sum_bmkEst != 0) {
+                $PerMskEst = round(($sum_bmkEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerMskEst = 0;
+            }
+
+            if ($sum_overEst != 0) {
+                $PerOverEst = round(($sum_overEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerOverEst = 0;
+            }
+            if ($sum_kosongjjgEst != 0) {
+                $PerkosongjjgEst = round(($sum_kosongjjgEst / ($sum_SamplejjgEst - $sum_abnorEst)) * 100, 3);
+            } else {
+                $PerkosongjjgEst = 0;
+            }
+            if ($sum_vcutEst != 0) {
+                $PerVcutest = round(($sum_vcutEst / $sum_SamplejjgEst) * 100, 3);
+            } else {
+                $PerVcutest = 0;
+            }
+            if ($sum_abnorEst != 0) {
+                $PerAbrest = round(($sum_abnorEst / $sum_SamplejjgEst) * 100, 3);
+            } else {
+                $PerAbrest = 0;
+            }
+            // $per_kr = round($sum_kr * 100);
+            $per_krEst = round($total_krEst * 100, 3);
+
+            $nonZeroValues = array_filter([$sum_SamplejjgEst, $sum_bmtEst, $sum_bmkEst, $sum_overEst, $sum_abnorEst, $sum_kosongjjgEst, $sum_vcutEst]);
+
+            if (!empty($nonZeroValues)) {
+                $mtPLABuah[$key]['check_data'] = 'ada';
+                // $mtPLABuah[$key]['skor_masak'] = $skor_masak =  skor_buah_masak_mb($PerMskEst);
+                // $mtPLABuah[$key]['skor_over'] = $skor_over =  skor_buah_over_mb($PerOverEst);
+                // $mtPLABuah[$key]['skor_jjgKosong'] = $skor_jjgKosong =  skor_jangkos_mb($PerkosongjjgEst);
+                // $mtPLABuah[$key]['skor_vcut'] = $skor_vcut =  skor_vcut_mb($PerVcutest);
+                // $mtPLABuah[$key]['skor_kr'] = $skor_kr =  skor_abr_mb($per_krEst);
+            } else {
+                $mtPLABuah[$key]['check_data'] = 'kosong';
+                // $mtPLABuah[$key]['skor_masak'] = $skor_masak = 0;
+                // $mtPLABuah[$key]['skor_over'] = $skor_over = 0;
+                // $mtPLABuah[$key]['skor_jjgKosong'] = $skor_jjgKosong = 0;
+                // $mtPLABuah[$key]['skor_vcut'] = $skor_vcut =  0;
+                // $mtPLABuah[$key]['skor_kr'] = $skor_kr = 0;
+            }
+
+            // $totalSkorEst = $skor_mentah + $skor_masak + $skor_over + $skor_jjgKosong + $skor_vcut + $skor_kr;
+
+
+            $totalSkorEst =   skor_buah_mentah_mb($PerMthEst) + skor_buah_masak_mb($PerMskEst) + skor_buah_over_mb($PerOverEst) + skor_jangkos_mb($PerkosongjjgEst) + skor_vcut_mb($PerVcutest) + skor_abr_mb($per_krEst);
+            $mtPLABuah[$key]['tph_baris_blok'] = $jum_haEst;
+            $mtPLABuah[$key]['sampleJJG_total'] = $sum_SamplejjgEst;
+            $mtPLABuah[$key]['total_mentah'] = $sum_bmtEst;
+            $mtPLABuah[$key]['total_perMentah'] = $PerMthEst;
+            $mtPLABuah[$key]['total_masak'] = $sum_bmkEst;
+            $mtPLABuah[$key]['total_perMasak'] = $PerMskEst;
+            $mtPLABuah[$key]['total_over'] = $sum_overEst;
+            $mtPLABuah[$key]['total_perOver'] = $PerOverEst;
+            $mtPLABuah[$key]['total_abnormal'] = $sum_abnorEst;
+            $mtPLABuah[$key]['total_perabnormal'] = $PerAbrest;
+            $mtPLABuah[$key]['total_jjgKosong'] = $sum_kosongjjgEst;
+            $mtPLABuah[$key]['total_perKosongjjg'] = $PerkosongjjgEst;
+            $mtPLABuah[$key]['total_vcut'] = $sum_vcutEst;
+            $mtPLABuah[$key]['perVcut'] = $PerVcutest;
+            $mtPLABuah[$key]['jum_kr'] = $sum_krEst;
+            $mtPLABuah[$key]['kr_blok'] = $total_krEst;
+
+            $mtPLABuah[$key]['persen_kr'] = $per_krEst;
+
+            // skoring
+            $mtPLABuah[$key]['skor_mentah'] =  skor_buah_mentah_mb($PerMthEst);
+            $mtPLABuah[$key]['skor_masak'] = skor_buah_masak_mb($PerMskEst);
+            $mtPLABuah[$key]['skor_over'] = skor_buah_over_mb($PerOverEst);;
+            $mtPLABuah[$key]['skor_jjgKosong'] = skor_jangkos_mb($PerkosongjjgEst);
+            $mtPLABuah[$key]['skor_vcut'] = skor_vcut_mb($PerVcutest);
+            $mtPLABuah[$key]['skor_kr'] = skor_abr_mb($per_krEst);
+            $mtPLABuah[$key]['skorPlasma'] = $totalSkorEst;
+
+            $jum_haWil += $jum_haEst;
+            $sum_SamplejjgWil += $sum_SamplejjgEst;
+            $sum_bmtWil += $sum_bmtEst;
+            $sum_bmkWil += $sum_bmkEst;
+            $sum_overWil += $sum_overEst;
+            $sum_abnorWil += $sum_abnorEst;
+            $sum_kosongjjgWil += $sum_kosongjjgEst;
+            $sum_vcutWil += $sum_vcutEst;
+            $sum_krWil += $sum_krEst;
+        } else {
+            $mtPLABuah[$key]['tph_baris_blok'] = 0;
+            $mtPLABuah[$key]['sampleJJG_total'] = 0;
+            $mtPLABuah[$key]['total_mentah'] = 0;
+            $mtPLABuah[$key]['total_perMentah'] = 0;
+            $mtPLABuah[$key]['total_masak'] = 0;
+            $mtPLABuah[$key]['total_perMasak'] = 0;
+            $mtPLABuah[$key]['total_over'] = 0;
+            $mtPLABuah[$key]['total_perOver'] = 0;
+            $mtPLABuah[$key]['total_abnormal'] = 0;
+            $mtPLABuah[$key]['total_perabnormal'] = 0;
+            $mtPLABuah[$key]['total_jjgKosong'] = 0;
+            $mtPLABuah[$key]['total_perKosongjjg'] = 0;
+            $mtPLABuah[$key]['total_vcut'] = 0;
+            $mtPLABuah[$key]['perVcut'] = 0;
+            $mtPLABuah[$key]['jum_kr'] = 0;
+            $mtPLABuah[$key]['kr_blok'] = 0;
+            $mtPLABuah[$key]['persen_kr'] = 0;
+
+            // skoring
+            $mtPLABuah[$key]['skor_mentah'] = 0;
+            $mtPLABuah[$key]['skor_masak'] = 0;
+            $mtPLABuah[$key]['skor_over'] = 0;
+            $mtPLABuah[$key]['skor_jjgKosong'] = 0;
+            $mtPLABuah[$key]['skor_vcut'] = 0;
+            $mtPLABuah[$key]['skor_abnormal'] = 0;;
+            $mtPLABuah[$key]['skor_kr'] = 0;
+            $mtPLABuah[$key]['skorPlasma'] = 0;
+        }
+
+        //mutu ancak
+        $mtPLAancak = array();
+        foreach ($mtAncakPlasma as $key => $value) if (!empty($value)) {
+            $pokok_panenEst = 0;
+            $jum_haEst =  0;
+            $janjang_panenEst =  0;
+            $akpEst =  0;
+            $p_panenEst =  0;
+            $k_panenEst =  0;
+            $brtgl_panenEst = 0;
+            $brdPerjjgEst =  0;
+            $bhtsEST = 0;
+            $bhtm1EST = 0;
+            $bhtm2EST = 0;
+            $bhtm3EST = 0;
+            $pelepah_sEST = 0;
+            foreach ($value as $key1 => $value1) if (!empty($value1)) {
+                $akp = 0;
+                $skor_bTinggal = 0;
+                $brdPerjjg = 0;
+                $ttlSkorMA = 0;
+                $listBlokPerAfd = array();
+                $jum_ha = 0;
+                $totalPokok = 0;
+                $totalPanen = 0;
+                $totalP_panen = 0;
+                $totalK_panen = 0;
+                $totalPTgl_panen = 0;
+                $totalbhts_panen = 0;
+                $totalbhtm1_panen = 0;
+                $totalbhtm2_panen = 0;
+                $totalbhtm3_oanen = 0;
+                $totalpelepah_s = 0;
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $listBlokPerAfd)) {
+                        $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
+                    }
+                    $jum_ha = count($listBlokPerAfd);
+                    $totalPokok += $value2["sample"];
+                    $totalPanen +=  $value2["jjg"];
+                    $totalP_panen += $value2["brtp"];
+                    $totalK_panen += $value2["brtk"];
+                    $totalPTgl_panen += $value2["brtgl"];
+
+                    $totalbhts_panen += $value2["bhts"];
+                    $totalbhtm1_panen += $value2["bhtm1"];
+                    $totalbhtm2_panen += $value2["bhtm2"];
+                    $totalbhtm3_oanen += $value2["bhtm3"];
+
+                    $totalpelepah_s += $value2["ps"];
+                }
+
+
+                if ($totalPokok != 0) {
+                    $akp = round(($totalPanen / $totalPokok) * 100, 1);
+                } else {
+                    $akp = 0;
+                }
+
+
+                $skor_bTinggal = $totalP_panen + $totalK_panen + $totalPTgl_panen;
+
+                if ($totalPokok != 0) {
+                    $brdPerjjg = round($skor_bTinggal / $totalPanen, 1);
+                } else {
+                    $brdPerjjg = 0;
+                }
+
+                $sumBH = $totalbhts_panen +  $totalbhtm1_panen +  $totalbhtm2_panen +  $totalbhtm3_oanen;
+                if ($sumBH != 0) {
+                    $sumPerBH = round($sumBH / ($totalPanen + $sumBH) * 100, 1);
+                } else {
+                    $sumPerBH = 0;
+                }
+
+                if ($totalpelepah_s != 0) {
+                    $perPl = round(($totalpelepah_s / $totalPokok) * 100, 3);
+                } else {
+                    $perPl = 0;
+                }
+
+                $nonZeroValues = array_filter([$totalP_panen, $totalK_panen, $totalPTgl_panen, $totalbhts_panen, $totalbhtm1_panen, $totalbhtm2_panen, $totalbhtm3_oanen]);
+
+                if (!empty($nonZeroValues)) {
+                    $mtPLAancak[$key][$key1]['check_data'] = 'ada';
+                    // $mtPLAancak[$key][$key1]['skor_brd'] = $skor_brd = skor_brd_ma($sumPerBH);
+                    // $mtPLAancak[$key][$key1]['skor_ps'] = $skor_ps = skor_palepah_ma($perPl);
+                } else {
+                    $mtPLAancak[$key][$key1]['check_data'] = 'kosong';
+                    // $mtPLAancak[$key][$key1]['skor_brd'] = $skor_brd = 0;
+                    // $mtPLAancak[$key][$key1]['skor_ps'] = $skor_ps = 0;
+                }
+
+                // $ttlSkorMA = $skor_bh + $skor_brd + $skor_ps;
+                $ttlSkorMA = skor_brd_ma($brdPerjjg) + skor_buah_Ma($sumPerBH) + skor_palepah_ma($perPl);
+
+                $mtPLAancak[$key][$key1]['pokok_sample'] = $totalPokok;
+                $mtPLAancak[$key][$key1]['ha_sample'] = $jum_ha;
+                $mtPLAancak[$key][$key1]['jumlah_panen'] = $totalPanen;
+                $mtPLAancak[$key][$key1]['akp_rl'] = $akp;
+
+                $mtPLAancak[$key][$key1]['p'] = $totalP_panen;
+                $mtPLAancak[$key][$key1]['k'] = $totalK_panen;
+                $mtPLAancak[$key][$key1]['tgl'] = $totalPTgl_panen;
+
+                $mtPLAancak[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtPLAancak[$key][$key1]['brd/jjg'] = $brdPerjjg;
+
+                // data untuk buah tinggal
+                $mtPLAancak[$key][$key1]['bhts_s'] = $totalbhts_panen;
+                $mtPLAancak[$key][$key1]['bhtm1'] = $totalbhtm1_panen;
+                $mtPLAancak[$key][$key1]['bhtm2'] = $totalbhtm2_panen;
+                $mtPLAancak[$key][$key1]['bhtm3'] = $totalbhtm3_oanen;
+                $mtPLAancak[$key][$key1]['buah/jjg'] = $sumPerBH;
+
+                $mtPLAancak[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
+                // data untuk pelepah sengklek
+
+                $mtPLAancak[$key][$key1]['palepah_pokok'] = $totalpelepah_s;
+                // total skor akhir
+                $mtPLAancak[$key][$key1]['skor_bh'] = skor_brd_ma($brdPerjjg);
+                $mtPLAancak[$key][$key1]['skor_brd'] = skor_buah_Ma($sumPerBH);
+                $mtPLAancak[$key][$key1]['skor_ps'] = skor_palepah_ma($perPl);
+                $mtPLAancak[$key][$key1]['skorWil'] = $ttlSkorMA;
+
+                $pokok_panenEst += $totalPokok;
+
+                $jum_haEst += $jum_ha;
+                $janjang_panenEst += $totalPanen;
+
+                $p_panenEst += $totalP_panen;
+                $k_panenEst += $totalK_panen;
+                $brtgl_panenEst += $totalPTgl_panen;
+
+                // bagian buah tinggal
+                $bhtsEST   += $totalbhts_panen;
+                $bhtm1EST += $totalbhtm1_panen;
+                $bhtm2EST   += $totalbhtm2_panen;
+                $bhtm3EST   += $totalbhtm3_oanen;
+                // data untuk pelepah sengklek
+                $pelepah_sEST += $totalpelepah_s;
+            } else {
+                $mtPLAancak[$key][$key1]['pokok_sample'] = 0;
+                $mtPLAancak[$key][$key1]['ha_sample'] = 0;
+                $mtPLAancak[$key][$key1]['jumlah_panen'] = 0;
+                $mtPLAancak[$key][$key1]['akp_rl'] =  0;
+
+                $mtPLAancak[$key][$key1]['p'] = 0;
+                $mtPLAancak[$key][$key1]['k'] = 0;
+                $mtPLAancak[$key][$key1]['tgl'] = 0;
+
+                // $mtPLAancak[$key][$key1]['total_brd'] = $skor_bTinggal;
+                $mtPLAancak[$key][$key1]['brd/jjg'] = 0;
+
+                // data untuk buah tinggal
+                $mtPLAancak[$key][$key1]['bhts_s'] = 0;
+                $mtPLAancak[$key][$key1]['bhtm1'] = 0;
+                $mtPLAancak[$key][$key1]['bhtm2'] = 0;
+                $mtPLAancak[$key][$key1]['bhtm3'] = 0;
+
+                // $mtPLAancak[$key][$key1]['jjgperBuah'] = number_format($sumPerBH, 3);
+                // data untuk pelepah sengklek
+
+                $mtPLAancak[$key][$key1]['palepah_pokok'] = 0;
+                // total skor akhi0;
+
+                $mtPLAancak[$key][$key1]['skor_bh'] = 0;
+                $mtPLAancak[$key][$key1]['skor_brd'] = 0;
+                $mtPLAancak[$key][$key1]['skor_ps'] = 0;
+                $mtPLAancak[$key][$key1]['skorWil'] = 0;
+            }
+            $sumBHEst = $bhtsEST +  $bhtm1EST +  $bhtm2EST +  $bhtm3EST;
+            $totalPKT = $p_panenEst + $k_panenEst + $brtgl_panenEst;
+            // dd($sumBHEst);
+            if ($pokok_panenEst != 0) {
+                $akpEst = round(($janjang_panenEst / $pokok_panenEst) * 100, 3);
+            } else {
+                $akpEst = 0;
+            }
+
+            if ($pokok_panenEst != 0) {
+                $brdPerjjgEst = round($totalPKT / $janjang_panenEst, 1);
+            } else {
+                $brdPerjjgEst = 0;
+            }
+
+
+
+            // dd($sumBHEst);
+            if ($sumBHEst != 0) {
+                $sumPerBHEst = round($sumBHEst / ($janjang_panenEst + $sumBHEst) * 100, 1);
+            } else {
+                $sumPerBHEst = 0;
+            }
+
+            if ($pokok_panenEst != 0) {
+                $perPlEst = round(($pelepah_sEST / $pokok_panenEst) * 100, 1);
+            } else {
+                $perPlEst = 0;
+            }
+
+            $nonZeroValues = array_filter([$p_panenEst, $k_panenEst, $brtgl_panenEst, $bhtsEST, $bhtm1EST, $bhtm2EST, $bhtm3EST]);
+
+            if (!empty($nonZeroValues)) {
+                $mtPLAancak[$key]['check_data'] = 'ada';
+                // $mtPLAancak[$key]['skor_brd'] = $skor_brd = skor_brd_ma($sumPerBHEst);
+                // $mtPLAancak[$key]['skor_ps'] = $skor_ps = skor_palepah_ma($perPlEst);
+            } else {
+                $mtPLAancak[$key]['check_data'] = 'kosong';
+                // $mtPLAancak[$key]['skor_brd'] = $skor_brd = 0;
+                // $mtPLAancak[$key]['skor_ps'] = $skor_ps = 0;
+            }
+
+            // $totalSkorEst = $skor_bh + $skor_brd + $skor_ps;
+            $totalSkorEst =  skor_brd_ma($brdPerjjgEst) + skor_buah_Ma($sumPerBHEst) + skor_palepah_ma($perPlEst);
+            //PENAMPILAN UNTUK PERESTATE
+            $mtPLAancak[$key]['pokok_sample'] = $pokok_panenEst;
+            $mtPLAancak[$key]['ha_sample'] =  $jum_haEst;
+            $mtPLAancak[$key]['jumlah_panen'] = $janjang_panenEst;
+            $mtPLAancak[$key]['akp_rl'] =  $akpEst;
+
+            $mtPLAancak[$key]['p'] = $p_panenEst;
+            $mtPLAancak[$key]['k'] = $k_panenEst;
+            $mtPLAancak[$key]['tgl'] = $brtgl_panenEst;
+
+            // $mtPLAancak[$key]['total_brd'] = $skor_bTinggal;
+            $mtPLAancak[$key]['brd/jjgest'] = $brdPerjjgEst;
+            $mtPLAancak[$key]['buah/jjg'] = $sumPerBHEst;
+
+            // data untuk buah tinggal
+            $mtPLAancak[$key]['bhts_s'] = $bhtsEST;
+            $mtPLAancak[$key]['bhtm1'] = $bhtm1EST;
+            $mtPLAancak[$key]['bhtm2'] = $bhtm2EST;
+            $mtPLAancak[$key]['bhtm3'] = $bhtm3EST;
+            $mtPLAancak[$key]['palepah_pokok'] = $pelepah_sEST;
+            $mtPLAancak[$key]['palepah_per'] = $perPlEst;
+            // total skor akhir
+            $mtPLAancak[$key]['skor_bh'] =  skor_brd_ma($brdPerjjgEst);
+            $mtPLAancak[$key]['skor_brd'] = skor_buah_Ma($sumPerBHEst);
+            $mtPLAancak[$key]['skor_ps'] = skor_palepah_ma($perPlEst);
+            $mtPLAancak[$key]['skorPlasma'] = $totalSkorEst;
+        } else {
+            $mtPLAancak[$key]['pokok_sample'] = 0;
+            $mtPLAancak[$key]['ha_sample'] =  0;
+            $mtPLAancak[$key]['jumlah_panen'] = 0;
+            $mtPLAancak[$key]['akp_rl'] =  0;
+
+            $mtPLAancak[$key]['p'] = 0;
+            $mtPLAancak[$key]['k'] = 0;
+            $mtPLAancak[$key]['tgl'] = 0;
+
+            // $mtPLAancak[$key]['total_brd'] = $skor_bTinggal;
+            $mtPLAancak[$key]['brd/jjgest'] = 0;
+            $mtPLAancak[$key]['buah/jjg'] = 0;
+            // data untuk buah tinggal
+            $mtPLAancak[$key]['bhts_s'] = 0;
+            $mtPLAancak[$key]['bhtm1'] = 0;
+            $mtPLAancak[$key]['bhtm2'] = 0;
+            $mtPLAancak[$key]['bhtm3'] = 0;
+            $mtPLAancak[$key]['palepah_pokok'] = 0;
+            // total skor akhir
+            $mtPLAancak[$key]['skor_bh'] =  0;
+            $mtPLAancak[$key]['skor_brd'] = 0;
+            $mtPLAancak[$key]['skor_ps'] = 0;
+            $mtPLAancak[$key]['skorPlasma'] = 0;
+        }
+        // dd($mtPLAancak);if (is_array($buah1) && $key1 == $cak1 && $cak1 == $bh1)
+        //         mtPLA
+        // mtPLAancak
+        // mtPLABuah
+        // dd($mtPLA, $mtPLABuah, $mtPLAancak);
+        // dd($mtPLAancak);
+        //rekap toal skor plasma
+        $rekapPlasma = array();
+        foreach ($mtPLA as $key => $trans) {
+            foreach ($trans as $key2 => $trans1) {
+                foreach ($mtPLAancak as $cak => $ancak) {
+                    foreach ($ancak as $cak2 => $ancak1) {
+                        foreach ($mtPLABuah as $bh => $buah) {
+                            foreach ($buah as $bh2 => $buah1) if (is_array($buah1) && $key2 == $cak2 && $cak2 == $bh2) {
+                                if ($trans1['check_data'] == 'kosong' && $ancak1['check_data'] === 'kosong' && $buah1['check_data'] === 'kosong') {
+
+                                    $rekapPlasma[$key][$key2]['data'] = 'kosong';
+                                }
+                                if ($trans1['check_data'] == 'kosong' && $ancak1['check_data'] === 'kosong' && $buah1['check_data'] === 'kosong') {
+
+                                    $rekapPlasma[$key][$key2]['Wil'] = 0;
+                                } else {
+                                    $rekapPlasma[$key][$key2]['Wil'] = $trans1['skorWil'] + $ancak1['skorWil'] + $buah1['skorWil'];
+                                }
+                                if ($trans1['check_data'] == 'kosong' && $ancak1['check_data'] === 'kosong' && $buah1['check_data'] === 'kosong') {
+
+                                    $rekapPlasma[$key]['Plasma'] = 0;
+                                } else {
+                                    $rekapPlasma[$key]['Plasma'] = $trans['skorPlasma'] + $ancak['skorPlasma'] + $buah['skorPlasma'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // dd($rekapPlasma);
+
+        //  buat ranking
+        foreach ($rekapPlasma as $key1 => $estates)  if (is_array($estates)) {
+            // $sortedData = array();
+            $sortedDataEst = array();
+            foreach ($estates as $estateName => $data) {
+                // dd($data);
+                if (is_array($data)) {
+                    $sortedDataEst[] = array(
+                        'key1' => $key1,
+                        'estateName' => $estateName,
+                        'data' => $data
+                    );
+                }
+            }
+            usort($sortedDataEst, function ($a, $b) {
+                return $b['data']['Wil'] - $a['data']['Wil'];
+            });
+            $rank = 1;
+            foreach ($sortedDataEst as $sortedest) {
+                $rekapPlasma[$key1][$sortedest['estateName']]['rank'] = $rank;
+                $rank++;
+            }
+            unset($sortedDataEst);
+        }
+        // dd($rekapPlasma);
+        function sortAndAssignRanks($rekapPlasma)
+        {
+            foreach ($rekapPlasma as $key1 => $estates) {
+                if (is_array($estates)) {
+                    $sortedDataEst = array();
+                    foreach ($estates as $estateName => $data) {
+                        if (is_array($data) && isset($data['Wil'])) {
+                            $sortedDataEst[] = array(
+                                'key1' => $key1,
+                                'estateName' => $estateName,
+                                'data' => $data
+                            );
+                        }
+                    }
+
+                    usort($sortedDataEst, function ($a, $b) {
+                        return $a['data']['rank'] - $b['data']['rank'];
+                    });
+
+                    $sortedRekapPlasma = array(); // Create a temporary array to store the sorted data
+                    foreach ($sortedDataEst as $sortedest) {
+                        $sortedRekapPlasma[$sortedest['estateName']] = $rekapPlasma[$key1][$sortedest['estateName']];
+                    }
+
+                    // Add the "Plasma" key back to the sorted array
+                    if (isset($rekapPlasma[$key1]['Plasma'])) {
+                        $sortedRekapPlasma['Plasma'] = $rekapPlasma[$key1]['Plasma'];
+                    }
+
+                    // Replace the original array with the sorted one
+                    $rekapPlasma[$key1] = $sortedRekapPlasma;
+                    unset($sortedDataEst);
+                }
+            }
+
+            return $rekapPlasma;
+        }
+
+        // okekitacok
+        // Call the function to sort the array and assign ranks
+        $rekapPlasma = sortAndAssignRanks($rekapPlasma);
+
+
+
+        // dd($rekapPlasma);
+        $rankingPlasma = $rekapPlasma;
+
+        //ubah format untuk mempermudahkan menampilkan di tabel
+        $PlasmaEm = array();
+        foreach ($rankingPlasma as $key => $value) if (is_array($value)) {
+            foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                // dd($value1);
+                $inc = 0;
+                $est = $key;
+                $skor = $value1['Wil'];
+                // dd($skor);
+                $EM = $key1;
+
+                $rank = $value1['rank'];
+                // $rank = $value1['rank'];
+                $nama = '-';
+                $data = isset($value1['data']) ? $value1['data'] : 'ada'; // Check if 'data' key exists, otherwise use 'ada'
+                foreach ($queryAsisten as $key4 => $value4) {
+                    if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
+                        $nama = $value4['nama'];
+                        break;
+                    }
+                }
+                $PlasmaEm[] = array(
+                    'est' => $est,
+                    'afd' => $EM,
+                    'nama' => $nama,
+                    'skor' => $skor,
+                    'rank' => $rank,
+                    'data' => $data
+
+                );
+                $inc++;
+            }
+        }
+
+        $PlasmaEm = array_values($PlasmaEm);
+
+        $PlsamaGMEM = array();
+        $namaEM = '-';
+        foreach ($rankingPlasma as $key => $value) {
+            if (is_array($value)) {
+                $inc = 0;
+                $est = $key;
+                $skor = $value['Plasma'];
+                $EM = 'EM';
+                // $GM = 'GM';
+                // dd($value);
+                foreach ($queryAsisten as $key4 => $value4) {
+
+                    if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
+                        $namaEM = $value4['nama'];
+                    }
+                    // if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $GM) {
+                    //     $namaGM = $value4['nama'];
+                    // }
+                }
+                $inc++;
+            }
+        }
+
+        $PlsamaGMEM[] = array(
+            'est' => $est,
+            'afd' => $EM,
+            'namaEM' => $namaEM,
+            'Skor' => $skor,
+
+        );
+
+        $PlsamaGMEM = array_values($PlsamaGMEM);
+
+        // dd($rankingPlasma);
+        $plasmaGM = array();
+        $namaGM = '-';
+        $GM = 'GM';
+        $skor = 0;
+        $est = '';
+
+        foreach ($rankingPlasma as $key => $value) {
+            if (is_array($value) && isset($value['Plasma'])) {
+                $inc = 0;
+                $est = $key;
+                $skor = $value['Plasma'];
+
+                foreach ($queryAsisten as $key4 => $value4) {
+                    if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $GM) {
+                        $namaGM = $value4['nama'];
+                    }
+                }
+                $inc++;
+            }
+        }
+
+        $plasmaGM[] = array(
+            'est' => $est,
+            'afd' => $GM,
+            'namaEM' => $namaGM,
+            'Skor' => $skor,
+        );
+
+        $plasmaGM = array_values($plasmaGM);
+
+
+
+
+        $pt_muaSkor = [
+            'Pt_mua' => $sumOfAllScores
+        ];
+        //
+        // dd($sumOfAllScores);
+        $keysToRemove = ["SRE", "LDE", "SKE"];
+        $filteredBuah = [];
+
+        foreach ($arrBuahBTT as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $filteredBuah[$key] = $value;
+            }
+        }
+
+
+        // dd($arrBuahBTT);
+
+        $chartPerwil = array();
+        foreach ($mtancaktab1Wil as $key => $value) {
+            $chartPerwil[$key] = $value['brd/jjgwil'];
+        }
+        // dd($mtancaktab1Wil);
+        $buahPerwil = array();
+        foreach ($mtancaktab1Wil as $key => $value) {
+            $buahPerwil[$key] =  $value['buah/jjgwil'];
+        }
+
+
+
+        // mengambil nilai grafik mutu ancak dari pt.mua
+        $ptMuachartBuah = $mtAncakMua['buah/jjgwil'];
+        $ptMuachartBRD = $mtAncakMua['brd/jjgwil'];
+
+        // dd($mtAncakMua);
+        $arrChartbhMua = [
+            'pt_muabuah' => $ptMuachartBuah
+        ];
+        $arrChartbhBRD = [
+            'pt_muabrd' => $ptMuachartBRD
+        ];
+
+
+        $filteredBRD = [];
+
+        foreach ($array as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $filteredBRD[$key] = $value;
+            }
+        }
+
+
+        // membuat pt muah satu array dan di bagian bawah
+        $filteredBuah["pt_muabuah"] = $arrChartbhMua["pt_muabuah"];
+        $filteredBRD["pt_muabrd"] = $arrChartbhBRD["pt_muabrd"];
+        // dd($filteredBuah);
+
+        // mengambil mutu ancak di plasma
+        $chartBuahTTPlas = array();
+        foreach ($mtPLAancak as $key => $value) {
+
+
+            $chartBuahTTPlas[$key] = $value['buah/jjg'];
+        }
+        $chartPlasBRD = array();
+        foreach ($mtPLAancak as $key => $value) {
+
+
+            $chartPlasBRD[$key] = $value['brd/jjgest'];
+        }
+        // menambahkan urutan plasma jika reg 1 tambahakan plasma sehabis key upe dan seterusnya
+        if ($Reg == 1 || $Reg == '1') {
+            $insertAfter = "UPE";
+        } else if ($Reg == 2 || $Reg == '2') {
+            $insertAfter = "SPE";
+        } else {
+            $insertAfter = "PKE";
+        }
+
+
+        // fungsi untuk menambah plasma ke dalam satu array untuk mutu ancak
+        $result_brd = [];
+        $added = false;
+        foreach ($filteredBRD as $key => $value) {
+            $result_brd[$key] = $value;
+            if ($key === $insertAfter && !$added) {
+                foreach ($chartPlasBRD as $k => $v) {
+                    $result_brd[$k] = $v;
+                }
+                $added = true;
+            }
+        }
+        $result_buah = [];
+        $addeds = false;
+        foreach ($filteredBuah as $key => $value) {
+            $result_buah[$key] = $value;
+            if ($key === $insertAfter && !$addeds) {
+                foreach ($chartBuahTTPlas as $k => $v) {
+                    $result_buah[$k] = $v;
+                }
+                $addeds = true;
+            }
+        }
+
+
+        // grafik untuk mutu buah
+        //  dd($mtBuahtab1Wil_reg);
+        $chrtBuahMentah = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrtBuahMentah[$key2] = $value2['total_perMentah'];
+            }
+        }
+        //  untuk mengahous key LDE etc 
+        $chrtBuahMentahv2 = [];
+        foreach ($chrtBuahMentah as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrtBuahMentahv2[$key] = $value;
+            }
+        }
+        //   dd($chrtBuahMentahv2);
+        $chrtBuahMsk = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrtBuahMsk[$key2] = $value2['total_perMasak'];
+            }
+        }
+        //  untuk mengahous key LDE etc 
+        $chrtBuahMskv2 = [];
+        foreach ($chrtBuahMsk as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrtBuahMskv2[$key] = $value;
+            }
+        }
+        $chrtBuahOver = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrtBuahOver[$key2] = $value2['total_perOver'];
+            }
+        }
+        //  untuk mengahous key LDE etc 
+        $chrtBuahOverv2 = [];
+        foreach ($chrtBuahOver as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrtBuahOverv2[$key] = $value;
+            }
+        }
+        $chrtBuahAbr = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrtBuahAbr[$key2] = $value2['total_perabnormal'];
+            }
+        }
+        //  untuk mengahous key LDE etc 
+        $chrtBuahAbrv2 = [];
+        foreach ($chrtBuahAbr as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrtBuahAbrv2[$key] = $value;
+            }
+        }
+        $chrtBuahKosng = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrtBuahKosng[$key2] = $value2['total_perKosongjjg'];
+            }
+        }
+        //  untuk mengahous key LDE etc 
+        $chrtBuahKosongv2 = [];
+        foreach ($chrtBuahKosng as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrtBuahKosongv2[$key] = $value;
+            }
+        }
+        $chrtBuahVcut = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrtBuahVcut[$key2] = $value2['perVcut'];
+            }
+        }
+        //  untuk mengahous key LDE etc 
+        $chrtBuahVcutv2 = [];
+        foreach ($chrtBuahVcut as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrtBuahVcutv2[$key] = $value;
+            }
+        }
+
+
+
+        // dd($mtAncakMua);
+        $arrBuahMentah = [
+            'pt_mua' => $mtBuahMua['total_perMentah']
+        ];
+        $arrBuahMasak = [
+            'pt_mua' => $mtBuahMua['total_perMasak']
+        ];
+        $arrBuahMOver = [
+            'pt_mua' => $mtBuahMua['total_perOver']
+        ];
+        $arrBuahAbnrm = [
+            'pt_mua' => $mtBuahMua['total_perabnormal']
+        ];
+        $arrBuahKosong = [
+            'pt_mua' => $mtBuahMua['total_perKosongjjg']
+        ];
+        $arrBuahVcut = [
+            'pt_mua' => $mtBuahMua['per_vcut']
+        ];
+
+        // membuat pt muah satu array dan di bagian bawah
+        $chrtBuahMentahv2["pt_mua"] = $arrBuahMentah["pt_mua"];
+        $chrtBuahMskv2["pt_mua"] = $arrBuahMasak["pt_mua"];
+        $chrtBuahOverv2["pt_mua"] = $arrBuahMOver["pt_mua"];
+        $chrtBuahAbrv2["pt_mua"] = $arrBuahAbnrm["pt_mua"];
+        $chrtBuahKosongv2["pt_mua"] = $arrBuahKosong["pt_mua"];
+        $chrtBuahVcutv2["pt_mua"] = $arrBuahVcut["pt_mua"];
+
+
+
+
+
+        $willBuah_Mentah = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            $willBuah_Mentah[$key] = $value['total_perMentah'];
+        }
+        $willBuah_Masak = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            $willBuah_Masak[$key] = $value['total_perMasak'];
+        }
+        $willBuah_Over = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            $willBuah_Over[$key] = $value['total_perOver'];
+        }
+
+        $willBuah_Abr = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            $willBuah_Abr[$key] = $value['total_perabnormal'];
+        }
+        $willBuah_Kosong = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            $willBuah_Kosong[$key] = $value['total_perKosongjjg'];
+        }
+        $willBuah_Vcut = array();
+        foreach ($mtBuahtab1Wil_reg as $key => $value) {
+            $willBuah_Vcut[$key] = $value['per_vcut'];
+        }
+
+
+        // dd($willBuah_Vcut);
+        $arrays = [
+            &$chrTransbrdv2,
+            &$chrTransbuahv2,
+            &$chrtBuahMentahv2,
+            &$chrtBuahMskv2,
+            &$chrtBuahOverv2,
+            &$chrtBuahAbrv2,
+            &$chrtBuahKosongv2,
+            &$chrtBuahVcutv2
+        ];
+        $insertAfterv2 = $Reg == '1' ? "UPE" : ($Reg == '2' ? "SPE" : "PKE");
+        function moveElement(&$array, $key, $insertAfterv2)
+        {
+            if (!array_key_exists($key, $array) || !array_key_exists($insertAfterv2, $array)) {
+                return false;
+            }
+            $newArray = [];
+            foreach ($array as $k => $v) {
+                if ($k === $key) continue;
+                $newArray[$k] = $v;
+                if ($k === $insertAfterv2) {
+                    $newArray[$key] = $array[$key];
+                }
+            }
+            $array = $newArray;
+            return true;
+        }
+
+        //end grafik mutu buah
+
+        // grafik untuk mutu transport
+
+        $chrTransbrd = array();
+        foreach ($mtTranstab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrTransbrd[$key2] = $value2['total_brd/TPH'];
+            }
+        }
+        $chrTransbrdv2 = [];
+        foreach ($chrTransbrd as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrTransbrdv2[$key] = $value;
+            }
+        }
+
+        $chrTransbuah = array();
+        foreach ($mtTranstab1Wil_reg as $key => $value) {
+            foreach ($value as $key2 => $value2) if (is_array($value2)) {
+
+                $chrTransbuah[$key2] = $value2['total_buahPerTPH'];
+            }
+        }
+        $chrTransbuahv2 = [];
+        foreach ($chrTransbuah as $key => $value) {
+            if (!in_array($key, $keysToRemove)) {
+                $chrTransbuahv2[$key] = $value;
+            }
+        }
+
+
+        $arrTransMentah = [
+            'pt_mua' => $mtTransMua['total_brd/TPH']
+        ];
+        $arrTransMasak = [
+            'pt_mua' => $mtTransMua['total_buahPerTPH']
+        ];
+
+        $chrTransbrdv2["pt_mua"] = $arrTransMentah["pt_mua"];
+        $chrTransbuahv2["pt_mua"] = $arrTransMasak["pt_mua"];
+
+        // unset($chrTransbrdv2["pt_mua"]);
+
+
+        // dd($chrTransbuahv2);
+
+        // Arrays to be modified
+
+
+        if (in_array($Reg, ['2', '3', 2, 3])) {
+            foreach ($arrays as &$array) {
+                if (array_key_exists('pt_mua', $array)) {
+                    unset($array['pt_mua']);
+                }
+            }
+        }
+
+        foreach ($arrays as &$array) {
+            $plasmaKeys = preg_grep('/^Plasma/', array_keys($array));
+            foreach ($plasmaKeys as $plasmaKey) {
+                moveElement($array, $plasmaKey, $insertAfterv2);
+            }
+        }
+
+        // transport perwilayah 
+
+        $WilTransBRD = array();
+        foreach ($mtTranstab1Wil_reg as $key => $value) {
+            $WilTransBRD[$key] = $value['total_brd/TPH'];
+        }
+
+        $WilTransBuah = array();
+        foreach ($mtTranstab1Wil_reg as $key => $value) {
+            $WilTransBuah[$key] = $value['total_buahPerTPH'];
+        }
+
+
+
+        // Check if $Reg is not equal to 1 or '1'
+        if ($Reg != 1 && $Reg != '1') {
+            unset($result_brd['pt_muabrd']);
+            unset($result_buah['pt_muabuah']);
+            unset($chrTransbrdv2['pt_mua']);
+            unset($chrTransbuahv2['pt_mua']);
+            unset($chrtBuahMentahv2['pt_mua']);
+            unset($chrtBuahMskv2['pt_mua']);
+            unset($chrtBuahOverv2['pt_mua']);
+            unset($chrtBuahAbrv2['pt_mua']);
+            unset($chrtBuahKosongv2['pt_mua']);
+            unset($chrtBuahVcutv2['pt_mua']);
+        }
+
+
+        // $queryEsta = updateKeyRecursive2($queryEsta);
+
+        // dd($FormatTable1);
+
+        function unsetPlasmaKeys(&$array)
+        {
+            $keydel = ['Plasma1', 'Plasma2', 'Plasma3', 'Plasma4']; // Array of keys to delete
+
+            foreach ($array as $key => $value) {
+                if (in_array($key, $keydel)) {
+                    unset($array[$key]); // Unset the key if it exists in $keydel
+                }
+            }
+        }
+        unsetPlasmaKeys($result_brd);
+        unsetPlasmaKeys($result_buah);
+
         $arrView = array();
+        // dd($result_brd,$chrtBuahMentahv2);
+        $arrView['chart_brd'] = $result_brd;
+        $arrView['chart_buah'] = $result_buah;
+        $arrView['chart_brdwil'] =  $chartPerwil;
+        $arrView['chart_buahwil'] = $buahPerwil;
+        $arrView['RekapRegTable'] =  $RekapRegTable;
+        $arrView['GM_1'] =  $GmWil1;
+        $arrView['GM_2'] =  $GmWil2;
+        $arrView['GM_3'] =  $GmWil3;
+        $arrView['asisten'] =  $queryAsisten;
+        $arrView['data_tabelutama'] =  $FormatTable1;
+        $arrView['data_tabelkedua'] =  $FormatTable2;
+        $arrView['data_tabeketiga'] =  $FormatTable3;
+        $arrView['data_Est1'] =  $FormatTabEst1;
+        $arrView['data_Est2'] =  $FormatTabEst2;
+        $arrView['data_Est3'] =  $FormatTabEst3;
+        $arrView['data_GM'] =  $RHGM;
+        $arrView['list_estate'] =  $queryEsta;
+        $arrView['plasma'] =  $PlasmaEm;
+        $arrView['plasmaEM'] =  $PlsamaGMEM;
+        $arrView['plasmaGM'] =  $plasmaGM;
+        $arrView['pt_mua'] =  $pt_muaSkor;
+        $arrView['ptmuaBuah'] =  $ptMuachartBuah;
+        $arrView['ptmuaBRD'] =  $ptMuachartBRD;
 
-        $arrView['reg'] =  $regional;
-        $arrView['bulan'] =  $bulan;
-        $arrView['afd_rekap'] =  $resultArray;
-        $arrView['header_cell'] =  $header_cell2;
-        $arrView['header_head'] =  $sum_header;
-        $arrView['rata_rata'] =  $extractedData;
-        $arrView['visit'] =  $numericSkorArray;
-        $arrView['skoring'] =  $result_skor;
-        $arrView['new_afd'] =  $new_array;
+        // grafik mutu buah
+        // dd($chrtBuahMentahv2);
 
+        unsetPlasmaKeys($chrtBuahMentahv2);
+        unsetPlasmaKeys($chrtBuahMskv2);
+        unsetPlasmaKeys($chrtBuahOverv2);
+        unsetPlasmaKeys($chrtBuahAbrv2);
+        unsetPlasmaKeys($chrtBuahKosongv2);
+        unsetPlasmaKeys($chrtBuahVcutv2);
 
+        $arrView['mtbuah_mentah'] =  $chrtBuahMentahv2;
+        $arrView['mtbuah_masak'] =  $chrtBuahMskv2;
+        $arrView['mtbuah_over'] =  $chrtBuahOverv2;
+        $arrView['mtbuah_abnr'] =  $chrtBuahAbrv2;
+        $arrView['mtbuah_ksong'] =  $chrtBuahKosongv2;
+        $arrView['mtbuah_vcut'] =  $chrtBuahVcutv2;
+
+        $arrView['willBuah_Mentah'] =  $willBuah_Mentah;
+        $arrView['willBuah_Masak'] =  $willBuah_Masak;
+        $arrView['willBuah_Over'] =  $willBuah_Over;
+        $arrView['willBuah_Abr'] =  $willBuah_Abr;
+        $arrView['willBuah_Kosong'] =  $willBuah_Kosong;
+        $arrView['willBuah_Vcut'] =  $willBuah_Vcut;
+        // grafik mutu transport
+
+        unsetPlasmaKeys($chrTransbrdv2);
+        unsetPlasmaKeys($chrTransbuahv2);
+
+        $arrView['mttrans_brd'] =  $chrTransbrdv2;
+        $arrView['mttrans_buah'] =  $chrTransbuahv2;
+        $arrView['mttrans_wilbrd'] =  $WilTransBRD;
+        $arrView['mttrans_wilbuah'] =  $WilTransBuah;
+        $arrView['list_asisten'] =  $queryAsisten;
+        $arrView['newmua'] =  $newmua;
+        // dd($FinalTahun);
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
-    }
-
-
-
-    public function detailEmplashmend($est,  $date)
-    {
-
-        // dd($est, $date);
-
-        $new_date = $date;
-
-
-        $prum_dates = DB::connection('mysql2')->table('perumahan')
-            ->select(DB::raw('DATE(perumahan.datetime) as date'))
-            ->where('perumahan.datetime', 'like', '%' . $date . '%')
-            ->where('perumahan.est', $est)
-            ->where('perumahan.afd', 'EST')
-            ->groupBy(DB::raw('DATE(perumahan.datetime)'))
-            ->get();
-
-        $prum_dates = json_decode(json_encode($prum_dates), true);
-
-        $lcp_dates = DB::connection('mysql2')->table('perumahan')
-            ->select(DB::raw('DATE(perumahan.datetime) as date'))
-            ->where('perumahan.datetime', 'like', '%' . $date . '%')
-            ->where('perumahan.est', $est)
-            ->where('perumahan.afd', 'EST')
-            ->groupBy(DB::raw('DATE(perumahan.datetime)'))
-            ->get();
-
-        $lcp_dates = json_decode(json_encode($lcp_dates), true);
-
-        $lkl_dates = DB::connection('mysql2')->table('lingkungan')
-            ->select(DB::raw('DATE(lingkungan.datetime) as date'))
-            ->where('lingkungan.datetime', 'like', '%' . $date . '%')
-            ->where('lingkungan.est', $est)
-            ->where('lingkungan.afd', 'EST')
-            ->groupBy(DB::raw('DATE(lingkungan.datetime)'))
-            ->get();
-
-        $lkl_dates = json_decode(json_encode($lkl_dates), true);
-
-
-        // dd($uniqueDates);
-        // $new_est = '-';
-        // if ($est = 'NBM') {
-        //     $new_est = 'NBE';
-        // } else {
-        //     $new_est = $est;
-        // }
-        // dd($new_est);
-
-
-        $prafd_dates = DB::connection('mysql2')->table('perumahan')
-            ->select(DB::raw('DATE(perumahan.datetime) as date'))
-            ->where('perumahan.datetime', 'like', '%' . $date . '%')
-            // ->where('perumahan.est', $new_est)
-            ->where('perumahan.est', $est)
-            ->where('perumahan.afd', '!=', 'EST')
-            ->groupBy(DB::raw('DATE(perumahan.datetime)'))
-            ->get();
-
-        $prafd_dates = json_decode(json_encode($prafd_dates), true);
-
-
-
-        $lcafd_dates = DB::connection('mysql2')->table('landscape')
-            ->select(DB::raw('DATE(landscape.datetime) as date'))
-            ->where('landscape.datetime', 'like', '%' . $date . '%')
-            // ->where('landscape.est', $new_est)
-            ->where('landscape.est', $est)
-            ->where('landscape.afd', '!=',  'EST')
-            ->groupBy(DB::raw('DATE(landscape.datetime)'))
-            ->get();
-
-        $lcafd_dates = json_decode(json_encode($lcafd_dates), true);
-
-        $lkafd_dates = DB::connection('mysql2')->table('lingkungan')
-            ->select(DB::raw('DATE(lingkungan.datetime) as date'))
-            ->where('lingkungan.datetime', 'like', '%' . $date . '%')
-            ->where('lingkungan.est', $est)
-            // ->where('lingkungan.est', $new_est)
-            ->where('lingkungan.afd', '!=',  'EST')
-            ->groupBy(DB::raw('DATE(lingkungan.datetime)'))
-            ->get();
-
-        $lkafd_dates = json_decode(json_encode($lkafd_dates), true);
-
-        $combinedArray = array_merge(
-            $prum_dates,
-            $lcp_dates,
-            $lkl_dates,
-            $prafd_dates,
-            $lcafd_dates,
-            $lkafd_dates
-        );
-
-        // Extract the "date" values
-        $dates = array_column($combinedArray, 'date');
-
-        // Get unique dates
-        $uniqueDates = array_unique($dates);
-
-        // dd($uniqueDates);
-
-
-
-        $dateString = $date;
-
-        // Convert the string to a DateTime object
-        $dateTimeObj = new DateTime($dateString);
-
-        // Get the year and month from the DateTime object
-        $yearAndMonth = $dateTimeObj->format('Y-m');
-        // dd($pagianteafd_lk);
-        $arrView = array();
-        $arrView['est'] =  $est;
-        // dd($date);
-
-
-        $arrView['tanggal'] =  $yearAndMonth;
-
-        $arrView['date'] = $uniqueDates;
-        return view('datailEmplashmend', $arrView);
-    }
-
-
-    public function getTemuan(Request $request)
-    {
-        $est = $request->input('estData');
-        $tanggal = $request->input('tanggal');
-
-
-
-        $emplacement = DB::connection('mysql2')->table('perumahan')
-            ->select(
-                "perumahan.*",
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
-            )
-            ->where('perumahan.datetime', 'like', '%' . $tanggal . '%')
-            ->where('perumahan.est', $est)
-            ->where('perumahan.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
-        $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
-
-        // dd($emplacement);
-        $lingkungan = DB::connection('mysql2')->table('lingkungan')
-            ->select(
-                "lingkungan.*",
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
-            )
-            ->where('lingkungan.datetime', 'like', '%' . $tanggal . '%')
-            ->where('lingkungan.est', $est)
-            ->where('lingkungan.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $lingkungan = json_decode(json_encode($lingkungan), true); // Convert the collection to an array
-        $lingkungan = collect($lingkungan)->groupBy(['est', 'afd'])->toArray();
-
-
-        $landscape = DB::connection('mysql2')->table('landscape')
-            ->select(
-                "landscape.*",
-                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
-            )
-            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
-            ->where('landscape.est', $est)
-            ->where('landscape.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
-        $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
-
-
-        // dd($date);
-        // dd($emplacement, $landscape, $lingkungan);
-
-        $hitungRmh = array();
-        foreach ($emplacement as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungRmh[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_Lngkl' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($hitungRmh);
-
-
-        $hitungLandscape = array();
-        foreach ($landscape as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLandscape[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_Lngkl' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['foto_temuan_ls' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['nilai_ls' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['komentar_ls' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        $hitungLingkungan = array();
-
-        foreach ($lingkungan as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLingkungan[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_Lngkl' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['foto_temuan_ll' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['nilai_ll' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['komentar_ll' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($hitungRmh, $hitungLandscape, $hitungLingkungan);
-
-        $new_Lscp = array();
-
-        foreach ($hitungLandscape as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $index = 0; // Initialize index here
-                foreach ($value1 as $key2 => $value2) {
-                    $index++; // Increment the index inside the loop
-
-                    // Group data based on "rmhX" keys
-                    $number = 1;
-                    $groupedData = array();
-                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
-                    foreach ($value2 as $key3 => $value3) {
-                        if (strpos($key3, 'foto_temuan_ls') === 0) {
-                            $numberOfFotoTemuanLsKeys++;
-                        }
-                    }
-
-
-
-
-                    if ($value2['foto_temuan_ls1'] !== '') {
-                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                            $number++;
-                            $groupedData[] = array(
-                                "foto_temuan_ls" => $value2["foto_temuan_ls" . $i],
-                                "komentar_temuan_ls" => $value2["komentar_temuan_ls" . $i],
-                                "komentar_ls" => $value2["komentar_ls" . $i],
-                                "title" => $value2["est"] . "-" . $value2["afd"],
-
-                            );
-                        }
-
-                        $new_Lscp[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Lscp[$key][$key1][$key2] = '';
-                    }
-                }
-            }
-        }
-
-        // dd($new_Lscp);
-        $new_Rmh = array();
-
-        foreach ($hitungRmh as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $index = 0; // Initialize index here
-                foreach ($value1 as $key2 => $value2) {
-                    $index++; // Increment the index inside the loop
-
-                    // Group data based on "rmhX" keys
-                    $number = 1;
-                    $groupedData = array();
-                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
-                    foreach ($value2 as $key3 => $value3) {
-                        if (strpos($key3, 'foto_temuan_rmh') === 0) {
-                            $numberOfFotoTemuanLsKeys++;
-                        }
-                    }
-
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_rmh1'] !== '') {
-                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                            $number++;
-                            $groupedData[] = array(
-                                "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
-                                "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
-                                "komentar_rmh" => $value2["komentar_rmh" . $i],
-                                "title" => $value2["est"] . "-" . $value2["afd"],
-
-                            );
-                        }
-
-                        $new_Rmh[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Rmh[$key][$key1][$key2] = '';
-                    }
-
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-
-                }
-            }
-        }
-
-        // dd($new_Rmh);
-        $new_lkngan = array();
-
-        foreach ($hitungLingkungan as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $index = 0; // Initialize index here
-                foreach ($value1 as $key2 => $value2) {
-                    $index++; // Increment the index inside the loop
-
-                    // Group data based on "rmhX" keys
-                    $number = 1;
-                    $groupedData = array();
-                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
-                    foreach ($value2 as $key3 => $value3) {
-                        if (strpos($key3, 'foto_temuan_ll') === 0) {
-                            $numberOfFotoTemuanLsKeys++;
-                        }
-                    }
-
-
-                    if ($value2['foto_temuan_ll1'] !== '') {
-                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                            $number++;
-                            $groupedData[] = array(
-                                "foto_temuan_ll" => $value2["foto_temuan_ll" . $i],
-                                "komentar_temuan_ll" => $value2["komentar_temuan_ll" . $i],
-                                "komentar_ll" => $value2["komentar_ll" . $i],
-                                "title" => $value2["est"] . "-" . $value2["afd"],
-
-                            );
-                        }
-
-                        $new_lkngan[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_lkngan[$key][$key1][$key2] = '';
-                    }
-                }
-            }
-        }
-
-
-        // Output the result
-
-        // dd($new_Rmh);
-        // dd($new_lkngan, $hitungLingkungan);
-        $new_Rmh_result = array();
-
-        foreach ($new_Rmh as $key => $value) if (is_array($value)) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                $merged_values = array();
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    // Merge all the nested arrays into a single array
-                    $merged_values = array_merge($merged_values, $value2);
-                }
-                // Add the merged array to the result
-                $new_Rmh_result[$key][$key1] = $merged_values;
-            }
-            // Unset the unnecessary level of the array
-            $new_Rmh_result[$key][$key1] = $new_Rmh_result[$key][$key1];
-        }
-        // dd($new_Rmh_result);
-
-        $new_Lscp_result = array();
-
-        foreach ($new_Lscp as $key => $value) if (is_array($value)) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                $merged_values = array();
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    // Merge all the nested arrays into a single array
-                    $merged_values = array_merge($merged_values, $value2);
-                }
-                // Add the merged array to the result
-                $new_Lscp_result[$key][$key1] = $merged_values;
-            }
-            // Unset the unnecessary level of the array
-            $new_Lscp_result[$key][$key1] = $new_Lscp_result[$key][$key1];
-        }
-        $new_lkngan_result = array();
-
-        foreach ($new_lkngan as $key => $value) if (is_array($value)) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                $merged_values = array();
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    // Merge all the nested arrays into a single array
-                    $merged_values = array_merge($merged_values, $value2);
-                }
-                // Add the merged array to the result
-                $new_lkngan_result[$key][$key1] = $merged_values;
-            }
-            // Unset the unnecessary level of the array
-            $new_lkngan_result[$key][$key1] = $new_lkngan_result[$key][$key1];
-        }
-
-        // Output the result
-        // dd($new_Rmh_result);
-        // Loop through the outermost array and merge the nested arrays for each key dynamically
-        foreach ($new_Rmh_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Rmh_result[$key1][$key2] = $mergedArray;
-            }
-        }
-        foreach ($new_Lscp_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Lscp_result[$key1][$key2] = $mergedArray;
-            }
-        }
-        foreach ($new_lkngan_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_lkngan_result[$key1][$key2] = $mergedArray;
-            }
-        }
-
-        // pagination perumahan 
-        // dd($new_Rmh_result);
-        $mergedArray_rmh = [];
-        foreach ($new_Rmh_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray_rmh = array_merge($mergedArray_rmh, $value2);
-            }
-        }
-        $mergedArray_lscp = [];
-        foreach ($new_Lscp_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray_lscp = array_merge($mergedArray_lscp, $value2);
-            }
-        }
-        $mergedArray_lkngn = [];
-        foreach ($new_lkngan_result as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray_lkngn = array_merge($mergedArray_lkngn, $value2);
-            }
-        }
-
-        // Convert the flat array into a Laravel collection
-        $collection = new Collection($mergedArray_rmh);
-        $collection_ls = new Collection($mergedArray_lscp);
-        $collection_lkngn = new Collection($mergedArray_lkngn);
-
-        // Paginate the collection with 8 items per page
-        $perPage = 8;
-        $currentPage = Paginator::resolveCurrentPage('page');
-        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $paginatedItems = new LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-        $paginatedItems->setPath(request()->url());
-
-
-        $currentPageItems_ls = $collection_ls->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $paginatedItems_lscp = new LengthAwarePaginator($currentPageItems_ls, count($collection_ls), $perPage);
-        $paginatedItems_lscp->setPath(request()->url());
-
-        $currentPageItems_lkngn = $collection_lkngn->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $paginatedItems_lkngan = new LengthAwarePaginator($currentPageItems_lkngn, count($collection_lkngn), $perPage);
-        $paginatedItems_lkngan->setPath(request()->url());
-
-        // dd($paginatedItems_lscp);
-
-        // dd($paginatedItems);
-        // Send the paginated collection to the view
-
-
-
-
-        // untuk afdeling 
-
-        // $estates = array_column($queryEste, 'est');
-        // $new_est = '-';
-        // if ($est = 'NBM') {
-        //     $new_est = 'NBE';
-        // } else {
-        //     $new_est = $est;
-        // }
-        // dd($new_est);
-        $prumahan_afd  = DB::connection('mysql2')->table('perumahan')
-            ->select(
-                "perumahan.*",
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
-            )
-            ->where('perumahan.datetime', 'like', '%' . $tanggal . '%')
-            // ->where('perumahan.est', $new_est)
-            ->where('perumahan.est', $est)
-            ->where('perumahan.afd', '!=', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $prumahan_afd  = json_decode(json_encode($prumahan_afd), true); // Convert the collection to an array
-        $prumahan_afd  = collect($prumahan_afd)->groupBy(['est', 'afd'])->toArray();
-
-        $lingkungan_afd = DB::connection('mysql2')->table('lingkungan')
-            ->select(
-                "lingkungan.*",
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
-            )
-            ->where('lingkungan.datetime', 'like', '%' . $tanggal . '%')
-            // ->where('lingkungan.est', $new_est)
-            ->where('lingkungan.est', $est)
-            ->where('lingkungan.afd', '!=', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $lingkungan_afd = json_decode(json_encode($lingkungan_afd), true); // Convert the collection to an array
-        $lingkungan_afd = collect($lingkungan_afd)->groupBy(['est', 'afd'])->toArray();
-
-
-        $landscape_afd = DB::connection('mysql2')->table('landscape')
-            ->select(
-                "landscape.*",
-                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
-            )
-            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
-            // ->where('landscape.est', $new_est)
-            ->where('landscape.est', $est)
-            ->where('landscape.afd', '!=', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $landscape_afd = json_decode(json_encode($landscape_afd), true); // Convert the collection to an array
-        $landscape_afd = collect($landscape_afd)->groupBy(['est', 'afd'])->toArray();
-
-
-        // dd($prumahan_afd, $landscape_afd, $lingkungan_afd);
-
-        $hitungRmh_afd = array();
-        foreach ($prumahan_afd as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungRmh_afd[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungRmh_afd[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_rmh' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungRmh_afd[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungRmh_afd[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungRmh_afd[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungRmh_afd[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($hitungRmh_afd);
-
-        $new_Rmh_afd = array();
-
-        foreach ($hitungRmh_afd as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $index = 0; // Initialize index here
-                foreach ($value1 as $key2 => $value2) {
-                    $index++; // Increment the index inside the loop
-
-                    // Group data based on "rmhX" keys
-                    $number = 1;
-                    $groupedData = array();
-                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
-                    foreach ($value2 as $key3 => $value3) {
-                        if (strpos($key3, 'foto_temuan_rmh') === 0) {
-                            $numberOfFotoTemuanLsKeys++;
-                        }
-                    }
-
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_rmh1'] !== '') {
-                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                            $number++;
-                            $groupedData[] = array(
-                                "foto_temuan_rmh" => $value2["foto_temuan_rmh" . $i],
-                                "komentar_temuan_rmh" => $value2["komentar_temuan_rmh" . $i],
-                                "komentar_rmh" => $value2["komentar_rmh" . $i],
-                                "title" => $value2["est"] . "-" . $value2["afd"],
-
-                            );
-                        }
-
-                        $new_Rmh_afd[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Rmh_afd[$key][$key1][$key2] = '';
-                    }
-
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-
-                }
-            }
-        }
-
-        $rmh_afd = array();
-
-        foreach ($new_Rmh_afd as $key => $value) if (is_array($value)) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                $merged_values = array();
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    // Merge all the nested arrays into a single array
-                    $merged_values = array_merge($merged_values, $value2);
-                }
-                // Add the merged array to the result
-                $rmh_afd[$key][$key1] = $merged_values;
-            }
-            // Unset the unnecessary level of the array
-            $rmh_afd[$key][$key1] = $rmh_afd[$key][$key1];
-        }
-
-        foreach ($rmh_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $rmh_afd[$key1][$key2] = $mergedArray;
-            }
-        }
-
-        $mergeAfdRmh = [];
-        foreach ($rmh_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergeAfdRmh = array_merge($mergeAfdRmh, $value2);
-            }
-        }
-
-
-
-        $pagermh_afd =  new Collection($mergeAfdRmh);
-        $curent_afdrmh = $pagermh_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $pagianteafd_rmh = new LengthAwarePaginator($curent_afdrmh, count($pagermh_afd), $perPage);
-        $pagianteafd_rmh->setPath(request()->url());
-        // dd($rmh_afd, $mergeAfdRmh, $new_Rmh_result);
-        // dd($pagianteafd_rmh);
-
-        $hitungLcp_afd = array();
-        foreach ($landscape_afd as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLcp_afd[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLcp_afd[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_lcp' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLcp_afd[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLcp_afd[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLcp_afd[$key][$key1][$key2]['nilai_lcp' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLcp_afd[$key][$key1][$key2]['komentar_lcp' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $new_Lcp_afd = array();
-
-        foreach ($hitungLcp_afd as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $index = 0; // Initialize index here
-                foreach ($value1 as $key2 => $value2) {
-                    $index++; // Increment the index inside the loop
-
-                    // Group data based on "rmhX" keys
-                    $number = 1;
-                    $groupedData = array();
-                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
-                    foreach ($value2 as $key3 => $value3) {
-                        if (strpos($key3, 'foto_temuan_lcp') === 0) {
-                            $numberOfFotoTemuanLsKeys++;
-                        }
-                    }
-
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_lcp1'] !== '') {
-                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                            $number++;
-                            $groupedData[] = array(
-                                "foto_temuan_lcp" => $value2["foto_temuan_lcp" . $i],
-                                "komentar_temuan_lcp" => $value2["komentar_temuan_lcp" . $i],
-                                "komentar_lcp" => $value2["komentar_lcp" . $i],
-                                "title" => $value2["est"] . "-" . $value2["afd"],
-
-                            );
-                        }
-
-                        $new_Lcp_afd[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Lcp_afd[$key][$key1][$key2] = '';
-                    }
-
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-
-                }
-            }
-        }
-        // dd($new_Lcp_afd);
-
-
-        foreach ($new_Lcp_afd as $key => $value) if (is_array($value)) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                $merged_values = array();
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    // Merge all the nested arrays into a single array
-                    $merged_values = array_merge($merged_values, $value2);
-                }
-                // Add the merged array to the result
-                $new_Lcp_afd[$key][$key1] = $merged_values;
-            }
-            // Unset the unnecessary level of the array
-            $new_Lcp_afd[$key][$key1] = $new_Lcp_afd[$key][$key1];
-        }
-
-
-
-        foreach ($new_Lcp_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Lcp_afd[$key1][$key2] = $mergedArray;
-            }
-        }
-
-        $mergeAfdlcp = [];
-        foreach ($new_Lcp_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergeAfdlcp = array_merge($mergeAfdlcp, $value2);
-            }
-        }
-
-        // dd($mergeAfdlcp);
-
-        $pagelcp_afd =  new Collection($mergeAfdlcp);
-        $curent_afdlcp = $pagelcp_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $pagianteafd_lcp = new LengthAwarePaginator($curent_afdlcp, count($pagelcp_afd), $perPage);
-        $pagianteafd_lcp->setPath(request()->url());
-
-        // dd($pagianteafd_lcp);
-
-        $hitungLk_afd = array();
-        foreach ($lingkungan_afd as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLk_afd[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLk_afd[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_lk' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLk_afd[$key][$key1][$key2]['foto_temuan_lk' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLk_afd[$key][$key1][$key2]['komentar_temuan_lk' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLk_afd[$key][$key1][$key2]['nilai_lk' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLk_afd[$key][$key1][$key2]['komentar_lk' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        $new_Lk_afd = array();
-
-        foreach ($hitungLk_afd as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $index = 0; // Initialize index here
-                foreach ($value1 as $key2 => $value2) {
-                    $index++; // Increment the index inside the loop
-
-                    // Group data based on "rmhX" keys
-                    $number = 1;
-                    $groupedData = array();
-                    $numberOfFotoTemuanLsKeys = 0; // Initialize the counter for foto_temuan_ls keys
-                    foreach ($value2 as $key3 => $value3) {
-                        if (strpos($key3, 'foto_temuan_lk') === 0) {
-                            $numberOfFotoTemuanLsKeys++;
-                        }
-                    }
-
-                    // dd($hitungRmh);
-                    if ($value2['foto_temuan_lk1'] !== '') {
-                        for ($i = 1; $i <= $numberOfFotoTemuanLsKeys; $i++) {
-                            $number++;
-                            $groupedData[] = array(
-                                "foto_temuan_lk" => $value2["foto_temuan_lk" . $i],
-                                "komentar_temuan_lk" => $value2["komentar_temuan_lk" . $i],
-                                "komentar_lk" => $value2["komentar_lk" . $i],
-                                "title" => $value2["est"] . "-" . $value2["afd"],
-
-                            );
-                        }
-
-                        $new_Lk_afd[$key][$key1][$key2][$index] = $groupedData;
-                    } else {
-                        $new_Lk_afd[$key][$key1][$key2] = '';
-                    }
-
-
-                    // Now, use the incremented index to create new arrays with desired keys and values
-
-                }
-            }
-        }
-
-        foreach ($new_Lk_afd as $key => $value) if (is_array($value)) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                $merged_values = array();
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    // Merge all the nested arrays into a single array
-                    $merged_values = array_merge($merged_values, $value2);
-                }
-                // Add the merged array to the result
-                $new_Lk_afd[$key][$key1] = $merged_values;
-            }
-            // Unset the unnecessary level of the array
-            $new_Lk_afd[$key][$key1] = $new_Lk_afd[$key][$key1];
-        }
-
-
-
-        foreach ($new_Lk_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergedArray = array_merge(...$value2);
-                $new_Lk_afd[$key1][$key2] = $mergedArray;
-            }
-        }
-
-        $mergeAfdlk = [];
-        foreach ($new_Lk_afd as $key1 => $value1) {
-            foreach ($value1 as $key2 => $value2) {
-                $mergeAfdlk = array_merge($mergeAfdlk, $value2);
-            }
-        }
-        $pagelk_afd =  new Collection($mergeAfdlk);
-        $curent_afdlk = $pagelk_afd->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $pagianteafd_lk = new LengthAwarePaginator($curent_afdlk, count($pagelk_afd), $perPage);
-        $pagianteafd_lk->setPath(request()->url());
-
-
-        $dateString = $date;
-
-        // Convert the string to a DateTime object
-        $dateTimeObj = new DateTime($dateString);
-
-        // Get the year and month from the DateTime object
-        $yearAndMonth = $dateTimeObj->format('Y-m');
-        // dd($pagianteafd_lk);
-        $arrView = array();
-        $arrView['est'] =  $est;
-        // dd($mergedArray_rmh, $mergedArray_lscp, $mergedArray_lkngn);
-
-        $arrView['Landscape'] =  $mergedArray_lscp;
-        $arrView['lingkungan'] =  $mergedArray_lkngn;
-        $arrView['tanggal'] =  $yearAndMonth;
-        $arrView['li'] =  $hitungRmh;
-        $arrView['Perumahan'] = $mergedArray_rmh;
-
-
-        // afd 
-        // dd($mergeAfdRmh, $mergeAfdlcp, $mergeAfdlk);
-        $arrView['rumah_afd'] = $mergeAfdRmh;
-        $arrView['lcp_afd'] = $mergeAfdlcp;
-        $arrView['lingkungan_afd'] = $mergeAfdlk;
-        // dd($paginatedItems);
-
-        echo json_encode($arrView);
-        exit();
-    }
-
-    public function downloadBAemp(Request $request)
-    {
-
-        $est = $request->input('estBA');
-        $tanggal = $request->input('tglPDF');
-
-        // dd($est, $tanggal);
-
-        $emplacement = DB::connection('mysql2')->table('perumahan')
-            ->select(
-                "perumahan.*",
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
-            )
-            ->where('perumahan.datetime', 'like', '%' . $tanggal . '%')
-            ->where('perumahan.est', $est)
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
-        $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
-
-        // dd($emplacement);
-        $lingkungan = DB::connection('mysql2')->table('lingkungan')
-            ->select(
-                "lingkungan.*",
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
-            )
-            ->where('lingkungan.datetime', 'like', '%' . $tanggal . '%')
-            ->where('lingkungan.est', $est)
-            // ->where('lingkungan.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $lingkungan = json_decode(json_encode($lingkungan), true); // Convert the collection to an array
-        $lingkungan = collect($lingkungan)->groupBy(['est', 'afd'])->toArray();
-
-
-        $landscape = DB::connection('mysql2')->table('landscape')
-            ->select(
-                "landscape.*",
-                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
-            )
-            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
-            ->where('landscape.est', $est)
-            // ->where('landscape.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
-        $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
-
-
-        // dd($date);
-        // dd($emplacement, $landscape, $lingkungan);
-
-        $hitungRmh = array();
-        foreach ($emplacement as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungRmh[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_rmh' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['nilai_rmh' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['komentar_rmh' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        // dd($hitungRmh);
-
-        $nila_akhir = array();
-
-        foreach ($hitungRmh as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $avg = count($value1);
-                $nilai = array_fill(1, 13, 0);
-                $komentar_rmh = array_fill(1, 13, '');
-
-                $tiperumah = '';
-                $penghuni = '';
-                foreach ($value1 as $key2 => $value3) {
-                    $datetime = $value3['datetime'];
-                    $time = date('Y-m-d', strtotime($datetime));
-
-                    for ($i = 1; $i <= 13; $i++) {
-                        $nilai[$i] += $value3["nilai_rmh$i"] / $avg;
-                        $komentar_rmh[$i] .= $value3["komentar_rmh$i"] . ', ';
-                    }
-
-                    $tiperumah .= $value3['tipe_rumah'] . ', ';
-                    $penghuni .= $value3['penghuni'] . ', ';
-                }
-
-                $nila_akhir[$key][$key1]['est'] = $value3['est'] . '-' . $value3['afd'];
-                $nila_akhir[$key][$key1]['tipe_rumah'] = rtrim($tiperumah, ', ');
-                $nila_akhir[$key][$key1]['penghuni'] = rtrim($penghuni, ', ');
-                $nila_akhir[$key][$key1]['petugas'] = $value3['petugas'];
-                $nila_akhir[$key][$key1]['tanggal'] = $time;
-
-                for ($i = 1; $i <= 13; $i++) {
-                    $nila_akhir[$key][$key1]["perumahan_nilai$i"] = $nilai[$i];
-                    $nila_akhir[$key][$key1]["perumahan_komen$i"] = rtrim($komentar_rmh[$i], ', ');
-                }
-                $nila_akhir[$key][$key1]["total_nilairmh"] = array_sum($nilai); // Corrected line
-            }
-        }
-
-
-        // dd($nila_akhir);
-
-        $hitungLingkungan = array();
-
-        foreach ($lingkungan as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLingkungan[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_Lngkl' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['foto_temuan_ll' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_ll' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['nilai_ll' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['komentar_ll' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        $nila_akhir_lingkungan = array();
-
-        foreach ($hitungLingkungan as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $avg = count($value1);
-                $nilai = array_fill(1, 14, 0);
-                $komentar_rmh = array_fill(1, 14, '');
-
-                $tiperumah = '';
-                $penghuni = '';
-                foreach ($value1 as $key2 => $value3) {
-                    $datetime = $value3['datetime'];
-                    $time = date('Y-m-d', strtotime($datetime));
-
-                    for ($i = 1; $i <= 14; $i++) {
-                        $nilai[$i] += $value3["nilai_ll$i"] / $avg;
-                        $komentar_rmh[$i] .= $value3["komentar_ll$i"] . ', ';
-                    }
-
-                    // $tiperumah .= $value3['tipe_rumah'] . ', ';
-                    // $penghuni .= $value3['penghuni'] . ', ';
-                }
-
-
-
-                for ($i = 1; $i <= 14; $i++) {
-                    $nila_akhir_lingkungan[$key][$key1]["lingkungan_nilai$i"] = $nilai[$i];
-                    $nila_akhir_lingkungan[$key][$key1]["lingkungan_komen$i"] = rtrim($komentar_rmh[$i], ', ');
-                }
-                $nila_akhir[$key][$key1]["total_nilailkng"] = array_sum($nilai); // Corrected line
-            }
-        }
-
-
-        $hitungLandscape = array();
-        foreach ($landscape as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLandscape[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_Lngkl' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['foto_temuan_ls' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['komentar_temuan_ls' . ($i + 1)] = $komn;
-                            }
-
-                            foreach ($nilai as $i => $nilai) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['nilai_ls' . ($i + 1)] = $nilai;
-                            }
-
-                            foreach ($komentar as $i => $komens) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['komentar_ls' . ($i + 1)] = $komens;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $nila_akhir_landscape = array();
-
-        foreach ($hitungLandscape as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $avg = count($value1);
-                $nilai = array_fill(1, 5, 0);
-                $komentar_rmh = array_fill(1, 5, '');
-
-                $tiperumah = '';
-                $penghuni = '';
-                foreach ($value1 as $key2 => $value3) {
-                    $datetime = $value3['datetime'];
-                    $time = date('Y-m-d', strtotime($datetime));
-
-                    for ($i = 1; $i <= 5; $i++) {
-                        $nilai[$i] += $value3["nilai_ls$i"] / $avg;
-                        $komentar_rmh[$i] .= $value3["komentar_ls$i"] . ', ';
-                    }
-
-                    // $tiperumah .= $value3['tipe_rumah'] . ', ';
-                    // $penghuni .= $value3['penghuni'] . ', ';
-                }
-
-
-
-                for ($i = 1; $i <= 5; $i++) {
-                    $nila_akhir_landscape[$key][$key1]["landscape_nilai$i"] = $nilai[$i];
-                    $nila_akhir_landscape[$key][$key1]["landscape_komen$i"] = rtrim($komentar_rmh[$i], ', ');
-                }
-                $nila_akhir[$key][$key1]["total_nilailcp"] = array_sum($nilai); // Corrected line
-            }
-        }
-
-
-        $mergedArray = array();
-
-        foreach ($nila_akhir as $key => $value) {
-            if (isset($nila_akhir_lingkungan[$key]) && isset($nila_akhir_landscape[$key])) {
-                foreach ($value as $subKey => $subValue) {
-                    if (isset($nila_akhir_lingkungan[$key][$subKey]) && isset($nila_akhir_landscape[$key][$subKey])) {
-                        $mergedArray[$key][$subKey] = array_merge(
-                            $subValue,
-                            $nila_akhir_lingkungan[$key][$subKey],
-                            $nila_akhir_landscape[$key][$subKey]
-                        );
-                    }
-                }
-            }
-        }
-        // dd($nila_akhir, $nila_akhir_lingkungan, $nila_akhir_landscape, $mergedArray);
-        // dd($nila_akhir, $mergedArray);
-        // dd($mergedArray);
-        // dd($date, $est);
-        $arrView = array();
-
-        $arrView['test'] =  'oke';
-        $arrView['total'] =  $mergedArray;
-        // $arrView['lingkungan'] =  $nila_akhir_lingkungan;
-
-        $pdf = PDF::loadView('baemp', ['data' => $arrView]);
-
-        $customPaper = array(360, 360, 360, 360);
-        $pdf->set_paper('A2', 'landscape');
-        // $pdf->set_paper('A2', 'potrait');
-
-        $filename = 'BA FORM PEMERIKSAAN PERUMAHAN' . $arrView['test'] . '.pdf';
-
-        return $pdf->stream($filename);
-    }
-
-    public function downloadPDF(Request $request)
-    {
-
-        $est = $request->input('estPDF');
-        $tanggal = $request->input('tglpdfnew');
-
-        // dd($est, $tanggal);
-
-        $emplacement = DB::connection('mysql2')->table('perumahan')
-            ->select(
-                "perumahan.*",
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
-            )
-            ->where('perumahan.datetime', 'like', '%' . $tanggal . '%')
-            ->where('perumahan.est', $est)
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
-        $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
-
-        // dd($emplacement);
-        $lingkungan = DB::connection('mysql2')->table('lingkungan')
-            ->select(
-                "lingkungan.*",
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
-            )
-            ->where('lingkungan.datetime', 'like', '%' . $tanggal . '%')
-            ->where('lingkungan.est', $est)
-            // ->where('lingkungan.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $lingkungan = json_decode(json_encode($lingkungan), true); // Convert the collection to an array
-        $lingkungan = collect($lingkungan)->groupBy(['est', 'afd'])->toArray();
-
-
-        $landscape = DB::connection('mysql2')->table('landscape')
-            ->select(
-                "landscape.*",
-                DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
-            )
-            ->where('landscape.datetime', 'like', '%' . $tanggal . '%')
-            ->where('landscape.est', $est)
-            // ->where('landscape.afd', 'EST')
-            ->orderBy('est', 'asc')
-            ->orderBy('afd', 'asc')
-            ->orderBy('datetime', 'asc')
-            ->get();
-
-        $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
-        $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
-
-
-        // dd($date);
-        // dd($emplacement, $landscape, $lingkungan);
-
-        $hitungRmh = array();
-        foreach ($emplacement as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungRmh[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungRmh[$key][$key1][$key2] = array_merge($value3, [
-                                'nilai_total_rmh' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['foto_temuan_rmh' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungRmh[$key][$key1][$key2]['komentar_temuan_rmh' . ($i + 1)] = $komn;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        $hitungLingkungan = array();
-
-        foreach ($lingkungan as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLingkungan[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLingkungan[$key][$key1][$key2] = array_merge($value3, [
-                                // 'nilai_total_Lngkl' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['foto_temuan_lkng' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLingkungan[$key][$key1][$key2]['komentar_temuan_lkng' . ($i + 1)] = $komn;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $hitungLandscape = array();
-        foreach ($landscape as $key => $value) {
-            foreach ($value as $key1 => $value2) {
-                // Initialize the "nilai_total" for each month to 0
-                $hitungLandscape[$key][$key1] = [];
-
-                if (is_array($value2)) {
-                    foreach ($value2 as $key2 => $value3) {
-                        if (is_array($value3)) {
-                            $sumNilai = isset($value3['nilai']) ? array_sum(array_map('intval', explode('$', $value3['nilai']))) : 0;
-                            // Store the sum in the "nilai_total" key of the corresponding index
-                            $date = $value3['datetime'];
-                            // Get the year and month from the datetime
-                            $yearMonth = date('Y-m-d', strtotime($date));
-
-                            $foto_temuan = explode('$', $value3['foto_temuan']);
-                            $kom_temuan = explode('$', $value3['komentar_temuan']);
-                            $nilai = explode('$', $value3['nilai']);
-                            $komentar = explode('$', $value3['komentar']);
-
-                            unset($value3['foto_temuan']);
-                            unset($value3['komentar_temuan']);
-                            unset($value3['nilai']);
-                            unset($value3['komentar']);
-
-                            $hitungLandscape[$key][$key1][$key2] = array_merge($value3, [
-                                // 'nilai_total_Lngkl' => $sumNilai,
-                                'date' => $yearMonth,
-                                'est_afd' => $value3['est'] . '_' . $value3['afd'],
-                            ]);
-
-                            foreach ($foto_temuan as $i => $foto) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['foto_temuan_lcp' . ($i + 1)] = $foto;
-                            }
-
-                            foreach ($kom_temuan as $i => $komn) {
-                                // Create new keys for each exploded value
-                                $hitungLandscape[$key][$key1][$key2]['komentar_temuan_lcp' . ($i + 1)] = $komn;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        $filter_rmh = [];
-
-        foreach ($hitungRmh as $estKey => $afdArray) {
-            foreach ($afdArray as $afdKey => $subArray) {
-                foreach ($subArray as $item) {
-                    if (!empty($item['foto_temuan_rmh1']) && !empty($item['komentar_temuan_rmh1'])) {
-                        $filter_rmh[$estKey][$afdKey][] = $item;
-                    }
-                }
-            }
-        }
-
-
-        // Output the new arra
-        // dd($newArray);
-        $filter_lingkungan = [];
-
-        foreach ($hitungLingkungan as $estKey => $afdArray) {
-            foreach ($afdArray as $afdKey => $subArray) {
-                foreach ($subArray as $item) {
-                    if (!empty($item['foto_temuan_lkng1']) && !empty($item['komentar_temuan_lkng1'])) {
-                        $filter_lingkungan[$estKey][$afdKey][] = $item;
-                    }
-                }
-            }
-        }
-        $filter_landscape = [];
-
-        foreach ($hitungLandscape as $estKey => $afdArray) {
-            foreach ($afdArray as $afdKey => $subArray) {
-                foreach ($subArray as $item) {
-                    if (!empty($item['foto_temuan_lcp1']) && !empty($item['komentar_temuan_lcp1'])) {
-                        $filter_landscape[$estKey][$afdKey][] = $item;
-                    }
-                }
-            }
-        }
-
-        // dd($filter_rmh, $filter_lingkungan, $filter_landscape);
-        $mergedArray = array();
-
-        // Iterate through each main key in filter_rmh
-        foreach ($filter_rmh as $mainKey => $subArray) {
-            // Initialize the merged array for this main key
-            $mergedArray[$mainKey] = array();
-
-            // Create a list of all subkeys across the arrays for this main key
-            $subKeys = array_unique(array_merge(
-                array_keys($subArray),
-                isset($filter_lingkungan[$mainKey]) ? array_keys($filter_lingkungan[$mainKey]) : [],
-                isset($filter_landscape[$mainKey]) ? array_keys($filter_landscape[$mainKey]) : []
-            ));
-
-            foreach ($subKeys as $subKey) {
-                $mergedArray[$mainKey][$subKey] = array();
-
-                if (isset($filter_rmh[$mainKey][$subKey])) {
-                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_rmh[$mainKey][$subKey]);
-                }
-
-                if (isset($filter_lingkungan[$mainKey][$subKey])) {
-                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_lingkungan[$mainKey][$subKey]);
-                }
-
-                if (isset($filter_landscape[$mainKey][$subKey])) {
-                    $mergedArray[$mainKey][$subKey] = array_merge($mergedArray[$mainKey][$subKey], $filter_landscape[$mainKey][$subKey]);
-                }
-            }
-        }
-
-        // Now $mergedArray contains the merged and combined data
-
-        // dd($mergedArray);
-
-        // Now $filteredHitungRmh will contain only the desired arrays
-        // Assuming your array is named $mergedArray
-        // dd($filter_rmh, $filter_lingkungan, $filter_landscape, $mergedArray);
-        $newArray = [];
-
-        foreach ($mergedArray as $estKey => $estValue) {
-            foreach ($estValue as $afdKey => $afdValue) {
-
-
-                $combinedIndex = [
-                    "est" => $estKey,
-                    "afd" => $afdKey,
-
-                    "foto_temuan" => [],
-                    "komentar_temuan" => [],
-
-                ];
-
-
-                foreach ($afdValue as $indexData) {
-                    // Combine the foto_temuan entries
-
-
-                    foreach ($indexData as $key => $value) {
-                        if (strpos($key, 'foto_temuan_rmh') === 0) {
-                            $combinedIndex['foto_temuan'][] = $value . "-" . "rmh";
-                        }
-                    }
-                    foreach ($indexData as $key => $value) {
-                        if (strpos($key, 'foto_temuan_lcp') === 0) {
-                            $combinedIndex['foto_temuan'][] = $value . "-" . "lcp";
-                        }
-                    }
-                    foreach ($indexData as $key => $value) {
-                        if (strpos($key, 'foto_temuan_lkng') === 0) {
-                            $combinedIndex['foto_temuan'][] = $value . "-" . "lkn";
-                        }
-                    }
-
-                    // Combine the komentar_temuan entries
-                    foreach ($indexData as $key => $value) {
-                        if (strpos($key, 'komentar_temuan_rmh') === 0) {
-                            $combinedIndex['komentar_temuan'][] = $value . "-" . "rmh";
-                        }
-                    }
-                    foreach ($indexData as $key => $value) {
-                        if (strpos($key, 'komentar_temuan_lcp') === 0) {
-                            $combinedIndex['komentar_temuan'][] = $value . "-" . "lcp";
-                        }
-                    }
-                    foreach ($indexData as $key => $value) {
-                        if (strpos($key, 'komentar_temuan_lkng') === 0) {
-                            $combinedIndex['komentar_temuan'][] = $value . "-" . "lkn";
-                        }
-                    }
-                }
-
-                $newArray[] = $combinedIndex;
-            }
-        }
-
-
-
-        $allPetugas = array();
-
-        // Step 1: Gather all petugas names
-        foreach ($mergedArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value3) {
-                    $allPetugas[] = $value3['petugas'];
-                }
-            }
-        }
-
-        $allAfd = array();
-
-        // Step 1: Gather all petugas names
-        foreach ($mergedArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value3) {
-                    $allAfd[] = $value3['afd'];
-                }
-            }
-        }
-
-        $allDate = array();
-
-        // Step 1: Gather all petugas names
-        foreach ($mergedArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value3) {
-                    $datetimeString = $value3['datetime'];
-                    $dateTime = new DateTime($datetimeString);
-
-                    $datePart = $dateTime->format("Y-m-d");
-                    $allDate[] = $datePart;
-                }
-            }
-        }
-
-        // Step 2: Create a unique list of petugas names
-        $uniquePetugas = array_unique($allPetugas);
-        $unique = array_unique($allAfd);
-        $uniqueDate = array_unique($allDate);
-
-
-        // dd($uniqueDate);
-        // Step 3: Combine unique petugas names with ampersand (&)
-        $combinedPetugas = implode(' & ', $uniquePetugas);
-        $combinedAfd = implode(' & ', $unique);
-        $header = array();
-
-        foreach ($mergedArray as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                foreach ($value1 as $key2 => $value3) {
-                    foreach ($newArray as $key4 => $value4) {
-                        if ($value4['est'] == $key && $value4['afd'] == $key1) {
-                            $header[$key4]['est'] = $value3['est'];
-                            $header[$key4]['afd'] = $value3['afd'];
-                            $header[$key4]['petugas'] = $combinedPetugas; // Use the combined petugas
-                            $header[$key4]['date'] = $value3['date'];
-                            $header[$key4]['foto_temuan'] = $value4['foto_temuan'];
-                            $header[$key4]['komentar_temuan'] = $value4['komentar_temuan'];
-                        }
-                    }
-                }
-            }
-        }
-
-        // dd($header);
-        // Example usage
-        $arrayMerge = [];
-
-        foreach ($header as $item) {
-            $arrayMerge['est'] = $item['est'];
-            $arrayMerge['date'] = $item['date'];
-            $arrayMerge['afd'] = $combinedAfd;
-            $arrayMerge['petugas'] = $combinedPetugas;
-            $arrayMerge['foto_temuan'] = array_merge($arrayMerge['foto_temuan'] ?? [], $item['foto_temuan']);
-            $arrayMerge['komentar_temuan'] = array_merge($arrayMerge['komentar_temuan'] ?? [], $item['komentar_temuan']);
-
-            // Extract and append detail_temuan
-            $detail_temuan = [];
-            foreach ($item['foto_temuan'] as $foto) {
-                $parts = explode('_', $foto);
-
-                if (count($parts) > 2) {
-                    $detail_parts = explode('.', $parts[4]); // Split the fourth part by dot
-                    if (count($detail_parts) > 1) {
-                        $detail_temuan[] = $parts[3] . ' ' . $detail_parts[0]; // Concatenate the third part and the part after dot
-                    }
-                }
-            }
-            $arrayMerge['detail_temuan'] = array_merge($arrayMerge['detail_temuan'] ?? [], $detail_temuan);
-        }
-
-        // dd($arrayMerge);
-
-        $arrView = array();
-
-        $arrView['test'] =  'oke';
-        $arrView['total'] =  $arrayMerge;
-        // $arrView['lingkungan'] =  $nila_akhir_lingkungan;
-
-        $pdf = PDF::loadView('emplPDF', ['data' => $arrView]);
-
-        $customPaper = array(360, 360, 360, 360);
-        $pdf->set_paper('A2', 'potrait');
-        // $pdf->set_paper('A2', 'potrait');
-
-        $filename = 'PDF FORM PEMERIKSAAN PERUMAHAN' . $arrView['test'] . '.pdf';
-
-        return $pdf->stream($filename);
     }
 }
