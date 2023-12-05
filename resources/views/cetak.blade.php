@@ -441,7 +441,7 @@
 
             </tr>
 
-            @if ($data->foto_kebersihan_gudang_count == 6)
+            @if ($data->foto_kebersihan_gudang_count == 6 ||$data->foto_kebersihan_gudang_count == 5 )
             <tr class="table-primary">
 
                 <th class="my-cell text-center" colspan="2">7. BUKU INSPEKSI KTU</th>
@@ -503,7 +503,7 @@
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>
                 @endif
 
-                @if ($data->foto_kebersihan_gudang_6)
+                @if (isset($data->foto_kebersihan_gudang_6))
                 <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_6}}" class="img-fluid modal-image"></td>
                 @else
                 <td><img src="{{asset('noimage.png')}}" style="weight:75pt;height:150pt"></td>

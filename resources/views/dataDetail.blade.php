@@ -2763,9 +2763,6 @@
                     $('#editModalBuah').modal('show');
                 }
 
-
-
-
                 $(document).ready(function() {
                     // Close modal when the close button is clicked
                     $('#closeModalBtn_buah').click(function() {
@@ -2782,7 +2779,8 @@
 
                         // Get the form data
                         var formData = new FormData(this);
-                        formData.append('id', $('#editId_buah').val());
+                        formData.append('id', $('#editId_buah').val()); // Append the id field to the form data
+
                         var bmt = $('#update-bmt').val();
                         var bmk = $('#update-bmk').val();
                         var emptyBH = $('#update-emptyBH').val();
@@ -3644,7 +3642,7 @@
                         let item2 = element[0];
                         let item3 = element[1]['status_panen'] ?? 0;
                         let item4 = element[1]['pokok_sample'] ?? 0;
-                        let item5 = (element[1]['luas_ha'] ?? [0])[0]; // Extract the first element from the array
+                        let item5 = (element[1]['luas_blok'] ?? [0])[0]; // Extract the first element from the array
 
                         let item6 = element[1]['jml_jjg_panen'] ?? 0;
                         let item7 = element[1]['akp_real'] ?? 0;
@@ -3920,57 +3918,57 @@
                     tr = document.createElement('tr');
                     let item1 = 'Total';
                     let item2 = total;
-                    let item3 = total2.toFixed(2);
+                    let item3 = total2.toFixed(3);
                     let item4 = total3;
-                    let item5 = total4.toFixed(2);
+                    let item5 = (total3 / total).toFixed(3);
                     let item6 = total5;
                     let item7 = total6;
                     let item8 = total7;
                     let item9 = total8;
-                    let item10 = total9.toFixed(2);
+                    let item10 = total9.toFixed(3);
                     let item11 = skor_brd_ma(total9);
                     let item12 = total11;
                     let item13 = total12;
                     let item14 = total13;
                     let item15 = total14;
                     let item16 = total15;
-                    let item17 = total16.toFixed(2);
-                    let item18 = skor_buah_Ma(total16.toFixed(2))
+                    let item17 = total16.toFixed(3);
+                    let item18 = skor_buah_Ma(total16.toFixed(3))
                     let item19 = total17
-                    let item20 = (total17 / total * 100).toFixed(2)
+                    let item20 = (total17 / total * 100).toFixed(3)
                     let item21 = skor_palepah_ma(total17 / total * 100)
-                    let item22 = skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(2)) + skor_brd_ma(total9);
-                    let item23 = total18.toFixed(2)
+                    let item22 = skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(3)) + skor_brd_ma(total9);
+                    let item23 = total18.toFixed(3)
                     let item24 = total19
-                    let item25 = (total19 / total18).toFixed(2)
+                    let item25 = (total19 / total18).toFixed(3)
                     let item26 = brd_tph(total19 / total18)
                     let item27 = total20
-                    let item28 = (total20 / total18).toFixed(2)
+                    let item28 = (total20 / total18).toFixed(3)
                     let item29 = buah_tph(total20 / total18)
                     let item30 = buah_tph(total20 / total18) + brd_tph(total19 / total18)
                     let item31 = total21
                     let item32 = total22
                     let item33 = total23
-                    let item34 = (total23 / (total22 - total24) * 100).toFixed(2)
+                    let item34 = (total23 / (total22 - total24) * 100).toFixed(3)
                     let item35 = mb_mentah(total23 / (total22 - total24) * 100)
                     let item36 = total25
-                    let item37 = (total25 / (total22 - total24) * 100).toFixed(2)
+                    let item37 = (total25 / (total22 - total24) * 100).toFixed(3)
                     let item38 = mb_masak(total25 / (total22 - total24) * 100)
                     let item39 = total26
-                    let item40 = (total26 / (total22 - total24) * 100).toFixed(2)
+                    let item40 = (total26 / (total22 - total24) * 100).toFixed(3)
                     let item41 = mb_over(total26 / (total22 - total24) * 100)
                     let item42 = total27
-                    let item43 = (total27 / (total22 - total24) * 100).toFixed(2)
+                    let item43 = (total27 / (total22 - total24) * 100).toFixed(3)
                     let item44 = mb_jangkos(total27 / (total22 - total24) * 100)
                     let item45 = total28
-                    let item46 = ((total28 / total22) * 100).toFixed(2)
+                    let item46 = ((total28 / total22) * 100).toFixed(3)
                     let item47 = mb_vcut((total28 / total22) * 100)
                     let item48 = total24
-                    let item49 = ((total24 / total22) * 100).toFixed(2)
+                    let item49 = ((total24 / total22) * 100).toFixed(3)
                     // let item50 = total21 + '/' + total29
                     let item50 = total29 + '/' + total21
                     // (element[1]['blok_mb'] ?? 0) + '/' + (element[1]['alas_mb'] ?? 0);
-                    let item51 = ((total29 / total21) * 100).toFixed(2)
+                    let item51 = ((total29 / total21) * 100).toFixed(3)
                     let item52 = mbalas_br((total29 / total21) * 100)
                     let item53 = mbalas_br((total29 / total21) * 100) + mb_vcut((total28 / total22) * 100) + mb_jangkos(total27 / (total22 - total24) * 100) +
                         mb_over(total26 / (total22 - total24) * 100) + mb_masak(total25 / (total22 - total24) * 100) + mb_mentah(total23 / (total22 - total24) * 100)
@@ -4032,8 +4030,6 @@
 
                     arrTbody1.forEach(element => {
                         tr = document.createElement('tr');
-
-
                         let item1 = inc++;
                         let item2 = element[0];
                         let item3 = element[1]['pokok_sample'] ?? 0;
@@ -4305,64 +4301,63 @@
                         }
 
                     }
-
-                    let avarage = (totalsph / countSph).toFixed(2)
+                    let avarage = (totalsph / countSph).toFixed(3)
 
                     tr = document.createElement('tr');
-                    let item1 = 'Total'
+                    let item1 = 'Total';
                     let item2 = total;
                     // let item3 = avarage
-                    let item3 = totalluas.toFixed(2)
+                    let item3 = totalluas.toFixed(3)
                     let item4 = total3;
-                    let item5 = ((total3 / total) * 100).toFixed(2);
+                    let item5 = ((total3 / total) * 100).toFixed(3);
                     let item6 = total5;
                     let item7 = total6;
                     let item8 = total7;
                     let item9 = total8;
-                    let item10 = total9.toFixed(2);
-                    let item11 = skor_brd_ma(total9);
+                    let item10 = total9.toFixed(3);
+                    let item11 = skor_brd_ma(total9.toFixed(3));
                     let item12 = total11;
                     let item13 = total12;
                     let item14 = total13;
                     let item15 = total14;
                     let item16 = total15;
-                    let item17 = total16.toFixed(2);
-                    let item18 = skor_buah_Ma(total16.toFixed(2))
+                    let item17 = total16.toFixed(3);
+                    let item18 = skor_buah_Ma(total16.toFixed(3))
                     let item19 = total17
-                    let item20 = (total17 / total * 100).toFixed(2)
+                    let item20 = (total17 / total * 100).toFixed(3)
                     let item21 = skor_palepah_ma(total17 / total * 100)
-                    let item22 = skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(2)) + skor_brd_ma(total9);
+                    let item22 = skor_palepah_ma(total17 / total * 100) + skor_buah_Ma(total16.toFixed(3)) + skor_brd_ma(total9);
                     let item23 = total18
                     let item24 = total19
-                    let item25 = (total19 / total18).toFixed(2)
+                    let item25 = (total19 / total18).toFixed(3)
                     let item26 = brd_tph(total19 / total18)
                     let item27 = total20
-                    let item28 = (total20 / total18).toFixed(2)
+                    let item28 = (total20 / total18).toFixed(3)
                     let item29 = buah_tph(total20 / total18)
                     let item30 = buah_tph(total20 / total18) + brd_tph(total19 / total18)
                     let item31 = total21
                     let item32 = total22
                     let item33 = total23
-                    let item34 = (total23 / (total22 - total24) * 100).toFixed(2)
+                    let item34 = (total23 / (total22 - total24) * 100).toFixed(3)
                     let item35 = mb_mentah(total23 / (total22 - total24) * 100)
                     let item36 = total25
-                    let item37 = (total25 / (total22 - total24) * 100).toFixed(2)
+                    let item37 = (total25 / (total22 - total24) * 100).toFixed(3)
                     let item38 = mb_masak(total25 / (total22 - total24) * 100)
                     let item39 = total26
-                    let item40 = (total26 / (total22 - total24) * 100).toFixed(2)
+                    let item40 = (total26 / (total22 - total24) * 100).toFixed(3)
                     let item41 = mb_over(total26 / (total22 - total24) * 100)
                     let item42 = total27
-                    let item43 = (total27 / (total22 - total24) * 100).toFixed(2)
+                    let item43 = (total27 / (total22 - total24) * 100).toFixed(3)
                     let item44 = mb_jangkos(total27 / (total22 - total24) * 100)
                     let item45 = total28
-                    let item46 = ((total28 / total22) * 100).toFixed(2)
+                    let item46 = ((total28 / total22) * 100).toFixed(3)
                     let item47 = mb_vcut((total28 / total22) * 100)
                     let item48 = total24
-                    let item49 = ((total24 / total22) * 100).toFixed(2)
+                    let item49 = ((total24 / total22) * 100).toFixed(3)
                     // let item50 = total21 + '/' + total29
                     let item50 = total29 + '/' + total21
                     // (element[1]['blok_mb'] ?? 0) + '/' + (element[1]['alas_mb'] ?? 0);
-                    let item51 = ((total29 / total21) * 100).toFixed(2)
+                    let item51 = ((total29 / total21) * 100).toFixed(3)
                     let item52 = mbalas_br((total29 / total21) * 100)
                     let item53 = mbalas_br((total29 / total21) * 100) + mb_vcut((total28 / total22) * 100) + mb_jangkos(total27 / (total22 - total24) * 100) +
                         mb_over(total26 / (total22 - total24) * 100) + mb_masak(total25 / (total22 - total24) * 100) + mb_mentah(total23 / (total22 - total24) * 100)

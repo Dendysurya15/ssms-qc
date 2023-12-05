@@ -212,3 +212,5 @@ Route::get('/absensibukti', [AbsensiController::class, 'getimgBukti'])->name('ab
 
 Route::get('/testmaps', [testingmapsController::class, 'index'])->name('testmaps');
 Route::post('/editNilai', [emplacementsController::class, 'editNilai'])->name('editNilai');
+Route::post('/adingnewimg', [emplacementsController::class, 'adingnewimg'])->name('adingnewimg');
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);

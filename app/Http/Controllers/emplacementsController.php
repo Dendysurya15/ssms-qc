@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Pagination\LengthAwarePaginator;
 use DateTime;
-use Illuminate\Validation\Rules\Unique;
 use Barryvdh\DomPDF\Facade\Pdf;
-use PhpParser\Node\Expr\Isset_;
+use Illuminate\Support\Facades\Http;
 
 require '../app/helpers.php';
 
@@ -2315,7 +2311,16 @@ class emplacementsController extends Controller
 
         // dd($uniqueDates);
 
+        $listafd = DB::connection('mysql2')->table('afdeling')
+            ->select('afdeling.*')
+            ->join('estate', 'estate.id', '=', 'afdeling.estate')
+            ->where('estate.est', '=', $est)
+            ->pluck('nama');
 
+        $listafd = json_decode($listafd, true);
+        array_push($listafd, "EST");
+
+        // dd($listafd);
 
         $dateString = $date;
 
@@ -2327,10 +2332,8 @@ class emplacementsController extends Controller
         // dd($pagianteafd_lk);
         $arrView = array();
         $arrView['est'] =  $est;
-        // dd($date);
-
-
         $arrView['tanggal'] =  $yearAndMonth;
+        $arrView['listafd'] =  $listafd;
 
         $arrView['date'] = $uniqueDates;
         return view('datailEmplashmend', $arrView);
@@ -4260,6 +4263,7 @@ class emplacementsController extends Controller
         }
 
         $arrayMerge2 = [];
+        // dd($header);
 
         foreach ($header as $item) {
             $arrayMerge2['est'] = $item['est'];
@@ -4271,7 +4275,7 @@ class emplacementsController extends Controller
             $detail_temuan = [];
             foreach ($item['foto_temuan'] as $foto) {
                 $parts = explode('_', $foto);
-
+                // dd($parts, $header);
                 if (count($parts) > 2) {
                     $detail_parts = explode('.', $parts[4]); // Split the fourth part by dot
                     if (count($detail_parts) > 1) {
@@ -4279,6 +4283,8 @@ class emplacementsController extends Controller
                     }
                 }
             }
+
+
             $arrayMerge2['detail_temuan'] = array_merge($arrayMerge2['detail_temuan'] ?? [], $detail_temuan);
 
             $komentar_temuan = [];
@@ -4295,6 +4301,9 @@ class emplacementsController extends Controller
                 }
             }
 
+            // dd($komentar_temuan);
+
+
             $arrayMerge2['komentar_temuan'] = array_merge($arrayMerge2['komentar_temuan'] ?? [], $komentar_temuan);
 
 
@@ -4310,7 +4319,7 @@ class emplacementsController extends Controller
             }
             $arrayMerge2['data_temuan'] = array_merge($arrayMerge2['data_temuan'] ?? [], $data_temuan);
         }
-        // dd($arrayMerge);
+        // dd($arrayMerge2);
         $baseURL = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/';
         // $baseURL2 = 'https://mobilepro.srs-ssms.com/storage/app/public/qc/lingkungan/PLG_2023829_112324_RGE_OB.jpg';
         $delArr = [];
@@ -4807,6 +4816,7 @@ class emplacementsController extends Controller
         $type = $request->input('type');
         $nilaiArray = $request->input('nilai');
 
+        // dd($nilaiArray);
         switch ($type) {
             case 'perumahan':
                 $result = implode('$', $nilaiArray);
@@ -4857,6 +4867,343 @@ class emplacementsController extends Controller
                 } catch (\Throwable $th) {
                     return response()->json(['status' => 'error', 'message' => 'Error updating nilai']);
                 }
+                break;
+            default:
+                // Handle default case or any other type
+                break;
+        }
+    }
+
+
+    public function adingnewimg(Request $request)
+    {
+
+        // dd($test);
+        $afd = $request->input('afd');
+        $tanggal = $request->input('tanggal');
+        $type = $request->input('type');
+        $estate = $request->input('estate');
+        $komentar = $request->input('komentar');
+        $image = $request->file('image');
+        // echo "AFD: $afd, Type: $type, Tanggal: $tanggal, Estate: $estate";
+        function generateRandomString($length = 6)
+        {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $randomString = '';
+
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, strlen($characters) - 1)];
+            }
+
+            return $randomString;
+        }
+
+        // Usage:
+        // dd($type);
+
+        $randomNumber = generateRandomString(6);
+
+
+        switch ($type) {
+            case 'perumahan':
+                $getdata = DB::connection('mysql2')->table('perumahan')
+                    ->select('perumahan.*')
+                    ->where('est', $estate)
+                    ->where('afd', $afd)
+                    ->where('datetime', 'LIKE', '%' . $tanggal . '%')
+                    ->first();
+
+
+                if (!$getdata) {
+
+                    // No existing data found, perform insert operation
+                    try {
+                        $imgquery = '$$$$$$$$$$$$';
+                        $newkomnt = '-$-$-$-$-$-$-$-$-$-$-$-$-' . '$' . $komentar;
+                        $img_format = $image->getClientOriginalExtension();
+
+                        $img_name = 'PPR_' . $randomNumber . '_' . $randomNumber . '_' . $estate . '_' . $afd . '.' . $img_format;
+
+                        $newimg = $imgquery . '$' . $img_name;
+
+                        DB::connection('mysql2')->table('perumahan')->insert([
+                            'datetime' => $tanggal . ' ' . '06:00:00',
+                            'est' => $estate,
+                            'afd' => $afd,
+                            'petugas' => '-',
+                            'pendamping' => '-',
+                            'foto_temuan' => $newimg,
+                            'komentar_temuan' => '',
+                            'nilai' => '0$0$0$0$0$0$0$0$0$0$0$0$0',
+                            'komentar' => $newkomnt,
+                            'app_version' => '1.5.35;13;RMX3521',
+                        ]);
+
+                        // Upload the image
+                        $baseUrl = 'https://srs-ssms.com/qc_inspeksi/upload_emplasment.php';
+                        $response = Http::attach('image', file_get_contents($image), $img_name)
+                            ->post($baseUrl, ['action' => 'perum', 'filename' => $img_name]);
+
+                        $responseData = $response->json();
+
+                        // Check if image upload was successful
+                        if (!$response->successful()) {
+                            return response()->json(['status' => 'error', 'message' => 'Image upload failed']);
+                        }
+
+                        return response()->json(['status' => 'success']);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => 'error', 'message' => 'Error inserting or uploading']);
+                    }
+                } else {
+
+                    $id = $getdata->id;
+                    $imgquery = $getdata->foto_temuan;
+                    $komentarquery = $getdata->komentar;
+                    $newkomnt = $komentarquery . '$' . $komentar;
+                    $img_format = $image->getClientOriginalExtension();
+
+                    $img_name = 'PPR_' . $randomNumber . '_' . $randomNumber . '_' . $estate . '_' . $afd . '.' . $img_format;
+
+                    $newimg = $imgquery . '$' . $img_name;
+
+
+
+                    // Perumahan; PPR
+                    // Landscape:PLD
+                    // Lingkungan:PLD
+
+                    $baseUrl = 'https://srs-ssms.com/qc_inspeksi/upload_emplasment.php';
+                    $response = Http::attach('image', file_get_contents($image), $img_name)
+                        ->post($baseUrl, ['action' => 'perum', 'filename' => $img_name]);
+                    $responseData = $response->json();
+
+                    // Check if image upload was successful before database update
+                    if (!$response->successful()) {
+                        return response()->json(['status' => 'error', 'message' => 'Image upload failed']);
+                    }
+
+
+                    try {
+
+                        DB::connection('mysql2')->table('perumahan')
+                            ->where('id', $id)
+                            ->update([
+                                'komentar' => $newkomnt,
+                                'foto_temuan' => $newimg,
+                            ]);
+
+
+                        return response()->json(['status' => 'success']);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => 'error', 'message' => 'Error updating']);
+                    }
+                }
+
+
+
+
+                break;
+            case 'lingkungan':
+                $getdata = DB::connection('mysql2')->table('lingkungan')
+                    ->select('lingkungan.*')
+                    ->where('est', $estate)
+                    ->where('afd', $afd)
+                    ->where('datetime', 'LIKE', '%' . $tanggal . '%')
+                    ->first();
+
+                // $getdata = json_decode($getdata, true);
+
+                // dd($getdata);
+
+
+                if (!$getdata) {
+
+                    // No existing data found, perform insert operation
+                    try {
+                        $imgquery = '$$$$$$$$$$$$$';
+                        $newkomnt = '-$-$-$-$-$-$-$-$-$-$-$-$-$-' . '$' . $komentar;
+                        $img_format = $image->getClientOriginalExtension();
+
+                        $img_name = 'PLD_' . $randomNumber . '_' . $randomNumber . '_' . $estate . '_' . $afd . '.' . $img_format;
+
+                        $newimg = $imgquery . '$' . $img_name;
+
+                        DB::connection('mysql2')->table('lingkungan')->insert([
+                            'datetime' => $tanggal . ' ' . '06:00:00',
+                            'est' => $estate,
+                            'afd' => $afd,
+                            'petugas' => '-',
+                            'pendamping' => '-',
+                            'foto_temuan' => $newimg,
+                            'komentar_temuan' => '',
+                            'nilai' => '0$0$0$0$0$0$0$0$0$0$0$0$0$0',
+                            'komentar' => $newkomnt,
+                            'app_version' => '1.5.35;13;RMX3521',
+                        ]);
+
+                        // Upload the image
+                        $baseUrl = 'https://srs-ssms.com/qc_inspeksi/upload_emplasment.php';
+                        $response = Http::attach('image', file_get_contents($image), $img_name)
+                            ->post($baseUrl, ['action' => 'lingkn', 'filename' => $img_name]);
+
+                        $responseData = $response->json();
+
+                        // Check if image upload was successful
+                        if (!$response->successful()) {
+                            return response()->json(['status' => 'error', 'message' => 'Image upload failed']);
+                        }
+
+                        return response()->json(['status' => 'success']);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => 'error', 'message' => 'Error inserting or uploading']);
+                    }
+                } else {
+                    $id = $getdata->id;
+                    $imgquery = $getdata->foto_temuan;
+                    $komentarquery = $getdata->komentar;
+                    $newkomnt = $komentarquery . '$' . $komentar;
+                    $img_format = $image->getClientOriginalExtension();
+
+                    $img_name = 'PLD_' . $randomNumber . '_' . $randomNumber . '_' . $estate . '_' . $afd . '.' . $img_format;
+
+                    $newimg = $imgquery . '$' . $img_name;
+
+
+
+                    // Perumahan; PPR
+                    // Landscape:PLD
+                    // Lingkungan:PLD
+
+                    $baseUrl = 'https://srs-ssms.com/qc_inspeksi/upload_emplasment.php';
+                    $response = Http::attach('image', file_get_contents($image), $img_name)
+                        ->post($baseUrl, ['action' => 'lingkn', 'filename' => $img_name]);
+                    $responseData = $response->json();
+
+                    // Check if image upload was successful before database update
+                    if (!$response->successful()) {
+                        return response()->json(['status' => 'error', 'message' => 'Image upload failed']);
+                    }
+
+
+                    try {
+
+                        DB::connection('mysql2')->table('lingkungan')
+                            ->where('id', $id)
+                            ->update([
+                                'komentar' => $newkomnt,
+                                'foto_temuan' => $newimg,
+                            ]);
+
+
+                        return response()->json(['status' => 'success']);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => 'error', 'message' => 'Error updating']);
+                    }
+                }
+
+                break;
+            case 'landscape':
+                $getdata = DB::connection('mysql2')->table('landscape')
+                    ->select('landscape.*')
+                    ->where('est', $estate)
+                    ->where('afd', $afd)
+                    ->where('datetime', 'LIKE', '%' . $tanggal . '%')
+                    ->first();
+
+                // $getdata = json_decode($getdata, true);
+
+                // dd($getdata);
+
+
+                if (!$getdata) {
+
+                    // No existing data found, perform insert operation
+                    try {
+                        $imgquery = '$$$$';
+                        $newkomnt = '$-$-$-$-' . '$' . $komentar;
+                        $img_format = $image->getClientOriginalExtension();
+
+                        $img_name = 'PLS_' . $randomNumber . '_' . $randomNumber . '_' . $estate . '_' . $afd . '.' . $img_format;
+
+                        $newimg = $imgquery . '$' . $img_name;
+
+                        DB::connection('mysql2')->table('landscape')->insert([
+                            'datetime' => $tanggal . ' ' . '06:00:00',
+                            'est' => $estate,
+                            'afd' => $afd,
+                            'petugas' => '-',
+                            'pendamping' => '-',
+                            'foto_temuan' => $newimg,
+                            'komentar_temuan' => '',
+                            'nilai' => '0$0$0$0$0',
+                            'komentar' => $newkomnt,
+                            'app_version' => '1.5.35;13;RMX3521',
+                        ]);
+
+                        // Upload the image
+                        $baseUrl = 'https://srs-ssms.com/qc_inspeksi/upload_emplasment.php';
+                        $response = Http::attach('image', file_get_contents($image), $img_name)
+                            ->post($baseUrl, ['action' => 'lands', 'filename' => $img_name]);
+
+                        $responseData = $response->json();
+
+                        // Check if image upload was successful
+                        if (!$response->successful()) {
+                            return response()->json(['status' => 'error', 'message' => 'Image upload failed']);
+                        }
+
+                        return response()->json(['status' => 'success']);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => 'error', 'message' => 'Error inserting or uploading']);
+                    }
+                } else {
+                    $id = $getdata->id;
+                    $imgquery = $getdata->foto_temuan;
+                    $komentarquery = $getdata->komentar;
+                    $newkomnt = $komentarquery . '$' . $komentar;
+                    $img_format = $image->getClientOriginalExtension();
+
+                    $img_name = 'PLS_' . $randomNumber . '_' . $randomNumber . '_' . $estate . '_' . $afd . '.' . $img_format;
+
+                    $newimg = $imgquery . '$' . $img_name;
+
+
+
+                    // Perumahan; PPR
+                    // Landscape:PLD
+                    // Lingkungan:PLD
+
+                    $baseUrl = 'https://srs-ssms.com/qc_inspeksi/upload_emplasment.php';
+                    $response = Http::attach('image', file_get_contents($image), $img_name)
+                        ->post($baseUrl, ['action' => 'lands', 'filename' => $img_name]);
+                    $responseData = $response->json();
+
+                    // Check if image upload was successful before database update
+                    if (!$response->successful()) {
+                        return response()->json(['status' => 'error', 'message' => 'Image upload failed']);
+                    }
+
+
+                    try {
+
+                        DB::connection('mysql2')->table('landscape')
+                            ->where('id', $id)
+                            ->update([
+                                'komentar' => $newkomnt,
+                                'foto_temuan' => $newimg,
+                            ]);
+
+
+                        return response()->json(['status' => 'success']);
+                    } catch (\Throwable $th) {
+                        return response()->json(['status' => 'error', 'message' => 'Error updating']);
+                    }
+                }
+
+
+
+
                 break;
             default:
                 // Handle default case or any other type

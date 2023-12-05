@@ -119,6 +119,10 @@
 
         <div class="d-flex justify-content-end mr-3">
             <button class="btn btn-primary ms-auto" id="toggleButton">Preview Penilaian</button>
+            @if (session('jabatan') && (session('jabatan') === 'Askep' || session('jabatan') === 'Manager' || session('jabatan') === 'Asisten'))
+            <button class="btn btn-primary ms-auto ml-3" id="addnewimg">Tambah Foto Baru</button>
+            @endif
+
         </div>
 
 
@@ -461,6 +465,8 @@
         });
 
         var currentUserName = "{{ session('jabatan') }}";
+
+        // console.log(listafd);
 
         function goBack() {
             // Save the selected tab to local storage
@@ -2336,6 +2342,11 @@
             if ($.fn.DataTable.isDataTable('#tablangscape')) {
                 $('#tablangscape').DataTable().destroy();
             }
+
+
+            if ($.fn.DataTable.isDataTable('#tablingk')) {
+                $('#tablingk').DataTable().destroy();
+            }
             $.ajax({
                 url: "{{ route('getTemuan') }}",
                 method: "get",
@@ -2818,5 +2829,113 @@
             $("#tglpdfnew").val(selectedDate);
 
             $("#downloadPDF").submit();
+        }
+
+        var listafd = @json($listafd);
+        var estdetail = @json($est);
+        if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
+
+            $('#addnewimg').click(function() {
+                console.log('adding new img')
+
+                // Create options for afdSelect dropdown
+                var afdOptions = '';
+                listafd.forEach(function(item) {
+                    afdOptions += `<option value="${item}">${item}</option>`;
+                });
+
+                // Example using SweetAlert 2
+                Swal.fire({
+                    title: 'Tambah Foto Baru',
+                    html: `
+            
+            <p> Tipe </p> <select id="typeSelect" class="swal2-select">
+                <option value="perumahan">Perumahan</option>
+                <option value="landscape">Landscape</option>
+                <option value="lingkungan">Lingkungan</option>
+            </select>
+            <p> Afdeling </p>
+            <select id="afdSelect" class="swal2-select">
+                ${afdOptions}
+            </select>
+            <p> Komentar </p>
+            <textarea id="komentar" style="height: 100px; width: 300px; resize: none;"></textarea>
+            <input type="file" id="imageInput" class="swal2-input" accept=".jpg, .jpeg, .png">
+        `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Save Image',
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        const imageFile = document.getElementById('imageInput').files[0];
+                        const typeSelected = document.getElementById('typeSelect').value;
+                        const afdSelected = document.getElementById('afdSelect').value;
+                        const inputDate = document.getElementById('inputDate').value;
+                        const komentar = $('#komentar').val();
+                        const estate = estdetail;
+
+                        // Check if the image file is not null
+                        if (!imageFile) {
+                            Swal.showValidationMessage('Harap Pilih Gambar!');
+                            return false; // Stops the modal from closing
+                        }
+
+                        const formData = new FormData();
+                        formData.append('image', imageFile);
+                        formData.append('type', typeSelected);
+                        formData.append('afd', afdSelected);
+                        formData.append('tanggal', inputDate);
+                        formData.append('estate', estate);
+                        formData.append('komentar', komentar);
+                        formData.append('_token', $('input[name="_token"]').val());
+
+                        // console.log(formData);
+
+
+
+                        // AJAX request
+                        $.ajax({
+                            type: 'post',
+                            url: "{{ route('adingnewimg') }}",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    // Handle success with SweetAlert
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Foto berhasil diUpload',
+                                        icon: 'success'
+                                    }).then(function() {
+                                        location.reload(); // Reload the page after success
+                                    });
+                                } else {
+                                    // Handle error with SweetAlert
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: response.message || 'Failed to update ',
+                                        icon: 'error'
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                // Handle AJAX error
+                                console.error('Error sending data:', error);
+                                Swal.fire('Error', 'Failed to update nilai', 'error');
+                            }
+                        });
+
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Saved!',
+                            'Image has been saved.',
+                            'success'
+                        );
+                    }
+                });
+            });
         }
     </script>
