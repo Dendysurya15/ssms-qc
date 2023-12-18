@@ -3113,7 +3113,7 @@
 
 
                 var arrTbody1 = filteredArray
-                // console.log(arrTbody1);
+                console.log(arrTbody1);
 
                 var tbody1 = document.getElementById('tbody1');
                 //         $('#thead1').empty()
@@ -3128,6 +3128,7 @@
                     let item3 = element['nama']
                     let item4 = element['skor']
                     let item5 = sortedArr.findIndex(sortedElement => sortedElement === element) + 1;
+
 
                     let itemElement1 = document.createElement('td')
                     let itemElement2 = document.createElement('td')
@@ -3150,6 +3151,7 @@
                     }
 
 
+                    let data = element['data']
 
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
@@ -3164,8 +3166,14 @@
                         itemElement4.style.backgroundColor = "#ffc404";
                         itemElement4.style.color = "black";
                     } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
+                        if (data === "ada") {
+                            itemElement4.style.backgroundColor = "red";
+                            itemElement4.style.color = "black";
+                        } else {
+                            itemElement4.style.backgroundColor = "white";
+                            itemElement4.style.color = "black";
+                        }
+
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
@@ -3251,6 +3259,8 @@
                     }
 
 
+                    let data = element['data']
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
@@ -3264,8 +3274,14 @@
                         itemElement4.style.backgroundColor = "#ffc404";
                         itemElement4.style.color = "black";
                     } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
+                        if (data === "ada") {
+                            itemElement4.style.backgroundColor = "red";
+                            itemElement4.style.color = "black";
+                        } else {
+                            itemElement4.style.backgroundColor = "white";
+                            itemElement4.style.color = "black";
+                        }
+
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
@@ -3413,6 +3429,8 @@
 
 
 
+                    let data = element['data']
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
@@ -3426,8 +3444,14 @@
                         itemElement4.style.backgroundColor = "#ffc404";
                         itemElement4.style.color = "black";
                     } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
+                        if (data === "ada") {
+                            itemElement4.style.backgroundColor = "red";
+                            itemElement4.style.color = "black";
+                        } else {
+                            itemElement4.style.backgroundColor = "white";
+                            itemElement4.style.color = "black";
+                        }
+
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
@@ -3509,6 +3533,8 @@
                         itemElement3.style.color = "black";
                     }
 
+                    let data = element['data']
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
@@ -3522,10 +3548,15 @@
                         itemElement4.style.backgroundColor = "#ffc404";
                         itemElement4.style.color = "black";
                     } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    }
+                        if (data === "ada") {
+                            itemElement4.style.backgroundColor = "red";
+                            itemElement4.style.color = "black";
+                        } else {
+                            itemElement4.style.backgroundColor = "white";
+                            itemElement4.style.color = "black";
+                        }
 
+                    }
                     if (itemElement4.style.backgroundColor === "#609cd4") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
@@ -3668,6 +3699,8 @@
 
 
 
+                    let data = element['data']
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
@@ -3681,8 +3714,14 @@
                         itemElement4.style.backgroundColor = "#ffc404";
                         itemElement4.style.color = "black";
                     } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
+                        if (data === "ada") {
+                            itemElement4.style.backgroundColor = "red";
+                            itemElement4.style.color = "black";
+                        } else {
+                            itemElement4.style.backgroundColor = "white";
+                            itemElement4.style.color = "black";
+                        }
+
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
@@ -3810,8 +3849,10 @@
 
 
 
+                    let data = element['data']
+
                     if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
+                        itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
                         itemElement4.style.backgroundColor = "#08b454";
@@ -3823,8 +3864,14 @@
                         itemElement4.style.backgroundColor = "#ffc404";
                         itemElement4.style.color = "black";
                     } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
+                        if (data === "ada") {
+                            itemElement4.style.backgroundColor = "red";
+                            itemElement4.style.color = "black";
+                        } else {
+                            itemElement4.style.backgroundColor = "white";
+                            itemElement4.style.color = "black";
+                        }
+
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {
@@ -4039,6 +4086,8 @@
 
 
 
+                    let data = element['data']
+
                     if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
@@ -4052,8 +4101,14 @@
                         itemElement4.style.backgroundColor = "#ffc404";
                         itemElement4.style.color = "black";
                     } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
+                        if (data === "ada") {
+                            itemElement4.style.backgroundColor = "red";
+                            itemElement4.style.color = "black";
+                        } else {
+                            itemElement4.style.backgroundColor = "white";
+                            itemElement4.style.color = "black";
+                        }
+
                     }
 
                     if (itemElement4.style.backgroundColor === "#609cd4") {

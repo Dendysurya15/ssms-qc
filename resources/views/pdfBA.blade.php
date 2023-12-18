@@ -741,9 +741,9 @@
 
                                 $persen_sampNew = $luasBloks !=0 ? round ($TotLuasSam / $luasBloks * 100,2) : '-';
 
-                                $TotPersenSam = $avg != 0 ? round(($TotLuasSam / $avg) * 100, 2) : '-';
+                                $TotPersenSam = $avg != 0 ? round(($totalPokokSample / $data['sph_avg']), 2) : '-';
 
-
+                                $newtodpersn = round (($TotPersenSam / $TotLuasBlok) * 100,2);
 
                                 }
 
@@ -841,7 +841,7 @@
                                     <td>{{ $totalPokokSample }}</td>
                                     <td>{{$TotLuasSam}}</td>
                                     <!--<td>oke</td>-->
-                                    <td>{{$TotPersenSam}}</td>
+                                    <td>{{$newtodpersn}}</td>
                                     <td>{{$totaljumPanen}}</td>
                                     <td>{{$akp_real}}</td>
 

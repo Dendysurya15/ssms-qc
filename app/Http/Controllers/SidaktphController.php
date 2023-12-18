@@ -387,6 +387,7 @@ class SidaktphController extends Controller
             ->select('estate.*')
             ->whereNotIn('estate.est', ['PLASMA', 'SRE', 'LDE', 'SKE', 'CWS1', 'SRS'])
             ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('estate.emp', '!=', 1)
             ->where('wil.regional', $regional)
             ->get();
         $queryEstereg = json_decode($queryEstereg, true);
@@ -8119,7 +8120,8 @@ class SidaktphController extends Controller
             $incr++;
         }
 
-        // dd($pkLatLn);
+
+        // dd($blokLatLnEw);
 
         // Define an associative array to track unique combinations
         $uniqueCombinations = [];
@@ -8144,7 +8146,7 @@ class SidaktphController extends Controller
                 }
             }
         }
-
+        dd($pkLatLn, $blokLatLnEw, $messageResponse);
         // dd($messageResponse);
         // dd($blokLatLnEw);
         $newArr = DB::connection('mysql2')->table('sidak_tph')

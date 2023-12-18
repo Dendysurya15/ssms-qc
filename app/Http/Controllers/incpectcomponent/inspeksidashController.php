@@ -1810,6 +1810,14 @@ class inspeksidashController extends Controller
                 $mtBuahtab1Wil[$key][$key1]['TOTAL_SKOR'] = 0;
             }
 
+            // if ($sum_kr != 0) {
+            //     $total_kr = round($sum_kr / $dataBLok, 3);
+            // } else {
+            //     $total_kr = 0;
+            // }
+
+
+
             if ($sum_krWil != 0) {
                 $total_krWil = round($sum_krWil / $jum_haWil, 3);
             } else {
@@ -4217,6 +4225,7 @@ class inspeksidashController extends Controller
         }
         // dd($newmua_ancak, $newmua_buah, $newmua_trans, $muacak, $muabuah, $muatrans,);
 
+        // dd($mtancaktab1Wil, $mtTranstab1Wil, $mtBuahtab1Wil);
 
 
         foreach ($mtancaktab1Wil as $key => $value) {

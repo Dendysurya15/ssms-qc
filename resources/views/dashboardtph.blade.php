@@ -2046,6 +2046,7 @@
           var parseResult = JSON.parse(result)
 
           var datatableweek1 = $('#newweek1').DataTable({
+            "iDisplayLength": 100,
             columns: [{
                 data: 'est'
               },
@@ -2395,6 +2396,7 @@
 
 
           var datatableweek2 = $('#newweek2').DataTable({
+            "iDisplayLength": 100,
             columns: [{
                 data: 'est'
               },
@@ -2743,6 +2745,7 @@
 
 
           var datatableweek3 = $('#newweek3').DataTable({
+            "iDisplayLength": 100,
             columns: [{
                 data: 'est'
               },
@@ -3090,6 +3093,7 @@
           datatableweek3.clear().rows.add(parseResult['week3']).draw();
 
           var datatableweek4 = $('#newweek4').DataTable({
+            "iDisplayLength": 100,
             columns: [{
                 data: 'est'
               },
@@ -3437,6 +3441,7 @@
           datatableweek4.clear().rows.add(parseResult['week4']).draw();
 
           var datatableweek5 = $('#newweek5').DataTable({
+            "iDisplayLength": 100,
             columns: [{
                 data: 'est'
               },
