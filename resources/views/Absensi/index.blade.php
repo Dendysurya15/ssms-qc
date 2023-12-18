@@ -20,9 +20,11 @@
                                         <button class="btn btn-primary" id="pdfdownload">Download PDF</button>
 
                                         <!-- Button to trigger modal -->
+                                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
                                         <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#editModal">
-                                            Edit
+                                            Edit Data
                                         </button>
+                                        @endif
 
                                         <!-- Edit Modal -->
                                         <!-- Edit Modal with Loading Screen and Select Options -->
