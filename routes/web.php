@@ -208,9 +208,11 @@ Route::get('/absensidata', [AbsensiController::class, 'data'])->name('absensidat
 Route::get('/absenmaps', [AbsensiController::class, 'getMaps'])->name('absenmaps');
 Route::get('/absensipdf', [AbsensiController::class, 'exportPDF'])->name('absensipdf');
 Route::get('/absensibukti', [AbsensiController::class, 'getimgBukti'])->name('absensibukti');
-
+Route::get('/getEditabsensi', [AbsensiController::class, 'getEdit'])->name('getEditabsensi');
+Route::post('/crudabsensi', [AbsensiController::class, 'crudAbsensi'])->name('crudabsensi');
 
 Route::get('/testmaps', [testingmapsController::class, 'index'])->name('testmaps');
 Route::post('/editNilai', [emplacementsController::class, 'editNilai'])->name('editNilai');
 Route::post('/adingnewimg', [emplacementsController::class, 'adingnewimg'])->name('adingnewimg');
+
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);

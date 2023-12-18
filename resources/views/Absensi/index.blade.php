@@ -18,8 +18,82 @@
                                 <div class="col-sm-8">
                                     <div style=" display: flex; justify-content: flex-start;padding-bottom:20px">
                                         <button class="btn btn-primary" id="pdfdownload">Download PDF</button>
+
+                                        <!-- Button to trigger modal -->
+                                        <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#editModal">
+                                            Edit
+                                        </button>
+
+                                        <!-- Edit Modal -->
+                                        <!-- Edit Modal with Loading Screen and Select Options -->
+                                        <div class="modal" id="editModal">
+                                            <div class="modal-dialog modal-xl">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Edit User Data</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+
+                                                    <!-- Modal Body with Loading Screen -->
+                                                    <div class="modal-body">
+                                                        <form id="editForm">
+                                                            <div class="form-group">
+                                                                <label for="userName">Select User:</label>
+                                                                <select class="form-control" id="userName">
+                                                                    @foreach ($useroption as $items)
+                                                                    <option value="{{$items['user_id']}}">{{$items['nama_lengkap']}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="datePicker">Select Date:</label>
+                                                                <input type="date" class="form-control" id="datePicker">
+                                                            </div>
+                                                            <button type="button" class="btn btn-primary" id="searchButton">Search</button>
+                                                        </form>
+
+                                                        <div class="loading-screen text-center" style="display: none;">
+                                                            <p>Loading...</p>
+                                                            <div class="spinner-border" role="status">
+                                                                <span class="sr-only">Loading...</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Table to display data -->
+                                                        <table class="table mt-3" id="dataResults" style="display: none;">
+                                                            <!-- Table headers -->
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="text-align:center">ID</th>
+                                                                    <th style="text-align:center">Nama Pengguna</th>
+                                                                    <th style="text-align:center">Jam Masuk</th>
+                                                                    <th style="text-align:center">Tanggal Masuk</th>
+                                                                    <th style="text-align:center" colspan="2">Aksi</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <!-- Table body to populate with data -->
+                                                            <tbody id="editabsensi">
+                                                                <!-- Data will be populated here -->
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+
                                     </div>
+
                                 </div>
+
                                 <div class="col-sm-2">
                                     <div style=" display: flex; justify-content: flex-end;padding-bottom:20px;">
                                         {{ csrf_field() }}
@@ -215,6 +289,243 @@
     var currentUserName = "{{ session('jabatan') }}";
 
     $(document).ready(function() {
+
+        $('#searchButton').click(function() {
+            var selectedUser = $('#userName').val();
+            var selectedDate = $('#datePicker').val();
+
+            // Show loading screen
+            showLoadingScreen();
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: "{{route ('getEditabsensi')}}", // Replace with your controller URL
+                method: 'get',
+                data: {
+                    userId: selectedUser,
+                    date: selectedDate,
+                    _token: _token
+                },
+                success: function(data) {
+                    if (data && data.length > 0) {
+                        // Update modal with received data
+                        $('#dataResults tbody').empty();
+
+
+                        $.each(data, function(index, item) {
+                            var row = `
+                            <tr>
+                            <td style="text-align:center">${item.id}</td>
+                            <td style="text-align:center">${item.nama}</td>
+                            <td style="text-align:center">${item.jam_masuk}</td>
+                            <td style="text-align:center">${item.tanggal}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary edit-btn" data-id="${item.id}" data-nama="${item.nama}" data-jam="${item.jam_masuk}" data-tanggal="${item.tanggal}">
+                                    <i class="fas fa-edit"></i> Jam
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger mk-btn" data-id="${item.id}">
+                                <i class="fas fa-edit"></i> MK
+                                </button>
+                            </td>
+                        </tr>
+
+                        `;
+                            $('#dataResults tbody').append(row);
+                        });
+
+                        hideLoadingScreen();
+
+                        $('#dataResults').on('click', '.edit-btn', function() {
+                            var id = $(this).data('id');
+                            var nama = $(this).data('nama');
+                            var jam = $(this).data('jam');
+                            var tanggal = $(this).data('tanggal');
+                            editRow(id, nama, jam, tanggal);
+                        });
+
+                        $('#dataResults').on('click', '.mk-btn', function() {
+                            var id = $(this).data('id');
+                            setMK(id);
+                        });
+
+
+
+                    } else {
+                        // If data is empty, add a button or handle the case to add new data
+                        $('#dataResults tbody').empty();
+                        $('#dataResults tbody').append(`
+                            <tr>
+                                <td colspan="6">No data found</td>
+                            </tr>
+                        `);
+
+                        // Adding a button to add new data
+                        $('#dataResults tbody').append(`
+                            <tr>
+                                <td colspan="6">
+                                    <button id="addDataButton" class="btn btn-primary">Add Data</button>
+                                </td>
+                            </tr>
+                        `);
+
+                        $('#addDataButton').on('click', function() {
+                            // Handle the click event to add new data
+                            // For example, you can open a form or trigger an action to add data
+                            alert('Add new data functionality');
+                        });
+
+                        hideLoadingScreen(); // Hide loading screen
+                    }
+                },
+
+
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                    // Handle errors if needed
+                }
+            });
+
+        });
+
+        function editRow(id, nama, jam, tanggal) {
+            // Format the tanggal and jam values to fit the datetime-local input format
+            const formattedDate = tanggal.replace(/:/g, '-'); // Replace colons with dashes
+            const formattedTime = jam.substring(0, 5); // Assuming jam is in the format "HH:MM:SS"
+
+            // Show SweetAlert to input new date and time
+            swal.fire({
+                title: 'Masukan Jam Baru',
+                html: `
+                <p>Harap Perhatikan tangal dan jam sebelum mengedit</p>
+                <input id="swal-date" type="date" value="${formattedDate}">
+               <input id="swal-time" type="time" value="${formattedTime}">`,
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                preConfirm: () => {
+                    const newDate = document.getElementById('swal-date').value;
+                    const newTime = document.getElementById('swal-time').value;
+                    return {
+                        newDate,
+                        newTime
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const {
+                        newDate,
+                        newTime
+                    } = result.value;
+                    var _token = $('input[name="_token"]').val();
+                    // Send the updated time to your AJAX function
+                    var type = 'editTime'
+                    $.ajax({
+                        url: "{{ route ('crudabsensi') }}",
+                        method: 'POST',
+                        data: {
+                            id: id,
+                            newTime: `${newDate} ${newTime}`, // Combine date and time
+                            tanggal: newDate,
+                            type: type,
+                            _token: _token
+                        },
+                        success: function(response) {
+                            // Handle success if needed
+                            if (response && response === 'Successfully updated') {
+                                swal.fire('New time submitted!', '', 'success').then(() => {
+                                    // Reload the window after displaying the success message
+                                    window.location.reload();
+                                });
+                            } else {
+                                swal.fire('Oops!', 'Failed to submit new time.', 'error');
+                            }
+                        },
+
+                        error: function(error) {
+                            // Handle error if needed
+                            swal.fire('Error!', 'Failed to submit new time.', 'error');
+                        }
+                    });
+                }
+                swal.getPopup().setAttribute('onclick', '');
+                swal.getContainer().removeAttribute('tabindex');
+            });
+        }
+
+        function setMK(id) {
+
+            console.log(id);
+            swal.fire({
+                title: 'Warning!',
+                html: '<i class="fas fa-exclamation-triangle" style="color:#f8bb86; font-size: 24px;"></i> Anda yakin ingin melakukan tindakan ini?<br>' +
+                    'Tindakan ini akan menghapus data kehadiran sekarang dan tidak dapat dikembalikan.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, ubah ke MK(mangkir)',
+                cancelButtonText: 'Cancel',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var _token = $('input[name="_token"]').val();
+                    var type = 'setMK';
+
+                    // Send the confirmation to your AJAX function
+                    $.ajax({
+                        url: "{{ route ('crudabsensi') }}",
+                        method: 'POST',
+                        data: {
+                            id: id,
+                            type: type,
+                            _token: _token
+                        },
+                        success: function(response) {
+                            // Handle success if needed
+                            if (response && response === 'Successfully deleted') {
+                                swal.fire('Data berhasil di buah ke MK!', '', 'success');
+                                window.location.reload();
+                            } else {
+                                swal.fire('Oops!', 'Failed to set the value to MK.', 'error');
+                            }
+                        },
+                        error: function(error) {
+                            // Handle error if needed
+                            swal.fire('Error!', 'Failed to set the value to MK.', 'error');
+                        }
+                    });
+                }
+                swal.getPopup().setAttribute('onclick', '');
+                swal.getContainer().removeAttribute('tabindex');
+            });
+
+        }
+
+
+
+
+
+        // Function to show loading screen and hide table
+        function showLoadingScreen() {
+            $('.loading-screen').show(); // Show loading screen
+            $('#dataResults').hide(); // Hide table
+        }
+
+        // Function to hide loading screen and show table
+        function hideLoadingScreen() {
+            $('.loading-screen').hide(); // Hide loading screen
+            $('#dataResults').show(); // Show the table with data
+        }
+
+
+
+
+
         var lokasiKerja = "{{ session('lok') }}";
 
 
@@ -244,6 +555,7 @@
             var selectedDateMonth = tahun.value;
 
             // Perform your AJAX request here with the selected values
+            var _token = $('input[name="_token"]').val();
             // Example:
             $('#data').empty()
             $.ajax({
@@ -251,7 +563,8 @@
                 url: "{{ route('absensidata') }}",
                 data: {
                     regional: selectedRegional,
-                    dateMonth: selectedDateMonth
+                    dateMonth: selectedDateMonth,
+                    _token: _token
                 },
                 success: function(data) {
                     // Handle the response data

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 
 
 
+
 class AbsensiController extends Controller
 {
     //
@@ -1047,5 +1048,101 @@ class AbsensiController extends Controller
         $arrView = array();
         $arrView['data'] = $imgdata; // Ensure it's a string
         return response()->json($arrView); // Laravel's response to JSON
+    }
+
+    public function getEdit(Request $request)
+    {
+        $userid = $request->input('userId');
+        $date = $request->input('date');
+
+        // dd($userid, $date);
+
+        // dd($date);
+        if ($date === null) {
+            $date = Carbon::now()->format('Y-m'); // Get the current year and month in 'YYYY-MM' format
+        }
+
+
+        $userdata = DB::connection('mysql2')->table('absensi_qc')
+            ->where('id_user', $userid)
+            ->where('waktu_absensi', 'LIKE', '%' . $date . '%')
+            ->get()
+            ->toArray(); // Convert the collection to array
+
+        // $userdata = json_decode($userdata, true);
+        // dd($userdata);
+        $table = [];
+        foreach ($userdata as $key => $value) {
+            // Retrieve the user's name
+
+            // Convert the 'waktu_absensi' to a Carbon instance and get the hours
+            $dateTime = Carbon::createFromFormat('Y-m-d H:i:s', $value->waktu_absensi);
+
+            // Get the hours in the format HH:MM:SS
+            $hours = $dateTime->format('H:i:s');
+            $tanggal = $dateTime->format('Y:m:d');
+
+
+            $table[] = [
+                'nama' => $value->nama_user,
+                'id' => $value->id,
+                'jam_masuk' => $hours,
+                'tanggal' => $tanggal
+            ];
+        }
+
+        // $arrView = array();
+        // $arrView['table'] =  $table;
+
+        // // dd($FinalTahun);
+        // echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
+        // exit();
+        // dd($table);
+
+        return response()->json($table);
+    }
+
+    public function crudAbsensi(Request $request)
+    {
+        $iddata = $request->input('id');
+        $newTime = $request->input('newTime');
+        $type = $request->input('type');
+
+        switch ($type) {
+            case 'editTime':
+                try {
+                    DB::connection('mysql2')
+                        ->table('absensi_qc')
+                        ->where('id', $iddata)
+                        ->update([
+                            'waktu_absensi' => $newTime,
+                        ]);
+
+                    return response()->json('Successfully updated');
+                } catch (\Throwable $th) {
+                    // Handle the exception - log the error or rollback if necessary
+                    return response()->json('Error updating data: ' . $th->getMessage(), 500);
+                }
+                break;
+            case 'setMK':
+                # code...
+
+                try {
+                    DB::connection('mysql2')
+                        ->table('absensi_qc')
+                        ->where('id', $iddata)
+                        ->delete();
+
+                    return response()->json('Successfully deleted');
+                } catch (\Throwable $th) {
+                    // Handle the exception - log the error or rollback if necessary
+                    return response()->json('Error updating data: ' . $th->getMessage(), 500);
+                }
+                break;
+
+            default:
+                # code...
+                break;
+        }
     }
 }
