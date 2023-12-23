@@ -344,10 +344,17 @@
                             var nama = $(this).data('nama');
                             var jam = $(this).data('jam');
                             var tanggal = $(this).data('tanggal');
-                            editRow(id, nama, jam, tanggal);
+                            var type = 'editTime'
+
+                            editRow(id, nama, jam, tanggal, type);
                         });
 
                         $('#dataResults').on('click', '.mk-btn', function() {
+                            var id = $(this).data('id');
+                            setMK(id);
+                        });
+
+                        $('#dataResults').on('click', '.ijin-btn', function() {
                             var id = $(this).data('id');
                             setMK(id);
                         });
@@ -367,15 +374,22 @@
                         $('#dataResults tbody').append(`
                             <tr>
                                 <td colspan="6">
-                                    <button id="addDataButton" class="btn btn-primary">Add Data</button>
+                                    <button id="addDataButton" class="btn btn-primary">Check in</button>
                                 </td>
                             </tr>
                         `);
-
                         $('#addDataButton').on('click', function() {
-                            // Handle the click event to add new data
-                            // For example, you can open a form or trigger an action to add data
-                            alert('Add new data functionality');
+                            var id = $('#userName').val();
+                            var tanggal = new Date().toISOString().split('T')[0]; // Formatting date as 'YYYY-MM-DD'
+                            var jam = new Date().toLocaleTimeString([], {
+                                hour12: false
+                            }); // Formatting time as 'HH:mm:ss'
+                            var nama = ''
+                            var type = 'nambahdata'
+
+
+
+                            addRow(id, nama, jam, tanggal, type)
                         });
 
                         hideLoadingScreen(); // Hide loading screen
@@ -391,18 +405,18 @@
 
         });
 
-        function editRow(id, nama, jam, tanggal) {
+        function editRow(id, nama, jam, tanggal, type) {
             // Format the tanggal and jam values to fit the datetime-local input format
             const formattedDate = tanggal.replace(/:/g, '-'); // Replace colons with dashes
             const formattedTime = jam.substring(0, 5); // Assuming jam is in the format "HH:MM:SS"
 
             // Show SweetAlert to input new date and time
-            swal.fire({
+            swal.fire({ ////
                 title: 'Masukan Jam Baru',
                 html: `
-                <p>Harap Perhatikan tangal dan jam sebelum mengedit</p>
+                <p>Harap Perhatikan tangal dan jam sebelum mengedit / menambah</p>
                 <input id="swal-date" type="date" value="${formattedDate}">
-               <input id="swal-time" type="time" value="${formattedTime}">`,
+                <input id="swal-time" type="time" value="${formattedTime}">`,
                 showCancelButton: true,
                 confirmButtonText: 'Submit',
                 cancelButtonText: 'Cancel',
@@ -411,9 +425,11 @@
                 preConfirm: () => {
                     const newDate = document.getElementById('swal-date').value;
                     const newTime = document.getElementById('swal-time').value;
+
                     return {
                         newDate,
                         newTime
+
                     };
                 }
             }).then((result) => {
@@ -421,10 +437,11 @@
                     const {
                         newDate,
                         newTime
+
                     } = result.value;
                     var _token = $('input[name="_token"]').val();
                     // Send the updated time to your AJAX function
-                    var type = 'editTime'
+                    // var type = 'editTime' //
                     $.ajax({
                         url: "{{ route ('crudabsensi') }}",
                         method: 'POST',
@@ -457,6 +474,213 @@
                 swal.getContainer().removeAttribute('tabindex');
             });
         }
+
+        var listkh = @json($listkerja);
+        // console.log(listkh);  
+        function addRow(id, nama, jam, tanggal, type) {
+            const formattedDate = tanggal.replace(/:/g, '-');
+            const formattedTime = jam.substring(0, 5);
+            const listkhOptions = listkh.map(item => `<option value="${item.id}">${item.nama}</option>`).join('');
+
+
+            const selectDropdown = `
+                <select id="pekerjaan" style="margin-bottom: 10px; padding: 5px;">
+                ${listkhOptions}
+                </select>
+            `;
+
+            const swalContent = document.createElement('div');
+            swalContent.style.fontFamily = 'Arial, sans-serif';
+            swalContent.style.padding = '20px';
+
+            const swalDate = document.createElement('input');
+            swalDate.id = 'swal-date';
+            swalDate.type = 'date';
+            swalDate.value = formattedDate;
+            swalDate.style.marginBottom = '10px';
+            swalDate.style.padding = '5px';
+            swalContent.appendChild(swalDate);
+
+            const swalTime = document.createElement('input');
+            swalTime.id = 'swal-time';
+            swalTime.type = 'time';
+            swalTime.value = formattedTime;
+            swalTime.style.marginBottom = '10px';
+            swalTime.style.padding = '5px';
+            swalContent.appendChild(swalTime);
+
+            const selectContainer = document.createElement('div');
+            selectContainer.innerHTML = selectDropdown;
+            swalContent.appendChild(selectContainer);
+
+            const fotoLabel = document.createElement('label');
+            fotoLabel.htmlFor = 'foto';
+            fotoLabel.style.display = 'block';
+            fotoLabel.style.marginBottom = '5px';
+            fotoLabel.textContent = 'FOTO';
+            swalContent.appendChild(fotoLabel);
+
+            const fotoInput = document.createElement('input');
+            fotoInput.id = 'foto';
+            fotoInput.type = 'file';
+            fotoInput.accept = '.jpg, .png, .jpeg';
+            fotoInput.placeholder = 'Opsional';
+            fotoInput.style.marginBottom = '10px';
+            fotoInput.style.padding = '5px';
+            swalContent.appendChild(fotoInput);
+
+            const cutiInput = document.createElement('input');
+            cutiInput.id = 'cuti';
+            cutiInput.type = 'checkbox';
+            cutiInput.style.marginBottom = '10px';
+            swalContent.appendChild(cutiInput);
+
+            const cutiLabel = document.createElement('label');
+            cutiLabel.htmlFor = 'cuti';
+            cutiLabel.style.marginLeft = '5px';
+            cutiLabel.textContent = 'Cuti (Check Box Jika mengambil Cuti)';
+            swalContent.appendChild(cutiLabel);
+
+            const dateRange = document.createElement('div');
+            dateRange.id = 'dateRange';
+            dateRange.style.display = 'none';
+            dateRange.style.marginTop = '10px';
+
+            const date1Input = document.createElement('input');
+            date1Input.id = 'date1';
+            date1Input.type = 'date';
+            date1Input.style.marginBottom = '5px';
+            date1Input.style.padding = '5px';
+            dateRange.appendChild(date1Input);
+
+            const date2Input = document.createElement('input');
+            date2Input.id = 'date2';
+            date2Input.type = 'date';
+            date2Input.style.padding = '5px';
+            dateRange.appendChild(date2Input);
+
+            swalContent.appendChild(dateRange);
+
+            cutiInput.addEventListener('change', function() {
+                dateRange.style.display = this.checked ? 'block' : 'none';
+            });
+
+            swal.fire({
+                title: 'Masukan Data Baru',
+                html: swalContent,
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                preConfirm: () => {
+                    const newDate = document.getElementById('swal-date').value;
+                    const newTime = document.getElementById('swal-time').value;
+                    const pekerjaan = document.getElementById('pekerjaan').value;
+                    const cuti = document.getElementById('cuti').checked;
+
+                    let date1, date2;
+
+                    if (cuti) {
+                        date1 = document.getElementById('date1').value;
+                        date2 = document.getElementById('date2').value;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('newDate_add', newDate);
+                    formData.append('newTime_add', newTime);
+                    formData.append('pekerjaan_add', pekerjaan);
+                    formData.append('cuti_add', cuti);
+                    formData.append('date1_add', date1);
+                    formData.append('date2_add', date2);
+                    formData.append('id', id);
+
+                    const fotoInput = document.getElementById('foto');
+
+                    if (fotoInput && fotoInput.files.length > 0) {
+                        formData.append('foto', fotoInput.files[0]);
+                    }
+
+                    return formData;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const newDate_add = document.getElementById('swal-date').value;
+                    const newTime_add = document.getElementById('swal-time').value;
+                    const pekerjaan_add = document.getElementById('pekerjaan').value;
+                    const cuti_add = document.getElementById('cuti').checked;
+                    const date1_add = document.getElementById('date1').value;
+                    const date2_add = document.getElementById('date2').value;
+                    const fotoInput = document.getElementById('foto').files[0];
+
+                    const formData = new FormData();
+                    formData.append('newDate_add', newDate_add);
+                    formData.append('newTime_add', newTime_add);
+                    formData.append('pekerjaan_add', pekerjaan_add);
+                    formData.append('cuti_add', cuti_add);
+                    formData.append('date1_add', date1_add);
+                    formData.append('date2_add', date2_add);
+                    formData.append('foto', fotoInput);
+                    formData.append('id', id);
+                    formData.append('_token', $('input[name="_token"]').val());
+
+
+                    $.ajax({
+                        url: "{{ route('creatAbsen') }}",
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            // Handle success response here
+                            console.log('Form submitted successfully.');
+                            console.log('Response:', response);
+
+                            // Check for undefined or unexpected response structure
+                            if (response === undefined || response.message === undefined) {
+                                console.error('Unexpected response received:', response);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Unexpected response received from the server. Please try again later.'
+                                });
+                                return; // Exit early to prevent further processing
+                            }
+
+                            // If the response indicates successful book upload
+                            if (response.message === 'Success') {
+                                // Show success message using SweetAlert
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil check in',
+                                    text: 'Berhasil check in.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    // Reload the page after the user clicks OK
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                // Handle other possible responses
+                                console.error('Unexpected response message:', response.message);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Unexpected response message received from the server. Please try again later.'
+                                });
+                            }
+                        },
+
+
+                    });
+                }
+                swal.getPopup().setAttribute('onclick', '');
+                swal.getContainer().removeAttribute('tabindex');
+            });
+        }
+
 
         function setMK(id) {
 

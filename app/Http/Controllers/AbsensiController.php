@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -61,7 +62,15 @@ class AbsensiController extends Controller
 
         // dd($header_month);
 
-        return view('Absensi.index', ['header_month' => $header_month, 'dates' => $JumlahBulan, 'useroption' => $user_Data]);
+        $listkerja = DB::connection('mysql2')->table('list_pekerjaan')
+            ->select('*')
+            ->get();
+
+
+        $listkerja = json_decode($listkerja, true);
+        // dd($listkerja); 
+
+        return view('Absensi.index', ['header_month' => $header_month, 'dates' => $JumlahBulan, 'useroption' => $user_Data, 'listkerja' => $listkerja]);
     }
 
     public function data(Request $request)
@@ -1108,6 +1117,10 @@ class AbsensiController extends Controller
         $newTime = $request->input('newTime');
         $type = $request->input('type');
 
+
+
+
+
         switch ($type) {
             case 'editTime':
                 try {
@@ -1139,10 +1152,113 @@ class AbsensiController extends Controller
                     return response()->json('Error updating data: ' . $th->getMessage(), 500);
                 }
                 break;
-
             default:
                 # code...
                 break;
+        }
+    }
+
+    public function creatAbsen(Request $request)
+    {
+
+
+        $iddata = $request->input('id');
+
+
+        $newDate_add = $request->input('newDate_add');
+        $newTime_add = $request->input('newTime_add');
+        $pekerjaan_add = $request->input('pekerjaan_add');
+        $cuti_add = $request->input('cuti_add');
+        $date1_add = $request->input('date1_add');
+        $date2_add = $request->input('date2_add');
+        $fotoSampul = $request->file('foto');
+
+
+
+        $getnama = DB::table('pengguna')
+            ->select('*')
+            ->where('user_id', $iddata)
+            ->pluck('nama_lengkap');
+
+
+        $getnama = json_decode($getnama, true);
+
+        $jam_msk = $newDate_add . ' ' . $newTime_add . ':00';
+
+
+        if ($request->hasFile('foto')) {
+
+
+            $foto = $request->file('foto');
+            $filename = uniqid() . '_' . $foto->getClientOriginalName();
+
+            $response = Http::attach(
+                'image',
+                file_get_contents($foto->getPathname()),
+                $filename
+            )->post('https://srs-ssms.com/qc_inspeksi/uploadabsensi.php');
+
+
+            if ($response->successful()) {
+                try {
+
+                    DB::connection('mysql2')->table('absensi_qc')->insert([
+                        'id_user' => $iddata,
+                        'nama_user' => $getnama[0],
+                        'id_pekerjaan' => $pekerjaan_add,
+                        'range_date' => $cuti_add ? ($date1_add . '$' . $date2_add) : 0,
+                        'foto' => $filename,
+                        'lat' => '-2.6235287',
+                        'lon' => '111.67308',
+                        'waktu_absensi' => $jam_msk, // You might want to adjust this based on your requirements
+                        'waktu_upload' => $jam_msk, // Ensure this is the correct field for file storage
+                        'app_version' => '1.5.34.debug;13;SM-A325F;GL',
+
+                    ]);
+                    return response()->json(['message' => 'Success']);
+                } catch (\Illuminate\Database\QueryException $e) {
+                    // This catches any database-related errors
+                    Log::error('Database error: ' . $e->getMessage());
+                    Log::error('Database error code: ' . $e->getCode()); // Optional: Log error code
+                    Log::error('Database error query: ' . $e->getSql()); // Optional: Log the SQL query that caused the error
+                    return response()->json(['message' => 'Database error occurred. Please check logs for details.'], 500);
+                } catch (\Throwable $th) {
+                    // This catches other types of exceptions
+                    Log::error('Unexpected error occurred: ' . $th->getMessage());
+                    return response()->json(['message' => 'Unexpected error occurred. Please check logs for details.'], 500);
+                }
+            } else {
+                // Handle upload failure
+                return response()->json(['message' => 'Failed to upload file.']);
+            }
+        } else {
+
+            try {
+
+                DB::connection('mysql2')->table('absensi_qc')->insert([
+                    'id_user' => $iddata,
+                    'nama_user' => $getnama[0],
+                    'id_pekerjaan' => $pekerjaan_add,
+                    'range_date' => $cuti_add ? ($date1_add . '$' . $date2_add) : 0,
+                    'lat' => '-2.6235287',
+                    'lon' => '111.67308',
+                    'waktu_absensi' => $jam_msk, // You might want to adjust this based on your requirements
+                    'waktu_upload' => $jam_msk, // Ensure this is the correct field for file storage
+                    'app_version' => '1.5.34.debug;13;SM-A325F;GL',
+
+                ]);
+                return response()->json(['message' => 'Success']);
+            } catch (\Illuminate\Database\QueryException $e) {
+                // This catches any database-related errors
+                Log::error('Database error: ' . $e->getMessage());
+                Log::error('Database error code: ' . $e->getCode()); // Optional: Log error code
+                Log::error('Database error query: ' . $e->getSql()); // Optional: Log the SQL query that caused the error
+                return response()->json(['message' => 'Database error occurred. Please check logs for details.'], 500);
+            } catch (\Throwable $th) {
+                // This catches other types of exceptions
+                Log::error('Unexpected error occurred: ' . $th->getMessage());
+                return response()->json(['message' => 'Unexpected error occurred. Please check logs for details.'], 500);
+            }
         }
     }
 }

@@ -44,7 +44,7 @@
             </tr>
         </table>
 
-        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size : 18px;margin-top: 10%">
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size : 15px;">
             <thead>
                 <tr>
                     <th style="background-color: #e8ecdc;border: 1px solid black;" colspan="{{$data['JumlahBulan'] + 3}}">Absensi User QC</th>

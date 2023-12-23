@@ -1795,7 +1795,6 @@
                     icon: markerIcon
                 });
 
-
                 var popupContent = `<strong>Jam Sidak: </strong>${markerResult[i][1]['time']}<br/>`;
                 popupContent += `<strong>Mentah: </strong>${markerResult[i][1]['bmt']}<br/>`;
                 popupContent += `<strong>Matang: </strong>${markerResult[i][1]['bmk']}<br/>`;
@@ -1806,11 +1805,20 @@
                 popupContent += `<strong>Tidak Standar Vcut: </strong>${markerResult[i][1]['vcut']}<br/>`;
                 popupContent += `<strong>Alas Brondol: </strong>${markerResult[i][1]['alas_br']}<br/>`;
 
+                if (markerResult[i][1]['foto_temuan']) {
+                    popupContent += `<strong>Foto Temuan: </strong><br/>`;
+
+                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['foto_temuan']}" alt="Foto Temuan" style="max-width:150px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar']}')"><br/>`;
+                }
                 if (markerResult[i][1]['foto_temuan1']) {
-                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['foto_temuan1']}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar1']}')"><br/>`;
+                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['foto_temuan1']}" alt="Foto Temuan" style="max-width:150px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar1']}')"><br/>`;
                 }
                 if (markerResult[i][1]['foto_temuan2']) {
-                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['foto_temuan2']}" alt="Foto Temuan" style="max-width:200px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar2']}')"><br/>`;
+                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['foto_temuan2']}" alt="Foto Temuan" style="max-width:150px; height:auto;" onclick="openModal(this.src, '${markerResult[i][1]['komentar2']}')"><br/>`;
+                }
+                if (markerResult[i][1]['verif']) {
+                    popupContent += `<strong>Foto verifikasi.: </strong><br/>`;
+                    popupContent += `<img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/sidakMutuBuah/${markerResult[i][1]['verif']}" alt="Foto Temuan" style="max-width:150px; height:auto;" onclick="openModal(this.src, 'Verifikasi')"><br/>`;
                 }
 
                 marker.bindPopup(popupContent);

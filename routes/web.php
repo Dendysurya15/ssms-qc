@@ -210,6 +210,9 @@ Route::get('/absensipdf', [AbsensiController::class, 'exportPDF'])->name('absens
 Route::get('/absensibukti', [AbsensiController::class, 'getimgBukti'])->name('absensibukti');
 Route::get('/getEditabsensi', [AbsensiController::class, 'getEdit'])->name('getEditabsensi');
 Route::post('/crudabsensi', [AbsensiController::class, 'crudAbsensi'])->name('crudabsensi');
+Route::post('/creatAbsen', [AbsensiController::class, 'creatAbsen'])->name('creatAbsen');
+
+
 
 Route::get('/testmaps', [testingmapsController::class, 'index'])->name('testmaps');
 Route::post('/editNilai', [emplacementsController::class, 'editNilai'])->name('editNilai');

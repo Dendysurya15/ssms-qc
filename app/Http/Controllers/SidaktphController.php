@@ -8146,8 +8146,7 @@ class SidaktphController extends Controller
                 }
             }
         }
-        dd($pkLatLn, $blokLatLnEw, $messageResponse);
-        // dd($messageResponse);
+
         // dd($blokLatLnEw);
         $newArr = DB::connection('mysql2')->table('sidak_tph')
             ->select('*', DB::raw("DATE_FORMAT(datetime, '%H:%i:%s') AS time"))

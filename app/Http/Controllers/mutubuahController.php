@@ -7227,7 +7227,7 @@ class mutubuahController extends Controller
             ->where('sidak_mutu_buah.estate', $est)
             ->where('sidak_mutu_buah.afdeling', $afd)
             ->where('datetime', 'like', '%' . $date . '%')
-            // ->where('sidak_tph.datetime', $date)
+
             ->get();
 
         $query = $query->groupBy(function ($item) {
@@ -7250,7 +7250,7 @@ class mutubuahController extends Controller
         $plotTitik = array();
         $plotMarker = array();
         $inc = 0;
-        // dd($datas);
+
         foreach ($datas as $key => $value) {
             if (!empty($value->lat)) {
                 $time = date('H:i:s', strtotime($value->datetime));
@@ -7270,27 +7270,65 @@ class mutubuahController extends Controller
                 $plotMarker[$inc]['time'] = $time;
 
 
-                $fotoTemuan = explode('; ', $value->foto_temuan);
-                $komentar = explode('; ', $value->komentar);
+                $checktemuan = $value->foto_temuan; // Assuming $value->foto_temuan contains your string
 
-                // If the number of items is the same for both arrays
-                if (count($fotoTemuan) == count($komentar)) {
-                    for ($i = 0; $i < count($fotoTemuan); $i++) {
-                        $plotMarker[$inc]['foto_temuan' . ($i + 1)] = $fotoTemuan[$i];
-                        $plotMarker[$inc]['komentar' . ($i + 1)] = $komentar[$i];
+                // Check if the string contains the word "verif"
+                if (strpos($checktemuan, 'verif') !== false) {
+                    // Assuming $value->foto_temuan and $value->komentar contain your string data
+                    $checktemuan = json_decode($value->foto_temuan, true);
+
+                    if (isset($checktemuan['temuan'])) {
+                        $temuanValues = explode(';', $checktemuan['temuan']);
+                        $verif = explode(';', $checktemuan['verif']);
+                        $komentarValues = explode(';', $value->komentar);
+
+                        // Unset the foto_temuan and komentar keys
+                        unset($plotMarker[$inc]['foto_temuan'], $plotMarker[$inc]['komentar']);
+
+                        $index = 0;
+                        foreach ($temuanValues as $key => $temuanValue) {
+                            $plotMarker[$inc]['foto_temuan' . ($index ? $index : '')] = $temuanValue;
+                            $plotMarker[$inc]['komentar' . ($index ? $index : '')] = isset($komentarValues[$key]) ? $komentarValues[$key] : '';
+                            $index++;
+                        }
+
                         $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                        $plotMarker[$inc]['verif'] = $verif[0];
+                    } else {
+                        unset($plotMarker[$inc]['foto_temuan'], $plotMarker[$inc]['komentar']);
+                        $plotMarker[$inc]['komentar'] = $value->komentar ?? '';
+                        $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                        $plotMarker[$inc]['verif'] = '';
                     }
                 } else {
+                    $fotoTemuan = explode('; ', $value->foto_temuan);
+                    $komentar = explode('; ', $value->komentar);
+
+                    // If the number of items is the same for both arrays
+                    if (count($fotoTemuan) == count($komentar)) {
+                        for ($i = 0; $i < count($fotoTemuan); $i++) {
+                            $plotMarker[$inc]['foto_temuan' . ($i + 1)] = $fotoTemuan[$i];
+                            $plotMarker[$inc]['komentar' . ($i + 1)] = $komentar[$i];
+                            $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                        }
+                        $plotMarker[$inc]['verif'] = '';
+                    } else {
 
 
-                    $plotMarker[$inc]['foto_temuan'] = $fotoTemuan[0];
-                    $plotMarker[$inc]['komentar'] = $komentar[0];
-                    $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                        $plotMarker[$inc]['foto_temuan'] = $fotoTemuan[0];
+                        $plotMarker[$inc]['komentar'] = $komentar[0];
+                        $plotMarker[$inc]['jam'] = Carbon::parse($value->datetime)->format('H:i');
+                        $plotMarker[$inc]['verif'] = '';
+                    }
                 }
+
+
+
 
                 $inc++;
             }
         }
+
 
         $list_blok = array();
         foreach ($datas as $key => $value) {
@@ -7487,7 +7525,6 @@ class mutubuahController extends Controller
             }
         }
 
-        // dd($plotMarker);
 
         $plot['plot'] = $plotTitik;
         $plot['marker'] = $plotMarker;
