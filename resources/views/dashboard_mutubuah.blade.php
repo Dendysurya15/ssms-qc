@@ -162,6 +162,7 @@
                             <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 ">
                                 <button id="sort-est-btn">Sort by Afd</button>
                                 <button id="sort-rank-btn">Sort by Rank</button>
+                                <button onclick="openNewTabAndSendData()" id="downladbulan">Download As IMG</button>
                             </div>
                             <div id="tablesContainer">
                                 <div class="tabContainer">
@@ -169,7 +170,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab1">
                                                 <div class="table-responsive">
-                                                    <table class=" table table-bordered" style="font-size: 13px" id="table1">
+                                                    <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table1">
                                                         <thead>
                                                             <tr bgcolor="yellow">
                                                                 <th colspan="5" id="thead1" class="text-center">WILAYAH I </th>
@@ -192,7 +193,7 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab2">
                                                 <div class="table-responsive">
-                                                    <table class=" table table-bordered" style="font-size: 13px" id="table1">
+                                                    <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table2">
                                                         <thead>
                                                             <tr bgcolor="yellow">
                                                                 <th colspan="5" id="thead2" class="text-center">WILAYAH II</th>
@@ -216,7 +217,7 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab3">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="Reg3">
+                                                    <table class="table table-bordered" style="font-size: 13px;background-color:white" id="table3">
                                                         <thead>
                                                             <tr bgcolor="yellow">
                                                                 <th colspan="5" id="thead3" class="text-center">WILAYAH III</th>
@@ -240,7 +241,7 @@
                                             </div>
                                             <div class="col-12 col-md-6 col-lg-3" data-regional="1" id="Tab4">
                                                 <div class="table-responsive">
-                                                    <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
+                                                    <table class="table table-bordered" style="font-size: 13px;background-color:white" id="table4">
                                                         <thead>
                                                             <tr bgcolor="yellow">
                                                                 <th colspan="5" class="text-center" id="theadx3">PLASMA1</th>
@@ -7103,64 +7104,7 @@
         }
     });
 
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     // Get the value of the lokasiKerja variable from the session
-    //     var lokasiKerja = "{{ session('lok') }}";
 
-    //     // Set the default value for regionalData select field based on lokasiKerja
-    //     var regionalDataSelect = document.getElementById("regionalData");
-    //     regionalDataSelect.value = getRegionalValue(lokasiKerja);
-
-    //     // Add event listener for the regionalData select field change
-    //     regionalDataSelect.addEventListener("change", function() {
-    //         // Retrieve the selected regional value
-    //         var selectedRegionalValue = regionalDataSelect.value;
-
-    //         // Update the value of the hidden input field
-    //         document.getElementById("regPDF").value = selectedRegionalValue;
-    //     });
-
-    //     // Retrieve the value from the dateWeek input field
-    //     var dateWeekInput = document.getElementById("dateWeek");
-    //     var dateWeekValue = dateWeekInput.value;
-
-    //     // Set the retrieved value to the hidden input field
-    //     document.getElementById("tglPDF").value = dateWeekValue;
-
-    //     // Submit the form when the page is first loaded
-    //     submitForm();
-    // });
-
-    // Function to submit the form
-    // function submitForm() {
-    //     // Retrieve the selected regional value
-    //     var selectedRegionalValue = document.getElementById("regionalData").value;
-
-    //     // Update the value of the hidden input field
-    //     document.getElementById("regPDF").value = selectedRegionalValue;
-
-    //     // Retrieve the value from the dateWeek input field
-    //     var dateWeekValue = document.getElementById("dateWeek").value;
-
-    //     // Set the retrieved value to the hidden input field
-    //     document.getElementById("tglPDF").value = dateWeekValue;
-
-    //     // Submit the form
-    //     document.getElementById("download-button").click();
-    // }
-
-    // function getRegionalValue(lokasiKerja) {
-    //     // Define the mapping of lokasiKerja to regional values
-    //     var regionalMapping = {
-    //         "Regional I": "1",
-    //         "Regional II": "2",
-    //         "Regional III": "3",
-    //         "Regional IV": "4"
-    //     };
-
-    //     // Return the regional value based on lokasiKerja
-    //     return regionalMapping[lokasiKerja] || "1"; // Default to "1" if lokasiKerja is not found
-    // }
     var downloadButton = document.getElementById("download-button");
     downloadButton.disabled = true;
     downloadButton.classList.add("disabled");
@@ -7178,4 +7122,100 @@
         downloadButton.disabled = false;
         downloadButton.classList.remove("disabled");
     });
+
+
+
+
+    function openNewTabAndSendData() {
+        // Define the URL of the new page where you want to send the data
+        const newPageUrl = '/getimgqc'; // Replace with the actual URL
+
+        // Retrieve the CSRF token from the input field using jQuery
+        var csrfToken = $('input[name="_token"]').val(); // Changed variable name to csrfToken
+
+        // Create an empty form element
+        const form = document.createElement('form');
+        form.method = 'POST'; // Change the method to POST
+        form.action = newPageUrl;
+
+        // Add a hidden input field for the CSRF token
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        // Add hidden input fields for your data
+        const tables = [
+            document.getElementById('table1'),
+            document.getElementById('table2'),
+            document.getElementById('table3'),
+            document.getElementById('table4')
+        ];
+        let date = document.getElementById('inputbulan').value;
+        let reg = document.getElementById('regionalPanen').value;
+
+        // Track how many tables have been processed
+        let tablesProcessed = 0;
+
+        // Function to submit the form when all tables are processed
+        function submitFormIfReady() {
+            tablesProcessed++;
+            if (tablesProcessed === tables.length) {
+                const dateInput = document.createElement('input');
+                dateInput.type = 'hidden';
+                dateInput.name = 'date';
+                dateInput.value = date;
+
+                const regInput = document.createElement('input');
+                regInput.type = 'hidden';
+                regInput.name = 'reg';
+                regInput.value = reg;
+                const title = document.createElement('input');
+                title.type = 'hidden';
+                title.name = 'title';
+                title.value = 'Sidak Mutu Buah';
+
+                const href = document.createElement('input');
+                href.type = 'hidden';
+                href.name = 'href';
+                href.value = '/dashboard_mutubuah';
+
+                form.appendChild(dateInput);
+                form.appendChild(regInput);
+                form.appendChild(title);
+                form.appendChild(href);
+
+                // Submit the form to open the new tab
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        tables.forEach((table, index) => {
+            const options = {
+                scale: 10, // Increase the scale for higher resolution (adjust as needed)
+            };
+
+            html2canvas(table, options).then(canvas => {
+                const dataURL = canvas.toDataURL('image/jpeg');
+                const base64Data = dataURL.split(',')[1];
+
+                // Create a hidden input field for each table's data
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = `table${index + 1}`;
+                input.value = base64Data;
+
+                form.appendChild(input);
+
+                // Check if it's the last table, then add date and reg and submit
+                if (index === tables.length - 1) {
+                    submitFormIfReady();
+                } else {
+                    submitFormIfReady();
+                }
+            });
+        });
+    }
 </script>

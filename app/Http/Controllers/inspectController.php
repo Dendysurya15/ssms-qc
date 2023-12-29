@@ -9289,6 +9289,8 @@ class inspectController extends Controller
     {
         $date = $request->input('date');
         $reg = $request->input('reg');
+        $title = $request->input('title');
+        $href = $request->input('href');
         $tables = [];
 
         // Retrieve the base64 data from the request
@@ -9299,12 +9301,14 @@ class inspectController extends Controller
 
         // Process the base64 data as needed
 
-        // dd($tables);
+        // dd($title);
 
         // Return a response, for example, to indicate success
         return view('layoutimgqc', [
             'date' => $date,
             'reg' => $reg,
+            'title' => $title,
+            'href' => $href,
             'tables' => $tables,
         ]);
     }

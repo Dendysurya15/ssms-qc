@@ -22,7 +22,7 @@
 
     <div class="row">
         <div class="col-lg-12" style="border: 10px;background-color:#C6DFB6">
-            <h1 style="text-align: center;">REKAPITULASI RANKING NILAI QC PANEN</h1>
+            <h1 style="text-align: center;">REKAPITULASI RANKING NILAI-{{$title}}</h1>
         </div>
 
         <div class="col-lg-4 text-center" style="padding-top: 10px;"> <!-- Center the content within the column -->
@@ -48,8 +48,9 @@
 <script>
     var date = <?php echo json_encode($date); ?>;
     var reg = <?php echo json_encode($reg); ?>;
+    var href = <?php echo json_encode($href); ?>;
+    var title = <?php echo json_encode($title); ?>;
 
-    // Function to capture and download the page
     function captureAndDownloadPage() {
         const pageContent = document.body;
 
@@ -59,18 +60,19 @@
             // Create an anchor element for download
             const downloadLink = document.createElement('a');
             downloadLink.href = dataURL;
-            downloadLink.download = `REKAPITULASI RANKING NILAI QC PANEN-${date}-${reg}.jpg`; // Dynamically set the filename
+            downloadLink.download = `REKAPITULASI RANKING NILAI ${title}-${date}-${reg}.jpg`; // Dynamically set the filename
 
             // Simulate a click on the anchor element to trigger the download
             downloadLink.click();
 
-            // Define the URL where you want to redirect
-            const newPageUrl = '/dashboard_inspeksi';
+            // Define the URL where you want to redirect based on the href variable
+            const newPageUrl = `${href}`; // Concatenating rootUrl and href
 
             // Redirect to the new URL
             window.location.href = newPageUrl;
         });
     }
+
 
     // Trigger the function immediately after the page loads
     captureAndDownloadPage();
