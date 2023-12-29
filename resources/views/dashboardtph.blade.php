@@ -3846,7 +3846,7 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "mone";
+        element4.style.display = "none";
         thElement1.textContent = 'WILAYAH IV';
         thElement2.textContent = 'WILAYAH V';
         thElement3.textContent = 'WILAYAH VI';
@@ -3935,7 +3935,7 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "mone";
+        element4.style.display = "none";
         thElement1.textContent = 'WILAYAH IV';
         thElement2.textContent = 'WILAYAH V';
         thElement3.textContent = 'WILAYAH VI';
