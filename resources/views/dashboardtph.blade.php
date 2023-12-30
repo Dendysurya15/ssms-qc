@@ -2349,10 +2349,11 @@
                     kategori = 'SATISFACTORY';
                   } else if (totalScoreValue >= 65) {
                     kategori = 'FAIR';
-                  } else {
+                  } else if (totalScoreValue < 65) {
                     kategori = 'POOR';
+                  } else {
+                    kategori = 'No Data';
                   }
-
                   return kategori;
                 }
               }
@@ -2699,8 +2700,10 @@
                     kategori = 'SATISFACTORY';
                   } else if (totalScoreValue >= 65) {
                     kategori = 'FAIR';
-                  } else {
+                  } else if (totalScoreValue < 65) {
                     kategori = 'POOR';
+                  } else {
+                    kategori = 'No Data';
                   }
 
                   return kategori;
@@ -3047,8 +3050,10 @@
                     kategori = 'SATISFACTORY';
                   } else if (totalScoreValue >= 65) {
                     kategori = 'FAIR';
-                  } else {
+                  } else if (totalScoreValue < 65) {
                     kategori = 'POOR';
+                  } else {
+                    kategori = 'No Data';
                   }
 
                   return kategori;
@@ -3386,7 +3391,6 @@
                 render: function(data, type, row) {
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
-
                   if (totalScoreValue >= 95) {
                     kategori = 'EXCELLENT';
                   } else if (totalScoreValue >= 85) {
@@ -3395,10 +3399,11 @@
                     kategori = 'SATISFACTORY';
                   } else if (totalScoreValue >= 65) {
                     kategori = 'FAIR';
-                  } else {
+                  } else if (totalScoreValue < 65) {
                     kategori = 'POOR';
+                  } else {
+                    kategori = 'No Data';
                   }
-
                   return kategori;
                 }
               }
@@ -3734,7 +3739,6 @@
                 render: function(data, type, row) {
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
-
                   if (totalScoreValue >= 95) {
                     kategori = 'EXCELLENT';
                   } else if (totalScoreValue >= 85) {
@@ -3743,8 +3747,10 @@
                     kategori = 'SATISFACTORY';
                   } else if (totalScoreValue >= 65) {
                     kategori = 'FAIR';
-                  } else {
+                  } else if (totalScoreValue < 65) {
                     kategori = 'POOR';
+                  } else {
+                    kategori = 'No Data';
                   }
 
                   return kategori;

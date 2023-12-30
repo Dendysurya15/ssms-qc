@@ -279,6 +279,8 @@ class SidaktphController extends Controller
         }
 
 
+        // dd($weekNumber);
+
         $result = [];
 
         // Iterate through the original array
@@ -595,6 +597,7 @@ class SidaktphController extends Controller
             $deviden = 0;
             $devest = count($value);
             // dd($devest);
+            // dd($value);
 
             foreach ($value as $key1 => $value2)  if (is_array($value2)) {
 
@@ -844,11 +847,11 @@ class SidaktphController extends Controller
             $newSidak[$key]['asisten'] = $namaGM;
             $newSidak[$key]['estate'] = $key;
             $newSidak[$key]['afd'] = 'GM';
+            $newSidak[$key]['afdeling'] = $devest;
         }
 
-        // dd($def)
-
         // dd($newSidak);
+
         $week1 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
             $estateValues = []; // Initialize an array to accumulate values for estate
@@ -857,6 +860,8 @@ class SidaktphController extends Controller
             $deviden = 0;
             $devnew = 0;
             $skor_akhir = 0;
+            $nulldata = [];
+            $afdcount = $value['afdeling'];
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week1'])) {
                     $week1Data = $subValue['week1']; // Access "week1" data
@@ -865,11 +870,20 @@ class SidaktphController extends Controller
                         $end = $value['end'];
                     }
                     // week for afdeling 
+                    if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
+                        # code...
+                        $total_score = '-';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] !== 'null') {
+                        $total_score = 100;
+                    } else {
+                        $total_score =  round($week1Data['all_score'], 1);
+                    }
+
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
-                        'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test',
+                        'total_score' => $total_score,
+                        'kategori' => $week1Data['check_data']
 
                     ];
 
@@ -927,22 +941,38 @@ class SidaktphController extends Controller
                     $total_weeks += round($week1Data['all_score'], 1);
                     $deviden += $subValue['new_deviden'];
                     $devnew = $subValue['devidenest'];
+
                     // Add the flattened array to the result
                     $week1[] = $week1Flat;
+                    $nulldata[] .= $week1Data['check_data'];
                 }
             }
-            if ($devnew != 0) {
+
+
+            $counts = array_count_values($nulldata);
+
+            // Subtract the count of 'ada' from the total count
+            $getnull = count($nulldata) - ($counts['ada'] ?? 0);
+
+            // Set getnull to 0 if it's negative (in case 'ada' occurs more times than the array size)
+            $getnull = max(0, $getnull);
+            if ($devnew != 0 && $getnull != $afdcount) {
                 // $skor_akhir = round($total_weeks / $deviden, 1);
                 $skor_akhir = round($total_weeks / $devnew, 1);
+            } else if ($getnull == $afdcount) {
+                $skor_akhir = '-';
             } else {
-                $skor_akhir = 0;
+                $skor_akhir = 100;
             }
+
+
 
             // week for estate 
             $weekestate = [
                 'est' => $key,
                 'afd' => 'EST',
-                'kategori' => 'Test',
+                'deviden' => $afdcount,
+                'null' => $getnull,
                 'total_score' => $skor_akhir,
                 'start' => $start,
                 'end' => $end,
@@ -972,6 +1002,7 @@ class SidaktphController extends Controller
             $week1[] = $weekestate;
         }
 
+        // dd($newSidak['KNE']);
         // dd($week1);
 
         $week2 = []; // Initialize the new array
@@ -982,6 +1013,8 @@ class SidaktphController extends Controller
             $deviden = 0;
             $skor_akhir = 0;
             $devnew = 0;
+            $nulldata = [];
+            $afdcount = $value['afdeling'];
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week2'])) {
                     $week1Data = $subValue['week2']; // Access "week1" data
@@ -989,12 +1022,20 @@ class SidaktphController extends Controller
                         $start = $value['start'];
                         $end = $value['end'];
                     }
-                    // week for afdeling 
+                    if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
+                        # code...
+                        $total_score = '-';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] !== 'null') {
+                        $total_score = 100;
+                    } else {
+                        $total_score =  round($week1Data['all_score'], 1);
+                    }
+
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
-                        'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test',
+                        'total_score' => $total_score,
+                        'kategori' => $week1Data['check_data']
 
                     ];
 
@@ -1054,14 +1095,26 @@ class SidaktphController extends Controller
                     $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week2[] = $week1Flat;
+                    $nulldata[] .= $week1Data['check_data'];
                 }
             }
-            if ($devnew != 0) {
+
+            $counts = array_count_values($nulldata);
+
+            // Subtract the count of 'ada' from the total count
+            $getnull = count($nulldata) - ($counts['ada'] ?? 0);
+
+            // Set getnull to 0 if it's negative (in case 'ada' occurs more times than the array size)
+            $getnull = max(0, $getnull);
+            if ($devnew != 0 && $getnull != $afdcount) {
                 // $skor_akhir = round($total_weeks / $deviden, 1);
                 $skor_akhir = round($total_weeks / $devnew, 1);
+            } else if ($getnull == $afdcount) {
+                $skor_akhir = '-';
             } else {
-                $skor_akhir = 0;
+                $skor_akhir = 100;
             }
+
 
             // week for estate 
             $weekestate = [
@@ -1106,19 +1159,32 @@ class SidaktphController extends Controller
             $deviden = 0;
             $skor_akhir = 0;
             $devnew = 0;
+            $nulldata = [];
+            $afdcount = $value['afdeling'];
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week3'])) {
                     $week1Data = $subValue['week3']; // Access "week1" data
+
+                    // dd($week1Data);
                     foreach ($weeks as $keywk => $value) if ($keywk == 3) {
                         $start = $value['start'];
                         $end = $value['end'];
                     }
                     // week for afdeling 
+                    if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
+                        # code...
+                        $total_score = '-';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] !== 'null') {
+                        $total_score = 100;
+                    } else {
+                        $total_score =  round($week1Data['all_score'], 1);
+                    }
+
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
-                        'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test',
+                        'total_score' => $total_score,
+                        'kategori' => $week1Data['check_data']
 
                     ];
 
@@ -1178,19 +1244,31 @@ class SidaktphController extends Controller
                     $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week3[] = $week1Flat;
+                    $nulldata[] .= $week1Data['check_data'];
                 }
             }
-            if ($devnew != 0) {
+            $counts = array_count_values($nulldata);
+
+            // Subtract the count of 'ada' from the total count
+            $getnull = count($nulldata) - ($counts['ada'] ?? 0);
+
+            // Set getnull to 0 if it's negative (in case 'ada' occurs more times than the array size)
+            $getnull = max(0, $getnull);
+
+            // dd($nulldata);
+            if ($devnew != 0 && $getnull != $afdcount) {
                 // $skor_akhir = round($total_weeks / $deviden, 1);
                 $skor_akhir = round($total_weeks / $devnew, 1);
+            } else if ($getnull == $afdcount) {
+                $skor_akhir = '-';
             } else {
-                $skor_akhir = 0;
+                $skor_akhir = 100;
             }
             // week for estate 
             $weekestate = [
                 'est' => $key,
                 'afd' => 'EST',
-                'kategori' => 'Test',
+                'kategori' => $getnull,
                 'total_score' => $skor_akhir,
                 'start' => $start,
                 'end' => $end,
@@ -1220,6 +1298,7 @@ class SidaktphController extends Controller
             $week3[] = $weekestate;
         }
 
+        // dd($week3[4]);
         $week4 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
             $estateValues = []; // Initialize an array to accumulate values for estate
@@ -1228,6 +1307,8 @@ class SidaktphController extends Controller
             $deviden = 0;
             $devnew = 0;
             $skor_akhir = 0;
+            $nulldata = [];
+            $afdcount = $value['afdeling'];
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week4'])) {
                     $week1Data = $subValue['week4']; // Access "week1" data
@@ -1236,11 +1317,20 @@ class SidaktphController extends Controller
                         $end = $value['end'];
                     }
                     // week for afdeling 
+                    if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
+                        # code...
+                        $total_score = '-';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] !== 'null') {
+                        $total_score = 100;
+                    } else {
+                        $total_score =  round($week1Data['all_score'], 1);
+                    }
+
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
-                        'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test',
+                        'total_score' => $total_score,
+                        'kategori' => $week1Data['check_data']
 
                     ];
 
@@ -1300,15 +1390,26 @@ class SidaktphController extends Controller
                     $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week4[] = $week1Flat;
+                    $nulldata[] .= $week1Data['check_data'];
                 }
             }
-            if ($devnew != 0) {
+
+            $counts = array_count_values($nulldata);
+
+            // Subtract the count of 'ada' from the total count
+            $getnull = count($nulldata) - ($counts['ada'] ?? 0);
+
+            // Set getnull to 0 if it's negative (in case 'ada' occurs more times than the array size)
+            $getnull = max(0, $getnull);
+            if ($devnew != 0 && $getnull != $afdcount) {
                 // $skor_akhir = round($total_weeks / $deviden, 1);
                 $skor_akhir = round($total_weeks / $devnew, 1);
+            } else if ($getnull == $afdcount) {
+                $skor_akhir = '-';
             } else {
-                $skor_akhir = 0;
+                $skor_akhir = 100;
             }
-            // dd
+
 
             // week for estate 
             $weekestate = [
@@ -1354,6 +1455,8 @@ class SidaktphController extends Controller
             $deviden = 0;
             $skor_akhir = 0;
             $devnew = 0;
+            $nulldata = [];
+            $afdcount = $value['afdeling'];
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week5'])) {
                     $week1Data = $subValue['week5']; // Access "week1" data
@@ -1362,11 +1465,20 @@ class SidaktphController extends Controller
                         $end = $value['end'];
                     }
                     // week for afdeling 
+                    if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
+                        # code...
+                        $total_score = '-';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] !== 'null') {
+                        $total_score = 100;
+                    } else {
+                        $total_score =  round($week1Data['all_score'], 1);
+                    }
+
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
-                        'total_score' => round($week1Data['all_score'], 1),
-                        'kategori' => 'Test',
+                        'total_score' => $total_score,
+                        'kategori' => $week1Data['check_data']
 
                     ];
 
@@ -1428,15 +1540,24 @@ class SidaktphController extends Controller
                     $devnew = $subValue['devidenest'];
                     // Add the flattened array to the result
                     $week5[] = $week1Flat;
+                    $nulldata[] .= $week1Data['check_data'];
                 }
             }
-            if ($devnew != 0) {
+            $counts = array_count_values($nulldata);
+
+            // Subtract the count of 'ada' from the total count
+            $getnull = count($nulldata) - ($counts['ada'] ?? 0);
+
+            // Set getnull to 0 if it's negative (in case 'ada' occurs more times than the array size)
+            $getnull = max(0, $getnull);
+            if ($devnew != 0 && $getnull != $afdcount) {
                 // $skor_akhir = round($total_weeks / $deviden, 1);
                 $skor_akhir = round($total_weeks / $devnew, 1);
+            } else if ($getnull == $afdcount) {
+                $skor_akhir = '-';
             } else {
-                $skor_akhir = 0;
+                $skor_akhir = 100;
             }
-            // dd($total_weeks);
             // week for estate 
             $weekestate = [
                 'est' => $key,

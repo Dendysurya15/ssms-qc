@@ -1772,7 +1772,7 @@
             s.style.display = "";
             m.style.display = "";
             l.style.display = "";
-            n.style.display = "";
+            n.style.display = "none";
 
             resetClassList(s);
             resetClassList(m);
@@ -1791,10 +1791,10 @@
             thElement4.classList.add("text-center");
 
 
-            s.classList.add("col-lg-3");
-            m.classList.add("col-lg-3");
-            l.classList.add("col-lg-3");
-            n.classList.add("col-lg-3");
+            s.classList.add("col-lg-4");
+            m.classList.add("col-lg-4");
+            l.classList.add("col-lg-4");
+
         } else if (c === '3') {
             s.style.display = "";
             m.style.display = "";
