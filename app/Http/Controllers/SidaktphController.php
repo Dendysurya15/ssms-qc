@@ -862,6 +862,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['afdeling'] = $devest;
         }
 
+        // dd($newSidak);
         // dd($newSidak['SCE']['OA']);
 
         $week1 = []; // Initialize the new array
@@ -985,9 +986,10 @@ class SidaktphController extends Controller
             $weekestate = [
                 'est' => $key,
                 'afd' => 'EST',
-                'deviden' => $afdcount,
-                'null' => $getnull,
+                'kategori' => 'Test',
                 'total_score' => $skor_akhir,
+                'start' => $start,
+                'end' => $end,
                 'reg' => $regional,
             ];
             $skor_brd = 0;
@@ -3267,7 +3269,7 @@ class SidaktphController extends Controller
         $qrafd = json_decode($qrafd, true);
         $queryEstereg = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
-            ->whereNotIn('estate.est', ['PLASMA', 'SRE', 'LDE', 'SKE', 'CWS1', 'SRS'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regSidak)
             ->get();
@@ -3460,6 +3462,10 @@ class SidaktphController extends Controller
             ->Table('asisten_qc')
             ->get();
         $asisten_qc = json_decode($asisten_qc, true);
+
+
+        // dd($newDefaultWeek);
+
         foreach ($newDefaultWeek as $key => $value) {
             $dividen_afd = 0;
             $total_skoreest = 0;
@@ -3468,13 +3474,22 @@ class SidaktphController extends Controller
             $new_dvdAfdest = 0;
             $total_estkors = 0;
             $total_skoreafd = 0;
+
+            $deviden = 0;
+            $devest = count($value);
+            // dd($devest);
+            // dd($value);
+
             foreach ($value as $key1 => $value2)  if (is_array($value2)) {
-                $deviden = 0;
+
                 $tot_afdscore = 0;
                 $totskor_brd1 = 0;
                 $totskor_janjang1 = 0;
                 $total_skoreest = 0;
+                $v2check4 = 0;
                 foreach ($value2 as $key2 => $value3) {
+
+
                     $total_brondolan = 0;
                     $total_janjang = 0;
                     $tod_brd = 0;
@@ -3483,6 +3498,8 @@ class SidaktphController extends Controller
                     $totskor_janjang = 0;
                     $tot_brdxm = 0;
                     $tod_janjangxm = 0;
+                    $v2check3 = 0;
+
                     foreach ($value3 as $key3 => $value4) if (is_array($value4)) {
                         $tph1 = 0;
                         $jalan1 = 0;
@@ -3490,6 +3507,8 @@ class SidaktphController extends Controller
                         $karung1 = 0;
                         $buah1 = 0;
                         $restan1 = 0;
+                        $v2check2 = 0;
+
                         foreach ($value4 as $key4 => $value5) if (is_array($value5)) {
                             $tph = 0;
                             $jalan = 0;
@@ -3497,6 +3516,7 @@ class SidaktphController extends Controller
                             $karung = 0;
                             $buah = 0;
                             $restan = 0;
+                            $v2check = count($value5);
                             foreach ($value5 as $key5 => $value6) {
                                 $sum_bt_tph = 0;
                                 $sum_bt_jalan = 0;
@@ -3505,7 +3525,9 @@ class SidaktphController extends Controller
                                 $sum_buah_tinggal = 0;
                                 $sum_restan_unreported = 0;
                                 $sum_all_restan_unreported = 0;
+
                                 foreach ($value6 as $key6 => $value7) {
+                                    // dd($value7);
                                     // dd($value7);
                                     $sum_bt_tph += $value7['bt_tph'];
                                     $sum_bt_jalan += $value7['bt_jalan'];
@@ -3524,6 +3546,7 @@ class SidaktphController extends Controller
                                 $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['buah'] = $sum_buah_tinggal;
                                 $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['restan'] = $sum_restan_unreported;
 
+
                                 $tph += $sum_bt_tph;
                                 $jalan += $sum_bt_jalan;
                                 $bin += $sum_bt_bin;
@@ -3539,6 +3562,7 @@ class SidaktphController extends Controller
 
                             $newSidak[$key][$key1][$key2][$key3][$key4]['buah'] = $buah;
                             $newSidak[$key][$key1][$key2][$key3][$key4]['restan'] = $restan;
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['v2check'] = $v2check;
 
                             $tph1 += $tph;
                             $jalan1 += $jalan;
@@ -3546,6 +3570,7 @@ class SidaktphController extends Controller
                             $karung1 += $karung;
                             $buah1 += $buah;
                             $restan1 += $restan;
+                            $v2check2 += $v2check;
                         }
                         // dd($key3);
                         $status_panen = $key3;
@@ -3568,11 +3593,13 @@ class SidaktphController extends Controller
                         $newSidak[$key][$key1][$key2][$key3]['skor_brd'] = $total_brondolan;
                         $newSidak[$key][$key1][$key2][$key3]['skor_janjang'] = $total_janjang;
                         $newSidak[$key][$key1][$key2][$key3]['tod_jjg'] = $tod_jjg;
+                        $newSidak[$key][$key1][$key2][$key3]['v2check2'] = $v2check2;
 
                         $totskor_brd += $total_brondolan;
                         $totskor_janjang += $total_janjang;
                         $tot_brdxm += $tod_brd;
                         $tod_janjangxm += $tod_jjg;
+                        $v2check3 += $v2check2;
                     } else {
                         $newSidak[$key][$key1][$key2][$key3]['tphx'] = 0;
                         $newSidak[$key][$key1][$key2][$key3]['jalan'] = 0;
@@ -3586,6 +3613,7 @@ class SidaktphController extends Controller
                         $newSidak[$key][$key1][$key2][$key3]['skor_janjang'] = 0;
                         $newSidak[$key][$key1][$key2][$key3]['tot_brd'] = 0;
                         $newSidak[$key][$key1][$key2][$key3]['tod_jjg'] = 0;
+                        $newSidak[$key][$key1][$key2][$key3]['v2check2'] = 0;
                     }
 
 
@@ -3607,10 +3635,12 @@ class SidaktphController extends Controller
                     $newSidak[$key][$key1][$key2]['total_janjangSkor'] = $totskor_janjang;
                     $newSidak[$key][$key1][$key2]['total_skor'] = $total_skoreafd;
                     $newSidak[$key][$key1][$key2]['janjang_brd'] = $totskor_brd + $totskor_janjang;
+                    $newSidak[$key][$key1][$key2]['v2check3'] = $v2check3;
 
                     $totskor_brd1 += $totskor_brd;
                     $totskor_janjang1 += $totskor_janjang;
                     $total_skoreest += $total_skoreafd;
+                    $v2check4 += $v2check3;
                 }
 
 
@@ -3645,9 +3675,12 @@ class SidaktphController extends Controller
                 }
 
                 $deviden = count($value2);
+
                 $new_dvd = $dividen_x;
                 $new_dvdest = $devidenEst_x;
-                if ($new_dvd != 0) {
+                if ($v2check4 != 0 && $total_skoreest == 0) {
+                    $tot_afdscore = 100;  # code...
+                } else if ($new_dvd != 0) {
                     $tot_afdscore = round($total_skoreest / $new_dvd, 1);
                 } else {
                     $tot_afdscore = 0;  # code...
@@ -3660,6 +3693,10 @@ class SidaktphController extends Controller
                 $newSidak[$key][$key1]['new_deviden'] = $new_dvd;
                 $newSidak[$key][$key1]['asisten'] = $namaGM;
                 $newSidak[$key][$key1]['total_skor'] = $total_skoreest;
+                $newSidak[$key][$key1]['est'] = $key;
+                $newSidak[$key][$key1]['afd'] = $key1;
+                $newSidak[$key][$key1]['devidenest'] = $devest;
+                $newSidak[$key][$key1]['v2check4'] = $v2check4;
 
                 $tot_estAFd += $tot_afdscore;
                 $new_dvdAfd += $new_dvd;
@@ -3679,11 +3716,12 @@ class SidaktphController extends Controller
                 $newSidak[$key][$key1]['total_brd'] = 0;
                 $newSidak[$key][$key1]['total_janjang'] = 0;
                 $newSidak[$key][$key1]['asisten'] = $namaGM;
+                $newSidak[$key][$key1]['v2check4'] = 0;
             }
 
             $dividen_afd = count($value);
             if ($new_dvdAfdest != 0) {
-                $total_skoreest = round($tot_estAFd / $new_dvdAfdest, 1);
+                $total_skoreest = round($tot_estAFd / $devest, 1);
             } else {
                 $total_skoreest = 0;
             }
@@ -3708,10 +3746,10 @@ class SidaktphController extends Controller
             $newSidak[$key]['asisten'] = $namaGM;
             $newSidak[$key]['estate'] = $key;
             $newSidak[$key]['afd'] = 'GM';
+            $newSidak[$key]['afdeling'] = $devest;
         }
 
-
-        // dd($newSidak);
+        // dd($newSidak['SPE']);
         $mtancakWIltab1 = array();
         foreach ($queryEstereg as $key => $value) {
             foreach ($newSidak as $key2 => $value2) {
@@ -3771,6 +3809,7 @@ class SidaktphController extends Controller
 
         // Create a copy of the array to preserve the original order
         $sortedArray = $resultafd1;
+        // dd($sortedArray);
 
         // Sort the copy based on 'skor' (total_score) in descending order
         usort($sortedArray, function ($a, $b) {
@@ -4047,6 +4086,8 @@ class SidaktphController extends Controller
 
         // Create a copy of the array to preserve the original order
         $sortedest1 = $resultest1;
+
+        // dd($sortedest1);
 
         // Sort the copy based on 'skor' (total_score) in descending order
         usort($sortedest1, function ($a, $b) {
@@ -4361,7 +4402,7 @@ class SidaktphController extends Controller
                 }
             }
         }
-        // dd($resultest4, $mtancakWIltab1);
+        // dd($mtancakWIltab1);
         $rhEstate = array();
         $total_rh = 0;
         $reg_finalskor = 0;
