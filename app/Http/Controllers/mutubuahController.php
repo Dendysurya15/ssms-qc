@@ -3880,10 +3880,21 @@ class mutubuahController extends Controller
                 $estateInt = intval($esatate); // Convert the estate string to an integer
                 $bgColor = $colors[$estateInt % count($colors)];
             }
+            $staff = '-'; // Initialize $staff outside the loop to ensure it retains a value if conditions aren't met
+
+            foreach ($queryAsisten as $ast => $asisten) {
+                if ($esatate === $asisten['est'] && $asisten['afd'] === 'EM') {
+                    $staff = $asisten['nama'];
+                    break; // Exit the loop once the condition is met to avoid overwriting $staff
+                }
+            }
+
+            // Now $staff should contain the "nama" value if the conditions were met, or '-' if not
+
             $totalValues = [
                 'reg' => '',
                 'pt' => '',
-                'nama_staff' => '',
+                'nama_staff' => $staff,
                 'Jumlah_janjang' => $totalJJG,
                 'est' => $esatate,
                 'afd' => '',
@@ -3919,7 +3930,6 @@ class mutubuahController extends Controller
                 'kategori' => $totKategor,
                 'background_color' => $bgColor, // Add the background color here
             ];
-
 
             if (dodo($totalValues)) {
                 $sidak_buah[$key][$key] = $totalValues;
@@ -3959,6 +3969,43 @@ class mutubuahController extends Controller
             }
         }
 
+        function convertToRoman($number)
+        {
+            $map = [
+                'M' => 1000,
+                'CM' => 900,
+                'D' => 500,
+                'CD' => 400,
+                'C' => 100,
+                'XC' => 90,
+                'L' => 50,
+                'XL' => 40,
+                'X' => 10,
+                'IX' => 9,
+                'V' => 5,
+                'IV' => 4,
+                'I' => 1,
+            ];
+
+            $result = '';
+
+            foreach ($map as $roman => $value) {
+                // Divide the number by the value of the Roman numeral
+                $matches = intval($number / $value);
+                // Concatenate the Roman numeral matches
+                $result .= str_repeat($roman, $matches);
+                // Subtract the Roman numeral value from the number
+                $number %= $value;
+            }
+
+            return $result;
+        }
+
+        // Test the function
+
+
+
+        $new_sidakBuah = [];
 
         $new_sidakBuah = array();
         foreach ($mutu_buahs as $primaryKey => $primaryValue) {
@@ -4048,6 +4095,14 @@ class mutubuahController extends Controller
 
 
             $nestedData = [];
+            $staff = '-'; // Initialize $staff outside the loop to ensure it retains a value if conditions aren't met
+            $newkey = 'WIL-' . convertToRoman($primaryKey);
+            foreach ($queryAsisten as $ast => $asisten) {
+                if ($newkey === $asisten['est'] && $asisten['afd'] === 'GM') {
+                    $staff = $asisten['nama'];
+                    break; // Exit the loop once the condition is met to avoid overwriting $staff
+                }
+            }
 
             // Assign the values to the nested data array
             $nestedData['reg'] = 'WiL';
@@ -4055,13 +4110,9 @@ class mutubuahController extends Controller
             $nestedData['Jumlah_janjang'] = $jjg_sample;
             $nestedData['blok'] = $blok;
             $nestedData['est'] = 'Wil-' . $primaryKey;
-            foreach ($queryAsisten as $ast => $asisten) {
-                if ($wil === $asisten['est'] && $gm === $asisten['afd']) {
-                    $nestedData['nama_asisten'] = $asisten['nama'];
-                }
-            }
+
             $nestedData['afd'] = $key1;
-            $nestedData['nama_staff'] = '-';
+            $nestedData['nama_staff'] = $staff;
             $nestedData['tnp_brd'] = $tnpBRD;
             $nestedData['krg_brd'] = $krgBRD;
             $nestedData['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
@@ -4097,8 +4148,8 @@ class mutubuahController extends Controller
 
             $new_sidakBuah[$primaryKey][$primaryKey] = $nestedData;
         }
-        // dd($new_sidakBuah);
 
+        // dd($new_sidakBuah);
 
 
         $regional_arrays = [
@@ -4516,126 +4567,7 @@ class mutubuahController extends Controller
             }
         }
 
-        $new_sidakBuahv2 = array();
-        foreach ($mutu_buahsv2 as $primaryKey => $primaryValue) {
-            $jjg_sample = 0;
-            $tnpBRD = 0;
-            $krgBRD = 0;
-            $abr = 0;
-            $skor_total = 0;
-            $overripe = 0;
-            $empty = 0;
-            $vcut = 0;
-            $rd = 0;
-            $sum_kr = 0;
-            $allSkor = 0;
-            $blok = 0;
-            foreach ($primaryValue as $key => $value) {
-                if (isset($value[$key]['Jumlah_janjang'])) {
 
-                    $jjg_sample += $value[$key]['Jumlah_janjang'];
-                    $tnpBRD += $value[$key]['tnp_brd'];
-                    $krgBRD += $value[$key]['krg_brd'];
-                    $abr += $value[$key]['abnormal'];
-                    $overripe += $value[$key]['lewat_matang'];
-                    $empty += $value[$key]['janjang_kosong'];
-                    $vcut += $value[$key]['vcut'];
-                    $rd += $value[$key]['rat_dmg'];
-                    $sum_kr += $value[$key]['karung'];
-                    $blok += $value[$key]['blok'];
-                }
-                $new_sidakBuahv2[$primaryKey][$key] = $value;
-            }
-
-
-            if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $blok, 2);
-            } else {
-                $total_kr = 0;
-            }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
-            $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
-
-
-
-            $gm = 'EM';
-            if ($primaryKey === 1) {
-                $namewil = 'WIL-I';
-            } else if ($primaryKey === 2) {
-                $namewil = 'WIL-II';
-            } else if ($primaryKey === 3) {
-                $namewil = 'WIL-III';
-            } else if ($primaryKey === 4) {
-                $namewil = 'WIL-IV';
-            } else if ($primaryKey === 5) {
-                $namewil = 'WIL-V';
-            } else if ($primaryKey === 6) {
-                $namewil = 'WIL-VI';
-            } else if ($primaryKey === 7) {
-                $namewil = 'WIL-VII';
-            } else if ($primaryKey === 8) {
-                $namewil = 'WIL-VIII';
-            }
-            $wil = 'Plasma1';
-
-            $nestedData = [];
-
-            $nestedData['reg'] = 'WiL';
-            $nestedData['pt'] = 'SSMS';
-            $nestedData['Jumlah_janjang'] = $jjg_sample;
-            $nestedData['blok'] = $blok;
-            $nestedData['est'] = 'Wil-' . $primaryKey;
-
-
-            foreach ($queryAsisten as $ast => $asisten) {
-                if ($wil === $asisten['est'] && $gm === $asisten['afd']) {
-                    $nestedData['nama_asisten'] = $asisten['nama'];
-                }
-            }
-            $nestedData['afd'] = $key1;
-            $nestedData['tnp_brd'] = $tnpBRD;
-            $nestedData['krg_brd'] = $krgBRD;
-            $nestedData['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-            $nestedData['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
-            $nestedData['total_jjg'] = $tnpBRD + $krgBRD;
-            $nestedData['persen_totalJjg'] = $skor_total;
-            $nestedData['skor_total'] = sidak_brdTotal($skor_total);
-            $nestedData['jjg_matang'] = $jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr);
-            $nestedData['persen_jjgMtang'] = $skor_jjgMSk;
-            $nestedData['skor_jjgMatang'] = sidak_matangSKOR($skor_jjgMSk);
-            $nestedData['lewat_matang'] = $overripe;
-            $nestedData['persen_lwtMtng'] =  $skor_lewatMTng;
-            $nestedData['skor_lewatMTng'] = sidak_lwtMatang($skor_lewatMTng);
-            $nestedData['janjang_kosong'] = $empty;
-            $nestedData['persen_kosong'] = $skor_jjgKosong;
-            $nestedData['skor_kosong'] = sidak_jjgKosong($skor_jjgKosong);
-            $nestedData['vcut'] = $vcut;
-            $nestedData['vcut_persen'] = $skor_vcut;
-            $nestedData['vcut_skor'] = sidak_tangkaiP($skor_vcut);
-            $nestedData['abnormal'] = $abr;
-            $nestedData['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
-            $nestedData['rat_dmg'] = $rd;
-            $nestedData['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
-            $nestedData['TPH'] = $total_kr;
-            $nestedData['persen_krg'] = $per_kr;
-            $nestedData['karung_est'] = $sum_kr;
-            $nestedData['skor_kr'] = sidak_PengBRD($per_kr);
-
-            // Store the nested data array inside the $new_sidakBuahv2 array with the key $primaryKey
-            $new_sidakBuahv2[$primaryKey][$primaryKey] = $nestedData;
-        }
-        // dd($new_sidakBuahv2);
-
-
-
-        $regional_arraysv2 = [
-            'Regional' => $new_sidakBuahv2
-        ];
 
         updateKeyRecursive($sidak_buah, "KTE4", "KTE");
         // updateKeyRecursive($new_sidakBuah, "KTE4", "KTE");
@@ -4646,9 +4578,8 @@ class mutubuahController extends Controller
         // dd($new_sidakBuah);
         $arrView = array();
 
-        $arrView['data_week'] =  $sidak_buah;
+
         $arrView['data_weekv2'] =  $new_sidakBuah;
-        $arrView['plasma'] =  $regional_arraysv2;
         $arrView['reg_data'] =  $regional_arrays;
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array

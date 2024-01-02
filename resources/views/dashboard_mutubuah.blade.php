@@ -5071,11 +5071,10 @@
 
                 Swal.close();
                 var parseResult = JSON.parse(result)
-                var data_Sidak = Object.entries(parseResult['data_week'])
+
                 var data_Sidakv2 = Object.entries(parseResult['data_weekv2'])
                 var regional = Object.entries(parseResult['reg_data'])
-                var plasma = Object.entries(parseResult['plasma'])
-                // console.log(data_Sidakv2);
+
                 delete data_Sidakv2[0][1].Plasma1;
                 // console.log(data_Sidakv2);
 
@@ -5253,7 +5252,7 @@
                         let item4 = wilayahData.est;
                         let item5 = ' '
 
-                        let item6 = wilayahData.nama_asisten !== undefined ? wilayahData.nama_asisten : '-';
+                        let item6 = wilayahData.nama_staff !== undefined ? wilayahData.nama_staff : '-';
                         let item7 = wilayahData.Jumlah_janjang;
                         let item8 = wilayahData.tnp_brd;
                         let item9 = wilayahData.persenTNP_brd;
@@ -5334,96 +5333,6 @@
                         body2.appendChild(tr);
                     }
                 });
-
-                // console.log(plasma);
-
-                var arrbody2v2 = plasma
-                // console.log(arrbody2v2);
-                // var ah = arrbody2v2[0][1];
-                var data = plasma[0][1][1]['Plasma1']
-
-                // console.log(data);
-
-                var tbodyPlas = document.getElementById('data_weekTab2');
-
-                // Loop through the keys in the data object
-                function createAndAppendTableCellWithIndex(data, cellIndex, parentRow, backgroundColor = null) {
-                    let cell;
-
-                    if (cellIndex === 32) {
-                        cell = createTableCellWithColor(data, data);
-                    } else {
-                        let isHTML = cellIndex === 2;
-                        cell = createTableCell(data, isHTML);
-                    }
-
-                    if (cellIndex !== 32 && backgroundColor) {
-                        cell.style.backgroundColor = backgroundColor;
-                    }
-
-                    parentRow.appendChild(cell);
-                }
-                count = 1;
-
-                for (var key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        // let item1 = data[key].afd;
-                        let item1 = count++
-                        let item2 = data[key].est;
-                        // 'detailtmutubuah/' + innerData.est + '/' + innerData.afd + '/' + bulan;
-                        let item3 = '<a href="detailtmutubuah/' + data[key].est + '/' + data[key].afd + '/' + bulan + '">' + data[key].afd + ' </a>'
-                        let item6 = data[key].nama_staff !== undefined ? data[key].nama_staff : '-';
-                        let item7 = data[key].Jumlah_janjang;
-                        let item8 = data[key].tnp_brd;
-                        let item9 = data[key].persenTNP_brd;
-                        let item10 = data[key].krg_brd;
-                        let item11 = data[key].persenKRG_brd;
-                        let item12 = data[key].total_jjg;
-                        let item13 = data[key].persen_totalJjg;
-                        let item14 = data[key].skor_total;
-                        let item15 = data[key].jjg_matang;
-                        let item16 = data[key].persen_jjgMtang;
-                        let item17 = data[key].skor_jjgMatang;
-                        let item18 = data[key].lewat_matang;
-                        let item19 = data[key].persen_lwtMtng;
-                        let item20 = data[key].skor_lewatMTng;
-                        let item21 = data[key].janjang_kosong;
-                        let item22 = data[key].persen_kosong;
-                        let item23 = data[key].skor_kosong;
-                        let item24 = data[key].vcut;
-                        let item25 = data[key].vcut_persen;
-                        let item26 = data[key].vcut_skor;
-                        let item27 = data[key].abnormal;
-                        let item28 = data[key].abnormal_persen;
-                        let item29 = data[key].rat_dmg;
-                        let item30 = data[key].rd_persen;
-                        let item31 = data[key].TPH;
-                        let item32 = data[key].persen_krg;
-                        let item33 = data[key].skor_kr;
-                        let item34 = data[key].All_skor;
-                        let item35 = data[key].kategori;
-
-
-                        let tr = document.createElement('tr');
-
-                        let items = [
-                            item1, item2, item3, item6, item7, item8, item9, item10,
-                            item11, item12, item13, item14, item15, item16, item17, item18, item19, item20,
-                            item21, item22, item23, item24, item25, item26, item27, item28, item29, item30,
-                            item31, item32, item33, item34, item35
-                        ];
-                        let backgroundColor = '#F0F0F0'; // Replace with the desired color value
-
-
-                        items.forEach((item, index) => {
-                            createAndAppendTableCellWithIndex(item, index, tr, backgroundColor);
-                        });
-
-                        tbodyPlas.appendChild(tr);
-                    }
-                }
-
-
 
 
 
