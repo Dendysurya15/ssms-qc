@@ -2226,54 +2226,59 @@
     var titleEstate = new Array();
 
     function drawEstatePlot(est, plot) {
-        var geoJsonEst = '{"type"'
-        geoJsonEst += ":"
-        geoJsonEst += '"FeatureCollection",'
-        geoJsonEst += '"features"'
-        geoJsonEst += ":"
-        geoJsonEst += '['
 
-        geoJsonEst += '{"type"'
-        geoJsonEst += ":"
-        geoJsonEst += '"Feature",'
-        geoJsonEst += '"properties"'
-        geoJsonEst += ":"
-        geoJsonEst += '{"estate"'
-        geoJsonEst += ":"
-        geoJsonEst += '"' + est + '"},'
-        geoJsonEst += '"geometry"'
-        geoJsonEst += ":"
-        geoJsonEst += '{"coordinates"'
-        geoJsonEst += ":"
-        geoJsonEst += '[['
-        geoJsonEst += plot
-        geoJsonEst += ']],"type"'
-        geoJsonEst += ":"
-        geoJsonEst += '"Polygon"'
-        geoJsonEst += '}},'
+        if (typeof est === 'undefined') {
 
-        geoJsonEst = geoJsonEst.substring(0, geoJsonEst.length - 1);
-        geoJsonEst += ']}'
+        } else {
+            var geoJsonEst = '{"type"'
+            geoJsonEst += ":"
+            geoJsonEst += '"FeatureCollection",'
+            geoJsonEst += '"features"'
+            geoJsonEst += ":"
+            geoJsonEst += '['
 
-        var estate = JSON.parse(geoJsonEst)
+            geoJsonEst += '{"type"'
+            geoJsonEst += ":"
+            geoJsonEst += '"Feature",'
+            geoJsonEst += '"properties"'
+            geoJsonEst += ":"
+            geoJsonEst += '{"estate"'
+            geoJsonEst += ":"
+            geoJsonEst += '"' + est + '"},'
+            geoJsonEst += '"geometry"'
+            geoJsonEst += ":"
+            geoJsonEst += '{"coordinates"'
+            geoJsonEst += ":"
+            geoJsonEst += '[['
+            geoJsonEst += plot
+            geoJsonEst += ']],"type"'
+            geoJsonEst += ":"
+            geoJsonEst += '"Polygon"'
+            geoJsonEst += '}},'
 
-        var estateObj = L.geoJSON(estate, {
-                onEachFeature: function(feature, layer) {
-                    layer.myTag = 'EstateMarker'
-                    var label = L.marker(layer.getBounds().getCenter(), {
-                        icon: L.divIcon({
-                            className: 'label-estate',
-                            html: feature.properties.estate,
-                            iconSize: [100, 20]
-                        })
-                    }).addTo(map);
-                    titleEstate.push(label)
-                    layer.addTo(map);
-                }
-            })
-            .addTo(map);
+            geoJsonEst = geoJsonEst.substring(0, geoJsonEst.length - 1);
+            geoJsonEst += ']}'
 
-        map.fitBounds(estateObj.getBounds());
+            var estate = JSON.parse(geoJsonEst)
+
+            var estateObj = L.geoJSON(estate, {
+                    onEachFeature: function(feature, layer) {
+                        layer.myTag = 'EstateMarker'
+                        var label = L.marker(layer.getBounds().getCenter(), {
+                            icon: L.divIcon({
+                                className: 'label-estate',
+                                html: feature.properties.estate,
+                                iconSize: [100, 20]
+                            })
+                        }).addTo(map);
+                        titleEstate.push(label)
+                        layer.addTo(map);
+                    }
+                })
+                .addTo(map);
+
+            map.fitBounds(estateObj.getBounds());
+        }
     }
 
     var titleBlok = new Array();
@@ -2406,6 +2411,10 @@
             },
             success: function(result) {
                 var estate = JSON.parse(result);
+
+                // console.log(estate);
+
+
                 drawEstatePlot(estate['est'], estate['plot'])
             }
         })
@@ -5801,7 +5810,7 @@
                     // namaEM: namaEM,
                     // namaGM: namaGM,
                 }));
-                // console.log(newPlasmaEM);
+                // console.log(Data_TableUtama);
 
                 const newData_TableUtama = Data_TableUtama.map(([_, data]) => ({
                     afd: data.afd,
@@ -5809,8 +5818,10 @@
                     est_afd: `${data.est}_${data.afd}`,
                     nama: data.nama,
                     rank: data.rank,
-                    skor: data.skor,
+                    skor: data.data === 'kosong' ? '-' : data.skor,
+                    data: data.data,
                 }));
+
                 const Data_TableKedua = Object.entries(parseResult['data_tabelkedua']);
 
                 // console.log(Data_TableKedua);
@@ -5820,7 +5831,8 @@
                     est_afd: `${data.est}_${data.afd}`,
                     nama: data.nama,
                     rank: data.rank,
-                    skor: data.skor,
+                    skor: data.data === 'kosong' ? '-' : data.skor,
+                    data: data.data,
                 }));
                 const Data_TableKetiga = Object.entries(parseResult['data_tabeketiga']);
                 const newData_TableKetiga = Data_TableKetiga.map(([_, data]) => ({
@@ -5829,19 +5841,21 @@
                     est_afd: `${data.est}_${data.afd}`,
                     nama: data.nama,
                     rank: data.rank,
-                    skor: data.skor,
+                    skor: data.data === 'kosong' ? '-' : data.skor,
+                    data: data.data,
                 }));
 
 
                 //untuk table perestate
                 const data_Est1 = Object.entries(parseResult['data_Est1']);
+                // console.log(data_Est1);
                 const newData_data_Est1 = data_Est1.map(([_, data]) => ({
 
                     est: data.est,
                     em: data.EM,
                     nama: data.nama,
                     rank: data.rank,
-                    skor: data.skor,
+                    skor: data.data === 'kosong' ? '-' : data.skor
                 }));
                 const data_Est2 = Object.entries(parseResult['data_Est2']);
                 const newData_data_Est2 = data_Est2.map(([_, data]) => ({
@@ -5850,7 +5864,7 @@
                     em: data.EM,
                     nama: data.nama,
                     rank: data.rank,
-                    skor: data.skor,
+                    skor: data.data === 'kosong' ? '-' : data.skor
                 }));
 
                 const data_Est3 = Object.entries(parseResult['data_Est3']);
@@ -5863,7 +5877,7 @@
                     em: data.EM,
                     nama: data.nama,
                     rank: data.rank,
-                    skor: data.skor,
+                    skor: data.data === 'kosong' ? '-' : data.skor
                 }));
 
                 const data_GM = Object.entries(parseResult['data_GM']);
@@ -5897,6 +5911,7 @@
                 // console.log(filteredArray);
                 var arrTbody1 = filteredArray
 
+                // console.log(arrTbody1);
                 var tbody1 = document.getElementById('tbodys1');
                 //         $('#thead1').empty()
                 // $('#thead2').empty()
@@ -5933,8 +5948,10 @@
                         itemElement3.style.color = "black";
                     }
 
-
-                    if (item4 >= 95) {
+                    if (item4 === '-') {
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                    } else if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
@@ -6031,8 +6048,10 @@
                         itemElement3.style.color = "black";
                     }
 
-
-                    if (item4 >= 95) {
+                    if (item4 === '-') {
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                    } else if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
@@ -6185,7 +6204,10 @@
                     }
 
 
-                    if (item4 >= 95) {
+                    if (item4 === '-') {
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                    } else if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
@@ -6213,7 +6235,6 @@
                     } else if (itemElement4.style.backgroundColor === "red") {
                         itemElement4.style.color = "black";
                     }
-
 
                     // if (item4 != 0 && item4 != 90) {
                     //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
@@ -6278,7 +6299,10 @@
                     }
 
 
-                    if (item4 >= 95) {
+                    if (item4 === '-') {
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                    } else if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
@@ -6404,7 +6428,10 @@
                     }
 
 
-                    if (item4 >= 95) {
+                    if (item4 === '-') {
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                    } else if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {
@@ -6513,7 +6540,10 @@
                     }
 
 
-                    if (item4 >= 95) {
+                    if (item4 === '-') {
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                    } else if (item4 >= 95) {
                         itemElement4.style.backgroundColor = "#609cd4";
                         itemElement4.style.color = "black";
                     } else if (item4 >= 85 && item4 < 95) {

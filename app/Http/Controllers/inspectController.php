@@ -6293,6 +6293,9 @@ class inspectController extends Controller
         $mtAncakMuaSkorAkhir = $mtAncakMua['skor_akhir'];
         $mtTransMuaTotalSkor = $mtTransMua['totalSkor'];
 
+
+        // dd($mtBuahMua, $mtAncakMua, $mtTransMua);
+
         $sumOfAllScores = $mtBuahMuaTotalSkor + $mtAncakMuaSkorAkhir + $mtTransMuaTotalSkor;
         // dd($mtTranstab1Wil[5]['BTE']);
 
@@ -6427,7 +6430,7 @@ class inspectController extends Controller
             $sortedArray[$key] = $value['TotalSkorWil'];
         }
 
-        arsort($sortedArray);
+        // arsort($sortedArray);
 
         $rank = 1;
         foreach ($sortedArray as $key => $value) {
@@ -6565,7 +6568,8 @@ class inspectController extends Controller
                 'skor' => $skor,
                 'EM' => $EM,
                 'rank' => $rank,
-                'nama' => $nama
+                'nama' => $nama,
+                'data' => $value['dataEst']
             );
             $inc++;
         }
@@ -6595,7 +6599,8 @@ class inspectController extends Controller
                 'skor' => $skor,
                 'EM' => $EM,
                 'rank' => $rank,
-                'nama' => $nama
+                'nama' => $nama,
+                'data' => $value['dataEst']
             );
             $inc++;
         }
@@ -6614,6 +6619,7 @@ class inspectController extends Controller
             $EM = 'EM';
             $rank = $value['rankEST'];
             $nama = '-';
+            // dd($value);
             foreach ($queryAsisten as $key4 => $value4) {
                 if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
                     $nama = $value4['nama'];
@@ -6625,7 +6631,8 @@ class inspectController extends Controller
                 'skor' => $skor,
                 'EM' => $EM,
                 'rank' => $rank,
-                'nama' => $nama
+                'nama' => $nama,
+                'data' => $value['dataEst']
             );
             $inc++;
         }
@@ -6642,6 +6649,8 @@ class inspectController extends Controller
                 $inc = 0;
                 foreach ($value as $key2 => $value2) {
                     if (is_array($value2)) {
+
+                        // dd($value2);
                         $est = $key;
                         $afd = $key2;
                         $skor = $value2['TotalSkor'];
@@ -6660,7 +6669,8 @@ class inspectController extends Controller
                             'skor' => $skor,
                             'EM' => $EM,
                             'rank' => $rank,
-                            'nama' => $nama
+                            'nama' => $nama,
+                            'data' => $value2['data']
                         );
                         $inc++;
                     }
@@ -6700,7 +6710,8 @@ class inspectController extends Controller
                             'skor' => $skor,
                             'EM' => $EM,
                             'rank' => $rank,
-                            'nama' => $nama
+                            'nama' => $nama,
+                            'data' => $value2['data']
                         );
                         $inc++;
                     }
@@ -6738,7 +6749,8 @@ class inspectController extends Controller
                             'skor' => $skor,
                             'EM' => $EM,
                             'rank' => $rank,
-                            'nama' => $nama
+                            'nama' => $nama,
+                            'data' => $value2['data']
                         );
                         $inc++;
                     }
@@ -7962,6 +7974,8 @@ class inspectController extends Controller
         ];
         //
 
+        // dd($pt_muaSkor);
+
 
         $ptMuachartBuah = $mtAncakMua['buah/jjgwil'];
         $ptMuachartBRD = $mtAncakMua['brd/jjgwil'];
@@ -8305,7 +8319,7 @@ class inspectController extends Controller
         // $queryEsta = updateKeyRecursive2($queryEsta);
         // dd($mtTranstab1Wil_reg,$chrTransbuahv2);
         $arrView = array();
-        // dd($result_brd);
+        // dd($FormatTable1);
         $arrView['chart_brd'] = $result_brd;
         $arrView['chart_buah'] = $result_buah;
         $arrView['chart_brdwil'] =  $chartPerwil;
