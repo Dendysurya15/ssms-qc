@@ -55,6 +55,8 @@ class inspeksidashController extends Controller
             ->get();
         $QueryMTbuahWil = $QueryMTbuahWil->groupBy(['estate', 'afdeling']);
         $QueryMTbuahWil = json_decode($QueryMTbuahWil, true);
+
+        // dd($QueryMTancakWil); // dd($QueryMTbuahWil);
         foreach ($QueryMTbuahWil as $estate => $afdelingArray) {
             $modifiedAfdelingArray = $afdelingArray;
             foreach ($afdelingArray as $afdeling => $data) {
@@ -65,7 +67,7 @@ class inspeksidashController extends Controller
             }
             $QueryMTbuahWil[$estate] = $modifiedAfdelingArray;
         }
-        // dd($QueryMTbuahWil);
+
         //MUTU ANCAK
         $QueryTransWil = DB::connection('mysql2')->table('mutu_transport')
             ->select(
@@ -2962,12 +2964,51 @@ class inspeksidashController extends Controller
 
 
         // dd($mttransReg, $mtancakReg, $mtBuahreg);
+        // $date = $request->input('date');
+
+        // $Reg = $request->input('reg');
+        $ancakregcheck = DB::connection('mysql2')->table('mutu_ancak_new')
+            ->select('*')
+            ->join('estate', 'estate.est', '=', 'mutu_ancak_new.estate')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('mutu_ancak_new.datetime', 'LIKE', '%' . $date . '%')
+            ->where('wil.regional', $Reg)
+            ->get();
+        $transregcheck = DB::connection('mysql2')->table('mutu_buah')
+            ->select('*')
+            ->join('estate', 'estate.est', '=', 'mutu_buah.estate')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('mutu_buah.datetime', 'LIKE', '%' . $date . '%')
+            ->where('wil.regional', $Reg)
+            ->get();
+        $buahregcheck = DB::connection('mysql2')->table('mutu_transport')
+            ->select('*')
+            ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('mutu_transport.datetime', 'LIKE', '%' . $date . '%')
+            ->where('wil.regional', $Reg)
+            ->get();
+
+
+        // dd($ancakregcheck, $transregcheck, $buahregcheck);
+
+        if ($ancakregcheck->isEmpty() && $transregcheck->isEmpty() && $buahregcheck->isEmpty()) {
+            $chkdatareg = 'kosong';
+        } else {
+            $chkdatareg = 'ada';
+        }
+
+        // dd($chkdatareg);
 
         $RekapRegTable = array();
         foreach ($mttransReg as $key => $value) {
             foreach ($mtancakReg as $key1 => $value2) {
                 foreach ($mtBuahreg as $key2 => $value3) if ($key == $key1 && $key1 == $key2) {
-                    $RekapRegTable[$key] = $value['totalSkor'] + $value2['skor_akhir'] + $value3['TOTAL_SKOR'];
+                    if ($chkdatareg == 'kosong') {
+                        $RekapRegTable[$key] = '-';
+                    } else {
+                        $RekapRegTable[$key] = $value['totalSkor'] + $value2['skor_akhir'] + $value3['TOTAL_SKOR'];
+                    }
                 }
             }
         }
@@ -4049,7 +4090,21 @@ class inspeksidashController extends Controller
         //menggabunugkan smua total skor di mutu ancak transport dan buah jadi satu array
         $RekapWIlTabel = array();
         // dd($mtancaktab1Wil[4]['MRE'], $mtTranstab1Wil[4]['MRE'],$mtBuahtab1Wil[4]['MRE']);
-        // dd($mtancaktab1Wil[3]['LDE']);
+        // dd($mtancaktab1Wil[3]);
+        function countKosong($array)
+        {
+            $count = 0;
+
+            foreach ($array as $innerArray) {
+                foreach ($innerArray as $value) {
+                    if (strtolower($value) === 'kosong') {
+                        $count++;
+                    }
+                }
+            }
+
+            return $count;
+        }
 
         // dd($mtancaktab1Wil[3], $mtBuahtab1Wil[3], $mtTranstab1Wil[3]);
         if ($Reg == 1 || $Reg == '1') {
@@ -4066,6 +4121,9 @@ class inspeksidashController extends Controller
                     'bhtm2' => $mtancaktab1Wil[3]['LDE']['bhtm2'] + $mtancaktab1Wil[3]['SRE']['bhtm2'] + $mtancaktab1Wil[3]['SKE']['bhtm2'],
                     'bhtm3' => $mtancaktab1Wil[3]['LDE']['bhtm3'] + $mtancaktab1Wil[3]['SRE']['bhtm3'] + $mtancaktab1Wil[3]['SKE']['bhtm3'],
                     'palepah_pokok' => $mtancaktab1Wil[3]['LDE']['palepah_pokok'] + $mtancaktab1Wil[3]['SRE']['OA']['palepah_pokok'] + $mtancaktab1Wil[3]['SKE']['OA']['palepah_pokok'],
+                    'check_dataLDE' => $mtancaktab1Wil[3]['LDE']['check_data'],
+                    'check_dataSRE' => $mtancaktab1Wil[3]['SRE']['check_data'],
+                    'check_dataSKE' => $mtancaktab1Wil[3]['SKE']['check_data'],
                 ]
             ];
             $newmua_buah = [
@@ -4079,6 +4137,9 @@ class inspeksidashController extends Controller
                     'total_jjgKosong' => $mtBuahtab1Wil[3]['LDE']['total_jjgKosong'] + $mtBuahtab1Wil[3]['SRE']['total_jjgKosong'] + $mtBuahtab1Wil[3]['SKE']['total_jjgKosong'],
                     'total_vcut' => $mtBuahtab1Wil[3]['LDE']['total_vcut'] + $mtBuahtab1Wil[3]['SRE']['total_vcut'] + $mtBuahtab1Wil[3]['SKE']['total_vcut'],
                     'jum_kr' => $mtBuahtab1Wil[3]['LDE']['jum_kr'] + $mtBuahtab1Wil[3]['SRE']['jum_kr'] + $mtBuahtab1Wil[3]['SKE']['jum_kr'],
+                    'check_dataLDE' => $mtancaktab1Wil[3]['LDE']['check_data'],
+                    'check_dataSRE' => $mtancaktab1Wil[3]['SRE']['check_data'],
+                    'check_dataSKE' => $mtancaktab1Wil[3]['SKE']['check_data'],
                 ]
             ];
             $newmua_trans = [
@@ -4086,9 +4147,34 @@ class inspeksidashController extends Controller
                     'tph_sample' => $mtTranstab1Wil[3]['LDE']['tph_sample'] + $mtTranstab1Wil[3]['SRE']['tph_sample'] + $mtTranstab1Wil[3]['SKE']['tph_sample'],
                     'total_brd' => $mtTranstab1Wil[3]['LDE']['total_brd'] + $mtTranstab1Wil[3]['SRE']['total_brd'] + $mtTranstab1Wil[3]['SKE']['total_brd'],
                     'total_buah' => $mtTranstab1Wil[3]['LDE']['total_buah'] + $mtTranstab1Wil[3]['SRE']['total_buah'] + $mtTranstab1Wil[3]['SKE']['total_buah'],
+                    'check_dataLDE' => $mtancaktab1Wil[3]['LDE']['check_data'],
+                    'check_dataSRE' => $mtancaktab1Wil[3]['SRE']['check_data'],
+                    'check_dataSKE' => $mtancaktab1Wil[3]['SKE']['check_data'],
                 ]
             ];
 
+            // dd($newmua_ancak);
+            $ancakdata[] = [
+                $newmua_ancak['Ancak']['check_dataLDE'],
+                $newmua_ancak['Ancak']['check_dataSRE'],
+                $newmua_ancak['Ancak']['check_dataSKE'],
+            ];
+            $buahdata[] = [
+                $newmua_buah['Buah']['check_dataLDE'],
+                $newmua_buah['Buah']['check_dataSRE'],
+                $newmua_buah['Buah']['check_dataSKE'],
+            ];
+            $transdata[] = [
+                $newmua_trans['Trans']['check_dataLDE'],
+                $newmua_trans['Trans']['check_dataSRE'],
+                $newmua_trans['Trans']['check_dataSKE'],
+            ];
+
+            $ancakcount = countKosong($ancakdata);
+            $buahcount = countKosong($buahdata);
+            $transcount = countKosong($transdata);
+
+            // dd($ancakcount);
 
             $muacak = [];
             foreach ($newmua_ancak as $key => $value) {
@@ -4121,7 +4207,16 @@ class inspeksidashController extends Controller
                 $skor_bh = skor_buah_Ma($sumPerBH);
                 $skor_brd = skor_brd_ma($brdPerjjg);
                 $skor_ps = skor_palepah_ma($perPl);
-                $ttlSkorMA = $skor_bh + $skor_brd + $skor_ps;
+
+                if ($ancakcount == 3) {
+                    $ttlSkorMA = 0;
+                    $muacak[$key]['data'] = 'kosong';
+                } else {
+                    $ttlSkorMA = $skor_bh + $skor_brd + $skor_ps;
+                    $muacak[$key]['data'] = 'ada';
+                }
+
+
                 $muacak[$key]['Skorancak'] = $ttlSkorMA;
                 $muacak[$key]['skorbuah'] = $skor_bh;
                 $muacak[$key]['skorbrd'] = $skor_brd;
@@ -4147,8 +4242,15 @@ class inspeksidashController extends Controller
 
                 $skor_bh = skor_brd_tinggal($brdPertphEst);
                 $skor_brd = skor_buah_tinggal($buahPerTPH);
+                if ($transcount == 3) {
+                    $ttlSkorMA = 0;
+                    $muatrans[$key]['data'] = 'kosong';
+                } else {
+                    $ttlSkorMA = $skor_bh + $skor_brd;
+                    $muatrans[$key]['data'] = 'ada';
+                }
 
-                $ttlSkorMA = $skor_bh + $skor_brd;
+
                 $muatrans[$key]['skorTrans'] = $ttlSkorMA;
                 $muatrans[$key]['skorbuah'] = $skor_bh;
                 $muatrans[$key]['skorbrd'] = $skor_brd;
@@ -4199,15 +4301,35 @@ class inspeksidashController extends Controller
                 }
 
                 $per_kr = round($total_kr * 100, 3);
+                if ($buahcount == 3) {
+                    $totalSkor = 0;
+                    $muabuah[$key]['data'] = 'kosong';
+                } else {
+                    $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+                    $muabuah[$key]['data'] = 'ada';
+                }
 
 
-
-                $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
 
                 $muabuah[$key]['skorbuah'] = $totalSkor;
             }
-            // dd($muabuah);
-            $totalestatemua = $muabuah['Buah']['skorbuah'] + $muatrans['Trans']['skorTrans'] + $muacak['Ancak']['Skorancak'];
+
+
+            $finalcheck[] = [
+                $muacak['Ancak']['data'],
+                $muabuah['Buah']['data'],
+                $muatrans['Trans']['data'],
+            ];
+
+            $finalcheck = countKosong($finalcheck);
+
+            if ($finalcheck == 3) {
+                $totalestatemua = '-';
+            } else {
+                $totalestatemua = $muabuah['Buah']['skorbuah'] + $muatrans['Trans']['skorTrans'] + $muacak['Ancak']['Skorancak'];
+            }
+
+            // dd($finalcheck);
 
             $newmua = [
                 'ancak' => 0,
@@ -4226,7 +4348,7 @@ class inspeksidashController extends Controller
         // dd($newmua_ancak, $newmua_buah, $newmua_trans, $muacak, $muabuah, $muatrans,);
 
         // dd($mtancaktab1Wil, $mtTranstab1Wil, $mtBuahtab1Wil);
-
+        // dd($newmua);
 
         foreach ($mtancaktab1Wil as $key => $value) {
             foreach ($value as $key1 => $value1) if (is_array($value1)) {

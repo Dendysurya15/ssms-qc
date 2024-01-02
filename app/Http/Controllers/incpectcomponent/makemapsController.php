@@ -26,6 +26,7 @@ class makemapsController extends Controller
     {
         $est = $request->get('est');
         $regData = $request->get('regData');
+        $date = $request->get('date');
 
         // dd($regData);
 
@@ -33,6 +34,7 @@ class makemapsController extends Controller
             ->select("mutu_transport.*", "estate.wil")
             ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
             ->where('mutu_transport.estate', $est)
+            ->whereYear('mutu_transport.datetime', $date)
             ->where('mutu_transport.afdeling', '!=', 'Pla')
             // ->where('mutu_transport.afd', 'OA')
             ->get();
@@ -44,6 +46,7 @@ class makemapsController extends Controller
             ->select("mutu_buah.*", "estate.wil")
             ->join('estate', 'estate.est', '=', 'mutu_buah.estate')
             ->where('mutu_buah.estate', $est)
+            ->whereYear('mutu_buah.datetime', $date)
             ->where('mutu_buah.afdeling', '!=', 'Pla')
             // ->where('mutu_buah.afd', 'OA')
             ->get();
@@ -55,6 +58,7 @@ class makemapsController extends Controller
             ->select("mutu_ancak_new.*", "estate.wil")
             ->join('estate', 'estate.est', '=', 'mutu_ancak_new.estate')
             ->where('mutu_ancak_new.estate', $est)
+            ->whereYear('mutu_ancak_new.datetime', $date)
             ->where('mutu_ancak_new.afdeling', '!=', 'Pla')
             // ->where('mutu_ancak_new.afd', 'OA')
             ->get();

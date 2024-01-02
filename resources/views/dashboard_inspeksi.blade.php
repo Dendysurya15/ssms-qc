@@ -721,12 +721,7 @@
                             <div class="col-sm-12">
                                 <table class="table table-bordered">
                                     <thead id="theadregs">
-                                        <tr>
-                                            <th colspan="1">REG-I</th>
-                                            <th colspan="1">RH-1</th>
-                                            <th colspan="1">Akhmad Faisyal</th>
-                                            <th colspan="8"></th>
-                                        </tr>
+
                                     </thead>
                                     <tbody>
                                         <!-- Isi tabel di sini -->
@@ -1337,7 +1332,10 @@
                             <h5><b>SCORE KUALITAS PANEN BERDASARKAN BLOK : {{ \Carbon\Carbon::now()->format('Y') }}</b></h5>
                         </div>
 
+                        @php
 
+                        $datenow = \Carbon\Carbon::now()->format('Y');
+                        @endphp
                         <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
                             <div class="row w-100">
                                 <div class="col-md-2 offset-md-8">
@@ -1982,63 +1980,6 @@
 
     });
 
-
-    var titleEstate = new Array();
-
-    function drawEstatePlot(est, plot) {
-        var geoJsonEst = '{"type"'
-        geoJsonEst += ":"
-        geoJsonEst += '"FeatureCollection",'
-        geoJsonEst += '"features"'
-        geoJsonEst += ":"
-        geoJsonEst += '['
-
-        geoJsonEst += '{"type"'
-        geoJsonEst += ":"
-        geoJsonEst += '"Feature",'
-        geoJsonEst += '"properties"'
-        geoJsonEst += ":"
-        geoJsonEst += '{"estate"'
-        geoJsonEst += ":"
-        geoJsonEst += '"' + est + '"},'
-        geoJsonEst += '"geometry"'
-        geoJsonEst += ":"
-        geoJsonEst += '{"coordinates"'
-        geoJsonEst += ":"
-        geoJsonEst += '[['
-        geoJsonEst += plot
-        geoJsonEst += ']],"type"'
-        geoJsonEst += ":"
-        geoJsonEst += '"Polygon"'
-        geoJsonEst += '}},'
-
-        geoJsonEst = geoJsonEst.substring(0, geoJsonEst.length - 1);
-        geoJsonEst += ']}'
-
-        var estate = JSON.parse(geoJsonEst)
-
-        var estateObj = L.geoJSON(estate, {
-                onEachFeature: function(feature, layer) {
-                    layer.myTag = 'EstateMarker'
-                    var label = L.marker(layer.getBounds().getCenter(), {
-                        icon: L.divIcon({
-                            className: 'label-estate',
-                            html: feature.properties.estate,
-                            iconSize: [100, 20]
-                        })
-                    }).addTo(map);
-                    titleEstate.push(label)
-                    layer.addTo(map);
-                }
-            })
-            .addTo(map);
-
-        map.fitBounds(estateObj.getBounds());
-    }
-
-    var titleBlok = new Array();
-
-
     function drawBlokPlot(blok) {
         if (blok.length === 0) {
             const errorAnimationPath = 'https://assets1.lottiefiles.com/packages/lf20_no386ede.json';
@@ -2282,6 +2223,63 @@
             console.error('Invalid bounds:', test.getBounds());
         }
     }
+    var titleEstate = new Array();
+
+    function drawEstatePlot(est, plot) {
+        var geoJsonEst = '{"type"'
+        geoJsonEst += ":"
+        geoJsonEst += '"FeatureCollection",'
+        geoJsonEst += '"features"'
+        geoJsonEst += ":"
+        geoJsonEst += '['
+
+        geoJsonEst += '{"type"'
+        geoJsonEst += ":"
+        geoJsonEst += '"Feature",'
+        geoJsonEst += '"properties"'
+        geoJsonEst += ":"
+        geoJsonEst += '{"estate"'
+        geoJsonEst += ":"
+        geoJsonEst += '"' + est + '"},'
+        geoJsonEst += '"geometry"'
+        geoJsonEst += ":"
+        geoJsonEst += '{"coordinates"'
+        geoJsonEst += ":"
+        geoJsonEst += '[['
+        geoJsonEst += plot
+        geoJsonEst += ']],"type"'
+        geoJsonEst += ":"
+        geoJsonEst += '"Polygon"'
+        geoJsonEst += '}},'
+
+        geoJsonEst = geoJsonEst.substring(0, geoJsonEst.length - 1);
+        geoJsonEst += ']}'
+
+        var estate = JSON.parse(geoJsonEst)
+
+        var estateObj = L.geoJSON(estate, {
+                onEachFeature: function(feature, layer) {
+                    layer.myTag = 'EstateMarker'
+                    var label = L.marker(layer.getBounds().getCenter(), {
+                        icon: L.divIcon({
+                            className: 'label-estate',
+                            html: feature.properties.estate,
+                            iconSize: [100, 20]
+                        })
+                    }).addTo(map);
+                    titleEstate.push(label)
+                    layer.addTo(map);
+                }
+            })
+            .addTo(map);
+
+        map.fitBounds(estateObj.getBounds());
+    }
+
+    var titleBlok = new Array();
+
+
+
     var test;
     // Declare a variable to store the previous Lottie animation instance
     let previousAnimation = null;
@@ -2339,32 +2337,16 @@
         }
     }
 
-    function getPlotEstate() {
-        var _token = $('input[name="_token"]').val();
-        var estData = $("#estDataMap").val();
-        const params = new URLSearchParams(window.location.search)
-        var paramArr = [];
-        for (const param of params) {
-            paramArr = param
-        }
-        $.ajax({
-            url: "{{ route('plotEstate') }}",
-            method: "POST",
-            data: {
-                est: estData,
-                _token: _token
-            },
-            success: function(result) {
-                var estate = JSON.parse(result);
-                drawEstatePlot(estate['est'], estate['plot'])
-            }
-        })
-    }
+
+    let waktuini = @json($datenow);
+
+    // console.log(waktuini);
 
     function getPlotBlok() {
         var _token = $('input[name="_token"]').val();
         var estData = $("#estDataMap").val();
         var regData = $("#regDataMap").val();
+        var date = waktuini
         const params = new URLSearchParams(window.location.search)
         var paramArr = [];
         for (const param of params) {
@@ -2377,6 +2359,7 @@
             data: {
                 est: estData,
                 regData: regData,
+                date: date,
                 _token: _token
             },
             success: function(result) {
@@ -2402,6 +2385,28 @@
                 legend.addTo(map);
 
                 legendVar = legend;
+            }
+        })
+    }
+
+    function getPlotEstate() {
+        var _token = $('input[name="_token"]').val();
+        var estData = $("#estDataMap").val();
+        const params = new URLSearchParams(window.location.search)
+        var paramArr = [];
+        for (const param of params) {
+            paramArr = param
+        }
+        $.ajax({
+            url: "{{ route('plotEstate') }}",
+            method: "POST",
+            data: {
+                est: estData,
+                _token: _token
+            },
+            success: function(result) {
+                var estate = JSON.parse(result);
+                drawEstatePlot(estate['est'], estate['plot'])
             }
         })
     }
@@ -2973,7 +2978,7 @@
                     nama: data.nama,
                     rank: data.rank,
                     data: data.data,
-                    skor: data.data === 'kosong' ? 0 : data.skor
+                    skor: data.data === 'kosong' ? '-' : data.skor
                 }));
 
                 const Data_TableKedua = Object.entries(parseResult['data_tabelkedua']);
@@ -2986,7 +2991,7 @@
                     nama: data.nama,
                     rank: data.rank,
                     data: data.data,
-                    skor: data.data === 'kosong' ? 0 : data.skor
+                    skor: data.data === 'kosong' ? '-' : data.skor
                 }));
                 const Data_TableKetiga = Object.entries(parseResult['data_tabeketiga']);
                 const newData_TableKetiga = Data_TableKetiga.map(([_, data]) => ({
@@ -2996,7 +3001,7 @@
                     nama: data.nama,
                     rank: data.rank,
                     data: data.data,
-                    skor: data.data === 'kosong' ? 0 : data.skor
+                    skor: data.data === 'kosong' ? '-' : data.skor
                 }));
 
 
@@ -3100,7 +3105,7 @@
 
 
                 var arrTbody1 = filteredArray
-                console.log(arrTbody1);
+                // console.log(arrTbody1);
 
                 var tbody1 = document.getElementById('tbody1');
                 //         $('#thead1').empty()
@@ -3264,9 +3269,11 @@
                         if (data === "ada") {
                             itemElement4.style.backgroundColor = "red";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = item4
                         } else {
                             itemElement4.style.backgroundColor = "white";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = '-'
                         }
 
                     }
@@ -3285,11 +3292,10 @@
 
 
 
-                    itemElement4.innerText = item4;
+
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
                     itemElement3.innerText = item3
-                    itemElement4.innerText = item4
                     itemElement5.innerText = item5
 
                     tr.appendChild(itemElement1)
@@ -3331,7 +3337,6 @@
                     itemElement3.style.color = "black";
                 }
 
-
                 if (item4 >= 95) {
                     itemElement4.style.backgroundColor = "#609cd4";
                     itemElement4.style.color = "black";
@@ -3345,8 +3350,14 @@
                     itemElement4.style.backgroundColor = "#ffc404";
                     itemElement4.style.color = "black";
                 } else {
-                    itemElement4.style.backgroundColor = "red";
-                    itemElement4.style.color = "black";
+                    if (data === "ada") {
+                        itemElement4.style.backgroundColor = "red";
+                        itemElement4.style.color = "black";
+                    } else {
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                    }
+
                 }
 
                 if (itemElement4.style.backgroundColor === "#609cd4") {
@@ -3538,12 +3549,15 @@
                         if (data === "ada") {
                             itemElement4.style.backgroundColor = "red";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = item4
                         } else {
                             itemElement4.style.backgroundColor = "white";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = '-'
                         }
 
                     }
+
                     if (itemElement4.style.backgroundColor === "#609cd4") {
                         itemElement4.style.color = "black";
                     } else if (itemElement4.style.backgroundColor === "#08b454") {
@@ -3558,11 +3572,10 @@
 
 
 
-                    itemElement4.innerText = item4;
+
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
                     itemElement3.innerText = item3
-                    itemElement4.innerText = item4
                     itemElement5.innerText = item5
 
                     tr.appendChild(itemElement1)
@@ -3596,29 +3609,34 @@
                 itemsElement3.style.backgroundColor = "#fff4cc";
 
                 if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                    itemElement3.style.color = "red";
+                    itemsElement3.style.color = "red";
                 } else {
-                    itemElement3.style.color = "black";
+                    itemsElement3.style.color = "black";
                 }
 
 
-                if (items4 >= 95) {
+                if (item4 >= 95) {
                     itemsElements4.style.backgroundColor = "#609cd4";
                     itemsElements4.style.color = "black";
-                } else if (items4 >= 85 && items4 < 95) {
+                } else if (item4 >= 85 && item4 < 95) {
                     itemsElements4.style.backgroundColor = "#08b454";
                     itemsElements4.style.color = "black";
-                } else if (items4 >= 75 && items4 < 85) {
+                } else if (item4 >= 75 && item4 < 85) {
                     itemsElements4.style.backgroundColor = "#fffc04";
                     itemsElements4.style.color = "black";
-                } else if (items4 >= 65 && items4 < 75) {
+                } else if (item4 >= 65 && item4 < 75) {
                     itemsElements4.style.backgroundColor = "#ffc404";
                     itemsElements4.style.color = "black";
                 } else {
-                    itemsElements4.style.backgroundColor = "red";
-                    itemsElements4.style.color = "black";
-                }
+                    if (data === "ada") {
+                        itemsElements4.style.backgroundColor = "red";
+                        itemsElements4.style.color = "black";
+                    } else {
+                        itemsElements4.style.backgroundColor = "white";
+                        itemsElements4.style.color = "black";
+                    }
 
+                }
                 if (itemsElements4.style.backgroundColor === "#609cd4") {
                     itemsElements4.style.color = "black";
                 } else if (itemsElements4.style.backgroundColor === "#08b454") {
@@ -3752,7 +3770,7 @@
 
 
 
-
+                // console.log(newData_data_Est3);
 
                 if (regInpt == '1') {
                     var data = list_asisten
@@ -3800,7 +3818,7 @@
                     // Always increment rank regardless of the score
                     element['rank'] = rank++;
                 });
-
+                // console.log(arrTbody3);
                 // var table1 = document.getElementById('table1');
                 var tbody3 = document.getElementById('tbody3');
                 arrTbody3.forEach(element => {
@@ -3854,9 +3872,11 @@
                         if (data === "ada") {
                             itemElement4.style.backgroundColor = "red";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = item4
                         } else {
                             itemElement4.style.backgroundColor = "white";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = '-'
                         }
 
                     }
@@ -3874,11 +3894,11 @@
                     }
 
 
-                    itemElement4.innerText = item4;
+
+
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
                     itemElement3.innerText = item3
-                    itemElement4.innerText = item4
                     itemElement5.innerText = item5
 
                     tr.appendChild(itemElement1)
@@ -3920,21 +3940,27 @@
                 }
 
 
-                if (itemx4 >= 95) {
+                if (item4 >= 95) {
+                    itemxElementx4.style.backgroundColor = "#609cd4";
+                    itemxElementx4.style.color = "black";
+                } else if (item4 >= 85 && item4 < 95) {
                     itemxElementx4.style.backgroundColor = "#08b454";
                     itemxElementx4.style.color = "black";
-                } else if (itemx4 >= 85 && itemx4 < 95) {
-                    itemxElementx4.style.backgroundColor = "#08b454";
-                    itemxElementx4.style.color = "black";
-                } else if (itemx4 >= 75 && itemx4 < 85) {
+                } else if (item4 >= 75 && item4 < 85) {
                     itemxElementx4.style.backgroundColor = "#fffc04";
                     itemxElementx4.style.color = "black";
-                } else if (itemx4 >= 65 && itemx4 < 75) {
+                } else if (item4 >= 65 && item4 < 75) {
                     itemxElementx4.style.backgroundColor = "#ffc404";
                     itemxElementx4.style.color = "black";
                 } else {
-                    itemxElementx4.style.backgroundColor = "black";
-                    itemxElementx4.style.color = "black";
+                    if (data === "ada") {
+                        itemxElementx4.style.backgroundColor = "red";
+                        itemxElementx4.style.color = "black";
+                    } else {
+                        itemxElementx4.style.backgroundColor = "white";
+                        itemxElementx4.style.color = "black";
+                    }
+
                 }
 
                 if (itemxElementx4.style.backgroundColor === "#609cd4") {
@@ -3994,25 +4020,19 @@
                     itemElement3.style.color = "black";
                 }
 
-
-                if (reg4 >= 95) {
-                    regElement4.style.backgroundColor = "#609cd4";
-                    regElement4.style.color = "black";
-                } else if (reg4 >= 85 && reg4 < 95) {
+                if (reg4 === '-') {
+                    regElement4.style.backgroundColor = "white";
+                } else if (reg4 >= '95') {
+                    regElement4.style.backgroundColor = "#0804fc";
+                } else if (reg4 >= '85' && reg4 < '95') {
                     regElement4.style.backgroundColor = "#08b454";
-                    regElement4.style.color = "black";
-                } else if (reg4 >= 75 && reg4 < 85) {
-                    regElement4.style.backgroundColor = "#fffc04";
-                    regElement4.style.color = "black";
-                } else if (reg4 >= 65 && reg4 < 75) {
+                } else if (reg4 >= '75' && reg4 < '85') {
+                    regElement4.style.backgroundColor = "red";
+                } else if (reg4 >= '65' && reg4 < '75') {
                     regElement4.style.backgroundColor = "#ffc404";
-                    regElement4.style.color = "black";
                 } else {
                     regElement4.style.backgroundColor = "red";
-                    regElement4.style.color = "black";
                 }
-
-
 
                 regElement1.innerText = reg1;
                 regElement2.innerText = reg2;
@@ -4034,281 +4054,6 @@
                 // }
 
                 //plasma
-                var arrTplasma = newPlasma
-
-                var tplasma = document.getElementById('plbody');
-
-                // $('#thead3').empty()
-
-                arrTplasma.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = element['rank']
-                    // let item6 = newPlasmaEM['EM']
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-
-                    let data = element['data']
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
-                    } else {
-                        if (data === "ada") {
-                            itemElement4.style.backgroundColor = "red";
-                            itemElement4.style.color = "black";
-                        } else {
-                            itemElement4.style.backgroundColor = "white";
-                            itemElement4.style.color = "black";
-                        }
-
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
-
-
-                    // if (item4 != 0 || item4 != 90) {
-                    //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
-                    // } else {
-                    //     itemElement4.innerText = item4
-                    // }
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    // itemElement2.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '" target="_blank">' + element['afd'] + ' </a>';
-
-                    itemElement3.innerText = item3
-                    itemElement4.innerText = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    tplasma.appendChild(tr)
-                    // }
-                });
-
-
-                var plasmaBEM = document.getElementById('plbody');
-
-                // $('#thead3').empty()
-                var arrplasmaEM = newPlasmaEM
-                arrplasmaEM.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = ''
-                    // let item6 = newPlasmaEM['EM']
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-                    itemElement1.style.backgroundColor = "#E8ecdc";
-                    itemElement2.style.backgroundColor = "#E8ecdc";
-                    itemElement3.style.backgroundColor = "#E8ecdc";
-
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
-
-
-                    itemElement4.innerText = item4;
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    //   itemElement4.innerText  = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    plasmaBEM.appendChild(tr)
-                    // }
-                });
-
-                var plasmaGMe = document.getElementById('plbody');
-
-                // $('#thead3').empty()
-                var arrPlasmaGM = newPlasmaGM
-                arrPlasmaGM.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = ''
-                    // let item6 = newPlasmaEM['EM']
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-                    itemElement1.style.backgroundColor = "#Fff4cc";
-                    itemElement2.style.backgroundColor = "#Fff4cc";
-                    itemElement3.style.backgroundColor = "#Fff4cc";
-
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
-
-                    itemElement4.innerText = item4;
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    //   itemElement4.innerText  = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    plasmaGMe.appendChild(tr)
-                    // }
-                });
 
 
 
@@ -6901,12 +6646,14 @@
 
                 var theadreg = document.getElementById('theadregs');
 
+                // console.log(regional);
+
                 tr = document.createElement('tr')
                 let reg1 = regIonal
                 let reg2 = regIonalRH
                 let reg3 = regIonalNama
                 let reg4 = regional[0][1]
-                // let reg4 = 'oke'
+                // let reg4 = '-'
                 let regElement1 = document.createElement('td')
                 let regElement2 = document.createElement('td')
                 let regElement3 = document.createElement('td')
@@ -6920,17 +6667,20 @@
                 regElement1.style.backgroundColor = "#c8e4b4";
                 regElement2.style.backgroundColor = "#c8e4b4";
                 regElement3.style.backgroundColor = "#c8e4b4";
-                if (reg4 >= 95) {
+                if (reg4 === '-') {
+                    regElement4.style.backgroundColor = "white";
+                } else if (reg4 >= '95') {
                     regElement4.style.backgroundColor = "#0804fc";
-                } else if (reg4 >= 85 && reg4 < 95) {
+                } else if (reg4 >= '85' && reg4 < '95') {
                     regElement4.style.backgroundColor = "#08b454";
-                } else if (reg4 >= 75 && reg4 < 85) {
-                    regElement4.style.backgroundColor = "#red";
-                } else if (reg4 >= 65 && reg4 < 75) {
+                } else if (reg4 >= '75' && reg4 < '85') {
+                    regElement4.style.backgroundColor = "red";
+                } else if (reg4 >= '65' && reg4 < '75') {
                     regElement4.style.backgroundColor = "#ffc404";
                 } else {
                     regElement4.style.backgroundColor = "red";
                 }
+
                 regElement1.innerText = reg1;
                 regElement2.innerText = reg2;
                 regElement3.innerText = reg3;
@@ -6943,290 +6693,9 @@
 
                 theadreg.appendChild(tr)
 
-                // var plasmahide = document.getElementById('plasmaID');
-                // if (regInpt === '2' || regInpt === '3') {
-                //     plasmahide.style.display = 'none'; // hide the table
-                // } else {
-                //     plasmahide.style.display = ''; // show the table
-                // }
-
-                //plasma
-                var arrTplasma = newPlasma
-
-                var tplasma = document.getElementById('plbodys');
-
-                // $('#thead3').empty()
-
-                arrTplasma.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = element['rank']
-                    // let item6 = newPlasmaEM['EM']
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
 
 
 
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
-                    // if (item4 != 0 || item4 != 90) {
-                    //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
-                    // } else {
-                    //     itemElement4.innerText = item4
-                    // }
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    // itemElement2.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '" target="_blank">' + element['afd'] + ' </a>';
-
-                    itemElement3.innerText = item3
-                    itemElement4.innerText = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    tplasma.appendChild(tr)
-                    // }
-                });
-
-
-                var plasmaBEM = document.getElementById('plbodys');
-
-                // $('#thead3').empty()
-                var arrplasmaEM = newPlasmaEM
-                arrplasmaEM.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = ''
-                    // let item6 = newPlasmaEM['EM']
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-                    itemElement1.style.backgroundColor = "#E8ecdc";
-                    itemElement2.style.backgroundColor = "#E8ecdc";
-                    itemElement3.style.backgroundColor = "#E8ecdc";
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
-
-                    itemElement4.innerText = item4;
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    //   itemElement4.innerText  = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    plasmaBEM.appendChild(tr)
-                    // }
-                });
-
-                var plasmaGMe = document.getElementById('plbodys');
-
-                // $('#thead3').empty()
-                var arrPlasmaGM = newPlasmaGM
-                arrPlasmaGM.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = ''
-                    // let item6 = newPlasmaEM['EM']
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-                    itemElement1.style.backgroundColor = "#Fff4cc";
-                    itemElement2.style.backgroundColor = "#Fff4cc";
-                    itemElement3.style.backgroundColor = "#Fff4cc";
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-                    itemElement4.innerText = item4;
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    //   itemElement4.innerText  = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    plasmaGMe.appendChild(tr)
-                    // }
-                });
-
-                // if (regInpt === '2' || regInpt === '3') {
-
-                //     const indexToDelete = chart_btt.findIndex(element => element[0] === 'pt_muabrd');
-
-                //     if (indexToDelete !== -1) {
-                //         chart_btt.splice(indexToDelete, 1);
-                //     }
-                //     const indexToDeletes = chart_buah.findIndex(element => element[0] === 'pt_muabuah');
-
-                //     if (indexToDeletes !== -1) {
-                //         chart_buah.splice(indexToDeletes, 1);
-                //     }
-
-
-                // } else {
-                //     chart_btt;
-                //     chart_buah;
-                // }
                 //chart
 
                 var wilayah = '['

@@ -1882,7 +1882,7 @@ class inspectController extends Controller
             ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
             ->orderBy('year', 'desc')
             ->get();
-        $querySidak_ancak = DB::connection('mysql2')->table('mutu_ancak')
+        $querySidak_ancak = DB::connection('mysql2')->table('mutu_ancak_new')
             ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
             ->orderBy('year', 'desc')
             ->get();
@@ -1890,6 +1890,7 @@ class inspectController extends Controller
             ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
             ->orderBy('year', 'desc')
             ->get();
+
 
         $years = [];
 
