@@ -712,6 +712,9 @@ class unitController extends Controller
             ->where('wil.regional', 1)
             ->get();
 
+        $currentYear = date('Y');
+        $years_list = range(2022, $currentYear);
+
         $queryEstate = json_decode($queryEstate, true);
 
         $dataRaw = array();
@@ -940,7 +943,7 @@ class unitController extends Controller
         // dd($dataResult);
         $bulanJson = json_encode($bulan);
 
-        return view('dashboard', ['dataResult' => $dataResult, 'resultCount' => $resultCount, 'bulanJson' => $bulanJson, 'bulan' => $bulan, 'total_column_bulan' => $total_column_bulan, 'resultCountJson' => $resultCountJson]);
+        return view('dashboard', ['curr_year' => $currentYear, 'years_list' => $years_list, 'dataResult' => $dataResult, 'resultCount' => $resultCount, 'bulanJson' => $bulanJson, 'bulan' => $bulan, 'total_column_bulan' => $total_column_bulan, 'resultCountJson' => $resultCountJson]);
     }
     public function tambah()
     {
