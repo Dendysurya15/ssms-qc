@@ -5906,15 +5906,15 @@ class mutubuahController extends Controller
 
         // dd($tanggal);
 
-        $mutuAncak = DB::connection('mysql2')->table('sidak_mutu_buah')
+        $mutubuah = DB::connection('mysql2')->table('sidak_mutu_buah')
             ->select("sidak_mutu_buah.*", DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun'))
             ->where('sidak_mutu_buah.datetime', 'like', '%' . $tanggal . '%')
 
             ->where('sidak_mutu_buah.estate', $Reg)
             ->where('sidak_mutu_buah.afdeling', $afd)
             ->get();
-        // $mutuAncak = $mutuAncak->groupBy(['blok']);
-        $mutuAncak = json_decode($mutuAncak, true);
+        // $mutubuah = $mutubuah->groupBy(['blok']);
+        $mutubuah = json_decode($mutubuah, true);
 
 
         // dd($mutuAncak);
@@ -5922,7 +5922,7 @@ class mutubuahController extends Controller
 
         $arrView = array();
 
-        $arrView['mutuAncak'] =  $mutuAncak;
+        $arrView['mutubuah'] =  $mutubuah;
         $arrView['tanggal'] =  $tanggal;
         echo json_encode($arrView);
         exit();

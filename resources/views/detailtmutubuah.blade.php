@@ -458,46 +458,25 @@
         </form>
     </div>
 
-    <div class="d-flex flex-column align-items-center mt-3 mb-2 ml-3 mr-3">
-        <h1 class="text-center">Tabel Sidak Mutu Buah</h1>
-        <div class="table-responsive">
-            <table class="table table-bordered" id="mutu_ancak">
-                <thead class="thead-light">
-                    <tr>
-                        <th>No</th>
-                        <th>Estate</th>
-                        <th>Afdeling</th>
-                        <th>Blok</th>
-                        <th>Petugas</th>
-                        <th>TPH Baris</th>
-                        <th>Ancak Pemanen</th>
-                        <th>Jumlah Janjang</th>
-                        <th>BMT</th>
-                        <th>BMK</th>
-                        <th>OverRipe</th>
-                        <th>Empty</th>
-                        <th>Abnormal</th>
-                        <th>Rat Damage</th>
-                        <th>Tidak Standar Vcut</th>
-                        <th>Alas BR</th>
-
-                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
-                        <th colspan="2">Aksi</th>
-                        @endif
-                    </tr>
-                </thead>
-                <tbody id="tab1">
-                </tbody>
-            </table>
-        </div>
-        <!-- Add this after the </table> tag -->
-        <div class="pagination-container d-flex justify-content-center mt-3">
-            <nav aria-label="Page navigation">
-                <ul class="pagination" id="pagination">
-                </ul>
-            </nav>
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <h1 style="text-align: center;">Tabel Mutu Buah</h1>
+                    <table class="table table-striped table-bordered" id="new_Sidak">
+                        <thead>
+                            <!-- Table header content -->
+                        </thead>
+                        <tbody>
+                            <!-- Table body content will be dynamically generated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+
+
 
     <style>
         .table th,
@@ -506,6 +485,7 @@
             vertical-align: middle !important;
         }
     </style>
+
     <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
         <div class="table-responsive">
             <table class="table table-bordered table-sm text-center">
@@ -850,7 +830,9 @@
         lottieContainer.style.display = 'block'; // Display the Lottie container
 
         $('#tab1').empty()
-
+        if ($.fn.DataTable.isDataTable('#new_Sidak')) {
+            $('#new_Sidak').DataTable().destroy();
+        }
 
         var est = document.getElementById('est').value;
         var afd = document.getElementById('afd').value;
@@ -872,356 +854,100 @@
             success: function(result) {
                 lottieAnimation.stop(); // Stop the Lottie animation
                 lottieContainer.style.display = 'none'; // Hide the Lottie container
+                var parseResult = JSON.parse(result);
+
 
                 //modal
-
-                // Get the modal
-                const modal = document.getElementById("imageModal");
-
-                // Get the image element inside the modal
-                const modalImage = document.getElementById("modalImage");
-
-                // Get the close button
-                const closeBtn = document.getElementsByClassName("close")[0];
-
-                // Function to show the modal with the clicked image
-                function showModal(src) {
-                    modalImage.src = src;
-                    modal.style.display = "block";
-                }
-
-                // When the user clicks on the close button, close the modal
-                closeBtn.onclick = function() {
-                    modal.style.display = "none";
-                }
-
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function(event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
-                    }
-                }
-                //
-
-                var parseResult = JSON.parse(result)
-                var mutuAncak = Object.entries(parseResult['mutuAncak'])
-
-
-                // Set the onclick event for the confirm delete button
-
-                //modal untuk mnerima data untuk mutu ancak
-                function openUpdateModal(id,
-                    blok_ancak,
-                    sph_ancak,
-                    br1_cak,
-                    br2_cak,
-                    sample_cak,
-                    pokok_kuning_cak,
-                    piringan_semak_cak,
-                    underpruning_cak,
-                    overpruning_cak,
-                    jjg_cak,
-                    brtp_cak,
-                    brtk_cak,
-                    brtgl_cak,
-                ) {
-                    const updateModal = document.getElementById('update-modal');
-                    const updateForm = document.getElementById('update-form');
-                    const updateId = document.getElementById('update-id');
-                    const bloks = document.getElementById('update-blokCak');
-                    const updateSph = document.getElementById('update-sph');
-                    const updateBr1 = document.getElementById('update-br1');
-                    const updateBr2 = document.getElementById('update-br2');
-                    const sample = document.getElementById('update-sampCak');
-                    const pokok_kuning = document.getElementById('update-pkKuning');
-
-                    const piringan_semak = document.getElementById('update-prSmk');
-                    const underpruning = document.getElementById('update-undrPR');
-                    const overpruning = document.getElementById('update-overPR');
-                    const janjang = document.getElementById('update-jjgCak');
-                    const brtp = document.getElementById('update-brtp');
-                    const brtk = document.getElementById('update-brtk');
-                    const brtgl = document.getElementById('update-brtgl');
-
-
-                    updateId.value = id;
-                    bloks.value = blok_ancak;
-                    updateSph.value = sph_ancak;
-                    updateBr1.value = br1_cak;
-                    updateBr2.value = br2_cak;
-                    sample.value = sample_cak;
-                    pokok_kuning.value = pokok_kuning_cak;
-
-                    piringan_semak.value = piringan_semak_cak;
-                    underpruning.value = underpruning_cak;
-                    overpruning.value = overpruning_cak;
-                    janjang.value = jjg_cak;
-                    brtp.value = brtp_cak;
-                    brtk.value = brtk_cak;
-                    brtgl.value = brtgl_cak;
-
-                    updateModal.style.display = 'block';
-
-                    updateForm.onsubmit = function(event) {
-                        event.preventDefault();
-                        updateMutuAncak(event.target);
-                    };
-                }
-
-                function createAksiButtons(row,
-                    id,
-                    blok_ancak,
-                    sph_ancak,
-                    br1_cak,
-                    br2_cak,
-                    sample_cak,
-                    pokok_kuning_cak,
-                    piringan_semak_cak,
-                    underpruning_cak,
-                    overpruning_cak,
-                    jjg_cak,
-                    brtp_cak,
-                    brtk_cak,
-                    brtgl_cak,
-                ) {
-                    const td = document.createElement('td');
-                    td.style.display = 'inline-flex';
-                    if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                        const updateBtn = document.createElement('button');
-                        updateBtn.className = 'btn btn-success mr-2';
-                        updateBtn.innerHTML = '<i class="nav-icon fa-solid fa-edit"></i>';
-                        updateBtn.onclick = function() {
-                            openUpdateModal(id,
-                                blok_ancak,
-                                sph_ancak,
-                                br1_cak,
-                                br2_cak,
-                                sample_cak,
-                                pokok_kuning_cak,
-                                piringan_semak_cak,
-                                underpruning_cak,
-                                overpruning_cak,
-                                jjg_cak,
-                                brtp_cak,
-                                brtk_cak,
-                                brtgl_cak,
-                            );
-                        };
-
-                        td.appendChild(updateBtn);
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.id = 'deleteBtn-' + id;
-                        deleteBtn.className = 'btn btn-danger';
-                        deleteBtn.innerHTML = '<i class="nav-icon fa-solid fa-trash"></i>';
-                        deleteBtn.onclick = function() {
-                            const deleteModal = document.getElementById('delete-modal');
-                            deleteModal.style.display = 'block';
-                            currentRowToDelete = row;
-                            currentIdToDelete = id;
-                            document.getElementById('delete-id').value = id;
-                        };
-                        td.appendChild(deleteBtn);
-                    }
-                    row.appendChild(td);
-                }
-
-                document.getElementById('close-delete-modal').addEventListener('click', function() {
-                    const deleteModal = document.getElementById('delete-modal');
-                    deleteModal.style.display = 'none';
-                });
-
-                document.getElementById('delete-form').addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    handleDeleteFormSubmit();
-
-                    // Reset the global variables
-                    currentRowToDelete = null;
-                    currentIdToDelete = null;
-
-                    // Close the delete modal
-                    const deleteModal = document.getElementById('delete-modal');
-                    deleteModal.style.display = 'none';
-                });
-
-
-
-                function handleDeleteFormSubmit() {
-                    const deleteId = document.getElementById('delete-id').value;
-                    const row = document.querySelector(`tr[data-id="${deleteId}"]`);
-
-                    const form = document.getElementById('delete-form');
-                    const formData = new FormData(form);
-                    const url = form.getAttribute('action');
-
-                    $.ajax({
-                        type: 'POST',
-                        url: url,
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                var sidakTPhNEw = $('#new_Sidak').DataTable({
+                    columns: [{
+                            title: 'ID',
+                            data: 'id',
                         },
-                        success: function(data, textStatus, xhr) {
-                            if (xhr.status === 200) {
-                                // Successfully deleted, remove the row from the table
-                                row.remove();
-
-                                // Show a SweetAlert
-                                Swal.fire({
-                                    title: 'Success',
-                                    text: 'Data has been deleted successfully.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        // Refresh the page
-                                        location.reload();
-                                    }
-                                });
-                            } else {
-                                alert('Error: Unable to delete data.');
+                        {
+                            title: 'Estate',
+                            data: 'estate'
+                        },
+                        {
+                            title: 'Afdeling',
+                            data: 'afdeling'
+                        },
+                        {
+                            title: 'Blok',
+                            data: 'blok'
+                        },
+                        {
+                            title: 'Petugas',
+                            data: 'petugas'
+                        },
+                        {
+                            title: 'Waktu',
+                            data: 'datetime'
+                        },
+                        {
+                            title: 'TPH Baris',
+                            data: 'tph_baris'
+                        },
+                        {
+                            title: 'Ancak Pemanen',
+                            data: 'ancak_pemanen'
+                        },
+                        {
+                            title: 'Jumlah Janjang',
+                            data: 'jumlah_jjg'
+                        }, {
+                            title: 'Buah Mentah',
+                            data: 'bmt'
+                        },
+                        {
+                            title: 'Buah Masak',
+                            data: 'bmk'
+                        },
+                        {
+                            title: 'Buah Lewat Masak',
+                            data: 'overripe'
+                        },
+                        {
+                            title: 'Buah Kosong',
+                            data: 'empty_bunch'
+                        },
+                        {
+                            title: 'Buah Abnormal',
+                            data: 'abnormal'
+                        },
+                        {
+                            title: 'Rat Damage',
+                            data: 'rd'
+                        },
+                        {
+                            title: 'Tidak Vcut',
+                            data: 'vcut'
+                        },
+                        {
+                            title: 'Alas Karung',
+                            data: 'alas_br'
+                        },
+                        {
+                            title: 'Maps',
+                            data: 'app_version'
+                        },
+                        {
+                            // -1 targets the last column
+                            title: 'Actions',
+                            visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),
+                            render: function(data, type, row, meta) {
+                                var buttons =
+                                    '<button class="edit-btn">Edit</button>' +
+                                    '<button class="delete-btn">Delete</button>';
+                                return buttons;
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            console.log("Error data:", xhr.responseJSON);
-                            console.error("There was a problem with the fetch operation:", error);
-                        },
-                    });
-                }
-
-
-                //bagian menampilkan tabel semua mutu buah ancak dsb
-
-
-                function createTableCell(value) {
-                    const cell = document.createElement('td');
-                    cell.innerText = value;
-                    return cell;
-                }
-
-                function createTableRow(items) {
-                    const tr = document.createElement('tr');
-                    items.forEach(item => {
-                        const td = document.createElement('td');
-                        if (item instanceof HTMLElement) {
-                            td.appendChild(item);
-                        } else {
-                            td.textContent = item;
                         }
-                        tr.appendChild(td);
-                    });
-                    return tr;
-                }
+                    ],
 
-                function createImageElement(src) {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.style.width = '100px';
-                    img.addEventListener('click', () => showModal(src));
-                    return img;
-                }
-
-                var mutuAncak1 = mutuAncak
-                var tRans = document.getElementById('tab1');
-                const rowsPerPage = 10;
-                let currentPage = 1;
-                const totalPages = Math.ceil(mutuAncak1.length / rowsPerPage);
-
-                function renderData(page, callback) {
-                    const start = (page - 1) * rowsPerPage;
-                    const end = start + rowsPerPage;
-
-                    const paginatedData = mutuAncak1.slice(start, end);
-
-                    // Clear the table body
-                    tRans.innerHTML = '';
-
-                    paginatedData.forEach((element, index) => {
-
-                        const items = [
-                            index + 1,
-                            element[1].estate,
-                            element[1].afdeling,
-                            element[1].blok,
-                            element[1].petugas,
-                            element[1].tph_baris,
-                            element[1].ancak_pemanen,
-                            element[1].jumlah_jjg,
-                            element[1].bmt,
-                            element[1].bmk,
-                            element[1].overripe,
-                            element[1].empty,
-                            element[1].abnormal,
-                            element[1].rd,
-                            element[1].vcut,
-                            element[1].alas_br,
-                            element[1].aksi,
-                        ];
-                        const row = createTableRow(items);
-                        // Inside the forEach loop
-                        if (currentUserName === 'Askep' || currentUserName === 'Manager') {
-                            createAksiButtons(row, element[1].id,
-                                element[1].blok,
-                                element[1].petugas,
-                                element[1].tph_baris,
-                                element[1].ancak_pemanen,
-                                element[1].jumlah_jjg,
-                                element[1].bmt,
-                                element[1].bmk,
-                                element[1].overripe,
-                                element[1].empty,
-                                element[1].abnormal,
-                                element[1].rd,
-                                element[1].vcut,
-                                element[1].alas_br,
-
-                            );
-                        }
-
-                        tRans.appendChild(row);
-                    });
-                    if (callback) {
-                        callback();
-                    }
-                }
-
-                function renderPagination() {
-                    const paginationElement = document.getElementById('pagination');
-                    paginationElement.innerHTML = '';
-
-                    for (let i = 1; i <= totalPages; i++) {
-                        const li = document.createElement('li');
-                        li.classList.add('page-item');
-
-                        li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-
-                        // Create a separate function to capture the correct value of i for the event listener
-                        const clickHandler = (pageNumber) => (e) => {
-                            e.preventDefault();
-                            currentPage = pageNumber;
-                            renderData(currentPage, () => {
-                                // After renderData is completed, update the pagination
-                                renderPagination();
-                            });
-                        };
-
-                        li.addEventListener('click', clickHandler(i)); // Use the clickHandler function
-
-                        // Add the 'active' class to the current page
-                        if (i === currentPage) {
-                            li.classList.add('active');
-                        }
-
-                        paginationElement.appendChild(li);
-                    }
-                }
-
-                // Render the first page and the pagination
-                renderData(currentPage, () => {
-                    renderPagination();
                 });
+
+                // Populate DataTable with data
+                sidakTPhNEw.clear().rows.add(parseResult['mutubuah']).draw();
+
 
 
 
