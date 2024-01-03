@@ -862,7 +862,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['afdeling'] = $devest;
         }
 
-        // dd($newSidak);
+        // dd($newSidak['UPE']);
         // dd($newSidak['SCE']['OA']);
 
         $week1 = []; // Initialize the new array
@@ -890,18 +890,21 @@ class SidaktphController extends Controller
                     if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
                         # code...
                         $total_score = 100;
+                        $data = 'ada';
                     } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
-                        $total_score = '-';
+                        $total_score = 0;
+                        $data = 'kosong';
                     } else {
                         $total_score =  round($week1Data['all_score'], 1);
+                        $data = 'ada';
                     }
 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => $total_score,
-                        'kategori' => $week1Data['check_data']
-
+                        'kategori' => $week1Data['check_data'],
+                        'inspek' => $data
                     ];
 
                     // Extract tphx values for keys 1 to 8 and flatten them
@@ -955,7 +958,7 @@ class SidaktphController extends Controller
                         $estateValues["tot_brd$i"] += $tot_brd;
                         $estateValues["tod_jjg$i"] += $tod_jjg;
                     }
-                    $total_weeks += round($week1Data['all_score'], 1);
+                    $total_weeks += round($week1Data['all_score'], 2);
                     $deviden += $subValue['new_deviden'];
                     $devnew = $subValue['devidenest'];
 
@@ -963,7 +966,7 @@ class SidaktphController extends Controller
                     $week1[] = $week1Flat;
                     $nulldata[] .= $week1Data['check_data'];
                     $v2check3 = $week1Data['v2check3'];
-                    $scoreest += intval($total_score);
+                    $scoreest += $total_score;
                 }
             }
 
@@ -977,7 +980,7 @@ class SidaktphController extends Controller
             $getnull = max(0, $getnull);
             if ($devnew != 0 && $scoreest != 0) {
                 // $skor_akhir = round($total_weeks / $deviden, 1);
-                $skor_akhir = round($scoreest / $devnew, 1);
+                $skor_akhir = round($scoreest / $devnew, 2);
             } else {
                 $skor_akhir = '-';
             }
@@ -988,9 +991,12 @@ class SidaktphController extends Controller
                 'afd' => 'EST',
                 'kategori' => 'Test',
                 'total_score' => $skor_akhir,
+                'skore' => $scoreest,
+                'pembagi' => $devnew,
                 'start' => $start,
                 'end' => $end,
                 'reg' => $regional,
+
             ];
             $skor_brd = 0;
             $skor_janjang = 0;
@@ -1015,7 +1021,7 @@ class SidaktphController extends Controller
 
             $week1[] = $weekestate;
         }
-        // dd($week1[43]);
+        // dd($week1[57], $week1[58], $week1[59], $week1[60], $week1[61], $week1[62]);
         // dd($newSidak['KNE']);
         // dd($week1['SCE']);
 
@@ -1041,18 +1047,21 @@ class SidaktphController extends Controller
                     if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
                         # code...
                         $total_score = 100;
+                        $data = 'ada';
                     } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
-                        $total_score = '-';
+                        $total_score = 0;
+                        $data = 'kosong';
                     } else {
                         $total_score =  round($week1Data['all_score'], 1);
+                        $data = 'ada';
                     }
 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => $total_score,
-                        'kategori' => $week1Data['check_data']
-
+                        'kategori' => $week1Data['check_data'],
+                        'inspek' => $data
                     ];
 
                     // Extract tphx values for keys 1 to 8 and flatten them
@@ -1113,7 +1122,7 @@ class SidaktphController extends Controller
                     $week2[] = $week1Flat;
                     $nulldata[] .= $week1Data['check_data'];
                     $v2check3 = $week1Data['v2check3'];
-                    $scoreest += intval($total_score);
+                    $scoreest += $total_score;
                 }
             }
 
@@ -1192,20 +1201,22 @@ class SidaktphController extends Controller
                     if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
                         # code...
                         $total_score = 100;
+                        $data = 'ada';
                     } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
-                        $total_score = '-';
+                        $total_score = 0;
+                        $data = 'kosong';
                     } else {
                         $total_score =  round($week1Data['all_score'], 1);
+                        $data = 'ada';
                     }
 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => $total_score,
-                        'kategori' => $week1Data['check_data']
-
+                        'kategori' => $week1Data['check_data'],
+                        'inspek' => $data
                     ];
-
                     // Extract tphx values for keys 1 to 8 and flatten them
                     for ($i = 1; $i <= 8; $i++) {
                         $tphxKey = $i;
@@ -1264,7 +1275,7 @@ class SidaktphController extends Controller
                     $week3[] = $week1Flat;
                     $nulldata[] .= $week1Data['check_data'];
                     $v2check3 = $week1Data['v2check3'];
-                    $scoreest += intval($total_score);
+                    $scoreest += $total_score;
                 }
             }
             $counts = array_count_values($nulldata);
@@ -1337,21 +1348,22 @@ class SidaktphController extends Controller
                     if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
                         # code...
                         $total_score = 100;
+                        $data = 'ada';
                     } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
-                        $total_score = '-';
+                        $total_score = 0;
+                        $data = 'kosong';
                     } else {
                         $total_score =  round($week1Data['all_score'], 1);
+                        $data = 'ada';
                     }
-
 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => $total_score,
-                        'kategori' => $week1Data['check_data']
-
+                        'kategori' => $week1Data['check_data'],
+                        'inspek' => $data
                     ];
-
                     // Extract tphx values for keys 1 to 8 and flatten them
                     for ($i = 1; $i <= 8; $i++) {
                         $tphxKey = $i;
@@ -1410,7 +1422,7 @@ class SidaktphController extends Controller
                     $week4[] = $week1Flat;
                     $nulldata[] .= $week1Data['check_data'];
                     $v2check3 = $week1Data['v2check3'];
-                    $scoreest += intval($total_score);
+                    $scoreest += $total_score;
                 }
             }
 
@@ -1487,18 +1499,21 @@ class SidaktphController extends Controller
                     if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
                         # code...
                         $total_score = 100;
+                        $data = 'ada';
                     } else if ($week1Data['all_score'] == 0 && $week1Data['check_data'] == 'null') {
-                        $total_score = '-';
+                        $total_score = 0;
+                        $data = 'kosong';
                     } else {
                         $total_score =  round($week1Data['all_score'], 1);
+                        $data = 'ada';
                     }
 
                     $week1Flat = [
                         'est' => $key,
                         'afd' => $subKey,
                         'total_score' => $total_score,
-                        'kategori' => $week1Data['check_data']
-
+                        'kategori' => $week1Data['check_data'],
+                        'inspek' => $data
                     ];
 
                     // dd($subValue);
@@ -1561,7 +1576,7 @@ class SidaktphController extends Controller
                     $week5[] = $week1Flat;
                     $nulldata[] .= $week1Data['check_data'];
                     $v2check3 = $week1Data['v2check3'];
-                    $scoreest += intval($total_score);
+                    $scoreest += $total_score;
                 }
             }
             $counts = array_count_values($nulldata);
@@ -3479,7 +3494,7 @@ class SidaktphController extends Controller
             $devest = count($value);
             // dd($devest);
             // dd($value);
-
+            $v2check5 = 0;
             foreach ($value as $key1 => $value2)  if (is_array($value2)) {
 
                 $tot_afdscore = 0;
@@ -3678,21 +3693,28 @@ class SidaktphController extends Controller
 
                 $new_dvd = $dividen_x;
                 $new_dvdest = $devidenEst_x;
+
+
                 if ($v2check4 != 0 && $total_skoreest == 0) {
-                    $tot_afdscore = 100;  # code...
+                    $tot_afdscore = 100;
                 } else if ($new_dvd != 0) {
                     $tot_afdscore = round($total_skoreest / $new_dvd, 1);
-                } else {
-                    $tot_afdscore = 0;  # code...
+                } else if ($new_dvd == 0 && $v2check4 == 0) {
+                    $tot_afdscore = 0;
                 }
 
                 // $newSidak[$key][$key1]['deviden'] = $deviden;
-                $newSidak[$key][$key1]['total_score'] = $tot_afdscore;
+
                 $newSidak[$key][$key1]['total_brd'] = $totskor_brd1;
                 $newSidak[$key][$key1]['total_janjang'] = $totskor_janjang1;
                 $newSidak[$key][$key1]['new_deviden'] = $new_dvd;
                 $newSidak[$key][$key1]['asisten'] = $namaGM;
-                $newSidak[$key][$key1]['total_skor'] = $total_skoreest;
+                if ($v2check4 == 0) {
+                    $newSidak[$key][$key1]['total_score'] = '-';
+                } else {
+                    $newSidak[$key][$key1]['total_score'] = $tot_afdscore;
+                }
+
                 $newSidak[$key][$key1]['est'] = $key;
                 $newSidak[$key][$key1]['afd'] = $key1;
                 $newSidak[$key][$key1]['devidenest'] = $devest;
@@ -3701,22 +3723,7 @@ class SidaktphController extends Controller
                 $tot_estAFd += $tot_afdscore;
                 $new_dvdAfd += $new_dvd;
                 $new_dvdAfdest += $new_dvdest;
-            } else {
-                $namaGM = '-';
-                foreach ($asisten_qc as $asisten) {
-
-                    // dd($asisten);
-                    if ($asisten['est'] == $key && $asisten['afd'] == $key1) {
-                        $namaGM = $asisten['nama'];
-                        break;
-                    }
-                }
-                $newSidak[$key][$key1]['deviden'] = 0;
-                $newSidak[$key][$key1]['total_score'] = 0;
-                $newSidak[$key][$key1]['total_brd'] = 0;
-                $newSidak[$key][$key1]['total_janjang'] = 0;
-                $newSidak[$key][$key1]['asisten'] = $namaGM;
-                $newSidak[$key][$key1]['v2check4'] = 0;
+                $v2check5 += $v2check4;
             }
 
             $dividen_afd = count($value);
@@ -3747,9 +3754,10 @@ class SidaktphController extends Controller
             $newSidak[$key]['estate'] = $key;
             $newSidak[$key]['afd'] = 'GM';
             $newSidak[$key]['afdeling'] = $devest;
+            $newSidak[$key]['v2check5'] = $v2check5;
         }
 
-        // dd($newSidak['SPE']);
+        // dd($newSidak);
         $mtancakWIltab1 = array();
         foreach ($queryEstereg as $key => $value) {
             foreach ($newSidak as $key2 => $value2) {
@@ -3759,22 +3767,6 @@ class SidaktphController extends Controller
             }
         }
 
-        $plasmaArray = [];
-
-        foreach ($mtancakWIltab1 as $key => $innerArray) {
-            foreach ($innerArray as $innerKey => $innerValue) {
-                if (strpos($innerKey, "Plasma") !== false) {
-                    // Move the inner array with "Plasma" key to the "Plasma" key
-                    $plasmaArray["Plasma"] = $innerValue;
-                    unset($mtancakWIltab1[$key][$innerKey]); // Remove the "Plasma" key
-                }
-            }
-        }
-
-        // Add the "Plasma" array to the original array
-        if (!empty($plasmaArray)) {
-            $mtancakWIltab1["Plasma"] = $plasmaArray;
-        }
         // final untuk penampilan afdeling 
 
         // dd($mtancakWIltab1);
@@ -4021,10 +4013,12 @@ class SidaktphController extends Controller
 
         $keyEst = [1, 4, 7, 10]; // Define the keys you want to iterate through
 
+        // dd($mtancakWIltab1);
         foreach ($keyEst as $keyToIterate) {
             if (isset($mtancakWIltab1[$keyToIterate])) {
                 $estateScore = 0;
                 $diveden = 0;
+                // $v2check5 = 0;
                 foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
                     // dd($value);
                     if (is_array($value)) { // Check if $value1 is an array
@@ -4035,6 +4029,7 @@ class SidaktphController extends Controller
                         $asisten = $value['asisten'];
                         $estateScore += $value['score_estate'];
                         $diveden += $value['deviden'];
+                        $v2check5 = $value['v2check5'];
 
                         if ($diveden != 0) {
                             $totalEst = round($estateScore / $diveden, 2);
@@ -4043,12 +4038,21 @@ class SidaktphController extends Controller
                         }
 
                         // Create a new array for each iteration
+                        if ($v2check5 != 0 && $total_score == 0) {
+                            # code...
+                            $skor = $total_score;
+                        } else if ($v2check5 == 0 && $total_score == 0) {
+                            $skor = '-';
+                        } else {
+                            $skor = $total_score;
+                        }
                         $resultest1[] = array(
                             'est' => $est,
                             'afd' => 'EM',
-                            'skor' => $total_score,
+                            'skor' => $skor,
                             'asisten' => $asisten,
                             'ranking' => null,
+                            'v2check5' => $v2check5,
                         );
                     }
                 }
@@ -4128,6 +4132,7 @@ class SidaktphController extends Controller
             if (isset($mtancakWIltab1[$keyToIterate])) {
                 $estateScore = 0;
                 $diveden = 0;
+                // $v2check5 = 0;
                 foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
                     // dd($value);
                     if (is_array($value)) { // Check if $value1 is an array
@@ -4138,6 +4143,7 @@ class SidaktphController extends Controller
                         $asisten = $value['asisten'];
                         $estateScore += $value['score_estate'];
                         $diveden += $value['deviden'];
+                        $v2check5 = $value['v2check5'];
 
                         if ($diveden != 0) {
                             $totalEst = round($estateScore / $diveden, 2);
@@ -4146,10 +4152,19 @@ class SidaktphController extends Controller
                         }
 
                         // Create a new array for each iteration
+                        if ($v2check5 != 0 && $total_score == 0) {
+                            # code...
+                            $skor = $total_score;
+                        } else if ($v2check5 == 0 && $total_score == 0) {
+                            $skor = '-';
+                        } else {
+                            $skor = $total_score;
+                        }
+                        // Create a new array for each iteration
                         $resultest2[] = array(
                             'est' => $est,
                             'afd' => 'EM',
-                            'skor' => $total_score,
+                            'skor' => $skor,
                             'asisten' => $asisten,
                             'ranking' => null,
                         );
@@ -4229,6 +4244,7 @@ class SidaktphController extends Controller
             if (isset($mtancakWIltab1[$keyToIterate])) {
                 $estateScore = 0;
                 $diveden = 0;
+                // $v2check5 = 0;
                 foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
                     // dd($value);
                     if (is_array($value)) { // Check if $value1 is an array
@@ -4239,6 +4255,7 @@ class SidaktphController extends Controller
                         $asisten = $value['asisten'];
                         $estateScore += $value['score_estate'];
                         $diveden += $value['deviden'];
+                        $v2check5 = $value['v2check5'];
 
                         if ($diveden != 0) {
                             $totalEst = round($estateScore / $diveden, 2);
@@ -4247,10 +4264,19 @@ class SidaktphController extends Controller
                         }
 
                         // Create a new array for each iteration
+                        if ($v2check5 != 0 && $total_score == 0) {
+                            # code...
+                            $skor = $total_score;
+                        } else if ($v2check5 == 0 && $total_score == 0) {
+                            $skor = '-';
+                        } else {
+                            $skor = $total_score;
+                        }
+                        // Create a new array for each iteration
                         $resultest3[] = array(
                             'est' => $est,
                             'afd' => 'EM',
-                            'skor' => $total_score,
+                            'skor' => $skor,
                             'asisten' => $asisten,
                             'ranking' => null,
                         );

@@ -2330,34 +2330,67 @@
               {
                 data: 'skor_janjang8'
               },
-
               {
-                data: 'total_score'
-              },
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
+                  var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
+                  var kategori = '-';
 
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                    } else if (totalScoreValue === 'kosong') {
+                      kategori = '-';
+                    }
+                  } else {
+                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                  }
+                  return kategori;
+                }
+              },
               {
                 data: 'total_score',
                 render: function(data, type, row) {
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
-
-                  if (totalScoreValue >= 95) {
-                    kategori = 'EXCELLENT';
-                  } else if (totalScoreValue >= 85) {
-                    kategori = 'GOOD';
-                  } else if (totalScoreValue >= 75) {
-                    kategori = 'SATISFACTORY';
-                  } else if (totalScoreValue >= 65) {
-                    kategori = 'FAIR';
-                  } else if (totalScoreValue < 65) {
-                    kategori = 'POOR';
+                  var ispeksi = row.inspek;
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      if (totalScoreValue >= 95) {
+                        kategori = 'EXCELLENT';
+                      } else if (totalScoreValue >= 85) {
+                        kategori = 'GOOD';
+                      } else if (totalScoreValue >= 75) {
+                        kategori = 'SATISFACTORY';
+                      } else if (totalScoreValue >= 65) {
+                        kategori = 'FAIR';
+                      } else if (totalScoreValue < 65) {
+                        kategori = 'POOR';
+                      } else {
+                        kategori = '-';
+                      }
+                    } else if (ispeksi === 'kosong') {
+                      kategori = '-';
+                    }
                   } else {
-                    kategori = 'No Data';
+                    if (totalScoreValue >= 95) {
+                      kategori = 'EXCELLENT';
+                    } else if (totalScoreValue >= 85) {
+                      kategori = 'GOOD';
+                    } else if (totalScoreValue >= 75) {
+                      kategori = 'SATISFACTORY';
+                    } else if (totalScoreValue >= 65) {
+                      kategori = 'FAIR';
+                    } else if (totalScoreValue < 65) {
+                      kategori = 'POOR';
+                    } else {
+                      kategori = '-';
+                    }
                   }
                   return kategori;
                 }
               }
-
             ],
             "createdRow": function(row, data, dataIndex) {
               // Assuming 'data' contains the data for each row
@@ -2396,7 +2429,7 @@
           });
           datatableweek1.clear().rows.add(parseResult['week1']).draw();
 
-
+          // console.log(parseResult['week1']);
           var datatableweek2 = $('#newweek2').DataTable({
             "iDisplayLength": 100,
             columns: [{
@@ -2683,29 +2716,63 @@
               },
 
               {
-                data: 'total_score'
-              },
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
+                  var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
+                  var kategori = '-';
 
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                    } else if (totalScoreValue === 'kosong') {
+                      kategori = '-';
+                    }
+                  } else {
+                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                  }
+                  return kategori;
+                }
+              },
               {
                 data: 'total_score',
                 render: function(data, type, row) {
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
-
-                  if (totalScoreValue >= 95) {
-                    kategori = 'EXCELLENT';
-                  } else if (totalScoreValue >= 85) {
-                    kategori = 'GOOD';
-                  } else if (totalScoreValue >= 75) {
-                    kategori = 'SATISFACTORY';
-                  } else if (totalScoreValue >= 65) {
-                    kategori = 'FAIR';
-                  } else if (totalScoreValue < 65) {
-                    kategori = 'POOR';
+                  var ispeksi = row.inspek;
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      if (totalScoreValue >= 95) {
+                        kategori = 'EXCELLENT';
+                      } else if (totalScoreValue >= 85) {
+                        kategori = 'GOOD';
+                      } else if (totalScoreValue >= 75) {
+                        kategori = 'SATISFACTORY';
+                      } else if (totalScoreValue >= 65) {
+                        kategori = 'FAIR';
+                      } else if (totalScoreValue < 65) {
+                        kategori = 'POOR';
+                      } else {
+                        kategori = '-';
+                      }
+                    } else if (ispeksi === 'kosong') {
+                      kategori = '-';
+                    }
                   } else {
-                    kategori = 'No Data';
+                    if (totalScoreValue >= 95) {
+                      kategori = 'EXCELLENT';
+                    } else if (totalScoreValue >= 85) {
+                      kategori = 'GOOD';
+                    } else if (totalScoreValue >= 75) {
+                      kategori = 'SATISFACTORY';
+                    } else if (totalScoreValue >= 65) {
+                      kategori = 'FAIR';
+                    } else if (totalScoreValue < 65) {
+                      kategori = 'POOR';
+                    } else {
+                      kategori = '-';
+                    }
                   }
-
                   return kategori;
                 }
               }
@@ -3033,29 +3100,63 @@
               },
 
               {
-                data: 'total_score'
-              },
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
+                  var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
+                  var kategori = '-';
 
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                    } else if (totalScoreValue === 'kosong') {
+                      kategori = '-';
+                    }
+                  } else {
+                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                  }
+                  return kategori;
+                }
+              },
               {
                 data: 'total_score',
                 render: function(data, type, row) {
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
-
-                  if (totalScoreValue >= 95) {
-                    kategori = 'EXCELLENT';
-                  } else if (totalScoreValue >= 85) {
-                    kategori = 'GOOD';
-                  } else if (totalScoreValue >= 75) {
-                    kategori = 'SATISFACTORY';
-                  } else if (totalScoreValue >= 65) {
-                    kategori = 'FAIR';
-                  } else if (totalScoreValue < 65) {
-                    kategori = 'POOR';
+                  var ispeksi = row.inspek;
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      if (totalScoreValue >= 95) {
+                        kategori = 'EXCELLENT';
+                      } else if (totalScoreValue >= 85) {
+                        kategori = 'GOOD';
+                      } else if (totalScoreValue >= 75) {
+                        kategori = 'SATISFACTORY';
+                      } else if (totalScoreValue >= 65) {
+                        kategori = 'FAIR';
+                      } else if (totalScoreValue < 65) {
+                        kategori = 'POOR';
+                      } else {
+                        kategori = '-';
+                      }
+                    } else if (ispeksi === 'kosong') {
+                      kategori = '-';
+                    }
                   } else {
-                    kategori = 'No Data';
+                    if (totalScoreValue >= 95) {
+                      kategori = 'EXCELLENT';
+                    } else if (totalScoreValue >= 85) {
+                      kategori = 'GOOD';
+                    } else if (totalScoreValue >= 75) {
+                      kategori = 'SATISFACTORY';
+                    } else if (totalScoreValue >= 65) {
+                      kategori = 'FAIR';
+                    } else if (totalScoreValue < 65) {
+                      kategori = 'POOR';
+                    } else {
+                      kategori = '-';
+                    }
                   }
-
                   return kategori;
                 }
               }
@@ -3381,28 +3482,63 @@
               {
                 data: 'skor_janjang8'
               },
-
               {
-                data: 'total_score'
-              },
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
+                  var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
+                  var kategori = '-';
 
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                    } else if (totalScoreValue === 'kosong') {
+                      kategori = '-';
+                    }
+                  } else {
+                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                  }
+                  return kategori;
+                }
+              },
               {
                 data: 'total_score',
                 render: function(data, type, row) {
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
-                  if (totalScoreValue >= 95) {
-                    kategori = 'EXCELLENT';
-                  } else if (totalScoreValue >= 85) {
-                    kategori = 'GOOD';
-                  } else if (totalScoreValue >= 75) {
-                    kategori = 'SATISFACTORY';
-                  } else if (totalScoreValue >= 65) {
-                    kategori = 'FAIR';
-                  } else if (totalScoreValue < 65) {
-                    kategori = 'POOR';
+                  var ispeksi = row.inspek;
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      if (totalScoreValue >= 95) {
+                        kategori = 'EXCELLENT';
+                      } else if (totalScoreValue >= 85) {
+                        kategori = 'GOOD';
+                      } else if (totalScoreValue >= 75) {
+                        kategori = 'SATISFACTORY';
+                      } else if (totalScoreValue >= 65) {
+                        kategori = 'FAIR';
+                      } else if (totalScoreValue < 65) {
+                        kategori = 'POOR';
+                      } else {
+                        kategori = '-';
+                      }
+                    } else if (ispeksi === 'kosong') {
+                      kategori = '-';
+                    }
                   } else {
-                    kategori = 'No Data';
+                    if (totalScoreValue >= 95) {
+                      kategori = 'EXCELLENT';
+                    } else if (totalScoreValue >= 85) {
+                      kategori = 'GOOD';
+                    } else if (totalScoreValue >= 75) {
+                      kategori = 'SATISFACTORY';
+                    } else if (totalScoreValue >= 65) {
+                      kategori = 'FAIR';
+                    } else if (totalScoreValue < 65) {
+                      kategori = 'POOR';
+                    } else {
+                      kategori = '-';
+                    }
                   }
                   return kategori;
                 }
@@ -3731,28 +3867,63 @@
               },
 
               {
-                data: 'total_score'
-              },
+                data: 'total_score',
+                render: function(data, type, row) {
+                  var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
+                  var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
+                  var kategori = '-';
 
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                    } else if (totalScoreValue === 'kosong') {
+                      kategori = '-';
+                    }
+                  } else {
+                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                  }
+                  return kategori;
+                }
+              },
               {
                 data: 'total_score',
                 render: function(data, type, row) {
                   var totalScoreValue = parseFloat(data);
                   var kategori = '';
-                  if (totalScoreValue >= 95) {
-                    kategori = 'EXCELLENT';
-                  } else if (totalScoreValue >= 85) {
-                    kategori = 'GOOD';
-                  } else if (totalScoreValue >= 75) {
-                    kategori = 'SATISFACTORY';
-                  } else if (totalScoreValue >= 65) {
-                    kategori = 'FAIR';
-                  } else if (totalScoreValue < 65) {
-                    kategori = 'POOR';
+                  var ispeksi = row.inspek;
+                  if ('inspek' in row) {
+                    if (ispeksi === 'ada') {
+                      if (totalScoreValue >= 95) {
+                        kategori = 'EXCELLENT';
+                      } else if (totalScoreValue >= 85) {
+                        kategori = 'GOOD';
+                      } else if (totalScoreValue >= 75) {
+                        kategori = 'SATISFACTORY';
+                      } else if (totalScoreValue >= 65) {
+                        kategori = 'FAIR';
+                      } else if (totalScoreValue < 65) {
+                        kategori = 'POOR';
+                      } else {
+                        kategori = '-';
+                      }
+                    } else if (ispeksi === 'kosong') {
+                      kategori = '-';
+                    }
                   } else {
-                    kategori = 'No Data';
+                    if (totalScoreValue >= 95) {
+                      kategori = 'EXCELLENT';
+                    } else if (totalScoreValue >= 85) {
+                      kategori = 'GOOD';
+                    } else if (totalScoreValue >= 75) {
+                      kategori = 'SATISFACTORY';
+                    } else if (totalScoreValue >= 65) {
+                      kategori = 'FAIR';
+                    } else if (totalScoreValue < 65) {
+                      kategori = 'POOR';
+                    } else {
+                      kategori = '-';
+                    }
                   }
-
                   return kategori;
                 }
               }
@@ -5740,168 +5911,6 @@
               // namaGM: namaGM,
             }));
 
-            var plasmaGMe = document.getElementById('plasmaMonth');
-            var arrPlasmaGM = afdeling4
-            arrPlasmaGM.forEach(element => {
-              tr = document.createElement('tr')
-              let item1 = element[1]['est']
-              let item2 = element[1]['afd']
-              let item3 = element[1]['asisten']
-              let item4 = element[1]['skor']
-              let item5 = element[1]['ranking']
-              // let item6 = newPlasmaEM['EM']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              plasmaGMe.appendChild(tr)
-              // }
-            });
-
-            var plasmaGMe = document.getElementById('plasmaMonth');
-            var arrPlasmaGM = estate4
-            arrPlasmaGM.forEach(element => {
-              tr = document.createElement('tr')
-              let item1 = element[1]['est']
-              let item2 = 'EM'
-              let item3 = element[1]['asisten']
-              let item4 = element[1]['skor']
-              let item5 = '-'
-              // let item6 = newPlasmaEM['EM']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-
-              itemElement1.style.backgroundColor = "#e8ecdc";
-              itemElement2.style.backgroundColor = "#e8ecdc";
-              itemElement3.style.backgroundColor = "#e8ecdc";
-
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="BaSidakTPH/' + element[
-                          'est'] + '/' + firstWeek + '/' + lastWeek +
-                      '" target="_blank">' + element['skor'] + ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              plasmaGMe.appendChild(tr)
-              // }
-            });
-
-
             //persetate
             renderChartTphMonth.updateSeries([{
               name: 'Brondolan/Blok Tinggal di TPH',
@@ -5980,7 +5989,10 @@
               }
 
 
-              if (item4 >= 95) {
+              if (item4 === '-') {
+                itemElement4.style.backgroundColor = "white";
+                itemElement4.style.color = "black";
+              } else if (item4 >= 95) {
                 itemElement4.style.backgroundColor = "#609cd4";
                 itemElement4.style.color = "black";
               } else if (item4 >= 85 && item4 < 95) {
@@ -6067,7 +6079,10 @@
               }
 
 
-              if (item4 >= 95) {
+              if (item4 === '-') {
+                itemElement4.style.backgroundColor = "white";
+                itemElement4.style.color = "black";
+              } else if (item4 >= 95) {
                 itemElement4.style.backgroundColor = "#609cd4";
                 itemElement4.style.color = "black";
               } else if (item4 >= 85 && item4 < 95) {
@@ -6150,7 +6165,10 @@
             }
 
 
-            if (item4 >= 95) {
+            if (item4 === '-') {
+              itemElement4.style.backgroundColor = "white";
+              itemElement4.style.color = "black";
+            } else if (item4 >= 95) {
               itemElement4.style.backgroundColor = "#609cd4";
               itemElement4.style.color = "black";
             } else if (item4 >= 85 && item4 < 95) {
@@ -6219,7 +6237,10 @@
               }
 
 
-              if (item4 >= 95) {
+              if (item4 === '-') {
+                itemElement4.style.backgroundColor = "white";
+                itemElement4.style.color = "black";
+              } else if (item4 >= 95) {
                 itemElement4.style.backgroundColor = "#609cd4";
                 itemElement4.style.color = "black";
               } else if (item4 >= 85 && item4 < 95) {
@@ -6299,7 +6320,10 @@
               }
 
 
-              if (item4 >= 95) {
+              if (item4 === '-') {
+                itemElement4.style.backgroundColor = "white";
+                itemElement4.style.color = "black";
+              } else if (item4 >= 95) {
                 itemElement4.style.backgroundColor = "#609cd4";
                 itemElement4.style.color = "black";
               } else if (item4 >= 85 && item4 < 95) {
@@ -6374,7 +6398,10 @@
               }
 
 
-              if (item4 >= 95) {
+              if (item4 === '-') {
+                itemElement4.style.backgroundColor = "white";
+                itemElement4.style.color = "black";
+              } else if (item4 >= 95) {
                 itemElement4.style.backgroundColor = "#609cd4";
                 itemElement4.style.color = "black";
               } else if (item4 >= 85 && item4 < 95) {
@@ -6456,8 +6483,10 @@
                 itemElement3.style.color = "black";
               }
 
-
-              if (item4 >= 95) {
+              if (item4 === '-') {
+                itemElement4.style.backgroundColor = "white";
+                itemElement4.style.color = "black";
+              } else if (item4 >= 95) {
                 itemElement4.style.backgroundColor = "#609cd4";
                 itemElement4.style.color = "black";
               } else if (item4 >= 85 && item4 < 95) {
@@ -6485,7 +6514,6 @@
               } else if (itemElement4.style.backgroundColor === "red") {
                 itemElement4.style.color = "black";
               }
-
               /* if (item4 != 0) {
                   itemElement4.innerHTML = '<a class="detailBa" href="BaSidakTPH/' + element[
                           'est'] + '/' + firstWeek + '/' + lastWeek +
