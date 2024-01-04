@@ -7248,6 +7248,8 @@ class mutubuahController extends Controller
             }
         }
 
+        // dd($plotMarker);
+
 
         $list_blok = array();
         foreach ($datas as $key => $value) {
@@ -7445,6 +7447,7 @@ class mutubuahController extends Controller
                 }
             }
         }
+
 
 
         $plot['plot'] = $plotTitik;

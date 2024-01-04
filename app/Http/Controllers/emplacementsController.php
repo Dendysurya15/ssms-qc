@@ -54,7 +54,7 @@ class emplacementsController extends Controller
 
         $perum = DB::connection('mysql2')->table('perumahan')
             ->select(DB::raw('DISTINCT YEAR(datetime) as year'))
-            ->orderBy('year', 'asc')
+            ->orderBy('year', 'desc')
             ->get();
 
         $years = [];

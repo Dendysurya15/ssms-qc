@@ -6547,7 +6547,7 @@ class inspectController extends Controller
 
 
         // $FormatTabEst1 = array_values($FormatTabEst1);
-        // dd($FormatTabEst1);
+        // dd($Wil1);
         //table untuk bagian EM estate wil1
         $FormatTabEst1 = array();
         foreach ($Wil1 as $key => $value) if (is_array($value)) {
@@ -6557,6 +6557,7 @@ class inspectController extends Controller
             $EM = 'EM';
             $rank = $value['rankEST'];
             $nama = '-';
+            $data = $value2['dataEst'] ?? 'ada';
             foreach ($queryAsisten as $key4 => $value4) {
                 if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
                     $nama = $value4['nama'];
@@ -6569,7 +6570,7 @@ class inspectController extends Controller
                 'EM' => $EM,
                 'rank' => $rank,
                 'nama' => $nama,
-                'data' => $value['dataEst']
+                'data' => $data
             );
             $inc++;
         }
@@ -6588,6 +6589,7 @@ class inspectController extends Controller
             $EM = 'EM';
             $rank = $value['rankEST'];
             $nama = '-';
+            $data = $value2['dataEst'] ?? 'ada';
             foreach ($queryAsisten as $key4 => $value4) {
                 if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
                     $nama = $value4['nama'];
@@ -6600,13 +6602,12 @@ class inspectController extends Controller
                 'EM' => $EM,
                 'rank' => $rank,
                 'nama' => $nama,
-                'data' => $value['dataEst']
+                'data' => $data
             );
             $inc++;
         }
-
         $FormatTabEst2 = array_values($FormatTabEst2);
-        //    dd($FormatTabEst1);
+
         usort($FormatTabEst2, function ($a, $b) {
             return $a['rank'] - $b['rank'];
         });
@@ -6619,7 +6620,7 @@ class inspectController extends Controller
             $EM = 'EM';
             $rank = $value['rankEST'];
             $nama = '-';
-            // dd($value);
+            $data = $value2['dataEst'] ?? 'ada';
             foreach ($queryAsisten as $key4 => $value4) {
                 if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $EM) {
                     $nama = $value4['nama'];
@@ -6632,7 +6633,7 @@ class inspectController extends Controller
                 'EM' => $EM,
                 'rank' => $rank,
                 'nama' => $nama,
-                'data' => $value['dataEst']
+                'data' => $data
             );
             $inc++;
         }
@@ -6642,12 +6643,16 @@ class inspectController extends Controller
         usort($FormatTabEst3, function ($a, $b) {
             return $a['rank'] - $b['rank'];
         });
+
+        // dd($Wil1);
         //bagian unutk afdeling
         $FormatTable1 = array();
         foreach ($Wil1 as $key => $value) {
             if (is_array($value)) {
                 $inc = 0;
                 foreach ($value as $key2 => $value2) {
+
+                    // dd($value2);
                     if (is_array($value2)) {
 
                         // dd($value2);
@@ -6656,6 +6661,7 @@ class inspectController extends Controller
                         $skor = $value2['TotalSkor'];
                         $EM = 'EM';
                         $rank = $value2['rankAFD'];
+                        $data = $value2['data'] ?? 'ada';
                         $nama = '-';
                         foreach ($queryAsisten as $key4 => $value4) {
                             if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $afd) {
@@ -6670,7 +6676,7 @@ class inspectController extends Controller
                             'EM' => $EM,
                             'rank' => $rank,
                             'nama' => $nama,
-                            'data' => $value2['data']
+                            'data' => $data
                         );
                         $inc++;
                     }
@@ -6685,6 +6691,7 @@ class inspectController extends Controller
             return $a['rank'] - $b['rank'];
         });
 
+        // dd($FormatTable1);
         //wil2
         $FormatTable2 = array();
         foreach ($Wil2 as $key => $value) {
@@ -6697,6 +6704,7 @@ class inspectController extends Controller
                         $skor = $value2['TotalSkor'];
                         $EM = 'EM';
                         $rank = $value2['rankAFD'];
+                        $data = $value2['data'] ?? 'ada';
                         $nama = '-';
                         foreach ($queryAsisten as $key4 => $value4) {
                             if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $afd) {
@@ -6711,7 +6719,7 @@ class inspectController extends Controller
                             'EM' => $EM,
                             'rank' => $rank,
                             'nama' => $nama,
-                            'data' => $value2['data']
+                            'data' => $data
                         );
                         $inc++;
                     }
@@ -6737,6 +6745,7 @@ class inspectController extends Controller
                         $EM = 'EM';
                         $rank = $value2['rankAFD'];
                         $nama = '-';
+                        $data = $value2['data'] ?? 'ada';
                         foreach ($queryAsisten as $key4 => $value4) {
                             if (is_array($value4) && $value4['est'] == $est && $value4['afd'] == $afd) {
                                 $nama = $value4['nama'];
@@ -6750,7 +6759,7 @@ class inspectController extends Controller
                             'EM' => $EM,
                             'rank' => $rank,
                             'nama' => $nama,
-                            'data' => $value2['data']
+                            'data' => $data
                         );
                         $inc++;
                     }

@@ -1843,8 +1843,6 @@
             $('#regionalData').val('1');
             $('#regDataIns').val('1');
             $('#regFind').val('1');
-            // $('#regGrafik').val('4');
-
 
             const nons = document.getElementById("Tab1");
             const nonx = document.getElementById("Tab2");
@@ -1883,6 +1881,7 @@
             tahun1.classList.add("col-lg-4");
             tahun2.classList.add("col-lg-4");
             tahun3.classList.add("col-lg-4");
+
 
 
         }
@@ -3221,7 +3220,7 @@
                 // console.log(arrTbody1);
                 // var table1 = document.getElementById('table1');
                 var tbody1 = document.getElementById('tbody1');
-                console.log(arrTbody1);
+                // console.log(arrTbody1);
 
                 arrTbody1.forEach(element => {
                     // for (let i = 0; i < 5; i++) {

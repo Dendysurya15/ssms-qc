@@ -445,7 +445,22 @@
             </div>
         </div>
 
-
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Image Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="" alt="" class="img-fluid" id="modalImage">
+                        <p id="modalComment"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     @include('layout/footer')
 
@@ -490,16 +505,24 @@
 
 
         });
+        // Function to handle image click event and display modal
+        function modalimg(imageUrl, comment) {
+            const modalImage = document.getElementById("modalImage");
+            const modalComment = document.getElementById("modalComment");
 
+            // Set the image source and comment in the modal
+            modalImage.src = imageUrl;
+            modalImage.alt = imageUrl; // Set alt as the image URL if alt is empty
+            modalComment.textContent = `Temuan: ${comment}`;
 
+            // Show the modal
+            $('#myModal').modal('show');
+        }
 
         function rumahupdate(Perumahan) {
             const container = document.getElementById("perumahan");
             const imageBaseUrl = "https://mobilepro.srs-ssms.com/storage/app/public/qc/perumahan/";
             const defaultImageUrl = "{{ asset('img/404img.png') }}"; // Use the asset function to get the correct URL
-
-            // console.log(Perumahan);
-            // Check if there is data to display
             if (Perumahan.length > 0) {
                 // Create the heading
                 const heading = document.createElement("div");
@@ -517,29 +540,41 @@
                     const id = item[0];
                     const data = item[1];
                     const imageUrl = imageBaseUrl + data.foto_temuan_rmh;
+
+                    // Create card structure
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+
+                    const cardInner = document.createElement("div");
+                    cardInner.classList.add("card");
+
                     const image = new Image();
                     image.src = imageUrl;
                     image.alt = data.foto_temuan_rmh;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    // image.onerror = function() {
-                    //     // If the image fails to load, use the default image
-                    //     this.src = defaultImageUrl;
-                    // };
+                    image.classList.add("card-img-top", "img-clickable");
+                    image.setAttribute("data-image", imageUrl);
+                    image.setAttribute("data-comment", data.komentar_temuan_rmh);
+                    image.addEventListener("click", () => modalimg(imageUrl, data.komentar_temuan_rmh));
 
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_rmh}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_rmh}</p>
-               
-                    </div>
-                    </div>
-                     `;
+                    const cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body");
+
+                    const title = document.createElement("h5");
+                    title.classList.add("card-title", "text-right");
+                    title.textContent = `Est: ${data.title}`;
+
+                    const text = document.createElement("p");
+                    text.classList.add("card-text", "text-left");
+                    text.textContent = `Temuan: ${data.komentar_temuan_rmh}`;
+
+                    // Construct card
+                    cardBody.appendChild(title);
+                    cardBody.appendChild(text);
+                    cardInner.appendChild(image);
+                    cardInner.appendChild(cardBody);
+                    card.appendChild(cardInner);
+
+
                     rowContainer.appendChild(card);
 
                     if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
@@ -789,7 +824,10 @@
 
 
                     }
+
+
                 });
+
 
             } else {
                 // If no data, show the "Perumahan not found" message
@@ -798,6 +836,8 @@
                 container.appendChild(noDataMessage);
             }
         }
+
+
 
         function landscapeupdate(Landscape) {
             const container = document.getElementById("landscape");
@@ -822,30 +862,43 @@
                     const id = item[0];
                     const data = item[1];
                     const imageUrl = imageBaseUrl + data.foto_temuan_ls;
+
+                    // Create card structure
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+
+                    const cardInner = document.createElement("div");
+                    cardInner.classList.add("card");
+
                     const image = new Image();
                     image.src = imageUrl;
                     image.alt = data.foto_temuan_ls;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    // image.onerror = function() {
-                    //     // If the image fails to load, use the default image
-                    //     this.src = defaultImageUrl;
-                    // };
+                    image.classList.add("card-img-top", "img-clickable");
+                    image.setAttribute("data-image", imageUrl);
+                    image.setAttribute("data-comment", data.komentar_temuan_ls);
+                    image.addEventListener("click", () => modalimg(imageUrl, data.komentar_temuan_ls));
 
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_ls}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ls}</p>
-                    
-                    </div>
-                    </div>
-                     `;
+                    const cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body");
+
+                    const title = document.createElement("h5");
+                    title.classList.add("card-title", "text-right");
+                    title.textContent = `Est: ${data.title}`;
+
+                    const text = document.createElement("p");
+                    text.classList.add("card-text", "text-left");
+                    text.textContent = `Temuan: ${data.komentar_temuan_ls}`;
+
+                    // Construct card
+                    cardBody.appendChild(title);
+                    cardBody.appendChild(text);
+                    cardInner.appendChild(image);
+                    cardInner.appendChild(cardBody);
+                    card.appendChild(cardInner);
                     rowContainer.appendChild(card);
+
+
+
 
                     if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
                         const buttonContainer = document.createElement("div");
@@ -1126,28 +1179,41 @@
                     const id = item[0];
                     const data = item[1];
                     const imageUrl = imageBaseUrl + data.foto_temuan_ll;
+
+                    // Create card structure
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+
+                    const cardInner = document.createElement("div");
+                    cardInner.classList.add("card");
+
                     const image = new Image();
                     image.src = imageUrl;
                     image.alt = data.foto_temuan_ll;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    // image.onerror = function() {
-                    //     // If the image fails to load, use the default image
-                    //     this.src = defaultImageUrl;
-                    // };
+                    image.classList.add("card-img-top", "img-clickable");
+                    image.setAttribute("data-image", imageUrl);
+                    image.setAttribute("data-comment", data.komentar_temuan_ll);
+                    image.addEventListener("click", () => modalimg(imageUrl, data.komentar_temuan_ll));
 
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_ll}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_ll}</p>
-                    </div>
-                    </div>
-                     `;
+                    const cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body");
+
+                    const title = document.createElement("h5");
+                    title.classList.add("card-title", "text-right");
+                    title.textContent = `Est: ${data.title}`;
+
+                    const text = document.createElement("p");
+                    text.classList.add("card-text", "text-left");
+                    text.textContent = `Temuan: ${data.komentar_temuan_ll}`;
+
+                    // Construct card
+                    cardBody.appendChild(title);
+                    cardBody.appendChild(text);
+                    cardInner.appendChild(image);
+                    cardInner.appendChild(cardBody);
+                    card.appendChild(cardInner);
+
+
                     rowContainer.appendChild(card);
 
                     if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
@@ -1430,29 +1496,40 @@
                     const id = item[0];
                     const data = item[1];
                     const imageUrl = imageBaseUrl + data.foto_temuan_rmh;
+
+
+                    // Create card structure
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+
+                    const cardInner = document.createElement("div");
+                    cardInner.classList.add("card");
+
                     const image = new Image();
                     image.src = imageUrl;
                     image.alt = data.foto_temuan_rmh;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    // image.onerror = function() {
-                    //     // If the image fails to load, use the default image
-                    //     this.src = defaultImageUrl;
-                    // };
+                    image.classList.add("card-img-top", "img-clickable");
+                    image.setAttribute("data-image", imageUrl);
+                    image.setAttribute("data-comment", data.komentar_temuan_rmh);
+                    image.addEventListener("click", () => modalimg(imageUrl, data.komentar_temuan_rmh));
 
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_rmh}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_rmh}</p>
-                      
-                    </div>
-                    </div>
-                     `;
+                    const cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body");
+
+                    const title = document.createElement("h5");
+                    title.classList.add("card-title", "text-right");
+                    title.textContent = `Est: ${data.title}`;
+
+                    const text = document.createElement("p");
+                    text.classList.add("card-text", "text-left");
+                    text.textContent = `Temuan: ${data.komentar_temuan_rmh}`;
+
+                    // Construct card
+                    cardBody.appendChild(title);
+                    cardBody.appendChild(text);
+                    cardInner.appendChild(image);
+                    cardInner.appendChild(cardBody);
+                    card.appendChild(cardInner);
                     rowContainer.appendChild(card);
 
                     if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
@@ -1738,29 +1815,39 @@
                     const id = item[0];
                     const data = item[1];
                     const imageUrl = imageBaseUrl + data.foto_temuan_lcp;
+
+                    // Create card structure
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+
+                    const cardInner = document.createElement("div");
+                    cardInner.classList.add("card");
+
                     const image = new Image();
                     image.src = imageUrl;
                     image.alt = data.foto_temuan_lcp;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    // image.onerror = function() {
-                    //     // If the image fails to load, use the default image
-                    //     this.src = defaultImageUrl;
-                    // };
+                    image.classList.add("card-img-top", "img-clickable");
+                    image.setAttribute("data-image", imageUrl);
+                    image.setAttribute("data-comment", data.komentar_temuan_lcp);
+                    image.addEventListener("click", () => modalimg(imageUrl, data.komentar_temuan_lcp));
 
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_lcp}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_lcp}</p>
-                      
-                    </div>
-                    </div>
-                     `;
+                    const cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body");
+
+                    const title = document.createElement("h5");
+                    title.classList.add("card-title", "text-right");
+                    title.textContent = `Est: ${data.title}`;
+
+                    const text = document.createElement("p");
+                    text.classList.add("card-text", "text-left");
+                    text.textContent = `Temuan: ${data.komentar_temuan_lcp}`;
+
+                    // Construct card
+                    cardBody.appendChild(title);
+                    cardBody.appendChild(text);
+                    cardInner.appendChild(image);
+                    cardInner.appendChild(cardBody);
+                    card.appendChild(cardInner);
                     rowContainer.appendChild(card);
                     if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
                         const buttonContainer = document.createElement("div");
@@ -2041,28 +2128,40 @@
                     const id = item[0];
                     const data = item[1];
                     const imageUrl = imageBaseUrl + data.foto_temuan_lk;
+
+
+                    // Create card structure
+                    const card = document.createElement("div");
+                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
+
+                    const cardInner = document.createElement("div");
+                    cardInner.classList.add("card");
+
                     const image = new Image();
                     image.src = imageUrl;
                     image.alt = data.foto_temuan_lk;
-                    image.classList.add("img-thumbnail");
-                    image.setAttribute("data-toggle", "modal");
-                    image.setAttribute("data-target", `#myModal${id}`);
-                    // image.onerror = function() {
-                    //     // If the image fails to load, use the default image
-                    //     this.src = defaultImageUrl;
-                    // };
+                    image.classList.add("card-img-top", "img-clickable");
+                    image.setAttribute("data-image", imageUrl);
+                    image.setAttribute("data-comment", data.komentar_temuan_lk);
+                    image.addEventListener("click", () => modalimg(imageUrl, data.komentar_temuan_lk));
 
-                    const card = document.createElement("div");
-                    card.classList.add("col-md-6", "col-lg-3", "mb-3");
-                    card.innerHTML = `
-                    <div class="card">
-                    <img src="${imageUrl}" alt="${data.foto_temuan_lk}" class="img-thumbnail" data-toggle="modal" data-target="#myModal${id}">
-                    <div class="card-body mt-2">
-                        <h5 class="card-title text-right">Est: ${data.title}</h5>
-                        <p class="card-text text-left">Temuan: ${data.komentar_temuan_lk}</p>
-                    </div>
-                    </div>
-                     `;
+                    const cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body");
+
+                    const title = document.createElement("h5");
+                    title.classList.add("card-title", "text-right");
+                    title.textContent = `Est: ${data.title}`;
+
+                    const text = document.createElement("p");
+                    text.classList.add("card-text", "text-left");
+                    text.textContent = `Temuan: ${data.komentar_temuan_lk}`;
+
+                    // Construct card
+                    cardBody.appendChild(title);
+                    cardBody.appendChild(text);
+                    cardInner.appendChild(image);
+                    cardInner.appendChild(cardBody);
+                    card.appendChild(cardInner);
                     rowContainer.appendChild(card);
 
                     if (currentUserName === 'Askep' || currentUserName === 'Manager' || currentUserName === 'Asisten') {
