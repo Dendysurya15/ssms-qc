@@ -718,16 +718,20 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
         $queryEste = json_decode($queryEste, true);
+
+        // dd($queryEste);
 
         $estev2 = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->pluck('est');
         $estev2 = json_decode($estev2, true);
 
@@ -792,32 +796,21 @@ class mutubuahController extends Controller
             $totaltnpBRD = 0;
             $totalkrgBRD = 0;
             $totalabr = 0;
-            $TotPersenTNP = 0;
-            $TotPersenKRG = 0;
-            $totJJG = 0;
             $totPersenTOtaljjg = 0;
-            $totSkor_total = 0;
             $totoverripe = 0;
             $totempty = 0;
             $totJJG_matang = 0;
             $totPer_jjgMtng = 0;
             $totPer_over = 0;
-            $totSkor_Over = 0;
             $totPer_Empty = 0;
-            $totSkor_Empty = 0;
             $totVcut = 0;
             $totPer_vcut =  0;
-            $totSkor_Vcut =  0;
-            $totPer_abr =  0;
             $totRD = 0;
-            $totPer_rd = 0;
             $totBlok = 0;
             $totKR = 0;
             $tot_krS = 0;
             $totPer_kr = 0;
-            $totSkor_kr = 0;
-            $totALlskor = 0;
-            $totKategor = 0;
+            $csfxr = 0;
             foreach ($value as $key1 => $value1) {
                 if (is_array($value1)) {
                     $jjg_sample = 0;
@@ -833,6 +826,7 @@ class mutubuahController extends Controller
                     $allSkor = 0;
                     $combination_counts = array();
                     $newblok = 0;
+                    $csfxr = count($value1);
                     foreach ($value1 as $key2 => $value2) {
                         $combination = $value2['blok'] . ' ' . $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
@@ -897,6 +891,7 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['persen_krg'] = $per_kr;
                     $sidak_buah[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
                     $sidak_buah[$key][$key1]['All_skor'] = $allSkor;
+                    $sidak_buah[$key][$key1]['csfxr'] = $csfxr;
                     $sidak_buah[$key][$key1]['kategori'] = sidak_akhir($allSkor);
 
                     foreach ($queryAsisten as $ast => $asisten) {
@@ -910,27 +905,24 @@ class mutubuahController extends Controller
                     $totaltnpBRD += $tnpBRD;
                     $totalkrgBRD += $krgBRD;
                     $totalabr += $abr;
-                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 2);
-                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 2);
-                    $totJJG = $totaltnpBRD + $totalkrgBRD;
+
                     $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 2);
-                    $totSkor_total = sidak_brdTotal($totPersenTOtaljjg);
+
                     $totoverripe += $overripe;
                     $totempty += $empty;
                     $totJJG_matang = $totalJJG - ($totaltnpBRD + $totalkrgBRD + $totoverripe + $totempty + $totalabr);
                     $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 2);
 
-                    $totSkor_jjgMtng = sidak_matangSKOR($totPer_jjgMtng);
+
                     $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 2);
-                    $totSkor_Over = sidak_lwtMatang($totPer_over);
+
                     $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 2);
-                    $totSkor_Empty = sidak_jjgKosong($totPer_Empty);
+
                     $totVcut += $vcut;
                     $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 2);
-                    $totSkor_Vcut =  sidak_tangkaiP($totPer_vcut);
-                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 2);
+
                     $totRD += $rd;
-                    $totPer_rd = round(($totRD / $totalJJG) * 100, 2);
+
                     $totBlok += $dataBLok;
                     $totKR += $sum_kr;
                     if ($totKR != 0) {
@@ -939,10 +931,8 @@ class mutubuahController extends Controller
                         $tot_krS = 0;
                     }
                     $totPer_kr = round($tot_krS * 100, 2);
-                    $totSkor_kr = sidak_PengBRD($totPer_kr);
-                    $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
 
-                    $totKategor = sidak_akhir($totALlskor);
+                    $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
                 } else {
 
                     $sidak_buah[$key][$key1]['Jumlah_janjang'] = 0;
@@ -979,6 +969,7 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['skor_kr'] = 0;
                     $sidak_buah[$key][$key1]['All_skor'] = 0;
                     $sidak_buah[$key][$key1]['kategori'] = 0;
+                    $sidak_buah[$key][$key1]['csfxr'] = 0;
                     foreach ($queryAsisten as $ast => $asisten) {
                         if ($key === $asisten['est'] && $key1 === $asisten['afd']) {
                             $sidak_buah[$key][$key1]['nama_asisten'] = $asisten['nama'];
@@ -1008,46 +999,7 @@ class mutubuahController extends Controller
             }
         }
         // dd($mutu_buah);
-        // Remove the "Plasma1" element from the original array
-        if (isset($mutu_buah[1]['Plasma1'])) {
-            $plasma1 = $mutu_buah[1]['Plasma1'];
-            unset($mutu_buah[1]['Plasma1']);
-        } else {
-            $plasma1 = null;
-        }
 
-        // Add the "Plasma1" element to its own index
-        if ($plasma1 !== null) {
-            $mutu_buah[4] = ['Plasma1' => $plasma1];
-        }
-        // Optional: Re-index the array to ensure the keys are in sequential order
-
-
-        if (isset($mutu_buah[4]['Plasma2'])) {
-            $Plasma2 = $mutu_buah[4]['Plasma2'];
-            unset($mutu_buah[4]['Plasma2']);
-        } else {
-            $Plasma2 = null;
-        }
-
-        // Add the "Plasma2" element to its own index
-        if ($Plasma2 !== null) {
-            $mutu_buah[7] = ['Plasma2' => $Plasma2];
-        }
-
-        if (isset($mutu_buah[7]['Plasma3'])) {
-            $Plasma3 = $mutu_buah[7]['Plasma3'];
-            unset($mutu_buah[7]['Plasma3']);
-        } else {
-            $Plasma3 = null;
-        }
-
-        // Add the "Plasma3" element to its own index
-        if ($Plasma3 !== null) {
-            $mutu_buah[9] = ['Plasma3' => $Plasma3];
-        }
-        // Optional: Re-index the array to ensure the keys are in sequential order
-        $mutu_buah = array_values($mutu_buah);
         // dd($mutu_buah);
 
         $mutubuah_est = array();
@@ -1476,6 +1428,8 @@ class mutubuahController extends Controller
             // unset($sortedData, $sortedDataEst);
             unset($sortedData);
         }
+
+
         $mutuBuah_wil = array();
         foreach ($mutubuah_est as $key => $value) {
             $jjg_sample = 0;
@@ -1874,7 +1828,7 @@ class mutubuahController extends Controller
         // updateKeyRecursive3($mutubuah_est[0], "KTE4", "KTE");
         // $estev2 = updateKeyRecursive2($estev2);
 
-        // dd($mutubuah_est);
+        // dd($mutu_buah);
 
         $arrView = array();
 
@@ -1941,7 +1895,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
         $queryEste = json_decode($queryEste, true);
 
@@ -1950,7 +1905,9 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $RegData)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1', 'CWS2', 'CWS3'])
+
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->pluck('est');
         $estev2 = json_decode($estev2, true);
 
@@ -3104,6 +3061,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $reg)
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
         $queryEste = json_decode($queryEste, true);
 
@@ -3416,7 +3375,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $reg)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->pluck('est');
         $queryEste = json_decode($queryEste, true);
         // $estatex = DB::connection('mysql2')->table('estate')
@@ -3641,6 +3601,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
         $queryEste = json_decode($queryEste, true);
 
@@ -4605,7 +4567,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
         $queryEste = json_decode($queryEste, true);
 
@@ -4614,7 +4577,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->pluck('est');
         $estev2 = json_decode($estev2, true);
 
@@ -5396,7 +5360,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'CWS1'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->pluck('est');
         $queryEstv1 = json_decode($queryEstv1, true);
 
@@ -5931,59 +5896,80 @@ class mutubuahController extends Controller
     public function updateBA_mutubuah(Request $request)
     {
 
-        $est = $request->input('est');
-        $afd = $request->input('afd');
-        $date = $request->input('date');
 
         // dd($date, $afd, $est);
         // mutu ancak 
-        $id = $request->input('id');
+        $id = $request->input('idbuah');
+
+        // dd($id);
         $blok = $request->input('blokCak');
-        $petugas = $request->input('sph');
-        $Tph_baris = $request->input('br1');
-        $ancak_pemanen = $request->input('br2');
-        $jml_jjg = $request->input('sampCak');
-        $bmt = $request->input('pkKuning');
-        $bmk = $request->input('prSmk');
-        $overripe = $request->input('undrPR');
-        $empty = $request->input('overPR');
-        $abnormal = $request->input('jjgCak');
-        $rd = $request->input('brtp');
-        $vcut = $request->input('brtk');
-        $alas_br = $request->input('brtgl');
+        $petugas = $request->input('petugasrow');
+        $Tph_baris = $request->input('tphbaris');
+        $ancak_pemanen = $request->input('ancakpemanen');
+        $jml_jjg = $request->input('jumlahjanjang');
+        $bmt = $request->input('bmt');
+        $bmk = $request->input('bmk');
+        $overripe = $request->input('overripe');
+        $empty = $request->input('empty');
+        $abnormal = $request->input('abnormal');
+        $rd = $request->input('ratdmg');
+        $vcut = $request->input('vcut');
+        $alas_br = $request->input('alasbr');
+        // dd($alas_br);
 
+        if ($id !== null && !empty($id)) {
+            try {
+                // Update database record
+                DB::connection('mysql2')->table('sidak_mutu_buah')->where('id', $id)->update([
+                    'blok' => $blok,
+                    'petugas' => $petugas,
+                    'petugas' => $petugas,
+                    'tph_baris' => $Tph_baris,
+                    'ancak_pemanen' => $ancak_pemanen,
+                    'jumlah_jjg' => $jml_jjg,
+                    'bmt' => $bmt,
+                    'bmk' => $bmk,
+                    'overripe' => $overripe,
+                    'empty_bunch' => $empty,
+                    'abnormal' => $abnormal,
+                    'rd' => $rd,
+                    'vcut' => $vcut,
+                    'alas_br' => $alas_br,
+                ]);
 
-
+                return response()->json(['message' => 'Success'], 200);
+            } catch (\Throwable $th) {
+                return response()->json(['message' => 'Error updating record'], 500);
+            }
+        } else {
+            return response()->json(['message' => 'Invalid ID'], 400);
+        }
         // dd($id, $blok, $petugas, $ancak_pemanen, $overripe);
 
-        DB::connection('mysql2')->table('sidak_mutu_buah')->where('id', $id)->update([
-            'blok' => $blok,
-            'petugas' => $petugas,
-            'tph_baris' => $Tph_baris,
-            'ancak_pemanen' => $ancak_pemanen,
-            'jumlah_jjg' => $jml_jjg,
-            'bmt' => $bmt,
-            'bmk' => $bmk,
-            'overripe' => $overripe,
-            'empty_bunch' => $empty,
-            'abnormal' => $abnormal,
-            'rd' => $rd,
-            'vcut' => $vcut,
-            'alas_br' => $alas_br,
-        ]);
+
     }
 
     public function deleteBA_mutubuah(Request $request)
     {
-
         $id = $request->input('id');
-        // dd($id);
-        //mutu ancak
-        DB::connection('mysql2')->table('sidak_mutu_buah')->where('id', $request->input('id'))->delete();
-        //mutu buah
 
-        return response()->json(['status' => 'success']);
+        if ($id !== null && !empty($id)) {
+            try {
+                // Delete row from the database
+                DB::connection('mysql2')->table('sidak_mutu_buah')->where('id', $id)->delete();
+
+                // Return success message
+                return response()->json(['message' => 'success'], 200);
+            } catch (\Throwable $th) {
+                // Return error message if deletion fails
+                return response()->json(['message' => 'Error updating record'], 500);
+            }
+        } else {
+            // Return error message if ID is invalid
+            return response()->json(['message' => 'error']);
+        }
     }
+
 
     public function pdfBA_sidakbuah(Request $request)
     {
@@ -6189,7 +6175,8 @@ class mutubuahController extends Controller
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $request->get('regional'))
-            ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->orderBy('estate.id', 'asc')
             ->get();
         $queryEstate = json_decode($queryEstate, true);
@@ -6523,6 +6510,7 @@ class mutubuahController extends Controller
             ->select('estate.*')
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
+
             ->where('wil.regional', $reg)
             ->get();
         $queryEste = json_decode($queryEste, true);
@@ -7341,6 +7329,8 @@ class mutubuahController extends Controller
             ->join('afdeling', 'afdeling.estate', '=', 'estate.id')
             ->where('estate.est', $est)
             ->where('afdeling.nama', $afd)
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->get();
         $estateQuery = json_decode($estateQuery, true);
 

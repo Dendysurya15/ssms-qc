@@ -3221,7 +3221,7 @@
                 // console.log(arrTbody1);
                 // var table1 = document.getElementById('table1');
                 var tbody1 = document.getElementById('tbody1');
-
+                console.log(arrTbody1);
 
                 arrTbody1.forEach(element => {
                     // for (let i = 0; i < 5; i++) {
@@ -3305,6 +3305,7 @@
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
                     itemElement3.innerText = item3
+                    itemElement4.innerText = item4
                     itemElement5.innerText = item5
 
                     tr.appendChild(itemElement1)

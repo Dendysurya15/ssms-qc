@@ -1747,27 +1747,27 @@
             s.style.display = "";
             m.style.display = "";
             l.style.display = "";
-            n.style.display = "";
+            n.style.display = "none";
 
             resetClassList(s);
             resetClassList(m);
             resetClassList(l);
-            resetClassList(n);
+
 
             thElement1.textContent = 'WILAYAH I';
             thElement2.textContent = 'WILAYAH II';
             thElement3.textContent = 'WILAYAH III';
-            thElement4.textContent = 'PLASMA I';
+
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
             thElement3.classList.add("text-center");
-            thElement4.classList.add("text-center");
 
-            s.classList.add("col-lg-3");
-            m.classList.add("col-lg-3");
-            l.classList.add("col-lg-3");
-            n.classList.add("col-lg-3");
+
+            s.classList.add("col-lg-4");
+            m.classList.add("col-lg-4");
+            l.classList.add("col-lg-4");
+
         } else if (c === '2') {
             s.style.display = "";
             m.style.display = "";
@@ -1798,24 +1798,21 @@
         } else if (c === '3') {
             s.style.display = "";
             m.style.display = "";
-            l.style.display = "";
+            l.style.display = "none";
             n.style.display = "none";
 
             resetClassList(s);
             resetClassList(m);
-            resetClassList(l);
 
-            thElement1.textContent = 'WILAYAH VII';
-            thElement2.textContent = 'WILAYAH VIII';
-            thElement3.textContent = 'PLASMA III';
+
+            thElement1s.textContent = 'WILAYAH VII';
+            thElement2s.textContent = 'WILAYAH VIII';
 
             thElement1.classList.add("text-center");
             thElement2.classList.add("text-center");
-            thElement3.classList.add("text-center");
 
-            s.classList.add("col-lg-4");
-            m.classList.add("col-lg-4");
-            l.classList.add("col-lg-4");
+            s.classList.add("col-lg-6");
+            m.classList.add("col-lg-6");
         } else if (c === '4') {
             s.style.display = "";
             m.style.display = "";
@@ -1857,32 +1854,32 @@
             ss.style.display = "";
             ms.style.display = "";
             ls.style.display = "";
-            ns.style.display = "";
+            ns.style.display = "none";
 
             resetClassList(ss);
             resetClassList(ms);
             resetClassList(ls);
-            resetClassList(ns);
+
 
             thElement1s.textContent = 'WILAYAH I';
             thElement2s.textContent = 'WILAYAH II';
             thElement3s.textContent = 'WILAYAH III';
-            thElement4s.textContent = 'Plasma1';
+
 
             thElement1s.classList.add("text-center");
             thElement2s.classList.add("text-center");
             thElement3s.classList.add("text-center");
-            thElement4s.classList.add("text-center");
 
-            ss.classList.add("col-lg-3");
-            ms.classList.add("col-lg-3");
-            ls.classList.add("col-lg-3");
-            ns.classList.add("col-lg-3");
+
+            ss.classList.add("col-lg-4");
+            ms.classList.add("col-lg-4");
+            ls.classList.add("col-lg-4");
+
         } else if (cs === '2') {
             ss.style.display = "";
             ms.style.display = "";
             ls.style.display = "";
-            ns.style.display = "";
+            ns.style.display = "none";
 
             resetClassList(ss);
             resetClassList(ms);
@@ -1896,33 +1893,33 @@
             thElement1s.classList.add("text-center");
             thElement2s.classList.add("text-center");
             thElement3s.classList.add("text-center");
-            thElement4s.classList.add("text-center");
 
-            ss.classList.add("col-lg-3");
-            ms.classList.add("col-lg-3");
-            ls.classList.add("col-lg-3");
-            ns.classList.add("col-lg-3");
-        } else if (cs === '3') {
-            ss.style.display = "";
-            ms.style.display = "";
-            ls.style.display = "";
-            ns.style.display = "none";
-
-            resetClassList(ss);
-            resetClassList(ms);
-            resetClassList(ls);
-
-            thElement1s.textContent = 'WILAYAH VII';
-            thElement2s.textContent = 'WILAYAH VIII';
-            thElement3s.textContent = 'PLASMA III';
-
-            thElement1s.classList.add("text-center");
-            thElement2s.classList.add("text-center");
-            thElement3s.classList.add("text-center");
 
             ss.classList.add("col-lg-4");
             ms.classList.add("col-lg-4");
             ls.classList.add("col-lg-4");
+
+        } else if (cs === '3') {
+            ss.style.display = "";
+            ms.style.display = "";
+            ls.style.display = "none";
+            ns.style.display = "none";
+
+            resetClassList(ss);
+            resetClassList(ms);
+
+
+
+            thElement1s.textContent = 'WILAYAH VII';
+            thElement2s.textContent = 'WILAYAH VIII';
+
+
+            thElement1s.classList.add("text-center");
+            thElement2s.classList.add("text-center");
+
+
+            ss.classList.add("col-lg-6");
+            ms.classList.add("col-lg-6");
         } else if (cs === '4') {
             ss.style.display = "";
             ms.style.display = "";
@@ -1968,54 +1965,24 @@
             sk.style.display = "";
             mk.style.display = "";
             lk.style.display = "";
-            nk.style.display = "";
+            nk.style.display = "none";
 
             resetClassList(sk);
             resetClassList(mk);
             resetClassList(lk);
-            resetClassList(nk);
 
             thElement1k.textContent = 'WILAYAH I';
             thElement2k.textContent = 'WILAYAH II';
             thElement3k.textContent = 'WILAYAH III';
-            thElement4k.textContent = 'Plasma1';
-
             thElement1k.classList.add("text-center");
             thElement2k.classList.add("text-center");
             thElement3k.classList.add("text-center");
-            thElement4k.classList.add("text-center");
 
-            sk.classList.add("col-lg-3");
-            mk.classList.add("col-lg-3");
-            lk.classList.add("col-lg-3");
-            nk.classList.add("col-lg-3");
+            sk.classList.add("col-lg-4");
+            mk.classList.add("col-lg-4");
+            lk.classList.add("col-lg-4");
+
         } else if (ck === '2') {
-            sk.style.display = "";
-            mk.style.display = "";
-            lk.style.display = "";
-            nk.style.display = "";
-
-            resetClassList(sk);
-            resetClassList(mk);
-            resetClassList(lk);
-            resetClassList(nk);
-
-            thElement1k.textContent = 'WILAYAH IV';
-            thElement2k.textContent = 'WILAYAH V';
-            thElement3k.textContent = 'WILAYAH VI';
-            thElement4k.textContent = 'PLASMA 2';
-
-            thElement1k.classList.add("text-center");
-            thElement2k.classList.add("text-center");
-            thElement3k.classList.add("text-center");
-            thElement4k.classList.add("text-center");
-
-
-            sk.classList.add("col-lg-3");
-            mk.classList.add("col-lg-3");
-            lk.classList.add("col-lg-3");
-            nk.classList.add("col-lg-3");
-        } else if (ck === '3') {
             sk.style.display = "";
             mk.style.display = "";
             lk.style.display = "";
@@ -2025,9 +1992,10 @@
             resetClassList(mk);
             resetClassList(lk);
 
-            thElement1k.textContent = 'WILAYAH VII';
-            thElement2k.textContent = 'WILAYAH VIII';
-            thElement3k.textContent = 'PLASMA III';
+
+            thElement1k.textContent = 'WILAYAH IV';
+            thElement2k.textContent = 'WILAYAH V';
+            thElement3k.textContent = 'WILAYAH VI';
 
             thElement1k.classList.add("text-center");
             thElement2k.classList.add("text-center");
@@ -2036,6 +2004,24 @@
             sk.classList.add("col-lg-4");
             mk.classList.add("col-lg-4");
             lk.classList.add("col-lg-4");
+        } else if (ck === '3') {
+            sk.style.display = "";
+            mk.style.display = "";
+            lk.style.display = "none";
+            nk.style.display = "none";
+
+            resetClassList(sk);
+            resetClassList(mk);
+
+
+            thElement1k.textContent = 'WILAYAH VII';
+            thElement2k.textContent = 'WILAYAH VIII';
+            thElement1k.classList.add("text-center");
+            thElement2k.classList.add("text-center");
+
+
+            sk.classList.add("col-lg-6");
+            mk.classList.add("col-lg-6");
         } else if (ck === '4') {
             sk.style.display = "";
             mk.style.display = "";
@@ -2671,13 +2657,22 @@
                     Object.entries(estateData).forEach(([key2, data], index) => {
                         const tr = document.createElement('tr');
 
+                        let item4; // Declare item4 variable outside the object
+
+                        if (data['csfxr'] !== 0) {
+                            item4 = data['All_skor'];
+                        } else {
+                            item4 = '-';
+                        }
+
                         const dataItems = {
                             item1: estateName,
                             item2: key2,
                             item3: data['nama_asisten'] !== undefined ? data['nama_asisten'] : '-',
-                            item4: data['All_skor'],
+                            item4: item4,
                             item5: data['rankAFD'],
                         };
+
 
                         const rowData = Object.values(dataItems);
 
@@ -2693,8 +2688,12 @@
                             }
 
                             if (cellIndex === 3) {
-                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                if (item4Value >= 95) {
+                                const item4Value = parseFloat(dataItems.item4);
+                                if (dataItems.item4 == '-') {
+                                    cell.style.backgroundColor = "white";
+                                    cell.style.color = "black";
+                                } // Convert to a number
+                                else if (item4Value >= 95) {
                                     cell.style.backgroundColor = "#609cd4";
                                     cell.style.color = "black";
                                 } else if (item4Value >= 85 && item4Value < 95) {
@@ -2861,11 +2860,19 @@
                     Object.entries(estateData).forEach(([key2, data], index) => {
                         const tr = document.createElement('tr');
 
+                        let item4; // Declare item4 variable outside the object
+
+                        if (data['csfxr'] !== 0) {
+                            item4 = data['All_skor'];
+                        } else {
+                            item4 = '-';
+                        }
+
                         const dataItems = {
                             item1: estateName,
                             item2: key2,
-                            item3: data['nama_asisten'] || '-',
-                            item4: data['All_skor'],
+                            item3: data['nama_asisten'] !== undefined ? data['nama_asisten'] : '-',
+                            item4: item4,
                             item5: data['rankAFD'],
                         };
 
@@ -2884,8 +2891,12 @@
                             }
 
                             if (cellIndex === 3) {
-                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                if (item4Value >= 95) {
+                                const item4Value = parseFloat(dataItems.item4);
+                                if (dataItems.item4 == '-') {
+                                    cell.style.backgroundColor = "white";
+                                    cell.style.color = "black";
+                                } // Convert to a number
+                                else if (item4Value >= 95) {
                                     cell.style.backgroundColor = "#609cd4";
                                     cell.style.color = "black";
                                 } else if (item4Value >= 85 && item4Value < 95) {
@@ -2902,7 +2913,6 @@
                                     cell.style.color = "black";
                                 }
                             }
-
                             tr.appendChild(cell);
                         });
 
@@ -3034,14 +3044,21 @@
                             Object.entries(estateData).forEach(([key2, data], index) => {
                                 const tr = document.createElement('tr');
 
+                                let item4; // Declare item4 variable outside the object
+
+                                if (data['csfxr'] !== 0) {
+                                    item4 = data['All_skor'];
+                                } else {
+                                    item4 = '-';
+                                }
+
                                 const dataItems = {
                                     item1: estateName,
                                     item2: key2,
-                                    item3: data['nama_asisten'] || '-',
-                                    item4: data['All_skor'],
+                                    item3: data['nama_asisten'] !== undefined ? data['nama_asisten'] : '-',
+                                    item4: item4,
                                     item5: data['rankAFD'],
                                 };
-
                                 const rowData = Object.values(dataItems);
 
                                 rowData.forEach((item, cellIndex) => {
@@ -3057,8 +3074,12 @@
                                     }
 
                                     if (cellIndex === 3) {
-                                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                        if (item4Value >= 95) {
+                                        const item4Value = parseFloat(dataItems.item4);
+                                        if (dataItems.item4 == '-') {
+                                            cell.style.backgroundColor = "white";
+                                            cell.style.color = "black";
+                                        } // Convert to a number
+                                        else if (item4Value >= 95) {
                                             cell.style.backgroundColor = "#609cd4";
                                             cell.style.color = "black";
                                         } else if (item4Value >= 85 && item4Value < 95) {
