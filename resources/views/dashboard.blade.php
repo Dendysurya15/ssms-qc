@@ -134,12 +134,14 @@
             </div>
             <div class="col-md-2 col-12">
                 <select name="" class="form-control" id="yearData">
-                    <option value="2023" selected>2023</option>
-                    <option value="2022">2022</option>
+                    @foreach ($years_list as $year)
+                    <option value="{{ $year }}" {{ $year==$curr_year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-md-3 col-12">
-                @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
+                @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') ==
+                'Asisten')
 
                 <a href="{{ route('listktu') }}" class="btn btn-success mr-2">List KTU</a>
                 <a href="{{ route('user_qc', ['lokasi_kerja' => session('lok')]) }}" class="btn btn-success mr-2">List
