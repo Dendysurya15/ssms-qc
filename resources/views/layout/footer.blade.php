@@ -16,5 +16,47 @@
 <script src="{{ asset('js/js_tabel/jquery.dataTables.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentUrl = window.location.href;
+        var navLinks = document.querySelectorAll('.nav-link');
 
+        // Define the mapping of URL segments to classes
+        var urlClassMapping = {
+            '/dashboard_inspeksi': 'bg-warning',
+            '/dashboardtph': 'bg-warning',
+            '/dashboard_mutubuah': 'bg-warning',
+            '/dashboard_gudang': 'bg-primary',
+            '/dashboard_perum': 'bg-success'
+        };
+
+        // Default class if no match is found
+        var defaultClass = 'bg-light';
+
+        navLinks.forEach(function(link) {
+            // Check if any URL segment matches the current URL
+            var found = Object.keys(urlClassMapping).find(function(segment) {
+                return currentUrl.endsWith(segment) && link.href.endsWith(segment);
+            });
+
+            // Assign the class based on the match or default class
+            link.classList.add(found ? urlClassMapping[found] : defaultClass);
+        });
+
+
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        var lottieElements = document.querySelectorAll('.lottie-animation');
+        lottieElements.forEach(function(element) {
+            var animationPath = element.getAttribute('data-animation-path');
+            lottie.loadAnimation({
+                container: element,
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: animationPath
+            });
+        });
+    });
+</script>
 </body>

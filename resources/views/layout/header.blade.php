@@ -7,7 +7,7 @@ session_start();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> DASHBOARD</title>
+    <title>QC APPS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/CBI-logo.png') }}">
 
@@ -100,18 +100,8 @@ session_start();
                 <li class="nav-item d-none d-sm-inline-block">
                     <a class="nav-link">Selamat datang, {{ session('user_name') }} </a>
                 </li>
-                <!-- <li class="nav-item d-none d-sm-inline-block">
-                    <a class="nav-link">Jabatan, {{ session('jabatan') }} </a>
-                </li> -->
             </ul>
 
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a class="nav-link">
-                        {{-- {{ session('user_name') }} --}}
-                    </a>
-                </li>
-            </ul>
         </nav>
         <aside class="main-sidebar sidebar-light-primary elevation-4">
             <a href="{{ asset('dashboard') }}" class="brand-link">
@@ -127,9 +117,9 @@ session_start();
 
                         <style>
                             .lottie-animation {
-                                width: 24px;
+                                width: 40px;
                                 /* adjust the width as per your preference */
-                                height: 24px;
+                                height: 40px;
                                 /* adjust the height as per your preference */
                                 margin-right: 8px;
                                 /* add some spacing between the icon and the text */
@@ -147,7 +137,7 @@ session_start();
                         <li class="nav-item">
                             <a href="{{ asset('/dashboard_inspeksi') }}" class="nav-link">
                                 <div class="nav-icon lottie-animation" data-animation-path="https://assets10.lottiefiles.com/packages/lf20_w4hwxwuq.json"></div>
-                                <p>QC Inspeksi</p>
+                                <p>PANEN REGULAR</p>
                             </a>
                         </li>
 
@@ -158,7 +148,7 @@ session_start();
                                 </div>
 
                                 <p>
-                                    QC Mutu Transport
+                                    SIDAK MUTU TRANSPORT
                                 </p>
                             </a>
                         </li>
@@ -168,7 +158,8 @@ session_start();
                                 </div>
 
                                 <p>
-                                    Mutu Buah
+                                    SIDAK MUTU BUAH
+
                                 </p>
                             </a>
                         </li>
@@ -176,7 +167,8 @@ session_start();
                             <a href="{{ asset('/dashboard_gudang') }}" class="nav-link">
                                 <div class="nav-icon lottie-animation" data-animation-path="https://assets9.lottiefiles.com/temp/lf20_vBnbOW.json"></div>
                                 <p>
-                                    QC Gudang
+                                    GUDANG
+
                                 </p>
                             </a>
                         </li>
@@ -191,33 +183,28 @@ session_start();
                                 </div>
 
                                 <p>
-                                    Perumahan
+                                    PERUMAHAN
+
                                 </p>
                             </a>
                         </li>
-
-
+                        @if (strpos(session('departemen'), 'QC') !== false)
                         <li class="nav-item">
                             <a href="{{ asset('/dashboardabsensi') }}" class="nav-link">
-                                <div class="nav-icon lottie-animation" data-animation-path="https://lottie.host/237bc051-94b1-45d6-89da-3144341616a8/i4uJsopUfQ.json">
-                                </div>
-                                <p>
-                                    Absensi QC
-                                </p>
+                                <div class="nav-icon lottie-animation" data-animation-path="https://lottie.host/237bc051-94b1-45d6-89da-3144341616a8/i4uJsopUfQ.json"></div>
+                                <p>Absensi QC</p>
                             </a>
                         </li>
+                        @endif
 
-
+                        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
                         <li class="nav-item">
                             <a href="{{ asset('/userqcpanel') }}" class="nav-link">
-                                <div class="nav-icon lottie-animation" data-animation-path="{{ asset('img/homejson.json') }}">
-                                </div>
-
-                                <p>
-                                    Management User QC
-                                </p>
+                                <div class="nav-icon lottie-animation" data-animation-path="{{ asset('img/homejson.json') }}"></div>
+                                <p>Management User QC</p>
                             </a>
                         </li>
+                        @endif
 
 
                         @if (strpos(session('departemen'), 'QC') !== false)
@@ -233,35 +220,8 @@ session_start();
 
 
 
-
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                var lottieElements = document.querySelectorAll('.lottie-animation');
-                                lottieElements.forEach(function(element) {
-                                    var animationPath = element.getAttribute('data-animation-path');
-                                    lottie.loadAnimation({
-                                        container: element,
-                                        renderer: 'svg',
-                                        loop: true,
-                                        autoplay: true,
-                                        path: animationPath
-                                    });
-                                });
-                            });
-                        </script>
-
-
                         <div class="fixed-bottom mb-3" style="position: absolute;">
-                            <li class="nav-item">
-                                <a href="/checkIMG" class="nav-link">
 
-                                    <div class="nav-icon lottie-animation" data-animation-path="https://assets9.lottiefiles.com/packages/lf20_8y92hieq.json">
-                                    </div>
-                                    <p>
-                                        Check Foto
-                                    </p>
-                                </a>
-                            </li>
                             @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten')
                             <li class="nav-item">
                                 <a href="{{ route('user.show') }}" class="nav-link">
@@ -290,18 +250,7 @@ session_start();
 
                     </ul>
                 </nav>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var currentUrl = window.location.href;
-                        var navLinks = document.querySelectorAll('.nav-link');
 
-                        navLinks.forEach(function(link) {
-                            if (link.href === currentUrl) {
-                                link.classList.add('active');
-                            }
-                        });
-                    });
-                </script>
 
             </div>
         </aside>
