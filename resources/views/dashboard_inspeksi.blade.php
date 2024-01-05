@@ -3585,6 +3585,7 @@
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
                     itemElement3.innerText = item3
+                    itemElement4.innerText = item4
                     itemElement5.innerText = item5
 
                     tr.appendChild(itemElement1)
@@ -3731,9 +3732,11 @@
                         if (data === "ada") {
                             itemElement4.style.backgroundColor = "red";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = item4
                         } else {
                             itemElement4.style.backgroundColor = "white";
                             itemElement4.style.color = "black";
+                            itemElement4.innerText = '-'
                         }
 
                     }
@@ -3827,7 +3830,7 @@
                     // Always increment rank regardless of the score
                     element['rank'] = rank++;
                 });
-                // console.log(arrTbody3);
+                console.log(arrTbody3);
                 // var table1 = document.getElementById('table1');
                 var tbody3 = document.getElementById('tbody3');
                 arrTbody3.forEach(element => {
@@ -3908,6 +3911,7 @@
                     itemElement1.innerText = item1
                     itemElement2.innerText = item2
                     itemElement3.innerText = item3
+                    itemElement4.innerText = item4
                     itemElement5.innerText = item5
 
                     tr.appendChild(itemElement1)

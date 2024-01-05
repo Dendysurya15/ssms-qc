@@ -742,6 +742,7 @@
     <br>
 
     @if ($reg == 2 )
+    <H1 class="text-center ">Data Perblok</H1>
     <div class="ml-3 mr-3 mb-3">
         <div class="row text-center tbl-fixed">
             <table class="table-responsive">
@@ -854,6 +855,7 @@
         </div>
     </div>
     @else
+    <H1 class="text-center ">Data Perblok</H1>
     <div class="ml-3 mr-3 mb-3">
         <div class="row text-center tbl-fixed">
             <table class="table-responsive">
@@ -964,8 +966,119 @@
             </table>
         </div>
     </div>
-    @endif
 
+
+    <H1 class="text-center ">Data Per Kemandoran</H1>
+    <div class="ml-3 mr-3 mb-3">
+        <div class="row text-center tbl-fixed">
+            <table class="table-responsive">
+                <thead style="color: white;">
+                    <tr>
+                        <th class="freeze-col align-middle" rowspan="3" bgcolor="#1c5870">Mandor</th>
+                        <th class="align-middle" colspan="4" rowspan="2" bgcolor="#588434">DATA BLOK SAMPEL</th>
+                        <th class="align-middle" colspan="17" bgcolor="#588434">Mutu Ancak (MA)</th>
+                        <th class="align-middle" colspan="8" bgcolor="blue">Mutu Transport (MT)</th>
+                        <th class="align-middle" colspan="23" bgcolor="#ffc404" style="color: #000000;">Mutu Buah (MB)
+                        <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">All Skor</th>
+                        <th class="align-middle" rowspan="3" bgcolor="gray" style="color: #fff;">Kategori</th>
+                        </th>
+                    </tr>
+                    <tr>
+                        <!-- Table Mutu Ancak -->
+                        <th class="align-middle" colspan="6" bgcolor="#588434">Brondolan Tinggal</th>
+                        <th class="align-middle" colspan="7" bgcolor="#588434">Buah Tinggal</th>
+                        <th class="align-middle" colspan="3" bgcolor="#588434">Pelepah Sengkleh</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#588434">Total Skor</th>
+
+                        <th class="align-middle" rowspan="2" bgcolor="blue">TPH Sampel</th>
+                        <th class="align-middle" colspan="3" bgcolor="blue">Brd Tinggal</th>
+                        <th class="align-middle" colspan="3" bgcolor="blue">Buah Tinggal</th>
+                        <th class="align-middle" rowspan="2" bgcolor="blue">Total Skor</th>
+
+                        <!-- Table Mutu Buah -->
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">TPH Sampel</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Janjang
+                            Sampel</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Mentah (A)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Matang (N)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Lewat Matang (O)
+                        </th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Janjang Kosong
+                            (E)</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Tidak Standar
+                            V-Cut</th>
+                        <th class="align-middle" colspan="2" bgcolor="#ffc404" style="color: #000000;">Abnormal</th>
+                        <th class="align-middle" colspan="3" bgcolor="#ffc404" style="color: #000000;">Penggunaan Karung
+                            Brondolan</th>
+                        <th class="align-middle" rowspan="2" bgcolor="#ffc404" style="color: #000000;">Total Skor</th>
+                    </tr>
+                    <tr>
+                        <!-- Table Mutu Ancak -->
+                        <th class="align-middle" bgcolor="#588434">Jumlah Pokok Sampel</th>
+                        <th class="align-middle" bgcolor="#588434">Luas Ha Sampel</th>
+                        <th class="align-middle" bgcolor="#588434">Jumlah Jjg Panen</th>
+                        <th class="align-middle" bgcolor="#588434">AKP Realisasi</th>
+                        <th class="align-middle" bgcolor="#588434">P</th>
+                        <th class="align-middle" bgcolor="#588434">K</th>
+                        <th class="align-middle" bgcolor="#588434">GL</th>
+                        <th class="align-middle" bgcolor="#588434">Total Brd</th>
+                        <th class="align-middle" bgcolor="#588434">Brd/JJG</th>
+                        <th class="align-middle" bgcolor="#588434">Skor</th>
+                        <th class="align-middle" bgcolor="#588434">S</th>
+                        <th class="align-middle" bgcolor="#588434">M1</th>
+                        <th class="align-middle" bgcolor="#588434">M2</th>
+                        <th class="align-middle" bgcolor="#588434">M3</th>
+                        <th class="align-middle" bgcolor="#588434">Total JJG</th>
+                        <th class="align-middle" bgcolor="#588434">%</th>
+                        <th class="align-middle" bgcolor="#588434">Skor</th>
+                        <th class="align-middle" bgcolor="#588434">Pokok</th>
+                        <th class="align-middle" bgcolor="#588434">%</th>
+                        <th class="align-middle" bgcolor="#588434">Skor</th>
+
+                        <th class="align-middle" bgcolor="blue">Butir</th>
+                        <th class="align-middle" bgcolor="blue">Butir/TPH</th>
+                        <th class="align-middle" bgcolor="blue">Skor</th>
+                        <th class="align-middle" bgcolor="blue">Jjg</th>
+                        <th class="align-middle" bgcolor="blue">Jjg/TPH</th>
+                        <th class="align-middle" bgcolor="blue">Skor</th>
+                        <!-- Table Mutu Buah -->
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Jjg</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Ya</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">%</th>
+                        <th class="align-middle" bgcolor="#ffc404" style="color: #000000;">Skor</th>
+                    </tr>
+                </thead>
+
+                <tbody id="datakemandoran">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @endif
 
     <div class="card p-4">
         <h4 class="text-center mt-2" style="font-weight: bold">Tracking Plot Inpeksi - {{$est}} {{$afd}} </h4>
@@ -3384,8 +3497,9 @@
                 var mutuBuah = Object.entries(parseResult['mutuBuah'])
                 var mutuTransport = Object.entries(parseResult['mutuTransport'])
                 var all_data = Object.entries(parseResult['data_chuack'])
+                var resmandr = Object.entries(parseResult['tabelmandor'])
 
-
+                console.log(resmandr);
                 var tbody1 = document.getElementById('dataInspeksi');
 
                 // console.log(all_data);
@@ -3917,7 +4031,7 @@
 
                     tr = document.createElement('tr');
                     let item1 = 'Total';
-                    let item2 = total;
+                    let item2 = total
                     let item3 = total2.toFixed(3);
                     let item4 = total3;
                     let item5 = (total3 / total).toFixed(3);
@@ -4417,6 +4531,222 @@
                     // }
 
                     // end table 
+                }
+
+                if (reg == 2) {
+
+                } else {
+                    let tbody1 = document.getElementById('datakemandoran');
+                    // Assuming 'resmandr' is your array
+                    resmandr.forEach(element => {
+                        let tr = document.createElement('tr');
+
+                        for (let i = 0; i <= 54; i++) {
+                            let itemElement = document.createElement('td');
+                            let value;
+                            let bgcolor = ''; // Declare bgcolor variable here
+
+                            let total = element[1]['tot_skorbuah'] + element[1]['totskor_ancak'] + element[1]['tot_skortra']
+                            let color, text;
+
+                            if (total >= 95.0 && total <= 100.0) {
+                                color = "#4874c4";
+                                text = "EXCELLENT";
+                            } else if (total >= 85.0 && total < 95.0) {
+                                color = "#00ff2e";
+                                text = "GOOD";
+                            } else if (total >= 75.0 && total < 85.0) {
+                                color = "yellow";
+                                text = "SATISFACTORY";
+                            } else if (total >= 65.0 && total < 75.0) {
+                                color = "orange";
+                                text = "FAIR";
+                            } else {
+                                color = "red";
+                                text = "POOR";
+                            }
+                            switch (i) {
+                                case 0:
+                                    value = element[0]; // Accessing the key ('A', 'B', 'Total')
+                                    break;
+                                case 1:
+                                    value = element[1]['pokok_sample']; // Accessing the 'pokok_sample' value
+                                    break;
+                                case 2:
+                                    value = element[1]['luas_ha']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 3:
+                                    value = element[1]['pokok_panen']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 4:
+                                    value = element[1]['akp']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 5:
+                                    value = element[1]['p_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 6:
+                                    value = element[1]['k_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 7:
+                                    value = element[1]['gl_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 8:
+                                    value = element[1]['total_brd_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 9:
+                                    value = element[1]['btr_jjg_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 10:
+                                    value = element[1]['skor_brd']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 11:
+                                    value = element[1]['bhts_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 12:
+                                    value = element[1]['bhtm1_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 13:
+                                    value = element[1]['bhtm2_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 14:
+                                    value = element[1]['bhtm3_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 15:
+                                    value = element[1]['tot_jjg_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 16:
+                                    value = element[1]['jjg_tgl_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 17:
+                                    value = element[1]['skor_buah']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 18:
+                                    value = element[1]['ps_ma']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 19:
+                                    value = element[1]['PerPSMA']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 20:
+                                    value = element[1]['skor_pale']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 21:
+                                    value = element[1]['totskor_ancak']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 22:
+                                    value = element[1]['tph_sample']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 23:
+                                    value = element[1]['bt_total']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 24:
+                                    value = element[1]['bt_tph']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 25:
+                                    value = element[1]['skor_bt']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 26:
+                                    value = element[1]['restan_total']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 27:
+                                    value = element[1]['restan_tph']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 28:
+                                    value = element[1]['skor_restan']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 29:
+                                    value = element[1]['tot_skortra']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 30:
+                                    value = element[1]['blok_mb']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 31:
+                                    value = element[1]['jml_janjang']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 32:
+                                    value = element[1]['jml_mentah']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 33:
+                                    value = element[1]['PersenBuahMentah']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 34:
+                                    value = element[1]['skorbh_mentah']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 35:
+                                    value = element[1]['jml_masak']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 36:
+                                    value = element[1]['PersenBuahMasak']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 37:
+                                    value = element[1]['skorbh_masak']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 38:
+                                    value = element[1]['jml_over']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 39:
+                                    value = element[1]['PersenBuahOver']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 40:
+                                    value = element[1]['skorbh_over']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 41:
+                                    value = element[1]['jml_empty']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 42:
+                                    value = element[1]['PersenPerempty']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 43:
+                                    value = element[1]['skorbh_empty']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 44:
+                                    value = element[1]['jml_vcut']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 45:
+                                    value = element[1]['PersenVcut']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 46:
+                                    value = element[1]['skorbh_vcut']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 47:
+                                    value = element[1]['jml_abnormal']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 48:
+                                    value = element[1]['PersenAbr']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 49:
+                                    value = element[1]['alas_mb']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 50:
+                                    value = element[1]['PersenKrgBrd']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 51:
+                                    value = element[1]['skorkarung']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 52:
+                                    value = element[1]['tot_skorbuah']; // Accessing the 'luas_ha' value
+                                    break;
+                                case 53:
+
+                                    value = element[1]['totalall'] ?? total
+                                    bgcolor = color
+                                    break;
+                                case 54:
+
+                                    value = element[1]['kategori'] ?? text
+                                    bgcolor = color
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            itemElement.innerText = value;
+                            itemElement.style.backgroundColor = bgcolor;
+                            tr.appendChild(itemElement);
+                        }
+
+                        tbody1.appendChild(tr);
+                    });
+
                 }
 
             }
