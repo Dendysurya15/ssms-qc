@@ -902,8 +902,29 @@
             },
             {
                 title: 'Maps',
-                data: 'app_version'
+                data: 'app_version',
+                render: function(data, type, row, meta) {
+                    var parts = data.split(';'); // Use the 'data' parameter instead of 'dataString'
+
+                    // Get the last part
+                    var lastPart = parts[parts.length - 1];
+
+                    // Define variables for the conditions
+                    var Akurat = 'Akurat';
+                    var Liar = 'Liar';
+                    var result = null;
+
+                    // Check conditions and assign values
+                    if (lastPart === 'GA') {
+                        result = Akurat;
+                    } else if (lastPart === 'GL') {
+                        result = Liar;
+                    }
+
+                    return result; // Return the computed result
+                }
             },
+
             {
                 title: 'Actions',
                 visible: (currentUserName === 'Askep' || currentUserName === 'Manager'),

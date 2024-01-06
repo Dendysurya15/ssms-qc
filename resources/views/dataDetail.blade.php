@@ -1253,6 +1253,9 @@
                                 <label for="update-bhtm3" class="col-form-label">BHTM3</label>
                                 <input type="text" class="form-control" id="update-bhtm3" name="bhtm3" value="" required>
 
+                                <label for="update-cakmandor" class="col-form-label">Kemandoran</label>
+                                <input type="text" class="form-control" id="update-cakmandor" name="cakmandor" value="" required>
+
 
                                 <label for="update-ps" class="col-form-label">PS</label>
                                 <input type="text" class="form-control" id="update-ps" name="ps" value="" required>
@@ -1351,6 +1354,9 @@
                                 <label for="update-abrBH" class="col-form-label">Abnormal</label>
                                 <input type="text" class="form-control" id="update-abrBH" name="abrBH" value="" required>
 
+                                <label for="update-bhmandor" class="col-form-label">Kemandoran</label>
+                                <input type="text" class="form-control" id="update-bhmandor" name="bhmandor" value="" required>
+
 
                                 <label for="update-vcutBH" class="col-form-label">V Cut</label>
                                 <input type="text" class="form-control" id="update-vcutBH" name="vcutBH" value="" required>
@@ -1421,6 +1427,8 @@
 
                                 <label for="update-bt_trans" class="col-form-label">Brondolan di TPH </label>
                                 <input type="text" class="form-control" id="update-bt_trans" name="bt_trans" value="" required>
+                                <label for="update-transmandor" class="col-form-label">Kemandoran </label>
+                                <input type="text" class="form-control" id="update-transmandor" name="transmandor" value="" required>
 
 
 
@@ -2480,6 +2488,7 @@
                     $('#update-ps').val(rowData.ps);
                     $('#update-sp').val(rowData.sp);
                     $('#update-pk_panenCAk').val(rowData.pokok_panen);
+                    $('#update-cakmandor').val(rowData.kemandoran);
 
                     // Add similar lines for other fields
 
@@ -2521,6 +2530,7 @@
                         var bhtm3 = $('#update-bhtm3').val();
                         var ps = $('#update-ps').val();
                         var sp = $('#update-sp').val();
+                        var cakmandor = $('#update-cakmandor').val();
                         var pk_panenCAk = $('#update-pk_panenCAk').val();
 
                         if (!isNumber(sampCak) ||
@@ -2802,7 +2812,7 @@
 
                         },
                         {
-                            title: 'Blok',
+                            title: 'Maps',
                             data: 'app_version',
 
                         },
@@ -2871,6 +2881,7 @@
                     $('#update-abrBH').val(rowData.abnormal)
                     $('#update-vcutBH').val(rowData.vcut)
                     $('#update-alsBR').val(rowData.alas_br)
+                    $('#update-bhmandor').val(rowData.kemandoran)
 
 
                     $('#editModalBuah').modal('show');
@@ -2902,6 +2913,7 @@
                         var abrBH = $('#update-abrBH').val();
                         var vcutBH = $('#update-vcutBH').val();
                         var alsBR = $('#update-alsBR').val();
+                        var bhmandor = $('#update-bhmandor').val();
 
                         if (!isNumber(bmt) ||
                             !isNumber(bmk) ||
@@ -3199,6 +3211,7 @@
                     $('#update-petugasTrans').val(rowData.petugas)
                     $('#update-bt_trans').val(rowData.bt)
                     $('#update-rstTrans').val(rowData.rst)
+                    $('#update-transmandor').val(rowData.kemandoran)
 
                     $('#editModalTrans').modal('show');
                 }
@@ -3224,6 +3237,7 @@
                         // Validate the bt_trans and rstTrans fields
                         var btTransValue = $('#update-bt_trans').val();
                         var rstTransValue = $('#update-rstTrans').val();
+                        var transmandor = $('#update-transmandor').val();
                         if (!isNumber(btTransValue) || !isNumber(rstTransValue)) {
                             Swal.fire({
                                 icon: 'error',
@@ -4546,7 +4560,8 @@
                             let value;
                             let bgcolor = ''; // Declare bgcolor variable here
 
-                            let total = element[1]['tot_skorbuah'] + element[1]['totskor_ancak'] + element[1]['tot_skortra']
+                            let total = (element[1]['tot_skorbuah'] ?? 0) + (element[1]['totskor_ancak'] ?? 0) + (element[1]['tot_skortra'] ?? 0);
+
                             let color, text;
 
                             if (total >= 95.0 && total <= 100.0) {
@@ -4570,160 +4585,160 @@
                                     value = element[0]; // Accessing the key ('A', 'B', 'Total')
                                     break;
                                 case 1:
-                                    value = element[1]['pokok_sample']; // Accessing the 'pokok_sample' value
+                                    value = element[1]['pokok_sample'] ?? 0
                                     break;
                                 case 2:
-                                    value = element[1]['luas_ha']; // Accessing the 'luas_ha' value
+                                    value = element[1]['luas_ha'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 3:
-                                    value = element[1]['pokok_panen']; // Accessing the 'luas_ha' value
+                                    value = element[1]['pokok_panen'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 4:
-                                    value = element[1]['akp']; // Accessing the 'luas_ha' value
+                                    value = element[1]['akp'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 5:
-                                    value = element[1]['p_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['p_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 6:
-                                    value = element[1]['k_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['k_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 7:
-                                    value = element[1]['gl_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['gl_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 8:
-                                    value = element[1]['total_brd_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['total_brd_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 9:
-                                    value = element[1]['btr_jjg_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['btr_jjg_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 10:
-                                    value = element[1]['skor_brd']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skor_brd'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 11:
-                                    value = element[1]['bhts_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['bhts_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 12:
-                                    value = element[1]['bhtm1_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['bhtm1_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 13:
-                                    value = element[1]['bhtm2_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['bhtm2_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 14:
-                                    value = element[1]['bhtm3_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['bhtm3_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 15:
-                                    value = element[1]['tot_jjg_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['tot_jjg_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 16:
-                                    value = element[1]['jjg_tgl_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jjg_tgl_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 17:
-                                    value = element[1]['skor_buah']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skor_buah'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 18:
-                                    value = element[1]['ps_ma']; // Accessing the 'luas_ha' value
+                                    value = element[1]['ps_ma'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 19:
-                                    value = element[1]['PerPSMA']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PerPSMA'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 20:
-                                    value = element[1]['skor_pale']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skor_pale'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 21:
-                                    value = element[1]['totskor_ancak']; // Accessing the 'luas_ha' value
+                                    value = element[1]['totskor_ancak'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 22:
-                                    value = element[1]['tph_sample']; // Accessing the 'luas_ha' value
+                                    value = element[1]['tph_sample'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 23:
-                                    value = element[1]['bt_total']; // Accessing the 'luas_ha' value
+                                    value = element[1]['bt_total'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 24:
-                                    value = element[1]['bt_tph']; // Accessing the 'luas_ha' value
+                                    value = element[1]['bt_tph'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 25:
-                                    value = element[1]['skor_bt']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skor_bt'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 26:
-                                    value = element[1]['restan_total']; // Accessing the 'luas_ha' value
+                                    value = element[1]['restan_total'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 27:
-                                    value = element[1]['restan_tph']; // Accessing the 'luas_ha' value
+                                    value = element[1]['restan_tph'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 28:
-                                    value = element[1]['skor_restan']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skor_restan'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 29:
-                                    value = element[1]['tot_skortra']; // Accessing the 'luas_ha' value
+                                    value = element[1]['tot_skortra'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 30:
-                                    value = element[1]['blok_mb']; // Accessing the 'luas_ha' value
+                                    value = element[1]['blok_mb'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 31:
-                                    value = element[1]['jml_janjang']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jml_janjang'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 32:
-                                    value = element[1]['jml_mentah']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jml_mentah'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 33:
-                                    value = element[1]['PersenBuahMentah']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PersenBuahMentah'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 34:
-                                    value = element[1]['skorbh_mentah']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skorbh_mentah'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 35:
-                                    value = element[1]['jml_masak']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jml_masak'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 36:
-                                    value = element[1]['PersenBuahMasak']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PersenBuahMasak'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 37:
-                                    value = element[1]['skorbh_masak']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skorbh_masak'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 38:
-                                    value = element[1]['jml_over']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jml_over'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 39:
-                                    value = element[1]['PersenBuahOver']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PersenBuahOver'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 40:
-                                    value = element[1]['skorbh_over']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skorbh_over'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 41:
-                                    value = element[1]['jml_empty']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jml_empty'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 42:
-                                    value = element[1]['PersenPerempty']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PersenPerempty'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 43:
-                                    value = element[1]['skorbh_empty']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skorbh_empty'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 44:
-                                    value = element[1]['jml_vcut']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jml_vcut'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 45:
-                                    value = element[1]['PersenVcut']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PersenVcut'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 46:
-                                    value = element[1]['skorbh_vcut']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skorbh_vcut'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 47:
-                                    value = element[1]['jml_abnormal']; // Accessing the 'luas_ha' value
+                                    value = element[1]['jml_abnormal'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 48:
-                                    value = element[1]['PersenAbr']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PersenAbr'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 49:
-                                    value = element[1]['alas_mb']; // Accessing the 'luas_ha' value
+                                    value = element[1]['alas_mb'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 50:
-                                    value = element[1]['PersenKrgBrd']; // Accessing the 'luas_ha' value
+                                    value = element[1]['PersenKrgBrd'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 51:
-                                    value = element[1]['skorkarung']; // Accessing the 'luas_ha' value
+                                    value = element[1]['skorkarung'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 52:
-                                    value = element[1]['tot_skorbuah']; // Accessing the 'luas_ha' value
+                                    value = element[1]['tot_skorbuah'] ?? 0 // Accessing the 'luas_ha' value
                                     break;
                                 case 53:
 

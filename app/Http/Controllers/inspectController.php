@@ -9486,95 +9486,95 @@ class inspectController extends Controller
         }
 
 
-        if ($reg == 2 || $reg == '2') {
+        // if ($reg == 2 || $reg == '2') {
 
-            // $ancak_status = $ancak[''];
-            foreach ($transM as $key => $value) {
-                $sum_bt = 0;
-                $sum_Restan = 0;
-                $tph_sample = 0;
-                $listBlokPerAfd = array();
-                foreach ($value as $key2 => $value2) {
-                    // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
-                    $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
-                    // }
-                    $sum_Restan += $value2['rst'];
-                    $tph_sample = count($listBlokPerAfd);
-                    $sum_bt += $value2['bt'];
-                    // dd($value2);
-                }
+        //     // $ancak_status = $ancak[''];
+        //     foreach ($transM as $key => $value) {
+        //         $sum_bt = 0;
+        //         $sum_Restan = 0;
+        //         $tph_sample = 0;
+        //         $listBlokPerAfd = array();
+        //         foreach ($value as $key2 => $value2) {
+        //             // if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
+        //             $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
+        //             // }
+        //             $sum_Restan += $value2['rst'];
+        //             $tph_sample = count($listBlokPerAfd);
+        //             $sum_bt += $value2['bt'];
+        //             // dd($value2);
+        //         }
 
-                $panenKey = 0;
+        //         $panenKey = 0;
 
-                if (isset($ancak[$key]['status_panen'])) {
-                    $transportx[$key]['status_panen'] = $ancak[$key]['status_panen'];
-                    $panenKey = $ancak[$key]['status_panen'];
-                    $transportx[$key]['status_panentrans'] = $value2['status_panen'];
-                    $transportx[$key]['status_panenAncak'] = $ancak[$key]['status_panen'];
-                }
-                $LuasKey = 0;
-                if (isset($ancak[$key]['luas_blok'])) {
-                    $transportx[$key]['luas_blok'] = $ancak[$key]['luas_blok'];
-                    $LuasKey = $ancak[$key]['luas_blok'];
-                }
+        //         if (isset($ancak[$key]['status_panen'])) {
+        //             $transportx[$key]['status_panen'] = $ancak[$key]['status_panen'];
+        //             $panenKey = $ancak[$key]['status_panen'];
+        //             $transportx[$key]['status_panentrans'] = $value2['status_panen'];
+        //             $transportx[$key]['status_panenAncak'] = $ancak[$key]['status_panen'];
+        //         }
+        //         $LuasKey = 0;
+        //         if (isset($ancak[$key]['luas_blok'])) {
+        //             $transportx[$key]['luas_blok'] = $ancak[$key]['luas_blok'];
+        //             $LuasKey = $ancak[$key]['luas_blok'];
+        //         }
 
-                if (isset($panenKey) && $panenKey <= 3 && isset($ancak[$key]['luas_blok'])) {
-                    $transportx[$key]['tph_sample'] = round($LuasKey * 1.3);
-                } else {
-                    $transportx[$key]['tph_sample'] = $tph_sample;
-                }
-
-
-                $transportx[$key]['reg'] = $reg;
-                $transportx[$key]['status_panen'] = $value2['status_panen'];
-                $transportx[$key]['tph_sampleTrans'] = $tph_sample;
-                $transportx[$key]['estate'] = $value2['estate'];
-                $transportx[$key]['afdeling'] = $value2['afdeling'];
-                $transportx[$key]['bt_total'] = $sum_bt;
-                $transportx[$key]['restan_total'] = $sum_Restan;
-                $transportx[$key]['skor'] = ($tph_sample != 0) ? round($sum_bt / $tph_sample, 2) : 0;
-                $transportx[$key]['skor_restan'] = ($tph_sample != 0) ? round($sum_Restan / $tph_sample, 2) : 0;
-            }
-            // Add this code after your existing foreach loop
+        //         if (isset($panenKey) && $panenKey <= 3 && isset($ancak[$key]['luas_blok'])) {
+        //             $transportx[$key]['tph_sample'] = round($LuasKey * 1.3);
+        //         } else {
+        //             $transportx[$key]['tph_sample'] = $tph_sample;
+        //         }
 
 
-            $transReg2 = array();
-            $tph_sample = 0;
-            foreach ($transport as $key => $value) {
-                # code...
-                $tph_sample += $value['tph_sample'];
-                // dd($value);
-            }
-            if (isset($value['estate'])) {
-                if (!isset($transReg2[$value['estate']])) {
-                    $transReg2[$value['estate']] = [];
-                }
-
-                if (!isset($transReg2[$value['estate']][$value['afdeling']])) {
-                    $transReg2[$value['estate']][$value['afdeling']] = [];
-                }
-
-                $transReg2[$value['estate']][$value['afdeling']]['tph_sample'] = $tph_sample;
-            }
+        //         $transportx[$key]['reg'] = $reg;
+        //         $transportx[$key]['status_panen'] = $value2['status_panen'];
+        //         $transportx[$key]['tph_sampleTrans'] = $tph_sample;
+        //         $transportx[$key]['estate'] = $value2['estate'];
+        //         $transportx[$key]['afdeling'] = $value2['afdeling'];
+        //         $transportx[$key]['bt_total'] = $sum_bt;
+        //         $transportx[$key]['restan_total'] = $sum_Restan;
+        //         $transportx[$key]['skor'] = ($tph_sample != 0) ? round($sum_bt / $tph_sample, 2) : 0;
+        //         $transportx[$key]['skor_restan'] = ($tph_sample != 0) ? round($sum_Restan / $tph_sample, 2) : 0;
+        //     }
+        //     // Add this code after your existing foreach loop
 
 
-            foreach ($ancak as $key => $value) {
-                if (!array_key_exists($key, $transport)) {
-                    $transport[$key]['status_panen'] = $value['status_panen'];
-                    $transport[$key]['luas_blok'] = $value['luas_blok'];
+        //     $transReg2 = array();
+        //     $tph_sample = 0;
+        //     foreach ($transport as $key => $value) {
+        //         # code...
+        //         $tph_sample += $value['tph_sample'];
+        //         // dd($value);
+        //     }
+        //     if (isset($value['estate'])) {
+        //         if (!isset($transReg2[$value['estate']])) {
+        //             $transReg2[$value['estate']] = [];
+        //         }
 
-                    if ($value['status_panen'] <= 3) {
-                        $transport[$key]['tph_sample'] = round($value['luas_blok'] * 1.3, 2);
-                    } else {
-                        $transport[$key]['tph_sample'] = $value['status_panen'];
-                    }
-                    $transport[$key]['bt_total'] = 0;
-                    $transport[$key]['restan_total'] = 0;
-                    $transport[$key]['skor'] = 0;
-                    $transport[$key]['skor_restan'] = 0;
-                }
-            }
-        }
+        //         if (!isset($transReg2[$value['estate']][$value['afdeling']])) {
+        //             $transReg2[$value['estate']][$value['afdeling']] = [];
+        //         }
+
+        //         $transReg2[$value['estate']][$value['afdeling']]['tph_sample'] = $tph_sample;
+        //     }
+
+
+        //     foreach ($ancak as $key => $value) {
+        //         if (!array_key_exists($key, $transport)) {
+        //             $transport[$key]['status_panen'] = $value['status_panen'];
+        //             $transport[$key]['luas_blok'] = $value['luas_blok'];
+
+        //             if ($value['status_panen'] <= 3) {
+        //                 $transport[$key]['tph_sample'] = round($value['luas_blok'] * 1.3, 2);
+        //             } else {
+        //                 $transport[$key]['tph_sample'] = $value['status_panen'];
+        //             }
+        //             $transport[$key]['bt_total'] = 0;
+        //             $transport[$key]['restan_total'] = 0;
+        //             $transport[$key]['skor'] = 0;
+        //             $transport[$key]['skor_restan'] = 0;
+        //         }
+        //     }
+        // }
 
         $mutuBuahx = array();
         foreach ($buahM as $key => $value) {
@@ -9664,7 +9664,7 @@ class inspectController extends Controller
         }
         $resultKemandoran = array_merge_recursive($ancakx, $transportx, $mutuBuahx);
 
-        // dd($resultKemandoran);
+        // dd($transportx);
         if ($reg != 2 || $reg != '2') {
             $tot_mntol = [];
             $totsample = 0;
@@ -9694,30 +9694,30 @@ class inspectController extends Controller
             foreach ($resultKemandoran as $key => $value) {
                 # code...
                 // dd($value);
-                $totsample += $value['pokok_sample'];
-                $totha += $value['luas_ha'];
-                $totpanen += $value['jml_jjg_panen'];
+                $totsample += $value['pokok_sample'] ?? 0;
+                $totha += $value['luas_ha'] ?? 0;
+                $totpanen += $value['jml_jjg_panen'] ?? 0;
 
                 $akp = round(($totpanen / $totsample) * 100, 3);
 
-                $p_ma += $value['p_ma'];
-                $k_ma += $value['k_ma'];
-                $gl_ma += $value['gl_ma'];
+                $p_ma += $value['p_ma'] ?? 0;
+                $k_ma += $value['k_ma'] ?? 0;
+                $gl_ma += $value['gl_ma'] ?? 0;
 
                 $tod_brd = $p_ma + $k_ma + $gl_ma;
                 $brd_jgg = round(($tod_brd / $totpanen), 3);
                 $skor_brd = skor_brd_ma($brd_jgg);
 
-                $bhts_ma += $value['bhts_ma'];
-                $bhtm1_ma += $value['bhtm1_ma'];
-                $bhtm2_ma += $value['bhtm2_ma'];
-                $bhtm3_ma += $value['bhtm3_ma'];
+                $bhts_ma += $value['bhts_ma'] ?? 0;
+                $bhtm1_ma += $value['bhtm1_ma'] ?? 0;
+                $bhtm2_ma += $value['bhtm2_ma'] ?? 0;
+                $bhtm3_ma += $value['bhtm3_ma'] ?? 0;
 
                 $tod_buah = $bhts_ma + $bhtm1_ma + $bhtm2_ma + $bhtm3_ma;
                 $buah_jjg = round(($tod_buah / ($totpanen + $tod_buah)) * 100, 3);
                 $skor_buah = skor_buah_Ma($buah_jjg);
 
-                $ps_ma += $value['ps_ma'];
+                $ps_ma += $value['ps_ma'] ?? 0;
 
                 $persen_ps = round(($ps_ma / $totsample) * 100, 3);
                 $skor_ps = skor_palepah_ma($persen_ps);
@@ -9726,27 +9726,27 @@ class inspectController extends Controller
 
                 // transport 
 
-                $tph_samplex += $value['tph_sample'];
-                $bt_total += $value['bt_total'];
+                $tph_samplex += $value['tph_sample'] ?? 0;
+                $bt_total += $value['bt_total'] ?? 0;
 
                 $bt_tph = ($tph_samplex != 0) ? round($bt_total / $tph_samplex, 3) : 0;
                 $skor_bt = skor_brd_tinggal($bt_tph);
-                $restan_total += $value['restan_total'];
+                $restan_total += $value['restan_total'] ?? 0;
                 $restan_tph = ($tph_samplex != 0) ? round($restan_total / $tph_samplex, 3) : 0;
                 $skor_restan = skor_buah_tinggal($restan_tph);
                 $tot_skortra = $skor_bt + $skor_restan;
 
                 // mutubuah 
-                $tph_samplebuah += $value['blok_mb'];
-                $jml_janjang += $value['jml_janjang'];
-                $jml_mentah += $value['jml_mentah'];
-                $jml_mtgx += $value['jml_masak'];
-                $Jjg_Abr += $value['jml_abnormal'];
-                $jml_empty += $value['jml_empty'];
-                $jml_vcut += $value['jml_vcut'];
-                $jml_over += $value['jml_over'];
+                $tph_samplebuah += $value['blok_mb'] ?? 0;
+                $jml_janjang += $value['jml_janjang'] ?? 0;
+                $jml_mentah += $value['jml_mentah'] ?? 0;
+                $jml_mtgx += $value['jml_masak'] ?? 0;
+                $Jjg_Abr += $value['jml_abnormal'] ?? 0;
+                $jml_empty += $value['jml_empty'] ?? 0;
+                $jml_vcut += $value['jml_vcut'] ?? 0;
+                $jml_over += $value['jml_over'] ?? 0;
 
-                $alas_mb += $value['alas_mb'];
+                $alas_mb += $value['alas_mb'] ?? 0;
 
                 $denom = ($jml_janjang - $Jjg_Abr) != 0 ? ($jml_janjang - $Jjg_Abr) : 1;
 

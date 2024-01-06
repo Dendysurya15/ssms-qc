@@ -279,6 +279,7 @@ class pdfgenerateController extends Controller
         $ps = $request->input('ps');
         $sp = $request->input('sp');
         $pk_panen = $request->input('pk_panenCAk');
+        $cakmandor = $request->input('cakmandor');
         // dd($id, $estate, $afdeling,$blok,$status_panen);
 
 
@@ -296,6 +297,7 @@ class pdfgenerateController extends Controller
         $petugasTrans = $request->input('petugasTrans');
         $rstTrans = $request->input('rstTrans');
         $estTrans = $request->input('estTrans');
+        $transmandor = $request->input('transmandor');
 
         // dd($id_trans, $afd_trans, $blok_trans, $bt_trans, $komentar_trans);
 
@@ -317,6 +319,7 @@ class pdfgenerateController extends Controller
             'bhts' => $bhts,
             'bhtm1' => $bhtm1,
             'bhtm2' => $bhtm2,
+            'kemandoran' => $cakmandor,
             'bhtm3' => $bhtm3,
             'ps' => $ps,
             'sp' => $sp,
@@ -341,6 +344,7 @@ class pdfgenerateController extends Controller
         $abrBH = $request->input('abrBH');
         $vcutBHs = $request->input('vcutBH');
         $alsBR = $request->input('alsBR');
+        $bhmandor = $request->input('bhmandor');
 
         //  dd($ids,$blok_bh,$status_bhpanen,$bmt);
 
@@ -357,6 +361,7 @@ class pdfgenerateController extends Controller
             'empty_bunch' => $emptyBHS,
             'jumlah_jjg' => $jjgBH,
             'overripe' => $overBH,
+            'kemandoran' => $bhmandor,
             'abnormal' => $abrBH,
             'vcut' => $vcutBHs,
             'alas_br' => $alsBR,
@@ -372,6 +377,7 @@ class pdfgenerateController extends Controller
             'rst' => $rstTrans,
             'estate' => $estTrans,
             'tph_baris' => $tphbrTrans,
+            'kemandoran' => $transmandor,
         ]);
     }
     public function deleteBA(Request $request)
