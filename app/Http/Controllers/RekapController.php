@@ -2621,9 +2621,7 @@ class RekapController extends Controller
         // dd($qcinspeksi, $sidaktph, $mutu_buah);
 
         $rekapafd = [];
-
         foreach ($qcinspeksi as $keyqc => $valqc) {
-
             foreach ($valqc as $keyqc1 => $valqc1) {
                 if (is_array($valqc1)) {
 
@@ -2777,17 +2775,60 @@ class RekapController extends Controller
                                     'est' => $keyqc1,
                                     'afd' => 'EM',
                                     'total' => $totalest
+                                    // 'rank' => ???
                                 ];
+
+                                $totale = $totalest;
                             }
                         }
                     }
                     $rekapafd[$keyqc][$keyqc1]['est'] = $estate;
+                    $getallest[] = $estate;
                 }
             }
         }
 
-        // dd($rekapafd, $qcinspeksi, $sidaktph, $mutu_buah);
-        dd($rekapafd);
+        foreach ($rekapafd as $key => $value) {
+            $estTotals = []; // Initialize an array to hold 'est' totals within this index
+
+            foreach ($value as $estKey => $estValue) {
+                if (isset($estValue['est'])) {
+                    $est = $estValue['est'];
+                    $afdElements = $estValue;
+                    unset($afdElements['est']);
+
+                    $totalsAfd = [];
+                    foreach ($afdElements as $afdKey => $afdValue) {
+                        $totalsAfd[$afdKey] = $afdValue['total'];
+                    }
+
+                    arsort($totalsAfd);
+
+                    $rank = 1;
+                    foreach ($totalsAfd as $afdKey => $totalAfd) {
+                        $rekapafd[$key][$estKey][$afdKey]['rank'] = $rank;
+                        $rank++;
+                    }
+
+                    // Accumulate 'est' totals within this index
+                    $estTotals[$estKey] = $est['total'];
+                }
+            }
+
+            // Sort 'est' totals within this index
+            arsort($estTotals);
+
+            // Assign ranks to each 'est' element within this index based on the sorted order of totals
+            $rank = 1;
+            foreach ($estTotals as $estKey => $totalEst) {
+                $rekapafd[$key][$estKey]['est']['rank'] = $rank;
+                $rank++;
+            }
+        }
+
+
+
+        // dd($rekapafd);
         $arr = array();
         $arr['rekapafd'] = $rekapafd;
 

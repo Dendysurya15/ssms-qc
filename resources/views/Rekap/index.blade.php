@@ -486,7 +486,7 @@
                         let item2 = table1[1][key][subKey]['afd'];
                         let item3 = table1[1][key][subKey]['nama']
                         let item4 = table1[1][key][subKey]['total'];
-                        let item5 = '-';
+                        let item5 = table1[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table1[1][key][subKey]['bgcolor'];
 
@@ -529,7 +529,7 @@
                         let item2 = table2[1][key][subKey]['afd'];
                         let item3 = table2[1][key][subKey]['nama']
                         let item4 = table2[1][key][subKey]['total'];
-                        let item5 = '-';
+                        let item5 = table2[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table2[1][key][subKey]['bgcolor'];
 
@@ -757,7 +757,7 @@
                         let item2 = table3[1][key][subKey]['afd'];
                         let item3 = table3[1][key][subKey]['nama']
                         let item4 = table3[1][key][subKey]['total'];
-                        let item5 = '-';
+                        let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table3[1][key][subKey]['bgcolor'];
 
