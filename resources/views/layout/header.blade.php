@@ -135,6 +135,12 @@ session_start();
                             }
                         </style>
                         <li class="nav-item">
+                            <a href="{{ asset('/rekap') }}" class="nav-link">
+                                <div class="nav-icon lottie-animation" data-animation-path="{{ asset('img/ALLREKAP.json') }}"></div>
+                                <p>ALL SKOR PANEN </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ asset('/dashboard_inspeksi') }}" class="nav-link">
                                 <div class="nav-icon lottie-animation" data-animation-path="https://assets10.lottiefiles.com/packages/lf20_w4hwxwuq.json"></div>
                                 <p>PANEN REGULAR</p>

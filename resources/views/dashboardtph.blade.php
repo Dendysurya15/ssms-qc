@@ -5624,9 +5624,6 @@
           var list_skor_gm = Object.entries(parseResult['list_skor_gm'])
           var list_skor_rh = Object.entries(parseResult['list_skor_rh'])
           var list_skor_gmNew = Object.entries(parseResult['list_skor_gmNew'])
-          const plasma = Object.entries(parseResult['PlasmaWIl']);
-          const plasmaEM = Object.entries(parseResult['PlasmaEM']);
-          const plasmaGM = Object.entries(parseResult['plasmaGM']);
 
 
           // new tph 
@@ -5887,29 +5884,7 @@
               data: [0, 0, 0]
             }])
           } else {
-            const newPlasma = plasma.map(([_, data]) => ({
-              est: data.est,
-              afd: data.afd,
-              nama: data.nama,
-              skor: data.skor,
-              rank: data.rank,
-            }));
-            const newPlasmaEM = plasmaEM.map(([_, data]) => ({
-              est: data.est,
-              afd: data.afd,
-              nama: data.namaEM,
-              skor: data.Skor,
-              // namaEM: namaEM,
-              // namaGM: namaGM,
-            }));
-            const newPlasmaGM = plasmaGM.map(([_, data]) => ({
-              est: data.est,
-              afd: data.afd,
-              nama: data.namaGM,
-              skor: data.Skor,
-              // namaEM: namaEM,
-              // namaGM: namaGM,
-            }));
+
 
             //persetate
             renderChartTphMonth.updateSeries([{

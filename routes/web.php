@@ -20,6 +20,7 @@ use App\Http\Controllers\incpectcomponent\pdfgenerateController;
 use App\Http\Controllers\incpectcomponent\makemapsController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\testingmapsController;
+use App\Http\Controllers\RekapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -219,3 +220,10 @@ Route::post('/editNilai', [emplacementsController::class, 'editNilai'])->name('e
 Route::post('/adingnewimg', [emplacementsController::class, 'adingnewimg'])->name('adingnewimg');
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
+
+
+
+
+Route::get('/rekap', [RekapController::class, 'index'])->name('rekap');
+Route::get('/olahdata', [RekapController::class, 'olahdata'])->name('olahdata');

@@ -9131,7 +9131,7 @@ class inspectController extends Controller
             }
         }
 
-
+        // dd($transport);
         $newVariable = array();
 
         foreach ($transport as $key => $value) {
@@ -9323,7 +9323,33 @@ class inspectController extends Controller
             ->get();
         $transM = $transM->groupBy(['kemandoran']);
         $transM = json_decode($transM, true);
-        // dd($ancakM);
+
+        // untuk reg 2 
+
+        $ancakM2 = DB::connection('mysql2')->table('mutu_ancak_new')
+            ->select("mutu_ancak_new.*", DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_ancak_new.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->where('mutu_ancak_new.estate', $est)
+            ->where('mutu_ancak_new.afdeling', $afd)
+
+            ->get();
+        $ancakM2 = $ancakM2->groupBy(['kemandoran', 'blok']);
+        $ancakM2 = json_decode($ancakM2, true);
+
+        $transM2 = DB::connection('mysql2')->table('mutu_transport')
+            ->select("mutu_transport.*", DB::raw('DATE_FORMAT(mutu_transport.datetime, "%M") as bulan'), DB::raw('DATE_FORMAT(mutu_transport.datetime, "%Y") as tahun'))
+            ->where('datetime', 'like', '%' . $date . '%')
+            ->where('mutu_transport.estate', $est)
+            ->where('mutu_transport.afdeling', $afd)
+
+            ->get();
+        $transM2 = $transM2->groupBy(['kemandoran', 'blok']);
+        $transM2 = json_decode($transM2, true);
+
+        dd($ancakM2);
+        // end reg 2 
+
+        // dd($transM2);
         $ancakx = array();
         $countx  = 0;
         foreach ($ancakM as $key => $value) {
