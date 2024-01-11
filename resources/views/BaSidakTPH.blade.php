@@ -776,6 +776,10 @@
                             data: 'blok'
                         },
                         {
+                            title: 'H+',
+                            data: 'status'
+                        },
+                        {
                             title: 'QC',
                             data: 'qc'
                         },

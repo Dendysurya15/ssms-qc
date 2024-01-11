@@ -237,32 +237,33 @@
                         @foreach ($data['hitung'] as $key => $items)
                         @foreach ($items as $key1 => $items1)
 
-
+                        @if ($key1 !== '') <!-- Add this condition to exclude the key EST -->
                         <tr>
                             <td>{{$key1}}</td>
                             <td style="white-space: pre-wrap;font-size: 12px">{{$items1['blok']}}</td>
-
-                            <td>{{$items1['luas']}}</td>
-                            <td>{{$items1['1']['brd']}}</td>
-                            <td>{{$items1['1']['janjang']}}</td>
-                            <td>{{$items1['2']['brd']}}</td>
-                            <td>{{$items1['2']['janjang']}}</td>
-                            <td>{{$items1['3']['brd']}}</td>
-                            <td>{{$items1['3']['janjang']}}</td>
-                            <td>{{$items1['4']['brd']}}</td>
-                            <td>{{$items1['4']['janjang']}}</td>
-                            <td>{{$items1['5']['brd']}}</td>
-                            <td>{{$items1['5']['janjang']}}</td>
-                            <td>{{$items1['6']['brd']}}</td>
-                            <td>{{$items1['6']['janjang']}}</td>
-                            <td>{{$items1['7']['brd']}}</td>
-                            <td>{{$items1['7']['janjang']}}</td>
-                            <td>{{$items1['8']['brd']}}</td>
-                            <td>{{$items1['8']['janjang']}}</td>
+                            <td>{{$items1['luas'] ?? ''}}</td>
+                            <td>{{$items1['1']['brd'] ?? ''}}</td>
+                            <td>{{$items1['1']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['2']['brd'] ?? ''}}</td>
+                            <td>{{$items1['2']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['3']['brd'] ?? ''}}</td>
+                            <td>{{$items1['3']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['4']['brd'] ?? ''}}</td>
+                            <td>{{$items1['4']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['5']['brd'] ?? ''}}</td>
+                            <td>{{$items1['5']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['6']['brd'] ?? ''}}</td>
+                            <td>{{$items1['6']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['7']['brd'] ?? ''}}</td>
+                            <td>{{$items1['7']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['8']['brd'] ?? ''}}</td>
+                            <td>{{$items1['8']['janjang'] ?? ''}}</td>
                         </tr>
+                        @endif
 
                         @endforeach
                         @endforeach
+
                     </tbody>
                 </table>
             </div>
@@ -310,29 +311,33 @@
                     <tbody>
                         @foreach ($data['hitung'] as $key => $items)
                         @foreach ($items as $key1 => $items1)
+                        @php
 
+                        @endphp
 
                         <tr>
                             <td>{{$key1}}</td>
 
-                            <td>{{$items1['1']['brd']}}</td>
-                            <td>{{$items1['1']['janjang']}}</td>
-                            <td>{{$items1['2']['brd']}}</td>
-                            <td>{{$items1['2']['janjang']}}</td>
-                            <td>{{$items1['3']['brd']}}</td>
-                            <td>{{$items1['3']['janjang']}}</td>
-                            <td>{{$items1['4']['brd']}}</td>
-                            <td>{{$items1['4']['janjang']}}</td>
-                            <td>{{$items1['5']['brd']}}</td>
-                            <td>{{$items1['5']['janjang']}}</td>
-                            <td>{{$items1['6']['brd']}}</td>
-                            <td>{{$items1['6']['janjang']}}</td>
-                            <td>{{$items1['7']['brd']}}</td>
-                            <td>{{$items1['7']['janjang']}}</td>
-                            <td>{{$items1['8']['brd']}}</td>
-                            <td>{{$items1['8']['janjang']}}</td>
-                            <td>{{$items1['total_skor']}}</td>
-                            <td>{{$items1['skor_akhir']}}</td>
+                            <td>{{$items1['1']['brd'] ?? ''}}</td>
+                            <td>{{$items1['1']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['2']['brd'] ?? ''}}</td>
+                            <td>{{$items1['2']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['3']['brd'] ?? ''}}</td>
+                            <td>{{$items1['3']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['4']['brd'] ?? ''}}</td>
+                            <td>{{$items1['4']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['5']['brd'] ?? ''}}</td>
+                            <td>{{$items1['5']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['6']['brd'] ?? ''}}</td>
+                            <td>{{$items1['6']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['7']['brd'] ?? ''}}</td>
+                            <td>{{$items1['7']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['8']['brd'] ?? ''}}</td>
+                            <td>{{$items1['8']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['total_skor'] ?? ''}}</td>
+                            <td>{{$items1['skor_akhir'] ?? ''}}</td>
+
+
                         </tr>
 
                         @endforeach
@@ -348,7 +353,7 @@
             <table class=" custom-table table-1-no-border" style="float: left; width: 40%;">
                 <thead>
                     <tr>
-                        <th class="text-center">Catatan Lainnya(%)</th>
+                        <th class="text-center">Catatan Lainnya</th>
                     </tr>
                 </thead>
                 <tbody>

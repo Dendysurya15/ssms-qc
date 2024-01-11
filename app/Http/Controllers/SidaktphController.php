@@ -229,14 +229,37 @@ class SidaktphController extends Controller
     {
         $tanggal = $request->get('date');
         $regional = $request->get('regional');
+
         $ancakFA = DB::connection('mysql2')
             ->table('sidak_tph')
-            ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal')) // Change the format to "%Y-%m-%d"
+            ->select(
+                "sidak_tph.*",
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal'),
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'),
+                DB::raw("
+            CASE 
+                WHEN status = '' THEN 1
+                WHEN status = '0' THEN 1
+                WHEN LOCATE('H+', status) > 0 THEN 
+                    CASE 
+                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
+                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
+                    END
+                WHEN LOCATE('>H+', status) > 0 THEN 
+                    CASE 
+                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1) > 8 THEN '8'
+                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1)
+                    END
+                WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
+                WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
+                ELSE status
+            END AS statuspanen")
+            ) // Change the format to "%Y-%m-%d"
             ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
             ->orderBy('status', 'asc')
             ->get();
 
-        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'status', 'tanggal', 'blok']);
+        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'statuspanen', 'tanggal', 'blok']);
         $ancakFA = json_decode($ancakFA, true);
 
         $dateString = $tanggal;
@@ -3129,12 +3152,34 @@ class SidaktphController extends Controller
 
         $ancakFA = DB::connection('mysql2')
             ->table('sidak_tph')
-            ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal')) // Change the format to "%Y-%m-%d"
+            ->select(
+                "sidak_tph.*",
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal'),
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'),
+                DB::raw("
+                CASE 
+                    WHEN status = '' THEN 1
+                    WHEN status = '0' THEN 1
+                    WHEN LOCATE('H+', status) > 0 THEN 
+                        CASE 
+                            WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
+                            ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
+                        END
+                    WHEN LOCATE('>H+', status) > 0 THEN 
+                        CASE 
+                            WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1) > 8 THEN '8'
+                            ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1)
+                        END
+                    WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
+                    WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
+                    ELSE status
+                END AS statuspanen")
+            ) // Change the format to "%Y-%m-%d"
             ->where('sidak_tph.datetime', 'like', '%' . $monthSidak . '%')
             ->orderBy('status', 'asc')
             ->get();
 
-        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'status', 'tanggal', 'blok']);
+        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'statuspanen', 'tanggal', 'blok']);
         $ancakFA = json_decode($ancakFA, true);
 
         $dateString = $monthSidak;
@@ -7651,12 +7696,16 @@ class SidaktphController extends Controller
 
         $final = [];
         foreach ($hitung as $key => $value) {
+
             foreach ($value as $key1 => $value1) {
+
                 foreach ($value1 as $key2 => $value2) {
                     $tot_luas = 0;
                     $tot_janjnag = 0;
                     $tod_brd = 0;
                     $avg = 0;
+                    $skorakhir = 0;
+                    $totskor = 0;
                     foreach ($value2 as $key3 => $value3) {
                         foreach ($calculation as $keyx => $value4) if ($key == $keyx) {
                             foreach ($value4 as $keyx1 => $value5) if ($key1 == $keyx1) {
@@ -7681,14 +7730,30 @@ class SidaktphController extends Controller
                         $tod_brd += $value3['skor_brd'];
                         $avg += $value3['avg'];
                     } # code...
+
+                    $skorakhir = 100 - ($tot_janjnag + $tod_brd);
+                    $totskor = $tot_janjnag + $tod_brd;
                     $final[$key][$key1]['blok'] = $blok;
                     $final[$key][$key1]['luas'] = $tot_luas;
-                    $final[$key][$key1]['total_skor'] = $tot_janjnag + $tod_brd;
-                    $final[$key][$key1]['skor_akhir'] = 100 - ($tot_janjnag + $tod_brd);
+                    $final[$key][$key1]['total_skor'] = $totskor;
+                    $final[$key][$key1]['skor_akhir'] = $skorakhir;
                 } # code...
+                $estakhir[] = $skorakhir;
+                $esttod[] = $totskor;
             }  # code...
-        }
+            $div = count($estakhir);
+            $sum = array_sum($estakhir);
+            $divtod = count($esttod);
+            $sumtod = array_sum($esttod);
 
+            $final[$key][''] = [
+                'blok' => '-',
+                'luas' => '-',
+                'total_skor' => 'EST',
+                'skor_akhir' => round($sum / $div, 2)
+            ];
+        }
+        // dd($final);
         // Now $keysCollection contains the keys as you described, including the date values.
 
         // dd($final);
