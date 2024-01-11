@@ -35,11 +35,7 @@
                 <div class="card header">
                 </div>
                 <div class="card body">
-
                     <p class="text-center mt-5">REKAPITULASI SKOR QC PANEN, SIDAK TPH (MUTU TRANSPORT) & SIDAK MUTU BUAH <span id="judtahun"> </span> </p>
-
-
-
                     <div class="row justify-content-center">
                         <div class="col-12 col-md-6 col-lg-4" data-regional="1" id="Tab1s">
                             <div class="table-responsive">
@@ -106,8 +102,79 @@
                     </div>
                 </div>
             </div>
-        </div>
 
+            <div class="card  px-4">
+                <p class="text-center">Data Pertahun</p>
+            </div>
+
+            <div class="card body">
+                <p class="text-center mt-5">REKAPITULASI SKOR QC PANEN, SIDAK TPH (MUTU TRANSPORT) & SIDAK MUTU BUAH <span id="tahunest"> </span> </p>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-6 col-lg-4" data-regional="1" id="yearTabs1">
+                        <div class="table-responsive">
+                            <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th id="yearwil1" colspan="5" class="text-center bg-gradient-primary">Wilayah</th>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <th>Estate</th>
+                                        <th>Afdeling</th>
+                                        <th>Nama</th>
+                                        <th>Skor</th>
+                                        <th>Rank</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="yearest1">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4" data-regional="1" id="yearTabs2">
+                        <div class="table-responsive">
+                            <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table2">
+                                <thead>
+                                    <tr>
+                                        <th id="yearwil2" colspan="5" class="text-center bg-gradient-primary">Wilayah</th>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <th>Estate</th>
+                                        <th>Afdeling</th>
+                                        <th>Nama</th>
+                                        <th>Skor</th>
+                                        <th>Rank</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="yearest2">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4" data-regional="1" id="yearTabs3">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" style="font-size: 13px;background-color:white" id="table3">
+                                <thead>
+                                    <tr>
+                                        <th id="yearwil3" colspan="5" class="text-center bg-gradient-primary">Wilayah</th>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <th>Estate</th>
+                                        <th>Afdeling</th>
+                                        <th>Nama</th>
+                                        <th>Skor</th>
+                                        <th>Rank</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="yearest3">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class=" tab-pane fade" id="nav-data" role="tabpanel" aria-labelledby="nav-data-tab">
             <div class="card  px-4">
@@ -122,6 +189,7 @@
                                 <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table1">
                                     <thead class="text-center">
                                         <tr>
+                                            <th rowspan="3">Estate</th>
                                             <th rowspan="3">Afdeling</th>
                                             <th>Skor QC Panen</th>
                                             <th>Skor QC Sidak TPH</th>
@@ -143,6 +211,7 @@
                                 <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table2">
                                     <thead class="text-center">
                                         <tr>
+                                            <th rowspan="3">Estate</th>
                                             <th rowspan="3">Afdeling</th>
                                             <th>Skor QC Panen</th>
                                             <th>Skor QC Sidak TPH</th>
@@ -165,6 +234,7 @@
                                 <table class="table table-bordered" style="font-size: 13px;background-color:white" id="table3">
                                     <thead class="text-center">
                                         <tr>
+                                            <th rowspan="3">Estate</th>
                                             <th rowspan="3">Afdeling</th>
                                             <th>Skor QC Panen</th>
                                             <th>Skor QC Sidak TPH</th>
@@ -185,9 +255,88 @@
                     </div>
                 </div>
             </div>
-        </div>
 
+            <div class="card  px-4">
+                <p class="text-center">Data Pertahun</p>
+            </div>
+            <div class="card body">
+                <p class="text-center mt-5">REKAPITULASI SKOR QC PANEN, SIDAK TPH (MUTU TRANSPORT) & SIDAK MUTU BUAH DALAM <span id="Tahunyear"> 2024 </span> </p>
+
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-6 col-lg-4" data-regional="1" id="yearTab1">
+                        <div class="table-responsive">
+                            <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table1">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th rowspan="3">Estate</th>
+                                        <th rowspan="3">Afdeling</th>
+                                        <th>Skor QC Panen</th>
+                                        <th>Skor QC Sidak TPH</th>
+                                        <th>Skor QC Mutu Buah</th>
+                                    </tr>
+                                    <tr id="yearthead1">
+                                        <th>January</th>
+                                        <th>January</th>
+                                        <th>January</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="year1">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4" data-regional="1" id="yearTab2">
+                        <div class="table-responsive">
+                            <table class=" table table-bordered" style="font-size: 13px;background-color:white" id="table2">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th rowspan="3">Estate</th>
+                                        <th rowspan="3">Afdeling</th>
+                                        <th>Skor QC Panen</th>
+                                        <th>Skor QC Sidak TPH</th>
+                                        <th>Skor QC Mutu Buah</th>
+                                    </tr>
+                                    <tr id="yearthead2">
+                                        <th>January</th>
+                                        <th>January</th>
+                                        <th>January</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="year2">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4" data-regional="1" id="yearTab3">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" style="font-size: 13px;background-color:white" id="table3">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th rowspan="3">Estate</th>
+                                        <th rowspan="3">Afdeling</th>
+                                        <th>Skor QC Panen</th>
+                                        <th>Skor QC Sidak TPH</th>
+                                        <th>Skor QC Mutu Buah</th>
+                                    </tr>
+                                    <tr id="yearthead3">
+                                        <th>January</th>
+                                        <th>January</th>
+                                        <th>January</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="year3">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+</div>
 
 
 </div>
@@ -216,7 +365,7 @@
             regs = 1
         }
         getdata()
-
+        getdatayear()
 
         fixtable(regs)
     });
@@ -235,10 +384,16 @@
         const satu = document.getElementById("Tab1s");
         const dua = document.getElementById("Tab2s");
         const tiga = document.getElementById("Tab3s");
+        const yearTab1 = document.getElementById("yearTab1");
+        const yearTab2 = document.getElementById("yearTab2");
+        const yearTab3 = document.getElementById("yearTab3");
+        const yearTabs1 = document.getElementById("yearTabs1");
+        const yearTabs2 = document.getElementById("yearTabs2");
+        const yearTabs3 = document.getElementById("yearTabs3");
 
-        const c = regs; // reg is already the number, no need for reg.value
+        // const c = regs; // reg is already the number, no need for reg.value
 
-        if (c === 1 || c === 2) {
+        if (regs == 1 || regs == 2) {
             // console.log('Testing 1');
             s.style.display = "";
             m.style.display = "";
@@ -259,7 +414,27 @@
             satu.classList.add("col-lg-4");
             dua.classList.add("col-lg-4");
             tiga.classList.add("col-lg-4");
-        } else if (c === 3 || c === 4) {
+
+            yearTab1.style.display = "";
+            yearTab2.style.display = "";
+            yearTab3.style.display = "";
+            resetClassList(yearTab1);
+            resetClassList(yearTab2);
+            resetClassList(yearTab3);
+            yearTab1.classList.add("col-lg-4");
+            yearTab2.classList.add("col-lg-4");
+            yearTab3.classList.add("col-lg-4");
+
+            yearTabs1.style.display = "";
+            yearTabs2.style.display = "";
+            yearTabs3.style.display = "";
+            resetClassList(yearTabs1);
+            resetClassList(yearTabs2);
+            resetClassList(yearTabs3);
+            yearTabs1.classList.add("col-lg-4");
+            yearTabs2.classList.add("col-lg-4");
+            yearTabs3.classList.add("col-lg-4");
+        } else if (regs == 3 || regs == 4) {
             // console.log('Testing 2');
             s.style.display = "";
             m.style.display = "";
@@ -276,111 +451,30 @@
             resetClassList(dua);
             satu.classList.add("col-lg-6");
             dua.classList.add("col-lg-6");
+            yearTab1.style.display = "";
+            yearTab2.style.display = "";
+            yearTab3.style.display = "none";
+            resetClassList(yearTab1);
+            resetClassList(yearTab2);
+            yearTab1.classList.add("col-lg-6");
+            yearTab2.classList.add("col-lg-6");
+            yearTabs1.style.display = "";
+            yearTabs2.style.display = "";
+            yearTabs3.style.display = "none";
+            resetClassList(yearTabs1);
+            resetClassList(yearTabs2);
+            yearTabs1.classList.add("col-lg-6");
+            yearTabs2.classList.add("col-lg-6");
         }
     }
 
 
-    const c = document.getElementById('btnShow');
-    const o = document.getElementById('regionalPanen');
-    const s = document.getElementById("Tab1");
-    const m = document.getElementById("Tab2");
-    const l = document.getElementById("Tab3");
-    const satu = document.getElementById("Tab1s");
-    const dua = document.getElementById("Tab2s");
-    const tiga = document.getElementById("Tab3s");
 
-
-
-
-    c.addEventListener('click', function() {
-        const c = o.value;
-        if (c === '1') {
-            s.style.display = "";
-            m.style.display = "";
-            l.style.display = "";
-            resetClassList(s);
-            resetClassList(m);
-            resetClassList(l);
-            s.classList.add("col-lg-4");
-            m.classList.add("col-lg-4");
-            l.classList.add("col-lg-4");
-
-            satu.style.display = "";
-            dua.style.display = "";
-            tiga.style.display = "";
-            resetClassList(satu);
-            resetClassList(dua);
-            resetClassList(tiga);
-            satu.classList.add("col-lg-4");
-            dua.classList.add("col-lg-4");
-            tiga.classList.add("col-lg-4");
-
-        } else if (c === '2') {
-            s.style.display = "";
-            m.style.display = "";
-            l.style.display = "";
-            resetClassList(s);
-            resetClassList(m);
-            resetClassList(l); -
-            s.classList.add("col-lg-4");
-            m.classList.add("col-lg-4");
-            l.classList.add("col-lg-4");
-            satu.style.display = "";
-            dua.style.display = "";
-            tiga.style.display = "";
-            resetClassList(satu);
-            resetClassList(dua);
-            resetClassList(tiga);
-            satu.classList.add("col-lg-4");
-            dua.classList.add("col-lg-4");
-            tiga.classList.add("col-lg-4");
-        } else if (c === '3') {
-            s.style.display = "";
-            m.style.display = "";
-            l.style.display = "none";
-            resetClassList(s);
-            resetClassList(m);
-            s.classList.add("col-lg-6");
-            m.classList.add("col-lg-6");
-
-            satu.style.display = "";
-            dua.style.display = "";
-            tiga.style.display = "none";
-            resetClassList(satu);
-            resetClassList(dua);
-            satu.classList.add("col-lg-6");
-            dua.classList.add("col-lg-6");
-
-        } else if (c === '4') {
-            s.style.display = "";
-            m.style.display = "";
-            l.style.display = "none";
-            resetClassList(s);
-            resetClassList(m);
-            s.classList.add("col-lg-6");
-            m.classList.add("col-lg-6");
-            satu.style.display = "";
-            dua.style.display = "";
-            tiga.style.display = "none";
-            resetClassList(satu);
-            resetClassList(dua);
-            satu.classList.add("col-lg-6");
-            dua.classList.add("col-lg-6");
-
-
-        }
-    });
     document.getElementById('btnShow').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        var regs = document.getElementById('regionalPanen').value;
+        fixtable(regs)
         getdata();
+        getdatayear();
     }
 
     function setBackgroundColor(element, score) {
@@ -401,6 +495,422 @@
     }
 
 
+
+
+
+    function getdatayear() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        var reg = document.getElementById('regionalPanen').value;
+        var bulan = document.getElementById('inputbulan').value;
+        var _token = $('input[name="_token"]').val();
+
+        const dateParts = bulan.split('-'); // Split the string into parts
+        const year = parseInt(dateParts[0]); // Extract the year
+        const month = parseInt(dateParts[1]); // Extract the month
+        $('#year1').empty()
+        $('#year2').empty()
+        $('#year3').empty()
+        $('#yearest1').empty()
+        $('#yearest2').empty()
+        $('#yearest3').empty()
+
+        const tableRows = ['yearthead1', 'yearthead2', 'yearthead3'];
+
+        tableRows.forEach(rowId => {
+            const tableRow = document.getElementById(rowId);
+            const tableHeaders = tableRow.querySelectorAll('th');
+
+            tableHeaders.forEach(header => {
+                header.textContent = year;
+            });
+        });
+        // console.log(year);
+        $.ajax({
+            url: "{{ route('allskoreyear') }}",
+            method: "GET",
+            data: {
+                reg: reg,
+                bulan: year,
+                _token: _token
+            },
+            headers: {
+                'X-CSRF-TOKEN': _token
+            },
+            success: function(result) {
+                var parseResult = JSON.parse(result)
+                var rekapafd = Object.entries(parseResult['rekapafd'])
+                // console.log(rekapafd);
+                let table1 = rekapafd[0]
+                let table2 = rekapafd[1]
+                let table3 = rekapafd[2]
+
+                function assignValue(checkValue, compareValue, assignIfEqual, assignIfNotEqual) {
+                    return checkValue === compareValue ? assignIfEqual : assignIfNotEqual;
+                }
+
+                // untk perestate 
+                var title1 = document.getElementById('yearwil1');
+                let key1 = table1[0];
+
+
+                var trekap1 = document.getElementById('yearest1');
+                Object.keys(table1[1]).forEach(key => {
+                    Object.keys(table1[1][key]).forEach(subKey => {
+                        let item1 = table1[1][key][subKey]['est'];
+                        let item2 = table1[1][key][subKey]['afd'];
+                        let item3 = table1[1][key][subKey]['nama']
+                        let item4 = table1[1][key][subKey]['total'];
+                        let item5 = table1[1][key][subKey]['rank'] ?? '-';
+
+                        let bg = table1[1][key][subKey]['bgcolor'];
+
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
+
+
+
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
+
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
+
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap1.appendChild(tr);
+                    });
+                });
+
+
+                var title2 = document.getElementById('yearwil2');
+                let key2 = table2[0];
+                if (reg == 4) {
+                    title1.textContent = 'Wilayah Inti'
+                    title2.textContent = 'Wilayah Plasma'
+                } else {
+                    title2.textContent = 'Wilayah ' + key2;
+                    title1.textContent = 'Wilayah ' + key1;
+                }
+
+                var trekap2 = document.getElementById('yearest2');
+                Object.keys(table2[1]).forEach(key => {
+                    Object.keys(table2[1][key]).forEach(subKey => {
+                        let item1 = table2[1][key][subKey]['est'];
+                        let item2 = table2[1][key][subKey]['afd'];
+                        let item3 = table2[1][key][subKey]['nama'] ?? '-'
+                        let item4 = table2[1][key][subKey]['total'];
+                        let item5 = table2[1][key][subKey]['rank'] ?? '-';
+
+                        let bg = table2[1][key][subKey]['bgcolor'];
+
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
+
+
+
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
+
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
+
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap2.appendChild(tr);
+                    });
+                });
+
+
+
+                //   perwilayah 
+
+                var tbody1 = document.getElementById('year1');
+                // console.log(table1);
+                // Iterate through the main object keys (KNE, PLE, etc.)
+                Object.keys(table1[1]).forEach(key => {
+                    // Iterate through the nested objects (OA, OB, etc.) within each main key
+                    Object.keys(table1[1][key]).forEach(subKey => {
+                        let item0 = table1[1][key][subKey]['est'];
+                        let item1 = table1[1][key][subKey]['afd'];
+
+
+                        const kosong = 'kosong';
+
+                        let item2 = assignValue(
+                            table1[1][key][subKey]['qc_check'],
+                            kosong,
+                            '-',
+                            table1[1][key][subKey]['skor_qc']
+                        );
+
+                        let item3 = assignValue(
+                            table1[1][key][subKey]['tph_check'],
+                            kosong,
+                            '-',
+                            table1[1][key][subKey]['skor_tph']
+                        );
+
+                        let item4 = assignValue(
+                            table1[1][key][subKey]['buah_check'],
+                            kosong,
+                            '-',
+                            table1[1][key][subKey]['skor_buah']
+                        );
+
+
+
+
+
+                        let bg = table1[1][key][subKey]['bgcolor'];
+
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement0 = document.createElement('td');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+
+                        itemElement1.classList.add("text-center");
+                        itemElement0.innerText = item0;
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+
+                        // Set background color style to the table row
+                        tr.style.backgroundColor = bg;
+                        setBackgroundColor(itemElement2, item2);
+                        setBackgroundColor(itemElement3, item3);
+                        setBackgroundColor(itemElement4, item4);
+                        tr.appendChild(itemElement0)
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tbody1.appendChild(tr);
+                    });
+
+                });
+                var tbody2 = document.getElementById('year2');
+                // Iterate through the main object keys (KNE, PLE, etc.)
+                Object.keys(table2[1]).forEach(key => {
+                    // Iterate through the nested objects (OA, OB, etc.) within each main key
+                    Object.keys(table2[1][key]).forEach(subKey => {
+                        let item0 = table2[1][key][subKey]['est'];
+                        let item1 = table2[1][key][subKey]['afd'];
+
+
+                        const kosong = 'kosong';
+
+                        let item2 = assignValue(
+                            table2[1][key][subKey]['qc_check'],
+                            kosong,
+                            '-',
+                            table2[1][key][subKey]['skor_qc']
+                        );
+
+                        let item3 = assignValue(
+                            table2[1][key][subKey]['tph_check'],
+                            kosong,
+                            '-',
+                            table2[1][key][subKey]['skor_tph']
+                        );
+
+                        let item4 = assignValue(
+                            table2[1][key][subKey]['buah_check'],
+                            kosong,
+                            '-',
+                            table2[1][key][subKey]['skor_buah']
+                        );
+
+
+
+
+
+                        let bg = table2[1][key][subKey]['bgcolor'];
+
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement0 = document.createElement('td');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+
+                        itemElement1.classList.add("text-center");
+                        itemElement0.innerText = item0;
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+
+                        // Set background color style to the table row
+                        tr.style.backgroundColor = bg;
+                        setBackgroundColor(itemElement2, item2);
+                        setBackgroundColor(itemElement3, item3);
+                        setBackgroundColor(itemElement4, item4);
+                        tr.appendChild(itemElement0)
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tbody2.appendChild(tr);
+                    });
+                });
+
+                var tbody3 = document.getElementById('year3');
+                Object.keys(table3[1]).forEach(key => {
+                    // Iterate through the nested objects (OA, OB, etc.) within each main key
+                    Object.keys(table3[1][key]).forEach(subKey => {
+                        let item0 = table3[1][key][subKey]['est'];
+                        let item1 = table3[1][key][subKey]['afd'];
+
+
+                        const kosong = 'kosong';
+
+                        let item2 = assignValue(
+                            table3[1][key][subKey]['qc_check'],
+                            kosong,
+                            '-',
+                            table3[1][key][subKey]['skor_qc']
+                        );
+
+                        let item3 = assignValue(
+                            table3[1][key][subKey]['tph_check'],
+                            kosong,
+                            '-',
+                            table3[1][key][subKey]['skor_tph']
+                        );
+
+                        let item4 = assignValue(
+                            table3[1][key][subKey]['buah_check'],
+                            kosong,
+                            '-',
+                            table3[1][key][subKey]['skor_buah']
+                        );
+
+
+
+
+
+                        let bg = table3[1][key][subKey]['bgcolor'];
+
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement0 = document.createElement('td');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+
+                        itemElement1.classList.add("text-center");
+                        itemElement0.innerText = item0;
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+
+                        // Set background color style to the table row
+                        tr.style.backgroundColor = bg;
+                        setBackgroundColor(itemElement2, item2);
+                        setBackgroundColor(itemElement3, item3);
+                        setBackgroundColor(itemElement4, item4);
+                        tr.appendChild(itemElement0)
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tbody3.appendChild(tr);
+                    });
+                });
+
+                var title3 = document.getElementById('yearwil3');
+                let key = table3[0] ?? 'INTI';
+
+                title3.textContent = 'Wilayah ' + key;
+
+                var trekap3 = document.getElementById('yearest3');
+                Object.keys(table3[1]).forEach(key => {
+                    Object.keys(table3[1][key]).forEach(subKey => {
+                        let item1 = table3[1][key][subKey]['est'];
+                        let item2 = table3[1][key][subKey]['afd'];
+                        let item3 = table3[1][key][subKey]['nama']
+                        let item4 = table3[1][key][subKey]['total'];
+                        let item5 = table3[1][key][subKey]['rank'] ?? '-';
+
+                        let bg = table3[1][key][subKey]['bgcolor'];
+
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
+
+
+
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
+
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
+
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap3.appendChild(tr);
+                    });
+                });
+
+                Swal.close();
+            },
+            error: function(xhr, status, error) {
+                // Handle the error, if any
+                console.error(xhr.responseText);
+            }
+        });
+    }
 
 
     function getdata() {
@@ -478,7 +988,7 @@
                 var title1 = document.getElementById('wil1');
                 let key1 = table1[0];
 
-                title1.textContent = 'Wilayah ' + key1;
+
                 var trekap1 = document.getElementById('week1');
                 Object.keys(table1[1]).forEach(key => {
                     Object.keys(table1[1][key]).forEach(subKey => {
@@ -518,16 +1028,25 @@
                         trekap1.appendChild(tr);
                     });
                 });
+
+
                 var title2 = document.getElementById('wil2');
                 let key2 = table2[0];
 
-                title2.textContent = 'Wilayah ' + key2;
+                if (reg == 4) {
+                    title1.textContent = 'Wilayah Inti'
+                    title2.textContent = 'Wilayah Plasma'
+                } else {
+                    title2.textContent = 'Wilayah ' + key2;
+                    title1.textContent = 'Wilayah ' + key1;
+                }
+
                 var trekap2 = document.getElementById('week2');
                 Object.keys(table2[1]).forEach(key => {
                     Object.keys(table2[1][key]).forEach(subKey => {
                         let item1 = table2[1][key][subKey]['est'];
                         let item2 = table2[1][key][subKey]['afd'];
-                        let item3 = table2[1][key][subKey]['nama']
+                        let item3 = table2[1][key][subKey]['nama'] ?? '-'
                         let item4 = table2[1][key][subKey]['total'];
                         let item5 = table2[1][key][subKey]['rank'] ?? '-';
 
@@ -571,6 +1090,7 @@
                 Object.keys(table1[1]).forEach(key => {
                     // Iterate through the nested objects (OA, OB, etc.) within each main key
                     Object.keys(table1[1][key]).forEach(subKey => {
+                        let item0 = table1[1][key][subKey]['est'];
                         let item1 = table1[1][key][subKey]['afd'];
 
 
@@ -605,12 +1125,14 @@
 
                         // Create table row and cell for each 'total' value
                         let tr = document.createElement('tr');
+                        let itemElement0 = document.createElement('td');
                         let itemElement1 = document.createElement('td');
                         let itemElement2 = document.createElement('td');
                         let itemElement3 = document.createElement('td');
                         let itemElement4 = document.createElement('td');
 
                         itemElement1.classList.add("text-center");
+                        itemElement0.innerText = item0;
                         itemElement1.innerText = item1;
                         itemElement2.innerText = item2;
                         itemElement3.innerText = item3;
@@ -621,6 +1143,7 @@
                         setBackgroundColor(itemElement2, item2);
                         setBackgroundColor(itemElement3, item3);
                         setBackgroundColor(itemElement4, item4);
+                        tr.appendChild(itemElement0)
                         tr.appendChild(itemElement1)
                         tr.appendChild(itemElement2)
                         tr.appendChild(itemElement3)
@@ -630,12 +1153,14 @@
 
                 });
                 var tbody2 = document.getElementById('afd2');
-
                 // Iterate through the main object keys (KNE, PLE, etc.)
                 Object.keys(table2[1]).forEach(key => {
                     // Iterate through the nested objects (OA, OB, etc.) within each main key
                     Object.keys(table2[1][key]).forEach(subKey => {
+                        let item0 = table2[1][key][subKey]['est'];
                         let item1 = table2[1][key][subKey]['afd'];
+
+
                         const kosong = 'kosong';
 
                         let item2 = assignValue(
@@ -659,16 +1184,22 @@
                             table2[1][key][subKey]['skor_buah']
                         );
 
+
+
+
+
                         let bg = table2[1][key][subKey]['bgcolor'];
 
                         // Create table row and cell for each 'total' value
                         let tr = document.createElement('tr');
+                        let itemElement0 = document.createElement('td');
                         let itemElement1 = document.createElement('td');
                         let itemElement2 = document.createElement('td');
                         let itemElement3 = document.createElement('td');
                         let itemElement4 = document.createElement('td');
 
                         itemElement1.classList.add("text-center");
+                        itemElement0.innerText = item0;
                         itemElement1.innerText = item1;
                         itemElement2.innerText = item2;
                         itemElement3.innerText = item3;
@@ -679,6 +1210,7 @@
                         setBackgroundColor(itemElement2, item2);
                         setBackgroundColor(itemElement3, item3);
                         setBackgroundColor(itemElement4, item4);
+                        tr.appendChild(itemElement0)
                         tr.appendChild(itemElement1)
                         tr.appendChild(itemElement2)
                         tr.appendChild(itemElement3)
@@ -687,12 +1219,19 @@
                     });
                 });
                 var tbody3 = document.getElementById('afd3');
+                var title3 = document.getElementById('wil3');
+                let key = table3[0] ?? 'INTI';
 
+                title3.textContent = 'Wilayah ' + key;
+                // console.log(key);
                 // Iterate through the main object keys (KNE, PLE, etc.)
                 Object.keys(table3[1]).forEach(key => {
                     // Iterate through the nested objects (OA, OB, etc.) within each main key
                     Object.keys(table3[1][key]).forEach(subKey => {
+                        let item0 = table3[1][key][subKey]['est'];
                         let item1 = table3[1][key][subKey]['afd'];
+
+
                         const kosong = 'kosong';
 
                         let item2 = assignValue(
@@ -715,16 +1254,23 @@
                             '-',
                             table3[1][key][subKey]['skor_buah']
                         );
+
+
+
+
+
                         let bg = table3[1][key][subKey]['bgcolor'];
 
                         // Create table row and cell for each 'total' value
                         let tr = document.createElement('tr');
+                        let itemElement0 = document.createElement('td');
                         let itemElement1 = document.createElement('td');
                         let itemElement2 = document.createElement('td');
                         let itemElement3 = document.createElement('td');
                         let itemElement4 = document.createElement('td');
 
                         itemElement1.classList.add("text-center");
+                        itemElement0.innerText = item0;
                         itemElement1.innerText = item1;
                         itemElement2.innerText = item2;
                         itemElement3.innerText = item3;
@@ -735,6 +1281,7 @@
                         setBackgroundColor(itemElement2, item2);
                         setBackgroundColor(itemElement3, item3);
                         setBackgroundColor(itemElement4, item4);
+                        tr.appendChild(itemElement0)
                         tr.appendChild(itemElement1)
                         tr.appendChild(itemElement2)
                         tr.appendChild(itemElement3)
@@ -742,14 +1289,11 @@
                         tbody3.appendChild(tr);
                     });
                 });
-                var title3 = document.getElementById('wil3');
-                let key = table3[0]; // Assuming table3 is defined elsewhere
 
-                title3.textContent = 'Wilayah ' + key;
-                // console.log(key);
 
                 // console.log(table3);
 
+                // untuk perestate 
                 var trekap3 = document.getElementById('week3');
                 Object.keys(table3[1]).forEach(key => {
                     Object.keys(table3[1][key]).forEach(subKey => {
@@ -800,8 +1344,4 @@
         });
 
     }
-    // $('#btnShow').click(function() {
-
-
-    // });
 </script>
