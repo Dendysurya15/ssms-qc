@@ -184,11 +184,11 @@
                             <tbody>
                                 <tr>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                 </tr>
 
 
@@ -375,11 +375,11 @@
                             <tbody>
                                 <tr>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                 </tr>
 
                                 <tr>
@@ -426,7 +426,7 @@
                                 </tr>
                                 <tr class="table-primary">
                                     {{-- <th class="my-cell" scope="col"></th> --}}
-                                    <th class="my-cell text-center" colspan="2">4.TIDAK TERDAPAT BARANG NON-STOCK</th>
+                                    <th class="my-cell text-center" colspan="2">4.Barang Non-Stock</th>
                                     {{-- <th class="my-cell" scope="col"></th> --}}
                                     <th class="my-cell text-center" colspan="2">5.SELURUH MR DITANDATANGANI EM</th>
                                     {{-- <th class="my-cell" scope="col"></th> --}}
@@ -435,11 +435,11 @@
                                 </tr>
                                 <tr>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                 </tr>
                                 <tr>
                                     <td class="my-cell" rowspan="2">
@@ -481,7 +481,7 @@
                                     @endphp
 
                                     <td class="my-cell" rowspan="2">
-                                        {{$total_gudang}}
+                                        {{$kondisigd}}
                                     </td>
                                     @if ($data->foto_kebersihan_gudang_1)
                                     <td class="my-cell col-md-4"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
@@ -528,15 +528,11 @@
                                 </tr>
                                 <tr>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
-
-                                    <!-- GUDANG  -->
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
-
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
-
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
                                 </tr>
                                 <tr>
                                     <td class="my-cell" rowspan="2">
@@ -602,7 +598,7 @@
                                 </tr>
                                 <tr>
                                     <td class="my-cell">HASIL</td>
-                                    <td class="my-cell">FOTO</td>
+                                    <td class="my-cell" style="text-align: center;">FOTO</td>
 
 
                                 </tr>
