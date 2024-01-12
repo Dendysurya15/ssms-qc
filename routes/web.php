@@ -228,3 +228,4 @@ Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'i
 Route::get('/rekap', [RekapController::class, 'index'])->name('rekap');
 Route::get('/olahdata', [RekapController::class, 'olahdata'])->name('olahdata');
 Route::get('/getdatayear', [RekapController::class, 'getdatayear'])->name('allskoreyear');
+Route::get('/getdataweek', [RekapController::class, 'getdataweek'])->name('getdataweek');
