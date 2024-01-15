@@ -56,7 +56,7 @@
                 $detail_temuan = $data['total']['detail_temuan'];
                 @endphp
 
-                @for ($i = 0; $i < count($foto_temuan); $i++) @php $foto_info=explode('-', $foto_temuan[$i]); $foto_name=$foto_info[0]; $foto_type=$foto_info[1]; $foto_url=$baseURL . ($foto_type==='rmh' ? 'perumahan/' : ($foto_type==='lcp' ? 'landscape/' : 'lingkungan/' )) . $foto_name; $komentar=($komentar_temuan[$i]==='Komentar tidak ada' ) ? '' : $komentar_temuan[$i]; $detail=$detail_temuan[$i]; @endphp @if ($i % 3===0) <tr>
+                @for ($i = 0; $i < count($foto_temuan); $i++) @php $foto_info=explode('@', $foto_temuan[$i]); $foto_name=$foto_info[0]; $foto_type=$foto_info[1]; $foto_url=$baseURL . ($foto_type==='rmh' ? 'perumahan/' : ($foto_type==='lcp' ? 'landscape/' : 'lingkungan/' )) . $foto_name; $komentar=($komentar_temuan[$i]==='Komentar tidak ada' ) ? '' : $komentar_temuan[$i]; $detail=$detail_temuan[$i]; @endphp @if ($i % 3===0) <tr>
                     @endif
 
                     <td class="align-middle" width="33%" style="position: relative; border: 1px solid black">

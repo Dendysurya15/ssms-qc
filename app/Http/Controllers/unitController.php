@@ -1462,6 +1462,15 @@ class unitController extends Controller
             $query->foto_barang_nonstok_1 = 0;
             $query->foto_barang_nonstok_2 = 0;
         }
+        if ($query->komentar_barang_nonstok != null) {
+            if (strpos($query->komentar_barang_nonstok, 'Tidak terdapat barang Non-Stock') !== false) {
+
+                $query->komentar_barang_nonstok = 'Barang Non-Stock';
+            } else {
+                $query->komentar_barang_nonstok;
+            }
+        }
+
 
         if ($query->foto_kebersihan_gudang != null) {
             if (str_contains($query->foto_kebersihan_gudang, ';')) {

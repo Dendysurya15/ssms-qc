@@ -2403,7 +2403,7 @@
               }
 
 
-              if (totalScoreValue == 0 && totalScoreValue <= 0) {
+              if (totalScoreValue <= 65) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
@@ -2417,14 +2417,17 @@
                 $(row).find('td:eq(82)').css('background-color', '#fffc04');
                 $(row).find('td:eq(83)').css('background-color', '#fffc04');
               }
+
               if (totalScoreValue >= 85 && totalScoreValue <= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#08b454');
                 $(row).find('td:eq(83)').css('background-color', '#08b454');
               }
+
               if (totalScoreValue >= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#609cd4');
                 $(row).find('td:eq(83)').css('background-color', '#609cd4');
               }
+
             }
           });
           datatableweek1.clear().rows.add(parseResult['week1']).draw();
@@ -2788,7 +2791,7 @@
               }
 
 
-              if (totalScoreValue == 0 && totalScoreValue <= 0) {
+              if (totalScoreValue <= 65) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
@@ -2802,10 +2805,12 @@
                 $(row).find('td:eq(82)').css('background-color', '#fffc04');
                 $(row).find('td:eq(83)').css('background-color', '#fffc04');
               }
+
               if (totalScoreValue >= 85 && totalScoreValue <= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#08b454');
                 $(row).find('td:eq(83)').css('background-color', '#08b454');
               }
+
               if (totalScoreValue >= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#609cd4');
                 $(row).find('td:eq(83)').css('background-color', '#609cd4');
@@ -3173,7 +3178,7 @@
               }
 
 
-              if (totalScoreValue == 0 && totalScoreValue <= 0) {
+              if (totalScoreValue <= 65) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
@@ -3187,10 +3192,12 @@
                 $(row).find('td:eq(82)').css('background-color', '#fffc04');
                 $(row).find('td:eq(83)').css('background-color', '#fffc04');
               }
+
               if (totalScoreValue >= 85 && totalScoreValue <= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#08b454');
                 $(row).find('td:eq(83)').css('background-color', '#08b454');
               }
+
               if (totalScoreValue >= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#609cd4');
                 $(row).find('td:eq(83)').css('background-color', '#609cd4');
@@ -3555,8 +3562,7 @@
                 $(row).css('background-color', '#b0d48c');
               }
 
-
-              if (totalScoreValue == 0 && totalScoreValue <= 0) {
+              if (totalScoreValue <= 65) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
@@ -3570,10 +3576,12 @@
                 $(row).find('td:eq(82)').css('background-color', '#fffc04');
                 $(row).find('td:eq(83)').css('background-color', '#fffc04');
               }
+
               if (totalScoreValue >= 85 && totalScoreValue <= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#08b454');
                 $(row).find('td:eq(83)').css('background-color', '#08b454');
               }
+
               if (totalScoreValue >= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#609cd4');
                 $(row).find('td:eq(83)').css('background-color', '#609cd4');
@@ -3938,9 +3946,13 @@
               if (afdValue === 'EST') {
                 $(row).css('background-color', '#b0d48c');
               }
+              if (totalScoreValue == '-') {
+                $(row).find('td:eq(82)').css('background-color', 'white');
+                $(row).find('td:eq(83)').css('background-color', 'white');
+              }
 
 
-              if (totalScoreValue == 0 && totalScoreValue <= 0) {
+              if (totalScoreValue <= 65) {
                 $(row).find('td:eq(82)').css('background-color', 'red');
                 $(row).find('td:eq(83)').css('background-color', 'red');
               }
@@ -3954,10 +3966,12 @@
                 $(row).find('td:eq(82)').css('background-color', '#fffc04');
                 $(row).find('td:eq(83)').css('background-color', '#fffc04');
               }
+
               if (totalScoreValue >= 85 && totalScoreValue <= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#08b454');
                 $(row).find('td:eq(83)').css('background-color', '#08b454');
               }
+
               if (totalScoreValue >= 95) {
                 $(row).find('td:eq(82)').css('background-color', '#609cd4');
                 $(row).find('td:eq(83)').css('background-color', '#609cd4');

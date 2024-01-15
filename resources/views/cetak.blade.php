@@ -120,11 +120,11 @@
         <tbody>
             <tr>
                 <td class="my-cell text-center" style="width:130px">HASIL</td>
-                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
                 <td class="my-cell text-center" style="width:130px">HASIL</td>
-                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
                 <td class="my-cell text-center" style="width:130px">HASIL</td>
-                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
             </tr>
             <tr>
                 <td class="my-cell" rowspan="2">
@@ -195,11 +195,11 @@
             </tr>
             <tr>
                 <td class="my-cell text-center">HASIL</td>
-                <td class="my-cell text-center">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
                 <td class="my-cell text-center">HASIL</td>
-                <td class="my-cell text-center">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
                 <td class="my-cell text-center">HASIL</td>
-                <td class="my-cell text-center">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
 
             </tr>
             <tr>
@@ -294,11 +294,11 @@
         <tbody>
             <tr>
                 <td class="my-cell text-center" style="width:130px">HASIL</td>
-                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
                 <td class="my-cell text-center" style="width:130px">HASIL</td>
-                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
                 <td class="my-cell text-center" style="width:130px">HASIL</td>
-                <td class="my-cell text-center" style="width: 350px">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
             </tr>
             <tr>
                 <td class="my-cell" rowspan="2">
@@ -347,7 +347,7 @@
             </tr>
             <tr class="">
                 {{-- <th class="my-cell" scope="col"></th> --}}
-                <th class="my-cell text-center table-primary" colspan="2">4.TIDAK TERDAPAT BARANG NON-STOCK</th>
+                <th class="my-cell text-center table-primary" colspan="2">4.BARANG NON-STOCK</th>
                 {{-- <th class="my-cell" scope="col"></th> --}}
                 <th class="my-cell text-center table-primary" colspan="2">5.SELURUH MR DITANDATANGANI EM</th>
                 {{-- <th class="my-cell" scope="col"></th> --}}
@@ -403,7 +403,7 @@
                 @endphp
 
                 <td class="my-cell" rowspan="2">
-                    {{$total_gudang}}
+                    {{$kondisigd}}
                 </td>
                 @if ($data->foto_kebersihan_gudang_1)
                 <td class="my-cell"><img src="https://mobilepro.srs-ssms.com/storage/app/public/qc/inspeksi_gudang/{{$data->foto_kebersihan_gudang_1}}" class="img-fluid modal-image"></td>
@@ -450,14 +450,16 @@
             </tr>
             <tr>
                 <td class="my-cell">HASIL</td>
-                <td class="my-cell">FOTO</td>
+                <td class="my-cell" style="text-align: center;">FOTO</td>
 
                 <!-- GUDANG  -->
                 <td class="my-cell">HASIL</td>
-                <td class="my-cell">FOTO</td>
+                <td class="my-cell" style="text-align: center;">FOTO</td>
+
 
                 <td class="my-cell">HASIL</td>
-                <td class="my-cell">FOTO</td>
+                <td class="my-cell" style="text-align: center;">FOTO</td>
+
 
             </tr>
             <tr>
@@ -529,7 +531,7 @@
             </tr>
             <tr>
                 <td class="my-cell">HASIL</td>
-                <td class="my-cell">FOTO</td>
+                <td class="my-cell text-center" style="width: 350px;text-align: center;">FOTO</td>
 
 
             </tr>

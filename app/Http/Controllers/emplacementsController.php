@@ -4313,7 +4313,7 @@ class emplacementsController extends Controller
                 // dd($parts);
                 if (count($parts) > 2) {
 
-                    $data_temuan[] = $parts[0] . '-' . $parts[2]; // Concatenate the third part and the part after dot
+                    $data_temuan[] = $parts[0] . '@' . $parts[2]; // Concatenate the third part and the part after dot
 
                 }
             }
@@ -4326,9 +4326,9 @@ class emplacementsController extends Controller
 
         foreach ($arrayMerge2['data_temuan'] as $key => $imageURL) {
             // Extract the location from the image URL (e.g., 'rmh', 'lcp', 'lkn')
-            $location = explode('-', $imageURL)[1];
+            $location = explode('@', $imageURL)[1];
 
-            // dd($location);
+            // dd($imageURL);
             // Build the full image URL
             $fullURL = $baseURL;
 
@@ -4345,10 +4345,13 @@ class emplacementsController extends Controller
 
             // dd($fullURL);
 
-            $cleanedURL = explode('-', $fullURL);
+            $cleanedURL = explode('@', $fullURL);
 
-            $finisurl = $cleanedURL[0] . '-' . $cleanedURL[1];
-            // dd($finisurl);
+            // dd($cleanedURL);
+
+            // $finisurl = $cleanedURL[0] . '-' . $cleanedURL[1];
+            $finisurl = $cleanedURL[0];
+            // dd($finisurl, $cleanedURL);
             // Send a HEAD request to check the image status
             $headers = get_headers($finisurl);
 

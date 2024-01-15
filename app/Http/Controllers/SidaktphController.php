@@ -240,27 +240,27 @@ class SidaktphController extends Controller
             CASE 
                 WHEN status = '' THEN 1
                 WHEN status = '0' THEN 1
+                WHEN LOCATE('>H+', status) > 0 THEN '8'
                 WHEN LOCATE('H+', status) > 0 THEN 
                     CASE 
                         WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
                         ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
                     END
-                WHEN LOCATE('>H+', status) > 0 THEN 
-                    CASE 
-                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1) > 8 THEN '8'
-                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1)
-                    END
                 WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
                 WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
                 ELSE status
             END AS statuspanen")
-            ) // Change the format to "%Y-%m-%d"
+            )
             ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
             ->orderBy('status', 'asc')
             ->get();
 
         $ancakFA = $ancakFA->groupBy(['est', 'afd', 'statuspanen', 'tanggal', 'blok']);
         $ancakFA = json_decode($ancakFA, true);
+
+
+
+        // dd($ancakFA['MKE']);
 
         $dateString = $tanggal;
         $dateParts = date_parse($dateString);
@@ -3157,24 +3157,20 @@ class SidaktphController extends Controller
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal'),
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'),
                 DB::raw("
-                CASE 
-                    WHEN status = '' THEN 1
-                    WHEN status = '0' THEN 1
-                    WHEN LOCATE('H+', status) > 0 THEN 
-                        CASE 
-                            WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
-                            ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
-                        END
-                    WHEN LOCATE('>H+', status) > 0 THEN 
-                        CASE 
-                            WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1) > 8 THEN '8'
-                            ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1)
-                        END
-                    WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
-                    WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
-                    ELSE status
-                END AS statuspanen")
-            ) // Change the format to "%Y-%m-%d"
+            CASE 
+                WHEN status = '' THEN 1
+                WHEN status = '0' THEN 1
+                WHEN LOCATE('>H+', status) > 0 THEN '8'
+                WHEN LOCATE('H+', status) > 0 THEN 
+                    CASE 
+                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
+                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
+                    END
+                WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
+                WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
+                ELSE status
+            END AS statuspanen")
+            )
             ->where('sidak_tph.datetime', 'like', '%' . $monthSidak . '%')
             ->orderBy('status', 'asc')
             ->get();
@@ -7344,16 +7340,35 @@ class SidaktphController extends Controller
         // $regional = $request->get('regional');
         $ancakFA = DB::connection('mysql2')
             ->table('sidak_tph')
-            ->select("sidak_tph.*", DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal')) // Change the format to "%Y-%m-%d"
+            ->select(
+                "sidak_tph.*",
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal'),
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'),
+                DB::raw("
+            CASE 
+                WHEN status = '' THEN 1
+                WHEN status = '0' THEN 1
+                WHEN LOCATE('>H+', status) > 0 THEN '8'
+                WHEN LOCATE('H+', status) > 0 THEN 
+                    CASE 
+                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
+                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
+                    END
+                WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
+                WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
+                ELSE status
+            END AS statuspanen")
+            )
             ->where('sidak_tph.est', $est)
             ->where('sidak_tph.datetime', 'like', '%' . $tanggal . '%')
             ->orderBy('afd', 'asc')
             ->orderBy('status', 'asc')
             ->get();
 
-        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'status', 'tanggal', 'blok']);
+        $ancakFA = $ancakFA->groupBy(['est', 'afd', 'statuspanen', 'tanggal', 'blok']);
         $ancakFA = json_decode($ancakFA, true);
 
+        // dd($ancakFA);
         $dateString = $tanggal;
         $dateParts = date_parse($dateString);
         $year = $dateParts['year'];

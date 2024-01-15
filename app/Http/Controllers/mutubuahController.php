@@ -1604,6 +1604,7 @@ class mutubuahController extends Controller
             $rdEST = 0;
             $sum_krEST = 0;
             $blokEST = 0;
+            $jjg_matang = 0;
             foreach ($value as $key1 => $value1) {
                 // dd($value1);
                 $jjg_sampleEST += $value1['Jumlah_janjang'];
@@ -1617,6 +1618,7 @@ class mutubuahController extends Controller
                 $rdEST +=    $value1['rat_dmg'];
                 $sum_krEST +=    $value1['karung'];
                 $afds = $value1['afd'];
+                $jjg_matang += $value1['jjg_matang'];
             }
             if ($sum_krEST != 0) {
                 $total_krEST = round($sum_krEST / $blokEST, 2);
@@ -1625,7 +1627,9 @@ class mutubuahController extends Controller
             }
             $per_krEST = round($total_krEST * 100, 2);
             $skor_totalEST = ($jjg_sampleEST - $abrEST) !== 0 ? round((($tnpBRDEST + $krgBRDEST) / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - ($tnpBRDEST + $krgBRDEST + $overripeEST + $emptyEST)) / ($jjg_sampleEST - $abrEST) * 100, 2) : 0;
+            // $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - $jjg_matang) / ($jjg_sampleEST - $abrEST) * 100, 2) : 0;
+            $skot_jjgmskEST = round($jjg_matang / ($jjg_sampleEST - $abrEST) * 100, 2);
+
             $skor_lewatmatangEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($overripeEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
             $skor_jjgKosongEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($emptyEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
             $skor_vcutEST = $jjg_sampleEST !== 0 ? round(($vcutEST / $jjg_sampleEST) * 100, 2) : 0;
@@ -1664,7 +1668,7 @@ class mutubuahController extends Controller
             $regArr[$key]['total_jjg'] = $tnpBRDEST + $krgBRDEST;
             $regArr[$key]['persen_totalJjg'] = $skor_totalEST;
             $regArr[$key]['skor_totalEST'] = sidak_brdTotal($skor_totalEST);
-            $regArr[$key]['jjg_matang'] = $jjg_sampleEST - ($tnpBRDEST + $krgBRDEST + $overripeEST + $emptyEST + $abr);
+            $regArr[$key]['jjg_matang'] = $jjg_matang;
             $regArr[$key]['persen_jjgMtang'] = $skot_jjgmskEST;
             $regArr[$key]['skor_jjgMatang'] = sidak_matangSKOR($skot_jjgmskEST);
             $regArr[$key]['lewat_matang'] = $overripeEST;
@@ -1821,6 +1825,8 @@ class mutubuahController extends Controller
                 }
             }
         }
+
+        // dd($regArr);
         // updateKeyRecursive($mutu_buah, "KTE4", "KTE");
 
 

@@ -1592,6 +1592,24 @@
 @include('layout/footer')
 
 <script>
+    function setBackgroundColor(element, score) {
+        if (score >= 95) {
+            element.style.backgroundColor = "#609cd4";
+        } else if (score >= 85) {
+            element.style.backgroundColor = "#08b454";
+        } else if (score >= 75) {
+            element.style.backgroundColor = "#fffc04";
+        } else if (score >= 65) {
+            element.style.backgroundColor = "#ffc404";
+        } else if (score === '-') {
+            element.style.backgroundColor = "white";
+        } else {
+            element.style.backgroundColor = "red";
+        }
+        element.style.color = "black";
+    }
+
+
     const estDataMapSelect = document.querySelector('#estDataMap');
     const regDataMapSelect = document.querySelector('#regDataMap');
     const buttonimg = document.getElementById('downloadimgmap');
@@ -3152,41 +3170,16 @@
 
 
                     let data = element['data']
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
+                    if (data === "ada") {
+                        itemElement4.style.backgroundColor = "red";
                         itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
+                        itemElement4.innerText = item4
                     } else {
-                        if (data === "ada") {
-                            itemElement4.style.backgroundColor = "red";
-                            itemElement4.style.color = "black";
-                        } else {
-                            itemElement4.style.backgroundColor = "white";
-                            itemElement4.style.color = "black";
-                        }
-
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                        itemElement4.innerText = '-'
                     }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
+                    setBackgroundColor(itemElement4, item4);
 
 
                     // if (item4 != 0 && item4 != 90) {
@@ -3261,43 +3254,16 @@
 
                     let data = element['data']
 
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
+                    if (data === "ada") {
+                        itemElement4.style.backgroundColor = "red";
                         itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
+                        itemElement4.innerText = item4
                     } else {
-                        if (data === "ada") {
-                            itemElement4.style.backgroundColor = "red";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = item4
-                        } else {
-                            itemElement4.style.backgroundColor = "white";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = '-'
-                        }
-
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                        itemElement4.innerText = '-'
                     }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
+                    setBackgroundColor(itemElement4, item4);
 
 
 
@@ -3346,41 +3312,7 @@
                     itemElement3.style.color = "black";
                 }
 
-                if (item4 >= 95) {
-                    itemElement4.style.backgroundColor = "#609cd4";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 85 && item4 < 95) {
-                    itemElement4.style.backgroundColor = "#08b454";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 75 && item4 < 85) {
-                    itemElement4.style.backgroundColor = "#fffc04";
-                    itemElement4.style.color = "black";
-                } else if (item4 >= 65 && item4 < 75) {
-                    itemElement4.style.backgroundColor = "#ffc404";
-                    itemElement4.style.color = "black";
-                } else {
-                    if (data === "ada") {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "white";
-                        itemElement4.style.color = "black";
-                    }
-
-                }
-
-                if (itemElement4.style.backgroundColor === "#609cd4") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#08b454") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                    itemElement4.style.color = "black";
-                } else if (itemElement4.style.backgroundColor === "red") {
-                    itemElement4.style.color = "black";
-                }
-
+                setBackgroundColor(itemElement4, item4);
                 itemElement1.innerText = item1;
                 itemElement2.innerText = item2;
                 itemElement3.innerText = item3;
@@ -3437,41 +3369,14 @@
 
 
                     let data = element['data']
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
+                    if (data === "ada") {
+                        itemElement4.style.backgroundColor = "red";
                         itemElement4.style.color = "black";
                     } else {
-                        if (data === "ada") {
-                            itemElement4.style.backgroundColor = "red";
-                            itemElement4.style.color = "black";
-                        } else {
-                            itemElement4.style.backgroundColor = "white";
-                            itemElement4.style.color = "black";
-                        }
-
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
+                        itemElement4.style.backgroundColor = "white";
                         itemElement4.style.color = "black";
                     }
+                    setBackgroundColor(itemElement4, item4);
 
 
 
@@ -3541,45 +3446,14 @@
                     }
 
                     let data = element['data']
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
+                    if (data === "ada") {
+                        itemElement4.style.backgroundColor = "red";
                         itemElement4.style.color = "black";
                     } else {
-                        if (data === "ada") {
-                            itemElement4.style.backgroundColor = "red";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = item4
-                        } else {
-                            itemElement4.style.backgroundColor = "white";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = '-'
-                        }
-
-                    }
-
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
+                        itemElement4.style.backgroundColor = "white";
                         itemElement4.style.color = "black";
                     }
-
-
+                    setBackgroundColor(itemElement4, item4);
 
 
                     itemElement1.innerText = item1
@@ -3604,71 +3478,41 @@
                 let items3 = GM_list[1].nama;
                 let items4 = GM_list[1].skor;
                 let items5 = ''
-                let itemsElement1 = document.createElement('td')
-                let itemsElement2 = document.createElement('td')
-                let itemsElement3 = document.createElement('td')
-                let itemsElements4 = document.createElement('td')
-                let itemsElement5 = document.createElement('td')
-                itemsElement1.classList.add("text-center")
-                itemsElement2.classList.add("text-center")
-                itemsElement3.classList.add("text-center")
-                itemsElements4.classList.add("text-center")
-                itemsElement5.classList.add("text-center")
-                itemsElement1.style.backgroundColor = "#fff4cc";
-                itemsElement2.style.backgroundColor = "#fff4cc";
-                itemsElement3.style.backgroundColor = "#fff4cc";
+                let itemsElementsx1 = document.createElement('td')
+                let itemsElementsx2 = document.createElement('td')
+                let itemsElementsx3 = document.createElement('td')
+                let itemsElementsx4 = document.createElement('td')
+                let itemsElementsx5 = document.createElement('td')
+                itemsElementsx1.classList.add("text-center")
+                itemsElementsx2.classList.add("text-center")
+                itemsElementsx3.classList.add("text-center")
+                itemsElementsx4.classList.add("text-center")
+                itemsElementsx5.classList.add("text-center")
+                itemsElementsx1.style.backgroundColor = "#fff4cc";
+                itemsElementsx2.style.backgroundColor = "#fff4cc";
+                itemsElementsx3.style.backgroundColor = "#fff4cc";
 
                 if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                    itemsElement3.style.color = "red";
+                    itemsElementsx3.style.color = "red";
                 } else {
-                    itemsElement3.style.color = "black";
+                    itemsElementsx3.style.color = "black";
                 }
 
 
-                if (item4 >= 95) {
-                    itemsElements4.style.backgroundColor = "#609cd4";
-                    itemsElements4.style.color = "black";
-                } else if (item4 >= 85 && item4 < 95) {
-                    itemsElements4.style.backgroundColor = "#08b454";
-                    itemsElements4.style.color = "black";
-                } else if (item4 >= 75 && item4 < 85) {
-                    itemsElements4.style.backgroundColor = "#fffc04";
-                    itemsElements4.style.color = "black";
-                } else if (item4 >= 65 && item4 < 75) {
-                    itemsElements4.style.backgroundColor = "#ffc404";
-                    itemsElements4.style.color = "black";
-                } else {
-                    if (data === "ada") {
-                        itemsElements4.style.backgroundColor = "red";
-                        itemsElements4.style.color = "black";
-                    } else {
-                        itemsElements4.style.backgroundColor = "white";
-                        itemsElements4.style.color = "black";
-                    }
 
-                }
-                if (itemsElements4.style.backgroundColor === "#609cd4") {
-                    itemsElements4.style.color = "black";
-                } else if (itemsElements4.style.backgroundColor === "#08b454") {
-                    itemsElements4.style.color = "black";
-                } else if (itemsElements4.style.backgroundColor === "#fffc04") {
-                    itemsElements4.style.color = "black";
-                } else if (itemsElements4.style.backgroundColor === "#ffc404") {
-                    itemsElements4.style.color = "black";
-                } else if (itemsElements4.style.backgroundColor === "red") {
-                    itemsElements4.style.color = "black";
-                }
 
-                itemsElement1.innerText = items1;
-                itemsElement2.innerText = items2;
-                itemsElement3.innerText = items3;
-                itemsElements4.innerText = items4;
-                itemsElement5.innerText = items5;
-                tr.appendChild(itemsElement1)
-                tr.appendChild(itemsElement2)
-                tr.appendChild(itemsElement3)
-                tr.appendChild(itemsElements4)
-                tr.appendChild(itemsElement5)
+                setBackgroundColor(itemsElementsx4, items4);
+
+                itemsElementsx1.innerText = items1;
+                itemsElementsx2.innerText = items2;
+                itemsElementsx3.innerText = items3;
+                itemsElementsx4.innerText = items4;
+                itemsElementsx5.innerText = items5;
+                tr.appendChild(itemsElementsx1)
+                tr.appendChild(itemsElementsx2)
+                tr.appendChild(itemsElementsx3)
+                tr.appendChild(itemsElementsx4)
+                tr.appendChild(itemsElementsx5)
                 tbody2.appendChild(tr)
 
                 //table wil 2
@@ -3715,44 +3559,17 @@
 
 
                     let data = element['data']
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
+                    if (data === "ada") {
+                        itemElement4.style.backgroundColor = "red";
                         itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
+                        itemElement4.innerText = item4
                     } else {
-                        if (data === "ada") {
-                            itemElement4.style.backgroundColor = "red";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = item4
-                        } else {
-                            itemElement4.style.backgroundColor = "white";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = '-'
-                        }
-
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                        itemElement4.innerText = '-'
                     }
 
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
+                    setBackgroundColor(itemElement4, item4);
 
                     // if (item4 != 0 && item4 != 90) {
                     //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
@@ -3830,7 +3647,7 @@
                     // Always increment rank regardless of the score
                     element['rank'] = rank++;
                 });
-                console.log(arrTbody3);
+                // console.log(arrTbody3);
                 // var table1 = document.getElementById('table1');
                 var tbody3 = document.getElementById('tbody3');
                 arrTbody3.forEach(element => {
@@ -3867,45 +3684,17 @@
 
 
                     let data = element['data']
-
-                    if (item4 >= 95) {
-                        itemElement4.style.backgroundColor = "#609cd4";
+                    if (data === "ada") {
+                        itemElement4.style.backgroundColor = "red";
                         itemElement4.style.color = "black";
-                    } else if (item4 >= 85 && item4 < 95) {
-                        itemElement4.style.backgroundColor = "#08b454";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 75 && item4 < 85) {
-                        itemElement4.style.backgroundColor = "#fffc04";
-                        itemElement4.style.color = "black";
-                    } else if (item4 >= 65 && item4 < 75) {
-                        itemElement4.style.backgroundColor = "#ffc404";
-                        itemElement4.style.color = "black";
+                        itemElement4.innerText = item4
                     } else {
-                        if (data === "ada") {
-                            itemElement4.style.backgroundColor = "red";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = item4
-                        } else {
-                            itemElement4.style.backgroundColor = "white";
-                            itemElement4.style.color = "black";
-                            itemElement4.innerText = '-'
-                        }
-
+                        itemElement4.style.backgroundColor = "white";
+                        itemElement4.style.color = "black";
+                        itemElement4.innerText = '-'
                     }
 
-                    if (itemElement4.style.backgroundColor === "#609cd4") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#08b454") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                        itemElement4.style.color = "black";
-                    } else if (itemElement4.style.backgroundColor === "red") {
-                        itemElement4.style.color = "black";
-                    }
-
-
+                    setBackgroundColor(itemElement4, item4);
 
 
                     itemElement1.innerText = item1
@@ -3931,73 +3720,42 @@
                 let itemx2 = GM_list[2].em;
                 let itemx3 = GM_list[2].nama;
                 let itemx4 = GM_list[2].skor;
-                let itemx5 = ''
-                let itemxElement1 = document.createElement('td')
-                let itemxElement2 = document.createElement('td')
-                let itemxElement3 = document.createElement('td')
-                let itemxElementx4 = document.createElement('td')
-                let itemxElement5 = document.createElement('td')
-                itemxElement1.classList.add("text-center")
-                itemxElement2.classList.add("text-center")
-                itemxElement3.classList.add("text-center")
-                itemxElementx4.classList.add("text-center")
-                itemxElement5.classList.add("text-center")
-                itemxElement1.style.backgroundColor = "#fff4cc";
-                itemxElement2.style.backgroundColor = "#fff4cc";
-                itemxElement3.style.backgroundColor = "#fff4cc";
+                let itemx5 = 'dd'
+                let itemxElementcv1 = document.createElement('td')
+                let itemxElementcv2 = document.createElement('td')
+                let itemxElementcv3 = document.createElement('td')
+                let itemxElementcv4 = document.createElement('td')
+                let itemxElementcv5 = document.createElement('td')
+                itemxElementcv1.classList.add("text-center")
+                itemxElementcv2.classList.add("text-center")
+                itemxElementcv3.classList.add("text-center")
+                itemxElementcv4.classList.add("text-center")
+                itemxElementcv5.classList.add("text-center")
+                itemxElementcv1.style.backgroundColor = "#fff4cc";
+                itemxElementcv2.style.backgroundColor = "#fff4cc";
+                itemxElementcv3.style.backgroundColor = "#fff4cc";
 
                 if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                    itemElement3.style.color = "red";
+                    itemxElementcv3.style.color = "red";
                 } else {
-                    itemElement3.style.color = "black";
+                    itemxElementcv3.style.color = "black";
                 }
 
 
-                if (item4 >= 95) {
-                    itemxElementx4.style.backgroundColor = "#609cd4";
-                    itemxElementx4.style.color = "black";
-                } else if (item4 >= 85 && item4 < 95) {
-                    itemxElementx4.style.backgroundColor = "#08b454";
-                    itemxElementx4.style.color = "black";
-                } else if (item4 >= 75 && item4 < 85) {
-                    itemxElementx4.style.backgroundColor = "#fffc04";
-                    itemxElementx4.style.color = "black";
-                } else if (item4 >= 65 && item4 < 75) {
-                    itemxElementx4.style.backgroundColor = "#ffc404";
-                    itemxElementx4.style.color = "black";
-                } else {
-                    if (data === "ada") {
-                        itemxElementx4.style.backgroundColor = "red";
-                        itemxElementx4.style.color = "black";
-                    } else {
-                        itemxElementx4.style.backgroundColor = "white";
-                        itemxElementx4.style.color = "black";
-                    }
+                setBackgroundColor(itemxElementcv4, itemx4);
 
-                }
 
-                if (itemxElementx4.style.backgroundColor === "#609cd4") {
-                    itemxElementx4.style.color = "black";
-                } else if (itemxElementx4.style.backgroundColor === "#08b454") {
-                    itemxElementx4.style.color = "black";
-                } else if (itemxElementx4.style.backgroundColor === "#fffc04") {
-                    itemxElementx4.style.color = "black";
-                } else if (itemxElementx4.style.backgroundColor === "#ffc404") {
-                    itemxElementx4.style.color = "black";
-                } else if (itemxElementx4.style.backgroundColor === "red") {
-                    itemxElementx4.style.color = "black";
-                }
 
-                itemxElement1.innerText = itemx1;
-                itemxElement2.innerText = itemx2;
-                itemxElement3.innerText = itemx3;
-                itemxElementx4.innerText = itemx4;
-                itemxElement5.innerText = itemx5;
-                tr.appendChild(itemxElement1)
-                tr.appendChild(itemxElement2)
-                tr.appendChild(itemxElement3)
-                tr.appendChild(itemxElementx4)
-                tr.appendChild(itemxElement5)
+                itemxElementcv1.innerText = itemx1;
+                itemxElementcv2.innerText = itemx2;
+                itemxElementcv3.innerText = itemx3;
+                itemxElementcv4.innerText = itemx4;
+                itemxElementcv5.innerText = itemx5;
+                tr.appendChild(itemxElementcv1)
+                tr.appendChild(itemxElementcv2)
+                tr.appendChild(itemxElementcv3)
+                tr.appendChild(itemxElementcv4)
+                tr.appendChild(itemxElementcv5)
                 tbody3.appendChild(tr)
 
 
@@ -4035,17 +3793,9 @@
 
                 if (reg4 === '-') {
                     regElement4.style.backgroundColor = "white";
-                } else if (reg4 >= '95') {
-                    regElement4.style.backgroundColor = "#0804fc";
-                } else if (reg4 >= '85' && reg4 < '95') {
-                    regElement4.style.backgroundColor = "#08b454";
-                } else if (reg4 >= '75' && reg4 < '85') {
-                    regElement4.style.backgroundColor = "red";
-                } else if (reg4 >= '65' && reg4 < '75') {
-                    regElement4.style.backgroundColor = "#ffc404";
-                } else {
-                    regElement4.style.backgroundColor = "red";
                 }
+                setBackgroundColor(regElement4, reg4);
+
 
                 regElement1.innerText = reg1;
                 regElement2.innerText = reg2;
@@ -4058,15 +3808,6 @@
                 tr.appendChild(regElement4)
 
                 theadreg.appendChild(tr)
-
-                // var plasmahide = document.getElementById('plasmaID');
-                // if (regInpt === '2' || regInpt === '3') {
-                //     plasmahide.style.display = 'none'; // hide the table
-                // } else {
-                //     plasmahide.style.display = ''; // show the table
-                // }
-
-                //plasma
 
 
 

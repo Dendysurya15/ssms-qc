@@ -525,16 +525,20 @@
         // console.log(lokasiKerja);
         if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
             $('#regionalPanen').val('2');
+            $('#regrekapweek').val('2');
 
             regs = 2
         } else if (lokasiKerja == 'Regional III' || lokasiKerja == 'Regional 3') {
             $('#regionalPanen').val('3');
+            $('#regrekapweek').val('3');
             regs = 3
         } else if (lokasiKerja == 'Regional IV' || lokasiKerja == 'Regional 4') {
             $('#regionalPanen').val('4');
+            $('#regrekapweek').val('4');
             regs = 4
         } else if (lokasiKerja == 'Regional I' || lokasiKerja == 'Regional 1') {
             $('#regionalPanen').val('1');
+            $('#regrekapweek').val('1');
             regs = 1
         }
         getdata()
@@ -563,6 +567,12 @@
         const yearTabs1 = document.getElementById("yearTabs1");
         const yearTabs2 = document.getElementById("yearTabs2");
         const yearTabs3 = document.getElementById("yearTabs3");
+        const weekrekap1 = document.getElementById('weekrekap1');
+        const weekrekap2 = document.getElementById('weekrekap2');
+        const weekrekap3 = document.getElementById('weekrekap3');
+        const weektabafd1 = document.getElementById('weektabafd1');
+        const weektabafd2 = document.getElementById('weektabafd2');
+        const weektabafd3 = document.getElementById('weektabafd3');
 
         // const c = regs; // reg is already the number, no need for reg.value
 
@@ -607,6 +617,27 @@
             yearTabs1.classList.add("col-lg-4");
             yearTabs2.classList.add("col-lg-4");
             yearTabs3.classList.add("col-lg-4");
+
+
+            weekrekap1.style.display = "";
+            weekrekap2.style.display = "";
+            weekrekap3.style.display = "";
+            resetClassList(weekrekap1);
+            resetClassList(weekrekap2);
+            resetClassList(weekrekap3);
+            weekrekap1.classList.add("col-lg-4");
+            weekrekap2.classList.add("col-lg-4");
+            weekrekap3.classList.add("col-lg-4");
+
+            weektabafd1.style.display = "";
+            weektabafd2.style.display = "";
+            weektabafd3.style.display = "";
+            resetClassList(weektabafd1);
+            resetClassList(weektabafd2);
+            resetClassList(weektabafd3);
+            weektabafd1.classList.add("col-lg-4");
+            weektabafd2.classList.add("col-lg-4");
+            weektabafd3.classList.add("col-lg-4");
         } else if (regs == 3 || regs == 4) {
             // console.log('Testing 2');
             s.style.display = "";
@@ -638,6 +669,22 @@
             resetClassList(yearTabs2);
             yearTabs1.classList.add("col-lg-6");
             yearTabs2.classList.add("col-lg-6");
+
+            weekrekap1.style.display = "";
+            weekrekap2.style.display = "";
+            weekrekap3.style.display = "none";
+            resetClassList(weekrekap1);
+            resetClassList(weekrekap2);
+            weekrekap1.classList.add("col-lg-6");
+            weekrekap2.classList.add("col-lg-6");
+
+            weektabafd1.style.display = "";
+            weektabafd2.style.display = "";
+            weektabafd3.style.display = "none";
+            resetClassList(weektabafd1);
+            resetClassList(weektabafd2);
+            weektabafd1.classList.add("col-lg-6");
+            weektabafd2.classList.add("col-lg-6");
         }
     }
 

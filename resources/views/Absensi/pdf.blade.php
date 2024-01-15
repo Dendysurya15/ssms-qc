@@ -142,7 +142,59 @@
             </tbody>
 
         </table>
-        @else
+        @elseif ($data['Reg'] === 'Regional II')
+        <table style="width: 50%;border:solid 1px black; border-collapse: collapse;margin-top: 10%;">
+            <thead>
+                <tr>
+                    <th colspan="4" style="border: solid 1px black; text-align: left;">
+                        Tambahkan kolom Ttd
+                    </th>
+                </tr>
+
+                <tr>
+                    <th style="border: solid 1px black;" colspan="4">
+                        Mengetahui
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: solid 1px black;height:300px">
+
+                    </td>
+                    <td style="border: solid 1px black;">
+
+                    </td>
+                    <td style="border: solid 1px black;">
+
+                    </td>
+                    <td style="border: solid 1px black;">
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td style="border: solid 1px black;text-align: center;">
+                        Asisten QC-1
+
+                    </td>
+                    <td style="border: solid 1px black;text-align: center;">
+                        Asisten QC-2
+
+                    </td>
+                    <td style="border: solid 1px black;text-align: center;">
+                        Asisten QC-3
+
+                    </td>
+                    <td style="border: solid 1px black;text-align: center;">
+                        Manager QC
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+        @elseif ($data['Reg'] === 'Regional III')
         <table style="width: 50%;border:solid 1px black; border-collapse: collapse;margin-top: 10%;">
             <thead>
                 <tr>
@@ -179,6 +231,47 @@
                         Asisten QC-2
 
                     </td>
+
+                    <td style="border: solid 1px black;text-align: center;">
+                        Askep QC
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+        @else
+        <table style="width: 50%;border:solid 1px black; border-collapse: collapse;margin-top: 10%;">
+            <thead>
+                <tr>
+                    <th colspan="2" style="border: solid 1px black; text-align: left;">
+                        Tambahkan kolom Ttd
+                    </th>
+                </tr>
+
+                <tr>
+                    <th style="border: solid 1px black;" colspan="2">
+                        Mengetahui
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: solid 1px black;height:300px">
+
+                    </td>
+                    <td style="border: solid 1px black;">
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td style="border: solid 1px black;text-align: center;">
+                        Asisten QC-1
+
+                    </td>
+
+
                     <td style="border: solid 1px black;text-align: center;">
                         Askep QC
                     </td>

@@ -119,6 +119,7 @@ class inspeksidashController extends Controller
         $queryEstereg = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
             // ->whereNotIn('estate.est', ['Plasma1'])
+            ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $Reg)
             ->get();
@@ -1989,6 +1990,7 @@ class inspeksidashController extends Controller
                     $jml_mth = 0;
                     $jml_mtg = 0;
                     $combination_counts = array();
+                    $newblok = count($value2);
                     foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
                         $combination = $value3['blok'] . ' ' . $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['tph_baris'];
                         if (!isset($combination_counts[$combination])) {
@@ -2007,7 +2009,8 @@ class inspeksidashController extends Controller
                         $sum_abnor += $value3['abnormal'];
                     }
 
-                    $dataBLok = count($combination_counts);
+                    // $dataBLok = count($combination_counts);
+                    $dataBLok = $newblok;
                     $jml_mth = ($sum_bmt + $sum_bmk);
                     $jml_mtg = $sum_Samplejjg - ($jml_mth + $sum_over + $sum_kosongjjg + $sum_abnor);
 
@@ -2336,7 +2339,7 @@ class inspeksidashController extends Controller
             $mtBuahtab1Wil_reg[$key]['skor_kr'] = 0;
             $mtBuahtab1Wil_reg[$key]['TOTAL_SKOR'] = 0;
         }
-        // dd($mtBuahtab1Wil[1]['KNE']['OD']);
+        // dd($mtBuahtab1Wil_reg);
 
         // dd($mtancakWIltab1_reg);
         $mtancaktab1Wil_reg = array();
@@ -2818,7 +2821,7 @@ class inspeksidashController extends Controller
         $mtancakReg['reg']['skor_ps'] = skor_palepah_ma($perPiWil);
         $mtancakReg['reg']['skor_akhir'] = $totalWil;
 
-        // dd($mtBuahtab1Wil);
+        // dd($mtBuahtab1Wil_reg);
         //endancak regional
         //Buah Regional
         $mtBuahreg = array();
@@ -2998,7 +3001,7 @@ class inspeksidashController extends Controller
             $chkdatareg = 'ada';
         }
 
-        // dd($chkdatareg);
+        // dd($mttransReg, $mtancakReg, $mtBuahreg);
 
         $RekapRegTable = array();
         foreach ($mttransReg as $key => $value) {

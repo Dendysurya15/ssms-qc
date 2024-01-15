@@ -1505,28 +1505,34 @@
 
 
             non.style.display = "none";
+            llon.style.display = "none";
             // resetClassList(llon);
             resetClassList(non);
-            llon.classList.add("col-lg-4");
-            nons.classList.add("col-lg-4");
-            nonx.classList.add("col-lg-4");
+            resetClassList(llon);
+            // llon.classList.add("col-lg-4");
+            nons.classList.add("col-lg-6");
+            nonx.classList.add("col-lg-6");
 
 
+            tahun3.style.display = "none";
             tahun4.style.display = "none";
             // resetClassList(tahun3);
+            resetClassList(tahun3);
             resetClassList(tahun4);
-            tahun3.classList.add("col-lg-4");
-            tahun1.classList.add("col-lg-4");
-            tahun2.classList.add("col-lg-4");
+            // tahun3.classList.add("col-lg-4");
+            tahun1.classList.add("col-lg-6");
+            tahun2.classList.add("col-lg-6");
 
 
 
+            sbi3.style.display = "none";
             sbi4.style.display = "none";
             // resetClassList(sbi3);
+            resetClassList(sbi3);
             resetClassList(sbi4);
-            sbi3.classList.add("col-lg-4");
-            sbi1.classList.add("col-lg-4");
-            sbi2.classList.add("col-lg-4");
+            // sbi3.classList.add("col-lg-4");
+            sbi1.classList.add("col-lg-6");
+            sbi2.classList.add("col-lg-6");
 
             const thElement1 = document.getElementById('thead1');
             const thElement2 = document.getElementById('thead2');
