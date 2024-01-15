@@ -123,9 +123,6 @@
             align-items: center; */
     }
 
-    .modal-content h2 {
-        /* margin-top: 20px; */
-    }
 
     .modal-content .form-control {
         width: 100%;

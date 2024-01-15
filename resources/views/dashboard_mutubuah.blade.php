@@ -1,7 +1,5 @@
 @include('layout/header')
 <style>
-    .tabContainer {}
-
     .blur {
         filter: blur(4px);
         opacity: 0.5;
