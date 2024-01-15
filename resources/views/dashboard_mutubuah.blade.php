@@ -737,73 +737,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark">
-                                        <div class="table-wrapper">
-                                            <table class="my-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th rowspan="4" style="background-color: #883c0c;">No</th>
-                                                        <th rowspan="4" style="background-color: #883c0c;">Reg.</th>
-                                                        <th rowspan="4" style="background-color: #883c0c;">PT.</th>
-                                                        <th rowspan="4" rowspan="2" style="background-color: #883c0c;" class="freeze-reg">Est.</th>
-                                                        <th rowspan="4" rowspan="2" style="background-color: #883c0c;" class="freeze-afd">Afd.</th>
-                                                        <th rowspan="4" rowspan="2" style="background-color: #883c0c;">Nama Staff</th>
-                                                        <th colspan="27" style="background-color: #ffc404;">Mutu Buah</th>
-                                                        <th rowspan="4" style="background-color: #a8a4a4;" rowspan="2">AlL Skor.</th>
-                                                        <th rowspan="4" style="background-color: #a8a4a4;" rowspan="2">Katagori</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th rowspan="3" style="background-color: #ffc404; white-space: nowrap;">Total Janjang Sample</th>
 
-                                                        <th colspan="7" style="background-color: #ffc404;">Mentah</th>
-                                                        <th colspan="3" rowspan="2" style="background-color: #ffc404;">Matang</th>
-                                                        <th colspan="3" rowspan="2" style="background-color: #ffc404;">Lewat Matang (O)</th>
-                                                        <th colspan="3" rowspan="2" style="background-color: #ffc404;">Janjang Kosong (E)</th>
-                                                        <th colspan="3" rowspan="2" style="background-color: #ffc404;">Tangkai Panjang (TP)</th>
-                                                        <th colspan="2" rowspan="2" style="background-color: #ffc404;">Abnormal</th>
-                                                        <th colspan="2" rowspan="2" style="background-color: #ffc404;">Rat Damage</th>
-                                                        <th colspan="3" rowspan="2" style="background-color: #ffc404;">Penggunaan Karung Brondolan</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colspan="2" style="background-color: #ffc404;">Tanpa Brondol</th>
-                                                        <th colspan="2" style="background-color: #ffc404;">Kurang Brondol</th>
-                                                        <th colspan="3" style="background-color: #ffc404;">Total</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Total</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Total</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Total</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Total</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Total</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Jjg</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">TPH</th>
-                                                        <th style="background-color: #ffc404;">%</th>
-                                                        <th style="background-color: #ffc404;">Skor</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="data_tahunTab">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
                                 </div>
 
 
@@ -1703,7 +1637,7 @@
         isTableHeaderModified = true;
         getweek()
         dashboard_tahun()
-        dashboardData_tahun()
+        // dashboardData_tahun() 
         dashboardFindingYear()
         getweekData()
         sbi_tahun()
@@ -4804,156 +4738,19 @@
     }
 
 
-    document.getElementById('showDataIns').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        dashboardData_tahun()
-    }
+    // document.getElementById('showDataIns').onclick = function() {
+    //     Swal.fire({
+    //         title: 'Loading',
+    //         html: '<span class="loading-text">Mohon Tunggu...</span>',
+    //         allowOutsideClick: false,
+    //         showConfirmButton: false,
+    //         willOpen: () => {
+    //             Swal.showLoading();
+    //         }
+    //     });
+    //     dashboardData_tahun()
+    // }
 
-    function dashboardData_tahun() {
-        $('#data_tahunTab').empty()
-
-
-        var reg = ''
-        var tahun = ''
-        var sbi_est = ''
-
-        var _token = $('input[name="_token"]').val();
-        var reg = document.getElementById('regDataTahun').value
-        var sbi_est = document.getElementById('sbiGraphYear').value
-        var tahun = document.getElementById('yearData').value
-
-
-        $.ajax({
-            url: "{{ route('getYearData') }}",
-            method: "GET",
-            data: {
-                reg,
-                tahun,
-                _token: _token
-            },
-            success: function(result) {
-                Swal.close();
-                var parseResult = JSON.parse(result)
-                var data_Sidak = Object.entries(parseResult['data_sidak'])
-                // console.log(data_Sidak);
-
-
-                function createTableCell(text) {
-                    const cell = document.createElement('td');
-                    cell.innerText = text;
-                    return cell;
-                }
-
-                function createTableCellWithColor(data, kategori) {
-                    let cell = document.createElement('td');
-                    cell.innerText = data;
-
-                    // Set background color based on kategori value
-                    switch (kategori) {
-                        case "POOR":
-                            cell.style.backgroundColor = 'red';
-                            break;
-                        case "GOOD":
-                            cell.style.backgroundColor = 'green';
-                            break;
-                        case "FAIR":
-                            cell.style.backgroundColor = 'yellow';
-                            break;
-                        case "EXCELLENT":
-                            cell.style.backgroundColor = 'blue';
-                            break;
-                    }
-
-                    return cell;
-                }
-                var arrTbody1 = data_Sidak;
-                var tbody1 = document.getElementById('data_tahunTab');
-                counter = 1;
-
-                arrTbody1.forEach(element => {
-                    let item4 = element[0];
-                    let afdelingData = element[1];
-
-                    Object.keys(afdelingData).forEach((key, index) => {
-                        tr = document.createElement('tr');
-                        let dataItems = {
-                            item1: counter++,
-                            item2: afdelingData[key].reg,
-                            item3: afdelingData[key].pt,
-                            item4: item4,
-                            item5: afdelingData[key].afd,
-                            item6: afdelingData[key].nama_staff,
-                            item7: afdelingData[key].Jumlah_janjang,
-                            item8: afdelingData[key].tnp_brd,
-                            item9: afdelingData[key].persenTNP_brd,
-                            item10: afdelingData[key].krg_brd,
-                            item11: afdelingData[key].persenKRG_brd,
-                            item12: afdelingData[key].total_jjg,
-                            item13: afdelingData[key].persen_totalJjg,
-                            item14: afdelingData[key].skor_total,
-                            item15: afdelingData[key].jjg_matang,
-                            item16: afdelingData[key].persen_jjgMtang,
-                            item17: afdelingData[key].skor_jjgMatang,
-                            item18: afdelingData[key].lewat_matang,
-                            item19: afdelingData[key].persen_lwtMtng,
-                            item20: afdelingData[key].skor_lewatMTng,
-                            item21: afdelingData[key].janjang_kosong,
-                            item22: afdelingData[key].persen_kosong,
-                            item23: afdelingData[key].skor_kosong,
-                            item24: afdelingData[key].vcut,
-                            item25: afdelingData[key].vcut_persen,
-                            item26: afdelingData[key].vcut_skor,
-                            item27: afdelingData[key].abnormal,
-                            item28: afdelingData[key].abnormal_persen,
-                            item29: afdelingData[key].rat_dmg,
-                            item30: afdelingData[key].rd_persen,
-                            item31: afdelingData[key].TPH,
-                            item32: afdelingData[key].persen_krg,
-                            item33: afdelingData[key].skor_kr,
-                            item34: afdelingData[key].All_skor,
-                            item35: afdelingData[key].kategori,
-                        };
-
-                        const rowData = Object.values(dataItems);
-
-                        rowData.forEach((data, cellIndex) => {
-                            // Create a new cell with a background color based on the 'kategori' value
-                            let cell = (cellIndex === 34) ? createTableCellWithColor(data, data) : createTableCell(data);
-
-                            // Apply lightblue color to the last row except for the cell with the 'kategori' value
-                            if (index === Object.keys(afdelingData).length - 1 && cellIndex !== 34) {
-                                cell.style.backgroundColor = 'lightblue';
-                            }
-
-                            // // Add the freeze-reg and freeze-afd classes to the corresponding cells
-                            // if (cellIndex === 3) {
-                            //     cell.classList.add('freeze-reg');
-                            // } else if (cellIndex === 4) {
-                            //     cell.classList.add('freeze-afd');
-                            // }
-
-                            tr.appendChild(cell);
-                        });
-
-
-                        tbody1.appendChild(tr);
-                    });
-
-
-                });
-
-
-            }
-        });
-    }
 
 
 
@@ -5182,12 +4979,23 @@
                                     // let item4 = document.createElement('span');
                                     // item4.innerText = innerData.est;
 
-                                    // let item5 = innerData.afd;
-                                    let item5 = document.createElement('a');
-                                    item5.href = 'detailtmutubuah/' + innerData.est + '/' + innerData.afd + '/' + bulan;
-                                    // item5.target = '_blank';
 
-                                    item5.innerText = innerData.afd;
+
+                                    let afd = innerData.afd;
+                                    let item5;
+
+                                    if (afd === 'EST') {
+                                        item5 = document.createElement('a');
+                                        item5.href = 'detailtmutubuah/' + innerData.est + '/' + innerData.afd + '/' + bulan;
+                                        item5.target = '_blank';
+                                        item5.innerText = innerData.afd;
+                                    } else {
+                                        item5 = document.createElement('span'); // or use 'div', 'p', etc. based on your needs
+                                        item5.innerText = innerData.afd;
+                                    }
+
+
+                                    // let item5 = innerData.afd;
                                     let item6 = innerData.nama_staff !== undefined ? innerData.nama_staff : '-';
                                     let item7 = innerData.Jumlah_janjang;
                                     let item8 = innerData.tnp_brd;

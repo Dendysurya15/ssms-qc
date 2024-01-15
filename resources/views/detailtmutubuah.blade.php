@@ -773,6 +773,16 @@
 
     });
     $("#show-button").click(function() {
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         $('#data_tahunTab').empty()
         getDataTphYear()
         getmapsbuah();
@@ -1284,160 +1294,183 @@
                 //parsing result ke json untuk dalam estate
                 var parseResult = JSON.parse(result)
                 var afdResult = Object.entries(parseResult['sidak_buah'])
-                var EstTotal = Object.entries(parseResult['total_buah'])
+                // var EstTotal = Object.entries(parseResult['total_buah'])
 
                 // console.log(arrEst1);
-                var arrEst1 = afdResult
-                var tbody1 = document.getElementById('data_tahunTab');
+                // var arrEst1 = afdResult
+                // var tbody1 = document.getElementById('data_tahunTab');
 
                 // console.log(arrEst1);
                 // Assuming `arrEst1` is your array of data
 
-                arrEst1.forEach((element) => {
-                    const tr = document.createElement('tr');
-                    let item1 = element[1]['estate']
-                    let item2 = element[1]['est']
-                    let item3 = element[1]['petugas']
-                    let item4 = element[1]['Jumlah_janjang']
-                    // mentah
-                    let item5 = element[1]['tnp_brd']
-                    let item6 = element[1]['persenTNP_brd']
-                    let item7 = element[1]['krg_brd']
-                    let item8 = element[1]['persenKRG_brd']
-                    let item9 = element[1]['total_jjg']
-                    let item10 = element[1]['persen_totalJjg']
-                    let item11 = element[1]['skor_total']
-                    // masak 
-                    let item12 = element[1]['jjg_matang']
-                    let item13 = element[1]['persen_jjgMtang']
-                    let item14 = element[1]['skor_jjgMatang']
-                    // lewat matang 
-                    let item15 = element[1]['lewat_matang']
-                    let item16 = element[1]['persen_lwtMtng']
-                    let item17 = element[1]['skor_lewatMTng']
-                    //janjang kosong
-                    let item18 = element[1]['janjang_kosong']
-                    let item19 = element[1]['persen_kosong']
-                    let item20 = element[1]['skor_kosong']
-                    // tidak standar vcut 
-                    let item21 = element[1]['vcut']
-                    let item22 = element[1]['vcut_persen']
-                    let item23 = element[1]['vcut_skor']
-                    // abnormal 
-                    let item24 = element[1]['abnormal']
-                    let item25 = element[1]['abnormal_persen']
-                    // rat dmg
-                    let item26 = element[1]['rat_dmg']
-                    let item27 = element[1]['rd_persen']
-                    // penggunaan  karung
-                    let item28 = element[1]['TPH']
-                    let item29 = element[1]['persen_krg']
-                    let item30 = element[1]['skor_kr']
-                    // all skor 
-                    let item31 = element[1]['All_skor']
-                    let item32 = element[1]['kategori']
-                    const items = [];
-                    for (let i = 1; i <= 32; i++) {
-                        items.push(eval(`item${i}`));
-                    }
+                var tbody1 = document.getElementById('data_tahunTab');
+                afdResult.forEach((outerArray) => {
+                    const key = outerArray[0];
+                    const data = outerArray[1];
 
+                    Object.keys(data).forEach((subKey) => {
+                        const rowData = data[subKey];
+                        const tr = document.createElement('tr');
+                        // console.log(rowData['estate']);
+                        let item1 = rowData['estate']
+                        let item2 = rowData['est']
+                        let item3 = rowData['petugas']
+                        let item4 = rowData['Jumlah_janjang']
+                        // mentah
+                        let item5 = rowData['tnp_brd']
+                        let item6 = rowData['persenTNP_brd']
+                        let item7 = rowData['krg_brd']
+                        let item8 = rowData['persenKRG_brd']
+                        let item9 = rowData['total_jjg']
+                        let item10 = rowData['persen_totalJjg']
+                        let item11 = rowData['skor_total']
+                        // masak 
+                        let item12 = rowData['jjg_matang']
+                        let item13 = rowData['persen_jjgMtang']
+                        let item14 = rowData['skor_jjgMatang']
+                        // lewat matang 
+                        let item15 = rowData['lewat_matang']
+                        let item16 = rowData['persen_lwtMtng']
+                        let item17 = rowData['skor_lewatMTng']
+                        //janjang kosong
+                        let item18 = rowData['janjang_kosong']
+                        let item19 = rowData['persen_kosong']
+                        let item20 = rowData['skor_kosong']
+                        // tidak standar vcut 
+                        let item21 = rowData['vcut']
+                        let item22 = rowData['vcut_persen']
+                        let item23 = rowData['vcut_skor']
+                        // abnormal 
+                        let item24 = rowData['abnormal']
+                        let item25 = rowData['abnormal_persen']
+                        // rat dmg
+                        let item26 = rowData['rat_dmg']
+                        let item27 = rowData['rd_persen']
+                        // penggunaan  karung
+                        let item28 = rowData['TPH']
+                        let item29 = rowData['persen_krg']
+                        let item30 = rowData['skor_kr']
+                        // all skor 
+                        let item31 = rowData['All_skor']
+                        let item32 = rowData['kategori']
+                        const items = [];
+                        for (let i = 1; i <= 32; i++) {
+                            items.push(eval(`item${i}`));
+                        }
 
-                    items.forEach((item, index) => {
-                        const itemElement = document.createElement('td');
-                        itemElement.classList.add('text-center');
-                        itemElement.innerText = item;
+                        items.forEach((item, index) => {
+                            const itemElement = document.createElement('td');
+                            itemElement.classList.add('text-center');
+                            itemElement.innerText = item;
 
-                        if (index === 31) {
-                            // Apply background color based on the value of item32
-                            if (item === 'SATISFACTORY') {
-                                itemElement.style.backgroundColor = '#fffc04';
-                            } else if (item === 'EXCELLENT') {
-                                itemElement.style.backgroundColor = '#5874c4';
-                            } else if (item === 'GOOD') {
-                                itemElement.style.backgroundColor = '#10fc2c';
-                            } else if (item === 'POOR') {
-                                itemElement.style.backgroundColor = '#ff0404';
-                            } else if (item === 'FAIR') {
-                                itemElement.style.backgroundColor = '#ffa404';
+                            if (index === 31) {
+                                // Apply background color based on the value of item32
+                                if (item === 'SATISFACTORY') {
+                                    itemElement.style.backgroundColor = '#fffc04';
+                                } else if (item === 'EXCELLENT') {
+                                    itemElement.style.backgroundColor = '#5874c4';
+                                } else if (item === 'GOOD') {
+                                    itemElement.style.backgroundColor = '#10fc2c';
+                                } else if (item === 'POOR') {
+                                    itemElement.style.backgroundColor = '#ff0404';
+                                } else if (item === 'FAIR') {
+                                    itemElement.style.backgroundColor = '#ffa404';
+                                }
                             }
-                        }
+                            if (item1 === 'TOTAL') {
+                                if (item32 === 'SATISFACTORY') {
+                                    itemElement.style.backgroundColor = '#fffc04';
+                                } else if (item32 === 'EXCELLENT') {
+                                    itemElement.style.backgroundColor = '#5874c4';
+                                } else if (item32 === 'GOOD') {
+                                    itemElement.style.backgroundColor = '#10fc2c';
+                                } else if (item32 === 'POOR') {
+                                    itemElement.style.backgroundColor = '#ff0404';
+                                } else if (item32 === 'FAIR') {
+                                    itemElement.style.backgroundColor = '#ffa404';
+                                }
+                            }
 
-                        tr.appendChild(itemElement);
+                            tr.appendChild(itemElement);
+                        });
+
+                        tbody1.appendChild(tr);
+
                     });
-
-                    tbody1.appendChild(tr);
-                });
-                // console.log(EstTotal);
-
-                const tr = document.createElement('tr');
-                let item1 = EstTotal[2][1];
-                let item2 = EstTotal[3][1];
-                let item3 = EstTotal[0][1];
-                let item4 = EstTotal[4][1];
-                let item5 = EstTotal[6][1];
-                let item6 = EstTotal[5][1];
-                let item7 = EstTotal[7][1];
-                let item8 = EstTotal[8][1];
-                let item9 = EstTotal[9][1];
-                let item10 = EstTotal[10][1];
-
-                let item11 = EstTotal[11][1];
-                let item12 = EstTotal[12][1];
-                let item13 = EstTotal[13][1];
-                let item14 = EstTotal[14][1];
-                let item15 = EstTotal[15][1];
-                let item16 = EstTotal[16][1];
-                let item17 = EstTotal[17][1];
-                let item18 = EstTotal[18][1];
-                let item19 = EstTotal[19][1];
-                let item20 = EstTotal[20][1];
-                let item21 = EstTotal[21][1];
-                let item22 = EstTotal[22][1];
-                let item23 = EstTotal[23][1];
-                let item24 = EstTotal[25][1];
-                let item25 = EstTotal[26][1];
-                let item26 = EstTotal[27][1];
-                let item27 = EstTotal[28][1];
-                let item28 = EstTotal[29][1];
-                let item29 = EstTotal[30][1];
-                let item30 = EstTotal[31][1];
-                let item31 = EstTotal[32][1];
-
-
-                const items = [];
-                for (let i = 1; i <= 31; i++) {
-                    items.push(eval(`item${i}`));
-                }
-
-                items.forEach((item, index) => {
-                    const itemElement = document.createElement('td');
-                    itemElement.classList.add('text-center');
-                    itemElement.innerText = item;
-                    if (index === 0) {
-                        itemElement.setAttribute('colspan', '2'); // Add colspan attribute for item1
-                    }
-                    if (index < 30) {
-                        // Apply background color for indices 0 to 29
-                        itemElement.style.backgroundColor = '#b8d48c'; // Set your desired background color here
-                    }
-                    if (index === 30) {
-                        // Apply background color based on the value of item32
-                        if (item === 'SATISFACTORY') {
-                            itemElement.style.backgroundColor = '#fffc04';
-                        } else if (item === 'EXCELLENT') {
-                            itemElement.style.backgroundColor = '#5874c4';
-                        } else if (item === 'GOOD') {
-                            itemElement.style.backgroundColor = '#10fc2c';
-                        } else if (item === 'POOR') {
-                            itemElement.style.backgroundColor = '#ff0404';
-                        } else if (item === 'FAIR') {
-                            itemElement.style.backgroundColor = '#ffa404';
-                        }
-                    }
-                    tr.appendChild(itemElement);
                 });
 
-                tbody1.appendChild(tr);
+
+
+
+                // const tr = document.createElement('tr');
+                // let item1 = EstTotal[2][1];
+                // let item2 = EstTotal[3][1];
+                // let item3 = EstTotal[0][1];
+                // let item4 = EstTotal[4][1];
+                // let item5 = EstTotal[6][1];
+                // let item6 = EstTotal[5][1];
+                // let item7 = EstTotal[7][1];
+                // let item8 = EstTotal[8][1];
+                // let item9 = EstTotal[9][1];
+                // let item10 = EstTotal[10][1];
+
+                // let item11 = EstTotal[11][1];
+                // let item12 = EstTotal[12][1];
+                // let item13 = EstTotal[13][1];
+                // let item14 = EstTotal[14][1];
+                // let item15 = EstTotal[15][1];
+                // let item16 = EstTotal[16][1];
+                // let item17 = EstTotal[17][1];
+                // let item18 = EstTotal[18][1];
+                // let item19 = EstTotal[19][1];
+                // let item20 = EstTotal[20][1];
+                // let item21 = EstTotal[21][1];
+                // let item22 = EstTotal[22][1];
+                // let item23 = EstTotal[23][1];
+                // let item24 = EstTotal[25][1];
+                // let item25 = EstTotal[26][1];
+                // let item26 = EstTotal[27][1];
+                // let item27 = EstTotal[28][1];
+                // let item28 = EstTotal[29][1];
+                // let item29 = EstTotal[30][1];
+                // let item30 = EstTotal[31][1];
+                // let item31 = EstTotal[32][1];
+
+
+                // const items = [];
+                // for (let i = 1; i <= 31; i++) {
+                //     items.push(eval(`item${i}`));
+                // }
+
+                // items.forEach((item, index) => {
+                //     const itemElement = document.createElement('td');
+                //     itemElement.classList.add('text-center');
+                //     itemElement.innerText = item;
+                //     if (index === 0) {
+                //         itemElement.setAttribute('colspan', '2'); // Add colspan attribute for item1
+                //     }
+                //     if (index < 30) {
+                //         // Apply background color for indices 0 to 29
+                //         itemElement.style.backgroundColor = '#b8d48c'; // Set your desired background color here
+                //     }
+                //     if (index === 30) {
+                //         // Apply background color based on the value of item32
+                //         if (item === 'SATISFACTORY') {
+                //             itemElement.style.backgroundColor = '#fffc04';
+                //         } else if (item === 'EXCELLENT') {
+                //             itemElement.style.backgroundColor = '#5874c4';
+                //         } else if (item === 'GOOD') {
+                //             itemElement.style.backgroundColor = '#10fc2c';
+                //         } else if (item === 'POOR') {
+                //             itemElement.style.backgroundColor = '#ff0404';
+                //         } else if (item === 'FAIR') {
+                //             itemElement.style.backgroundColor = '#ffa404';
+                //         }
+                //     }
+                //     tr.appendChild(itemElement);
+                // });
+
+                // tbody1.appendChild(tr);
             }
         })
     }
@@ -1534,7 +1567,7 @@
     L.control.layers(baseMaps).addTo(map);
 
 
-    var blokLayer, temuanLayer, legendContainer; // Define layer and legend variables
+    var blokLayer, temuanLayer, legendContainer, plotarr
 
 
     function getmapsbuah() {
@@ -1548,6 +1581,9 @@
         }
         if (legendContainer) {
             legendContainer.remove(map);
+        }
+        if (plotarr) {
+            map.removeLayer(plotarr);
         }
 
         var Tanggal = document.getElementById('inputDate').value;
@@ -1573,16 +1609,19 @@
                 drawTemuan(markerResult);
                 drawLegend(markerResult)
                 drawArrow(plotarrow)
+
+                Swal.close();
             },
 
 
 
             error: function() {
-
+                Swal.close();
             }
         });
 
         function drawBlok(blok) {
+            blokLayer = L.layerGroup();
 
             var getPlotStr = '{"type"'
             getPlotStr += ":"
@@ -1624,17 +1663,16 @@
 
             var test = L.geoJSON(blok, {
                     onEachFeature: function(feature, layer) {
-
-                        layer.myTag = 'BlokMarker'
+                        layer.myTag = 'BlokMarker';
                         var label = L.marker(layer.getBounds().getCenter(), {
                             icon: L.divIcon({
                                 className: 'label-bidang',
                                 html: feature.properties.blok,
                                 iconSize: [50, 10]
                             })
-                        }).addTo(map);
+                        }).addTo(blokLayer);
 
-                        layer.addTo(map);
+                        // layer.addTo(blokLayer);
                     },
                     style: function(feature) {
                         switch (feature.properties.afdeling) {
@@ -1686,13 +1724,12 @@
                         }
                     }
                 })
-                .addTo(map);
+                .addTo(blokLayer);
 
-            blokLayer = test; // Store the reference to the new blokLayer
 
             map.fitBounds(test.getBounds());
+            blokLayer.addTo(map);
 
-            // map.remove();
         }
 
         function drawTemuan(markerResult) {
@@ -1812,36 +1849,45 @@
         }
 
         function drawArrow(plotarrow) {
-            const latLngArray = plotarrow.map((item) => {
-                const latLng = item[1].latln.split(','); // Split the latlng string into latitude and longitude
-                return [parseFloat(latLng[0]), parseFloat(latLng[1])]; // Convert strings to numbers
-            });
+            plotarr = L.layerGroup();
 
+            for (let i = 0; i < plotarrow.length; i++) {
+                const [key, nestedArray] = plotarrow[i];
 
-            for (let i = 0; i < latLngArray.length - 1; i++) {
-                const startLatLng = latLngArray[i];
-                const endLatLng = latLngArray[i + 1];
+                const latLngArray = nestedArray.map(item => {
+                    const latLng = item.latln.split(',');
+                    return [parseFloat(latLng[0]), parseFloat(latLng[1])];
+                });
 
-                const arrow = L.polyline([startLatLng, endLatLng], {
-                    color: 'red',
-                    weight: 2
-                }).addTo(map);
+                for (let j = 0; j < latLngArray.length - 1; j++) {
+                    const startLatLng = latLngArray[j];
+                    const endLatLng = latLngArray[j + 1];
 
-                const arrowHead = L.polylineDecorator(arrow, {
-                    patterns: [{
-                        offset: '50%',
-                        repeat: 50,
-                        symbol: L.Symbol.arrowHead({
-                            pixelSize: 12,
-                            polygon: false,
-                            pathOptions: {
-                                color: 'yellow'
-                            }
-                        })
-                    }]
-                }).addTo(map);
+                    const arrow = L.polyline([startLatLng, endLatLng], {
+                        color: 'red',
+                        weight: 2
+                    }).addTo(plotarr);
+
+                    const arrowHead = L.polylineDecorator(arrow, {
+                        patterns: [{
+                            offset: '50%',
+                            repeat: 50,
+                            symbol: L.Symbol.arrowHead({
+                                pixelSize: 12,
+                                polygon: false,
+                                pathOptions: {
+                                    color: 'yellow'
+                                }
+                            })
+                        }]
+                    }).addTo(plotarr);
+                }
             }
+
+            plotarr.addTo(map);
         }
+
+
 
     }
 </script>

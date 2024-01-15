@@ -203,11 +203,12 @@
                 <table class="my-table">
                     <thead>
                         <tr>
-                            <th colspan="23">Mutu BUAH (MB)</th>
+                            <th colspan="25">Mutu BUAH (MB)</th>
                             <th colspan="7">Keterangan</th>
                         </tr>
                         <tr>
                             <th colspan="2" rowspan="3">Afdeling</th>
+                            <th colspan="2" rowspan="3">Blok</th>
                             <th rowspan="3">Total Janjang Sample</th>
                             <th colspan="6">Mentah (A)</th>
                             <th colspan="2" rowspan="2">Matang (N)</th>
@@ -216,8 +217,9 @@
                             <th colspan="2" rowspan="2">Abnormal</th>
                             <th colspan="2" rowspan="2">Tidak Standar V-Cut</th>
                             <th colspan="2" rowspan="2">Rat Damage</th>
-                            <th colspan="2" rowspan="2">Alas Brondol</th>
-                            <th colspan="12" rowspan="17"></th>
+                            <th colspan="2" rowspan="2" style="border: 1px solid black;">Alas Brondol</th>
+
+                            <!-- <th colspan="12" rowspan="25"></th> -->
                         </tr>
                         <tr>
                             <th colspan="2">0 Brondol</th>
@@ -249,10 +251,38 @@
                         <tr>
 
                     </thead>
-                    <tbody id="tab2">
-                        @foreach ($data['sidak_buah'] as $key => $item)
+                    <tbody id="tab2" style="font-size: 13px;border:none">
+                        @foreach ($data['sidak_buah'] as $items)
+                        @foreach ($items as $item)
                         <tr>
-                            <td colspan="2">{{$item['afd']}}-{{$item['est']}}</td>
+                            @if ($item['afd'] === 'TOTAL')
+
+                            <td colspan="2" style="background-color: #80A29E;">{{$item['estate']}}</td>
+                            <td colspan="2" style="background-color: #80A29E;">{{$item['est']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['Jumlah_janjang']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['tnp_brd']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['persenTNP_brd']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['krg_brd']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['persenKRG_brd']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['total_jjg']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['persen_totalJjg']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['jjg_matang']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['persen_jjgMtang']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['lewat_matang']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['persen_lwtMtng']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['janjang_kosong']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['persen_kosong']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['abnormal']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['abnormal_persen']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['vcut']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['vcut_persen']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['rat_dmg']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['rd_persen']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['karung']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['persen_krg']}}</td>
+                            @else
+                            <td colspan="2">{{$item['estate']}}</td>
+                            <td colspan="2">{{$item['est']}}</td>
                             <td>{{$item['Jumlah_janjang']}}</td>
                             <td>{{$item['tnp_brd']}}</td>
                             <td>{{$item['persenTNP_brd']}}</td>
@@ -272,66 +302,17 @@
                             <td>{{$item['vcut_persen']}}</td>
                             <td>{{$item['rat_dmg']}}</td>
                             <td>{{$item['rd_persen']}}</td>
-                            <td>{{$item['karung']}}/{{$item['blok']}}</td>
+                            <td>{{$item['karung']}}</td>
                             <td>{{$item['persen_krg']}}</td>
+                            @endif
+
+
+
+
                         </tr>
+
                         @endforeach
-
-                        @php
-                        $emptyRows = 12 - count($data['sidak_buah']);
-                        @endphp
-
-                        @for ($i = 0; $i < $emptyRows; $i++) <tr>
-                            <td colspan="2">&nbsp;</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            </tr>
-                            @endfor
-
-                            <tr>
-                                <td colspan="2">Total</td>
-                                <td>{{ $data['total_buah']['Jumlah_janjang'] }}</td>
-                                <td>{{ $data['total_buah']['tnp_brd'] }}</td>
-                                <td>{{ $data['total_buah']['persenTNP_brd'] }}</td>
-                                <td>{{ $data['total_buah']['krg_brd'] }}</td>
-                                <td>{{ $data['total_buah']['persenKRG_brd'] }}</td>
-                                <td>{{ $data['total_buah']['total_jjg'] }}</td>
-                                <td>{{ $data['total_buah']['persen_totalJjg'] }}</td>
-                                <td>{{ $data['total_buah']['jjg_matang'] }}</td>
-                                <td>{{ $data['total_buah']['persen_jjgMtang'] }}</td>
-                                <td>{{ $data['total_buah']['lewat_matang'] }}</td>
-                                <td>{{ $data['total_buah']['persen_lwtMtng'] }}</td>
-                                <td>{{ $data['total_buah']['janjang_kosong'] }}</td>
-                                <td>{{ $data['total_buah']['persen_kosong'] }}</td>
-                                <td>{{ $data['total_buah']['abnormal'] }}</td>
-                                <td>{{ $data['total_buah']['abnormal_persen'] }}</td>
-                                <td>{{ $data['total_buah']['vcut'] }}</td>
-                                <td>{{ $data['total_buah']['vcut_persen'] }}</td>
-                                <td>{{ $data['total_buah']['rat_dmg'] }}</td>
-                                <td>{{ $data['total_buah']['rd_persen'] }}</td>
-                                <td>{{ $data['total_buah']['karung'] }}/{{ $data['total_buah']['blok'] }}</td>
-                                <td>{{ $data['total_buah']['persen_krg'] }}</td>
-
-                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
