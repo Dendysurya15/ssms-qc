@@ -129,47 +129,12 @@ class makemapsController extends Controller
             }
             $skorTrans = skor_brd_tinggal(round($sum_bt / $tph_sample, 2)) + skor_buah_tinggal(round($sum_Restan / $tph_sample, 2));
             $dataSkor[$key][0]['skorTrans'] = $skorTrans;
+            $dataSkor[$key][0]['latin'] = $value2['lat'] . ',' . $value2['lon'];
         }
 
-        foreach ($DataMTbuah as $key => $value) {
-            $listBlokPerAfd = array();
-            $janjang = 0;
-            $Jjg_Mth = 0;
-            $Jjg_Mth2 = 0;
-            $Jjg_Over = 0;
-            $Jjg_Empty = 0;
-            $Jjg_Abr = 0;
-            $Jjg_Vcut = 0;
-            $Jjg_Als = 0;
-            foreach ($value as $key2 => $value2) {
-                if (!in_array($value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'], $listBlokPerAfd)) {
-                    $listBlokPerAfd[] = $value2['estate'] . ' ' . $value2['afdeling'] . ' ' . $value2['blok'];
-                }
-                $dtBlok = count($listBlokPerAfd);
-                $janjang += $value2['jumlah_jjg'];
-                $Jjg_Mth += $value2['bmt'];
-                $Jjg_Mth2 += $value2['bmk'];
-                $Jjg_Over += $value2['overripe'];
-                $Jjg_Empty += $value2['empty_bunch'];
-                $Jjg_Abr += $value2['abnormal'];
-                $Jjg_Vcut += $value2['vcut'];
-                $Jjg_Als += $value2['alas_br'];
-            }
-            $jml_mth = ($Jjg_Mth + $Jjg_Mth2);
-            $jml_mtg = $janjang - ($jml_mth + $Jjg_Over + $Jjg_Empty + $Jjg_Abr);
-            $perBuahMentah = ($janjang - $Jjg_Abr) != 0 ? round(($jml_mth / ($janjang - $Jjg_Abr)) * 100, 2) : 0;
-            $perBuahMtg = ($janjang - $Jjg_Abr) != 0 ? round(($jml_mtg / ($janjang - $Jjg_Abr)) * 100, 2) : 0;
-            $perBuahOver = ($janjang - $Jjg_Abr) != 0 ? round(($Jjg_Over / ($janjang - $Jjg_Abr)) * 100, 2) : 0;
-            $perJangkos = ($janjang - $Jjg_Abr) != 0 ? round(($Jjg_Empty / ($janjang - $Jjg_Abr)) * 100, 2) : 0;
 
-            $perVcut = count_percent($Jjg_Vcut, $janjang);
-            $perAbnr = count_percent($Jjg_Abr, $janjang);
-            $perKrgBrd = count_percent($Jjg_Als, $dtBlok);
-            $skorBuah = skor_buah_mentah_mb($perBuahMentah) + skor_buah_masak_mb($perBuahMtg) + skor_buah_over_mb($perBuahOver) + skor_jangkos_mb($perJangkos) + skor_buah_over_mb($perVcut) + skor_abr_mb($perKrgBrd);
 
-            $dataSkor[$key][0]['skorBuah'] = $skorBuah;
-        }
-
+        // dd($dataSkor);
         foreach ($DataMTAncak as $key => $value) {
             $listBlok = array();
             $sph = 0;
@@ -215,68 +180,17 @@ class makemapsController extends Controller
             $skorAncak = skor_brd_ma($perBrdt) + skor_buah_Ma($perBt) + skor_palepah_ma($perPSMA);
 
             $dataSkor[$key][0]['skorAncak'] = $skorAncak;
+            $dataSkor[$key][0]['latin2'] = $value2['lat_awal'] . ',' . $value2['lon_awal'];
         }
-        // dd($regData);
+        // dd($dataSkor);
 
         $dataSkorResult = array();
         $newData = '';
 
-        // dd($regData,$est);
+        // dd($dataSkor, $est);
         foreach ($dataSkor as $key => $value) {
             foreach ($value as $key1 => $value1) {
                 // dd($key);
-                if ($est == "NBE") {
-                    if (strlen($key) == 5) {
-                        $newData = substr($key, 0, -2);
-                    } else if (strlen($key) == 4) {
-                        $newData = substr($key, 0, 1) . substr($key, 2);
-                    }
-                } else {
-                    if (strlen($key) == 5) {
-                        $sliced = substr($key, 0, -2);
-                        $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if ($est == "KTE" || $est == "MKE" || $est == "PKE" || $est == "BSE" || $est == "BWE" || $est == "GDE") {
-                        if (strlen($key) == 6  && substr($key, 0, 1) == 'H') {
-                            $sliced = substr($key, 0, -2);
-                            $newData = substr($sliced, 0, 1) . substr($sliced, 2);
-                        } elseif (strlen($key) == 6) {
-                            $newData = substr($key, 0, -3);
-                        }
-                    } else if ($est == "BDE") {
-                        // $replace = substr_replace($key, '', 1, 1);
-                        // $sliced = substr($replace, 0, -2);
-                        $newData = substr($key, 0, -3);
-                    } else if (strlen($key) == 8) {
-                        $replace = substr_replace($key, '', 1, 1);
-                        $sliced = substr($replace, 0, -2);
-                        $newData = substr($key, 0, -3);
-                    } else if (strlen($key) == 7) {
-                        $replace = substr_replace($key, '', 1, 1);
-                        $sliced = substr($replace, 0, -2);
-                        $newData = substr($key, 0, -3);
-                    } else if (strlen($key) == 6) {
-                        $replace = substr_replace($key, '', 1, 1);
-                        $sliced = substr($replace, 0, -2);
-                        $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if (strlen($key) == 3) {
-                        $sliced = $key;
-                        $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if (strpos($key, 'CBI') !== false && strlen($key) == 9) {
-                        $sliced = substr($key, 0, -6);
-                        $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if (strpos($key, 'CBI') !== false) {
-                        $newData = substr($key, 0, -4);
-                    } else if (strpos($key, 'CB') !== false) {
-                        $replace = substr_replace($key, '', 1, 1);
-                        $sliced = substr($replace, 0, -3);
-                        $newData = substr_replace($sliced, '0', 1, 0);
-                    } else if ($regData == [7, 8]) {
-                        $newData = substr($key, 0, 3);
-                    } else if ($regData == [10, 11]) {
-                        $newData = substr($key, 0, 4);
-                    }
-                }
-
 
 
                 $skorTrans = check_array('skorTrans', $value1);
@@ -307,101 +221,161 @@ class makemapsController extends Controller
 
 
 
-                $dataSkorResult[$newData][0]['estate'] = $est;
-                $dataSkorResult[$newData][0]['skorTrans'] = $skorTrans;
-                $dataSkorResult[$newData][0]['skorBuah'] = $skorBuah;
-                $dataSkorResult[$newData][0]['skorAncak'] = $skorAncak;
-                $dataSkorResult[$newData][0]['blok'] = $newData;
-                $dataSkorResult[$newData][0]['text'] = $skor_kategori_akhir_est[1];
-                $dataSkorResult[$newData][0]['skorAkhir'] = $skorAkhir;
-                $dataSkorResult[$newData][0]['check_data'] = $check;
+                $dataSkorResult[$key]['estate'] = $est;
+                $dataSkorResult[$key]['skorTrans'] = $skorTrans;
+                $dataSkorResult[$key]['skorBuah'] = $skorBuah;
+                $dataSkorResult[$key]['skorAncak'] = $skorAncak;
+                $dataSkorResult[$key]['blok'] = $key;
+                $dataSkorResult[$key]['text'] = $skor_kategori_akhir_est[1];
+                $dataSkorResult[$key]['skorAkhir'] = $skorAkhir;
+                $dataSkorResult[$key]['check_data'] = $check;
+                $dataSkorResult[$key]['latin'] = $value1['latin'] ?? $value1['latin2'];
             }
         }
 
 
-        // end testing 
+        function isPointInPolygon($point, $polygon)
+        {
+            $splPoint = explode(',', $point);
+            $x = $splPoint[0];
+            $y = $splPoint[1];
 
-        $datas = array();
-        foreach ($dataSkorResult as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                $datas[] = $value2;
+            $vertices = array_map(function ($vertex) {
+                return explode(',', $vertex);
+            }, explode('$', $polygon));
+
+            $numVertices = count($vertices);
+            $isInside = false;
+
+            for ($i = 0, $j = $numVertices - 1; $i < $numVertices; $j = $i++) {
+                $xi = $vertices[$i][0];
+                $yi = $vertices[$i][1];
+                $xj = $vertices[$j][0];
+                $yj = $vertices[$j][1];
+
+                $intersect = (($yi > $y) != ($yj > $y)) && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
+
+                if ($intersect) {
+                    $isInside = !$isInside;
+                }
             }
+
+            return $isInside;
         }
 
-        $list_blok = array();
-        foreach ($datas as $key => $value) {
-            $list_blok[$est][] = $value['blok'];
-        }
-
-
-        $estateQuery = DB::connection('mysql2')->Table('estate')
-            ->join('afdeling', 'afdeling.estate', 'estate.id')
-            ->where('est', $est)
+        $estateQuery = DB::connection('mysql2')->table('estate')
+            ->select('*')
+            ->join('afdeling', 'afdeling.estate', '=', 'estate.id')
+            ->where('estate.est', $est)
             ->get();
+        $estateQuery = json_decode($estateQuery, true);
 
         $listIdAfd = array();
         foreach ($estateQuery as $key => $value) {
-            $listIdAfd[] = $value->id;
+            $listIdAfd[] = $value['id'];
         }
-        $blokEstate =  DB::connection('mysql2')->Table('blok')->whereIn('afdeling', $listIdAfd)->groupBy('nama')->pluck('nama', 'id');
-        $blokEstateFix[$est] = json_decode($blokEstate, true);
 
 
+        $blokEstate = DB::connection('mysql2')->table('blok')
+            ->select(DB::raw('DISTINCT nama, MIN(id) as id, afdeling'))
+            ->whereIn('afdeling', $listIdAfd)
+            ->groupBy('nama', 'afdeling')
+            ->get();
+        $blokEstate = json_decode($blokEstate, true);
 
+        $blokEstateFix = array();
+        foreach ($blokEstate as $key => $value) {
+            $blokEstateFix[$value['afdeling']][] = $value['nama'];
+        }
 
-        // $values = array_values($blokEstateFix['BDE']);
+        // dd($blokEstateFix);
+        $qrAfd = DB::connection('mysql2')->table('afdeling')
+            ->select('*')
+            ->get();
+        $qrAfd = json_decode($qrAfd, true);
 
-
-
-        // dd($dataSkorResult,$blokEstateFix);
-        $blokLatLn = array();
+        $blokEstNewFix = array();
         foreach ($blokEstateFix as $key => $value) {
-            $inc = 0;
-            foreach ($value as $key2 => $data) {
-                $nilai = 0;
-                $kategori = 'x';
-
-                if (isset($dataSkorResult[$data])) {
-                    $value4 = $dataSkorResult[$data][0];
-                    $nilai = $value4['skorAkhir'];
-                    $kategori = $value4['text'];
+            foreach ($qrAfd as $key1 => $value1) {
+                if ($value1['id'] == $key) {
+                    $afdelingNama = $value1['nama'];
                 }
+            }
+            $blokEstNewFix[$afdelingNama] = $value;
+        }
 
-                $query = DB::connection('mysql2')->table('blok')
-                    ->select('blok.*')
-                    ->whereIn('blok.afdeling', $listIdAfd)
-                    ->get();
+        $queryBlok = DB::connection('mysql2')->table('blok')
+            ->select('*')
+            ->whereIn('afdeling', $listIdAfd)
+            ->get();
+        $queryBlok = json_decode($queryBlok, true);
 
+        $blokLatLnEw = array();
+        $inc = 0;
+        foreach ($blokEstNewFix as $key => $value) {
+            foreach ($value as $key1 => $value1) {
                 $latln = '';
-                $queryAfd  = '';
-                foreach ($query as $key3 => $val) {
-                    if ($val->nama == $data) {
-                        $latln .= '[' . $val->lon . ',' . $val->lat . '],';
-                        $afd =  $val->afdeling;
-                        $queryAfd = DB::connection('mysql2')->table('afdeling')
-                            ->select('afdeling.*')
-                            ->where('id', $afd)
-                            ->first();
-
-                        // $queryEst = DB::connection('mysql2')->table('afdeling')
-                        // ->select('afdeling.*')
-                        // ->whereIn('afdeling.id', $afd)
-                        // ->pluck('nama');
-
-
+                $latln2 = '';
+                foreach ($queryBlok as $key3 => $value4) {
+                    if ($value4['nama'] == $value1) {
+                        $latln .= $value4['lat'] . ',' . $value4['lon'] . '$';
+                        $latln2 .= '[' . $value4['lon'] . ',' . $value4['lat'] . '],';
                     }
                 }
 
-                $blokLatLn[$inc]['blok'] = $data;
-                $blokLatLn[$inc]['estate'] = $est;
-                $blokLatLn[$inc]['latln'] = rtrim($latln, ',');
-                $blokLatLn[$inc]['nilai'] = $nilai;
-                $blokLatLn[$inc]['afdeling'] = $queryAfd->nama;
-                $blokLatLn[$inc]['kategori'] = $kategori;
-
+                $blokLatLnEw[$inc]['afd'] = $key;
+                $blokLatLnEw[$inc]['blok'] = $value1;
+                $blokLatLnEw[$inc]['latln'] = rtrim($latln, '$');
+                $blokLatLnEw[$inc]['latinnew'] = rtrim($latln2, ',');
                 $inc++;
             }
         }
+
+        // dd($blokLatLnEw);
+
+        // $values = array_values($blokEstateFix['BDE']);
+        $uniqueCombinations = [];
+
+        foreach ($blokLatLnEw as $value) {
+            $key = $value['blok'] . '_' . $est . '_' . $value['latln']; // Initialize key before the inner loop
+
+            $hasData = false; // Flag to track if there's data for the current latln
+
+            foreach ($dataSkorResult as $marker) {
+                if (isPointInPolygon($marker['latin'], $value['latln'])) {
+                    $hasData = true; // Set the flag to true if there's data
+                    // Check if the combination already exists
+                    if (!isset($uniqueCombinations[$key])) {
+                        $uniqueCombinations[$key] = true; // Mark the combination as encountered
+                        $blokLatLn[] = [
+                            'blok' => $value['blok'],
+                            'estate' => $est,
+                            'latln' => $value['latinnew'],
+                            'nilai' => $marker['skorAkhir'],
+                            'afdeling' => $value['afd'],
+                            'kategori' => $marker['text'],
+                        ];
+                    }
+                }
+            }
+
+            // Check if there is no data for the current latln and add it to the result
+            if (!$hasData) {
+                if (!isset($uniqueCombinations[$key])) {
+                    $uniqueCombinations[$key] = true; // Mark the combination as encountered
+                    $blokLatLn[] = [
+                        'blok' => $value['blok'],
+                        'estate' => $est,
+                        'latln' => $value['latinnew'],
+                        'nilai' => 0,
+                        'afdeling' => $value['afd'],
+                        'kategori' => 'x',
+                    ];
+                }
+            }
+        }
+
+        // dd($blokLatLn, $dataSkorResult);
 
 
 
@@ -454,24 +428,6 @@ class makemapsController extends Controller
         $dataLegend['perPoor'] = count_percent($tot_poor, $totalSkor);
         $dataLegend['perEmpty'] = count_percent($tot_empty, $totalSkor);
 
-
-        // $filteredKeys = array_keys($dataSkorResult);
-
-        // $diff = array_diff($filteredKeys, $values);
-        // $sameCount = count($filteredKeys) - count($diff);
-
-        // $result = [
-        //     'same_count' => $sameCount,
-        //     'same_keys' => array_intersect($values, $filteredKeys),
-        //     'not_same_count' => count($diff),
-        //     'not_same_keys' => $diff
-        // ];
-
-
-
-
-        // dd($values, $filteredKeys ,$dataSkor , $result);
-        // dd($blokLatLn,$dataLegend);
         $highestValue = null;
         $estatesWithHighestNilai = [];
         $bloksWithHighestNilai = [];
@@ -527,7 +483,7 @@ class makemapsController extends Controller
         ];
 
 
-        // dd($blokLatLn,$dataLegend);
+        // dd($blokLatLn, $dataLegend);
 
 
         $plot['blok'] = $blokLatLn;

@@ -8063,7 +8063,7 @@ class SidaktphController extends Controller
                 $inc++;
             }
         }
-        // dd($blokLatLnEw);
+
         $dtQuery = DB::connection('mysql2')->table('sidak_tph')
             ->select('*', DB::raw("DATE_FORMAT(datetime, '%H:%i:%s') AS time"))
             ->where('est', $est)
@@ -8083,7 +8083,7 @@ class SidaktphController extends Controller
             $incr++;
         }
 
-
+        dd($blokLatLnEw, $pkLatLn);
         // dd($blokLatLnEw);
 
         // Define an associative array to track unique combinations
