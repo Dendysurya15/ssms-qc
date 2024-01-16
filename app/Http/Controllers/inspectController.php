@@ -1475,7 +1475,7 @@ class inspectController extends Controller
             $testing[$key]['total_score']  = skor_buah_tinggal($rst_esttph) +  skor_brd_tinggal($bt_esttph);
         }
 
-        // dd($testing);
+        // dd($dataSkor);
         $regdata = [];
         $tphblok2 = 0;
         $tot_jjg2 = 0;
@@ -1553,14 +1553,19 @@ class inspectController extends Controller
                 $bhtm2 += $value1['bhtm2_ma_est'];
                 $bhtm3 += $value1['bhtm3_ma_est'];
                 // mutu transport 
-
-                foreach ($testing as $trans => $transval) if ($key == $trans) {
-                    foreach ($transval as $trans1 => $transval1) if ($key1 == $trans1) {
-                        // dd($transval1);
-                        $tphsample += $transval1['tph_tod'];
-                        $total_brxd += $transval1['total_bt'];
-                        $total_rsxt += $transval1['total_rst'];
+                if ($regs == 2 || $regs === '2') {
+                    foreach ($testing as $trans => $transval) if ($key == $trans) {
+                        foreach ($transval as $trans1 => $transval1) if ($key1 == $trans1) {
+                            // dd($transval1);
+                            $tphsample += $transval1['tph_tod'];
+                            $total_brxd += $transval1['total_bt'];
+                            $total_rsxt += $transval1['total_rst'];
+                        }
                     }
+                } else {
+                    $tphsample += $value1['tph_sample_total'];
+                    $total_brxd += $value1['bt_total'];
+                    $total_rsxt += $value1['jjg_total'];
                 }
             }
             // mutu buah 
@@ -1775,7 +1780,7 @@ class inspectController extends Controller
 
 
 
-        // dd($regdata);
+        // dd($dataSkor, $testing, $regdata);
 
         return view('dataInspeksi', [
             'dataSkor' => $dataSkor,

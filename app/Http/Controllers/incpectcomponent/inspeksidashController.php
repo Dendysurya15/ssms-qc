@@ -2908,23 +2908,25 @@ class inspeksidashController extends Controller
             ->select('*')
             ->join('estate', 'estate.est', '=', 'mutu_ancak_new.estate')
             ->join('wil', 'wil.id', '=', 'estate.wil')
-            ->where('mutu_ancak_new.datetime', 'LIKE', '%' . $date . '%')
+            ->where('mutu_ancak_new.datetime', 'LIKE', '%' . $request->input('date') . '%')
             ->where('wil.regional', $Reg)
             ->get();
         $transregcheck = DB::connection('mysql2')->table('mutu_buah')
             ->select('*')
             ->join('estate', 'estate.est', '=', 'mutu_buah.estate')
             ->join('wil', 'wil.id', '=', 'estate.wil')
-            ->where('mutu_buah.datetime', 'LIKE', '%' . $date . '%')
+            ->where('mutu_buah.datetime', 'LIKE', '%' . $request->input('date') . '%')
             ->where('wil.regional', $Reg)
             ->get();
         $buahregcheck = DB::connection('mysql2')->table('mutu_transport')
             ->select('*')
             ->join('estate', 'estate.est', '=', 'mutu_transport.estate')
             ->join('wil', 'wil.id', '=', 'estate.wil')
-            ->where('mutu_transport.datetime', 'LIKE', '%' . $date . '%')
+            ->where('mutu_transport.datetime', 'LIKE', '%' . $request->input('date') . '%')
             ->where('wil.regional', $Reg)
             ->get();
+
+        // dd($date, $reg);
 
 
         // dd($ancakregcheck, $transregcheck, $buahregcheck);
@@ -2935,7 +2937,9 @@ class inspeksidashController extends Controller
             $chkdatareg = 'ada';
         }
 
-        // dd($mtTranstab1Wil_reg, $mttransReg);
+        // dd($chkdatareg);
+
+        // dd($mtBuahreg, $mtancakReg, $mttransReg);
 
         $RekapRegTable = array();
         foreach ($mttransReg as $key => $value) {
