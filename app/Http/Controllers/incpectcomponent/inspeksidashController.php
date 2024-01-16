@@ -201,11 +201,11 @@ class inspeksidashController extends Controller
         foreach ($queryEstereg as $est) {
             foreach ($queryAfd as $afd) {
                 if ($est['est'] == $afd['est']) {
-                    $defaultMTbuahReg[$est['est']][$afd['nama']]['null'] = 0;
+                    $defaultMTbuahReg[$est['est']][$afd['nama']] = 0;
                 }
             }
         }
-        // dd($defaultMTbuah, $dataMTBuah);
+        // dd($defaultMTbuahReg, $dataMTBuah);
         // mutu ancak
         $dataPerBulan = array();
         foreach ($QueryMTancakWil as $key => $value) {
@@ -1287,7 +1287,7 @@ class inspeksidashController extends Controller
             $mtTranstab1Wil[$key]['totalSkor'] = 0;
         }
 
-        // dd($mtTranstab1Wil);
+        // dd($mtTransWiltab1_reg);
 
         $mtTranstab1Wil_reg = array();
         foreach ($mtTransWiltab1_reg as $key => $value) if (!empty($value)) {
@@ -1941,6 +1941,8 @@ class inspeksidashController extends Controller
             $mtBuahtab1Wil[$key]['TOTAL_SKOR'] = 0;
         }
         // dd($mtBuahtab1Wil['1']);
+
+        // dd($mtBuahWIltab1_reg);
         $mtBuahtab1Wil_reg = array();
         foreach ($mtBuahWIltab1_reg as $key => $value) if (is_array($value)) {
             $jum_haWil = 0;
@@ -1991,12 +1993,8 @@ class inspeksidashController extends Controller
                     $jml_mtg = 0;
                     $combination_counts = array();
                     $newblok = count($value2);
+
                     foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
-                        $combination = $value3['blok'] . ' ' . $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['tph_baris'];
-                        if (!isset($combination_counts[$combination])) {
-                            $combination_counts[$combination] = 0;
-                        }
-                        $jum_ha = count($listBlokPerAfd);
                         $sum_bmt += $value3['bmt'];
                         $sum_bmk += $value3['bmk'];
                         $sum_over += $value3['overripe'];
@@ -2056,7 +2054,7 @@ class inspeksidashController extends Controller
 
 
                     $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
-                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['tph_baris_bloks'] = $dataBLok;
+                    $mtBuahtab1Wil_reg[$key][$key1][$key2]['tph_baris_bloks'] = $newblok;
                     $mtBuahtab1Wil_reg[$key][$key1][$key2]['sampleJJG_total'] = $sum_Samplejjg;
                     $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_mentah'] = $jml_mth;
                     $mtBuahtab1Wil_reg[$key][$key1][$key2]['total_perMentah'] = $PerMth;
@@ -2343,7 +2341,7 @@ class inspeksidashController extends Controller
 
         // dd($mtancakWIltab1_reg);
         $mtancaktab1Wil_reg = array();
-        foreach ($mtancakWIltab1_reg as $key => $value) if (!empty($value)) {
+        foreach ($mtancakWIltab1_reg as $key => $value) {
             $pokok_panenWil = 0;
             $jum_haWil = 0;
             $janjang_panenWil = 0;
@@ -2362,7 +2360,7 @@ class inspeksidashController extends Controller
             $sumPerBHWil = 0;
             $perPiWil = 0;
             $totalWil = 0;
-            foreach ($value as $key1 => $value1) if (!empty($value2)) {
+            foreach ($value as $key1 => $value1) {
                 $pokok_panenEst = 0;
                 $jum_haEst =  0;
                 $janjang_panenEst =  0;
@@ -2370,37 +2368,20 @@ class inspeksidashController extends Controller
                 $p_panenEst =  0;
                 $k_panenEst =  0;
                 $brtgl_panenEst = 0;
-                $skor_bTinggalEst =  0;
                 $brdPerjjgEst =  0;
                 $bhtsEST = 0;
                 $bhtm1EST = 0;
                 $bhtm2EST = 0;
                 $bhtm3EST = 0;
                 $pelepah_sEST = 0;
-
-                $skor_bhEst =  0;
-                $skor_brdPerjjgEst =  0;
-
                 foreach ($value1 as $key2 => $value2) if (!empty($value2)) {
-
                     $akp = 0;
                     $skor_bTinggal = 0;
                     $brdPerjjg = 0;
-                    $pokok_panen = 0;
-                    $janjang_panen = 0;
-                    $p_panen = 0;
-                    $k_panen = 0;
-                    $bhts_panen  = 0;
-                    $bhtm1_panen  = 0;
-                    $bhtm2_panen  = 0;
-                    $bhtm3_oanen  = 0;
                     $ttlSkorMA = 0;
                     $listBlokPerAfd = array();
                     $jum_ha = 0;
-                    $pelepah_s = 0;
-                    $skor_brdPerjjg = 0;
                     $skor_bh = 0;
-                    $skor_perPl = 0;
                     $totalPokok = 0;
                     $totalPanen = 0;
                     $totalP_panen = 0;
@@ -2411,11 +2392,10 @@ class inspeksidashController extends Controller
                     $totalbhtm2_panen = 0;
                     $totalbhtm3_oanen = 0;
                     $totalpelepah_s = 0;
-                    $total_brd = 0;
                     $tod_ah = 'kosong';
                     $skor_input = 0;
+                    // dd($value2);
                     foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
-
                         if (!in_array($value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
                             $listBlokPerAfd[] = $value3['estate'] . ' ' . $value3['afdeling'] . ' ' . $value3['blok'];
                         }
@@ -2620,30 +2600,6 @@ class inspeksidashController extends Controller
                 $bhtm2_panenWil += $bhtm2EST;
                 $bhtm3_oanenWil += $bhtm3EST;
                 $pelepah_swil += $pelepah_sEST;
-            } else {
-                $mtancaktab1Wil_reg[$key][$key1]['pokok_sample'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['ha_sample'] =  0;
-                $mtancaktab1Wil_reg[$key][$key1]['jumlah_panen'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['akp_rl'] =  0;
-
-                $mtancaktab1Wil_reg[$key][$key1]['p'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['k'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['tgl'] = 0;
-
-                // $mtancaktab1Wil_reg[$key][$key1]['total_brd'] = $skor_bTinggal;
-                $mtancaktab1Wil_reg[$key][$key1]['brd/jjgest'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['buah/jjg'] = 0;
-                // data untuk buah tinggal
-                $mtancaktab1Wil_reg[$key][$key1]['bhts_s'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['bhtm1'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['bhtm2'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['bhtm3'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['palepah_pokok'] = 0;
-                // total skor akhir
-                $mtancaktab1Wil_reg[$key][$key1]['skor_bh'] =  0;
-                $mtancaktab1Wil_reg[$key][$key1]['skor_brd'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['skor_ps'] = 0;
-                $mtancaktab1Wil_reg[$key][$key1]['skor_akhir'] = 0;
             }
             $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
             $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
@@ -2703,34 +2659,9 @@ class inspeksidashController extends Controller
             $mtancaktab1Wil_reg[$key]['skor_brd'] = skor_buah_Ma($sumPerBHWil);
             $mtancaktab1Wil_reg[$key]['skor_ps'] = skor_palepah_ma($perPiWil);
             $mtancaktab1Wil_reg[$key]['skor_akhir'] = $totalWil;
-        } else {
-            $mtancaktab1Wil_reg[$key]['pokok_sample'] = 0;
-            $mtancaktab1Wil_reg[$key]['ha_sample'] =  0;
-            $mtancaktab1Wil_reg[$key]['jumlah_panen'] = 0;
-            $mtancaktab1Wil_reg[$key]['akp_rl'] =  0;
-
-            $mtancaktab1Wil_reg[$key]['p'] = 0;
-            $mtancaktab1Wil_reg[$key]['k'] = 0;
-            $mtancaktab1Wil_reg[$key]['tgl'] = 0;
-
-            // $mtancaktab1Wil_reg[$key]['total_brd'] = $skor_bTinggal;
-            $mtancaktab1Wil_reg[$key]['brd/jjgwil'] = 0;
-            $mtancaktab1Wil_reg[$key]['buah/jjgwil'] = 0;
-            $mtancaktab1Wil_reg[$key]['bhts_s'] = 0;
-            $mtancaktab1Wil_reg[$key]['bhtm1'] = 0;
-            $mtancaktab1Wil_reg[$key]['bhtm2'] = 0;
-            $mtancaktab1Wil_reg[$key]['bhtm3'] = 0;
-            // $mtancaktab1Wil_reg[$key]['jjgperBuah'] = number_format($sumPerBH, 3);
-            // data untuk pelepah sengklek
-            $mtancaktab1Wil_reg[$key]['palepah_pokok'] = 0;
-            // total skor akhir
-            $mtancaktab1Wil_reg[$key]['skor_bh'] = 0;
-            $mtancaktab1Wil_reg[$key]['skor_brd'] = 0;
-            $mtancaktab1Wil_reg[$key]['skor_ps'] = 0;
-            $mtancaktab1Wil_reg[$key]['skor_akhir'] = 0;
         }
-
         // dd($mtancaktab1Wil_reg);
+        // dd($mtancaktab1Wil_reg, $mtancakWIltab1_reg);
         //Ancak regional
         $mtancakReg = array();
         $pkok = 0;
@@ -2821,6 +2752,8 @@ class inspeksidashController extends Controller
         $mtancakReg['reg']['skor_ps'] = skor_palepah_ma($perPiWil);
         $mtancakReg['reg']['skor_akhir'] = $totalWil;
 
+
+        // dd($mtancakReg);
         // dd($mtBuahtab1Wil_reg);
         //endancak regional
         //Buah Regional
@@ -2900,6 +2833,7 @@ class inspeksidashController extends Controller
 
 
         $totalSkor =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
+
         $mtBuahreg['reg']['tph_baris_blok'] = $dataBLok;
         $mtBuahreg['reg']['sampleJJG_total'] = $sum_Samplejjg;
         $mtBuahreg['reg']['total_mentah'] = $sum_bmt;
@@ -3001,7 +2935,7 @@ class inspeksidashController extends Controller
             $chkdatareg = 'ada';
         }
 
-        // dd($mttransReg, $mtancakReg, $mtBuahreg);
+        // dd($mtTranstab1Wil_reg, $mttransReg);
 
         $RekapRegTable = array();
         foreach ($mttransReg as $key => $value) {

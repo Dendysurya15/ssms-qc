@@ -82,7 +82,7 @@ Route::get('/cetakpdf/{id}', [unitController::class, 'cetakpdf']);
 Route::get('/dashboard_inspeksi', [inspectController::class, 'dashboard_inspeksi'])->name('dashboard_inspeksi');
 
 Route::get('/getFindData', [inspectController::class, 'getFindData'])->name('getFindData');
-Route::post('/changeDataInspeksi', [inspectController::class, 'changeDataInspeksi'])->name('changeDataInspeksi');
+Route::get('/changeDataInspeksi', [inspectController::class, 'changeDataInspeksi'])->name('changeDataInspeksi');
 Route::post('/plotEstate', [inspectController::class, 'plotEstate'])->name('plotEstate');
 
 

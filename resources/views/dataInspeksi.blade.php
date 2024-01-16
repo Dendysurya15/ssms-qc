@@ -657,7 +657,67 @@
     @endif
     @endforeach
 
+    @php
+    $testResult = skor_kategori_akhir($rh_data['allscore']);
+    @endphp
+    <tr>
+        <td style="background-color: {{ $testResult[0] }}" colspan="2"> {{$rh_data['est']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_pokoksample']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_luasha']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_pokokpanen']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_akp']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_p']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_k']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_tgl']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_brd']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_totalbrd']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_skor_brd']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_s']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_m1']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_m2']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_m3']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_totalbuah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_buah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_skor_bh']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_palepah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_perpalepah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_skor_ps']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_totalskor']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_tphsample']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_brdx']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_brdpertph']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_brd']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_buahx']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_buahpertph']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_buah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_totalskor']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_tphblok']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_tot_jjg']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_mentah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_mentah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_mentah']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_masak']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_masak']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_masak']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_over']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_over']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_over']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_jjgKosong']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_jjgKosong']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_jjgKosong']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_vcut']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_vcut']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_vcut']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_abnormal']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_abnormal']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_jum_kr']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_kr']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_kr']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['totalmtb_skor']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['allscore']}}</td>
+        <td style="background-color: {{ $testResult[0] }}">{{ $testResult[1] }}</td>
 
+    </tr>
 
     <tr style="border: none;">
         <td colspan="32" style="background-color : #fff;">&nbsp;</td>

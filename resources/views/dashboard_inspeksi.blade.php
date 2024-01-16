@@ -2444,7 +2444,7 @@
 
         $.ajax({
             url: "{{ route('changeDataInspeksi') }}",
-            method: "POST",
+            method: "get",
             cache: false,
             data: {
                 _token: _token,
@@ -3720,7 +3720,7 @@
                 let itemx2 = GM_list[2].em;
                 let itemx3 = GM_list[2].nama;
                 let itemx4 = GM_list[2].skor;
-                let itemx5 = 'dd'
+                let itemx5 = ''
                 let itemxElementcv1 = document.createElement('td')
                 let itemxElementcv2 = document.createElement('td')
                 let itemxElementcv3 = document.createElement('td')
