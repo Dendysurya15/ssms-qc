@@ -8083,7 +8083,7 @@ class SidaktphController extends Controller
             $incr++;
         }
 
-        dd($blokLatLnEw, $pkLatLn);
+        // dd($blokLatLnEw, $pkLatLn);
         // dd($blokLatLnEw);
 
         // Define an associative array to track unique combinations

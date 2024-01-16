@@ -5675,6 +5675,8 @@ class mutubuahController extends Controller
 
         $sidakblok = array();
 
+
+        // dd($mutuAncak);
         foreach ($mutuAncak as $key => $value) {
             $bloks = 0;
             foreach ($value as $key1 => $value1) {
@@ -5693,7 +5695,7 @@ class mutubuahController extends Controller
                 $allSkor = 0;
 
                 $combination_counts = array();
-                $bloks = count($value);
+                $bloks = count($value1);
                 foreach ($value1 as $key2 => $value2) {
                     $jjg_sample += $value2['jumlah_jjg'];
                     $tnpBRD += $value2['bmt'];
@@ -5835,6 +5837,7 @@ class mutubuahController extends Controller
             $sidakafd[$key]['rat_dmg'] = $rd;
             $sidakafd[$key]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
             $sidakafd[$key]['TPH'] = $total_kr;
+            $sidakafd[$key]['jumkarung'] = $sum_kr;
             $sidakafd[$key]['persen_krg'] = $per_kr;
             $sidakafd[$key]['skor_kr'] = sidak_PengBRD($per_kr);
             $sidakafd[$key]['All_skor'] = $allSkor;
@@ -6019,7 +6022,7 @@ class mutubuahController extends Controller
                 $allSkor = 0;
 
                 $combination_counts = array();
-                $bloks = count($value);
+                $bloks = count($value1);
                 foreach ($value1 as $key2 => $value2) {
                     $jjg_sample += $value2['jumlah_jjg'];
                     $tnpBRD += $value2['bmt'];
