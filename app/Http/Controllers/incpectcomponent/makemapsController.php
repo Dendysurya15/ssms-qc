@@ -815,11 +815,43 @@ class makemapsController extends Controller
                         $matchingAncakFa[] = $value;
                     }
                 }
-                $maps = $coord['app_version'];
-                if (strpos($maps, ';GA') !== false) {
-                    $maps = 'GPS Akurat';
-                } elseif (strpos($maps, ';GL') !== false) {
-                    $maps = 'GPS Liar';
+                // $maps = $coord['app_version'];
+                // if (strpos($maps, ';GA') !== false) {
+                //     $maps = 'GPS Akurat';
+                // } elseif (strpos($maps, ';GL') !== false) {
+                //     $maps = 'GPS Liar';
+                // }
+
+                $vers = $coord['app_version'];
+                $parts = explode(';', $vers);
+
+
+                $version = $parts[3];
+
+                if (strpos($version, 'awal')) {
+                    if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"GA') !== false) {
+                        $maps = 'GPS Awal Liar : GPS Akhir Akurat';
+                    } else  if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"GL') !== false) {
+                        $maps = 'GPS Awal Liar : GPS Akhir Liar';
+                    } else  if (strpos($version, 'awal":"GA') !== false && strpos($version, 'akhir":"GL"') !== false) {
+                        $maps = 'GPS Awal Akurat : GPS Akhir Liar';
+                    } else  if (strpos($version, 'awal":"GA') !== false && strpos($version, 'akhir":"GA"') !== false) {
+                        $maps = 'GPS Awal Akurat : GPS Akhir Akurat';
+                    } else if (strpos($version, 'awal":"GA') !== false && strpos($version, 'akhir":"G') !== false) {
+                        $maps = 'GPS Awal Akurat : GPS Akhir Uknown';
+                    } else if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"G') !== false) {
+                        $maps = 'GPS Awal Akurat : GPS Akhir Uknown';
+                    } else {
+                        $maps = 'GPS Uknown';
+                    }
+                } else {
+                    if (strpos($coord['app_version'], ';GA') !== false) {
+                        $maps = 'GPS Akurat';
+                    } elseif (strpos($coord['app_version'], ';GL') !== false) {
+                        $maps = 'GPS Liar';
+                    } else {
+                        $maps = 'GPS Awal Uknown : GPS Akhir Uknown';
+                    }
                 }
                 $ancak_fa_item = [
                     'blok' => $blok,

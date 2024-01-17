@@ -2143,16 +2143,49 @@ class inspectController extends Controller
         $mutuTransport = json_decode($mutuTransport, true);
         // dd($mutuAncak, $mutuBuah, $mutuTransport);
         foreach ($mutuAncak as &$item) {
-            // Check if "app_version" key exists in the current item
             if (isset($item['app_version'])) {
-                // Check if the value contains ";GA" or ":GL"
-                if (strpos($item['app_version'], ';GA') !== false) {
-                    $item['app_version'] = 'GPS Akurat';
-                } elseif (strpos($item['app_version'], ';GL') !== false) {
-                    $item['app_version'] = 'GPS Liar';
+
+
+                $vers = $item['app_version'];
+                $parts = explode(';', $vers);
+
+
+                $version = $parts[3];
+
+                if (strpos($version, 'awal')) {
+                    if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"GA') !== false) {
+                        $item['app_version'] = 'GPS Awal Liar : GPS Akhir Akurat';
+                    } else  if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"GL') !== false) {
+                        $item['app_version'] = 'GPS Awal Liar : GPS Akhir Liar';
+                    } else  if (strpos($version, 'awal":"GA') !== false && strpos($version, 'akhir":"GL"') !== false) {
+                        $item['app_version'] = 'GPS Awal Akurat : GPS Akhir Liar';
+                    } else  if (strpos($version, 'awal":"GA') !== false && strpos($version, 'akhir":"GA"') !== false) {
+                        $item['app_version'] = 'GPS Awal Akurat : GPS Akhir Akurat';
+                    } else if (strpos($version, 'awal":"GA') !== false && strpos($version, 'akhir":"G') !== false) {
+                        $item['app_version'] = 'GPS Awal Akurat : GPS Akhir Uknown';
+                    } else if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"G') !== false) {
+                        $item['app_version'] = 'GPS Awal Akurat : GPS Akhir Uknown';
+                    } else {
+                        $item['app_version'] = 'GPS Uknown';
+                    }
+
+                    // $item['app_version'] = $version;
+                    // dd($version);
+                    // dd('awal');
+                } else {
+                    if (strpos($item['app_version'], ';GA') !== false) {
+                        $item['app_version'] = 'GPS Akurat';
+                    } elseif (strpos($item['app_version'], ';GL') !== false) {
+                        $item['app_version'] = 'GPS Liar';
+                    } else {
+                        $item['app_version'] = 'GPS Awal Uknown : GPS Akhir Uknown';
+                    }
                 }
             }
         }
+
+
+        // dd($mutuAncak);
 
         foreach ($mutuTransport as &$item) {
             // Check if "app_version" key exists in the current item
@@ -2191,6 +2224,8 @@ class inspectController extends Controller
             }
         }
         // dd($mutuAncak,$mutuBuah,$mutuTransport);
+
+        // dd($mutuAncak);
 
         $arrView = array();
         // dd($mutuAncak2);
@@ -9283,7 +9318,7 @@ class inspectController extends Controller
         $transM2 = $transM2->groupBy(['kemandoran', 'blok']);
         $transM2 = json_decode($transM2, true);
 
-        dd($ancakM2);
+        // dd($ancakM2);
         // end reg 2 
 
         // dd($transM2);
