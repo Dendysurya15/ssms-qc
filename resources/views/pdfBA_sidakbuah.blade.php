@@ -20,7 +20,7 @@
     .my-table {
         width: 100%;
         table-layout: fixed;
-        border-collapse: collapse;
+        /* border-collapse: collapse; */
     }
 
     .my-table th {
@@ -101,10 +101,10 @@
         justify-content: space-between;
     }
 
-    .custom-table {
+    /* .custom-table {
         border-collapse: collapse;
         width: 45%;
-    }
+    } */
 
     .table-center {
         margin-left: auto;
@@ -115,7 +115,7 @@
     .custom-table,
     .custom-table th,
     .custom-table td {
-        border: 1px solid black;
+        /* border: 1px solid black; */
         text-align: left;
         padding: 8px;
     }
@@ -198,13 +198,13 @@
 
         </div>
 
-        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 border border-dark ">
+        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3">
             <div class="Wraping">
                 <table class="my-table">
                     <thead>
                         <tr>
                             <th colspan="25">Mutu BUAH (MB)</th>
-                            <th colspan="7">Keterangan</th>
+                            <th colspan="7" style="border: 1px solid black;">Keterangan</th>
                         </tr>
                         <tr>
                             <th colspan="2" rowspan="3">Afdeling</th>
@@ -217,9 +217,10 @@
                             <th colspan="2" rowspan="2">Abnormal</th>
                             <th colspan="2" rowspan="2">Tidak Standar V-Cut</th>
                             <th colspan="2" rowspan="2">Rat Damage</th>
-                            <th colspan="2" rowspan="2" style="border: 1px solid black;">Alas Brondol</th>
+                            <th colspan="2" rowspan="2">Alas Brondol</th>
+                            <th colspan="7" rowspan="{{$data['totalrs'] + 4}}"></th>
 
-                            <!-- <th colspan="12" rowspan="25"></th> -->
+
                         </tr>
                         <tr>
                             <th colspan="2">0 Brondol</th>
@@ -246,12 +247,12 @@
                             <th>%</th>
                             <th>Jjg</th>
                             <th>%</th>
-                            <th>Jjg</th>
+                            <th>TPH</th>
                             <th>%</th>
                         <tr>
 
                     </thead>
-                    <tbody id="tab2" style="font-size: 13px;border:none">
+                    <tbody id="tab2" style="font-size: 13px;">
                         @foreach ($data['sidak_buah'] as $items)
                         @foreach ($items as $item)
                         <tr>
@@ -278,7 +279,7 @@
                             <td style="background-color: #80A29E;">{{$item['vcut_persen']}}</td>
                             <td style="background-color: #80A29E;">{{$item['rat_dmg']}}</td>
                             <td style="background-color: #80A29E;">{{$item['rd_persen']}}</td>
-                            <td style="background-color: #80A29E;">{{$item['karung']}}</td>
+                            <td style="background-color: #80A29E;">{{$item['jumkarung'] ?? $item['karung']}}/{{$item['blok']}}</td>
                             <td style="background-color: #80A29E;">{{$item['persen_krg']}}</td>
                             @else
                             <td colspan="2">{{$item['estate']}}</td>
@@ -302,7 +303,7 @@
                             <td>{{$item['vcut_persen']}}</td>
                             <td>{{$item['rat_dmg']}}</td>
                             <td>{{$item['rd_persen']}}</td>
-                            <td>{{$item['karung']}}</td>
+                            <td>{{$item['jumkarung'] ?? $item['karung']}}/{{$item['blok']}}</td>
                             <td>{{$item['persen_krg']}}</td>
                             @endif
 

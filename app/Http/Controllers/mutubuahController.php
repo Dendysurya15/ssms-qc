@@ -5854,8 +5854,23 @@ class mutubuahController extends Controller
                 $final[$key] = $value1;
             }
         }
+        $gerowspan = [];
+        $rowspantotal = 0;
+
+        foreach ($final as $key => $value) {
+            $rowspan = count($value);
+            $rowspantot = 0; // Reset to zero in each iteration
+            $rowspantot += $rowspan;
+            $gerowspan[$key] = $rowspantot;
+            $rowspantotal += $rowspantot; // Move this line inside the loop
+        }
+
+        $gerowspan['total'] = $rowspantotal;
+        // dd($gerowspan);
 
         // dd($final);
+
+
 
         // dd($sidak_buah, $total_buah);
         $arrView = array();
@@ -5864,6 +5879,7 @@ class mutubuahController extends Controller
         $arrView['afd'] =  $afd;
         $arrView['tanggal'] =  $date;
         $arrView['sidak_buah'] =  $final;
+        $arrView['totalrs'] =  $gerowspan['total'];
         // $arrView['total_buah'] =  $total_buah;
 
         $pdf = PDF::loadView('pdfBA_sidakbuah', ['data' => $arrView]);
@@ -7171,7 +7187,7 @@ class mutubuahController extends Controller
 
 
 
-        // dd($dtQuery, $pkLatLn);
+        // dd($blokLatLnEw, $pkLatLn);
         // 
         // Define an associative array to track unique combinations
         $uniqueCombinations = [];

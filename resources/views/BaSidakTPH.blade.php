@@ -697,17 +697,17 @@
         }
     }
 
-    const lottieContainer = document.getElementById('lottie-container');
-    const lottieAnimation = lottie.loadAnimation({
-        container: lottieContainer,
-        renderer: "svg",
-        loop: true,
-        autoplay: false,
-        path: "https://assets3.lottiefiles.com/private_files/lf30_fup2uejx.json",
-    });
+
     document.getElementById('showFindingYear').onclick = function() {
-        lottieContainer.style.display = 'block'; // Show the Lottie container
-        lottieAnimation.play(); // Start the Lottie animation
+        Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
         dashboardFindingYear()
     }
 
@@ -751,8 +751,6 @@
                 _token: _token
             },
             success: function(result) {
-                lottieAnimation.stop(); // Stop the Lottie animation
-                lottieContainer.style.display = 'none'; // Hide the Lottie container
 
                 var parseResult = JSON.parse(result);
 
@@ -1233,9 +1231,13 @@
                 drawLegend(markerResult)
 
                 drawArrow(plotarrow)
+
+                Swal.close()
             },
             error: function(xhr, status, error) {
                 console.log("An error occurred:", error);
+                Swal.fire('Error', 'Operation Error', 'error');
+                // Swal.close()
             }
         });
     }
