@@ -1480,7 +1480,7 @@
               <div class="tabContainer">
                 <div class="ml-3 mr-3">
                   <div class="row text-center">
-                    <div class="col-12 col-md-6 col-lg-3" id="Tab1">
+                    <div class="col-12 col-md-6 col-lg-4" id="Tab1">
                       <div class="table-responsive">
                         <table class=" table table-bordered" style="font-size: 13px" id="table1">
                           <thead>
@@ -1503,7 +1503,7 @@
                         </table>
                       </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3" id="Tab2">
+                    <div class="col-12 col-md-6 col-lg-4" id="Tab2">
                       <div class="table-responsive">
                         <table class=" table table-bordered" style="font-size: 13px" id="table1">
                           <thead>
@@ -1527,7 +1527,7 @@
                         </table>
                       </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3" id="Tab3">
+                    <div class="col-12 col-md-6 col-lg-4" id="Tab3">
                       <div class="table-responsive">
                         <table class="table table-bordered" style="font-size: 13px" id="Reg3">
                           <thead>
@@ -1551,30 +1551,7 @@
                         </table>
                       </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3" id="Tab4">
-                      <div class="table-responsive">
-                        <table class="table table-bordered" style="font-size: 13px" id="plasmaID">
-                          <thead>
-                            <tr bgcolor="darkorange">
-                              <th colspan="5" id="thhead4">Plasma</th>
-                            </tr>
-                            <tr bgcolor="#2044a4" style="color: white">
-                              <th rowspan="2" class="text-center" style="vertical-align: middle;">KEBUN</th>
-                              <th rowspan="2" style="vertical-align: middle;">AFD</th>
-                              <th rowspan="2" style="text-align:center; vertical-align: middle;">Nama</th>
-                              <th colspan="2" class="text-center">Todate</th>
-                            </tr>
-                            <tr bgcolor="darkblue" style="color: white">
-                              <th>Score</th>
-                              <th>Rank</th>
-                            </tr>
-                          </thead>
-                          <tbody id="plasmaYear">
 
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1933,7 +1910,6 @@
       $('#tbody1Year').empty()
       $('#tbody2Year').empty()
       $('#tbody3Year').empty()
-      $('#plasmaYear').empty()
       $('#tbodySkorRHYear').empty()
       Swal.fire({
         title: 'Loading',
@@ -4021,7 +3997,7 @@
         thElement1.textContent = 'WILAYAH I';
         thElement2.textContent = 'WILAYAH II';
         thElement3.textContent = 'WILAYAH III';
-        thElement4.textContent = 'Plasma1';
+
         thElement1.classList.add("text-center");
         thElement2.classList.add("text-center");
         thElement3.classList.add("text-center");
@@ -4171,23 +4147,23 @@
       const element1 = document.getElementById('Tab1');
       const element2 = document.getElementById('Tab2');
       const element3 = document.getElementById('Tab3');
-      const element4 = document.getElementById('Tab4');
+
       const thElement1 = document.getElementById('thead1');
       const thElement2 = document.getElementById('thead2');
       const thElement3 = document.getElementById('thead3');
-      const thElement4 = document.getElementById('thhead4');
+
       if (regSidak == '3') {
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "none";
-        element4.style.display = "none";
+
         thElement1.textContent = 'WILAYAH VII';
         thElement2.textContent = 'WILAYAH VIII';
-        thElement4.textContent = 'Plasma3';
+
         thElement1.classList.add("text-center");
         thElement2.classList.add("text-center");
         thElement3.classList.add("text-center");
-        thElement4.classList.add("text-center");
+
         element1.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
         element1.classList.add("col-md-6", "col-lg-6");
         element2.classList.remove("col-md-6", "col-lg-3", "col-lg-6");
@@ -4197,15 +4173,15 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "none";
+
         thElement1.textContent = 'WILAYAH I';
         thElement2.textContent = 'WILAYAH II';
         thElement3.textContent = 'WILAYAH III';
-        thElement4.textContent = 'Plasma1';
+
         thElement1.classList.add("text-center");
         thElement2.classList.add("text-center");
         thElement3.classList.add("text-center");
-        thElement4.classList.add("text-center");
+
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
         element1.classList.add("col-md-4", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
@@ -4217,15 +4193,15 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "";
-        element4.style.display = "mone";
+
         thElement1.textContent = 'WILAYAH IV';
         thElement2.textContent = 'WILAYAH V';
         thElement3.textContent = 'WILAYAH VI';
-        thElement4.textContent = 'Plasma2';
+
         thElement1.classList.add("text-center");
         thElement2.classList.add("text-center");
         thElement3.classList.add("text-center");
-        thElement4.classList.add("text-center");
+
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
         element1.classList.add("col-md-6", "col-lg-4");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
@@ -4237,15 +4213,8 @@
         element1.style.display = "";
         element2.style.display = "";
         element3.style.display = "none";
-        element4.style.display = "none";
-        thElement1.textContent = 'WILAYAH Inti';
-        thElement2.textContent = 'WILAYAH Plasma';
-        // thElement3.textContent = 'WILAYAH VI';
-        // thElement4.textContent = 'Plasma2';
         thElement1.classList.add("text-center");
         thElement2.classList.add("text-center");
-        // thElement3.classList.add("text-center");
-        // thElement4.classList.add("text-center");
         element1.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
         element1.classList.add("col-md-6", "col-lg-6");
         element2.classList.remove("col-md-6", "col-lg-4", "col-lg-6");
@@ -6544,6 +6513,23 @@
       })
     }
 
+    function setBackgroundColor(element, score) {
+      if (score >= 95) {
+        element.style.backgroundColor = "#609cd4";
+      } else if (score >= 85) {
+        element.style.backgroundColor = "#08b454";
+      } else if (score >= 75) {
+        element.style.backgroundColor = "#fffc04";
+      } else if (score >= 65) {
+        element.style.backgroundColor = "#ffc404";
+      } else if (score === '-') {
+        element.style.backgroundColor = "white";
+      } else {
+        element.style.backgroundColor = "red";
+      }
+      element.style.color = "black";
+    }
+
     function getDataTphYear() {
       changeClassYear()
       var _token = $('input[name="_token"]').val();
@@ -6561,939 +6547,168 @@
           Swal.close();
           //parsing result ke json untuk dalam estate
           var parseResult = JSON.parse(result)
-          var list_all_wil = Object.entries(parseResult['list_all_wil'])
-          var list_all_est = Object.entries(parseResult['list_all_est'])
-          var list_skor_gm = Object.entries(parseResult['list_skor_gm'])
-          var list_skor_rh = Object.entries(parseResult['list_skor_rh'])
-          var list_skor_gmNew = Object.entries(parseResult['list_skor_gmNew'])
-          const plasma = Object.entries(parseResult['PlasmaWIl']);
-          const plasmaEM = Object.entries(parseResult['PlasmaEM']);
-          const plasmaGM = Object.entries(parseResult['plasmaGM']);
+          var newsidakend = Object.entries(parseResult['newsidakend'])
+          var rhdata = Object.entries(parseResult['rhdata'])
 
-          // Check if the result is an empty object
-          if ($.isEmptyObject(result)) {
-            result = null;
-          } else {
-            const newPlasma = plasma.map(([_, data]) => ({
-              est: data.est,
-              afd: data.afd,
-              nama: data.nama,
-              skor: data.skor,
-              rank: data.rank,
-            }));
-            const newPlasmaEM = plasmaEM.map(([_, data]) => ({
-              est: data.est,
-              afd: data.afd,
-              nama: data.namaEM,
-              skor: data.Skor,
-              // namaEM: namaEM,
-              // namaGM: namaGM,
-            }));
-            const newPlasmaGM = plasmaGM.map(([_, data]) => ({
-              est: data.est,
-              afd: data.afd,
-              nama: data.namaGM,
-              skor: data.Skor,
-              // namaEM: namaEM,
-              // namaGM: namaGM,
-            }));
+          // console.log(newsidakend);
 
-            var plasmaGMe = document.getElementById('plasmaYear');
-            var arrPlasmaGM = newPlasma
-            arrPlasmaGM.forEach(element => {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              //   let item2 = 'GM'
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
-              // let item6 = newPlasmaEM['EM']
+          let table1 = newsidakend[0]
+          let table2 = newsidakend[1]
+          let table3 = newsidakend[2]
 
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
+          var theadreg = document.getElementById('tbodySkorRHYear');
 
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
+          // console.log(regional);
 
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
+          tr = document.createElement('tr')
+          let reg1 = rhdata[1][1]
+          let reg2 = rhdata[3][1]
+          let reg3 = '-'
+          let reg4 = rhdata[0][1]
+          // let reg4 = '-'
+          let regElement1 = document.createElement('td')
+          let regElement2 = document.createElement('td')
+          let regElement3 = document.createElement('td')
+          let regElement4 = document.createElement('td')
+
+          regElement1.classList.add("text-center")
+          regElement2.classList.add("text-center")
+          regElement3.classList.add("text-center")
+          regElement4.classList.add("text-center")
+
+          regElement1.innerText = reg1;
+          regElement2.innerText = reg2;
+          regElement3.innerText = reg3;
+          regElement4.innerText = reg4;
+          setBackgroundColor(regElement4, reg4);
+          tr.appendChild(regElement1)
+          tr.appendChild(regElement2)
+          tr.appendChild(regElement3)
+          tr.appendChild(regElement4)
+
+          theadreg.appendChild(tr)
+          //     $('#tbody1Year').empty()
+          // $('#tbody2Year').empty()
+          // $('#tbody3Year').empty()
+          var trekap1 = document.getElementById('tbody1Year');
+          Object.keys(table1[1]).forEach(key => {
+            Object.keys(table1[1][key]).forEach(subKey => {
+              let item1 = table1[1][key][subKey]['est'];
+              let item2 = table1[1][key][subKey]['afd'];
+              let item3 = table1[1][key][subKey]['nama']
+              let item4 = table1[1][key][subKey]['total_score'];
+              let item5 = table1[1][key][subKey]['rank'] ?? '-';
+
+              let bg = table1[1][key][subKey]['bgcolor'];
+
+              // Create table row and cell for each 'total' value
+              let tr = document.createElement('tr');
+              let itemElement1 = document.createElement('td');
+              let itemElement2 = document.createElement('td');
+              let itemElement3 = document.createElement('td');
+              let itemElement4 = document.createElement('td');
+              let itemElement5 = document.createElement('td');
 
 
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
 
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              plasmaGMe.appendChild(tr)
-              // }
-            });
-
-            var plasmaGMe = document.getElementById('plasmaYear');
-            var arrPlasmaGM = newPlasmaEM
-            arrPlasmaGM.forEach(element => {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              //   let item2 = 'GM'
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = ''
-              // let item6 = newPlasmaEM['EM']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-
-              itemElement1.style.backgroundColor = "#e8ecdc";
-              itemElement2.style.backgroundColor = "#e8ecdc";
-              itemElement3.style.backgroundColor = "#e8ecdc";
-
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              plasmaGMe.appendChild(tr)
-              // }
-            });
-
-            var plasmaGMe = document.getElementById('plasmaYear');
-            var arrPlasmaGM = newPlasmaGM
-            arrPlasmaGM.forEach(element => {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              //   let item2 = 'GM'
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = ''
-              // let item6 = newPlasmaEM['EM']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-
-              itemElement1.style.backgroundColor = "#Fff4cc";
-              itemElement2.style.backgroundColor = "#Fff4cc";
-              itemElement3.style.backgroundColor = "#Fff4cc";
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-
+              itemElement1.classList.add("text-center");
+              itemElement1.innerText = item1;
+              itemElement2.innerText = item2;
+              itemElement3.innerText = item3;
               itemElement4.innerText = item4;
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-
               itemElement5.innerText = item5
+
+              setBackgroundColor(itemElement4, item4);
+              tr.style.backgroundColor = bg;
 
               tr.appendChild(itemElement1)
               tr.appendChild(itemElement2)
               tr.appendChild(itemElement3)
               tr.appendChild(itemElement4)
               tr.appendChild(itemElement5)
-
-              plasmaGMe.appendChild(tr)
-              // }
+              trekap1.appendChild(tr);
             });
-            //persetate
+          });
+
+          var trekap2 = document.getElementById('tbody2Year');
+          Object.keys(table2[1]).forEach(key => {
+            Object.keys(table2[1][key]).forEach(subKey => {
+              let item1 = table2[1][key][subKey]['est'];
+              let item2 = table2[1][key][subKey]['afd'];
+              let item3 = table2[1][key][subKey]['nama'] ?? '-'
+              let item4 = table2[1][key][subKey]['total_score'];
+              let item5 = table2[1][key][subKey]['rank'] ?? '-';
+
+              let bg = table2[1][key][subKey]['bgcolor'];
+
+              // Create table row and cell for each 'total' value
+              let tr = document.createElement('tr');
+              let itemElement1 = document.createElement('td');
+              let itemElement2 = document.createElement('td');
+              let itemElement3 = document.createElement('td');
+              let itemElement4 = document.createElement('td');
+              let itemElement5 = document.createElement('td');
 
 
-            //untuk table
-            //table wil 1
-            function filterArrayByEst(array) {
-              return array.filter(obj => !obj.est.includes('Plasma'));
-            }
 
-            const originalArray = list_all_wil[0][1];
-            const filteredArray = filterArrayByEst(originalArray);
-            const wilarr = filterArrayByEst(list_all_est[0][1]);
-
-            var arrTbody1 = filteredArray;
-            var table1 = document.getElementById('table1Year');
-            var tbody1 = document.getElementById('tbody1Year');
-
-            arrTbody1.forEach(element => {
-              // for (let i = 0; i < 5; i++) {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="detailSidakTph/' +
-                      element['est'] + '/' + element['afd'] + '/' +
-                      firstWeek + '/' + lastWeek + '">' + element['skor'] +
-                      ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
+              itemElement1.classList.add("text-center");
+              itemElement1.innerText = item1;
+              itemElement2.innerText = item2;
+              itemElement3.innerText = item3;
+              itemElement4.innerText = item4;
               itemElement5.innerText = item5
+
+              setBackgroundColor(itemElement4, item4);
+              tr.style.backgroundColor = bg;
 
               tr.appendChild(itemElement1)
               tr.appendChild(itemElement2)
               tr.appendChild(itemElement3)
               tr.appendChild(itemElement4)
               tr.appendChild(itemElement5)
-
-              tbody1.appendChild(tr)
-              // }
+              trekap2.appendChild(tr);
             });
-            //  testing
+          });
 
-            var arrTbody1 = wilarr
-            var table1 = document.getElementById('table1Year');
-            var tbody1 = document.getElementById('tbody1Year');
-            arrTbody1.forEach(element => {
-              // for (let i = 0; i < 5; i++) {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['EM']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
+          var trekap3 = document.getElementById('tbody3Year');
+          Object.keys(table3[1]).forEach(key => {
+            Object.keys(table3[1][key]).forEach(subKey => {
+              let item1 = table3[1][key][subKey]['est'];
+              let item2 = table3[1][key][subKey]['afd'];
+              let item3 = table3[1][key][subKey]['nama']
+              let item4 = table3[1][key][subKey]['total_score'];
+              let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
+              let bg = table3[1][key][subKey]['bgcolor'];
 
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-              itemElement1.style.backgroundColor = "#e8ecdc";
-              itemElement2.style.backgroundColor = "#e8ecdc";
-              itemElement3.style.backgroundColor = "#e8ecdc";
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
+              // Create table row and cell for each 'total' value
+              let tr = document.createElement('tr');
+              let itemElement1 = document.createElement('td');
+              let itemElement2 = document.createElement('td');
+              let itemElement3 = document.createElement('td');
+              let itemElement4 = document.createElement('td');
+              let itemElement5 = document.createElement('td');
 
 
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
 
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="BaSidakTPH/' + element[
-                          'est'] + '/' + firstWeek + '/' + lastWeek +
-                      '" target="_blank">' + element['skor'] + ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
+              itemElement1.classList.add("text-center");
+              itemElement1.innerText = item1;
+              itemElement2.innerText = item2;
+              itemElement3.innerText = item3;
+              itemElement4.innerText = item4;
               itemElement5.innerText = item5
+
+              setBackgroundColor(itemElement4, item4);
+              tr.style.backgroundColor = bg;
 
               tr.appendChild(itemElement1)
               tr.appendChild(itemElement2)
               tr.appendChild(itemElement3)
               tr.appendChild(itemElement4)
               tr.appendChild(itemElement5)
-
-              tbody1.appendChild(tr)
-              // }
+              trekap3.appendChild(tr);
             });
-            // endtesting
-            tbodySkorRH = document.getElementById('tbodySkorRHYear')
-            var reg = ''
-            if (list_skor_rh[0][0] == 1) {
-              reg = 'REG I'
-            } else if (list_skor_rh[0][0] == 2) {
-              reg = 'REG II'
-            } else if (list_skor_rh[0][0] == 3) {
-              reg = 'REG III'
-            } else {
-              reg = 'REG IV'
-            }
-            tr = document.createElement('tr')
-            let item1 = reg
-            let item2 = 'RH - ' + list_skor_rh[0][0]
-            let item3 = list_skor_rh[0][1]['nama']
-            let item4 = list_skor_rh[0][1]['skor']
-            let itemElement1 = document.createElement('td')
-            let itemElement2 = document.createElement('td')
-            let itemElement3 = document.createElement('td')
-            let itemElement4 = document.createElement('td')
-
-            itemElement1.classList.add("text-center")
-            itemElement2.classList.add("text-center")
-            itemElement3.classList.add("text-center")
-            itemElement4.classList.add("text-center")
-            itemElement1.style.backgroundColor = "#e8ecdc";
-            itemElement2.style.backgroundColor = "#e8ecdc";
-            itemElement3.style.backgroundColor = "#e8ecdc";
-            if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-              itemElement3.style.color = "red";
-            } else {
-              itemElement3.style.color = "black";
-            }
-
-
-            if (item4 >= 95) {
-              itemElement4.style.backgroundColor = "#609cd4";
-              itemElement4.style.color = "black";
-            } else if (item4 >= 85 && item4 < 95) {
-              itemElement4.style.backgroundColor = "#08b454";
-              itemElement4.style.color = "black";
-            } else if (item4 >= 75 && item4 < 85) {
-              itemElement4.style.backgroundColor = "#fffc04";
-              itemElement4.style.color = "black";
-            } else if (item4 >= 65 && item4 < 75) {
-              itemElement4.style.backgroundColor = "#ffc404";
-              itemElement4.style.color = "black";
-            } else {
-              itemElement4.style.backgroundColor = "red";
-              itemElement4.style.color = "black";
-            }
-
-            if (itemElement4.style.backgroundColor === "#609cd4") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "#08b454") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "#fffc04") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "#ffc404") {
-              itemElement4.style.color = "black";
-            } else if (itemElement4.style.backgroundColor === "red") {
-              itemElement4.style.color = "black";
-            }
-            itemElement1.innerText = item1
-            itemElement2.innerText = item2
-            itemElement3.innerText = item3
-            itemElement4.innerText = item4
-            tr.appendChild(itemElement1)
-            tr.appendChild(itemElement2)
-            tr.appendChild(itemElement3)
-            tr.appendChild(itemElement4)
-            tbodySkorRH.appendChild(tr)
-            ///table wil 2
-            var arrTbody2 = list_all_wil[1][1]
-            var tbody2 = document.getElementById('tbody2Year');
-            arrTbody2.forEach(element => {
-              // for (let i = 0; i < 5; i++) {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="detailSidakTph/' +
-                      element['est'] + '/' + element['afd'] + '/' +
-                      firstWeek + '/' + lastWeek + '">' + element['skor'] +
-                      ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
-              itemElement5.innerText = item5
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-              tbody2.appendChild(tr)
-              // }
-            });
-            //untuk estate wil 2
-            var arrTbody1 = list_all_est[1][1]
-            var tbody1 = document.getElementById('tbody2Year');
-            arrTbody1.forEach(element => {
-              // for (let i = 0; i < 5; i++) {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['EM']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-              itemElement1.style.backgroundColor = "#e8ecdc";
-              itemElement2.style.backgroundColor = "#e8ecdc";
-              itemElement3.style.backgroundColor = "#e8ecdc";
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="BaSidakTPH/' + element[
-                          'est'] + '/' + firstWeek + '/' + lastWeek +
-                      '" target="_blank">' + element['skor'] + ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              tbody1.appendChild(tr)
-              // }
-            });
-
-            ///table wil 3
-            // if (regSidak != 3) {
-            var arrTbody3 = list_all_wil[2][1]
-            var tbody3 = document.getElementById('tbody3Year');
-            arrTbody3.forEach(element => {
-              // for (let i = 0; i < 5; i++) {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['afd']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              /* if (item4 != 0) {
-                  itemElement4.innerHTML = '<a class="detailBa" href="detailSidakTph/' +
-                      element['est'] + '/' + element['afd'] + '/' +
-                      firstWeek + '/' + lastWeek + '">' + element['skor'] +
-                      ' </a>'
-              } else {
-                  itemElement4.innerText = item4
-              } */
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              tbody3.appendChild(tr)
-              // }
-            });
-
-            // untuk estate will 3
-            var arrTbody1 = list_all_est[2][1]
-            var tbody1 = document.getElementById('tbody3Year');
-            arrTbody1.forEach(element => {
-              // for (let i = 0; i < 5; i++) {
-              tr = document.createElement('tr')
-              let item1 = element['est']
-              let item2 = element['EM']
-              let item3 = element['nama']
-              let item4 = element['skor']
-              let item5 = element['rank']
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-              itemElement1.style.backgroundColor = "#e8ecdc";
-              itemElement2.style.backgroundColor = "#e8ecdc";
-              itemElement3.style.backgroundColor = "#e8ecdc";
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              itemElement5.innerText = item5
-
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-
-              tbody1.appendChild(tr)
-              // }
-            });
-
-            var inc = 0;
-            for (let i = 1; i <= 3; i++) {
-              var tbody = document.getElementById('tbody' + i + 'Year');
-              var wil = ''
-              if (i == 1) {
-                wil = 'I'
-              } else if (i == 2) {
-                wil = 'II'
-              } else {
-                wil = 'III'
-              }
-
-              tr = document.createElement('tr')
-              let item1 = list_skor_gmNew[inc][1]['est']
-              let item2 = list_skor_gmNew[inc][1]['afd']
-              let item3 = list_skor_gmNew[inc][1]['namaGM']
-              let item4 = list_skor_gmNew[inc][1]['skor']
-              let item5 = ''
-
-              let itemElement1 = document.createElement('td')
-              let itemElement2 = document.createElement('td')
-              let itemElement3 = document.createElement('td')
-              let itemElement4 = document.createElement('td')
-              let itemElement5 = document.createElement('td')
-              itemElement1.classList.add("text-center")
-              itemElement2.classList.add("text-center")
-              itemElement3.classList.add("text-center")
-              itemElement4.classList.add("text-center")
-              itemElement5.classList.add("text-center")
-              itemElement1.style.backgroundColor = "#fff4cc";
-              itemElement2.style.backgroundColor = "#fff4cc";
-              itemElement3.style.backgroundColor = "#fff4cc";
-              if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                itemElement3.style.color = "red";
-              } else {
-                itemElement3.style.color = "black";
-              }
-
-
-              if (item4 >= 95) {
-                itemElement4.style.backgroundColor = "#609cd4";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 85 && item4 < 95) {
-                itemElement4.style.backgroundColor = "#08b454";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 75 && item4 < 85) {
-                itemElement4.style.backgroundColor = "#fffc04";
-                itemElement4.style.color = "black";
-              } else if (item4 >= 65 && item4 < 75) {
-                itemElement4.style.backgroundColor = "#ffc404";
-                itemElement4.style.color = "black";
-              } else {
-                itemElement4.style.backgroundColor = "red";
-                itemElement4.style.color = "black";
-              }
-
-              if (itemElement4.style.backgroundColor === "#609cd4") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#08b454") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#fffc04") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "#ffc404") {
-                itemElement4.style.color = "black";
-              } else if (itemElement4.style.backgroundColor === "red") {
-                itemElement4.style.color = "black";
-              }
-              itemElement1.innerText = item1
-              itemElement2.innerText = item2
-              itemElement3.innerText = item3
-              itemElement4.innerText = item4
-              itemElement5.innerText = item5
-              tr.appendChild(itemElement1)
-              tr.appendChild(itemElement2)
-              tr.appendChild(itemElement3)
-              tr.appendChild(itemElement4)
-              tr.appendChild(itemElement5)
-              tbody.appendChild(tr)
-              inc++
-            }
-
-            // }
-          }
+          });
         },
         error: function() {
           Swal.close();

@@ -5289,6 +5289,22 @@
 
 
     var selectedTahun = ''; // Global variable to store the selected tahun value
+    function setBackgroundColor(element, score) {
+        if (score >= 95) {
+            element.style.backgroundColor = "#609cd4";
+        } else if (score >= 85) {
+            element.style.backgroundColor = "#08b454";
+        } else if (score >= 75) {
+            element.style.backgroundColor = "#fffc04";
+        } else if (score >= 65) {
+            element.style.backgroundColor = "#ffc404";
+        } else if (score === '-') {
+            element.style.backgroundColor = "white";
+        } else {
+            element.style.backgroundColor = "red";
+        }
+        element.style.color = "black";
+    }
 
     function sbi_tahun() {
         $('#tahun1').empty()
@@ -5327,897 +5343,172 @@
                 Swal.close();
 
                 var parseResult = JSON.parse(result)
-                var region = Object.entries(parseResult['listregion'])
                 var mutu_buah = Object.entries(parseResult['mutu_buah'])
-                var mutubuah_est = Object.entries(parseResult['mutubuah_est'])
-                var mutuBuah_wil = Object.entries(parseResult['mutuBuah_wil'])
-                var regIonal = Object.entries(parseResult['regional'])
-                var queryAsisten = Object.entries(parseResult['queryAsisten'])
+                var rhdata = Object.entries(parseResult['rhdata'])
 
-                var regionaltab = Object.entries(parseResult['regionaltab'])
-                var list_esate = Object.entries(parseResult['list_est'])
-                // console.log(chart_matang);
-                const estSidakYear = document.getElementById('estSidakYear');
-                estSidakYear.innerHTML = '';
-                list_esate.forEach(([key, value]) => {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.text = value;
-                    estSidakYear.add(option);
-                });
-                let regInpt = reg;
-                // console.log(chart_matang);
+                // console.log(rhdata);
+                //         $('#tahun1').empty()
+                // $('#tahun2').empty()
+                // $('#tahun3').empty()
+                let table1 = mutu_buah[0]
+                let table2 = mutu_buah[1]
+                let table3 = mutu_buah[2]
 
-                // untuk chart
-                // console.log(region);
-                var wilayah = '['
-                region.forEach(element => {
-                    wilayah += '"' + element + '",'
-                });
-                wilayah = wilayah.substring(0, wilayah.length - 1);
-                wilayah += ']'
+                //     $('#tbody1Year').empty()
+                // $('#tbody2Year').empty()
+                // $('#tbody3Year').empty()
+                var theadreg = document.getElementById('tahunreg');
 
-                var estate = JSON.parse(wilayah)
+                // console.log(regional);
 
+                tr = document.createElement('tr')
+                let reg1 = rhdata[1][1]
+                let reg2 = rhdata[3][1]
+                let reg3 = '-'
+                let reg4 = rhdata[0][1]
+                // let reg4 = '-'
+                let regElement1 = document.createElement('td')
+                let regElement2 = document.createElement('td')
+                let regElement3 = document.createElement('td')
+                let regElement4 = document.createElement('td')
 
+                regElement1.classList.add("text-center")
+                regElement2.classList.add("text-center")
+                regElement3.classList.add("text-center")
+                regElement4.classList.add("text-center")
 
-                const formatEst = estate.map((item) => item.split(',')[1]);
-                let plasma1Index = formatEst.indexOf("Plasma1");
+                regElement1.innerText = reg1;
+                regElement2.innerText = reg2;
+                regElement3.innerText = reg3;
+                regElement4.innerText = reg4;
+                setBackgroundColor(regElement4, reg4);
+                tr.appendChild(regElement1)
+                tr.appendChild(regElement2)
+                tr.appendChild(regElement3)
+                tr.appendChild(regElement4)
 
-                if (plasma1Index !== -1) {
-                    formatEst.splice(plasma1Index, 1);
-                    formatEst.push("Plasma1");
-                }
+                theadreg.appendChild(tr)
+                // console.log(table1);
+                var trekap1 = document.getElementById('tahun1');
+                Object.keys(table1[1]).forEach(key => {
+                    Object.keys(table1[1][key]).forEach(subKey => {
+                        let item1 = table1[1][key][subKey]['est'];
+                        let item2 = table1[1][key][subKey]['afd'];
+                        let item3 = table1[1][key][subKey]['nama']
+                        let item4 = table1[1][key][subKey]['total_score'];
+                        let item5 = table1[1][key][subKey]['rank'] ?? '-';
 
-                //endchart
+                        let bg = table1[1][key][subKey]['bgcolor'];
 
-
-                function createTableCell(text, customClass = null) {
-                    const cell = document.createElement('td');
-                    cell.innerText = text;
-                    if (customClass) {
-                        cell.classList.add(customClass);
-                    }
-                    return cell;
-                }
-
-                function setBackgroundColor(element, score) {
-                    let color;
-                    if (score >= 95) {
-                        color = "#609cd4";
-                    } else if (score >= 85 && score < 95) {
-                        color = "#08b454";
-                    } else if (score >= 75 && score < 85) {
-                        color = "#fffc04";
-                    } else if (score >= 65 && score < 75) {
-                        color = "#ffc404";
-                    } else {
-                        color = "red";
-                    }
-
-                    element.style.backgroundColor = color;
-                    element.style.color = (color === "#609cd4" || color === "#08b454" || color === "red") ? "white" : "black";
-                }
-
-                function bgest(element, score) {
-                    let color;
-                    if (score >= 95) {
-                        color = "#609cd4";
-                    } else if (score >= 85 && score < 95) {
-                        color = "#08b454";
-                    } else if (score >= 75 && score < 85) {
-                        color = "#fffc04";
-                    } else if (score >= 65 && score < 75) {
-                        color = "#ffc404";
-                    } else {
-                        color = "red";
-                    }
-
-                    element.style.backgroundColor = color;
-                    element.style.color = (color === "#609cd4" || color === "#08b454" || color === "red") ? "white" : "black";
-                }
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
 
 
 
-                var arrTbody1 = mutu_buah[0][1];
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
 
-                var tbody1 = document.getElementById('tahun1');
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
 
-                Object.entries(arrTbody1).forEach(([estateName, estateData]) => {
-                    Object.entries(estateData).forEach(([key2, data], index) => {
-                        const tr = document.createElement('tr');
-
-                        const dataItems = {
-                            item1: estateName,
-                            item2: key2,
-                            item3: data['nama_asisten'] !== undefined ? data['nama_asisten'] : '-',
-                            item4: data['All_skor'],
-                            item5: data['rankAFD'],
-                        };
-
-                        const rowData = Object.values(dataItems);
-
-                        rowData.forEach((item, cellIndex) => {
-                            const cell = createTableCell(item, "text-center");
-
-                            if (cellIndex === 2) {
-                                const item3nama = dataItems.item3;
-                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                    cell.style.color = "red";
-                                } else {
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            if (cellIndex === 3) {
-                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                if (item4Value >= 95) {
-                                    cell.style.backgroundColor = "#609cd4";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 85 && item4Value < 95) {
-                                    cell.style.backgroundColor = "#08b454";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 75 && item4Value < 85) {
-                                    cell.style.backgroundColor = "#fffc04";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 65 && item4Value < 75) {
-                                    cell.style.backgroundColor = "#ffc404";
-                                    cell.style.color = "black";
-                                } else {
-                                    cell.style.backgroundColor = "red";
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            tr.appendChild(cell);
-                        });
-
-                        tbody1.appendChild(tr);
-                    });
-                });
-                var arrEst1 = mutubuah_est[0][1];
-                // console.log(arrEst1);
-                var tbody1 = document.getElementById('tahun1');
-
-                Object.entries(arrEst1).forEach(([estateName, estateData]) => {
-                    const tr = document.createElement('tr');
-                    // console.log(estateData);
-                    const dataItems = {
-                        item1: estateName,
-                        item2: estateData['EM'],
-                        item3: estateData['Nama_assist'] || '-',
-                        item4: estateData['All_skor'],
-                        item5: estateData['rankEST'],
-                    };
-
-                    const rowData = Object.values(dataItems);
-
-                    rowData.forEach((item, cellIndex) => {
-                        const cell = createTableCell(item, "text-center");
-                        if (cellIndex === 2) {
-                            const item3nama = dataItems.item3;
-                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                cell.style.color = "red";
-                            } else {
-                                cell.style.color = "black";
-                            }
-                        }
-
-                        if (cellIndex === 3) {
-                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                            if (item4Value >= 95) {
-                                cell.style.backgroundColor = "#609cd4";
-                                cell.style.color = "black";
-                            } else if (item4Value >= 85 && item4Value < 95) {
-                                cell.style.backgroundColor = "#08b454";
-                                cell.style.color = "black";
-                            } else if (item4Value >= 75 && item4Value < 85) {
-                                cell.style.backgroundColor = "#fffc04";
-                                cell.style.color = "black";
-                            } else if (item4Value >= 65 && item4Value < 75) {
-                                cell.style.backgroundColor = "#ffc404";
-                                cell.style.color = "black";
-                            } else {
-                                cell.style.backgroundColor = "red";
-                                cell.style.color = "black";
-                            }
-                        }
-
-                        tr.appendChild(cell);
-                    });
-
-                    tbody1.appendChild(tr);
-
-                });
-                if (regInpt === '1') {
-                    wil1 = 'WIL-I';
-                    wil2 = 'WIL-II';
-                    wil3 = 'WIL-III';
-                    wil4 = 'Plasma1'
-                } else if (regInpt === '2') {
-                    wil1 = 'WIL-IV';
-                    wil2 = 'WIL-V';
-                    wil3 = 'WIL-VI';
-                    wil4 = 'Plasma2'
-                } else if (regInpt === '3') {
-                    wil1 = 'WIL-VII';
-                    wil2 = 'WIL-VIII';
-                    wil3 = 'Plasma3';
-                    wil4 = 'Plasma3'
-                } else {
-                    wil1 = 'WIL-IX';
-                    wil2 = 'WIL-X';
-                    wil3 = '-';
-                    wil4 = '-'
-                }
-                var arrEst1 = mutuBuah_wil[0][1];
-                // console.log(arrEst1);
-                var tbody1 = document.getElementById('tahun1');
-                const tr = document.createElement('tr');
-                // console.log(estateData);
-                let item3 = '-';
-                queryAsisten.forEach((asisten) => {
-                    if (asisten[1].est === wil1 && asisten[1].afd === 'GM') {
-                        item3 = asisten[1].nama;
-                    }
-                });
-
-                const dataItems = {
-                    item1: wil1,
-                    item2: 'GM',
-                    item3: item3,
-                    item4: arrEst1['All_skor'],
-                    item5: arrEst1['rankWil'],
-                };
-
-
-                const rowData = Object.values(dataItems);
-
-                rowData.forEach((item, cellIndex) => {
-                    const cell = createTableCell(item, "text-center");
-                    if (cellIndex === 2) {
-                        const item3nama = dataItems.item3;
-                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                            cell.style.color = "red";
-                        } else {
-                            cell.style.color = "black";
-                        }
-                    }
-
-                    if (cellIndex === 3) {
-                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                        if (item4Value >= 95) {
-                            cell.style.backgroundColor = "#609cd4";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 85 && item4Value < 95) {
-                            cell.style.backgroundColor = "#08b454";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 75 && item4Value < 85) {
-                            cell.style.backgroundColor = "#fffc04";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 65 && item4Value < 75) {
-                            cell.style.backgroundColor = "#ffc404";
-                            cell.style.color = "black";
-                        } else {
-                            cell.style.backgroundColor = "red";
-                            cell.style.color = "black";
-                        }
-                    }
-
-
-                    tr.appendChild(cell);
-                });
-
-                tbody1.appendChild(tr);
-
-
-
-                var tab2 = mutu_buah[1][1];
-                var tbody2 = document.getElementById('tahun2');
-                // console.log(tab2);
-                Object.entries(tab2).forEach(([estateName, estateData]) => {
-                    Object.entries(estateData).forEach(([key2, data], index) => {
-                        const tr = document.createElement('tr');
-
-                        const dataItems = {
-                            item1: estateName,
-                            item2: key2,
-                            item3: data['nama_asisten'] || '-',
-                            item4: data['All_skor'],
-                            item5: data['rankAFD'],
-                        };
-
-                        const rowData = Object.values(dataItems);
-
-                        rowData.forEach((item, cellIndex) => {
-                            const cell = createTableCell(item, "text-center");
-
-                            if (cellIndex === 2) {
-                                const item3nama = dataItems.item3;
-                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                    cell.style.color = "red";
-                                } else {
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            if (cellIndex === 3) {
-                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                if (item4Value >= 95) {
-                                    cell.style.backgroundColor = "#609cd4";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 85 && item4Value < 95) {
-                                    cell.style.backgroundColor = "#08b454";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 75 && item4Value < 85) {
-                                    cell.style.backgroundColor = "#fffc04";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 65 && item4Value < 75) {
-                                    cell.style.backgroundColor = "#ffc404";
-                                    cell.style.color = "black";
-                                } else {
-                                    cell.style.backgroundColor = "red";
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            tr.appendChild(cell);
-                        });
-
-                        tbody2.appendChild(tr);
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap1.appendChild(tr);
                     });
                 });
 
-                var arrEst2 = mutubuah_est[1][1];
-                // console.log(arrEst2);
-                var tbody2 = document.getElementById('tahun2');
+                var trekap2 = document.getElementById('tahun2');
+                Object.keys(table2[1]).forEach(key => {
+                    Object.keys(table2[1][key]).forEach(subKey => {
+                        let item1 = table2[1][key][subKey]['est'];
+                        let item2 = table2[1][key][subKey]['afd'];
+                        let item3 = table2[1][key][subKey]['nama'] ?? '-'
+                        let item4 = table2[1][key][subKey]['total_score'];
+                        let item5 = table2[1][key][subKey]['rank'] ?? '-';
 
-                Object.entries(arrEst2).forEach(([estateName, estateData]) => {
-                    const tr = document.createElement('tr');
-                    // console.log(estateData);
-                    const dataItems = {
-                        item1: estateName,
-                        item2: estateData['EM'],
-                        item3: estateData['Nama_assist'] || '-',
-                        item4: estateData['All_skor'],
-                        item5: estateData['rankEST'],
-                    };
+                        let bg = table2[1][key][subKey]['bgcolor'];
 
-                    const rowData = Object.values(dataItems);
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
 
-                    rowData.forEach((item, cellIndex) => {
-                        const cell = createTableCell(item, "text-center");
-                        if (cellIndex === 2) {
-                            const item3nama = dataItems.item3;
-                            if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                cell.style.color = "red";
-                            } else {
-                                cell.style.color = "black";
-                            }
-                        }
 
-                        if (cellIndex === 3) {
-                            const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                            if (item4Value >= 95) {
-                                cell.style.backgroundColor = "#609cd4";
-                                cell.style.color = "black";
-                            } else if (item4Value >= 85 && item4Value < 95) {
-                                cell.style.backgroundColor = "#08b454";
-                                cell.style.color = "black";
-                            } else if (item4Value >= 75 && item4Value < 85) {
-                                cell.style.backgroundColor = "#fffc04";
-                                cell.style.color = "black";
-                            } else if (item4Value >= 65 && item4Value < 75) {
-                                cell.style.backgroundColor = "#ffc404";
-                                cell.style.color = "black";
-                            } else {
-                                cell.style.backgroundColor = "red";
-                                cell.style.color = "black";
-                            }
-                        }
 
-                        tr.appendChild(cell);
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
+
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
+
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap2.appendChild(tr);
                     });
-
-                    tbody2.appendChild(tr);
-
                 });
 
-                var arrWil2 = mutuBuah_wil[1][1];
-                // console.log(arrWil2);
-                var tbody2 = document.getElementById('tahun2');
-                const tx = document.createElement('tr');
-                // console.log(estateData);
-                let item3s = '-';
-                queryAsisten.forEach((asisten) => {
-                    if (asisten[1].est === wil2 && asisten[1].afd === 'GM') {
-                        item3s = asisten[1].nama;
-                    }
-                });
-                const dataItemx = {
+                var trekap3 = document.getElementById('tahun3');
+                Object.keys(table3[1]).forEach(key => {
+                    Object.keys(table3[1][key]).forEach(subKey => {
+                        let item1 = table3[1][key][subKey]['est'];
+                        let item2 = table3[1][key][subKey]['afd'];
+                        let item3 = table3[1][key][subKey]['nama']
+                        let item4 = table3[1][key][subKey]['total_score'];
+                        let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
-                    item1: wil2,
-                    item2: 'GM',
-                    item3: item3s,
-                    item4: arrWil2['All_skor'],
-                    item5: arrWil2['rankWil'],
-                };
+                        let bg = table3[1][key][subKey]['bgcolor'];
 
-                const rowDatax = Object.values(dataItemx);
-
-                rowDatax.forEach((item, cellIndex) => {
-                    const cell = createTableCell(item, "text-center");
-                    if (cellIndex === 2) {
-                        const item3nama = dataItems.item3;
-                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                            cell.style.color = "red";
-                        } else {
-                            cell.style.color = "black";
-                        }
-                    }
-
-                    if (cellIndex === 3) {
-                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                        if (item4Value >= 95) {
-                            cell.style.backgroundColor = "#609cd4";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 85 && item4Value < 95) {
-                            cell.style.backgroundColor = "#08b454";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 75 && item4Value < 85) {
-                            cell.style.backgroundColor = "#fffc04";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 65 && item4Value < 75) {
-                            cell.style.backgroundColor = "#ffc404";
-                            cell.style.color = "black";
-                        } else {
-                            cell.style.backgroundColor = "red";
-                            cell.style.color = "black";
-                        }
-                    }
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
 
 
-                    tx.appendChild(cell);
+
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
+
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
+
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap3.appendChild(tr);
+                    });
                 });
 
-                tbody2.appendChild(tx);
-
-                var tbody3 = document.getElementById('tahun3');
-
-                if (mutu_buah[2] !== undefined) {
-                    var tab3 = mutu_buah[2][1];
-
-                    if (tab3 !== null && tab3 !== undefined) {
-                        Object.entries(tab3).forEach(([estateName, estateData]) => {
-                            Object.entries(estateData).forEach(([key2, data], index) => {
-                                const tr = document.createElement('tr');
-
-                                const dataItems = {
-                                    item1: estateName,
-                                    item2: key2,
-                                    item3: data['nama_asisten'] || '-',
-                                    item4: data['All_skor'],
-                                    item5: data['rankAFD'],
-                                };
-
-                                const rowData = Object.values(dataItems);
-
-                                rowData.forEach((item, cellIndex) => {
-                                    const cell = createTableCell(item, "text-center");
-
-                                    if (cellIndex === 2) {
-                                        const item3nama = dataItems.item3;
-                                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                            cell.style.color = "red";
-                                        } else {
-                                            cell.style.color = "black";
-                                        }
-                                    }
-
-                                    if (cellIndex === 3) {
-                                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                        if (item4Value >= 95) {
-                                            cell.style.backgroundColor = "#609cd4";
-                                            cell.style.color = "black";
-                                        } else if (item4Value >= 85 && item4Value < 95) {
-                                            cell.style.backgroundColor = "#08b454";
-                                            cell.style.color = "black";
-                                        } else if (item4Value >= 75 && item4Value < 85) {
-                                            cell.style.backgroundColor = "#fffc04";
-                                            cell.style.color = "black";
-                                        } else if (item4Value >= 65 && item4Value < 75) {
-                                            cell.style.backgroundColor = "#ffc404";
-                                            cell.style.color = "black";
-                                        } else {
-                                            cell.style.backgroundColor = "red";
-                                            cell.style.color = "black";
-                                        }
-                                    }
-
-                                    tr.appendChild(cell);
-                                });
-
-                                tbody3.appendChild(tr);
-                            });
-                        });
-                    } else {
-                        console.log("tab3 is null or undefined");
-                    }
-                } else {
-                    console.log("mutu_buah[2] is undefined");
-                }
-
-                var tbody3 = document.getElementById('tahun3');
-
-                if (mutubuah_est[2] !== undefined) {
-                    var arrEst3 = mutubuah_est[2][1];
-
-                    if (arrEst3 !== null && arrEst3 !== undefined) {
-                        Object.entries(arrEst3).forEach(([estateName, estateData]) => {
-                            const tr = document.createElement('tr');
-
-                            const dataItems = {
-                                item1: estateName,
-                                item2: estateData['EM'],
-                                item3: estateData['Nama_assist'] || '-',
-                                item4: estateData['All_skor'],
-                                item5: estateData['rankEST'],
-                            };
-
-                            const rowData = Object.values(dataItems);
-
-                            rowData.forEach((item, cellIndex) => {
-                                const cell = createTableCell(item, "text-center");
-                                if (cellIndex === 2) {
-                                    const item3nama = dataItems.item3;
-                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                        cell.style.color = "red";
-                                    } else {
-                                        cell.style.color = "black";
-                                    }
-                                }
-
-                                if (cellIndex === 3) {
-                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                    if (item4Value >= 95) {
-                                        cell.style.backgroundColor = "#609cd4";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 85 && item4Value < 95) {
-                                        cell.style.backgroundColor = "#08b454";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 75 && item4Value < 85) {
-                                        cell.style.backgroundColor = "#fffc04";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 65 && item4Value < 75) {
-                                        cell.style.backgroundColor = "#ffc404";
-                                        cell.style.color = "black";
-                                    } else {
-                                        cell.style.backgroundColor = "red";
-                                        cell.style.color = "black";
-                                    }
-                                }
-
-                                tr.appendChild(cell);
-                            });
-
-                            tbody3.appendChild(tr);
-                        });
-                    } else {
-                        console.log("arrEst3 is null or undefined");
-                    }
-                } else {
-                    console.log("mutubuah_est[2] is undefined");
-                }
-
-                var tbody3 = document.getElementById('tahun3');
-
-                if (mutuBuah_wil[2] !== undefined) {
-                    var arrWIl3 = mutuBuah_wil[2][1];
-                    let item3s = '-';
-                    queryAsisten.forEach((asisten) => {
-                        if (asisten[1].est === wil3 && asisten[1].afd === 'GM') {
-                            item3s = asisten[1].nama;
-                        }
-                    });
-                    if (arrWIl3 !== null && arrWIl3 !== undefined) {
-                        const tm = document.createElement('tr');
-
-                        const dataitemc = {
-                            item1: wil3,
-                            item2: 'GM',
-                            item3: item3s,
-                            item4: arrWIl3['All_skor'],
-                            item5: arrWIl3['rankWil'],
-                        };
-
-                        const rowDatac = Object.values(dataitemc);
-
-                        rowDatac.forEach((item, cellIndex) => {
-                            const cell = createTableCell(item, "text-center");
-                            if (cellIndex === 2) {
-                                const item3nama = dataItems.item3;
-                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                    cell.style.color = "red";
-                                } else {
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            if (cellIndex === 3) {
-                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                if (item4Value >= 95) {
-                                    cell.style.backgroundColor = "#609cd4";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 85 && item4Value < 95) {
-                                    cell.style.backgroundColor = "#08b454";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 75 && item4Value < 85) {
-                                    cell.style.backgroundColor = "#fffc04";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 65 && item4Value < 75) {
-                                    cell.style.backgroundColor = "#ffc404";
-                                    cell.style.color = "black";
-                                } else {
-                                    cell.style.backgroundColor = "red";
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            tm.appendChild(cell);
-                        });
-
-                        tbody3.appendChild(tm);
-                    } else {
-                        console.log("arrWIl3 is null or undefined");
-                    }
-                } else {
-                    console.log("mutuBuah_wil[2] is undefined");
-                }
-
-
-                var arrTbody1 = mutu_buah[0]?.[1] || [];
-
-                if (mutu_buah[3]) {
-                    var tab4 = mutu_buah[3][1];
-                }
-                // var tab4 = mutu_buah[3][1];
-                var tbody4 = document.getElementById('tahun4');
-
-                if (tab4 !== null && tab4 !== undefined) {
-                    Object.entries(tab4).forEach(([estateName, estateData]) => {
-                        Object.entries(estateData).forEach(([key2, data], index) => {
-                            const tr = document.createElement('tr');
-
-                            const dataItems = {
-                                item1: estateName,
-                                item2: key2,
-                                item3: data['nama_asisten'] || '-',
-                                item4: data['All_skor'],
-                                item5: data['rankAFD'],
-                            };
-
-                            const rowData = Object.values(dataItems);
-
-                            rowData.forEach((item, cellIndex) => {
-                                const cell = createTableCell(item, "text-center");
-
-                                if (cellIndex === 2) {
-                                    const item3nama = dataItems.item3;
-                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                        cell.style.color = "red";
-                                    } else {
-                                        cell.style.color = "black";
-                                    }
-                                }
-
-                                if (cellIndex === 3) {
-                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                    if (item4Value >= 95) {
-                                        cell.style.backgroundColor = "#609cd4";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 85 && item4Value < 95) {
-                                        cell.style.backgroundColor = "#08b454";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 75 && item4Value < 85) {
-                                        cell.style.backgroundColor = "#fffc04";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 65 && item4Value < 75) {
-                                        cell.style.backgroundColor = "#ffc404";
-                                        cell.style.color = "black";
-                                    } else {
-                                        cell.style.backgroundColor = "red";
-                                        cell.style.color = "black";
-                                    }
-                                }
-
-                                tr.appendChild(cell);
-                            });
-
-                            tbody4.appendChild(tr);
-                        });
-                    });
-                } else {
-                    console.log("tab4 is null or undefined");
-                }
-
-                var tbody4 = document.getElementById('tahun4');
-
-                if (mutubuah_est[3] !== undefined) {
-                    var arrEst4 = mutubuah_est[3][1];
-
-                    if (arrEst4 !== null && arrEst4 !== undefined) {
-                        Object.entries(arrEst4).forEach(([estateName, estateData]) => {
-                            const tr = document.createElement('tr');
-
-                            const dataItems = {
-                                item1: estateName,
-                                item2: estateData['EM'],
-                                item3: estateData['Nama_assist'] || '-',
-                                item4: estateData['All_skor'],
-                                item5: estateData['rankEST'],
-                            };
-
-                            const rowData = Object.values(dataItems);
-
-                            rowData.forEach((item, cellIndex) => {
-                                const cell = createTableCell(item, "text-center");
-                                if (cellIndex === 2) {
-                                    const item3nama = dataItems.item3;
-                                    if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                        cell.style.color = "red";
-                                    } else {
-                                        cell.style.color = "black";
-                                    }
-                                }
-
-                                if (cellIndex === 3) {
-                                    const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                    if (item4Value >= 95) {
-                                        cell.style.backgroundColor = "#609cd4";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 85 && item4Value < 95) {
-                                        cell.style.backgroundColor = "#08b454";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 75 && item4Value < 85) {
-                                        cell.style.backgroundColor = "#fffc04";
-                                        cell.style.color = "black";
-                                    } else if (item4Value >= 65 && item4Value < 75) {
-                                        cell.style.backgroundColor = "#ffc404";
-                                        cell.style.color = "black";
-                                    } else {
-                                        cell.style.backgroundColor = "red";
-                                        cell.style.color = "black";
-                                    }
-                                }
-
-                                tr.appendChild(cell);
-                            });
-
-                            tbody4.appendChild(tr);
-                        });
-                    } else {
-                        console.log("arrEst4 is null or undefined");
-                    }
-                } else {
-                    console.log("mutubuah_est[3] is undefined");
-                }
-
-
-                var tbody4 = document.getElementById('tahun4');
-                const tl = document.createElement('tr');
-
-                if (mutuBuah_wil[3] !== undefined) {
-                    var arrWIl3 = mutuBuah_wil[3][1];
-                    let item3s = '-';
-                    queryAsisten.forEach((asisten) => {
-                        if (asisten[1].est === wil4 && asisten[1].afd === 'GM') {
-                            item3s = asisten[1].nama;
-                        }
-                    });
-                    if (arrWIl3 !== null && arrWIl3 !== undefined) {
-                        const dataOm = {
-                            item1: wil4,
-                            item2: 'GM',
-                            item3: item3s,
-                            item4: arrWIl3['All_skor'],
-                            item5: arrWIl3['rankWil'],
-                        };
-
-                        const rowOm = Object.values(dataOm);
-
-                        rowOm.forEach((item, cellIndex) => {
-                            const cell = createTableCell(item, "text-center");
-                            if (cellIndex === 2) {
-                                const item3nama = dataItems.item3;
-                                if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                                    cell.style.color = "red";
-                                } else {
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            if (cellIndex === 3) {
-                                const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                                if (item4Value >= 95) {
-                                    cell.style.backgroundColor = "#609cd4";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 85 && item4Value < 95) {
-                                    cell.style.backgroundColor = "#08b454";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 75 && item4Value < 85) {
-                                    cell.style.backgroundColor = "#fffc04";
-                                    cell.style.color = "black";
-                                } else if (item4Value >= 65 && item4Value < 75) {
-                                    cell.style.backgroundColor = "#ffc404";
-                                    cell.style.color = "black";
-                                } else {
-                                    cell.style.backgroundColor = "red";
-                                    cell.style.color = "black";
-                                }
-                            }
-
-                            tl.appendChild(cell);
-                        });
-
-                        tbody4.appendChild(tl);
-                    } else {
-                        console.log("arrWIl3 is null or undefined");
-                    }
-                } else {
-                    console.log("mutuBuah_wil[3] is undefined");
-                }
-
-
-                var regionals = regIonal;
-                // console.log(regionals);
-                var headregional = document.getElementById('tahunreg');
-                const trreg = document.createElement('tr');
-
-                const dataReg = {
-                    // item1: regIonal[0] && regIonal[0][1] && regIonal[0][1].regional !== undefined ? regIonal[0][1].regional : '-',
-                    item1: regionaltab[0][1]['nama'],
-                    // item2: regIonal[0] && regIonal[0][1] && regIonal[0][1].jabatan !== undefined ? regIonal[0][1].jabatan : '-',
-                    item2: regionaltab[0][1]['jabatan'],
-                    // item3: regIonal[0] && regIonal[0][1] && regIonal[0][1].nama_asisten !== undefined ? regIonal[0][1].nama_asisten : '-',
-                    item3: regionaltab[0][1]['nama_rh'],
-                    item4: regIonal[0] && regIonal[0][1] && regIonal[0][1].all_skorYear !== undefined ? regIonal[0][1].all_skorYear : '-',
-                };
-
-
-                const rowREG = Object.values(dataReg);
-                rowREG.forEach((item, cellIndex) => {
-                    const cell = createTableCell(item, "text-center");
-                    if (cellIndex === 2) {
-                        const item3nama = dataItems.item3;
-                        if (item3nama.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                            cell.style.color = "red";
-                        } else {
-                            cell.style.color = "black";
-                        }
-                    }
-
-                    if (cellIndex === 3) {
-                        const item4Value = parseFloat(dataItems.item4); // Convert to a number
-                        if (item4Value >= 95) {
-                            cell.style.backgroundColor = "#609cd4";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 85 && item4Value < 95) {
-                            cell.style.backgroundColor = "#08b454";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 75 && item4Value < 85) {
-                            cell.style.backgroundColor = "#fffc04";
-                            cell.style.color = "black";
-                        } else if (item4Value >= 65 && item4Value < 75) {
-                            cell.style.backgroundColor = "#ffc404";
-                            cell.style.color = "black";
-                        } else {
-                            cell.style.backgroundColor = "red";
-                            cell.style.color = "black";
-                        }
-                    }
-                    trreg.appendChild(cell);
-                });
-                headregional.appendChild(trreg);
 
                 sbi_chart();
             },

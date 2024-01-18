@@ -155,14 +155,14 @@
         <style>
             .custom-border {
                 border: 1px solid #000;
-                padding: 20px;
-                margin-top: 50px;
-                margin-bottom: 50px;
+                padding: 5px;
+                margin-top: 1px;
+                /* margin-bottom: 50px; */
             }
         </style>
 
         <div class="d-flex justify-content-center custom-border">
-            <h2 class="text-center">REKAPITULASI SIDAK PEMERIKSAAN MUTU BUAH
+            <h2 class="text-center">REKAPITULASI SIDAK PEMERIKSAAN MUTU BUAH es
 
             </h2>
         </div>
@@ -194,11 +194,11 @@
             </tr>
         </table>
 
-        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
+        <!-- <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
 
-        </div>
+        </div> -->
 
-        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3">
+        <div class="d-flex justify-content-center mb-2 ml-3 mr-3">
             <div class="Wraping">
                 <table class="my-table">
                     <thead>
@@ -318,53 +318,32 @@
                 </table>
             </div>
         </div>
+        <table class="custom-table" style="float: left; width: 40%; border-collapse: collapse;" border="1">
 
-        <div class="d-flex justify-content-center mt-3 mb-2 ml-3 mr-3 " style="padding: 5px;">
-            <!-- Table 1 -->
-            <table class="custom-table table-1-no-border" style="float: left; width: 33%;">
-                <thead>
-                    <tr class="table-1-no-border hide-row">
-                        <th colspan="2" class="text-center"></th>
-                    </tr>
-                </thead>
-            </table>
-            <!-- Table 2 -->
-            <table class="custom-table" style="float: left; width: 40%; border-collapse: collapse;" border="1">
-                <thead>
-                    <tr>
-                        <th colspan="12" class="table-1-no-border hide-row">Demikian hasil pemeriksaan ini dengan sebenar-benarnya tanpa rekayasa dan paksaan dari Siapapun,</th>
-                    </tr>
-                    <tr>
-                        <th colspan="9" class="text-center">Dibuat Oleh</th>
-                        <th colspan="3" class="text-center">Diterima Oleh</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr></tr>
-                    <tr></tr>
-                    <tr></tr>
-                    <tr>
-                        <td colspan="3" style="vertical-align: bottom; padding-top: 244px; text-align:center; border: 1px solid black;"></td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="9" style="vertical-align: bottom; text-align:center; border: 1px solid black;">Quality Control</td>
-                        <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;">Estate Manager</td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- Table 3 -->
-            <table class="custom-table table-1-no-border" style="float: right; width: 34%;">
-                <thead>
-                    <tr class="hide-row">
-                        <th colspan="2" class="text-center"></th>
-                    </tr>
-                </thead>
-            </table>
-            <div style="clear:both;"></div>
-        </div>
+
+            <thead>
+                <tr>
+                    <th colspan="12" class="table-1-no-border hide-row">Demikian hasil pemeriksaan ini dengan sebenar-benarnya tanpa rekayasa dan paksaan dari Siapapun,</th>
+                </tr>
+                <tr>
+                    <th colspan="9" class="text-center">Dibuat Oleh</th>
+                    <th colspan="3" class="text-center">Diterima Oleh</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td colspan="3" style="vertical-align: bottom; padding-top: 244px; text-align:center; border: 1px solid black;"></td>
+                    <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
+                    <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
+                    <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;"></td>
+                </tr>
+                <tr>
+                    <td colspan="9" style="vertical-align: bottom; text-align:center; border: 1px solid black;">Quality Control</td>
+                    <td colspan="3" style="vertical-align: bottom; text-align:center; border: 1px solid black;">Estate Manager</td>
+                </tr>
+            </tbody>
+        </table>
 
         <div style="clear:both;"></div>
     </div>

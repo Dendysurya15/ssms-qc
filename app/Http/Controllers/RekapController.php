@@ -415,22 +415,18 @@ class RekapController extends Controller
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'),
                 DB::raw("
                 CASE 
-                    WHEN status = '' THEN 1
-                    WHEN status = '0' THEN 1
-                    WHEN LOCATE('H+', status) > 0 THEN 
-                        CASE 
-                            WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
-                            ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
-                        END
-                    WHEN LOCATE('>H+', status) > 0 THEN 
-                        CASE 
-                            WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1) > 8 THEN '8'
-                            ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1)
-                        END
-                    WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
-                    WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
-                    ELSE status
-                END AS statuspanen")
+                WHEN status = '' THEN 1
+                WHEN status = '0' THEN 1
+                WHEN LOCATE('>H+', status) > 0 THEN '8'
+                WHEN LOCATE('H+', status) > 0 THEN 
+                    CASE 
+                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
+                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
+                    END
+                WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
+                WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
+                ELSE status
+            END AS statuspanen")
             ) // Change the format to "%Y-%m-%d"
             ->where('sidak_tph.datetime', 'like', '%' . $bulan . '%')
             ->orderBy('status', 'asc')
@@ -821,6 +817,11 @@ class RekapController extends Controller
 
                     $total_estkors = $totskor_brd + $totskor_janjang;
                     if ($total_estkors != 0) {
+                        $newSidak[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+                        $newSidak[$key][$key1][$key2]['check_data'] = 'ada';
+
+                        $total_skoreafd = 100 - ($total_estkors);
+                    } else if ($v2check3 != 0) {
                         $newSidak[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                         $newSidak[$key][$key1][$key2]['check_data'] = 'ada';
 
@@ -3259,18 +3260,14 @@ class RekapController extends Controller
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y") as tahun'),
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal'),
                 DB::raw("
-            CASE 
+                CASE 
                 WHEN status = '' THEN 1
                 WHEN status = '0' THEN 1
+                WHEN LOCATE('>H+', status) > 0 THEN '8'
                 WHEN LOCATE('H+', status) > 0 THEN 
                     CASE 
                         WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
                         ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
-                    END
-                WHEN LOCATE('>H+', status) > 0 THEN 
-                    CASE 
-                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1) > 8 THEN '8'
-                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1)
                     END
                 WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
                 WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
@@ -3483,6 +3480,11 @@ class RekapController extends Controller
                         if ($total_estkors != 0) {
                             $newSidak[$key][$key1][$key2][$key3]['all_score'] = 100 - ($total_estkors);
                             $newSidak[$key][$key1][$key2][$key3]['check_data'] = 'ada';
+
+                            $total_skoreafd = 100 - ($total_estkors);
+                        } else if ($v2check3 != 0) {
+                            $newSidak[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+                            $newSidak[$key][$key1][$key2]['check_data'] = 'ada';
 
                             $total_skoreafd = 100 - ($total_estkors);
                         } else {
@@ -5975,18 +5977,14 @@ class RekapController extends Controller
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal'),
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'),
                 DB::raw("
-            CASE 
+                CASE 
                 WHEN status = '' THEN 1
                 WHEN status = '0' THEN 1
+                WHEN LOCATE('>H+', status) > 0 THEN '8'
                 WHEN LOCATE('H+', status) > 0 THEN 
                     CASE 
                         WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
                         ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
-                    END
-                WHEN LOCATE('>H+', status) > 0 THEN 
-                    CASE 
-                        WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1) > 8 THEN '8'
-                        ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, '>H+', -1), ' ', 1)
                     END
                 WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
                 WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
@@ -6042,6 +6040,8 @@ class RekapController extends Controller
             $weekNumber++;
         }
         $WeekStatus = [];
+
+        // dd($weeks);
         // dd($startDate, $endDate, $weeks);
 
         foreach ($ancakFA as $key => $value) {
@@ -6277,6 +6277,11 @@ class RekapController extends Controller
 
                     $total_estkors = $totskor_brd + $totskor_janjang;
                     if ($total_estkors != 0) {
+                        $newSidak[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+                        $newSidak[$key][$key1][$key2]['check_data'] = 'ada';
+
+                        $total_skoreafd = 100 - ($total_estkors);
+                    } else if ($v2check3 != 0) {
                         $newSidak[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                         $newSidak[$key][$key1][$key2]['check_data'] = 'ada';
 
