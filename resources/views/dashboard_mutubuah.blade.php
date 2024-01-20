@@ -2665,7 +2665,7 @@
                         item1: estateName,
                         item2: estateData['EM'],
                         item3: estateData['Nama_assist'] || '-',
-                        item4: estateData['All_skor'],
+                        item4: (estateData['All_skor'] < 0) ? 0 : estateData['All_skor'],
                         item5: estateData['rankEST'],
                     };
 
@@ -2745,7 +2745,7 @@
                     item1: wil1,
                     item2: 'GM',
                     item3: item3,
-                    item4: arrEst1['All_skor'],
+                    item4: (arrEst1['All_skor'] < 0) ? 0 : arrEst1['All_skor'],
                     item5: arrEst1['rankWil'],
                 };
 
@@ -2802,6 +2802,9 @@
 
                         if (data['csfxr'] !== 0) {
                             item4 = data['All_skor'];
+
+                            item4 = (item4 < 0) ? 0 : item4;
+
                         } else {
                             item4 = '-';
                         }
@@ -2869,7 +2872,7 @@
                         item1: estateName,
                         item2: estateData['EM'],
                         item3: estateData['Nama_assist'] || '-',
-                        item4: estateData['All_skor'],
+                        item4: (estateData['All_skor'] < 0) ? 0 : estateData['All_skor'],
                         item5: estateData['rankEST'],
                     };
 
@@ -2930,7 +2933,7 @@
                     item1: wil2,
                     item2: 'GM',
                     item3: item3s,
-                    item4: arrWil2['All_skor'],
+                    item4: (arrWil2['All_skor'] < 0) ? 0 : arrWil2['All_skor'],
                     item5: arrWil2['rankWil'],
                 };
 
@@ -2986,6 +2989,8 @@
 
                                 if (data['csfxr'] !== 0) {
                                     item4 = data['All_skor'];
+                                    item4 = (item4 < 0) ? 0 : item4;
+
                                 } else {
                                     item4 = '-';
                                 }
@@ -3061,7 +3066,7 @@
                                 item1: estateName,
                                 item2: estateData['EM'],
                                 item3: estateData['Nama_assist'] || '-',
-                                item4: estateData['All_skor'],
+                                item4: (estateData['All_skor'] < 0) ? 0 : estateData['All_skor'],
                                 item5: estateData['rankEST'],
                             };
 
@@ -3127,7 +3132,7 @@
                             item1: wil3,
                             item2: 'GM',
                             item3: item3s,
-                            item4: arrWIl3['All_skor'],
+                            item4: (arrWIl3['All_skor'] < 0) ? 0 : arrWIl3['All_skor'],
                             item5: arrWIl3['rankWil'],
                         };
 
@@ -3206,7 +3211,7 @@
                                 item1: estateName,
                                 item2: key2,
                                 item3: data['nama_asisten'] || '-',
-                                item4: data['All_skor'],
+                                item4: (data['All_skor'] < 0) ? 0 : data['All_skor'],
                                 item5: data['rankAFD'],
                             };
 
@@ -3267,7 +3272,7 @@
                                 item1: estateName,
                                 item2: estateData['EM'],
                                 item3: estateData['Nama_assist'] || '-',
-                                item4: estateData['All_skor'],
+                                item4: (estateData['All_skor'] < 0) ? 0 : estateData['All_skor'],
                                 item5: estateData['rankEST'],
                             };
 
@@ -3332,7 +3337,7 @@
                             item1: wil4,
                             item2: 'GM',
                             item3: item3s,
-                            item4: arrWIl3['All_skor'],
+                            item4: (arrWIl3['All_skor'] < 0) ? 0 : arrWIl3['All_skor'],
                             item5: arrWIl3['rankWil'],
                         };
 
@@ -5365,7 +5370,11 @@
                 let reg1 = rhdata[1][1]
                 let reg2 = rhdata[3][1]
                 let reg3 = '-'
+                // let reg4 = rhdata[0][1]
                 let reg4 = rhdata[0][1]
+
+                // Check if item4 is less than 0, and set it to 0 if true
+                reg4 = (reg4 < 0) ? 0 : reg4;
                 // let reg4 = '-'
                 let regElement1 = document.createElement('td')
                 let regElement2 = document.createElement('td')
@@ -5397,6 +5406,7 @@
                         let item3 = table1[1][key][subKey]['nama']
                         let item4 = table1[1][key][subKey]['total_score'];
                         let item5 = table1[1][key][subKey]['rank'] ?? '-';
+                        item4 = (item4 < 0) ? 0 : item4;
 
                         let bg = table1[1][key][subKey]['bgcolor'];
 
@@ -5437,6 +5447,7 @@
                         let item3 = table2[1][key][subKey]['nama'] ?? '-'
                         let item4 = table2[1][key][subKey]['total_score'];
                         let item5 = table2[1][key][subKey]['rank'] ?? '-';
+                        item4 = (item4 < 0) ? 0 : item4;
 
                         let bg = table2[1][key][subKey]['bgcolor'];
 
@@ -5477,6 +5488,7 @@
                         let item3 = table3[1][key][subKey]['nama']
                         let item4 = table3[1][key][subKey]['total_score'];
                         let item5 = table3[1][key][subKey]['rank'] ?? '-';
+                        item4 = (item4 < 0) ? 0 : item4;
 
                         let bg = table3[1][key][subKey]['bgcolor'];
 

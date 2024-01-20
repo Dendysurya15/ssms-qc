@@ -2142,6 +2142,7 @@ class inspectController extends Controller
             ->get();
         $mutuTransport = json_decode($mutuTransport, true);
         // dd($mutuAncak, $mutuBuah, $mutuTransport);
+        // dd($mutuAncak);
         foreach ($mutuAncak as &$item) {
             if (isset($item['app_version'])) {
 
@@ -2149,8 +2150,9 @@ class inspectController extends Controller
                 $vers = $item['app_version'];
                 $parts = explode(';', $vers);
 
-
-                $version = $parts[3];
+                $defaultparts = '{"awal":"GO","akhir":"GO"}';
+                // dd($parts);
+                $version = $parts[3] ?? $defaultparts;
 
                 if (strpos($version, 'awal')) {
                     if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"GA') !== false) {
@@ -2165,6 +2167,8 @@ class inspectController extends Controller
                         $item['app_version'] = 'GPS Awal Akurat : GPS Akhir Uknown';
                     } else if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"G') !== false) {
                         $item['app_version'] = 'GPS Awal Akurat : GPS Akhir Uknown';
+                    } else if (strpos($version, 'awal":"GO') !== false && strpos($version, 'akhir":"GO') !== false) {
+                        $item['app_version'] = 'GPS Awal Uknown : GPS Akhir Uknown';
                     } else {
                         $item['app_version'] = 'GPS Uknown';
                     }

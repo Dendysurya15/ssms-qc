@@ -2315,13 +2315,18 @@
 
                   if ('inspek' in row) {
                     if (ispeksi === 'ada') {
-                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                      kategori = (totalScoreValue < 0) ? 0 : totalScoreValue;
                     } else if (totalScoreValue === 'kosong') {
                       kategori = '-';
                     }
                   } else {
-                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                    if (totalScoreValue < 0) {
+                      kategori = 0;
+                    } else {
+                      kategori = totalScoreValue;
+                    }
                   }
+
                   return kategori;
                 }
               },
@@ -2700,16 +2705,20 @@
                   var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
                   var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
                   var kategori = '-';
-
                   if ('inspek' in row) {
                     if (ispeksi === 'ada') {
-                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                      kategori = (totalScoreValue < 0) ? 0 : totalScoreValue;
                     } else if (totalScoreValue === 'kosong') {
                       kategori = '-';
                     }
                   } else {
-                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                    if (totalScoreValue < 0) {
+                      kategori = 0;
+                    } else {
+                      kategori = totalScoreValue;
+                    }
                   }
+
                   return kategori;
                 }
               },
@@ -3086,16 +3095,20 @@
                   var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
                   var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
                   var kategori = '-';
-
                   if ('inspek' in row) {
                     if (ispeksi === 'ada') {
-                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                      kategori = (totalScoreValue < 0) ? 0 : totalScoreValue;
                     } else if (totalScoreValue === 'kosong') {
                       kategori = '-';
                     }
                   } else {
-                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                    if (totalScoreValue < 0) {
+                      kategori = 0;
+                    } else {
+                      kategori = totalScoreValue;
+                    }
                   }
+
                   return kategori;
                 }
               },
@@ -3474,13 +3487,18 @@
 
                   if ('inspek' in row) {
                     if (ispeksi === 'ada') {
-                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                      kategori = (totalScoreValue < 0) ? 0 : totalScoreValue;
                     } else if (totalScoreValue === 'kosong') {
                       kategori = '-';
                     }
                   } else {
-                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                    if (totalScoreValue < 0) {
+                      kategori = 0;
+                    } else {
+                      kategori = totalScoreValue;
+                    }
                   }
+
                   return kategori;
                 }
               },
@@ -3856,16 +3874,20 @@
                   var ispeksi = row.inspek; // Assuming 'inspek' is a property in the 'row' object
                   var totalScoreValue = row.total_score; // Assuming 'total_score' is a property in the 'row' object
                   var kategori = '-';
-
                   if ('inspek' in row) {
                     if (ispeksi === 'ada') {
-                      kategori = totalScoreValue; // Display the 'total_score' value when 'ispeksi' is 'ada'
+                      kategori = (totalScoreValue < 0) ? 0 : totalScoreValue;
                     } else if (totalScoreValue === 'kosong') {
                       kategori = '-';
                     }
                   } else {
-                    kategori = totalScoreValue; // If 'inspek' property doesn't exist, use 'total_score'
+                    if (totalScoreValue < 0) {
+                      kategori = 0;
+                    } else {
+                      kategori = totalScoreValue;
+                    }
                   }
+
                   return kategori;
                 }
               },
@@ -5925,7 +5947,11 @@
               let item1 = element[1]['est']
               let item2 = element[1]['afd']
               let item3 = element[1]['asisten']
-              let item4 = element[1]['skor']
+              let item4 = element[1]['skor'];
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
+
               let item5 = element[1]['ranking']
               // console.log(item5);
 
@@ -6012,7 +6038,11 @@
               let item1 = element[1]['est']
               let item2 = element[1]['afd']
               let item3 = element[1]['asisten']
-              let item4 = element[1]['skor']
+              let item4 = element[1]['skor'];
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
+
               let item5 = element[1]['ranking']
               let item6 = element[1]['est_score']
 
@@ -6102,7 +6132,13 @@
             let item1 = reg
             let item2 = 'RH - ' + list_skor_rh[0][0]
             let item3 = list_skor_rh[0][1]['nama']
+            // let item4 = hasilRh[0][1]['skor']
             let item4 = hasilRh[0][1]['skor']
+
+            // Check if item4 is less than 0, and set it to 0 if true
+            item4 = (item4 < 0) ? 0 : item4;
+
+            // let item4 = hasilRh[0][1]['skor']
             // let item4 = 'Test'
             let itemElement1 = document.createElement('td')
             let itemElement2 = document.createElement('td')
@@ -6174,7 +6210,12 @@
               let item1 = element[1]['est']
               let item2 = element[1]['afd']
               let item3 = element[1]['asisten']
+              // let item4 = element[1]['skor']
+
               let item4 = element[1]['skor']
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
@@ -6255,7 +6296,11 @@
               let item1 = element[1]['est']
               let item2 = element[1]['afd']
               let item3 = element[1]['asisten']
+
               let item4 = element[1]['skor']
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
               let itemElement1 = document.createElement('td')
               let itemElement2 = document.createElement('td')
@@ -6335,7 +6380,11 @@
               let item1 = element[1]['est']
               let item2 = element[1]['afd']
               let item3 = element[1]['asisten']
+
               let item4 = element[1]['skor']
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
@@ -6418,7 +6467,11 @@
               let item1 = element[1]['est']
               let item2 = element[1]['afd']
               let item3 = element[1]['asisten']
+
               let item4 = element[1]['skor']
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
@@ -6597,6 +6650,10 @@
               let item2 = table1[1][key][subKey]['afd'];
               let item3 = table1[1][key][subKey]['nama']
               let item4 = table1[1][key][subKey]['total_score'];
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
+
               let item5 = table1[1][key][subKey]['rank'] ?? '-';
 
               let bg = table1[1][key][subKey]['bgcolor'];
@@ -6637,6 +6694,10 @@
               let item2 = table2[1][key][subKey]['afd'];
               let item3 = table2[1][key][subKey]['nama'] ?? '-'
               let item4 = table2[1][key][subKey]['total_score'];
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
+
               let item5 = table2[1][key][subKey]['rank'] ?? '-';
 
               let bg = table2[1][key][subKey]['bgcolor'];
@@ -6677,6 +6738,10 @@
               let item2 = table3[1][key][subKey]['afd'];
               let item3 = table3[1][key][subKey]['nama']
               let item4 = table3[1][key][subKey]['total_score'];
+
+              // Check if item4 is less than 0, and set it to 0 if true
+              item4 = (item4 < 0) ? 0 : item4;
+
               let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
               let bg = table3[1][key][subKey]['bgcolor'];

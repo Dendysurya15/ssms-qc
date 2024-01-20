@@ -180,7 +180,10 @@
                 </td>
                 <td colspan="2" class="text-center my-cell">{{ $data->komentar_kesesuaian_ppro }}
                 </td>
-                <td colspan="2" class="text-center my-cell">{{ $data->komentar_barang_nonstok }}
+                <td colspan="2" class="text-center my-cell">{{
+                                        $data->barang_nonstok == 5 ? 'Ya Barang Non-Stock' :
+                                        ($data->barang_nonstok == 0 ? 'Tidak Ada Barang Non-Stock' : '')
+                                        }}
                 </td>
 
             </tr>
@@ -431,7 +434,10 @@
 
             </tr>
             <tr>
-                <td colspan="2" class="text-center my-cell">{{ $data->komentar_barang_nonstok }}
+                <td colspan="2" class="text-center my-cell">{{
+                                        $data->barang_nonstok == 5 ? 'Ya Barang Non-Stock' :
+                                        ($data->barang_nonstok == 0 ? 'Tidak Ada Barang Non-Stock' : '')
+                                        }}
                 </td>
                 <td colspan="2" class="text-center my-cell" style="border-bottom:1px solid black">{{
                     $data->komentar_mr_ditandatangani }}

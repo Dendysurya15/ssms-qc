@@ -440,43 +440,78 @@ class RekapController extends Controller
         $year = $dateParts['year'];
         $month = $dateParts['month'];
 
-        $year = $year; // Replace with the desired year
-        $month = $month;   // Replace with the desired month (September in this example)
+        $year = $year;
+        $month = $month;
 
+        if ($regional == 3) {
 
-        $weeks = [];
-        $firstDayOfMonth = strtotime("$year-$month-01");
-        $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
+            $weeks = [];
+            $firstDayOfMonth = strtotime("$year-$month-01");
+            $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
 
-        $weekNumber = 1;
-        $startDate = $firstDayOfMonth;
+            $weekNumber = 1;
 
-        while ($startDate <= $lastDayOfMonth) {
-            $endDate = strtotime("next Sunday", $startDate);
-            if ($endDate > $lastDayOfMonth) {
-                $endDate = $lastDayOfMonth;
+            // Find the first Saturday of the month or the last Saturday of the previous month
+            $firstSaturday = strtotime("last Saturday", $firstDayOfMonth);
+
+            // Set the start date to the first Saturday
+            $startDate = $firstSaturday;
+
+            while ($startDate <= $lastDayOfMonth) {
+                $endDate = strtotime("next Friday", $startDate);
+                if ($endDate > $lastDayOfMonth) {
+                    $endDate = $lastDayOfMonth;
+                }
+
+                $weeks[$weekNumber] = [
+                    'start' => date('Y-m-d', $startDate),
+                    'end' => date('Y-m-d', $endDate),
+                ];
+
+                // Update start date to the next Saturday
+                $startDate = strtotime("next Saturday", $endDate);
+
+                $weekNumber++;
             }
+        } else {
+            $weeks = [];
+            $firstDayOfMonth = strtotime("$year-$month-01");
+            $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
 
-            $weeks[$weekNumber] = [
-                'start' => date('Y-m-d', $startDate),
-                'end' => date('Y-m-d', $endDate),
-            ];
+            $weekNumber = 1;
+            $startDate = $firstDayOfMonth;
 
-            $nextMonday = strtotime("next Monday", $endDate);
+            while ($startDate <= $lastDayOfMonth) {
+                $endDate = strtotime("next Sunday", $startDate);
+                if ($endDate > $lastDayOfMonth) {
+                    $endDate = $lastDayOfMonth;
+                }
 
-            // Check if the next Monday is still within the current month.
-            if (date('m', $nextMonday) == $month) {
-                $startDate = $nextMonday;
-            } else {
-                // If the next Monday is in the next month, break the loop.
-                break;
+                $weeks[$weekNumber] = [
+                    'start' => date('Y-m-d', $startDate),
+                    'end' => date('Y-m-d', $endDate),
+                ];
+
+                $nextMonday = strtotime("next Monday", $endDate);
+
+                // Check if the next Monday is still within the current month.
+                if (date('m', $nextMonday) == $month) {
+                    $startDate = $nextMonday;
+                } else {
+                    // If the next Monday is in the next month, break the loop.
+                    break;
+                }
+
+                $weekNumber++;
             }
-
-            $weekNumber++;
         }
 
+        // dd($weeks);
 
-        // dd($result);
+
+
+
+        // dd($weeks);
 
         $WeekStatus = [];
 
@@ -3296,56 +3331,91 @@ class RekapController extends Controller
 
 
         $year = $tahun;
+        if ($regional == 3) {
+            $months = [];
 
-        $months = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $weeks = [];
-            $firstDayOfMonth = strtotime("$year-$month-01");
-            $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
+            for ($month = 1; $month <= 12; $month++) {
+                $weeks = [];
+                $firstDayOfMonth = strtotime("$year-$month-01");
+                $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
 
-            $weekNumber = 1;
-            $startDate = $firstDayOfMonth;
+                $weekNumber = 1;
 
-            while ($startDate <= $lastDayOfMonth) {
-                $endDate = strtotime("next Sunday", $startDate);
-                if ($endDate > $lastDayOfMonth) {
-                    $endDate = $lastDayOfMonth;
+                // Find the first Saturday of the month or the last Saturday of the previous month
+                $firstSaturday = strtotime("last Saturday", $firstDayOfMonth);
+
+                // Set the start date to the first Saturday
+                $startDate = $firstSaturday;
+
+                while ($startDate <= $lastDayOfMonth) {
+                    $endDate = strtotime("next Friday", $startDate);
+                    if ($endDate > $lastDayOfMonth) {
+                        $endDate = $lastDayOfMonth;
+                    }
+
+                    $weeks[$weekNumber] = [
+                        'start' => date('Y-m-d', $startDate),
+                        'end' => date('Y-m-d', $endDate),
+                    ];
+
+                    // Update start date to the next Saturday
+                    $startDate = strtotime("next Saturday", $endDate);
+
+                    $weekNumber++;
                 }
 
-                $weeks[$weekNumber] = [
-                    'start' => date('Y-m-d', $startDate),
-                    'end' => date('Y-m-d', $endDate),
-                ];
-
-                $nextMonday = strtotime("next Monday", $endDate);
-
-                // Check if the next Monday is still within the current month.
-                if (date('m', $nextMonday) == $month) {
-                    $startDate = $nextMonday;
-                } else {
-                    // If the next Monday is in the next month, break the loop.
-                    break;
-                }
-
-                $weekNumber++;
+                $monthName = date('F', mktime(0, 0, 0, $month, 1));
+                $months[$monthName] = $weeks;
             }
 
-            $monthName = date('F', mktime(0, 0, 0, $month, 1));
-            $months[$monthName] = $weeks;
+            $weeksdata = $months;
+        } else {
+            $months = [];
+            for ($month = 1; $month <= 12; $month++) {
+                $weeks = [];
+                $firstDayOfMonth = strtotime("$year-$month-01");
+                $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
+
+                $weekNumber = 1;
+                $startDate = $firstDayOfMonth;
+
+                while ($startDate <= $lastDayOfMonth) {
+                    $endDate = strtotime("next Sunday", $startDate);
+                    if ($endDate > $lastDayOfMonth) {
+                        $endDate = $lastDayOfMonth;
+                    }
+
+                    $weeks[$weekNumber] = [
+                        'start' => date('Y-m-d', $startDate),
+                        'end' => date('Y-m-d', $endDate),
+                    ];
+
+                    $nextMonday = strtotime("next Monday", $endDate);
+
+                    // Check if the next Monday is still within the current month.
+                    if (date('m', $nextMonday) == $month) {
+                        $startDate = $nextMonday;
+                    } else {
+                        // If the next Monday is in the next month, break the loop.
+                        break;
+                    }
+
+                    $weekNumber++;
+                }
+
+                $monthName = date('F', mktime(0, 0, 0, $month, 1));
+                $months[$monthName] = $weeks;
+            }
+
+            $weeksdata = $months;
         }
 
-        $weeksdata = $months;
 
-        // $result = [];
 
-        // foreach ($ancakFA as $key => $value) {
-        //     foreach ($value as $subKey => $subValue) {
-        //         foreach ($subValue as $month => $dates) {
-        //             foreach ($dates as $date => $data) {
-        //                 // dd($data);
-        //             }
-        //         }
-        //     }
+
+
+
+        // dd($weeksdata);
 
         $result = [];
 
@@ -6009,36 +6079,71 @@ class RekapController extends Controller
         $month = $month;   // Replace with the desired month (September in this example)
 
 
-        $weeks = [];
-        $firstDayOfMonth = strtotime("$year-$month-01");
-        $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
+        if ($regional == 3) {
 
-        $weekNumber = 1;
-        $startDatex = $firstDayOfMonth;
+            $weeks = [];
+            $firstDayOfMonth = strtotime("$year-$month-01");
+            $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
 
-        while ($startDatex <= $lastDayOfMonth) {
-            $endDatex = strtotime("next Sunday", $startDatex);
-            if ($endDatex > $lastDayOfMonth) {
-                $endDatex = $lastDayOfMonth;
+            $weekNumber = 1;
+
+            // Find the first Saturday of the month or the last Saturday of the previous month
+            $firstSaturday = strtotime("last Saturday", $firstDayOfMonth);
+
+            // Set the start date to the first Saturday
+            $startDate = $firstSaturday;
+
+            while ($startDate <= $lastDayOfMonth) {
+                $endDate = strtotime("next Friday", $startDate);
+                if ($endDate > $lastDayOfMonth) {
+                    $endDate = $lastDayOfMonth;
+                }
+
+                $weeks[$weekNumber] = [
+                    'start' => date('Y-m-d', $startDate),
+                    'end' => date('Y-m-d', $endDate),
+                ];
+
+                // Update start date to the next Saturday
+                $startDate = strtotime("next Saturday", $endDate);
+
+                $weekNumber++;
             }
+        } else {
+            $weeks = [];
+            $firstDayOfMonth = strtotime("$year-$month-01");
+            $lastDayOfMonth = strtotime(date('Y-m-t', $firstDayOfMonth));
 
-            $weeks[$weekNumber] = [
-                'start' => date('Y-m-d', $startDatex),
-                'end' => date('Y-m-d', $endDatex),
-            ];
+            $weekNumber = 1;
+            $startDate = $firstDayOfMonth;
 
-            $nextMonday = strtotime("next Monday", $endDatex);
+            while ($startDate <= $lastDayOfMonth) {
+                $endDate = strtotime("next Sunday", $startDate);
+                if ($endDate > $lastDayOfMonth) {
+                    $endDate = $lastDayOfMonth;
+                }
 
-            // Check if the next Monday is still within the current month.
-            if (date('m', $nextMonday) == $month) {
-                $startDatex = $nextMonday;
-            } else {
-                // If the next Monday is in the next month, break the loop.
-                break;
+                $weeks[$weekNumber] = [
+                    'start' => date('Y-m-d', $startDate),
+                    'end' => date('Y-m-d', $endDate),
+                ];
+
+                $nextMonday = strtotime("next Monday", $endDate);
+
+                // Check if the next Monday is still within the current month.
+                if (date('m', $nextMonday) == $month) {
+                    $startDate = $nextMonday;
+                } else {
+                    // If the next Monday is in the next month, break the loop.
+                    break;
+                }
+
+                $weekNumber++;
             }
-
-            $weekNumber++;
         }
+
+
+
         $WeekStatus = [];
 
         // dd($weeks);

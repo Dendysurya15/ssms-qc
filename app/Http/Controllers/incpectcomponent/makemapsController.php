@@ -825,8 +825,8 @@ class makemapsController extends Controller
                 $vers = $coord['app_version'];
                 $parts = explode(';', $vers);
 
-
-                $version = $parts[3];
+                $defaultparts = '{"awal":"GO","akhir":"GO"}';
+                $version = $parts[3] ?? $defaultparts;
 
                 if (strpos($version, 'awal')) {
                     if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"GA') !== false) {
@@ -841,6 +841,8 @@ class makemapsController extends Controller
                         $maps = 'GPS Awal Akurat : GPS Akhir Uknown';
                     } else if (strpos($version, 'awal":"GL') !== false && strpos($version, 'akhir":"G') !== false) {
                         $maps = 'GPS Awal Akurat : GPS Akhir Uknown';
+                    } else if (strpos($version, 'awal":"GO') !== false && strpos($version, 'akhir":"GO') !== false) {
+                        $maps = 'GPS Awal Uknown : GPS Akhir Uknown';
                     } else {
                         $maps = 'GPS Uknown';
                     }

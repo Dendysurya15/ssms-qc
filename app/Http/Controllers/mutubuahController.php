@@ -5648,14 +5648,29 @@ class mutubuahController extends Controller
             $rowspantotal += $rowspantot; // Move this line inside the loop
         }
 
-        $gerowspan['total'] = $rowspantotal;
+        $gerowspan['total'] = $rowspantotal + 4;
         // dd($gerowspan);
 
-        // dd($final);
+        $percentageA = 60;
+        $percentageB = 20;
+        $percentageC = 20;
+
+        // Calculate the values for parts a, b, and c
+        $valueA = round(($percentageA / 100) * $gerowspan['total']);
+        $valueB = round(($percentageB / 100) * $gerowspan['total']);
+        $valueC = round(($percentageC / 100) * $gerowspan['total']);
+
+        // Create a new array with the updated values
+        $outputArray = [
+            "a" => $valueA,
+            "b" => $valueB,
+            "c" => $valueC
+        ];
+        // dd($gerowspan, $outputArray);
 
 
 
-        // dd($sidak_buah, $total_buah);
+        // dd($outputArray, $gerowspan);
         $arrView = array();
 
         $arrView['est'] =  $est;
@@ -5663,6 +5678,7 @@ class mutubuahController extends Controller
         $arrView['tanggal'] =  $date;
         $arrView['sidak_buah'] =  $final;
         $arrView['totalrs'] =  $gerowspan['total'];
+        $arrView['rowspan'] =  $outputArray;
         // $arrView['total_buah'] =  $total_buah;
 
         $pdf = PDF::loadView('pdfBA_sidakbuah', ['data' => $arrView]);

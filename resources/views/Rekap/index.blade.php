@@ -790,6 +790,7 @@
                         let item2 = table1[1][key][subKey]['afd'];
                         let item3 = table1[1][key][subKey]['nama']
                         let item4 = table1[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table1[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table1[1][key][subKey]['bgcolor'];
@@ -841,6 +842,7 @@
                         let item2 = table2[1][key][subKey]['afd'];
                         let item3 = table2[1][key][subKey]['nama'] ?? '-'
                         let item4 = table2[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table2[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table2[1][key][subKey]['bgcolor'];
@@ -892,21 +894,23 @@
                             table1[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_qc']
+                            (table1[1][key][subKey]['skor_qc'] < 0) ? 0 : table1[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table1[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_tph']
+                            // table1[1][key][subKey]['skor_tph']
+                            (table1[1][key][subKey]['skor_tph'] < 0) ? 0 : table1[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table1[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_buah']
+                            // table1[1][key][subKey]['skor_buah']
+                            (table1[1][key][subKey]['skor_buah'] < 0) ? 0 : table1[1][key][subKey]['skor_buah']
                         );
 
 
@@ -958,22 +962,26 @@
                             table2[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_qc']
+                            (table2[1][key][subKey]['skor_qc'] < 0) ? 0 : table2[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table2[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_tph']
+                            // table2[1][key][subKey]['skor_tph']
+                            (table2[1][key][subKey]['skor_tph'] < 0) ? 0 : table2[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table2[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_buah']
+                            // table2[1][key][subKey]['skor_buah']
+                            (table2[1][key][subKey]['skor_buah'] < 0) ? 0 : table2[1][key][subKey]['skor_buah']
                         );
+
+
 
 
 
@@ -1024,22 +1032,25 @@
                             table3[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_qc']
+                            (table3[1][key][subKey]['skor_qc'] < 0) ? 0 : table3[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table3[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_tph']
+                            // table3[1][key][subKey]['skor_tph']
+                            (table3[1][key][subKey]['skor_tph'] < 0) ? 0 : table3[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table3[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_buah']
+                            // table3[1][key][subKey]['skor_buah']
+                            (table3[1][key][subKey]['skor_buah'] < 0) ? 0 : table3[1][key][subKey]['skor_buah']
                         );
+
 
 
 
@@ -1088,6 +1099,7 @@
                         let item2 = table3[1][key][subKey]['afd'];
                         let item3 = table3[1][key][subKey]['nama']
                         let item4 = table3[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table3[1][key][subKey]['bgcolor'];
@@ -1202,6 +1214,7 @@
                         let item2 = table1[1][key][subKey]['afd'];
                         let item3 = table1[1][key][subKey]['nama']
                         let item4 = table1[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table1[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table1[1][key][subKey]['bgcolor'];
@@ -1253,6 +1266,7 @@
                         let item2 = table2[1][key][subKey]['afd'];
                         let item3 = table2[1][key][subKey]['nama'] ?? '-'
                         let item4 = table2[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table2[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table2[1][key][subKey]['bgcolor'];
@@ -1301,28 +1315,28 @@
 
 
                         const kosong = 'kosong';
-
                         let item2 = assignValue(
                             table1[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_qc']
+                            (table1[1][key][subKey]['skor_qc'] < 0) ? 0 : table1[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table1[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_tph']
+                            // table1[1][key][subKey]['skor_tph']
+                            (table1[1][key][subKey]['skor_tph'] < 0) ? 0 : table1[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table1[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_buah']
+                            // table1[1][key][subKey]['skor_buah']
+                            (table1[1][key][subKey]['skor_buah'] < 0) ? 0 : table1[1][key][subKey]['skor_buah']
                         );
-
 
 
 
@@ -1373,22 +1387,26 @@
                             table2[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_qc']
+                            (table2[1][key][subKey]['skor_qc'] < 0) ? 0 : table2[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table2[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_tph']
+                            // table2[1][key][subKey]['skor_tph']
+                            (table2[1][key][subKey]['skor_tph'] < 0) ? 0 : table2[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table2[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_buah']
+                            // table2[1][key][subKey]['skor_buah']
+                            (table2[1][key][subKey]['skor_buah'] < 0) ? 0 : table2[1][key][subKey]['skor_buah']
                         );
+
+
 
 
 
@@ -1439,22 +1457,25 @@
                             table3[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_qc']
+                            (table3[1][key][subKey]['skor_qc'] < 0) ? 0 : table3[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table3[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_tph']
+                            // table3[1][key][subKey]['skor_tph']
+                            (table3[1][key][subKey]['skor_tph'] < 0) ? 0 : table3[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table3[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_buah']
+                            // table3[1][key][subKey]['skor_buah']
+                            (table3[1][key][subKey]['skor_buah'] < 0) ? 0 : table3[1][key][subKey]['skor_buah']
                         );
+
 
 
 
@@ -1503,6 +1524,7 @@
                         let item2 = table3[1][key][subKey]['afd'];
                         let item3 = table3[1][key][subKey]['nama']
                         let item4 = table3[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table3[1][key][subKey]['bgcolor'];
@@ -1637,6 +1659,7 @@
                         let item2 = table1[1][key][subKey]['afd'];
                         let item3 = table1[1][key][subKey]['nama']
                         let item4 = table1[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table1[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table1[1][key][subKey]['bgcolor'];
@@ -1689,6 +1712,7 @@
                         let item2 = table2[1][key][subKey]['afd'];
                         let item3 = table2[1][key][subKey]['nama'] ?? '-'
                         let item4 = table2[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table2[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table2[1][key][subKey]['bgcolor'];
@@ -1736,27 +1760,29 @@
 
 
                         const kosong = 'kosong';
-
                         let item2 = assignValue(
                             table1[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_qc']
+                            (table1[1][key][subKey]['skor_qc'] < 0) ? 0 : table1[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table1[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_tph']
+                            // table1[1][key][subKey]['skor_tph']
+                            (table1[1][key][subKey]['skor_tph'] < 0) ? 0 : table1[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table1[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table1[1][key][subKey]['skor_buah']
+                            // table1[1][key][subKey]['skor_buah']
+                            (table1[1][key][subKey]['skor_buah'] < 0) ? 0 : table1[1][key][subKey]['skor_buah']
                         );
+
 
 
 
@@ -1808,22 +1834,25 @@
                             table2[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_qc']
+                            (table2[1][key][subKey]['skor_qc'] < 0) ? 0 : table2[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table2[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_tph']
+                            // table2[1][key][subKey]['skor_tph']
+                            (table2[1][key][subKey]['skor_tph'] < 0) ? 0 : table2[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table2[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table2[1][key][subKey]['skor_buah']
+                            // table2[1][key][subKey]['skor_buah']
+                            (table2[1][key][subKey]['skor_buah'] < 0) ? 0 : table2[1][key][subKey]['skor_buah']
                         );
+
 
 
 
@@ -1879,21 +1908,23 @@
                             table3[1][key][subKey]['qc_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_qc']
+                            (table3[1][key][subKey]['skor_qc'] < 0) ? 0 : table3[1][key][subKey]['skor_qc']
                         );
 
                         let item3 = assignValue(
                             table3[1][key][subKey]['tph_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_tph']
+                            // table3[1][key][subKey]['skor_tph']
+                            (table3[1][key][subKey]['skor_tph'] < 0) ? 0 : table3[1][key][subKey]['skor_tph']
                         );
 
                         let item4 = assignValue(
                             table3[1][key][subKey]['buah_check'],
                             kosong,
                             '-',
-                            table3[1][key][subKey]['skor_buah']
+                            // table3[1][key][subKey]['skor_buah']
+                            (table3[1][key][subKey]['skor_buah'] < 0) ? 0 : table3[1][key][subKey]['skor_buah']
                         );
 
 
@@ -1942,6 +1973,7 @@
                         let item2 = table3[1][key][subKey]['afd'];
                         let item3 = table3[1][key][subKey]['nama']
                         let item4 = table3[1][key][subKey]['total'];
+                        item4 = (item4 < 0) ? 0 : item4;
                         let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
                         let bg = table3[1][key][subKey]['bgcolor'];
