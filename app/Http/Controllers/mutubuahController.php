@@ -271,16 +271,16 @@ class mutubuahController extends Controller
                     }
                     $dataBLok = count($combination_counts);
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
 
@@ -299,8 +299,8 @@ class mutubuahController extends Controller
 
                     $sidak_buahv2[$key][$key1]['tnp_brd'] = $tnpBRD;
                     $sidak_buahv2[$key][$key1]['krg_brd'] = $krgBRD;
-                    $sidak_buahv2[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                    $sidak_buahv2[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $sidak_buahv2[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                    $sidak_buahv2[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                     $sidak_buahv2[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                     $sidak_buahv2[$key][$key1]['persen_totalJjg'] = $skor_total;
                     $sidak_buahv2[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -317,9 +317,9 @@ class mutubuahController extends Controller
                     $sidak_buahv2[$key][$key1]['vcut_persen'] = $skor_vcut;
                     $sidak_buahv2[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $sidak_buahv2[$key][$key1]['abnormal'] = $abr;
-                    $sidak_buahv2[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $sidak_buahv2[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                     $sidak_buahv2[$key][$key1]['rat_dmg'] = $rd;
-                    $sidak_buahv2[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $sidak_buahv2[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                     $sidak_buahv2[$key][$key1]['TPH'] = $total_kr;
                     $sidak_buahv2[$key][$key1]['persen_krg'] = $per_kr;
                     $sidak_buahv2[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -330,35 +330,35 @@ class mutubuahController extends Controller
                     $totaltnpBRD += $tnpBRD;
                     $totalkrgBRD += $krgBRD;
                     $totalabr += $abr;
-                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 2);
-                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 2);
+                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 3);
+                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 3);
                     $totJJG = $totaltnpBRD + $totalkrgBRD;
-                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_total = sidak_brdTotal($totPersenTOtaljjg);
                     $totoverripe += $overripe;
                     $totempty += $empty;
                     $totJJG_matang = $totalJJG - ($totaltnpBRD + $totalkrgBRD + $totoverripe + $totempty + $totalabr);
-                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 2);
+                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 3);
 
                     $totSkor_jjgMtng = sidak_matangSKOR($totPer_jjgMtng);
-                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Over = sidak_lwtMatang($totPer_over);
-                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Empty = sidak_jjgKosong($totPer_Empty);
                     $totVcut += $vcut;
-                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 2);
+                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 3);
                     $totSkor_Vcut =  sidak_tangkaiP($totPer_vcut);
-                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 2);
+                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 3);
                     $totRD += $rd;
-                    $totPer_rd = round(($totRD / $totalJJG) * 100, 2);
+                    $totPer_rd = round(($totRD / $totalJJG) * 100, 3);
                     $totBlok += $dataBLok;
                     $totKR += $sum_kr;
                     if ($totKR != 0) {
-                        $tot_krS = round($totKR / $totBlok, 2);
+                        $tot_krS = round($totKR / $totBlok, 3);
                     } else {
                         $tot_krS = 0;
                     }
-                    $totPer_kr = round($tot_krS * 100, 2);
+                    $totPer_kr = round($tot_krS * 100, 3);
                     $totSkor_kr = sidak_PengBRD($totPer_kr);
                     $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
 
@@ -486,16 +486,16 @@ class mutubuahController extends Controller
 
 
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $blok, 2);
+                $total_kr = round($sum_kr / $blok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
 
@@ -537,8 +537,8 @@ class mutubuahController extends Controller
             $nestedData['afd'] = $key1;
             $nestedData['tnp_brd'] = $tnpBRD;
             $nestedData['krg_brd'] = $krgBRD;
-            $nestedData['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-            $nestedData['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+            $nestedData['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+            $nestedData['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
             $nestedData['total_jjg'] = $tnpBRD + $krgBRD;
             $nestedData['persen_totalJjg'] = $skor_total;
             $nestedData['skor_total'] = sidak_brdTotal($skor_total);
@@ -555,9 +555,9 @@ class mutubuahController extends Controller
             $nestedData['vcut_persen'] = $skor_vcut;
             $nestedData['vcut_skor'] = sidak_tangkaiP($skor_vcut);
             $nestedData['abnormal'] = $abr;
-            $nestedData['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+            $nestedData['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
             $nestedData['rat_dmg'] = $rd;
-            $nestedData['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+            $nestedData['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
             $nestedData['TPH'] = $total_kr;
             $nestedData['persen_krg'] = $per_kr;
             $nestedData['karung_est'] = $sum_kr;
@@ -607,20 +607,20 @@ class mutubuahController extends Controller
         }
 
         if ($sum_kr != 0) {
-            $total_kr = round($sum_kr / $blok, 2);
+            $total_kr = round($sum_kr / $blok, 3);
         } else {
             $total_kr = 0;
         }
-        $per_kr = round($total_kr * 100, 2);
-        $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1)) * 100, 2);
-        $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1) * 100, 2);
-        $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1)) * 100, 2);
-        $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1)) * 100, 2);
-        $skor_vcut =   round(($vcut / ($jjg_sample !== 0 ? $jjg_sample : 1)) * 100, 2);
+        $per_kr = round($total_kr * 100, 3);
+        $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1)) * 100, 3);
+        $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1) * 100, 3);
+        $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1)) * 100, 3);
+        $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr !== 0 ? $jjg_sample - $abr : 1)) * 100, 3);
+        $skor_vcut =   round(($vcut / ($jjg_sample !== 0 ? $jjg_sample : 1)) * 100, 3);
 
         $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
-        if (in_array($key, [1, 2, 3])) {
+        if (in_array($key, [1, 3, 3])) {
             $regional = 'REG-I';
         } else if (in_array($key, [4, 5, 6])) {
             $regional = 'REG-II';
@@ -647,8 +647,8 @@ class mutubuahController extends Controller
             'nama_staff' => $nama_rh,
             'tnp_brd' => $tnpBRD,
             'krg_brd' => $krgBRD,
-            'persenTNP_brd' => round(($jjg_sample - $abr !== 0 ? ($tnpBRD / ($jjg_sample - $abr)) : 0) * 100, 2),
-            'persenKRG_brd' => round(($jjg_sample - $abr !== 0 ? ($krgBRD / ($jjg_sample - $abr)) : 0) * 100, 2),
+            'persenTNP_brd' => round(($jjg_sample - $abr !== 0 ? ($tnpBRD / ($jjg_sample - $abr)) : 0) * 100, 3),
+            'persenKRG_brd' => round(($jjg_sample - $abr !== 0 ? ($krgBRD / ($jjg_sample - $abr)) : 0) * 100, 3),
 
             'total_jjg' => $tnpBRD + $krgBRD,
             'persen_totalJjg' => $skor_total,
@@ -666,9 +666,9 @@ class mutubuahController extends Controller
             'vcut_persen' => $skor_vcut,
             'vcut_skor' => sidak_tangkaiP($skor_vcut),
             'abnormal' => $abr,
-            'abnormal_persen' => round(($jjg_sample !== 0 ? ($abr / $jjg_sample) : 0) * 100, 2),
+            'abnormal_persen' => round(($jjg_sample !== 0 ? ($abr / $jjg_sample) : 0) * 100, 3),
             'rat_dmg' => $rd,
-            'rd_persen' => round(($jjg_sample !== 0 ? ($rd / $jjg_sample) : 0) * 100, 2),
+            'rd_persen' => round(($jjg_sample !== 0 ? ($rd / $jjg_sample) : 0) * 100, 3),
 
             'TPH' => $total_kr,
             'persen_krg' => $per_kr,
@@ -846,16 +846,16 @@ class mutubuahController extends Controller
                     // $dataBLok = count($combination_counts);
                     $dataBLok = $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $sidak_buah[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
@@ -865,8 +865,8 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['nama_staff'] = '-';
                     $sidak_buah[$key][$key1]['tnp_brd'] = $tnpBRD;
                     $sidak_buah[$key][$key1]['krg_brd'] = $krgBRD;
-                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                     $sidak_buah[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                     $sidak_buah[$key][$key1]['persen_totalJjg'] = $skor_total;
                     $sidak_buah[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -884,9 +884,9 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['vcut_persen'] = $skor_vcut;
                     $sidak_buah[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $sidak_buah[$key][$key1]['abnormal'] = $abr;
-                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['rat_dmg'] = $rd;
-                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['TPH'] = $total_kr;
                     $sidak_buah[$key][$key1]['persen_krg'] = $per_kr;
                     $sidak_buah[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -906,31 +906,31 @@ class mutubuahController extends Controller
                     $totalkrgBRD += $krgBRD;
                     $totalabr += $abr;
 
-                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 3);
 
                     $totoverripe += $overripe;
                     $totempty += $empty;
                     $totJJG_matang = $totalJJG - ($totaltnpBRD + $totalkrgBRD + $totoverripe + $totempty + $totalabr);
-                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 2);
+                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 3);
 
 
-                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 3);
 
-                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 3);
 
                     $totVcut += $vcut;
-                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 2);
+                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 3);
 
                     $totRD += $rd;
 
                     $totBlok += $dataBLok;
                     $totKR += $sum_kr;
                     if ($totKR != 0) {
-                        $tot_krS = round($totKR / $totBlok, 2);
+                        $tot_krS = round($totKR / $totBlok, 3);
                     } else {
                         $tot_krS = 0;
                     }
-                    $totPer_kr = round($tot_krS * 100, 2);
+                    $totPer_kr = round($tot_krS * 100, 3);
 
                     $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
                 } else {
@@ -1033,20 +1033,20 @@ class mutubuahController extends Controller
                 }
 
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
-                $per_kr = round($total_kr * 100, 2);
-                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $per_kr = round($total_kr * 100, 3);
+                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
                 $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -1065,7 +1065,7 @@ class mutubuahController extends Controller
 
 
 
-                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 2) : 0;
+                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 3) : 0;
 
                 $mutubuah_est[$key][$key1]['jjg_mantah'] = $jjg_mth;
                 $mutubuah_est[$key][$key1]['persen_jjgmentah'] = $skor_jjgMTh;
@@ -1084,10 +1084,10 @@ class mutubuahController extends Controller
                 $mutubuah_est[$key][$key1]['nama_staff'] = '-';
                 $mutubuah_est[$key][$key1]['tnp_brd'] = $tnpBRD;
                 $mutubuah_est[$key][$key1]['krg_brd'] = $krgBRD;
-                $mutubuah_est[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutubuah_est[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutubuah_est[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-                $mutubuah_est[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+                $mutubuah_est[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutubuah_est[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutubuah_est[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+                $mutubuah_est[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
                 $mutubuah_est[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -1150,20 +1150,20 @@ class mutubuahController extends Controller
                 }
 
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
-                $per_kr = round($total_kr * 100, 2);
-                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $per_kr = round($total_kr * 100, 3);
+                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
                 $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -1179,7 +1179,7 @@ class mutubuahController extends Controller
                 }
                 $jjg_mth = $tnpBRD + $krgBRD + $overripe + $empty;
 
-                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 2) : 0;
+                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 3) : 0;
 
                 $mutu_buahEst[$key][$key1]['jjg_mantah'] = $jjg_mth;
                 $mutu_buahEst[$key][$key1]['persen_jjgmentah'] = $skor_jjgMTh;
@@ -1192,10 +1192,10 @@ class mutubuahController extends Controller
                 $mutu_buahEst[$key][$key1]['nama_staff'] = '-';
                 $mutu_buahEst[$key][$key1]['tnp_brd'] = $tnpBRD;
                 $mutu_buahEst[$key][$key1]['krg_brd'] = $krgBRD;
-                $mutu_buahEst[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutu_buahEst[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutu_buahEst[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-                $mutu_buahEst[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+                $mutu_buahEst[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutu_buahEst[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutu_buahEst[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+                $mutu_buahEst[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
                 $mutu_buahEst[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -1260,20 +1260,20 @@ class mutubuahController extends Controller
             }
 
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $dataBLok, 2);
+                $total_kr = round($sum_kr / $dataBLok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -1320,10 +1320,10 @@ class mutubuahController extends Controller
             $mutu_bhWil[$key]['nama_staff'] = $nama_em;
             $mutu_bhWil[$key]['tnp_brd'] = $tnpBRD;
             $mutu_bhWil[$key]['krg_brd'] = $krgBRD;
-            $mutu_bhWil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutu_bhWil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutu_bhWil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-            $mutu_bhWil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+            $mutu_bhWil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutu_bhWil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutu_bhWil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+            $mutu_bhWil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
             $mutu_bhWil[$key]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -1461,20 +1461,20 @@ class mutubuahController extends Controller
             }
 
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $dataBLok, 2);
+                $total_kr = round($sum_kr / $dataBLok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -1528,10 +1528,10 @@ class mutubuahController extends Controller
             $mutuBuah_wil[$key]['nama_staff'] = $nama_em;
             $mutuBuah_wil[$key]['tnp_brd'] = $tnpBRD;
             $mutuBuah_wil[$key]['krg_brd'] = $krgBRD;
-            $mutuBuah_wil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutuBuah_wil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutuBuah_wil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-            $mutuBuah_wil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+            $mutuBuah_wil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutuBuah_wil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutuBuah_wil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+            $mutuBuah_wil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
             $mutuBuah_wil[$key]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -1621,18 +1621,18 @@ class mutubuahController extends Controller
                 $jjg_matang += $value1['jjg_matang'];
             }
             if ($sum_krEST != 0) {
-                $total_krEST = round($sum_krEST / $blokEST, 2);
+                $total_krEST = round($sum_krEST / $blokEST, 3);
             } else {
                 $total_krEST = 0;
             }
-            $per_krEST = round($total_krEST * 100, 2);
-            $skor_totalEST = ($jjg_sampleEST - $abrEST) !== 0 ? round((($tnpBRDEST + $krgBRDEST) / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            // $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - $jjg_matang) / ($jjg_sampleEST - $abrEST) * 100, 2) : 0;
-            $skot_jjgmskEST = round($jjg_matang / ($jjg_sampleEST - $abrEST) * 100, 2);
+            $per_krEST = round($total_krEST * 100, 3);
+            $skor_totalEST = ($jjg_sampleEST - $abrEST) !== 0 ? round((($tnpBRDEST + $krgBRDEST) / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            // $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - $jjg_matang) / ($jjg_sampleEST - $abrEST) * 100, 3) : 0;
+            $skot_jjgmskEST = round($jjg_matang / ($jjg_sampleEST - $abrEST) * 100, 3);
 
-            $skor_lewatmatangEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($overripeEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $skor_jjgKosongEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($emptyEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $skor_vcutEST = $jjg_sampleEST !== 0 ? round(($vcutEST / $jjg_sampleEST) * 100, 2) : 0;
+            $skor_lewatmatangEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($overripeEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            $skor_jjgKosongEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($emptyEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            $skor_vcutEST = $jjg_sampleEST !== 0 ? round(($vcutEST / $jjg_sampleEST) * 100, 3) : 0;
 
             $allSkorEST = sidak_brdTotal($skor_totalEST) +  sidak_matangSKOR($skot_jjgmskEST) +  sidak_lwtMatang($skor_lewatmatangEST) + sidak_jjgKosong($skor_jjgKosongEST) + sidak_tangkaiP($skor_vcutEST) + sidak_PengBRD($per_krEST);
 
@@ -1663,8 +1663,8 @@ class mutubuahController extends Controller
             }
             $regArr[$key]['tnp_brd'] = $tnpBRDEST;
             $regArr[$key]['krg_brd'] = $krgBRDEST;
-            $regArr[$key]['persenTNP_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $regArr[$key]['persenKRG_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
+            $regArr[$key]['persenTNP_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            $regArr[$key]['persenKRG_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
             $regArr[$key]['total_jjg'] = $tnpBRDEST + $krgBRDEST;
             $regArr[$key]['persen_totalJjg'] = $skor_totalEST;
             $regArr[$key]['skor_totalEST'] = sidak_brdTotal($skor_totalEST);
@@ -1681,9 +1681,9 @@ class mutubuahController extends Controller
             $regArr[$key]['vcut_persen'] = $skor_vcutEST;
             $regArr[$key]['vcut_skor'] = sidak_tangkaiP($skor_vcutEST);
             $regArr[$key]['abnormal'] = $abrEST;
-            $regArr[$key]['abnormal_persen'] = $jjg_sampleEST !== 0 ? round(($abrEST / $jjg_sampleEST) * 100, 2) : 0;
+            $regArr[$key]['abnormal_persen'] = $jjg_sampleEST !== 0 ? round(($abrEST / $jjg_sampleEST) * 100, 3) : 0;
             $regArr[$key]['rat_dmg'] = $rdEST;
-            $regArr[$key]['rd_persen'] = $jjg_sampleEST !== 0 ? round(($rdEST / $jjg_sampleEST) * 100, 2) : 0;
+            $regArr[$key]['rd_persen'] = $jjg_sampleEST !== 0 ? round(($rdEST / $jjg_sampleEST) * 100, 3) : 0;
             $regArr[$key]['karung'] = $sum_krEST;
             $regArr[$key]['TPH'] = $total_krEST;
             $regArr[$key]['persen_krg'] = $per_krEST;
@@ -2038,16 +2038,16 @@ class mutubuahController extends Controller
                     // $dataBLok = count($combination_counts);
                     $dataBLok = $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $sidak_buah[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
@@ -2057,8 +2057,8 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['nama_staff'] = '-';
                     $sidak_buah[$key][$key1]['tnp_brd'] = $tnpBRD;
                     $sidak_buah[$key][$key1]['krg_brd'] = $krgBRD;
-                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                     $sidak_buah[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                     $sidak_buah[$key][$key1]['persen_totalJjg'] = $skor_total;
                     $sidak_buah[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -2076,9 +2076,9 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['vcut_persen'] = $skor_vcut;
                     $sidak_buah[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $sidak_buah[$key][$key1]['abnormal'] = $abr;
-                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['rat_dmg'] = $rd;
-                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['TPH'] = $total_kr;
                     $sidak_buah[$key][$key1]['persen_krg'] = $per_kr;
                     $sidak_buah[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -2096,35 +2096,35 @@ class mutubuahController extends Controller
                     $totaltnpBRD += $tnpBRD;
                     $totalkrgBRD += $krgBRD;
                     $totalabr += $abr;
-                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 2);
-                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 2);
+                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 3);
+                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 3);
                     $totJJG = $totaltnpBRD + $totalkrgBRD;
-                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_total = sidak_brdTotal($totPersenTOtaljjg);
                     $totoverripe += $overripe;
                     $totempty += $empty;
                     $totJJG_matang = $totalJJG - ($totaltnpBRD + $totalkrgBRD + $totoverripe + $totempty + $totalabr);
-                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 2);
+                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 3);
 
                     $totSkor_jjgMtng = sidak_matangSKOR($totPer_jjgMtng);
-                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Over = sidak_lwtMatang($totPer_over);
-                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Empty = sidak_jjgKosong($totPer_Empty);
                     $totVcut += $vcut;
-                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 2);
+                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 3);
                     $totSkor_Vcut =  sidak_tangkaiP($totPer_vcut);
-                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 2);
+                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 3);
                     $totRD += $rd;
-                    $totPer_rd = round(($totRD / $totalJJG) * 100, 2);
+                    $totPer_rd = round(($totRD / $totalJJG) * 100, 3);
                     $totBlok += $dataBLok;
                     $totKR += $sum_kr;
                     if ($totKR != 0) {
-                        $tot_krS = round($totKR / $totBlok, 2);
+                        $tot_krS = round($totKR / $totBlok, 3);
                     } else {
                         $tot_krS = 0;
                     }
-                    $totPer_kr = round($tot_krS * 100, 2);
+                    $totPer_kr = round($tot_krS * 100, 3);
                     $totSkor_kr = sidak_PengBRD($totPer_kr);
                     $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
 
@@ -2266,20 +2266,20 @@ class mutubuahController extends Controller
                 }
 
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
-                $per_kr = round($total_kr * 100, 2);
-                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $per_kr = round($total_kr * 100, 3);
+                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
                 $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -2295,7 +2295,7 @@ class mutubuahController extends Controller
                 }
                 $jjg_mth = $tnpBRD + $krgBRD + $overripe + $empty;
 
-                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 2) : 0;
+                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 3) : 0;
 
                 $mutubuah_est[$key][$key1]['jjg_mantah'] = $jjg_mth;
                 $mutubuah_est[$key][$key1]['persen_jjgmentah'] = $skor_jjgMTh;
@@ -2315,10 +2315,10 @@ class mutubuahController extends Controller
                 $mutubuah_est[$key][$key1]['nama_staff'] = '-';
                 $mutubuah_est[$key][$key1]['tnp_brd'] = $tnpBRD;
                 $mutubuah_est[$key][$key1]['krg_brd'] = $krgBRD;
-                $mutubuah_est[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutubuah_est[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutubuah_est[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-                $mutubuah_est[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+                $mutubuah_est[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutubuah_est[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutubuah_est[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+                $mutubuah_est[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
                 $mutubuah_est[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -2379,20 +2379,20 @@ class mutubuahController extends Controller
                 }
 
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
-                $per_kr = round($total_kr * 100, 2);
-                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $per_kr = round($total_kr * 100, 3);
+                $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+                $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+                $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
                 $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -2408,7 +2408,7 @@ class mutubuahController extends Controller
                 }
                 $jjg_mth = $tnpBRD + $krgBRD + $overripe + $empty;
 
-                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 2) : 0;
+                $skor_jjgMTh = ($jjg_sample - $abr != 0) ? round($jjg_mth / ($jjg_sample - $abr) * 100, 3) : 0;
 
                 $mutu_buahEst[$key][$key1]['jjg_mantah'] = $jjg_mth;
                 $mutu_buahEst[$key][$key1]['persen_jjgmentah'] = $skor_jjgMTh;
@@ -2421,10 +2421,10 @@ class mutubuahController extends Controller
                 $mutu_buahEst[$key][$key1]['nama_staff'] = '-';
                 $mutu_buahEst[$key][$key1]['tnp_brd'] = $tnpBRD;
                 $mutu_buahEst[$key][$key1]['krg_brd'] = $krgBRD;
-                $mutu_buahEst[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutu_buahEst[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-                $mutu_buahEst[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-                $mutu_buahEst[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+                $mutu_buahEst[$key][$key1]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutu_buahEst[$key][$key1]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+                $mutu_buahEst[$key][$key1]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+                $mutu_buahEst[$key][$key1]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
                 $mutu_buahEst[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -2489,20 +2489,20 @@ class mutubuahController extends Controller
             }
 
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $dataBLok, 2);
+                $total_kr = round($sum_kr / $dataBLok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -2549,10 +2549,10 @@ class mutubuahController extends Controller
             $mutu_bhWil[$key]['nama_staff'] = $nama_em;
             $mutu_bhWil[$key]['tnp_brd'] = $tnpBRD;
             $mutu_bhWil[$key]['krg_brd'] = $krgBRD;
-            $mutu_bhWil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutu_bhWil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutu_bhWil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-            $mutu_bhWil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+            $mutu_bhWil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutu_bhWil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutu_bhWil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+            $mutu_bhWil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
             $mutu_bhWil[$key]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -2692,20 +2692,20 @@ class mutubuahController extends Controller
             }
 
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $dataBLok, 2);
+                $total_kr = round($sum_kr / $dataBLok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round(($jjg_sample - $abr != 0 ? (($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgMSk = round(($jjg_sample - $abr != 0 ? (($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_lewatMTng = round(($jjg_sample - $abr != 0 ? ($overripe / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 2);
+            $skor_jjgKosong = round(($jjg_sample - $abr != 0 ? ($empty / ($jjg_sample - $abr)) * 100 : 0), 3);
 
-            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 2);
+            $skor_vcut = round(($jjg_sample != 0 ? ($vcut / $jjg_sample) * 100 : 0), 3);
 
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -2759,10 +2759,10 @@ class mutubuahController extends Controller
             $mutuBuah_wil[$key]['nama_staff'] = $nama_em;
             $mutuBuah_wil[$key]['tnp_brd'] = $tnpBRD;
             $mutuBuah_wil[$key]['krg_brd'] = $krgBRD;
-            $mutuBuah_wil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutuBuah_wil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 2);
-            $mutuBuah_wil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 2);
-            $mutuBuah_wil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 2);
+            $mutuBuah_wil[$key]['persenTNP_brd'] = round(($jjg_sample - $abr != 0 ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutuBuah_wil[$key]['persenKRG_brd'] = round(($jjg_sample - $abr != 0 ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0), 3);
+            $mutuBuah_wil[$key]['abnormal_persen'] = round(($jjg_sample != 0 ? ($abr / $jjg_sample) * 100 : 0), 3);
+            $mutuBuah_wil[$key]['rd_persen'] = round(($jjg_sample != 0 ? ($rd / $jjg_sample) * 100 : 0), 3);
 
 
             $mutuBuah_wil[$key]['total_jjg'] = $tnpBRD + $krgBRD;
@@ -2850,16 +2850,16 @@ class mutubuahController extends Controller
                 $afds = $value1['afd'];
             }
             if ($sum_krEST != 0) {
-                $total_krEST = round($sum_krEST / $blokEST, 2);
+                $total_krEST = round($sum_krEST / $blokEST, 3);
             } else {
                 $total_krEST = 0;
             }
-            $per_krEST = round($total_krEST * 100, 2);
-            $skor_totalEST = ($jjg_sampleEST - $abrEST) !== 0 ? round((($tnpBRDEST + $krgBRDEST) / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - ($tnpBRDEST + $krgBRDEST + $overripeEST + $emptyEST)) / ($jjg_sampleEST - $abrEST) * 100, 2) : 0;
-            $skor_lewatmatangEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($overripeEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $skor_jjgKosongEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($emptyEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $skor_vcutEST = $jjg_sampleEST !== 0 ? round(($vcutEST / $jjg_sampleEST) * 100, 2) : 0;
+            $per_krEST = round($total_krEST * 100, 3);
+            $skor_totalEST = ($jjg_sampleEST - $abrEST) !== 0 ? round((($tnpBRDEST + $krgBRDEST) / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - ($tnpBRDEST + $krgBRDEST + $overripeEST + $emptyEST)) / ($jjg_sampleEST - $abrEST) * 100, 3) : 0;
+            $skor_lewatmatangEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($overripeEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            $skor_jjgKosongEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($emptyEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            $skor_vcutEST = $jjg_sampleEST !== 0 ? round(($vcutEST / $jjg_sampleEST) * 100, 3) : 0;
 
             $allSkorEST = sidak_brdTotal($skor_totalEST) +  sidak_matangSKOR($skot_jjgmskEST) +  sidak_lwtMatang($skor_lewatmatangEST) + sidak_jjgKosong($skor_jjgKosongEST) + sidak_tangkaiP($skor_vcutEST) + sidak_PengBRD($per_krEST);
 
@@ -2890,8 +2890,8 @@ class mutubuahController extends Controller
             }
             $regArr[$key]['tnp_brd'] = $tnpBRDEST;
             $regArr[$key]['krg_brd'] = $krgBRDEST;
-            $regArr[$key]['persenTNP_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-            $regArr[$key]['persenKRG_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
+            $regArr[$key]['persenTNP_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+            $regArr[$key]['persenKRG_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
             $regArr[$key]['total_jjg'] = $tnpBRDEST + $krgBRDEST;
             $regArr[$key]['persen_totalJjg'] = $skor_totalEST;
             $regArr[$key]['skor_totalEST'] = sidak_brdTotal($skor_totalEST);
@@ -2908,9 +2908,9 @@ class mutubuahController extends Controller
             $regArr[$key]['vcut_persen'] = $skor_vcutEST;
             $regArr[$key]['vcut_skor'] = sidak_tangkaiP($skor_vcutEST);
             $regArr[$key]['abnormal'] = $abrEST;
-            $regArr[$key]['abnormal_persen'] = $jjg_sampleEST !== 0 ? round(($abrEST / $jjg_sampleEST) * 100, 2) : 0;
+            $regArr[$key]['abnormal_persen'] = $jjg_sampleEST !== 0 ? round(($abrEST / $jjg_sampleEST) * 100, 3) : 0;
             $regArr[$key]['rat_dmg'] = $rdEST;
-            $regArr[$key]['rd_persen'] = $jjg_sampleEST !== 0 ? round(($rdEST / $jjg_sampleEST) * 100, 2) : 0;
+            $regArr[$key]['rd_persen'] = $jjg_sampleEST !== 0 ? round(($rdEST / $jjg_sampleEST) * 100, 3) : 0;
             $regArr[$key]['karung'] = $sum_krEST;
             $regArr[$key]['TPH'] = $total_krEST;
             $regArr[$key]['persen_krg'] = $per_krEST;
@@ -3201,16 +3201,16 @@ class mutubuahController extends Controller
                     // $dataBLok = count($combination_counts);
                     $dataBLok =  $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $sidak_buah[$key][$key1]['reg'] = 'REG-I';
@@ -3222,8 +3222,8 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['nama_staff'] = '-';
                     $sidak_buah[$key][$key1]['tnp_brd'] = $tnpBRD;
                     $sidak_buah[$key][$key1]['krg_brd'] = $krgBRD;
-                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                     $sidak_buah[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                     $sidak_buah[$key][$key1]['persen_totalJjg'] = $skor_total;
                     $sidak_buah[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -3240,9 +3240,9 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['vcut_persen'] = $skor_vcut;
                     $sidak_buah[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $sidak_buah[$key][$key1]['abnormal'] = $abr;
-                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['rat_dmg'] = $rd;
-                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['TPH'] = $total_kr;
                     $sidak_buah[$key][$key1]['persen_krg'] = $per_kr;
                     $sidak_buah[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -3253,35 +3253,35 @@ class mutubuahController extends Controller
                     $totaltnpBRD += $tnpBRD;
                     $totalkrgBRD += $krgBRD;
                     $totalabr += $abr;
-                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 2);
-                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 2);
+                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 3);
+                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 3);
                     $totJJG = $totaltnpBRD + $totalkrgBRD;
-                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_total = sidak_brdTotal($totPersenTOtaljjg);
                     $totoverripe += $overripe;
                     $totempty += $empty;
                     $totJJG_matang = $totalJJG - ($totaltnpBRD + $totalkrgBRD + $totoverripe + $totempty + $totalabr);
-                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 2);
+                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 3);
 
                     $totSkor_jjgMtng = sidak_matangSKOR($totPer_jjgMtng);
-                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Over = sidak_lwtMatang($totPer_over);
-                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Empty = sidak_jjgKosong($totPer_Empty);
                     $totVcut += $vcut;
-                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 2);
+                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 3);
                     $totSkor_Vcut =  sidak_tangkaiP($totPer_vcut);
-                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 2);
+                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 3);
                     $totRD += $rd;
-                    $totPer_rd = round(($totRD / $totalJJG) * 100, 2);
+                    $totPer_rd = round(($totRD / $totalJJG) * 100, 3);
                     $totBlok += $dataBLok;
                     $totKR += $sum_kr;
                     if ($totKR != 0) {
-                        $tot_krS = round($totKR / $totBlok, 2);
+                        $tot_krS = round($totKR / $totBlok, 3);
                     } else {
                         $tot_krS = 0;
                     }
-                    $totPer_kr = round($tot_krS * 100, 2);
+                    $totPer_kr = round($tot_krS * 100, 3);
                     $totSkor_kr = sidak_PengBRD($totPer_kr);
                     $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
 
@@ -3518,8 +3518,8 @@ class mutubuahController extends Controller
             // $item_counts[$key]['followUp'] = '-';
             // $item_counts[$key]['tuntas'] = '-';
             // $item_counts[$key]['no_tuntas'] = $total_foto_temuan - $total_followUP;
-            // $item_counts[$key]['perTuntas'] = ($total_foto_temuan - $total_followUP == 0) ? 0 : round($total_followUP / $total_foto_temuan * 100, 2);
-            // $item_counts[$key]['perNoTuntas'] = ($total_foto_temuan - $total_followUP == 0) ? 0 : round(($total_foto_temuan - $total_followUP) / $total_foto_temuan * 100, 2);
+            // $item_counts[$key]['perTuntas'] = ($total_foto_temuan - $total_followUP == 0) ? 0 : round($total_followUP / $total_foto_temuan * 100, 3);
+            // $item_counts[$key]['perNoTuntas'] = ($total_foto_temuan - $total_followUP == 0) ? 0 : round(($total_foto_temuan - $total_followUP) / $total_foto_temuan * 100, 3);
             $item_counts[$key]['visit'] = $highest_visit;
         }
 
@@ -3747,16 +3747,16 @@ class mutubuahController extends Controller
                     // $dataBLok = count($combination_counts);
                     $dataBLok = $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $sidak_buah[$key][$key1]['reg'] = 'REG-I';
@@ -3774,8 +3774,8 @@ class mutubuahController extends Controller
                     }
                     $sidak_buah[$key][$key1]['tnp_brd'] = $tnpBRD;
                     $sidak_buah[$key][$key1]['krg_brd'] = $krgBRD;
-                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                     $sidak_buah[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                     $sidak_buah[$key][$key1]['persen_totalJjg'] = $skor_total;
                     $sidak_buah[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -3792,9 +3792,9 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['vcut_persen'] = $skor_vcut;
                     $sidak_buah[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $sidak_buah[$key][$key1]['abnormal'] = $abr;
-                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['rat_dmg'] = $rd;
-                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['TPH'] = $total_kr;
                     $sidak_buah[$key][$key1]['persen_krg'] = $per_kr;
                     $sidak_buah[$key][$key1]['karung'] = $sum_kr;
@@ -3807,35 +3807,35 @@ class mutubuahController extends Controller
                     $totaltnpBRD += $tnpBRD;
                     $totalkrgBRD += $krgBRD;
                     $totalabr += $abr;
-                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 2);
-                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 2);
+                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 3);
+                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 3);
                     $totJJG = $totaltnpBRD + $totalkrgBRD;
-                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_total = sidak_brdTotal($totPersenTOtaljjg);
                     $totoverripe += $overripe;
                     $totempty += $empty;
                     $totJJG_matang = $totalJJG - ($totaltnpBRD + $totalkrgBRD + $totoverripe + $totempty + $totalabr);
-                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 2);
+                    $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 3);
 
                     $totSkor_jjgMtng = sidak_matangSKOR($totPer_jjgMtng);
-                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Over = sidak_lwtMatang($totPer_over);
-                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 2);
+                    $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 3);
                     $totSkor_Empty = sidak_jjgKosong($totPer_Empty);
                     $totVcut += $vcut;
-                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 2);
+                    $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 3);
                     $totSkor_Vcut =  sidak_tangkaiP($totPer_vcut);
-                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 2);
+                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 3);
                     $totRD += $rd;
-                    $totPer_rd = round(($totRD / $totalJJG) * 100, 2);
+                    $totPer_rd = round(($totRD / $totalJJG) * 100, 3);
                     $totBlok += $dataBLok;
                     $totKR += $sum_kr;
                     if ($totKR != 0) {
-                        $tot_krS = round($totKR / $totBlok, 2);
+                        $tot_krS = round($totKR / $totBlok, 3);
                     } else {
                         $tot_krS = 0;
                     }
-                    $totPer_kr = round($tot_krS * 100, 2);
+                    $totPer_kr = round($tot_krS * 100, 3);
                     $totSkor_kr = sidak_PengBRD($totPer_kr);
                     $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
 
@@ -3903,7 +3903,7 @@ class mutubuahController extends Controller
                 $sidak_buah[$key][$key] = $totalValues;
             }
         }
-
+        // dd($sidak_buah);
         // dd($sidak_buah, $defPerbulanWil['KNE']['OA']);
         $new_sidak_buah = array();
 
@@ -3971,7 +3971,7 @@ class mutubuahController extends Controller
 
         // Test the function
 
-
+        // dd($mutu_buahs);
 
         $new_sidakBuah = [];
 
@@ -4008,16 +4008,16 @@ class mutubuahController extends Controller
 
 
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $blok, 2);
+                $total_kr = round($sum_kr / $blok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
             $totKategor = sidak_akhir($allSkor);
@@ -4083,8 +4083,8 @@ class mutubuahController extends Controller
             $nestedData['nama_staff'] = $staff;
             $nestedData['tnp_brd'] = $tnpBRD;
             $nestedData['krg_brd'] = $krgBRD;
-            $nestedData['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-            $nestedData['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+            $nestedData['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+            $nestedData['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
             $nestedData['total_jjg'] = $tnpBRD + $krgBRD;
             $nestedData['persen_totalJjg'] = $skor_total;
             $nestedData['skor_total'] = sidak_brdTotal($skor_total);
@@ -4101,9 +4101,9 @@ class mutubuahController extends Controller
             $nestedData['vcut_persen'] = $skor_vcut;
             $nestedData['vcut_skor'] = sidak_tangkaiP($skor_vcut);
             $nestedData['abnormal'] = $abr;
-            $nestedData['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+            $nestedData['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
             $nestedData['rat_dmg'] = $rd;
-            $nestedData['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+            $nestedData['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
             $nestedData['TPH'] = $total_kr;
             $nestedData['persen_krg'] = $per_kr;
             $nestedData['karung_est'] = $sum_kr;
@@ -4154,20 +4154,20 @@ class mutubuahController extends Controller
         }
 
         if ($sum_kr != 0) {
-            $total_kr = round($sum_kr / $blok, 2);
+            $total_kr = round($sum_kr / $blok, 3);
         } else {
             $total_kr = 0;
         }
-        $per_kr = round($total_kr * 100, 2);
-        $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1)) * 100, 2);
-        $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1) * 100, 2);
-        $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1)) * 100, 2);
-        $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1)) * 100, 2);
-        $skor_vcut =   round(($vcut / ($jjg_sample !== 0 ? $jjg_sample : 1)) * 100, 2);
+        $per_kr = round($total_kr * 100, 3);
+        $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1)) * 100, 3);
+        $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1) * 100, 3);
+        $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1)) * 100, 3);
+        $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr !== 0 ? ($jjg_sample - $abr) : 1)) * 100, 3);
+        $skor_vcut =   round(($vcut / ($jjg_sample !== 0 ? $jjg_sample : 1)) * 100, 3);
 
         $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
-        if (in_array($key, [1, 2, 3])) {
+        if (in_array($key, [1, 3, 3])) {
             $regional = 'REG-I';
         } else if (in_array($key, [4, 5, 6])) {
             $regional = 'REG-II';
@@ -4201,8 +4201,8 @@ class mutubuahController extends Controller
             'nama_staff' => $nama_rh,
             'tnp_brd' => $tnpBRD,
             'krg_brd' => $krgBRD,
-            'persenTNP_brd' => round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2),
-            'persenKRG_brd' => round(($krgBRD / ($jjg_sample - $abr)) * 100, 2),
+            'persenTNP_brd' => round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3),
+            'persenKRG_brd' => round(($krgBRD / ($jjg_sample - $abr)) * 100, 3),
             'total_jjg' => $tnpBRD + $krgBRD,
             'persen_totalJjg' => $skor_total,
             'skor_total' => sidak_brdTotal($skor_total),
@@ -4219,9 +4219,9 @@ class mutubuahController extends Controller
             'vcut_persen' => $skor_vcut,
             'vcut_skor' => sidak_tangkaiP($skor_vcut),
             'abnormal' => $abr,
-            'abnormal_persen' => round(($abr / $jjg_sample) * 100, 2),
+            'abnormal_persen' => round(($abr / $jjg_sample) * 100, 3),
             'rat_dmg' => $rd,
-            'rd_persen' => round(($rd / $jjg_sample) * 100, 2),
+            'rd_persen' => round(($rd / $jjg_sample) * 100, 3),
             'TPH' => $total_kr,
             'persen_krg' => $per_kr,
             'skor_kr' => sidak_PengBRD($per_kr),
@@ -4232,7 +4232,7 @@ class mutubuahController extends Controller
 
 
 
-        // dd($new_sidakBuah);
+        // dd($new_sidakBuah[7]['PKE']['OD']);
 
 
 
@@ -4418,16 +4418,16 @@ class mutubuahController extends Controller
                     // $dataBLok = count($combination_counts);
                     $dataBLok = $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $sidak_buah[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
@@ -4437,8 +4437,8 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['nama_staff'] = '-';
                     $sidak_buah[$key][$key1]['tnp_brd'] = $tnpBRD;
                     $sidak_buah[$key][$key1]['krg_brd'] = $krgBRD;
-                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $sidak_buah[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                    $sidak_buah[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                     $sidak_buah[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                     $sidak_buah[$key][$key1]['persen_totalJjg'] = $skor_total;
                     $sidak_buah[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -4456,9 +4456,9 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1]['vcut_persen'] = $skor_vcut;
                     $sidak_buah[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $sidak_buah[$key][$key1]['abnormal'] = $abr;
-                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['rat_dmg'] = $rd;
-                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $sidak_buah[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                     $sidak_buah[$key][$key1]['TPH'] = $total_kr;
                     $sidak_buah[$key][$key1]['persen_krg'] = $per_kr;
                     $sidak_buah[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -4529,20 +4529,20 @@ class mutubuahController extends Controller
                 }
             }
             if ($sum_krx != 0) {
-                $total_kr = round($sum_krx / $dataBLokx, 2);
+                $total_kr = round($sum_krx / $dataBLokx, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round(($jjg_samplex - $abrx != 0 ? (($tnpBRDx + $krgBRDx) / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round(($jjg_samplex - $abrx != 0 ? (($tnpBRDx + $krgBRDx) / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_jjgMSk = round(($jjg_samplex - $abrx != 0 ? (($jjg_samplex - ($tnpBRDx + $krgBRDx + $overripex + $emptyx + $abrx)) / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $skor_jjgMSk = round(($jjg_samplex - $abrx != 0 ? (($jjg_samplex - ($tnpBRDx + $krgBRDx + $overripex + $emptyx + $abrx)) / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_lewatMTng = round(($jjg_samplex - $abrx != 0 ? ($overripex / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $skor_lewatMTng = round(($jjg_samplex - $abrx != 0 ? ($overripex / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_jjgKosong = round(($jjg_samplex - $abrx != 0 ? ($emptyx / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $skor_jjgKosong = round(($jjg_samplex - $abrx != 0 ? ($emptyx / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_vcut = round(($jjg_samplex != 0 ? ($vcutx / $jjg_samplex) * 100 : 0), 2);
+            $skor_vcut = round(($jjg_samplex != 0 ? ($vcutx / $jjg_samplex) * 100 : 0), 3);
 
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -4558,7 +4558,7 @@ class mutubuahController extends Controller
             }
             $jjg_mth = $tnpBRDx + $krgBRDx + $overripex + $emptyx;
 
-            $skor_jjgMTh = ($jjg_samplex - $abrx != 0) ? round($jjg_mth / ($jjg_samplex - $abrx) * 100, 2) : 0;
+            $skor_jjgMTh = ($jjg_samplex - $abrx != 0) ? round($jjg_mth / ($jjg_samplex - $abrx) * 100, 3) : 0;
 
             $sidak_buah[$key]['jjg_mantah'] = $jjg_mth;
             $sidak_buah[$key]['persen_jjgmentah'] = $skor_jjgMTh;
@@ -4579,10 +4579,10 @@ class mutubuahController extends Controller
             $sidak_buah[$key]['nama_staff'] = '-';
             $sidak_buah[$key]['tnp_brd'] = $tnpBRDx;
             $sidak_buah[$key]['krg_brd'] = $krgBRDx;
-            $sidak_buah[$key]['persenTNP_brd'] = round(($jjg_samplex - $abrx != 0 ? ($tnpBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 2);
-            $sidak_buah[$key]['persenKRG_brd'] = round(($jjg_samplex - $abrx != 0 ? ($krgBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 2);
-            $sidak_buah[$key]['abnormal_persen'] = round(($jjg_samplex != 0 ? ($abrx / $jjg_samplex) * 100 : 0), 2);
-            $sidak_buah[$key]['rd_persen'] = round(($jjg_samplex != 0 ? ($rdx / $jjg_samplex) * 100 : 0), 2);
+            $sidak_buah[$key]['persenTNP_brd'] = round(($jjg_samplex - $abrx != 0 ? ($tnpBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 3);
+            $sidak_buah[$key]['persenKRG_brd'] = round(($jjg_samplex - $abrx != 0 ? ($krgBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 3);
+            $sidak_buah[$key]['abnormal_persen'] = round(($jjg_samplex != 0 ? ($abrx / $jjg_samplex) * 100 : 0), 3);
+            $sidak_buah[$key]['rd_persen'] = round(($jjg_samplex != 0 ? ($rdx / $jjg_samplex) * 100 : 0), 3);
 
 
             $sidak_buah[$key]['total_jjg'] = $tnpBRDx + $krgBRDx;
@@ -4662,20 +4662,20 @@ class mutubuahController extends Controller
             }
 
             if ($sum_krx != 0) {
-                $total_kr = round($sum_krx / $dataBLokx, 2);
+                $total_kr = round($sum_krx / $dataBLokx, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round(($jjg_samplex - $abrx != 0 ? (($tnpBRDx + $krgBRDx) / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round(($jjg_samplex - $abrx != 0 ? (($tnpBRDx + $krgBRDx) / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_jjgMSk = round(($jjg_samplex - $abrx != 0 ? (($jjg_samplex - ($tnpBRDx + $krgBRDx + $overripex + $emptyx + $abrx)) / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $skor_jjgMSk = round(($jjg_samplex - $abrx != 0 ? (($jjg_samplex - ($tnpBRDx + $krgBRDx + $overripex + $emptyx + $abrx)) / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_lewatMTng = round(($jjg_samplex - $abrx != 0 ? ($overripex / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $skor_lewatMTng = round(($jjg_samplex - $abrx != 0 ? ($overripex / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_jjgKosong = round(($jjg_samplex - $abrx != 0 ? ($emptyx / ($jjg_samplex - $abrx)) * 100 : 0), 2);
+            $skor_jjgKosong = round(($jjg_samplex - $abrx != 0 ? ($emptyx / ($jjg_samplex - $abrx)) * 100 : 0), 3);
 
-            $skor_vcut = round(($jjg_samplex != 0 ? ($vcutreg / $jjg_samplex) * 100 : 0), 2);
+            $skor_vcut = round(($jjg_samplex != 0 ? ($vcutreg / $jjg_samplex) * 100 : 0), 3);
 
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -4691,7 +4691,7 @@ class mutubuahController extends Controller
             }
             $jjg_mth = $tnpBRDx + $krgBRDx + $overripex + $emptyx;
 
-            $skor_jjgMTh = ($jjg_samplex - $abrx != 0) ? round($jjg_mth / ($jjg_samplex - $abrx) * 100, 2) : 0;
+            $skor_jjgMTh = ($jjg_samplex - $abrx != 0) ? round($jjg_mth / ($jjg_samplex - $abrx) * 100, 3) : 0;
 
             $mutu_buah[$key]['jjg_mantah'] = $jjg_mth;
             $mutu_buah[$key]['persen_jjgmentah'] = $skor_jjgMTh;
@@ -4713,10 +4713,10 @@ class mutubuahController extends Controller
             $mutu_buah[$key]['nama_staff'] = '-';
             $mutu_buah[$key]['tnp_brd'] = $tnpBRDx;
             $mutu_buah[$key]['krg_brd'] = $krgBRDx;
-            $mutu_buah[$key]['persenTNP_brd'] = round(($jjg_samplex - $abrx != 0 ? ($tnpBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 2);
-            $mutu_buah[$key]['persenKRG_brd'] = round(($jjg_samplex - $abrx != 0 ? ($krgBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 2);
-            $mutu_buah[$key]['abnormal_persen'] = round(($jjg_samplex != 0 ? ($abrx / $jjg_samplex) * 100 : 0), 2);
-            $mutu_buah[$key]['rd_persen'] = round(($jjg_samplex != 0 ? ($rat_dmg / $jjg_samplex) * 100 : 0), 2);
+            $mutu_buah[$key]['persenTNP_brd'] = round(($jjg_samplex - $abrx != 0 ? ($tnpBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 3);
+            $mutu_buah[$key]['persenKRG_brd'] = round(($jjg_samplex - $abrx != 0 ? ($krgBRDx / ($jjg_samplex - $abrx)) * 100 : 0), 3);
+            $mutu_buah[$key]['abnormal_persen'] = round(($jjg_samplex != 0 ? ($abrx / $jjg_samplex) * 100 : 0), 3);
+            $mutu_buah[$key]['rd_persen'] = round(($jjg_samplex != 0 ? ($rat_dmg / $jjg_samplex) * 100 : 0), 3);
 
 
             $mutu_buah[$key]['total_jjg'] = $tnpBRDx + $krgBRDx;
@@ -4760,20 +4760,20 @@ class mutubuahController extends Controller
             // $csrmsy += $csfxr;
         }
         if ($sum_krx != 0) {
-            $total_kr = round($sum_krxy / $dataBLokxy, 2);
+            $total_kr = round($sum_krxy / $dataBLokxy, 3);
         } else {
             $total_kr = 0;
         }
-        $per_kr = round($total_kr * 100, 2);
-        $skor_total = round(($jjg_samplexy - $abrxy != 0 ? (($tnpBRDxy + $krgBRDxy) / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+        $per_kr = round($total_kr * 100, 3);
+        $skor_total = round(($jjg_samplexy - $abrxy != 0 ? (($tnpBRDxy + $krgBRDxy) / ($jjg_samplexy - $abrxy)) * 100 : 0), 3);
 
-        $skor_jjgMSk = round(($jjg_samplexy - $abrxy != 0 ? (($jjg_samplexy - ($tnpBRDxy + $krgBRDxy + $overripexy + $emptyxy + $abrxy)) / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+        $skor_jjgMSk = round(($jjg_samplexy - $abrxy != 0 ? (($jjg_samplexy - ($tnpBRDxy + $krgBRDxy + $overripexy + $emptyxy + $abrxy)) / ($jjg_samplexy - $abrxy)) * 100 : 0), 3);
 
-        $skor_lewatMTng = round(($jjg_samplexy - $abrxy != 0 ? ($overripexy / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+        $skor_lewatMTng = round(($jjg_samplexy - $abrxy != 0 ? ($overripexy / ($jjg_samplexy - $abrxy)) * 100 : 0), 3);
 
-        $skor_jjgKosong = round(($jjg_samplexy - $abrxy != 0 ? ($emptyx / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+        $skor_jjgKosong = round(($jjg_samplexy - $abrxy != 0 ? ($emptyx / ($jjg_samplexy - $abrxy)) * 100 : 0), 3);
 
-        $skor_vcut = round(($jjg_samplexy != 0 ? ($vcutxy / $jjg_samplexy) * 100 : 0), 2);
+        $skor_vcut = round(($jjg_samplexy != 0 ? ($vcutxy / $jjg_samplexy) * 100 : 0), 3);
 
         $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -4789,7 +4789,7 @@ class mutubuahController extends Controller
         }
         $jjg_mth = $tnpBRDxy + $krgBRDxy + $overripexy + $emptyx;
 
-        $skor_jjgMTh = ($jjg_samplexy - $abrxy != 0) ? round($jjg_mth / ($jjg_samplexy - $abrxy) * 100, 2) : 0;
+        $skor_jjgMTh = ($jjg_samplexy - $abrxy != 0) ? round($jjg_mth / ($jjg_samplexy - $abrxy) * 100, 3) : 0;
 
         $mutu_buah['jjg_mantah'] = $jjg_mth;
         $mutu_buah['persen_jjgmentah'] = $skor_jjgMTh;
@@ -4810,10 +4810,10 @@ class mutubuahController extends Controller
         $mutu_buah['nama_staff'] = '-';
         $mutu_buah['tnp_brd'] = $tnpBRDxy;
         $mutu_buah['krg_brd'] = $krgBRDxy;
-        $mutu_buah['persenTNP_brd'] = round(($jjg_samplexy - $abrxy != 0 ? ($tnpBRDxy / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
-        $mutu_buah['persenKRG_brd'] = round(($jjg_samplexy - $abrxy != 0 ? ($krgBRDxy / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
-        $mutu_buah['abnormal_persen'] = round(($jjg_samplexy != 0 ? ($abrxy / $jjg_samplexy) * 100 : 0), 2);
-        $mutu_buah['rd_persen'] = round(($jjg_samplexy != 0 ? ($rdxy / $jjg_samplexy) * 100 : 0), 2);
+        $mutu_buah['persenTNP_brd'] = round(($jjg_samplexy - $abrxy != 0 ? ($tnpBRDxy / ($jjg_samplexy - $abrxy)) * 100 : 0), 3);
+        $mutu_buah['persenKRG_brd'] = round(($jjg_samplexy - $abrxy != 0 ? ($krgBRDxy / ($jjg_samplexy - $abrxy)) * 100 : 0), 3);
+        $mutu_buah['abnormal_persen'] = round(($jjg_samplexy != 0 ? ($abrxy / $jjg_samplexy) * 100 : 0), 3);
+        $mutu_buah['rd_persen'] = round(($jjg_samplexy != 0 ? ($rdxy / $jjg_samplexy) * 100 : 0), 3);
         $mutu_buah['total_jjg'] = $tnpBRDxy + $krgBRDxy;
         $mutu_buah['persen_totalJjg'] = $skor_total;
         $mutu_buah['skor_total'] = sidak_brdTotal($skor_total);
@@ -5044,16 +5044,16 @@ class mutubuahController extends Controller
                     // $dataBLok = count($combination_counts);
                     $dataBLok = $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 2);
-                    $skor_jjgMSk = round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 2);
-                    $skor_lewatMTng = round(($overripe / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 2);
-                    $skor_jjgKosong = round(($empty / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 2);
-                    $skor_vcut = round(($vcut / ($jjg_sample != 0 ? $jjg_sample : 1)) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 3);
+                    $skor_jjgMSk = round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 3);
+                    $skor_lewatMTng = round(($overripe / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 3);
+                    $skor_jjgKosong = round(($empty / (($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1)) * 100, 3);
+                    $skor_vcut = round(($vcut / ($jjg_sample != 0 ? $jjg_sample : 1)) * 100, 3);
 
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
@@ -5064,8 +5064,8 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1][$key2]['nama_staff'] = '-';
                     $sidak_buah[$key][$key1][$key2]['tnp_brd'] = $tnpBRD;
                     $sidak_buah[$key][$key1][$key2]['krg_brd'] = $krgBRD;
-                    $sidak_buah[$key][$key1][$key2]['persenTNP_brd'] = round(($jjg_sample - $abr != 0) ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0, 2);
-                    $sidak_buah[$key][$key1][$key2]['persenKRG_brd'] = round(($jjg_sample - $abr != 0) ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0, 2);
+                    $sidak_buah[$key][$key1][$key2]['persenTNP_brd'] = round(($jjg_sample - $abr != 0) ? ($tnpBRD / ($jjg_sample - $abr)) * 100 : 0, 3);
+                    $sidak_buah[$key][$key1][$key2]['persenKRG_brd'] = round(($jjg_sample - $abr != 0) ? ($krgBRD / ($jjg_sample - $abr)) * 100 : 0, 3);
 
                     $sidak_buah[$key][$key1][$key2]['total_jjg'] = $tnpBRD + $krgBRD;
                     $sidak_buah[$key][$key1][$key2]['persen_totalJjg'] = $skor_total;
@@ -5083,10 +5083,10 @@ class mutubuahController extends Controller
                     $sidak_buah[$key][$key1][$key2]['vcut_persen'] = $skor_vcut;
                     $sidak_buah[$key][$key1][$key2]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $sidak_buah[$key][$key1][$key2]['abnormal'] = $abr;
-                    $sidak_buah[$key][$key1][$key2]['abnormal_persen'] = round(($jjg_sample != 0) ? ($abr / $jjg_sample) * 100 : 0, 2);
+                    $sidak_buah[$key][$key1][$key2]['abnormal_persen'] = round(($jjg_sample != 0) ? ($abr / $jjg_sample) * 100 : 0, 3);
 
                     $sidak_buah[$key][$key1][$key2]['rat_dmg'] = $rd;
-                    $sidak_buah[$key][$key1][$key2]['rd_persen'] = round(($jjg_sample != 0) ? ($rd / $jjg_sample) * 100 : 0, 2);
+                    $sidak_buah[$key][$key1][$key2]['rd_persen'] = round(($jjg_sample != 0) ? ($rd / $jjg_sample) * 100 : 0, 3);
 
                     $sidak_buah[$key][$key1][$key2]['karung'] = $sum_kr;
                     $sidak_buah[$key][$key1][$key2]['TPH'] = $total_kr;
@@ -5156,16 +5156,16 @@ class mutubuahController extends Controller
                 }
 
                 if ($sum_krEST != 0) {
-                    $total_krEST = round($sum_krEST / $blokEST, 2);
+                    $total_krEST = round($sum_krEST / $blokEST, 3);
                 } else {
                     $total_krEST = 0;
                 }
-                $per_krEST = round($total_krEST * 100, 2);
-                $skor_totalEST = ($jjg_sampleEST - $abrEST) !== 0 ? round((($tnpBRDEST + $krgBRDEST) / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-                $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - ($tnpBRDEST + $krgBRDEST + $overripeEST + $emptyEST)) / ($jjg_sampleEST - $abrEST) * 100, 2) : 0;
-                $skor_lewatmatangEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($overripeEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-                $skor_jjgKosongEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($emptyEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-                $skor_vcutEST = $jjg_sampleEST !== 0 ? round(($vcutEST / $jjg_sampleEST) * 100, 2) : 0;
+                $per_krEST = round($total_krEST * 100, 3);
+                $skor_totalEST = ($jjg_sampleEST - $abrEST) !== 0 ? round((($tnpBRDEST + $krgBRDEST) / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+                $skot_jjgmskEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($jjg_sampleEST - ($tnpBRDEST + $krgBRDEST + $overripeEST + $emptyEST)) / ($jjg_sampleEST - $abrEST) * 100, 3) : 0;
+                $skor_lewatmatangEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($overripeEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+                $skor_jjgKosongEST = ($jjg_sampleEST - $abrEST) !== 0 ? round(($emptyEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+                $skor_vcutEST = $jjg_sampleEST !== 0 ? round(($vcutEST / $jjg_sampleEST) * 100, 3) : 0;
 
                 $allSkorEST = sidak_brdTotal($skor_totalEST) +  sidak_matangSKOR($skot_jjgmskEST) +  sidak_lwtMatang($skor_lewatmatangEST) + sidak_jjgKosong($skor_jjgKosongEST) + sidak_tangkaiP($skor_vcutEST) + sidak_PengBRD($per_krEST);
 
@@ -5183,8 +5183,8 @@ class mutubuahController extends Controller
                 }
                 $sidak_buah[$key][$key1]['tnp_brd'] = $tnpBRDEST;
                 $sidak_buah[$key][$key1]['krg_brd'] = $krgBRDEST;
-                $sidak_buah[$key][$key1]['persenTNP_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
-                $sidak_buah[$key][$key1]['persenKRG_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 2) : 0;
+                $sidak_buah[$key][$key1]['persenTNP_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
+                $sidak_buah[$key][$key1]['persenKRG_brd'] = ($jjg_sampleEST - $abrEST) !== 0 ? round(($krgBRDEST / ($jjg_sampleEST - $abrEST)) * 100, 3) : 0;
                 $sidak_buah[$key][$key1]['total_jjg'] = $tnpBRDEST + $krgBRDEST;
                 $sidak_buah[$key][$key1]['persen_totalJjg'] = $skor_totalEST;
                 $sidak_buah[$key][$key1]['skor_totalEST'] = sidak_brdTotal($skor_totalEST);
@@ -5201,9 +5201,9 @@ class mutubuahController extends Controller
                 $sidak_buah[$key][$key1]['vcut_persen'] = $skor_vcutEST;
                 $sidak_buah[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcutEST);
                 $sidak_buah[$key][$key1]['abnormal'] = $abrEST;
-                $sidak_buah[$key][$key1]['abnormal_persen'] = $jjg_sampleEST !== 0 ? round(($abrEST / $jjg_sampleEST) * 100, 2) : 0;
+                $sidak_buah[$key][$key1]['abnormal_persen'] = $jjg_sampleEST !== 0 ? round(($abrEST / $jjg_sampleEST) * 100, 3) : 0;
                 $sidak_buah[$key][$key1]['rat_dmg'] = $rdEST;
-                $sidak_buah[$key][$key1]['rd_persen'] = $jjg_sampleEST !== 0 ? round(($rdEST / $jjg_sampleEST) * 100, 2) : 0;
+                $sidak_buah[$key][$key1]['rd_persen'] = $jjg_sampleEST !== 0 ? round(($rdEST / $jjg_sampleEST) * 100, 3) : 0;
                 $sidak_buah[$key][$key1]['karung'] = $sum_krEST;
                 $sidak_buah[$key][$key1]['TPH'] = $total_krEST;
                 $sidak_buah[$key][$key1]['persen_krg'] = $per_krEST;
@@ -5492,16 +5492,16 @@ class mutubuahController extends Controller
                 }
                 $dataBLok = $bloks;
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
-                $per_kr = round($total_kr * 100, 2);
-                $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                $per_kr = round($total_kr * 100, 3);
+                $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                 $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                 $sidakblok[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
@@ -5512,8 +5512,8 @@ class mutubuahController extends Controller
                 $sidakblok[$key][$key1]['tnp_brd'] = $tnpBRD;
                 $sidakblok[$key][$key1]['petugas'] = $value2['petugas'];
                 $sidakblok[$key][$key1]['krg_brd'] = $krgBRD;
-                $sidakblok[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                $sidakblok[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                $sidakblok[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                $sidakblok[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                 $sidakblok[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                 $sidakblok[$key][$key1]['persen_totalJjg'] = $skor_total;
                 $sidakblok[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -5531,9 +5531,9 @@ class mutubuahController extends Controller
                 $sidakblok[$key][$key1]['vcut_persen'] = $skor_vcut;
                 $sidakblok[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                 $sidakblok[$key][$key1]['abnormal'] = $abr;
-                $sidakblok[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                $sidakblok[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                 $sidakblok[$key][$key1]['rat_dmg'] = $rd;
-                $sidakblok[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                $sidakblok[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                 $sidakblok[$key][$key1]['TPH'] = $total_kr;
                 $sidakblok[$key][$key1]['persen_krg'] = $per_kr;
                 $sidakblok[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -5548,7 +5548,17 @@ class mutubuahController extends Controller
         // dd($sidakblok);
 
         $sidakafd = array();
-
+        $blokwil = 0;
+        $krgwil = 0;
+        $tnpbrdwil = 0;
+        $krgbrdwil = 0;
+        $abrwil = 0;
+        $overripewil = 0;
+        $vcutwil = 0;
+        $rdwil = 0;
+        $emptywil = 0;
+        $janjangsamplewil = 0;
+        $sidakafd[$key]['kategori'] = sidak_akhir($allSkor);
         foreach ($sidakblok as $key => $value) {
 
             // dd($value);
@@ -5564,7 +5574,6 @@ class mutubuahController extends Controller
             $sum_kr = 0;
             foreach ($value as $key1 => $value1) {
                 $jjg_sample += $value1['Jumlah_janjang'];
-                // dd($value1);
                 $tnpBRD += $value1['tnp_brd'];
                 $krgBRD += $value1['krg_brd'];
                 $abr += $value1['abnormal'];
@@ -5577,16 +5586,16 @@ class mutubuahController extends Controller
             }
             $dataBLok = $blok;
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $dataBLok, 2);
+                $total_kr = round($sum_kr / $dataBLok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
             $sidakafd[$key]['Jumlah_janjang'] = $jjg_sample;
@@ -5597,8 +5606,8 @@ class mutubuahController extends Controller
             $sidakafd[$key]['petugas'] = '-';
             $sidakafd[$key]['tnp_brd'] = $tnpBRD;
             $sidakafd[$key]['krg_brd'] = $krgBRD;
-            $sidakafd[$key]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-            $sidakafd[$key]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+            $sidakafd[$key]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+            $sidakafd[$key]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
             $sidakafd[$key]['total_jjg'] = $tnpBRD + $krgBRD;
             $sidakafd[$key]['persen_totalJjg'] = $skor_total;
             $sidakafd[$key]['skor_total'] = sidak_brdTotal($skor_total);
@@ -5616,27 +5625,99 @@ class mutubuahController extends Controller
             $sidakafd[$key]['vcut_persen'] = $skor_vcut;
             $sidakafd[$key]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
             $sidakafd[$key]['abnormal'] = $abr;
-            $sidakafd[$key]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+            $sidakafd[$key]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
             $sidakafd[$key]['rat_dmg'] = $rd;
-            $sidakafd[$key]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+            $sidakafd[$key]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
             $sidakafd[$key]['TPH'] = $total_kr;
             $sidakafd[$key]['jumkarung'] = $sum_kr;
             $sidakafd[$key]['persen_krg'] = $per_kr;
             $sidakafd[$key]['skor_kr'] = sidak_PengBRD($per_kr);
             $sidakafd[$key]['All_skor'] = $allSkor;
             $sidakafd[$key]['kategori'] = sidak_akhir($allSkor);
-        }
 
+            $blokwil += $blok;
+            $krgwil += $sum_kr;
+            $tnpbrdwil +=  $tnpBRD;
+            $krgbrdwil  += $krgBRD;
+            $abrwil += $abr;
+            $overripewil += $overripe;
+            $emptywil += $empty;
+            $vcutwil += $vcut;
+            $rdwil += $rd;
+            $janjangsamplewil += $jjg_sample;
+        }
+        if ($sum_kr != 0) {
+            $total_krwil = round($krgwil / $blokwil, 3);
+        } else {
+            $total_krwil = 0;
+        }
+        $per_krwil = round($total_krwil * 100, 3);
+        $skor_totalwil = round((($tnpbrdwil + $krgbrdwil) / ($janjangsamplewil - $abrwil)) * 100, 3);
+        $skor_jjgMSkwil = round(($janjangsamplewil - ($tnpbrdwil + $krgbrdwil + $overripewil + $emptywil + $abrwil)) / ($janjangsamplewil - $abrwil) * 100, 3);
+        $skor_lewatMTngwwil =  round(($overripewil / ($janjangsamplewil - $abrwil)) * 100, 3);
+        $skor_jjgKosongwil =  round(($emptywil / ($janjangsamplewil - $abrwil)) * 100, 3);
+        $skor_vcutwil =   round(($vcutwil / $janjangsamplewil) * 100, 3);
+        $allSkorwil = sidak_brdTotal($skor_totalwil) +  sidak_matangSKOR($skor_jjgMSkwil) +  sidak_lwtMatang($skor_lewatMTngwwil) + sidak_jjgKosong($skor_jjgKosongwil) + sidak_tangkaiP($skor_vcutwil) + sidak_PengBRD($per_krwil);
+
+
+
+
+        $sidakafd['EST'] = [
+            'Jumlah_janjang' => $janjangsamplewil,
+            'blok' => $blokwil,
+            'estate' => $value1['afd'],
+            'est' => 'TOTAL',
+            'afd' => 'TOTAL',
+            'petugas' => '-',
+            'tnp_brd' => $tnpbrdwil,
+            'krg_brd' => $krgbrdwil,
+            'persenTNP_brd' => round(($tnpbrdwil / ($janjangsamplewil - $abrwil)) * 100, 3),
+            'persenKRG_brd' => round(($krgbrdwil / ($janjangsamplewil - $abrwil)) * 100, 3),
+            'total_jjg' => $tnpbrdwil + $krgbrdwil,
+            'persen_totalJjg' => $skor_totalwil,
+            'skor_total' => sidak_brdTotal($skor_total),
+            'jjg_matang' => $janjangsamplewil - ($tnpbrdwil + $krgbrdwil + $overripewil + $emptywil + $abrwil),
+            'persen_jjgMtang' => $skor_jjgMSkwil,
+            'skor_jjgMatang' => sidak_matangSKOR($skor_jjgMSkwil),
+            'lewat_matang' => $overripewil,
+            'persen_lwtMtng' =>  $skor_lewatMTngwwil,
+            'skor_lewatMTng' => sidak_lwtMatang($skor_lewatMTngwwil),
+            'janjang_kosong' => $emptywil,
+            'persen_kosong' => $skor_jjgKosongwil,
+            'skor_kosong' => sidak_jjgKosong($skor_jjgKosongwil),
+            'vcut' => $vcutwil,
+            'karung' => $krgwil,
+            'vcut_persen' => $skor_vcutwil,
+            'vcut_skor' => sidak_tangkaiP($skor_vcutwil),
+            'abnormal' => $abrwil,
+            'abnormal_persen' => round(($abrwil / $janjangsamplewil) * 100, 3),
+            'rat_dmg' => $rdwil,
+            'rd_persen' => round(($rdwil / $janjangsamplewil) * 100, 3),
+            'TPH' => $total_krwil,
+            'jumkarung' => $krgwil,
+            'persen_krg' => $per_krwil,
+            'skor_kr' => sidak_PengBRD($per_krwil),
+            'All_skor' => $allSkorwil,
+            'kategori' => sidak_akhir($allSkorwil),
+        ];
+        // dd($sidakafd);
         // dd($sidakblok, $sidakafd);
 
         $final = [];
         foreach ($sidakblok as $key => $value1) {
+            // dd($value1);
             if (array_key_exists($key, $sidakafd)) {
                 $final[$key] = array_merge($value1, [$key => $sidakafd[$key]]);
             } else {
-                $final[$key] = $value1;
+                $final[$key] = $sidakafd;
             }
         }
+
+        // dd($final);
+
+        $estdata = $sidakafd['EST'];
+        // dd($est);
+
         $gerowspan = [];
         $rowspantotal = 0;
 
@@ -5677,6 +5758,7 @@ class mutubuahController extends Controller
         $arrView['afd'] =  $afd;
         $arrView['tanggal'] =  $date;
         $arrView['sidak_buah'] =  $final;
+        $arrView['estdata'] =  $estdata;
         $arrView['totalrs'] =  $gerowspan['total'];
         $arrView['rowspan'] =  $outputArray;
         // $arrView['total_buah'] =  $total_buah;
@@ -5851,16 +5933,16 @@ class mutubuahController extends Controller
                 }
                 $dataBLok = $bloks;
                 if ($sum_kr != 0) {
-                    $total_kr = round($sum_kr / $dataBLok, 2);
+                    $total_kr = round($sum_kr / $dataBLok, 3);
                 } else {
                     $total_kr = 0;
                 }
-                $per_kr = round($total_kr * 100, 2);
-                $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                $per_kr = round($total_kr * 100, 3);
+                $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                 $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                 $sidakblok[$key][$key1]['Jumlah_janjang'] = $jjg_sample;
@@ -5871,8 +5953,8 @@ class mutubuahController extends Controller
                 $sidakblok[$key][$key1]['tnp_brd'] = $tnpBRD;
                 $sidakblok[$key][$key1]['petugas'] = $value2['petugas'];
                 $sidakblok[$key][$key1]['krg_brd'] = $krgBRD;
-                $sidakblok[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                $sidakblok[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                $sidakblok[$key][$key1]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                $sidakblok[$key][$key1]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                 $sidakblok[$key][$key1]['total_jjg'] = $tnpBRD + $krgBRD;
                 $sidakblok[$key][$key1]['persen_totalJjg'] = $skor_total;
                 $sidakblok[$key][$key1]['skor_total'] = sidak_brdTotal($skor_total);
@@ -5890,9 +5972,9 @@ class mutubuahController extends Controller
                 $sidakblok[$key][$key1]['vcut_persen'] = $skor_vcut;
                 $sidakblok[$key][$key1]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                 $sidakblok[$key][$key1]['abnormal'] = $abr;
-                $sidakblok[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                $sidakblok[$key][$key1]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                 $sidakblok[$key][$key1]['rat_dmg'] = $rd;
-                $sidakblok[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                $sidakblok[$key][$key1]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                 $sidakblok[$key][$key1]['TPH'] = $total_kr;
                 $sidakblok[$key][$key1]['persen_krg'] = $per_kr;
                 $sidakblok[$key][$key1]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -5935,16 +6017,16 @@ class mutubuahController extends Controller
             }
             $dataBLok = $blok;
             if ($sum_kr != 0) {
-                $total_kr = round($sum_kr / $dataBLok, 2);
+                $total_kr = round($sum_kr / $dataBLok, 3);
             } else {
                 $total_kr = 0;
             }
-            $per_kr = round($total_kr * 100, 2);
-            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+            $per_kr = round($total_kr * 100, 3);
+            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
             $sidakafd[$key]['Jumlah_janjang'] = $jjg_sample;
@@ -5954,8 +6036,8 @@ class mutubuahController extends Controller
             $sidakafd[$key]['petugas'] = '-';
             $sidakafd[$key]['tnp_brd'] = $tnpBRD;
             $sidakafd[$key]['krg_brd'] = $krgBRD;
-            $sidakafd[$key]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-            $sidakafd[$key]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+            $sidakafd[$key]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+            $sidakafd[$key]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
             $sidakafd[$key]['total_jjg'] = $tnpBRD + $krgBRD;
             $sidakafd[$key]['persen_totalJjg'] = $skor_total;
             $sidakafd[$key]['skor_total'] = sidak_brdTotal($skor_total);
@@ -5973,9 +6055,9 @@ class mutubuahController extends Controller
             $sidakafd[$key]['vcut_persen'] = $skor_vcut;
             $sidakafd[$key]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
             $sidakafd[$key]['abnormal'] = $abr;
-            $sidakafd[$key]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+            $sidakafd[$key]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
             $sidakafd[$key]['rat_dmg'] = $rd;
-            $sidakafd[$key]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+            $sidakafd[$key]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
             $sidakafd[$key]['TPH'] = $total_kr;
             $sidakafd[$key]['persen_krg'] = $per_kr;
             $sidakafd[$key]['skor_kr'] = sidak_PengBRD($per_kr);
@@ -6180,17 +6262,17 @@ class mutubuahController extends Controller
                     }
                     $dataBLok =  $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
                     $denominator = ($jjg_sample - $abr);
-                    $skor_total = $denominator !== 0 ? round((($tnpBRD + $krgBRD) / $denominator) * 100, 2) : 0;
-                    $skor_jjgMSk = $denominator !== 0 ? round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / $denominator) * 100, 2) : 0;
-                    $skor_lewatMTng = $denominator !== 0 ? round(($overripe / $denominator) * 100, 2) : 0;
-                    $skor_jjgKosong = $denominator !== 0 ? round(($empty / $denominator) * 100, 2) : 0;
-                    $skor_vcut = $jjg_sample !== 0 ? round(($vcut / $jjg_sample) * 100, 2) : 0;
+                    $skor_total = $denominator !== 0 ? round((($tnpBRD + $krgBRD) / $denominator) * 100, 3) : 0;
+                    $skor_jjgMSk = $denominator !== 0 ? round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / $denominator) * 100, 3) : 0;
+                    $skor_lewatMTng = $denominator !== 0 ? round(($overripe / $denominator) * 100, 3) : 0;
+                    $skor_jjgKosong = $denominator !== 0 ? round(($empty / $denominator) * 100, 3) : 0;
+                    $skor_vcut = $jjg_sample !== 0 ? round(($vcut / $jjg_sample) * 100, 3) : 0;
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $weeklyReport[$key][$key1][$key2]['Jumlah_janjang'] = $jjg_sample;
@@ -6225,17 +6307,17 @@ class mutubuahController extends Controller
                     $vcuteST += $vcut;
                     $rdeST += $rd;
                     if ($kr_est != 0) {
-                        $total_krEst = round($kr_est / $blok_est, 2);
+                        $total_krEst = round($kr_est / $blok_est, 3);
                     } else {
                         $total_krEst = 0;
                     }
-                    $per_krEst = round($total_krEst * 100, 2);
+                    $per_krEst = round($total_krEst * 100, 3);
                     $denominatorEst = ($jjg_sampleEst - $abreST);
-                    $skor_total = $denominatorEst !== 0 ? round((($tnpBRDEst + $krgBRDEst) / $denominatorEst) * 100, 2) : 0;
-                    $skor_jjgMSk = $denominatorEst !== 0 ? round((($jjg_sampleEst - ($tnpBRDEst + $krgBRDEst + $overripeEst + $emptyeST + $abreST)) / $denominatorEst) * 100, 2) : 0;
-                    $skor_lewatMTng = $denominatorEst !== 0 ? round(($overripeEst / $denominatorEst) * 100, 2) : 0;
-                    $skor_jjgKosong = $denominatorEst !== 0 ? round(($emptyeST / $denominatorEst) * 100, 2) : 0;
-                    $skor_vcut = $jjg_sampleEst !== 0 ? round(($vcuteST / $jjg_sampleEst) * 100, 2) : 0;
+                    $skor_total = $denominatorEst !== 0 ? round((($tnpBRDEst + $krgBRDEst) / $denominatorEst) * 100, 3) : 0;
+                    $skor_jjgMSk = $denominatorEst !== 0 ? round((($jjg_sampleEst - ($tnpBRDEst + $krgBRDEst + $overripeEst + $emptyeST + $abreST)) / $denominatorEst) * 100, 3) : 0;
+                    $skor_lewatMTng = $denominatorEst !== 0 ? round(($overripeEst / $denominatorEst) * 100, 3) : 0;
+                    $skor_jjgKosong = $denominatorEst !== 0 ? round(($emptyeST / $denominatorEst) * 100, 3) : 0;
+                    $skor_vcut = $jjg_sampleEst !== 0 ? round(($vcuteST / $jjg_sampleEst) * 100, 3) : 0;
                 }
                 $ass = '-';
                 foreach ($queryAsisten as $ast => $asisten) {
@@ -6273,7 +6355,7 @@ class mutubuahController extends Controller
                 $vcutWil += $vcuteST;
                 $rdWil += $rdeST;
                 if ($kr_Wil != 0) {
-                    $total_krWil = round($kr_Wil / $blok_Wil, 2);
+                    $total_krWil = round($kr_Wil / $blok_Wil, 3);
                 } else {
                     $total_krWil = 0;
                 }
@@ -6364,17 +6446,17 @@ class mutubuahController extends Controller
                     }
                     $dataBLok = count($combination_counts);
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
                     $denominator = ($jjg_sample - $abr);
-                    $skor_total = $denominator !== 0 ? round((($tnpBRD + $krgBRD) / $denominator) * 100, 2) : 0;
-                    $skor_jjgMSk = $denominator !== 0 ? round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / $denominator) * 100, 2) : 0;
-                    $skor_lewatMTng = $denominator !== 0 ? round(($overripe / $denominator) * 100, 2) : 0;
-                    $skor_jjgKosong = $denominator !== 0 ? round(($empty / $denominator) * 100, 2) : 0;
-                    $skor_vcut = $jjg_sample !== 0 ? round(($vcut / $jjg_sample) * 100, 2) : 0;
+                    $skor_total = $denominator !== 0 ? round((($tnpBRD + $krgBRD) / $denominator) * 100, 3) : 0;
+                    $skor_jjgMSk = $denominator !== 0 ? round((($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / $denominator) * 100, 3) : 0;
+                    $skor_lewatMTng = $denominator !== 0 ? round(($overripe / $denominator) * 100, 3) : 0;
+                    $skor_jjgKosong = $denominator !== 0 ? round(($empty / $denominator) * 100, 3) : 0;
+                    $skor_vcut = $jjg_sample !== 0 ? round(($vcut / $jjg_sample) * 100, 3) : 0;
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $weeklyReportV2[$key][$key1][$key2]['Jumlah_janjang'] = $jjg_sample;
@@ -6531,16 +6613,16 @@ class mutubuahController extends Controller
                     }
                     $dataBLok = $bloks;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 2);
+                        $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }
-                    $per_kr = round($total_kr * 100, 2);
-                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 2);
-                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 2);
-                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 2);
+                    $per_kr = round($total_kr * 100, 3);
+                    $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
+                    $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
+                    $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
                     $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
                     $blokWeekly[$key][$key1][$key2]['Jumlah_janjang'] = $jjg_sample;
@@ -6548,8 +6630,8 @@ class mutubuahController extends Controller
                     $blokWeekly[$key][$key1][$key2]['blokss'] = $dataBLok;
                     $blokWeekly[$key][$key1][$key2]['tnp_brd'] = $tnpBRD;
                     $blokWeekly[$key][$key1][$key2]['krg_brd'] = $krgBRD;
-                    $blokWeekly[$key][$key1][$key2]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 2);
-                    $blokWeekly[$key][$key1][$key2]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 2);
+                    $blokWeekly[$key][$key1][$key2]['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
+                    $blokWeekly[$key][$key1][$key2]['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
                     $blokWeekly[$key][$key1][$key2]['total_jjg'] = $tnpBRD + $krgBRD;
                     $blokWeekly[$key][$key1][$key2]['persen_totalJjg'] = $skor_total;
                     $blokWeekly[$key][$key1][$key2]['skor_total'] = sidak_brdTotal($skor_total);
@@ -6567,9 +6649,9 @@ class mutubuahController extends Controller
                     $blokWeekly[$key][$key1][$key2]['vcut_persen'] = $skor_vcut;
                     $blokWeekly[$key][$key1][$key2]['vcut_skor'] = sidak_tangkaiP($skor_vcut);
                     $blokWeekly[$key][$key1][$key2]['abnormal'] = $abr;
-                    $blokWeekly[$key][$key1][$key2]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 2);
+                    $blokWeekly[$key][$key1][$key2]['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
                     $blokWeekly[$key][$key1][$key2]['rat_dmg'] = $rd;
-                    $blokWeekly[$key][$key1][$key2]['rd_persen'] = round(($rd / $jjg_sample) * 100, 2);
+                    $blokWeekly[$key][$key1][$key2]['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
                     $blokWeekly[$key][$key1][$key2]['TPH'] = $total_kr;
                     $blokWeekly[$key][$key1][$key2]['persen_krg'] = $per_kr;
                     $blokWeekly[$key][$key1][$key2]['skor_kr'] = sidak_PengBRD($per_kr);

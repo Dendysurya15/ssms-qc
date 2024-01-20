@@ -43,7 +43,7 @@
         <tr>
             <td style="vertical-align: middle; padding-left: 0; width: 10%;border:0;">
                 <div>
-                    <img src="{{ asset('img/logo-SSS.png') }}" style="height:60px">
+                    <img src="{{ asset('img/Logo-SSS.png') }}" style="height:60px">
                 </div>
             </td>
             <td style="width:30%;border:0;">
@@ -79,8 +79,8 @@
                     <th rowspan="3">Blok</th>
                     <th rowspan="3">Total
                         Janjang
-                        Sampl</th>
-                    <th colspan="6">Mentah (A)</th>
+                        Sampel</th>
+                    <th colspan="6" style="text-align: center;">Mentah (A)</th>
                     <th colspan="2" rowspan="2">Matang (N)</th>
                     <th colspan="2" rowspan="2">Lewat Matang
                         (O)</th>
@@ -184,6 +184,34 @@
                 @endforeach
                 @endforeach
 
+                @php
+
+                $estdata = $data['estdata'];
+                @endphp
+                <tr>
+                    <td colspan="2" style="text-align:center;background-color: #FFE082;">{{$estdata['estate']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['Jumlah_janjang']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['tnp_brd']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['persenTNP_brd']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['krg_brd']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['persenKRG_brd']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['total_jjg']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['persen_totalJjg']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['jjg_matang']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['persen_jjgMtang']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['lewat_matang']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['persen_lwtMtng']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['janjang_kosong']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['persen_kosong']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['abnormal']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['abnormal_persen']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['vcut']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['vcut_persen']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['rat_dmg']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['rd_persen']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['jumkarung'] ?? $estdata['karung']}}/{{$estdata['blok']}}</td>
+                    <td style="background-color: #FFE082;">{{$estdata['persen_krg']}}</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -214,7 +242,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td rowspan="{{$data['rowspan']['b']  +1 }}"></td>
+                    <td rowspan="{{$data['rowspan']['b'] +4}}"></td>
                 </tr>
             </tbody>
         </table>
@@ -226,7 +254,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="border-bottom: 1px solid red;" rowspan="{{$data['rowspan']['c'] }}"></td>
+                    <td style="border-bottom: 1px solid red;" rowspan="{{$data['rowspan']['c'] + 3 }}"></td>
                 </tr>
                 <!-- Add more rows as needed -->
             </tbody>
