@@ -1253,6 +1253,52 @@
                 </div>
             </div>
     </section>
+
+
+    @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Terdeteksi data duplicate</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-primary">
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Estate</th>
+                                <th>Afdeling</th>
+                                <th>blok</th>
+                                <th>datetime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($check_data as $items)
+                            <tr>
+                                <td>{{$items['id']}}</td>
+                                <td>{{$items['estate']}}</td>
+                                <td>{{$items['afdeling']}}</td>
+                                <td>{{$items['blok']}}</td>
+                                <td>{{$items['datetime']}}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    Apakah anda ingin menghapus?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="confirmBtn">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
 </div>
 @include('layout/footer')
 <!-- JavaScript -->
@@ -1298,7 +1344,51 @@
     });
 
     ////untuk mode single and full mode
-    let checkdata = @json($check)
+    let checkdata = @json($check);
+    let recordsdupt = @json($idduplicate);
+    if (checkdata === 'ada') {
+        // Show Bootstrap modal
+        $('#confirmationModal').modal('show');
+
+        // Attach a click event to the "Yes" button
+        $('#confirmBtn').on('click', function() {
+            // User clicked 'Yes', proceed with your actions
+            let type = 'sidakmtb'
+
+            // Hide the Bootstrap modal
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: '{{ route("duplicatesidakmtb") }}', // Replace with your actual endpoint URL
+                type: 'post',
+                data: {
+                    data: recordsdupt,
+                    type: type,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': _token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Show success alert
+                        alert('Data berhasil dihapus');
+                        // Reload the page
+                        location.reload();
+                    } else {
+                        // Show error alert
+                        alert('Gagal menghapus data');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+
+            $('#confirmationModal').modal('hide');
+        });
+    }
+
+
 
 
     var currentMode = 'all';
@@ -1694,18 +1784,7 @@
             }
         });
     }
-    $("#showFinding").click(function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        getFindData()
-    });
+
 
     const c = document.getElementById('btnShow');
     const o = document.getElementById('regionalPanen');
@@ -1925,119 +2004,21 @@
         }
     });
 
-    const ck = document.getElementById('showTahung');
-    const ok = document.getElementById('regionalData');
-    const sk = document.getElementById("Tabs1");
-    const mk = document.getElementById("Tabs2");
-    const lk = document.getElementById("Tabs3");
-    const nk = document.getElementById("Tabs4");
-    const thElement1k = document.getElementById('theads1');
-    const thElement2k = document.getElementById('theads2');
-    const thElement3k = document.getElementById('theads3');
-    const thElement4k = document.getElementById('theads4');
 
-    function resetClassList(element) {
-        element.classList.remove("col-md-6", "col-lg-3", "col-lg-4", "col-lg-6");
-        element.classList.add("col-md-6");
-    }
-
-    ck.addEventListener('click', function() {
-        const ck = ok.value;
-        if (ck === '1') {
-            sk.style.display = "";
-            mk.style.display = "";
-            lk.style.display = "";
-            nk.style.display = "none";
-
-            resetClassList(sk);
-            resetClassList(mk);
-            resetClassList(lk);
-
-            thElement1k.textContent = 'WILAYAH I';
-            thElement2k.textContent = 'WILAYAH II';
-            thElement3k.textContent = 'WILAYAH III';
-            thElement1k.classList.add("text-center");
-            thElement2k.classList.add("text-center");
-            thElement3k.classList.add("text-center");
-
-            sk.classList.add("col-lg-4");
-            mk.classList.add("col-lg-4");
-            lk.classList.add("col-lg-4");
-
-        } else if (ck === '2') {
-            sk.style.display = "";
-            mk.style.display = "";
-            lk.style.display = "";
-            nk.style.display = "none";
-
-            resetClassList(sk);
-            resetClassList(mk);
-            resetClassList(lk);
-
-
-            thElement1k.textContent = 'WILAYAH IV';
-            thElement2k.textContent = 'WILAYAH V';
-            thElement3k.textContent = 'WILAYAH VI';
-
-            thElement1k.classList.add("text-center");
-            thElement2k.classList.add("text-center");
-            thElement3k.classList.add("text-center");
-
-            sk.classList.add("col-lg-4");
-            mk.classList.add("col-lg-4");
-            lk.classList.add("col-lg-4");
-        } else if (ck === '3') {
-            sk.style.display = "";
-            mk.style.display = "";
-            lk.style.display = "none";
-            nk.style.display = "none";
-
-            resetClassList(sk);
-            resetClassList(mk);
-
-
-            thElement1k.textContent = 'WILAYAH VII';
-            thElement2k.textContent = 'WILAYAH VIII';
-            thElement1k.classList.add("text-center");
-            thElement2k.classList.add("text-center");
-
-
-            sk.classList.add("col-lg-6");
-            mk.classList.add("col-lg-6");
-        } else if (ck === '4') {
-            sk.style.display = "";
-            mk.style.display = "";
-            lk.style.display = "none";
-            nk.style.display = "none";
-
-            resetClassList(sk);
-            resetClassList(mk);
-
-
-            thElement1k.textContent = 'WILAYAH Inti';
-            thElement2k.textContent = 'WILAYAH Plasma';
-
-            thElement1k.classList.add("text-center");
-            thElement2k.classList.add("text-center");
-
-
-            sk.classList.add("col-lg-6");
-            mk.classList.add("col-lg-6");
-
-        }
-    });
     //tampilakn filter perweek
+    let btnShow;
+
     document.getElementById('btnShow').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        getweek();
+        btnShow = showLoadingSwal();
+        // console.log('aaa');
+        getweek()
+    }
+    let showFinding;
+
+    document.getElementById('showFinding').onclick = function() {
+        showFinding = showLoadingSwal();
+        // console.log('aaa');
+        getFindData()
     }
 
     var options = {
@@ -3488,23 +3469,10 @@
         });
     }
 
-
-
-
-
-
-
+    let showTahung
     //tampilkan pertahun filter table utama
     document.getElementById('showTahung').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        showTahung = showLoadingSwal();
         dashboard_tahun()
     }
 
@@ -3537,9 +3505,6 @@
     chart5.render();
     chart6.render();
 
-
-
-
     function dashboard_tahun() {
         $('#weeks1').empty()
         $('#weeks2').empty()
@@ -3562,8 +3527,7 @@
                 _token: _token
             },
             success: function(result) {
-
-                Swal.close();
+                closeLoadingSwal(showTahung);
                 var parseResult = JSON.parse(result)
                 var region = Object.entries(parseResult['listregion'])
 
@@ -4780,37 +4744,17 @@
 
 
 
-            }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                closeLoadingSwal(showTahung);
+                showErrorSwal('No data found.');
+            },
         });
     }
 
-
-    // document.getElementById('showDataIns').onclick = function() {
-    //     Swal.fire({
-    //         title: 'Loading',
-    //         html: '<span class="loading-text">Mohon Tunggu...</span>',
-    //         allowOutsideClick: false,
-    //         showConfirmButton: false,
-    //         willOpen: () => {
-    //             Swal.showLoading();
-    //         }
-    //     });
-    //     dashboardData_tahun()
-    // }
-
-
-
-
+    let showFindingYear
     document.getElementById('showFindingYear').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        showFindingYear = showLoadingSwal();
 
         dashboardFindingYear()
     }
@@ -4838,7 +4782,7 @@
                 _token: _token
             },
             success: function(result) {
-                Swal.close();
+                closeLoadingSwal(showFindingYear);
                 var parseResult = JSON.parse(result)
                 var findingIsue = Object.entries(parseResult['finding_nemo'])
 
@@ -4901,21 +4845,17 @@
                 });
 
 
-            }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                showTahung = showFindingYear();
+                showErrorSwal('No data found.');
+            },
         });
     }
 
-
+    let btnShoWeekdata
     document.getElementById('btnShoWeekdata').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        btnShoWeekdata = showLoadingSwal();
         getweekData();
     }
 
@@ -4940,7 +4880,7 @@
             },
             success: function(result) {
 
-                Swal.close();
+                closeLoadingSwal(btnShoWeekdata);
                 var parseResult = JSON.parse(result)
 
                 var data_Sidakv2 = Object.entries(parseResult['data_weekv2'])
@@ -5307,30 +5247,17 @@
 
             },
             error: function(xhr, status, error) {
-                Swal.close();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Data Kosong.'
-                });
-                // Handle the error here
+                closeLoadingSwal(btnShoWeekdata);
+                showErrorSwal('No data found.');
                 console.log("An error occurred:", error);
             }
 
 
         });
     }
-
+    let show_sbithn
     document.getElementById('show_sbithn').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        show_sbithn = showLoadingSwal();
         sbi_tahun()
     }
 
@@ -5389,7 +5316,7 @@
             },
             success: function(result) {
 
-                Swal.close();
+                closeLoadingSwal(show_sbithn);
 
                 var parseResult = JSON.parse(result)
                 var mutu_buah = Object.entries(parseResult['mutu_buah'])
@@ -5569,7 +5496,8 @@
                 sbi_chart();
             },
             error: function(jqXHR, textStatus, errorThrown) {
-
+                closeLoadingSwal(show_sbithn);
+                showErrorSwal('No data found.');
             }
         });
     }
@@ -5637,17 +5565,9 @@
     });
 
 
-
+    let sbiGraphYear
     document.getElementById('sbiGraphYear').onclick = function() {
-        Swal.fire({
-            title: 'Loading',
-            html: '<span class="loading-text">Mohon Tunggu...</span>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        sbiGraphYear = showLoadingSwal();
         sbi_chart()
     }
 
@@ -5679,7 +5599,7 @@
             },
             success: function(result) {
 
-                Swal.close();
+                closeLoadingSwal(sbiGraphYear);
                 var parseResult = JSON.parse(result)
 
 
@@ -5866,7 +5786,8 @@
 
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                // Handle errors here
+                closeLoadingSwal(sbiGraphYear);
+                showErrorSwal('No data found.');
             },
         });
     }
@@ -5905,7 +5826,7 @@
             },
             success: function(result) {
 
-                Swal.close();
+                closeLoadingSwal(showFinding);
                 var parseResult = JSON.parse(result)
                 var dataFinding = Object.entries(parseResult['dataFinding'])
 
@@ -5939,13 +5860,8 @@
                 });
             },
             error: function(xhr, status, error) {
-                Swal.close();
-                // Handle the error here
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No data found.'
-                });
+                closeLoadingSwal(showFinding);
+                showErrorSwal('No data found.');
                 console.log("An error occurred:", error);
             }
         });
@@ -6305,6 +6221,35 @@
                     submitFormIfReady();
                 }
             });
+        });
+    }
+
+
+    function showLoadingSwal() {
+        return Swal.fire({
+            title: 'Loading',
+            html: '<span class="loading-text">Mohon Tunggu...</span>',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
+
+    function closeLoadingSwal(swalInstance) {
+        if (swalInstance && Swal.isVisible()) {
+            Swal.close();
+            swalInstance.close();
+        }
+    }
+
+
+    function showErrorSwal(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message
         });
     }
 </script>

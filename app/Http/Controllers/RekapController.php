@@ -927,6 +927,13 @@ class RekapController extends Controller
                     $tot_afdscore = 0;
                 }
 
+
+                if ($tot_afdscore < 0) {
+                    # code...
+                    $newscore = 0;
+                } else {
+                    $newscore = $tot_afdscore;
+                }
                 // $newSidak[$key][$key1]['deviden'] = $deviden;
 
                 $newSidak[$key][$key1]['total_brd'] = $totskor_brd1;
@@ -936,7 +943,7 @@ class RekapController extends Controller
                 if ($v2check4 == 0) {
                     $newSidak[$key][$key1]['total_score'] = '-';
                 } else {
-                    $newSidak[$key][$key1]['total_score'] = $tot_afdscore;
+                    $newSidak[$key][$key1]['total_score'] = $newscore;
                 }
 
                 $newSidak[$key][$key1]['est'] = $key;
@@ -944,7 +951,7 @@ class RekapController extends Controller
                 $newSidak[$key][$key1]['devidenest'] = $devest;
                 $newSidak[$key][$key1]['v2check4'] = $v2check4;
 
-                $tot_estAFd += $tot_afdscore;
+                $tot_estAFd += $newscore;
                 $new_dvdAfd += $new_dvd;
                 $new_dvdAfdest += $new_dvdest;
                 $v2check5 += $v2check4;
@@ -989,6 +996,8 @@ class RekapController extends Controller
                 }
             }
         }
+
+        // dd($sidaktph);
 
         // dd($newDefaultWeek['KNE'], $newSidak['KNE']['OA']);
 

@@ -11,12 +11,6 @@
 </head>
 
 <style>
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        max-width: 100%;
-    }
-
     .my-table {
         width: 100%;
         table-layout: fixed;
@@ -27,7 +21,8 @@
         white-space: normal;
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 16px;
+        font-size: 14px;
+        /* Adjust the font size as needed */
     }
 
     .my-table td {
@@ -36,20 +31,15 @@
         text-overflow: ellipsis;
     }
 
+
+    /* Repeat the pattern for other columns as needed */
+
     th,
     td {
         border: 1px solid black;
         text-align: center;
         padding: 2px;
     }
-
-    /* The rest of your CSS */
-
-    .sticky-footer {
-        margin-top: auto;
-        /* Push the footer to the bottom */
-    }
-
 
 
     .header {
@@ -169,7 +159,7 @@
             <tr>
                 <td style="vertical-align: middle; padding-left: 0; width: 10%;border:0;">
                     <div>
-                        <img src="{{ asset('img/logo-SSS.png') }}" style="height:60px">
+                        <img src="{{ asset('img/Logo-SSS.png') }}" style="height:60px">
                     </div>
                 </td>
                 <td style="width:30%;border:0;">
@@ -215,22 +205,22 @@
                             <th colspan="2">>H+7</th>
                         </tr>
                         <tr>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Brondolan(Butir)</th>
-                            <th style="white-space: pre-wrap;font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
+                            <th style="font-size: 14px">Brondolan(Butir)</th>
+                            <th style="font-size: 14px">Buah Tinggal(Janjang)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -318,22 +308,22 @@
                         <tr>
                             <td>{{$key1}}</td>
 
-                            <td>{{$items1['1']['brd'] ?? ''}}</td>
-                            <td>{{$items1['1']['janjang'] ?? ''}}</td>
-                            <td>{{$items1['2']['brd'] ?? ''}}</td>
-                            <td>{{$items1['2']['janjang'] ?? ''}}</td>
-                            <td>{{$items1['3']['brd'] ?? ''}}</td>
-                            <td>{{$items1['3']['janjang'] ?? ''}}</td>
-                            <td>{{$items1['4']['brd'] ?? ''}}</td>
-                            <td>{{$items1['4']['janjang'] ?? ''}}</td>
-                            <td>{{$items1['5']['brd'] ?? ''}}</td>
-                            <td>{{$items1['5']['janjang'] ?? ''}}</td>
-                            <td>{{$items1['6']['brd'] ?? ''}}</td>
-                            <td>{{$items1['6']['janjang'] ?? ''}}</td>
-                            <td>{{$items1['7']['brd'] ?? ''}}</td>
-                            <td>{{$items1['7']['janjang'] ?? ''}}</td>
-                            <td>{{$items1['8']['brd'] ?? ''}}</td>
-                            <td>{{$items1['8']['janjang'] ?? ''}}</td>
+                            <td>{{$items1['1']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['1']['skor_luas'] ?? ''}}</td>
+                            <td>{{$items1['2']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['2']['skor_luas'] ?? ''}}</td>
+                            <td>{{$items1['3']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['3']['skor_luas'] ?? ''}}</td>
+                            <td>{{$items1['4']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['4']['skor_luas'] ?? ''}}</td>
+                            <td>{{$items1['5']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['5']['skor_luas'] ?? ''}}</td>
+                            <td>{{$items1['6']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['6']['skor_luas'] ?? ''}}</td>
+                            <td>{{$items1['7']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['7']['skor_luas'] ?? ''}}</td>
+                            <td>{{$items1['8']['skor_brd'] ?? ''}}</td>
+                            <td>{{$items1['8']['skor_luas'] ?? ''}}</td>
                             <td>{{$items1['total_skor'] ?? ''}}</td>
                             <td>{{$items1['skor_akhir'] ?? ''}}</td>
 

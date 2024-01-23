@@ -891,3 +891,26 @@ if (!function_exists('convertToRoman')) {
         return $result;
     }
 }
+
+if (!function_exists('detectDuplicates')) {
+    function detectDuplicates($data, $columns)
+    {
+        $temp = [];
+        $result = [];
+
+        foreach ($data as $item) {
+            $identifier = '';
+            foreach ($columns as $column) {
+                $identifier .= $item->{$column};
+            }
+
+            if (isset($temp[$identifier])) {
+                $result[] = $item->id;
+            } else {
+                $temp[$identifier] = true;
+            }
+        }
+
+        return $result;
+    }
+}

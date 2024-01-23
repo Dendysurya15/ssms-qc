@@ -1631,6 +1631,50 @@
         </div>
       </div>
   </section>
+
+  @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
+  <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Terdeteksi data duplicate</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-primary">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>Estate</th>
+                <th>Afdeling</th>
+                <th>blok</th>
+                <th>datetime</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($check_data as $items)
+              <tr>
+                <td>{{$items['id']}}</td>
+                <td>{{$items['est']}}</td>
+                <td>{{$items['afd']}}</td>
+                <td>{{$items['blok']}}</td>
+                <td>{{$items['datetime']}}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+          Apakah anda ingin menghapus?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" id="confirmBtn">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  @endif
 </div>
 <div id="lottie-container" style="display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 9999; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
   <div id="lottie-animation" style="width: 200px; height: 200px;"></div>
@@ -1644,6 +1688,57 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
 
 <script>
+  let checkdata = @json($check);
+  let recordsdupt = @json($idduplicate);
+  if (checkdata === 'ada') {
+    // Show Bootstrap modal
+    $('#confirmationModal').modal('show');
+
+    // Attach a click event to the "Yes" button
+    $('#confirmBtn').on('click', function() {
+      // User clicked 'Yes', proceed with your actions
+      // console.log('User clicked Yes, proceed with AJAX request here');
+      // console.log(recordsdupt);
+
+      // Hide the Bootstrap modal
+      var _token = $('input[name="_token"]').val();
+      let type = 'sidaktph'
+
+      $.ajax({
+        url: '{{ route("duplicatesidakmtb") }}', // Replace with your actual endpoint URL
+        type: 'post',
+        data: {
+          data: recordsdupt,
+          type: type,
+        },
+        headers: {
+          'X-CSRF-TOKEN': _token
+        },
+        success: function(response) {
+          if (response.success) {
+            // Show success alert
+            alert('Data berhasil dihapus');
+            // Reload the page
+            location.reload();
+          } else {
+            // Show error alert
+            alert('Gagal menghapus data');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+
+      $('#confirmationModal').modal('hide');
+    });
+  }
+
+
+
+
+
+
   $(document).ready(function() {
     const estDataMapSelect = document.querySelector('#estSidakYear');
     const regDataMapSelect = document.querySelector('#regionalSidakYear');

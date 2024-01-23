@@ -230,3 +230,4 @@ Route::get('/olahdata', [RekapController::class, 'olahdata'])->name('olahdata');
 Route::get('/getdatayear', [RekapController::class, 'getdatayear'])->name('allskoreyear');
 Route::get('/getdataweek', [RekapController::class, 'getdataweek'])->name('getdataweek');
 Route::get('/getestatesidakmtbuah', [MutubuahController::class, 'getestatesidakmtbuah'])->name('getestatesidakmtbuah');
+Route::post('/duplicatesidakmtb', [MutubuahController::class, 'duplicatesidakmtb'])->name('duplicatesidakmtb');

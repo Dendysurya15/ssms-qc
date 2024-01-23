@@ -21,7 +21,14 @@ class mutubuahController extends Controller
     {
 
 
+        $lok = trim(session('lok'));
 
+        $getreg = DB::connection('mysql2')->table('reg')
+            ->select('*')
+            ->where('nama', '=', $lok)
+            ->pluck('id');
+
+        // dd($getreg, $lok);
         // dd($result);
         $queryEst = DB::connection('mysql2')->table('estate')
             ->select('estate.*')
@@ -79,8 +86,42 @@ class mutubuahController extends Controller
 
         $optionREg = json_decode($optionREg, true);
         // dd($optionREg);
-        $check = 'ada';
-        // dd($mutu_buahs, $sidak_buah);
+
+        $sidakmtb = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select('sidak_mutu_buah.*')
+            ->join('estate', 'estate.est', '=', 'sidak_mutu_buah.estate')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('estate.emp', '!=', 1)
+            ->where('wil.regional', $getreg)
+            ->whereDate('datetime', today())
+            ->get();
+        $columns = [
+            'estate', 'afdeling', 'blok', 'petugas', 'tph_baris', 'ancak_pemanen',
+            'jumlah_jjg', 'bmt', 'bmk', 'overripe', 'empty_bunch', 'abnormal',
+            'rd', 'vcut', 'alas_br', 'foto_temuan', 'komentar', 'datetime',
+            'lat', 'lon', 'app_version'
+        ];
+
+        $records = detectDuplicates($sidakmtb, $columns);
+
+        // dd($sidakmtb);
+
+        $getdata = DB::connection('mysql2')->table('sidak_mutu_buah')
+            ->select('*')
+            ->whereIn('id', $records)
+            ->get();
+
+        // dd($getdata);
+
+        $getdata = json_decode($getdata, true);
+        $tt_duplicate = count($records);
+
+        if ($tt_duplicate != 0) {
+            $check = 'ada';
+        } else {
+            $check = 'kosong';
+        }
+
         // $arrView['list_bulan'] =  $bulan;
         return view('dashboard_mutubuah', [
             'arrHeader' => $arrHeader,
@@ -91,6 +132,8 @@ class mutubuahController extends Controller
             'list_tahun' => $years,
             'option_reg' => $optionREg,
             'check' => $check,
+            'idduplicate' => $records,
+            'check_data' => $getdata,
         ]);
     }
 
@@ -6522,5 +6565,46 @@ class mutubuahController extends Controller
         $arr['est'] = $getest;
         echo json_encode($arr);
         exit();
+    }
+
+    public function duplicatesidakmtb(Request $request)
+    {
+        $data = $request->input('data');
+        $type = $request->input('type');
+        // dd($type);
+
+        switch ($type) {
+            case 'sidaktph':
+                try {
+                    // Code...
+
+                    DB::connection('mysql2')->table('sidak_tph')
+                        ->whereIn('id', $data)
+                        ->delete();
+
+                    return response()->json(['success' => 'Data dihapus']);
+                } catch (\Throwable $th) {
+                    return response()->json(['error' => 'Gagal menghapus data'], 500);
+                }
+                break;
+            case 'sidakmtb':
+
+                try {
+                    // Code...
+
+                    DB::connection('mysql2')->table('sidak_mutu_buah')
+                        ->whereIn('id', $data)
+                        ->delete();
+
+                    return response()->json(['success' => 'Data dihapus']);
+                } catch (\Throwable $th) {
+                    return response()->json(['error' => 'Gagal menghapus data'], 500);
+                }
+                break;
+
+            default:
+                # code...
+                break;
+        }
     }
 }

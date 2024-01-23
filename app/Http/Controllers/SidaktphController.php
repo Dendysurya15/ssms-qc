@@ -110,101 +110,7 @@ class SidaktphController extends Controller
             ->get();
         $queryEstate = json_decode($queryEstate, true);
 
-        $dataSkorPlas = array();
-        foreach ($queryEstate as $value1) {
-            $querySidaks = DB::connection('mysql2')->table('sidak_tph')
-                ->select("sidak_tph.*")
-                ->where('est', $value1['est'])
-                ->where('datetime', 'like', '%' . '2023-04' . '%')
-                ->whereIn('est', ['Plasma1', 'Plasma2', 'Plasma3'])
-                ->orderBy('afd', 'asc')
-                ->get();
-            $DataEstate = $querySidaks->groupBy(['est', 'afd']);
-            // dd($DataEstate);
-            $DataEstate = json_decode($DataEstate, true);
 
-            foreach ($DataEstate as $key => $value) {
-                $luas_ha_est = 0;
-                $jml_blok_est = 0;
-                $sum_bt_tph_est = 0;
-                $sum_bt_jln_est = 0;
-                $sum_bt_bin_est = 0;
-                $sum_krg_est = 0;
-                $sumBuah_est = 0;
-                $sumRst_est = 0;
-                foreach ($value as $key2 => $value2) {
-                    $luas_ha = 0;
-                    $jml_blok = 0;
-                    $sum_bt_tph = 0;
-                    $sum_bt_jln = 0;
-                    $sum_bt_bin = 0;
-                    $sum_krg = 0;
-                    $sumBuah = 0;
-                    $sumRst = 0;
-                    $listBlokPerAfd = array();
-                    foreach ($value2 as $key3 => $value3) {
-                        if (!in_array($value3['est'] . ' ' . $value3['afd'] . ' ' . $value3['blok'], $listBlokPerAfd)) {
-                            $listBlokPerAfd[] = $value3['est'] . ' ' . $value3['afd'] . ' ' . $value3['blok'];
-                            $luas_ha += $value3['luas'];
-                        }
-                        $jml_blok = count($listBlokPerAfd);
-                        $sum_bt_tph += $value3['bt_tph'];
-                        $sum_bt_jln += $value3['bt_jalan'];
-                        $sum_bt_bin += $value3['bt_bin'];
-                        $sum_krg += $value3['jum_karung'];
-                        $sumBuah += $value3['buah_tinggal'];
-                        $sumRst += $value3['restan_unreported'];
-                    }
-                    $luas_ha_est += $luas_ha;
-                    $jml_blok_est += $jml_blok;
-                    $sum_bt_tph_est += $sum_bt_tph;
-                    $sum_bt_jln_est += $sum_bt_jln;
-                    $sum_bt_bin_est += $sum_bt_bin;
-                    $sum_krg_est += $sum_krg;
-                    $sumBuah_est += $sumBuah;
-                    $sumRst_est += $sumRst;
-
-                    $tot_bt = ($sum_bt_tph + $sum_bt_jln + $sum_bt_bin);
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['jml_blok'] = $jml_blok;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['luas_ha'] = $luas_ha;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['bt_tph'] = $sum_bt_tph;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['bt_jln'] = $sum_bt_jln;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['bt_bin'] = $sum_bt_bin;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['tot_bt'] = $tot_bt;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['divBt'] = round($tot_bt / $jml_blok, 2);
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['skorBt'] = skor_bt_tph(round($tot_bt / $jml_blok, 2));
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['sum_krg'] = $sum_krg;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['divKrg'] = round($sum_krg / $jml_blok, 2);
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['skorKrg'] = skor_krg_tph(round($sum_krg / $jml_blok, 2));
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['sumBuah'] = $sumBuah;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['divBuah'] = round($sumBuah / $jml_blok, 2);
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['skorBuah'] = skor_buah_tph(round($sumBuah / $jml_blok, 2));
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['sumRst'] = $sumRst;
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['divRst'] = round($sumRst / $jml_blok, 2);
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['skorRst'] = skor_rst_tph(round($sumRst / $jml_blok, 2));
-                    $dataSkorPlas[$value1['wil']][$key][$key2]['allSkor'] = skor_bt_tph(round($tot_bt / $jml_blok, 2)) + skor_krg_tph(round($sum_krg / $jml_blok, 2)) + skor_buah_tph(round($sumBuah / $jml_blok, 2)) + skor_rst_tph(round($sumRst / $jml_blok, 2));
-                }
-                $tot_bt_est = ($sum_bt_tph_est + $sum_bt_jln_est + $sum_bt_bin_est);
-                $dataSkorPlas[$value1['wil']][$key]['jml_blok_est'] = $jml_blok_est;
-                $dataSkorPlas[$value1['wil']][$key]['luas_ha_est'] = $luas_ha_est;
-                $dataSkorPlas[$value1['wil']][$key]['bt_tph_est'] = $sum_bt_tph_est;
-                $dataSkorPlas[$value1['wil']][$key]['bt_jln_est'] = $sum_bt_jln_est;
-                $dataSkorPlas[$value1['wil']][$key]['bt_bin_est'] = $sum_bt_bin_est;
-                $dataSkorPlas[$value1['wil']][$key]['tot_bt_est'] = $tot_bt_est;
-                $dataSkorPlas[$value1['wil']][$key]['divBt_est'] = round($tot_bt_est / $jml_blok_est, 2);
-                $dataSkorPlas[$value1['wil']][$key]['skorBt_est'] = skor_bt_tph(round($tot_bt_est / $jml_blok_est, 2));
-                $dataSkorPlas[$value1['wil']][$key]['sum_krg_est'] = $sum_krg_est;
-                $dataSkorPlas[$value1['wil']][$key]['divKrg_est'] = round($sum_krg_est / $jml_blok_est, 2);
-                $dataSkorPlas[$value1['wil']][$key]['skorKrg_est'] = skor_krg_tph(round($sum_krg_est / $jml_blok_est, 2));
-                $dataSkorPlas[$value1['wil']][$key]['sumBuah_est'] = $sumBuah_est;
-                $dataSkorPlas[$value1['wil']][$key]['divBuah_est'] = round($sumBuah_est / $jml_blok_est, 2);
-                $dataSkorPlas[$value1['wil']][$key]['skorBuah_est'] = skor_buah_tph(round($sumBuah_est / $jml_blok_est, 2));
-                $dataSkorPlas[$value1['wil']][$key]['sumRst_est'] = $sumRst_est;
-                $dataSkorPlas[$value1['wil']][$key]['divRst_est'] = round($sumRst_est / $jml_blok_est, 2);
-                $dataSkorPlas[$value1['wil']][$key]['skorRst_est'] = skor_rst_tph(round($sumRst_est / $jml_blok_est, 2));
-                $dataSkorPlas[$value1['wil']][$key]['allSkor_est'] = skor_bt_tph(round($tot_bt_est / $jml_blok_est, 2)) + skor_krg_tph(round($sum_krg_est / $jml_blok_est, 2)) + skor_buah_tph(round($sumBuah_est / $jml_blok_est, 2)) + skor_rst_tph(round($sumRst_est / $jml_blok_est, 2));
-            }
-        }
         // dd($dataSkorPlas);
         $optionREg = DB::connection('mysql2')->table('reg')
             ->select('reg.*')
@@ -214,12 +120,76 @@ class SidaktphController extends Controller
 
 
         $optionREg = json_decode($optionREg, true);
+
+
+
+        $lok = trim(session('lok'));
+
+        $getreg = DB::connection('mysql2')->table('reg')
+            ->select('*')
+            ->where('nama', '=', $lok)
+            ->pluck('id');
+
+        $sidaktph = DB::connection('mysql2')->table('sidak_tph')
+            ->select('sidak_tph.*')
+            ->join('estate', 'estate.est', '=', 'sidak_tph.est')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('estate.emp', '!=', 1)
+            ->where('wil.regional', $getreg)
+            ->whereDate('datetime', today())
+            ->get();
+        $columns = [
+            'qc',
+            'status',
+            'est',
+            'afd',
+            'blok',
+            'luas',
+            'no_tph',
+            'bt_tph',
+            'bt_jalan',
+            'bt_bin',
+            'jum_karung',
+            'buah_tinggal',
+            'restan_unreported',
+            'tph_semak',
+            'foto_temuan',
+            'foto_semak',
+            'komentar',
+            'foto_temuan',
+            'datetime',
+            'app_version'
+        ];
+
+        $records = detectDuplicates($sidaktph, $columns);
+
+        // dd($records);
+
+        $getdata = DB::connection('mysql2')->table('sidak_tph')
+            ->select('*')
+            ->whereIn('id', $records)
+            ->get();
+
+        // dd($getdata);
+
+        $getdata = json_decode($getdata, true);
+        $tt_duplicate = count($records);
+
+        if ($tt_duplicate != 0) {
+            $check = 'ada';
+        } else {
+            $check = 'kosong';
+        }
+
         return view('dashboardtph', [
             'list_estate' => $queryEst,
             'list_wilayah' => $queryWill,
             'optYear' => $optYear,
             'list_month' => $listMonth,
-            'option_reg' => $optionREg
+            'option_reg' => $optionREg,
+            'check' => $check,
+            'idduplicate' => $records,
+            'check_data' => $getdata,
         ]);
     }
 
@@ -921,11 +891,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['afd'] = 'GM';
             $newSidak[$key]['afdeling'] = $devest;
         }
-
-        // dd($newSidak['SLE']['OA']);
-        // dd($newSidak['MLE']);
-        // dd($newSidak['MLE']['OB']);
-        // dd($newSidak['SCE']['OA']);
+        dd($newSidak['UPE']);
 
         $week1 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
@@ -1701,12 +1667,6 @@ class SidaktphController extends Controller
 
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
-        // return view('dataSidakTph', [
-        //     'dataSkor' => $dataSkor,
-        //     'dataSkorPlasma' => $dataSkorPlas,
-        //     'tanggal' => $tanggal,
-        //     'regional' => $regional,
-        // ]);
     }
 
     public function listAsisten(Request $request)
