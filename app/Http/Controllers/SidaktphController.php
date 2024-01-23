@@ -638,7 +638,7 @@ class SidaktphController extends Controller
             ->Table('asisten_qc')
             ->get();
         $asisten_qc = json_decode($asisten_qc, true);
-        // dd($newDefaultWeek);
+        // dd($newDefaultWeek['SLE']['OA']);
         $devest = 0;
         foreach ($newDefaultWeek as $key => $value) {
             $dividen_afd = 0;
@@ -922,6 +922,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['afdeling'] = $devest;
         }
 
+        // dd($newSidak['SLE']['OA']);
         // dd($newSidak['MLE']);
         // dd($newSidak['MLE']['OB']);
         // dd($newSidak['SCE']['OA']);
@@ -1236,7 +1237,7 @@ class SidaktphController extends Controller
             $week2[] = $weekestate;
         }
 
-        // dd($weekt)
+        // dd($week2[15]);
 
         $week3 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
@@ -6027,7 +6028,7 @@ class SidaktphController extends Controller
             'bgcolor' => '#FFF176'
         ];
 
-        // dd($newsidakend);
+        // dd($data);
 
         $arr = array();
         $arr['newsidakend'] = $data;
@@ -6042,365 +6043,246 @@ class SidaktphController extends Controller
         $estData = $request->get('est');
         $yearGraph = $request->get('yearGraph');
 
-        $queryReg = DB::connection('mysql2')
-            ->table('wil')
-            ->whereIn('regional', [$regData])
-            ->pluck('id')
-            ->toArray();
+        // dd($regData, $estData, $yearGraph);
 
-        $querySidak = DB::connection('mysql2')->table('sidak_tph')
-            ->select("sidak_tph.*")
-            ->whereNotIn('est', ['Plasma1', 'Plasma2', 'Plasma3'])
+
+        $queryAsisten = DB::connection('mysql2')->table('asisten_qc')
+            ->select('asisten_qc.*')
             ->get();
-        $DataEstate = $querySidak->groupBy(['est', 'afd']);
-        $DataEstate = json_decode($DataEstate, true);
+        $queryAsisten = json_decode($queryAsisten, true);
+        // dd($value2['datetime'], $endDate);
+        $queryEste = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $regData)
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
+            ->get();
+        $queryEste = json_decode($queryEste, true);
 
-        //menghitung buat table tampilkan pertahun
-        $queryTph = DB::connection('mysql2')->table('sidak_tph')
+        $defafd = DB::connection('mysql2')->table('afdeling')
+            ->select('afdeling.*', 'estate.*', 'afdeling.nama as afdnama')
+            ->join('estate', 'estate.id', '=', 'afdeling.estate')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $regData)
+            ->where('estate.emp', '!=', 1)
+            ->get();
+        $defafd = $defafd->groupBy(['wil', 'est', 'afdnama']);
+        $defafd = json_decode($defafd, true);
+
+        // dd($defafd);
+
+        $datatph = [];
+
+
+        $chunkSize = 1000;
+
+        // Overview:
+        // The CASE statement is like a series of if-else conditions used within SQL queries.
+
+        // Breakdown:
+        // WHEN status = '' THEN 1:
+
+        // If status is an empty string, set statuspanen as 1.
+        // WHEN status = '0' THEN 1:
+
+        // If status is '0', also set statuspanen as 1.
+        // WHEN LOCATE('H+', status) > 0 THEN ... and WHEN LOCATE('>H+', status) > 0 THEN ...:
+
+        // If status contains 'H+' or '>H+', the subsequent SUBSTRING_INDEX extracts the portion after these substrings (e.g., 'H+11' -> '11').
+        // If the extracted number is greater than 8, it sets statuspanen to 8; otherwise, it uses the extracted number.
+        // WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8':
+
+        // If status contains only digits (0-9) and is greater than 8, it directly sets statuspanen to 8.
+        // WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1):
+
+        // If the length of status is greater than 1 and doesn't contain 'H+' or '>H+', but has a comma, it extracts the portion before the comma as statuspanen.
+        // ELSE status:
+
+        // If none of the conditions match, it sets statuspanen as the original status value.
+        // Overall Purpose:
+        // This construction aims to provide a specific value for statuspanen based on different patterns and conditions observed in the status column, ensuring it's properly processed and normalized for further usage within the query result.
+        DB::connection('mysql2')->table('sidak_tph')
             ->select(
                 "sidak_tph.*",
                 DB::raw('DATE_FORMAT(sidak_tph.datetime, "%M") as bulan'),
-                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y") as tahun')
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y") as tahun'),
+                DB::raw('DATE_FORMAT(sidak_tph.datetime, "%Y-%m-%d") as tanggal'),
+                DB::raw("
+            CASE 
+            WHEN status = '' THEN 1
+            WHEN status = '0' THEN 1
+            WHEN LOCATE('>H+', status) > 0 THEN '8'
+            WHEN LOCATE('H+', status) > 0 THEN 
+                CASE 
+                    WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1) > 8 THEN '8'
+                    ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(status, 'H+', -1), ' ', 1)
+                END
+            WHEN status REGEXP '^[0-9]+$' AND status > 8 THEN '8'
+            WHEN LENGTH(status) > 1 AND status NOT LIKE '%H+%' AND status NOT LIKE '%>H+%' AND LOCATE(',', status) > 0 THEN SUBSTRING_INDEX(status, ',', 1)
+            ELSE status
+        END AS statuspanen")
             )
-            ->whereNotIn('est', ['Plasma1', 'Plasma2', 'Plasma3'])
+
+            ->join('estate', 'estate.est', '=', 'sidak_tph.est')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            // ->where('wil.regional', $regData)
+            ->where('estate.est', '=', $estData)
+            ->where('estate.emp', '!=', 1)
             ->whereYear('datetime', $yearGraph)
+            ->orderBy('afd', 'asc')
+            ->orderBy('datetime', 'asc')
+            ->chunk($chunkSize, function ($results) use (&$datatph) {
+                foreach ($results as $result) {
+                    // Grouping logic here, if needed
+                    $datatph[] = $result;
+                    // Adjust this according to your grouping requirements
+                }
+            });
+
+
+        $datatph = collect($datatph)->groupBy(['est', 'bulan', 'afd']);
+        $ancakFA = json_decode($datatph, true);
+
+        // dd($ancakFA);
+
+        $default = DB::connection('mysql2')->table('afdeling')
+            ->select('afdeling.*', 'estate.*', 'afdeling.nama as afdnama')
+            ->join('estate', 'estate.id', '=', 'afdeling.estate')
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('estate.est', $estData)
+            // ->where('wil.regional', $regData)
+            ->where('estate.emp', '!=', 1)
             ->get();
-        $queryTph = $queryTph->groupBy(['est', 'afd']);
-        $queryTph = json_decode($queryTph, true);
+        $default = $default->groupBy(['est', 'afdnama']);
 
-        //afdeling
-        $queryAfd = DB::connection('mysql2')->table('afdeling')
-            ->select(
-                'afdeling.id',
-                'afdeling.nama',
-                'estate.est'
-            ) //buat mengambil data di estate db dan willayah db
-            ->whereNotIn('estate.est', ['Plasma1', 'Plasma2', 'Plasma3'])
-            ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
-            ->get();
-        $queryAfd = json_decode($queryAfd, true);
-        //estate
-        $queryEste = DB::connection('mysql2')->table('estate')->whereIn('wil', $queryReg)->get();
-        $queryEste = json_decode($queryEste, true);
+        // dd($default);
+        $default = json_decode($default, true);
 
-        $bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-        $dataBulananTph = array();
-        foreach ($queryTph as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $month = date('F', strtotime($value3['datetime']));
-                    if (!array_key_exists($month, $dataBulananTph)) {
-                        $dataBulananTph[$month] = array();
-                    }
-                    if (!array_key_exists($key, $dataBulananTph[$month])) {
-                        $dataBulananTph[$month][$key] = array();
-                    }
-                    if (!array_key_exists($key2, $dataBulananTph[$month][$key])) {
-                        $dataBulananTph[$month][$key][$key2] = array();
-                    }
-                    $dataBulananTph[$month][$key][$key2][$key3] = $value3;
+        $montharr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        $arrdeff = [];
+        // Iterate through BDE array
+        foreach ($default as $bdeKey => $bdeValue) {
+            // Initialize the nested array for the current BDE key
+            $arrdeff[$bdeKey] = [];
+
+            // Iterate through months
+            foreach ($montharr as $month) {
+                // Initialize the nested array for the current month
+                $arrdeff[$bdeKey][$month] = [];
+
+                // Iterate through subarrays (OA, OB, OC, OD, OE)
+                foreach ($bdeValue as $subKey => $subValue) {
+                    // Set the default value (0 in this case)
+                    $arrdeff[$bdeKey][$month][$subKey] = 0;
                 }
             }
         }
 
-        $defaultTph = array();
-        foreach ($bulan as $month) {
-            foreach ($queryEste as $est) {
-                foreach ($queryAfd as $afd) {
-                    if ($est['est'] == $afd['est']) {
-                        $defaultTph[$est['est']][$month][$afd['nama']] = 0;
-                    }
+        // dd($arrdeff);
+
+
+        // dd($ancakFA, $arrdeff);
+        $result = [];
+
+        foreach ($arrdeff as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $result[$key][$key1] = [];
+                foreach ($ancakFA[$key][$key1] ?? [] as $key2 => $value2) {
+                    $result[$key][$key1][$key2] = $value2;
+                }
+                foreach ($value1 as $key2 => $defaultValue) {
+                    $result[$key][$key1][$key2] = $result[$key][$key1][$key2] ?? $defaultValue;
                 }
             }
         }
 
-        //menimpa nilai default mutu transport dengan yang memiliki value
-        foreach ($defaultTph as $key => $estValue) {
-            foreach ($estValue as $monthKey => $monthValue) {
-                foreach ($dataBulananTph as $dataKey => $dataValue) {
-                    if ($dataKey == $monthKey) {
-                        foreach ($dataValue as $dataEstKey => $dataEstValue) {
-                            if ($dataEstKey == $key) {
-                                $defaultTph[$key][$monthKey] = array_merge($monthValue, $dataEstValue);
-                            }
-                        }
+
+        // dd($result);
+        // dd($result, $arrdeff);
+
+        // dd($arrdeff, $result, $finalarr);
+
+        $newSidak = array();
+
+        foreach ($result as $key => $value1) {
+            foreach ($value1 as $key1 => $value2) {
+                $tph = 0;
+                $jalan = 0;
+                $bin = 0;
+                $karung = 0;
+                $buah = 0;
+                $restan = 0;
+                foreach ($value2 as $key2 => $value3) if (is_array($value3)) {
+                    $sum_bt_tph = 0;
+                    $sum_bt_jalan = 0;
+                    $sum_bt_bin = 0;
+                    $sum_jum_karung = 0;
+                    $sum_buah_tinggal = 0;
+                    $sum_restan_unreported = 0;
+                    foreach ($value3 as $key3 => $value4) {
+                        $sum_bt_tph += $value4['bt_tph'];
+                        $sum_bt_jalan += $value4['bt_jalan'];
+                        $sum_bt_bin += $value4['bt_bin'];
+                        $sum_jum_karung += $value4['jum_karung'];
+
+                        $sum_buah_tinggal += $value4['buah_tinggal'];
+                        $sum_restan_unreported += $value4['restan_unreported'];
                     }
+                    $newSidak[$key][$key1][$key2]['tph'] = $sum_bt_tph;
+                    $newSidak[$key][$key1][$key2]['jalan'] = $sum_bt_jalan;
+                    $newSidak[$key][$key1][$key2]['bin'] = $sum_bt_bin;
+                    $newSidak[$key][$key1][$key2]['karung'] = $sum_jum_karung;
+                    $newSidak[$key][$key1][$key2]['buah'] = $sum_buah_tinggal;
+                    $newSidak[$key][$key1][$key2]['restan'] = $sum_restan_unreported;
+
+                    $tph += $sum_bt_tph;
+                    $jalan += $sum_bt_jalan;
+                    $bin += $sum_bt_bin;
+                    $karung += $sum_jum_karung;
+                    $buah += $sum_buah_tinggal;
+                    $restan += $sum_restan_unreported;
                 }
+
+                $total_brondolan =  $tph + $jalan + $bin + $karung;
+                $total_janjang =  $buah + $restan;
+
+                $newSidak[$key][$key1]['tot_brd'] = $total_brondolan;
+                $newSidak[$key][$key1]['tod_buah'] = $total_janjang;
             }
         }
 
-        $sidakTphEst = array();
-        foreach ($defaultTph as $key => $value) {
-            foreach ($value as $key1 => $value2) if (!empty($value2)) {
-                $luas_ha_est = 0;
-                $jml_blok_est = 0;
-                $sum_bt_tph_est = 0;
-                $sum_bt_jln_est = 0;
-                $sum_bt_bin_est = 0;
-                $sum_krg_est = 0;
-                $sumBuah_est = 0;
-                $sumRst_est = 0;
-                foreach ($value2 as $key2 => $value3) {
-                    if (is_array($value3)) {
-                        $luas_ha = 0;
-                        $jml_blok = 0;
-                        $sum_bt_tph = 0;
-                        $sum_bt_jln = 0;
-                        $sum_bt_bin = 0;
-                        $sum_krg = 0;
-                        $sumBuah = 0;
-                        $sumRst = 0;
-                        $listBlokPerAfd = array();
-                        foreach ($value3 as $key3 => $value4) {
-                            if (!in_array($value4['est'] . ' ' . $value4['afd'] . ' ' . $value4['blok'], $listBlokPerAfd)) {
-                                $listBlokPerAfd[] = $value4['est'] . ' ' . $value4['afd'] . ' ' . $value4['blok'];
-                                $luas_ha += $value4['luas'];
-                            }
-                            $jml_blok = count($listBlokPerAfd);
-                            $sum_bt_tph += $value4['bt_tph'];
-                            $sum_bt_jln += $value4['bt_jalan'];
-                            $sum_bt_bin += $value4['bt_bin'];
-                            $sum_krg += $value4['jum_karung'];
-                            $sumBuah += $value4['buah_tinggal'];
-                            $sumRst += $value4['restan_unreported'];
-                        }
-                        $luas_ha_est += $luas_ha;
-                        $jml_blok_est += $jml_blok;
-                        $sum_bt_tph_est += $sum_bt_tph;
-                        $sum_bt_jln_est += $sum_bt_jln;
-                        $sum_bt_bin_est += $sum_bt_bin;
-                        $sum_krg_est += $sum_krg;
-                        $sumBuah_est += $sumBuah;
-                        $sumRst_est += $sumRst;
+        // dd($newSidak);
 
-                        $tot_bt = ($sum_bt_tph + $sum_bt_jln + $sum_bt_bin);
-                        $sidakTphEst[$key][$key1][$key2]['jml_blok'] = $jml_blok;
-                        $sidakTphEst[$key][$key1][$key2]['luas_ha'] = $luas_ha;
-                        $sidakTphEst[$key][$key1][$key2]['bt_tph'] = $sum_bt_tph;
-                        $sidakTphEst[$key][$key1][$key2]['bt_jln'] = $sum_bt_jln;
-                        $sidakTphEst[$key][$key1][$key2]['bt_bin'] = $sum_bt_bin;
-                        $sidakTphEst[$key][$key1][$key2]['tot_bt'] = $tot_bt;
-                        $sidakTphEst[$key][$key1][$key2]['divBt'] = round($tot_bt / $jml_blok, 2);
-                        $sidakTphEst[$key][$key1][$key2]['skorBt'] = skor_bt_tph(round($tot_bt / $jml_blok, 2));
-                        $sidakTphEst[$key][$key1][$key2]['sum_krg'] = $sum_krg;
-                        $sidakTphEst[$key][$key1][$key2]['divKrg'] = round($sum_krg / $jml_blok, 2);
-                        $sidakTphEst[$key][$key1][$key2]['skorKrg'] = skor_krg_tph(round($sum_krg / $jml_blok, 2));
-                        $sidakTphEst[$key][$key1][$key2]['sumBuah'] = $sumBuah;
-                        $sidakTphEst[$key][$key1][$key2]['divBuah'] = round($sumBuah / $jml_blok, 2);
-                        $sidakTphEst[$key][$key1][$key2]['skorBuah'] = skor_buah_tph(round($sumBuah / $jml_blok, 2));
-                        $sidakTphEst[$key][$key1][$key2]['sumRst'] = $sumRst;
-                        $sidakTphEst[$key][$key1][$key2]['divRst'] = round($sumRst / $jml_blok, 2);
-                        $sidakTphEst[$key][$key1][$key2]['skorRst'] = skor_rst_tph(round($sumRst / $jml_blok, 2));
-                        $sidakTphEst[$key][$key1][$key2]['allSkor'] = skor_bt_tph(round($tot_bt / $jml_blok, 2)) + skor_krg_tph(round($sum_krg / $jml_blok, 2)) + skor_buah_tph(round($sumBuah / $jml_blok, 2)) + skor_rst_tph(round($sumRst / $jml_blok, 2));
-                    } else {
-                        $sidakTphEst[$key][$key1][$key2]['jml_blok'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['luas_ha'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['bt_tph'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['bt_jln'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['bt_bin'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['tot_bt'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['divBt'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['skorBt'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['sum_krg'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['divKrg'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['skorKrg'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['sumBuah'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['divBuah'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['skorBuah'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['sumRst'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['divRst'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['skorRst'] = 0;
-                        $sidakTphEst[$key][$key1][$key2]['allSkor'] = 0;
-                    }
-                }
-                $tot_bt_est = ($sum_bt_tph_est + $sum_bt_jln_est + $sum_bt_bin_est);
-                $divBt_est = $jml_blok_est == 0 ? $tot_bt_est : round($tot_bt_est / $jml_blok_est, 2);
-                $divKrg_est = $jml_blok_est == 0 ? $sum_krg_est : round($sum_krg_est / $jml_blok_est, 2);
-                $divBuah_est = $jml_blok_est == 0 ? $sumBuah_est : round($sumBuah_est / $jml_blok_est, 2);
-                $divRst_est = $jml_blok_est == 0 ? $sumRst_est : round($sumRst_est / $jml_blok_est, 2);
-                $sidakTphEst[$key][$key1]['jml_blok_est'] = $jml_blok_est;
-                $sidakTphEst[$key][$key1]['luas_ha_est'] = $luas_ha_est;
-                $sidakTphEst[$key][$key1]['bt_tph_est'] = $sum_bt_tph_est;
-                $sidakTphEst[$key][$key1]['bt_jln_est'] = $sum_bt_jln_est;
-                $sidakTphEst[$key][$key1]['bt_bin_est'] = $sum_bt_bin_est;
-                $sidakTphEst[$key][$key1]['tot_bt_est'] = $tot_bt_est;
-                $sidakTphEst[$key][$key1]['divBt_est'] = $divBt_est;
-                $sidakTphEst[$key][$key1]['skorBt_est'] = skor_bt_tph($divBt_est);
-                $sidakTphEst[$key][$key1]['sum_krg_est'] = $sum_krg_est;
-                $sidakTphEst[$key][$key1]['divKrg_est'] = $divKrg_est;
-                $sidakTphEst[$key][$key1]['skorKrg_est'] = skor_krg_tph($divKrg_est);
-                $sidakTphEst[$key][$key1]['sumBuah_est'] = $sumBuah_est;
-                $sidakTphEst[$key][$key1]['divBuah_est'] = $divBuah_est;
-                $sidakTphEst[$key][$key1]['skorBuah_est'] = skor_buah_tph($divBuah_est);
-                $sidakTphEst[$key][$key1]['sumRst_est'] = $sumRst_est;
-                $sidakTphEst[$key][$key1]['divRst_est'] = $divRst_est;
-                $sidakTphEst[$key][$key1]['skorRst_est'] = skor_rst_tph($divRst_est);
-                $sidakTphEst[$key][$key1]['allSkor_est'] = skor_bt_tph($divBt_est) + skor_krg_tph($divKrg_est) + skor_buah_tph($divBuah_est) + skor_rst_tph($divRst_est);
-            } else {
-                $sidakTphEst[$key][$key1]['jml_blok_est'] = 0;
-                $sidakTphEst[$key][$key1]['luas_ha_est'] = 0;
-                $sidakTphEst[$key][$key1]['bt_tph_est'] = 0;
-                $sidakTphEst[$key][$key1]['bt_jln_est'] = 0;
-                $sidakTphEst[$key][$key1]['bt_bin_est'] = 0;
-                $sidakTphEst[$key][$key1]['tot_bt_est'] = 0;
-                $sidakTphEst[$key][$key1]['divBt_est'] = 0;
-                $sidakTphEst[$key][$key1]['skorBt_est'] = 0;
-                $sidakTphEst[$key][$key1]['sum_krg_est'] = 0;
-                $sidakTphEst[$key][$key1]['divKrg_est'] = 0;
-                $sidakTphEst[$key][$key1]['skorKrg_est'] = 0;
-                $sidakTphEst[$key][$key1]['sumBuah_est'] = 0;
-                $sidakTphEst[$key][$key1]['divBuah_est'] = 0;
-                $sidakTphEst[$key][$key1]['skorBuah_est'] = 0;
-                $sidakTphEst[$key][$key1]['sumRst_est'] = 0;
-                $sidakTphEst[$key][$key1]['divRst_est'] = 0;
-                $sidakTphEst[$key][$key1]['skorRst_est'] = 0;
-                $sidakTphEst[$key][$key1]['allSkor_est'] = 0;
-            }
-        }
 
-        $brdGraphMonth = array();
-        $krgGraphMonth = array();
-        $buahGraphMonth = array();
-        $rstGraphMonth = array();
-        foreach ($sidakTphEst as $key => $value) {
-            foreach ($value as $key2  => $value2) {
-                $brdGraphMonth[$key][$key2]['brdGraph'] = $value2['divBt_est'];
-                $krgGraphMonth[$key][$key2]['krgGraph'] = $value2['divKrg_est'];
-                $buahGraphMonth[$key][$key2]['buahGraph'] = $value2['divBuah_est'];
-                $rstGraphMonth[$key][$key2]['rstGraph'] = $value2['divRst_est'];
-            }
-        }
+        $graphbrd = [];
 
-        $rekapBrdGraph = [];
-        if ($estData !== 'CWS1' && isset($brdGraphMonth[$estData])) {
-            foreach ($brdGraphMonth[$estData] as $month => $data) {
-                $rekapBrdGraph[$estData][$month] = isset($data['brdGraph']) ? $data['brdGraph'] : 0;
-            }
-        } else {
-            $rekapBrdGraph[$estData] = [
-                "January" => 0,
-                "February" => 0,
-                "March" => 0,
-                "April" => 0,
-                "May" => 0,
-                "June" => 0,
-                "July" => 0,
-                "August" => 0,
-                "September" => 0,
-                "October" => 0,
-                "November" => 0,
-                "December" => 0
-            ];
-        }
-
-        $rekapKrgGraph = [];
-        if ($estData !== 'CWS1' && isset($krgGraphMonth[$estData])) {
-            foreach ($krgGraphMonth[$estData] as $month => $data) {
-                $rekapKrgGraph[$estData][$month] = isset($data['krgGraph']) ? $data['krgGraph'] : 0;
-            }
-        } else {
-            $rekapKrgGraph[$estData] = [
-                "January" => 0,
-                "February" => 0,
-                "March" => 0,
-                "April" => 0,
-                "May" => 0,
-                "June" => 0,
-                "July" => 0,
-                "August" => 0,
-                "September" => 0,
-                "October" => 0,
-                "November" => 0,
-                "December" => 0
-            ];
-        }
-
-        $rekapBuahGraph = [];
-        if ($estData !== 'CWS1' && isset($buahGraphMonth[$estData])) {
-            foreach ($buahGraphMonth[$estData] as $month => $data) {
-                $rekapBuahGraph[$estData][$month] = isset($data['buahGraph']) ? $data['buahGraph'] : 0;
-            }
-        } else {
-            $rekapBuahGraph[$estData] = [
-                "January" => 0,
-                "February" => 0,
-                "March" => 0,
-                "April" => 0,
-                "May" => 0,
-                "June" => 0,
-                "July" => 0,
-                "August" => 0,
-                "September" => 0,
-                "October" => 0,
-                "November" => 0,
-                "December" => 0
-            ];
-        }
-
-        $rekapRstGraph = [];
-        if ($estData !== 'CWS1' && isset($rstGraphMonth[$estData])) {
-            foreach ($rstGraphMonth[$estData] as $month => $data) {
-                $rekapRstGraph[$estData][$month] = isset($data['rstGraph']) ? $data['rstGraph'] : 0;
-            }
-        } else {
-            $rekapRstGraph[$estData] = [
-                "January" => 0,
-                "February" => 0,
-                "March" => 0,
-                "April" => 0,
-                "May" => 0,
-                "June" => 0,
-                "July" => 0,
-                "August" => 0,
-                "September" => 0,
-                "October" => 0,
-                "November" => 0,
-                "December" => 0
-            ];
-        }
-
-        $scBrdGraph = array();
-        foreach ($rekapBrdGraph as $key => $value) {
+        foreach ($newSidak as $key => $value) {
             foreach ($value as $key1 => $value1) {
-                $scBrdGraph[] = $value1;
-            }
-        }
-        $scKrgGraph = array();
-        foreach ($rekapKrgGraph as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $scKrgGraph[] = $value1;
-            }
-        }
-        $scBuahGraph = array();
-        foreach ($rekapBuahGraph as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $scBuahGraph[] = $value1;
-            }
-        }
-        $scRstGraph = array();
-        foreach ($rekapRstGraph as $key => $value) {
-            foreach ($value as $key1 => $value1) {
-                $scRstGraph[] = $value1;
-            }
-        }
-        $keysToRemove = ['SRE', 'LDE', 'SKE'];
 
-        // Loop through the array and remove the elements with the specified keys
-        // foreach ($keysToRemove as $key) {
-        //     unset($arrBtTPHperEst[$key]);
-        //     unset($arrKRest[$key]);
-        //     unset($arrBHest[$key]);
-        //     unset($arrRSest[$key]);
-        // }
+                $graphbrd[] = $value1['tot_brd'];
+            }
+        }
+        $graphbuah = [];
 
-        // dd($scBrdGraph, $scKrgGraph, $scBuahGraph, $scRstGraph);
+        foreach ($newSidak as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+
+                $graphbuah[] = $value1['tod_buah'];
+            }
+        }
+
+
+        // dd($newSidak, $graphbrd);
+        // dd($result);
         $arrView = array();
-        $arrView['brdGraph'] =  $scBrdGraph;
-        $arrView['krgGraph'] =  $scKrgGraph;
-        $arrView['buahGraph'] =  $scBuahGraph;
-        $arrView['rstGraph'] =  $scRstGraph;
-        echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
+        $arrView['brdgraph'] = $graphbrd;
+        $arrView['graphbuah'] = $graphbuah;
+        $arrView['ktg'] = $montharr;
+
+        echo json_encode($arrView);
         exit();
     }
 
@@ -7364,7 +7246,7 @@ class SidaktphController extends Controller
             ->toArray();
 
         $EstMapVal = DB::connection('mysql2')->table('estate')
-            ->whereNotIn('estate.est', ['CWS1', 'CWS2', 'CWS3', 'SRE', 'LDE', 'SKE'])
+            ->where('estate.emp', '!=', 1)
             ->whereIn('wil', $queryReg2)->pluck('est')->toArray();
 
         // Return the estates as JSON data

@@ -1610,7 +1610,7 @@
                 <div class="card">
                   <div class="card-body">
                     <p style="font-size: 15px; text-align: center;" class="text-uppercase">
-                      <b>Brondolan Tinggal (Brondol / Blok)</b>
+                      <b>Total Brondolan Tinggal</b>
                     </p>
                     <div id="bttinggalYear"></div>
                   </div>
@@ -1620,35 +1620,13 @@
                 <div class="card">
                   <div class="card-body">
                     <p style="font-size: 15px; text-align: center;" class="text-uppercase">
-                      <b>Karung
-                        Berisi Brondolan (Karung / Blok)</b>
+                      <b>Total Buah Tinggal</b>
                     <div id="karungYear"></div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row ml-2 mr-2">
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <p style="font-size: 15px; text-align: center;" class="text-uppercase"><b>Buah
-                        Tinggal (Janjang / Blok)</b>
-                    </p>
-                    <div id="btt_tglYear"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <p style="font-size: 15px; text-align: center;" class="text-uppercase">
-                      <b>Restan
-                        Tidak Dilaporkan (Janjang / Blok)</b>
-                    <div id="rst_noneYear"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -1839,10 +1817,7 @@
     renderChartTphYear.render();
     var renderChartKarungYear = new ApexCharts(document.querySelector("#karungYear"), lbMonth);
     renderChartKarungYear.render();
-    var renderChartBuahTglTphYear = new ApexCharts(document.querySelector("#btt_tglYear"), lbMonth);
-    renderChartBuahTglTphYear.render();
-    var renderChartBuahRestanNoneYear = new ApexCharts(document.querySelector("#rst_noneYear"), lbMonth);
-    renderChartBuahRestanNoneYear.render();
+
     var lokasiKerja = "{{ session('lok') }}";
     // console.log(lokasiKerja);
     if (lokasiKerja == 'Regional II' || lokasiKerja == 'Regional 2') {
@@ -6797,63 +6772,48 @@
         },
         success: function(result) {
           Swal.close();
-          var parseResult = JSON.parse(result)
-          var chart_brd = Object.entries(parseResult['brdGraph'])
-          var chart_krg = Object.entries(parseResult['krgGraph'])
-          var chart_buah = Object.entries(parseResult['buahGraph'])
-          var chart_rst = Object.entries(parseResult['rstGraph'])
+          var parseResult = JSON.parse(result);
+          var chart_brd = parseResult['brdgraph'];
+          var chart_krg = parseResult['graphbuah'];
+          var ktg = parseResult['ktg'];
 
-          var graphBrd = '['
-          chart_brd.forEach(element => {
-            graphBrd += '"' + element[1] + '",'
-          });
-          graphBrd = graphBrd.substring(0, graphBrd.length - 1);
-          graphBrd += ']'
-          var brdJson = JSON.parse(graphBrd)
-
-          var graphKrg = '['
-          chart_krg.forEach(element => {
-            graphKrg += '"' + element[1] + '",'
-          });
-          graphKrg = graphKrg.substring(0, graphKrg.length - 1);
-          graphKrg += ']'
-          var krgJson = JSON.parse(graphKrg)
-
-          var graphBuah = '['
-          chart_buah.forEach(element => {
-            graphBuah += '"' + element[1] + '",'
-          });
-          graphBuah = graphBuah.substring(0, graphBuah.length - 1);
-          graphBuah += ']'
-          var buahJson = JSON.parse(graphBuah)
-
-          var graphRst = '['
-          chart_rst.forEach(element => {
-            graphRst += '"' + element[1] + '",'
-          });
-          graphRst = graphRst.substring(0, graphRst.length - 1);
-          graphRst += ']'
-          var rstJson = JSON.parse(graphRst)
-
+          // Assuming chart_brd is an array of arrays, you can directly use it for data in Apex chart
           renderChartTphYear.updateSeries([{
-            name: 'Brondolan/Blok Tinggal di TPH',
-            data: brdJson
-          }])
+            name: 'Brondolan Tinggal',
+            data: chart_brd
+          }]);
+
+          // If ktg is an array, you can use it for x-axis categories
+          renderChartTphYear.updateOptions({
+            xaxis: {
+              categories: ktg
+            }
+          });
+
+          // renderChartTphYear.updateSeries([{
+          //   name: 'Brondolan Tinggal',
+          //   data: chart_brd
+          // }])
 
           renderChartKarungYear.updateSeries([{
-            name: 'Karung/Blok  Berisi Brondolan',
-            data: krgJson
+            name: 'Buah Tinggal',
+            data: chart_krg
           }])
 
-          renderChartBuahTglTphYear.updateSeries([{
-            name: 'Buah/Blok  Tinggal TPH',
-            data: buahJson
-          }])
 
-          renderChartBuahRestanNoneYear.updateSeries([{
-            name: 'Restan/Blok  Tidak dilaporkan',
-            data: rstJson
-          }])
+          renderChartKarungYear.updateOptions({
+            xaxis: {
+              categories: ktg
+            }
+          })
+
+
+          // renderChartBuahTglTphYear.updateSeries([{
+          //   name: 'Buah/Blok  Tinggal TPH',
+          //   data: chart_krg
+          // }])
+
+
         },
         error: function() {
           Swal.close();

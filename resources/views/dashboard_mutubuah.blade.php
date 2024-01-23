@@ -1298,6 +1298,7 @@
     });
 
     ////untuk mode single and full mode
+    let checkdata = @json($check)
 
 
     var currentMode = 'all';
@@ -1641,15 +1642,58 @@
         sbi_tahun()
         getFindData()
 
-        // $('#data_weekTab2 tbody tr').each(function() {
-        //     var secondCell = $(this).find('td:eq(1)');
-        //     if (secondCell.text().trim() === 'KTE4') {
-        //         secondCell.text('KTE');
-        //     }
-        // });
+        function handleSelectChange() {
+            var regdata = $('#reg_sbiThun').val();
+
+            optsbireg(regdata)
+            // handleAjaxRequest(selectedValue, currentDate);
+        }
+
+        // Trigger the change event on page load
+        handleSelectChange();
+
+        // Bind the change event to the select element
+        $('#reg_sbiThun').on('change', function() {
+            handleSelectChange();
+        });
+
     });
 
+    function optsbireg(regdata) {
 
+        $.ajax({
+            url: '{{ route("getestatesidakmtbuah") }}', // Replace with your actual endpoint URL
+            type: 'GET',
+            data: {
+                reg: regdata,
+            },
+            success: function(data) {
+                var parseResult = JSON.parse(data);
+                var est = parseResult['est'];
+
+                // Assuming "est" is an array of options
+                var selectElement = document.getElementById("estSidakYear");
+
+                // Clear existing options (if any)
+                selectElement.innerHTML = "";
+
+                // Iterate through the array and create options
+                est.forEach(function(optionValue) {
+                    var option = document.createElement("option");
+                    option.value = optionValue;
+                    option.text = optionValue;
+                    selectElement.appendChild(option);
+                });
+
+                // Log the populated select element for verification
+                // console.log(selectElement);
+            },
+
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
     $("#showFinding").click(function() {
         Swal.fire({
             title: 'Loading',
