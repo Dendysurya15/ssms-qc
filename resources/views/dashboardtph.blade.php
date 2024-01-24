@@ -1632,7 +1632,7 @@
       </div>
   </section>
 
-  @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep')
+  @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten'|| session('jabatan') == 'Askep/Asisten' )
   <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -6020,7 +6020,7 @@
               let item4 = element[1]['skor'];
 
               // Check if item4 is less than 0, and set it to 0 if true
-              item4 = (item4 < 0) ? 0 : item4;
+              // item4 = (item4 < 0) ? 0 : item4;
 
               let item5 = element[1]['ranking']
               // console.log(item5);
@@ -6111,7 +6111,7 @@
               let item4 = element[1]['skor'];
 
               // Check if item4 is less than 0, and set it to 0 if true
-              item4 = (item4 < 0) ? 0 : item4;
+              // item4 = (item4 < 0) ? 0 : item4;
 
               let item5 = element[1]['ranking']
               let item6 = element[1]['est_score']
@@ -6206,7 +6206,7 @@
             let item4 = hasilRh[0][1]['skor']
 
             // Check if item4 is less than 0, and set it to 0 if true
-            item4 = (item4 < 0) ? 0 : item4;
+            // item4 = (item4 < 0) ? 0 : item4;
 
             // let item4 = hasilRh[0][1]['skor']
             // let item4 = 'Test'
@@ -6285,7 +6285,7 @@
               let item4 = element[1]['skor']
 
               // Check if item4 is less than 0, and set it to 0 if true
-              item4 = (item4 < 0) ? 0 : item4;
+              // item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
@@ -6370,7 +6370,7 @@
               let item4 = element[1]['skor']
 
               // Check if item4 is less than 0, and set it to 0 if true
-              item4 = (item4 < 0) ? 0 : item4;
+              // item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
               let itemElement1 = document.createElement('td')
               let itemElement2 = document.createElement('td')
@@ -6454,7 +6454,7 @@
               let item4 = element[1]['skor']
 
               // Check if item4 is less than 0, and set it to 0 if true
-              item4 = (item4 < 0) ? 0 : item4;
+              // item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')
@@ -6541,7 +6541,7 @@
               let item4 = element[1]['skor']
 
               // Check if item4 is less than 0, and set it to 0 if true
-              item4 = (item4 < 0) ? 0 : item4;
+              // item4 = (item4 < 0) ? 0 : item4;
               let item5 = element[1]['ranking']
 
               let itemElement1 = document.createElement('td')

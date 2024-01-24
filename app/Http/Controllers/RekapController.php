@@ -3623,7 +3623,12 @@ class RekapController extends Controller
                 if ($v2check5 != 0 && $tot_estAFd == 0) {
                     $tot_afdscoremonth = 100;
                 } else if ($devidenmonth != 0) {
-                    $tot_afdscoremonth = round($tot_estAFd / $devidenmonth, 2);
+                    $score =  round($tot_estAFd / $devidenmonth, 2);
+                    if ($score < 0) {
+                        $tot_afdscoremonth = 0;
+                    } else {
+                        $tot_afdscoremonth = $score;
+                    }
                 } else if ($devidenmonth == 0 && $v2check5 == 0) {
                     $tot_afdscoremonth = 0;
                 }
@@ -3669,7 +3674,7 @@ class RekapController extends Controller
 
         // dd($);
 
-        // dd($newSidak);
+        // dd($newSidak['BKE']['OE']);
         $newsidakend = [];
         foreach ($defafd as $key => $value) {
             foreach ($value as $key2 => $value2) {

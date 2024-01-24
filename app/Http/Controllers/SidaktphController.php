@@ -762,15 +762,35 @@ class SidaktphController extends Controller
 
                     $total_estkors = $totskor_brd + $totskor_janjang;
                     if ($total_estkors != 0) {
-                        $newSidak[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+
+                        $checkscore = 100 - ($total_estkors);
+
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak[$key][$key1][$key2]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak[$key][$key1][$key2]['mines'] = 'tidak';
+                        }
+
+                        $newSidak[$key][$key1][$key2]['all_score'] = $newscore;
                         $newSidak[$key][$key1][$key2]['check_data'] = 'ada';
 
-                        $total_skoreafd = 100 - ($total_estkors);
+                        $total_skoreafd = $newscore;
                     } else if ($v2check3 != 0) {
+                        $checkscore = 100 - ($total_estkors);
+
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak[$key][$key1][$key2]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak[$key][$key1][$key2]['mines'] = 'tidak';
+                        }
                         $newSidak[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                         $newSidak[$key][$key1][$key2]['check_data'] = 'ada';
 
-                        $total_skoreafd = 100 - ($total_estkors);
+                        $total_skoreafd = $newscore;
                     } else {
                         $newSidak[$key][$key1][$key2]['all_score'] = 0;
                         $newSidak[$key][$key1][$key2]['check_data'] = 'null';
@@ -891,7 +911,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['afd'] = 'GM';
             $newSidak[$key]['afdeling'] = $devest;
         }
-        dd($newSidak['UPE']);
+        // dd($newSidak['UPE']);
 
         $week1 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
@@ -915,7 +935,11 @@ class SidaktphController extends Controller
                     }
                     // week for afdeling 
                     // dd($week1Data);
-                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
+                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0  && $week1Data['mines'] === 'ada') {
+                        # code...
+                        $total_score = 0;
+                        $data = 'ada';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0 && $week1Data['mines'] === 'tidak') {
                         # code...
                         $total_score = 100;
                         $data = 'ada';
@@ -1072,7 +1096,11 @@ class SidaktphController extends Controller
                         $end = $value['end'];
                     }
 
-                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
+                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0  && $week1Data['mines'] === 'ada') {
+                        # code...
+                        $total_score = 0;
+                        $data = 'ada';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0 && $week1Data['mines'] === 'tidak') {
                         # code...
                         $total_score = 100;
                         $data = 'ada';
@@ -1083,6 +1111,7 @@ class SidaktphController extends Controller
                         $total_score =  round($week1Data['all_score'], 1);
                         $data = 'ada';
                     }
+
 
                     $week1Flat = [
                         'est' => $key,
@@ -1226,7 +1255,11 @@ class SidaktphController extends Controller
                         $end = $value['end'];
                     }
                     // week for afdeling 
-                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
+                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0  && $week1Data['mines'] === 'ada') {
+                        # code...
+                        $total_score = 0;
+                        $data = 'ada';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0 && $week1Data['mines'] === 'tidak') {
                         # code...
                         $total_score = 100;
                         $data = 'ada';
@@ -1237,6 +1270,7 @@ class SidaktphController extends Controller
                         $total_score =  round($week1Data['all_score'], 1);
                         $data = 'ada';
                     }
+
 
                     $week1Flat = [
                         'est' => $key,
@@ -1373,7 +1407,11 @@ class SidaktphController extends Controller
                         $end = $value['end'];
                     }
                     // week for afdeling 
-                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
+                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0  && $week1Data['mines'] === 'ada') {
+                        # code...
+                        $total_score = 0;
+                        $data = 'ada';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0 && $week1Data['mines'] === 'tidak') {
                         # code...
                         $total_score = 100;
                         $data = 'ada';
@@ -1384,6 +1422,7 @@ class SidaktphController extends Controller
                         $total_score =  round($week1Data['all_score'], 1);
                         $data = 'ada';
                     }
+
 
                     $week1Flat = [
                         'est' => $key,
@@ -1524,7 +1563,11 @@ class SidaktphController extends Controller
                         $end = $value['end'];
                     }
                     // week for afdeling 
-                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0) {
+                    if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0  && $week1Data['mines'] === 'ada') {
+                        # code...
+                        $total_score = 0;
+                        $data = 'ada';
+                    } else if ($week1Data['all_score'] == 0 && $week1Data['v2check3'] != 0 && $week1Data['mines'] === 'tidak') {
                         # code...
                         $total_score = 100;
                         $data = 'ada';
@@ -3778,10 +3821,21 @@ class SidaktphController extends Controller
 
                 if ($v2check4 != 0 && $total_skoreest == 0) {
                     $tot_afdscore = 100;
+                    $data = 'tidak';
                 } else if ($new_dvd != 0) {
-                    $tot_afdscore = round($total_skoreest / $new_dvd, 2);
+                    // $tot_afdscore = round($total_skoreest / $new_dvd, 2);
+
+                    $score =  round($total_skoreest / $new_dvd, 2);
+                    if ($score < 0) {
+                        $tot_afdscoremonth = 0;
+                    } else {
+                        $tot_afdscoremonth = $score;
+                    }
+
+                    $data = 'minus';
                 } else if ($new_dvd == 0 && $v2check4 == 0) {
                     $tot_afdscore = 0;
+                    $data = 'kosong';
                 }
 
                 // $newSidak[$key][$key1]['deviden'] = $deviden;
@@ -3793,7 +3847,7 @@ class SidaktphController extends Controller
                 if ($v2check4 == 0) {
                     $newSidak[$key][$key1]['total_score'] = '-';
                 } else {
-                    $newSidak[$key][$key1]['total_score'] = $tot_afdscore;
+                    $newSidak[$key][$key1]['total_score'] = $tot_afdscoremonth;
                 }
 
                 $newSidak[$key][$key1]['est'] = $key;
@@ -3801,7 +3855,7 @@ class SidaktphController extends Controller
                 $newSidak[$key][$key1]['devidenest'] = $devest;
                 $newSidak[$key][$key1]['v2check4'] = $v2check4;
 
-                $tot_estAFd += $tot_afdscore;
+                $tot_estAFd += $tot_afdscoremonth;
                 $new_dvdAfd += $new_dvd;
                 $new_dvdAfdest += $new_dvdest;
                 $v2check5 += $v2check4;
@@ -3816,7 +3870,7 @@ class SidaktphController extends Controller
             }
             $dividennewx = array_sum($divest);
             $dividen_afd = count($value);
-            if ($new_dvdAfdest != 0) {
+            if ($v2check5 != 0) {
                 $total_skoreest = round($tot_estAFd / $dividennewx, 2);
             } else {
                 $total_skoreest = 0;
@@ -3846,7 +3900,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['v2check5'] = $v2check5;
         }
 
-        // dd($newSidak);
+        // dd($newSidak['UPE']);
         $mtancakWIltab1 = array();
         foreach ($queryEstereg as $key => $value) {
             foreach ($newSidak as $key2 => $value2) {
