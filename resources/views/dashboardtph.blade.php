@@ -5664,6 +5664,7 @@
           Swal.close();
           //parsing result ke json untuk dalam estate
           var parseResult = JSON.parse(result)
+          var rekapmua = parseResult['newSidak_mua']
           // ubah json ke array agar bisa di for atau foreach
           var listBtTph = Object.entries(parseResult[
             'val_bt_tph']) //parsing data brondolan ke dalam var list
@@ -6529,6 +6530,37 @@
               tbody3.appendChild(tr)
               // }
             });
+            Object.entries(rekapmua).forEach(([key, value]) => {
+              let tr = document.createElement('tr');
+
+              let itemElement1 = document.createElement('td');
+              let itemElement2 = document.createElement('td');
+              let itemElement3 = document.createElement('td');
+              let itemElement4 = document.createElement('td');
+              let itemElement5 = document.createElement('td');
+
+              itemElement1.innerText = key;
+              itemElement2.innerText = key;
+              itemElement3.innerText = value['asisten'];
+              itemElement4.innerText = value['score_estate'];
+              itemElement5.innerText = '-';
+              if (key === 'PT.MUA') {
+                itemElement1.style.backgroundColor = "#e8ecdc";
+                itemElement2.style.backgroundColor = "#e8ecdc";
+                itemElement3.style.backgroundColor = "#e8ecdc";
+              }
+
+              setBackgroundColor(itemElement4, value['score_estate']);
+
+              tr.appendChild(itemElement1);
+              tr.appendChild(itemElement2);
+              tr.appendChild(itemElement3);
+              tr.appendChild(itemElement4);
+              tr.appendChild(itemElement5);
+
+              tbody3.appendChild(tr);
+            });
+
             // untuk estate will 3
             var arrTbody3 = estate3
             arrTbody3.forEach(element => {

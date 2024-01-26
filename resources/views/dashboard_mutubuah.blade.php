@@ -2175,7 +2175,7 @@
                 Swal.close();
                 var parseResult = JSON.parse(result)
                 var region = Object.entries(parseResult['listregion'])
-
+                var rekapmua = parseResult['sidak_buah_mua']
                 var mutu_buah = Object.entries(parseResult['mutu_buah'])
                 var mutubuah_est = Object.entries(parseResult['mutubuah_est'])
                 var mutuBuah_wil = Object.entries(parseResult['mutuBuah_wil'])
@@ -2576,7 +2576,9 @@
 
                 function setBackgroundColor(element, score) {
                     let color;
-                    if (score >= 95) {
+                    if (score === '-') {
+                        color = "white";
+                    } else if (score >= 95) {
                         color = "#609cd4";
                     } else if (score >= 85 && score < 95) {
                         color = "#08b454";
@@ -2594,7 +2596,7 @@
 
                 function bgest(element, score) {
                     let color;
-                    if (score >= 95) {
+                    if (score === '-') {
                         color = "#609cd4";
                     } else if (score >= 85 && score < 95) {
                         color = "#08b454";
@@ -3070,6 +3072,36 @@
 
                                 tbody3.appendChild(tr);
                             });
+                        });
+                        // console.log(rekapmua);
+                        Object.entries(rekapmua).forEach(([key, value]) => {
+                            let tr = document.createElement('tr');
+
+                            let itemElement1 = document.createElement('td');
+                            let itemElement2 = document.createElement('td');
+                            let itemElement3 = document.createElement('td');
+                            let itemElement4 = document.createElement('td');
+                            let itemElement5 = document.createElement('td');
+                            itemElement1.classList.add("text-center")
+                            itemElement2.classList.add("text-center")
+                            itemElement3.classList.add("text-center")
+                            itemElement4.classList.add("text-center")
+                            itemElement5.classList.add("text-center")
+                            itemElement1.innerText = key;
+                            itemElement2.innerText = key;
+                            itemElement3.innerText = value['Nama_assist'];
+                            itemElement4.innerText = value['All_skor'];
+                            itemElement5.innerText = '-'
+
+                            setBackgroundColor(itemElement4, value['All_skor']);
+
+                            tr.appendChild(itemElement1);
+                            tr.appendChild(itemElement2);
+                            tr.appendChild(itemElement3);
+                            tr.appendChild(itemElement4);
+                            tr.appendChild(itemElement5);
+
+                            tbody3.appendChild(tr);
                         });
                     } else {
                         console.log("tab3 is null or undefined");

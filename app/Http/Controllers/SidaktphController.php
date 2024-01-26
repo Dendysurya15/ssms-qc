@@ -3093,13 +3093,32 @@ class SidaktphController extends Controller
         // dd($queryEst);
         $queryEste = DB::connection('mysql2')
             ->table('estate')
-            ->whereNotIn('estate.est', ['PLASMA', 'SRE', 'LDE', 'SKE', 'CWS1'])
+            ->where('estate.emp', '!=', 1)
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->whereIn('wil', $queryReg2)
             ->get();
         $queryEste = $queryEste->groupBy(function ($item) {
             return $item->wil;
         });
 
+        $muaest = DB::connection('mysql2')->table('estate')
+            ->select('estate.*')
+            ->where('estate.emp', '!=', 1)
+            ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->where('wil.regional', $regSidak)
+            // ->where('estate.emp', '!=', 1)
+            ->whereIn('estate.est', ['SRE', 'LDE', 'SKE'])
+            ->get('est');
+        $muaest = json_decode($muaest, true);
+        $afdmua = DB::connection('mysql2')->table('afdeling')
+            ->select(
+                'afdeling.id',
+                'afdeling.nama',
+                'estate.est'
+            ) //buat mengambil data di estate db dan willayah db
+            ->join('estate', 'estate.id', '=', 'afdeling.estate') //kemudian di join untuk mengambil est perwilayah
+            ->get();
+        $afdmua = json_decode($afdmua, true);
         $queryEste = json_decode($queryEste, true);
 
         // dd($queryEst);
@@ -3393,6 +3412,7 @@ class SidaktphController extends Controller
             ->select('estate.*')
             ->where('estate.emp', '!=', 1)
             ->join('wil', 'wil.id', '=', 'estate.wil')
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
             ->where('wil.regional', $regSidak)
             ->get();
         $queryEstereg = json_decode($queryEstereg, true);
@@ -3493,6 +3513,7 @@ class SidaktphController extends Controller
             // dd($value);
             $v2check5 = 0;
             $newpembagi3 = 0;
+            $divwil2 = 0;
             foreach ($value as $key1 => $value2)  if (is_array($value2)) {
 
                 $tot_afdscore = 0;
@@ -3743,14 +3764,22 @@ class SidaktphController extends Controller
                 $newSidak[$key][$key1]['afd'] = $key1;
                 $newSidak[$key][$key1]['devidenest'] = $newpembagi1;
                 $newSidak[$key][$key1]['v2check4'] = $v2check4;
+                if ($v2check4 != 0) {
+                    $newSidak[$key][$key1]['divwil'] = 1;
+                    $divwil = 1;
+                } else {
+                    $newSidak[$key][$key1]['divwil'] = 0;
+                    $divwil = 0;
+                }
+
 
                 $tot_estAFd += $newscore;
                 $new_dvdAfd += $new_dvd;
                 $new_dvdAfdest += $new_dvdest;
                 $v2check5 += $v2check4;
                 $newpembagi3 += $newpembagi2;
+                $divwil2 += $divwil;
             }
-
 
             if ($v2check5 != 0) {
                 $total_skoreest = round($tot_estAFd / $newpembagi3, 1);
@@ -3782,8 +3811,10 @@ class SidaktphController extends Controller
             $newSidak[$key]['afd'] = 'GM';
             $newSidak[$key]['afdeling'] = $newpembagi3;
             $newSidak[$key]['v2check5'] = $v2check5;
+            $newSidak[$key]['divwil2'] = $divwil2;
         }
 
+        // dd($newSidak);
         // dd($newSidak['UPE']);
         $mtancakWIltab1 = array();
         foreach ($queryEstereg as $key => $value) {
@@ -4040,23 +4071,29 @@ class SidaktphController extends Controller
 
         $keyEst = [1, 4, 7, 10]; // Define the keys you want to iterate through
 
-        // dd($mtancakWIltab1);
+
         foreach ($keyEst as $keyToIterate) {
             if (isset($mtancakWIltab1[$keyToIterate])) {
                 $estateScore = 0;
                 $diveden = 0;
+                $total_skorest = 0;
+                $divwil2 = 0;
                 // $v2check5 = 0;
                 foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
+
+
                     // dd($value);
                     if (is_array($value)) { // Check if $value1 is an array
                         $est = $key;
                         $afd = $key1;
-
+                        // dd($value);
+                        $total_skorest += $value['total_skorest'];
                         $total_score = $value['score_estate'];
                         $asisten = $value['asisten'];
                         $estateScore += $value['score_estate'];
                         $diveden += $value['deviden'];
                         $v2check5 = $value['v2check5'];
+                        $divwil2 += $value['divwil2'];
 
                         if ($diveden != 0) {
                             $totalEst = round($estateScore / $diveden, 2);
@@ -4105,10 +4142,10 @@ class SidaktphController extends Controller
                 $resultest1[] = array(
                     'afd' => 'GM',
                     'est' => $newKey,
-                    'skor' => $totalEst,
+                    'skor' => round($total_skorest / $divwil2, 0),
                     'asisten' => $namaGM,
                     'ranking' => '-',
-                    'est_score' => $estateScore,
+                    'divwil2' => $divwil2,
                     'dividen' => $diveden
                 );
             }
@@ -4117,8 +4154,8 @@ class SidaktphController extends Controller
 
         // Create a copy of the array to preserve the original order
         $sortedest1 = $resultest1;
-
-        // dd($sortedest1);
+        // dd($mtancakWIltab1, $resultest1);
+        // dd($resultest1);
 
         // Sort the copy based on 'skor' (total_score) in descending order
         usort($sortedest1, function ($a, $b) {
@@ -4159,7 +4196,8 @@ class SidaktphController extends Controller
             if (isset($mtancakWIltab1[$keyToIterate])) {
                 $estateScore = 0;
                 $diveden = 0;
-                // $v2check5 = 0;
+                $total_skorest = 0;
+                $divwil2 = 0;
                 foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
                     // dd($value);
                     if (is_array($value)) { // Check if $value1 is an array
@@ -4171,6 +4209,8 @@ class SidaktphController extends Controller
                         $estateScore += $value['score_estate'];
                         $diveden += $value['deviden'];
                         $v2check5 = $value['v2check5'];
+                        $total_skorest += $value['total_skorest'];
+                        $divwil2 += $value['divwil2'];
 
                         if ($diveden != 0) {
                             $totalEst = round($estateScore / $diveden, 2);
@@ -4219,7 +4259,7 @@ class SidaktphController extends Controller
                 $resultest2[] = array(
                     'afd' => 'GM',
                     'est' =>  $newKey, // Concatenate $keyEst here
-                    'skor' => $totalEst,
+                    'skor' => round($total_skorest / $divwil2, 0),
                     'asisten' => $namaGM,
                     'ranking' => '-',
                     'est_score' => $estateScore,
@@ -4271,7 +4311,8 @@ class SidaktphController extends Controller
             if (isset($mtancakWIltab1[$keyToIterate])) {
                 $estateScore = 0;
                 $diveden = 0;
-                // $v2check5 = 0;
+                $total_skorest = 0;
+                $divwil2 = 0;
                 foreach ($mtancakWIltab1[$keyToIterate] as $key => $value) {
                     // dd($value);
                     if (is_array($value)) { // Check if $value1 is an array
@@ -4283,7 +4324,8 @@ class SidaktphController extends Controller
                         $estateScore += $value['score_estate'];
                         $diveden += $value['deviden'];
                         $v2check5 = $value['v2check5'];
-
+                        $total_skorest += $value['total_skorest'];
+                        $divwil2 += $value['divwil2'];
                         if ($diveden != 0) {
                             $totalEst = round($estateScore / $diveden, 2);
                         } else {
@@ -4327,7 +4369,7 @@ class SidaktphController extends Controller
                 $resultest3[] = array(
                     'afd' => 'GM',
                     'est' =>  $newKey, // Concatenate $keyEst here
-                    'skor' => $totalEst,
+                    'skor' => round($total_skorest / $divwil2, 0),
                     'asisten' => $namaGM,
                     'ranking' => '-',
                     'est_score' => $estateScore,
@@ -5284,6 +5326,400 @@ class SidaktphController extends Controller
         $keys = array_keys($arrRSest);
 
         $keys = updateKeyRecursive2($keys);
+
+
+        if ($regSidak == 1) {
+            // untuk mua ============================= 
+            $defaultweekmua = array();
+
+            foreach ($muaest as $est) {
+                foreach ($afdmua as $afd) {
+                    if ($est['est'] == $afd['est']) {
+                        $defaultweekmua[$est['est']][$afd['est']] = 0;
+                    }
+                }
+            }
+
+            // dd($defaultweekmua);
+            foreach ($defaultweekmua as $key => $estValue) {
+                foreach ($estValue as $monthKey => $monthValue) {
+                    foreach ($WeekStatus as $dataKey => $dataValue) {
+
+                        if ($dataKey == $key) {
+                            foreach ($dataValue as $dataEstKey => $dataEstValue) {
+
+                                if ($dataEstKey == $monthKey) {
+                                    $defaultweekmua[$key][$monthKey] = $dataEstValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $dividenmua = [];
+
+            foreach ($defaultweekmua as $key => $value) {
+                foreach ($value as $key1 => $value1) if (is_array($value1)) {
+                    foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+
+                        $dividenn = count($value1);
+                    }
+                    $dividenmua[$key][$key1]['dividen'] = $dividenn;
+                } else {
+                    $dividenmua[$key][$key1]['dividen'] = 0;
+                }
+            }
+            // dd($defaultweekmua);
+
+            $tot_estAFdx = 0;
+            $new_dvdAfdx = 0;
+            $new_dvdAfdesx = 0;
+            $v2check5x = 0;
+            $newSidak_mua = array();
+            foreach ($defaultweekmua as $key => $value) {
+                $dividen_afd = 0;
+                $total_skoreest = 0;
+                $tot_estAFd = 0;
+                $new_dvdAfd = 0;
+                $new_dvdAfdest = 0;
+                $total_estkors = 0;
+                $total_skoreafd = 0;
+
+                $deviden = 0;
+                $devest = count($value);
+                // dd($devest);
+                // dd($value);
+                $v2check5 = 0;
+                foreach ($value as $key1 => $value2)  if (is_array($value2)) {
+
+                    $tot_afdscore = 0;
+                    $totskor_brd1 = 0;
+                    $totskor_janjang1 = 0;
+                    $total_skoreest = 0;
+                    $v2check4 = 0;
+                    foreach ($value2 as $key2 => $value3) {
+
+
+                        $total_brondolan = 0;
+                        $total_janjang = 0;
+                        $tod_brd = 0;
+                        $tod_jjg = 0;
+                        $totskor_brd = 0;
+                        $totskor_janjang = 0;
+                        $tot_brdxm = 0;
+                        $tod_janjangxm = 0;
+                        $v2check3 = 0;
+
+                        foreach ($value3 as $key3 => $value4) if (is_array($value4)) {
+                            $tph1 = 0;
+                            $jalan1 = 0;
+                            $bin1 = 0;
+                            $karung1 = 0;
+                            $buah1 = 0;
+                            $restan1 = 0;
+                            $v2check2 = 0;
+
+                            foreach ($value4 as $key4 => $value5) if (is_array($value5)) {
+                                $tph = 0;
+                                $jalan = 0;
+                                $bin = 0;
+                                $karung = 0;
+                                $buah = 0;
+                                $restan = 0;
+                                $v2check = count($value5);
+                                foreach ($value5 as $key5 => $value6) {
+                                    $sum_bt_tph = 0;
+                                    $sum_bt_jalan = 0;
+                                    $sum_bt_bin = 0;
+                                    $sum_jum_karung = 0;
+                                    $sum_buah_tinggal = 0;
+                                    $sum_restan_unreported = 0;
+                                    $sum_all_restan_unreported = 0;
+
+                                    foreach ($value6 as $key6 => $value7) {
+                                        // dd($value7);
+                                        // dd($value7);
+                                        $sum_bt_tph += $value7['bt_tph'];
+                                        $sum_bt_jalan += $value7['bt_jalan'];
+                                        $sum_bt_bin += $value7['bt_bin'];
+                                        $sum_jum_karung += $value7['jum_karung'];
+
+
+                                        $sum_buah_tinggal += $value7['buah_tinggal'];
+                                        $sum_restan_unreported += $value7['restan_unreported'];
+                                    }
+                                    $newSidak_mua[$key][$key1][$key2][$key3][$key4][$key5]['tph'] = $sum_bt_tph;
+                                    $newSidak_mua[$key][$key1][$key2][$key3][$key4][$key5]['jalan'] = $sum_bt_jalan;
+                                    $newSidak_mua[$key][$key1][$key2][$key3][$key4][$key5]['bin'] = $sum_bt_bin;
+                                    $newSidak_mua[$key][$key1][$key2][$key3][$key4][$key5]['karung'] = $sum_jum_karung;
+
+                                    $newSidak_mua[$key][$key1][$key2][$key3][$key4][$key5]['buah'] = $sum_buah_tinggal;
+                                    $newSidak_mua[$key][$key1][$key2][$key3][$key4][$key5]['restan'] = $sum_restan_unreported;
+
+
+                                    $tph += $sum_bt_tph;
+                                    $jalan += $sum_bt_jalan;
+                                    $bin += $sum_bt_bin;
+                                    $karung += $sum_jum_karung;
+                                    $buah += $sum_buah_tinggal;
+                                    $restan += $sum_restan_unreported;
+                                }
+
+                                $newSidak_mua[$key][$key1][$key2][$key3][$key4]['tph'] = $tph;
+                                $newSidak_mua[$key][$key1][$key2][$key3][$key4]['jalan'] = $jalan;
+                                $newSidak_mua[$key][$key1][$key2][$key3][$key4]['bin'] = $bin;
+                                $newSidak_mua[$key][$key1][$key2][$key3][$key4]['karung'] = $karung;
+
+                                $newSidak_mua[$key][$key1][$key2][$key3][$key4]['buah'] = $buah;
+                                $newSidak_mua[$key][$key1][$key2][$key3][$key4]['restan'] = $restan;
+                                $newSidak_mua[$key][$key1][$key2][$key3][$key4]['v2check'] = $v2check;
+
+                                $tph1 += $tph;
+                                $jalan1 += $jalan;
+                                $bin1 += $bin;
+                                $karung1 += $karung;
+                                $buah1 += $buah;
+                                $restan1 += $restan;
+                                $v2check2 += $v2check;
+                            }
+                            // dd($key3);
+                            $status_panen = $key3;
+
+                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+
+                            // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
+                            $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
+                            $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
+                            $tod_brd = $tph1 + $jalan1 + $bin1 + $karung1;
+                            $tod_jjg = $buah1 + $restan1;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['tphx'] = $tph1;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['jalan'] = $jalan1;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['bin'] = $bin1;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['karung'] = $karung1;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['tot_brd'] = $tod_brd;
+
+                            $newSidak_mua[$key][$key1][$key2][$key3]['buah'] = $buah1;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['restan'] = $restan1;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['skor_brd'] = $total_brondolan;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['skor_janjang'] = $total_janjang;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['tod_jjg'] = $tod_jjg;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['v2check2'] = $v2check2;
+
+                            $totskor_brd += $total_brondolan;
+                            $totskor_janjang += $total_janjang;
+                            $tot_brdxm += $tod_brd;
+                            $tod_janjangxm += $tod_jjg;
+                            $v2check3 += $v2check2;
+                        } else {
+                            $newSidak_mua[$key][$key1][$key2][$key3]['tphx'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['jalan'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['bin'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['karung'] = 0;
+
+                            $newSidak_mua[$key][$key1][$key2][$key3]['buah'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['restan'] = 0;
+
+                            $newSidak_mua[$key][$key1][$key2][$key3]['skor_brd'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['skor_janjang'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['tot_brd'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['tod_jjg'] = 0;
+                            $newSidak_mua[$key][$key1][$key2][$key3]['v2check2'] = 0;
+                        }
+
+
+                        $total_estkors = $totskor_brd + $totskor_janjang;
+                        if ($total_estkors != 0) {
+                            $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+                            $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
+
+                            $total_skoreafd = 100 - ($total_estkors);
+                        } else if ($v2check3 != 0) {
+                            $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+                            $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
+
+                            $total_skoreafd = 100 - ($total_estkors);
+                        } else {
+                            $newSidak_mua[$key][$key1][$key2]['all_score'] = 0;
+                            $newSidak_mua[$key][$key1][$key2]['check_data'] = 'null';
+                            $total_skoreafd = 0;
+                        }
+                        // $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+                        $newSidak_mua[$key][$key1][$key2]['total_brd'] = $tot_brdxm;
+                        $newSidak_mua[$key][$key1][$key2]['total_brdSkor'] = $totskor_brd;
+                        $newSidak_mua[$key][$key1][$key2]['total_janjang'] = $tod_janjangxm;
+                        $newSidak_mua[$key][$key1][$key2]['total_janjangSkor'] = $totskor_janjang;
+                        $newSidak_mua[$key][$key1][$key2]['total_skor'] = $total_skoreafd;
+                        $newSidak_mua[$key][$key1][$key2]['janjang_brd'] = $totskor_brd + $totskor_janjang;
+                        $newSidak_mua[$key][$key1][$key2]['v2check3'] = $v2check3;
+
+                        $totskor_brd1 += $totskor_brd;
+                        $totskor_janjang1 += $totskor_janjang;
+                        $total_skoreest += $total_skoreafd;
+                        $v2check4 += $v2check3;
+                    }
+
+
+                    // dd($newSidak_mua);
+
+                    foreach ($dividenmua as $keyx => $value) {
+                        if ($keyx == $key) {
+                            foreach ($value as $keyx1 => $value2) {
+                                if ($keyx1 == $key1) {
+                                    // dd($value2);
+                                    $dividen_x = $value2['dividen'];
+                                    if ($value2['dividen'] != 0) {
+                                        $devidenEst_x = 1;
+                                    } else {
+                                        $devidenEst_x = 0;
+                                    }
+                                    // dd($dividen);
+                                }
+                            }
+                        }
+                    }
+
+                    // dd($deviden);
+
+                    $namaGM = '-';
+                    foreach ($queryAsisten as $asisten) {
+
+                        // dd($asisten);
+                        if ($asisten['est'] == $key && $asisten['afd'] == $key1) {
+                            $namaGM = $asisten['nama'];
+                            break;
+                        }
+                    }
+
+                    $deviden = count($value2);
+
+                    $new_dvd = $dividen_x ?? 0;
+                    $new_dvdest = $devidenEst_x ?? 0;
+
+
+                    if ($v2check4 != 0 && $total_skoreest == 0) {
+                        $tot_afdscore = 100;
+                    } else if ($new_dvd != 0) {
+                        $tot_afdscore = round($total_skoreest / $new_dvd, 1);
+                    } else if ($new_dvd == 0 && $v2check4 == 0) {
+                        $tot_afdscore = 0;
+                    }
+
+
+                    if ($tot_afdscore < 0) {
+                        # code...
+                        $newscore = 0;
+                    } else {
+                        $newscore = $tot_afdscore;
+                    }
+                    // $newSidak_mua[$key][$key1]['deviden'] = $deviden;
+
+                    $newSidak_mua[$key][$key1]['total_brd'] = $totskor_brd1;
+                    $newSidak_mua[$key][$key1]['total_janjang'] = $totskor_janjang1;
+                    $newSidak_mua[$key][$key1]['new_deviden'] = $new_dvd;
+                    $newSidak_mua[$key][$key1]['asisten'] = $namaGM;
+                    if ($v2check4 == 0) {
+                        $newSidak_mua[$key][$key1]['total_score'] = '-';
+                    } else {
+                        $newSidak_mua[$key][$key1]['total_score'] = $newscore;
+                    }
+
+                    $newSidak_mua[$key][$key1]['est'] = $key;
+                    $newSidak_mua[$key][$key1]['afd'] = $key1;
+                    $newSidak_mua[$key][$key1]['devidenest'] = $devest;
+                    $newSidak_mua[$key][$key1]['v2check4'] = $v2check4;
+
+                    $tot_estAFd += $newscore;
+                    $new_dvdAfd += $new_dvd;
+                    $new_dvdAfdest += $new_dvdest;
+                    $v2check5 += $v2check4;
+                }
+
+                $dividen_afd = count($value);
+                if ($v2check5 != 0) {
+                    $total_skoreest = round($tot_estAFd / $devest, 1);
+                    $checkdata = 'ada';
+                } else if ($v2check5 != 0 && $devest != 0) {
+                    $checkdata = 'ada';
+                    $total_skoreest = 0;
+                } else {
+                    $total_skoreest = '-';
+                    $checkdata = 'kosong';
+                }
+
+                // dd($value);
+
+                $namaGM = '-';
+                foreach ($queryAsisten as $asisten) {
+                    if ($asisten['est'] == $key && $asisten['afd'] == 'OA') {
+                        $namaGM = $asisten['nama'];
+                        break;
+                    }
+                }
+                if ($new_dvdAfd != 0) {
+                    $newSidak_mua[$key]['deviden'] = 1;
+                } else {
+                    $newSidak_mua[$key]['deviden'] = 0;
+                }
+
+                $newSidak_mua[$key]['total_skorest'] = $tot_estAFd;
+                $newSidak_mua[$key]['checkdata'] = $checkdata;
+                $newSidak_mua[$key]['score_estate'] = $total_skoreest;
+                $newSidak_mua[$key]['asisten'] = $namaGM;
+                $newSidak_mua[$key]['estate'] = $key;
+                $newSidak_mua[$key]['afd'] = 'GM';
+                $newSidak_mua[$key]['afdeling'] = $devest;
+                $newSidak_mua[$key]['v2check5'] = $v2check5;
+
+                if ($v2check5 != 0) {
+                    $devidenlast = 1;
+                } else {
+                    $devidenlast = 0;
+                }
+                $devmuxa[] = $devidenlast;
+
+                $tot_estAFdx  += $tot_estAFd;
+                $new_dvdAfdx  += $new_dvdAfd;
+                $new_dvdAfdesx += $new_dvdAfdest;
+                $v2check5x += $v2check5;
+            }
+            $devmuxax = array_sum($devmuxa);
+
+            if ($v2check5x != 0) {
+                $total_skoreestxyz = round($tot_estAFdx / $devmuxax, 1);
+                $checkdata = 'ada';
+            } else if ($v2check5x != 0 && $devmuxax != 0) {
+                $total_skoreestxyz = 0;
+                $checkdata = 'ada';
+            } else {
+                $total_skoreestxyz = '-';
+                $checkdata = 'kosong';
+            }
+
+            // dd($value);
+
+            $namaGMnewSidak_mua = '-';
+            foreach ($queryAsisten as $asisten) {
+                if ($asisten['est'] == 'PT.MUA' && $asisten['afd'] == 'EM') {
+                    $namaGMnewSidak_mua = $asisten['nama'];
+                    break;
+                }
+            }
+            $newSidak_mua['PT.MUA'] = [
+                'deviden' => $devmuxax,
+                'checkdata' => $checkdata,
+                'total_skorest' => $tot_estAFdx,
+                'score_estate' => $total_skoreestxyz,
+                'asisten' => $namaGMnewSidak_mua,
+                'estate' => $key,
+                'afdeling' => $devmuxax,
+                'v2check6' => $v2check5,
+            ];
+        } else {
+            $newSidak_mua = [];
+        }
+        // dd($newSidak_mua);
+
+
         // dd($keys);
         // masukan ke array data penjumlahan dari estate
         // dd($arrBtTPHperEst, $arrKRest, $arrBHest, $arrRSest, $keys);
@@ -5306,12 +5742,15 @@ class SidaktphController extends Controller
         $arrView['afdeling3'] = $resultafd3;
         $arrView['afdeling4'] = $resultafd4;
         //  untuk estate table 1 sampe 4 
+
+        // dd($resultest1);
         $arrView['estate1'] = $resultest1;
         $arrView['estate2'] = $resultest2;
         $arrView['estate3'] = $resultest3;
         $arrView['estate4'] = $resultest4;
         $arrView['hasilRh'] = $rhEstate;
         $arrView['sidaktph'] = $mtancakWIltab1;
+        $arrView['newSidak_mua'] = $newSidak_mua;
 
         // dd($mtancakWIltab1);
 
