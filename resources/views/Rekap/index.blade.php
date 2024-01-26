@@ -769,7 +769,7 @@
             success: function(result) {
                 var parseResult = JSON.parse(result)
                 var rekapafd = Object.entries(parseResult['rekapafd'])
-
+                var rekapmua = parseResult['rekapmua']
                 let table1 = rekapafd[0]
                 let table2 = rekapafd[1]
                 let table3 = rekapafd[2]
@@ -1084,6 +1084,31 @@
                         tbody3.appendChild(tr);
                     });
                 });
+                Object.entries(rekapmua).forEach(([key, value]) => {
+                    let tr = document.createElement('tr');
+
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+
+                    itemElement1.innerText = key;
+                    itemElement2.innerText = key;
+                    itemElement3.innerText = value['skorqc'];
+                    itemElement4.innerText = value['skortph'];
+                    itemElement5.innerText = value['skor_mutubuah'];
+                    setBackgroundColor(itemElement3, value['skorqc']);
+                    setBackgroundColor(itemElement4, value['skortph']);
+                    setBackgroundColor(itemElement5, value['skor_mutubuah']);
+                    tr.appendChild(itemElement1);
+                    tr.appendChild(itemElement2);
+                    tr.appendChild(itemElement3);
+                    tr.appendChild(itemElement4);
+                    tr.appendChild(itemElement5);
+
+                    tbody3.appendChild(tr);
+                });
 
                 var title3 = document.getElementById('rekapwil3');
                 let key = table3[0] ?? 'INTI';
@@ -1130,6 +1155,32 @@
                         trekap3.appendChild(tr);
                     });
                 });
+                Object.entries(rekapmua).forEach(([key, value]) => {
+                    let tr = document.createElement('tr');
+
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+
+                    itemElement1.innerText = key;
+                    itemElement2.innerText = key;
+                    itemElement3.innerText = value['asistenafd'] ?? value['manager'] ?? '-'
+                    itemElement4.innerText = value['skorestate'];
+                    itemElement5.innerText = '-'
+
+                    setBackgroundColor(itemElement4, value['skorestate']);
+
+                    tr.appendChild(itemElement1);
+                    tr.appendChild(itemElement2);
+                    tr.appendChild(itemElement3);
+                    tr.appendChild(itemElement4);
+                    tr.appendChild(itemElement5);
+
+                    trekap3.appendChild(tr);
+                });
+
 
             },
             error: function(xhr, status, error) {
@@ -1188,7 +1239,7 @@
             success: function(result) {
                 var parseResult = JSON.parse(result)
                 var rekapafd = Object.entries(parseResult['rekapafd'])
-
+                var rekapmua = parseResult['rekapmua']
                 Swal.close();
 
                 // console.log(rekapafd);
@@ -1503,6 +1554,31 @@
                         tbody3.appendChild(tr);
                     });
                 });
+                Object.entries(rekapmua).forEach(([key, value]) => {
+                    let tr = document.createElement('tr');
+
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+
+                    itemElement1.innerText = key;
+                    itemElement2.innerText = key;
+                    itemElement3.innerText = value['skorqc'];
+                    itemElement4.innerText = value['skortph'];
+                    itemElement5.innerText = value['skor_mutubuah'];
+                    setBackgroundColor(itemElement3, value['skorqc']);
+                    setBackgroundColor(itemElement4, value['skortph']);
+                    setBackgroundColor(itemElement5, value['skor_mutubuah']);
+                    tr.appendChild(itemElement1);
+                    tr.appendChild(itemElement2);
+                    tr.appendChild(itemElement3);
+                    tr.appendChild(itemElement4);
+                    tr.appendChild(itemElement5);
+
+                    tbody3.appendChild(tr);
+                });
 
                 var title3 = document.getElementById('yearwil3');
                 let key = table3[0] ?? 'INTI';
@@ -1549,6 +1625,32 @@
                         trekap3.appendChild(tr);
                     });
                 });
+                Object.entries(rekapmua).forEach(([key, value]) => {
+                    let tr = document.createElement('tr');
+
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+
+                    itemElement1.innerText = key;
+                    itemElement2.innerText = key;
+                    itemElement3.innerText = value['asistenafd'] ?? value['manager'] ?? '-'
+                    itemElement4.innerText = value['skorestate'];
+                    itemElement5.innerText = '-'
+
+                    setBackgroundColor(itemElement4, value['skorestate']);
+
+                    tr.appendChild(itemElement1);
+                    tr.appendChild(itemElement2);
+                    tr.appendChild(itemElement3);
+                    tr.appendChild(itemElement4);
+                    tr.appendChild(itemElement5);
+
+                    trekap3.appendChild(tr);
+                });
+
 
 
             },
@@ -1629,6 +1731,8 @@
 
                 var parseResult = JSON.parse(result)
                 var rekapafd = Object.entries(parseResult['rekapafd'])
+                var rekapmua = parseResult['rekapmua']
+                // console.log(rekapmua);
                 // console.log(rekapafd);
                 let table1 = rekapafd[0]
                 let table2 = rekapafd[1]
@@ -1810,6 +1914,10 @@
                     });
 
                 });
+
+                // Assuming rekapmua is your array
+
+
                 var tbody2 = document.getElementById('afd2');
                 // Iterate through the main object keys (KNE, PLE, etc.)
                 Object.keys(table2[1]).forEach(key => {
@@ -1949,6 +2057,31 @@
                         tbody3.appendChild(tr);
                     });
                 });
+                Object.entries(rekapmua).forEach(([key, value]) => {
+                    let tr = document.createElement('tr');
+
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+
+                    itemElement1.innerText = key;
+                    itemElement2.innerText = key;
+                    itemElement3.innerText = value['skorqc'];
+                    itemElement4.innerText = value['skortph'];
+                    itemElement5.innerText = value['skor_mutubuah'];
+                    setBackgroundColor(itemElement3, value['skorqc']);
+                    setBackgroundColor(itemElement4, value['skortph']);
+                    setBackgroundColor(itemElement5, value['skor_mutubuah']);
+                    tr.appendChild(itemElement1);
+                    tr.appendChild(itemElement2);
+                    tr.appendChild(itemElement3);
+                    tr.appendChild(itemElement4);
+                    tr.appendChild(itemElement5);
+
+                    tbody3.appendChild(tr);
+                });
 
 
                 // console.log(table3);
@@ -1993,6 +2126,31 @@
                         tr.appendChild(itemElement5)
                         trekap3.appendChild(tr);
                     });
+                });
+                Object.entries(rekapmua).forEach(([key, value]) => {
+                    let tr = document.createElement('tr');
+
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+
+                    itemElement1.innerText = key;
+                    itemElement2.innerText = key;
+                    itemElement3.innerText = value['asistenafd'] ?? value['manager'] ?? '-'
+                    itemElement4.innerText = value['skorestate'];
+                    itemElement5.innerText = '-'
+
+                    setBackgroundColor(itemElement4, value['skorestate']);
+
+                    tr.appendChild(itemElement1);
+                    tr.appendChild(itemElement2);
+                    tr.appendChild(itemElement3);
+                    tr.appendChild(itemElement4);
+                    tr.appendChild(itemElement5);
+
+                    trekap3.appendChild(tr);
                 });
 
 
