@@ -3562,7 +3562,7 @@
                 closeLoadingSwal(showTahung);
                 var parseResult = JSON.parse(result)
                 var region = Object.entries(parseResult['listregion'])
-
+                var rekapmua = parseResult['rekapmua']
                 var mutu_buah = Object.entries(parseResult['mutu_buah'])
                 // console.log(mutu_buah);
                 var mutubuah_est = Object.entries(parseResult['mutubuah_est'])
@@ -4418,6 +4418,38 @@
 
                                 tbody3.appendChild(tr);
                             });
+
+
+                        });
+
+                        Object.entries(rekapmua).forEach(([key, value]) => {
+                            let tr = document.createElement('tr');
+
+                            let itemElement1 = document.createElement('td');
+                            let itemElement2 = document.createElement('td');
+                            let itemElement3 = document.createElement('td');
+                            let itemElement4 = document.createElement('td');
+                            let itemElement5 = document.createElement('td');
+                            itemElement1.classList.add("text-center")
+                            itemElement2.classList.add("text-center")
+                            itemElement3.classList.add("text-center")
+                            itemElement4.classList.add("text-center")
+                            itemElement5.classList.add("text-center")
+                            itemElement1.innerText = key;
+                            itemElement2.innerText = key;
+                            itemElement3.innerText = value['Nama_assist'];
+                            itemElement4.innerText = value['All_skor'];
+                            itemElement5.innerText = '-'
+
+                            setBackgroundColor(itemElement4, value['All_skor']);
+
+                            tr.appendChild(itemElement1);
+                            tr.appendChild(itemElement2);
+                            tr.appendChild(itemElement3);
+                            tr.appendChild(itemElement4);
+                            tr.appendChild(itemElement5);
+
+                            tbody3.appendChild(tr);
                         });
                     } else {
                         console.log("tab3 is null or undefined");
@@ -5353,7 +5385,7 @@
                 var parseResult = JSON.parse(result)
                 var mutu_buah = Object.entries(parseResult['mutu_buah'])
                 var rhdata = Object.entries(parseResult['rhdata'])
-
+                var rekapmua = parseResult['rekapmua']
                 // console.log(rhdata);
                 //         $('#tahun1').empty()
                 // $('#tahun2').empty()
@@ -5524,7 +5556,35 @@
                     });
                 });
 
+                Object.entries(rekapmua).forEach(([key, value]) => {
+                    let tr = document.createElement('tr');
 
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+                    itemElement1.classList.add("text-center")
+                    itemElement2.classList.add("text-center")
+                    itemElement3.classList.add("text-center")
+                    itemElement4.classList.add("text-center")
+                    itemElement5.classList.add("text-center")
+                    itemElement1.innerText = key;
+                    itemElement2.innerText = key;
+                    itemElement3.innerText = value['Nama_assist'];
+                    itemElement4.innerText = value['All_skor'];
+                    itemElement5.innerText = '-'
+
+                    setBackgroundColor(itemElement4, value['All_skor']);
+
+                    tr.appendChild(itemElement1);
+                    tr.appendChild(itemElement2);
+                    tr.appendChild(itemElement3);
+                    tr.appendChild(itemElement4);
+                    tr.appendChild(itemElement5);
+
+                    trekap3.appendChild(tr);
+                });
                 sbi_chart();
             },
             error: function(jqXHR, textStatus, errorThrown) {
