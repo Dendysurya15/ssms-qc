@@ -132,21 +132,21 @@
                     <td style="background-color: #80A29E;">{{$item['est']}}</td>
                     <td style="background-color: #80A29E;">{{$item['Jumlah_janjang']}}</td>
                     <td style="background-color: #80A29E;">{{$item['tnp_brd']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['persenTNP_brd']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['persenTNP_brd'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['krg_brd']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['persenKRG_brd']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['persenKRG_brd'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['total_jjg']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['persen_totalJjg']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['persen_totalJjg'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['jjg_matang']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['persen_jjgMtang']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['persen_jjgMtang'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['lewat_matang']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['persen_lwtMtng']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['persen_lwtMtng'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['janjang_kosong']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['persen_kosong']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['persen_kosong'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['abnormal']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['abnormal_persen']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['abnormal_persen'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['vcut']}}</td>
-                    <td style="background-color: #80A29E;">{{$item['vcut_persen']}}</td>
+                    <td style="background-color: #80A29E;">{{round($item['vcut_persen'],2)}}</td>
                     <td style="background-color: #80A29E;">{{$item['rat_dmg']}}</td>
                     <td style="background-color: #80A29E;">{{$item['rd_persen']}}</td>
                     <td style="background-color: #80A29E;">{{$item['jumkarung'] ?? $item['karung']}}/{{$item['blok']}}</td>
@@ -156,21 +156,21 @@
                     <td>{{$item['est']}}</td>
                     <td>{{$item['Jumlah_janjang']}}</td>
                     <td>{{$item['tnp_brd']}}</td>
-                    <td>{{$item['persenTNP_brd']}}</td>
+                    <td>{{round($item['persenTNP_brd'],2)}}</td>
                     <td>{{$item['krg_brd']}}</td>
-                    <td>{{$item['persenKRG_brd']}}</td>
+                    <td>{{round($item['persenKRG_brd'],2)}}</td>
                     <td>{{$item['total_jjg']}}</td>
-                    <td>{{$item['persen_totalJjg']}}</td>
+                    <td>{{round($item['persen_totalJjg'],2)}}</td>
                     <td>{{$item['jjg_matang']}}</td>
-                    <td>{{$item['persen_jjgMtang']}}</td>
+                    <td>{{round($item['persen_jjgMtang'],2)}}</td>
                     <td>{{$item['lewat_matang']}}</td>
-                    <td>{{$item['persen_lwtMtng']}}</td>
+                    <td>{{round($item['persen_lwtMtng'],2)}}</td>
                     <td>{{$item['janjang_kosong']}}</td>
-                    <td>{{$item['persen_kosong']}}</td>
+                    <td>{{round($item['persen_kosong'],2)}}</td>
                     <td>{{$item['abnormal']}}</td>
-                    <td>{{$item['abnormal_persen']}}</td>
+                    <td>{{round($item['abnormal_persen'],2)}}</td>
                     <td>{{$item['vcut']}}</td>
-                    <td>{{$item['vcut_persen']}}</td>
+                    <td>{{round($item['vcut_persen'],2)}}</td>
                     <td>{{$item['rat_dmg']}}</td>
                     <td>{{$item['rd_persen']}}</td>
                     <td>{{$item['jumkarung'] ?? $item['karung']}}/{{$item['blok']}}</td>
@@ -192,21 +192,21 @@
                     <td colspan="2" style="text-align:center;background-color: #FFE082;">{{$estdata['estate']}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['Jumlah_janjang']}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['tnp_brd']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['persenTNP_brd']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['persenTNP_brd'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['krg_brd']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['persenKRG_brd']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['persenKRG_brd'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['total_jjg']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['persen_totalJjg']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['persen_totalJjg'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['jjg_matang']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['persen_jjgMtang']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['persen_jjgMtang'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['lewat_matang']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['persen_lwtMtng']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['persen_lwtMtng'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['janjang_kosong']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['persen_kosong']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['persen_kosong'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['abnormal']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['abnormal_persen']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['abnormal_persen'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['vcut']}}</td>
-                    <td style="background-color: #FFE082;">{{$estdata['vcut_persen']}}</td>
+                    <td style="background-color: #FFE082;">{{round($estdata['vcut_persen'],2)}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['rat_dmg']}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['rd_persen']}}</td>
                     <td style="background-color: #FFE082;">{{$estdata['jumkarung'] ?? $estdata['karung']}}/{{$estdata['blok']}}</td>

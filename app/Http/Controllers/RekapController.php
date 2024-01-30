@@ -598,20 +598,17 @@ class RekapController extends Controller
             }
         }
 
-        // dd($newSidak_mua);
+        // dd($defaultWeek);
 
         // dd($dividen, $defaultWeek);
         $newSidak = array();
         foreach ($defaultWeek as $key => $value) {
-            $dividen_afd = 0;
             $total_skoreest = 0;
             $tot_estAFd = 0;
             $new_dvdAfd = 0;
             $new_dvdAfdest = 0;
             $total_estkors = 0;
             $total_skoreafd = 0;
-
-            $deviden = 0;
             $devest = count($value);
             // dd($devest);
             // dd($value);
@@ -873,6 +870,17 @@ class RekapController extends Controller
                 $new_dvdAfdest += $new_dvdest;
                 $v2check5 += $v2check4;
                 $newpembagi3 += $newpembagi2;
+            } else {
+                $newSidak[$key][$key1]['total_brd'] = 0;
+                $newSidak[$key][$key1]['total_janjang'] = 0;
+                $newSidak[$key][$key1]['new_deviden'] = 0;
+                $newSidak[$key][$key1]['asisten'] = 0;
+                $newSidak[$key][$key1]['total_skoreest'] = 0;
+                $newSidak[$key][$key1]['total_score'] = '-';
+                $newSidak[$key][$key1]['est'] = $key;
+                $newSidak[$key][$key1]['afd'] = $key1;
+                $newSidak[$key][$key1]['devidenest'] = 0;
+                $newSidak[$key][$key1]['v2check4'] = 0;
             }
 
 
@@ -917,6 +925,8 @@ class RekapController extends Controller
             }
         }
 
+
+        // dd($newSidak);
         // dd($sidaktph[4]['MRE']['OA']);
 
         // dd($newDefaultWeek['KNE'], $newSidak['KNE']['OA']);
@@ -5303,6 +5313,7 @@ class RekapController extends Controller
         }
         $newSidak = array();
 
+        // dd($result);
 
         foreach ($result as $key => $value1) {
             $v2check6 = 0;
@@ -8988,7 +8999,7 @@ class RekapController extends Controller
             $rekapmua = [];
         }
 
-        // dd($rekapmua);
+        // dd($newsidakend);
         // dd($sidakbuahmuah, $mutu_buah);
         // end mua ====================================================================== 
         $rekapafd = [];
@@ -13892,7 +13903,7 @@ class RekapController extends Controller
             $rekapmua = [];
         }
 
-        // dd($rekapmua);
+        // dd($rekapafd);
         $arr = array();
         $arr['rekapafd'] = $rekapafd;
         $arr['rekapmua'] = $rekapmua;

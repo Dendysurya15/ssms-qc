@@ -48,7 +48,7 @@ Route::post('/getData', [SidaktphController::class, 'getData'])->name('getData')
 Route::post('/dashboardtph', [SidaktphController::class, 'chart'])->name('chart');
 Route::post('/downloadPDF', [SidaktphController::class, 'downloadPDF'])->name('downloadPDF');
 
-Route::post('/getBtTph', [SidaktphController::class, 'getBtTph'])->name('getBtTph');
+Route::get('/getBtTph', [SidaktphController::class, 'getBtTph'])->name('getBtTph');
 Route::post('/getKrTph', [SidaktphController::class, 'getKrTph'])->name('getKrTph');
 Route::post('/getBHtgl', [SidaktphController::class, 'getBHtgl'])->name('getBHtgl');
 Route::get('/exportPDF', [SidaktphController::class, 'exportPDF'])->name('exportPDF');
