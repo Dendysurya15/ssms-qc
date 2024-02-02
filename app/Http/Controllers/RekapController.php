@@ -4487,13 +4487,17 @@ class RekapController extends Controller
                         $key == $key1
                         && $key == $key2
                     ) {
-                        if ($value['check_data'] == 'kosong' && $value1['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                        if ((isset($value['check_data']) && $value['check_data'] === 'kosong' ? $value['check_data'] : 0) &&
+                            (isset($value1['check_data']) && $value1['check_data'] === 'kosong' ? $value1['tph_baris_blok'] : 0) &&
+                            (isset($value2['check_data']) && $value2['check_data'] === 'kosong' ? $value2['tph_sample'] : 0)
+                        ) {
                             $qcinspeksimua[$key]['TotalSkor'] = '-';
                             $qcinspeksimua[$key]['checkdata'] = 'kosong';
                         } else {
                             $qcinspeksimua[$key]['TotalSkor'] = $value['skor_akhir'] + $value1['TOTAL_SKOR'] + $value2['totalSkor'];
                             $qcinspeksimua[$key]['checkdata'] = 'ada';
                         }
+
 
                         $qcinspeksimua[$key]['est'] = $key;
                         $qcinspeksimua[$key]['afd'] = 'OA';

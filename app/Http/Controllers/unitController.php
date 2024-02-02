@@ -322,10 +322,12 @@ class unitController extends Controller
             ->where('wil.regional', $regional)
             ->where('estate.nama', '!=', 'PLASMA')
             // ->where('wil.nama', '!=', 'Plasma')
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM'])
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'NBM', 'REG-1', 'SLM', 'SR', 'TC', 'SRS', 'SGM', 'SYM', 'SKM', 'KTM'])
             ->get();
 
         $queryEstate = json_decode($queryEstate, true);
+
+        // dd($queryEstate);
 
         $dataRaw = array();
 

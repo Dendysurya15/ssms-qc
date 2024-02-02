@@ -91,7 +91,7 @@ class emplacementsController extends Controller
             ->select('estate.*')
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'SRS', 'TC', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM'])
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'SRS', 'TC', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'Plasma3'])
             ->get();
         $queryEste = json_decode($queryEste, true);
 
@@ -1048,7 +1048,7 @@ class emplacementsController extends Controller
             ->select('estate.*')
             ->join('wil', 'wil.id', '=', 'estate.wil')
             ->where('wil.regional', $regional)
-            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE'])
+            ->whereNotIn('estate.est', ['SRE', 'LDE', 'SKE', 'Plasma3'])
             ->get();
         $queryEste = json_decode($queryEste, true);
 
@@ -1078,19 +1078,18 @@ class emplacementsController extends Controller
         $estates = array_column($filteredArray, 'est');
 
         $qerafd = array_column($filteredArray, 'namaafd');
-        // dd($estates);
+        // dd($estates, $qerafd, $est_emp);
         $emplacement = DB::connection('mysql2')->table('perumahan')
             ->select(
                 "perumahan.*",
                 DB::raw('DATE_FORMAT(perumahan.datetime, "%M") as bulan'),
                 DB::raw('DATE_FORMAT(perumahan.datetime, "%Y") as tahun'),
+                DB::raw('CASE WHEN perumahan.est = "GDE" AND perumahan.afd = "OD" THEN "EST" ELSE perumahan.afd END AS newafd')
             )
             ->where('perumahan.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
-            ->whereIn('afd', $qerafd)
-            // ->where('est', '=', 'NBM')
-            // ->whereIn('perumahan.afd', ['EST', 'WIL'])
-            // ->where('perumahan.afd', 'EST')
+            ->whereIn(DB::raw('CASE WHEN perumahan.est = "GDE" AND perumahan.afd = "OD" THEN "EST" ELSE perumahan.afd END'), $qerafd)
+
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
             ->orderBy('datetime', 'asc')
@@ -1099,20 +1098,20 @@ class emplacementsController extends Controller
         $emplacement = json_decode(json_encode($emplacement), true); // Convert the collection to an array
         $emplacement = collect($emplacement)->groupBy(['est', 'afd'])->toArray();
 
-        // dd($emplacement, $qerafd);
+        // dd($emplacement);
 
         $lingkungan = DB::connection('mysql2')->table('lingkungan')
             ->select(
                 "lingkungan.*",
                 DB::raw('DATE_FORMAT(lingkungan.datetime, "%M") as bulan'),
                 DB::raw('DATE_FORMAT(lingkungan.datetime, "%Y") as tahun'),
+                DB::raw('CASE WHEN lingkungan.est = "GDE" AND lingkungan.afd = "OD" THEN "EST" ELSE lingkungan.afd END AS newafd')
             )
             ->where('lingkungan.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
-            ->whereIn('afd', $qerafd)
-            // ->where('est', '=', 'NBM')
-            // ->whereIn('lingkungan.afd', ['EST', 'WIL'])
-            // ->where('lingkungan.afd', 'EST')
+            // ->whereIn('afd', $qerafd)
+            ->whereIn(DB::raw('CASE WHEN lingkungan.est = "GDE" AND lingkungan.afd = "OD" THEN "EST" ELSE lingkungan.afd END'), $qerafd)
+
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
             ->orderBy('datetime', 'asc')
@@ -1127,13 +1126,13 @@ class emplacementsController extends Controller
                 "landscape.*",
                 DB::raw('DATE_FORMAT(landscape.datetime, "%M") as bulan'),
                 DB::raw('DATE_FORMAT(landscape.datetime, "%Y") as tahun'),
+                DB::raw('CASE WHEN landscape.est = "GDE" AND landscape.afd = "OD" THEN "EST" ELSE landscape.afd END AS newafd')
+
             )
             ->where('landscape.datetime', 'like', '%' . $bulan . '%')
             ->whereIn('est', $estates)
-            ->whereIn('afd', $qerafd)
-            // ->where('est', '=', 'NBM')
-            // ->whereIn('landscape.afd', ['EST', 'WIL'])
-            // ->where('landscape.afd', 'EST')
+            // ->whereIn('afd', $qerafd)
+            ->whereIn(DB::raw('CASE WHEN landscape.est = "GDE" AND landscape.afd = "OD" THEN "EST" ELSE landscape.afd END'), $qerafd)
             ->orderBy('est', 'asc')
             ->orderBy('afd', 'asc')
             ->orderBy('datetime', 'asc')
@@ -1141,7 +1140,6 @@ class emplacementsController extends Controller
 
         $landscape = json_decode(json_encode($landscape), true); // Convert the collection to an array
         $landscape = collect($landscape)->groupBy(['est', 'afd'])->toArray();
-
         // dd($landscape, $emplacement, $lingkungan);
 
 
@@ -1201,27 +1199,6 @@ class emplacementsController extends Controller
         // dd($defaultNew, $dataPerBulan);
         $emplashmenOri = array();
 
-        // dd($defaultNew, $filteredArray);
-        // foreach ($defaultNew as $key => $value) {
-        //     foreach ($value as $key3 => $value3) {
-        //         foreach ($value3 as $key4 => $value4) {
-        //             foreach ($filteredArray as $key2 => $value2) if ($key == $value2['est']) {
-
-        //                 $exceptKeys = ['REG-I', 'TC', 'SRS', 'SR', 'SLM', 'SGM', 'SKM', 'SYM', 'NBM', 'NKM', 'REG-1', 'MLM', 'NKM', 'SCM', 'KTM', 'SJM'];
-        //                 if (!in_array($value2['est'], $exceptKeys)) {
-        //                     $newKeys = $value2['est'] . '-' . 'EST';
-        //                 } else {
-        //                     $newKeys = $value2['est'];
-        //                 }
-        //                 // $newKeys = $value2['est'] . '-' . 'EST';
-        //                 // dd($keyToAdd);
-        //                 $emplashmenOri[$value2['nama']][$newKeys][$key3] = $value4;
-        //             }
-        //         }
-        //     }
-        // }
-
-        // dd($emplashmenOri);
 
         // dd($defaultNew);
         foreach ($defaultNew as $key => $value) {
@@ -1246,8 +1223,8 @@ class emplacementsController extends Controller
                 }
             }
         }
-        // dd($key);
         // dd($emplashmenOri);
+        // dd($defaultNew);
 
         function combineItemsByDatetime($data)
         {
@@ -2157,21 +2134,6 @@ class emplacementsController extends Controller
                     'pic' => '-',
                 );
 
-                // Loop through each month and add the corresponding number of values and dates
-                // foreach ($allMonths as $month) {
-                //     $values = $skor_total_per_month[$month] ?? array();
-                //     $dates = $dates_per_month[$month] ?? array();
-                //     $avg = $avg_per_month[$month] ?? 0;
-                //     if (isset($header_cell[$month]) && $header_cell[$month] === 1 && count($values) === 1 && $values[0] === 0) {
-                //         $values = $values;
-                //     } else {
-                //         $values = array_pad($values, $max_values, 0);
-                //     }
-
-                //     $new_row[$month] = $values;
-                //     $new_row[$month . '_avg'] = $avg;
-                //     $new_row[$month . '_dates'] = $dates; // Add the dates for the month
-                // }
 
                 foreach ($allMonths as $month) {
                     $values = $skor_total_per_month[$month] ?? array();
