@@ -4325,7 +4325,7 @@ class inspeksidashController extends Controller
                                                 }
 
 
-                                                if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                if ($trans1['check_data'] == 'kosong' && $buah1['check_data'] === 'kosong' && $value1['check_data'] === 'kosong') {
                                                     $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = 0;
                                                 } else {
                                                     $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = $value1['skor_akhir'] + $buah1['TOTAL_SKOR'] + $trans1['totalSkor'];

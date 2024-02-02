@@ -582,7 +582,7 @@
                           <div class="card">
                             <div class="card-body">
                               <p style="font-size: 15px; text-align: center;" class="text-uppercase">
-                                <b>Brondolan Tinggal (Brondol / Blok)</b>
+                                <b>Brondolan Tinggal</b>
                               </p>
                               <div id="bttinggal"></div>
                             </div>
@@ -591,34 +591,15 @@
                         <div class="col-sm-6">
                           <div class="card">
                             <div class="card-body">
-                              <p style="font-size: 15px; text-align: center;" class="text-uppercase"><b>Karung
-                                  Berisi Brondolan (Karung / Blok)</b>
+                              <p style="font-size: 15px; text-align: center;" class="text-uppercase"><b>
+                                  Buah Tinggal
+                                </b>
                               <div id="karung"></div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="row">
-                        <div class="col-sm-6">
-                          <div class="card">
-                            <div class="card-body">
-                              <p style="font-size: 15px; text-align: center;" class="text-uppercase"><b>Buah
-                                  Tinggal (Janjang / Blok)</b>
-                              </p>
-                              <div id="btt_tgl"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-sm-6">
-                          <div class="card">
-                            <div class="card-body">
-                              <p style="font-size: 15px; text-align: center;" class="text-uppercase"><b>Restan
-                                  Tidak Dilaporkan (Janjang / Blok)</b>
-                              <div id="rst_none"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -1826,11 +1807,6 @@
     var renderChartKarung = new ApexCharts(document.querySelector("#karung"), options);
     renderChartKarung.render();
 
-    var renderChartBuahTglTph = new ApexCharts(document.querySelector("#btt_tgl"), options);
-    renderChartBuahTglTph.render();
-
-    var renderChartBuahRestanNone = new ApexCharts(document.querySelector("#rst_none"), options);
-    renderChartBuahRestanNone.render();
 
     //render chart perwilayah temporary /0 value
     var will_btt = new ApexCharts(document.querySelector("#btt_id"), will);
@@ -1839,11 +1815,6 @@
     var renderChartKarungWil = new ApexCharts(document.querySelector("#karung_id"), will);
     renderChartKarungWil.render();
 
-    var renderChartBuahTglTphWil = new ApexCharts(document.querySelector("#bttTglTph_id"), will);
-    renderChartBuahTglTphWil.render();
-
-    var renderChartBuahRestanNoneWil = new ApexCharts(document.querySelector("#rst_none_id"), will);
-    renderChartBuahRestanNoneWil.render();
 
     // Render Chart Month
     var renderChartTphMonth = new ApexCharts(document.querySelector("#bttinggalMonth"), options);
@@ -4365,10 +4336,35 @@
           let table1 = rekapafd[0]
           let table2 = rekapafd[1]
           let table3 = rekapafd[2]
-
+          var listest = parseResult['listest']
+          var brdchart = parseResult['brdchart']
+          var chartrst = parseResult['chartrst']
           // $('#tbody1').empty()
           // $('#tbody2').empty()
           // $('#tbody3').empty()
+
+          renderChartTph.updateSeries([{
+            name: 'Brondolan Tinggal',
+            data: brdchart
+          }]);
+
+          // If ktg is an array, you can use it for x-axis categories
+          renderChartTph.updateOptions({
+            xaxis: {
+              categories: listest
+            }
+          });
+          renderChartKarung.updateSeries([{
+            name: 'Buah Tinggal',
+            data: chartrst
+          }]);
+
+          // If ktg is an array, you can use it for x-axis categories
+          renderChartKarung.updateOptions({
+            xaxis: {
+              categories: listest
+            }
+          });
 
 
           var trekap1 = document.getElementById('tbody1');

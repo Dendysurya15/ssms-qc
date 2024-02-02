@@ -2479,59 +2479,74 @@ class RekapController extends Controller
             $mtTranstab1Wil[$key]['totalSkor'] = 0;
         }
 
+
+
         foreach ($mtancaktab1Wil as $key => $value) {
-            foreach ($value as $key1 => $value1) if (is_array($value1)) {
-                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-                    foreach ($mtBuahtab1Wil as $bh => $buah) {
-                        foreach ($buah as $bh1 => $buah1) if (is_array($buah1)) {
-                            foreach ($buah1 as $bh2 => $buah2) if (is_array($buah2)) {
-                                foreach ($mtTranstab1Wil as $tr => $trans) {
-                                    foreach ($trans as $tr1 => $trans1) if (is_array($trans1)) {
-                                        foreach ($trans1 as $tr2 => $trans2) if (is_array($trans2))
-                                            if (
-                                                $bh == $key
-                                                && $bh == $tr
-                                                && $bh1 == $key1
-                                                && $bh1 == $tr1
-                                                && $bh2 == $key2
-                                                && $bh2 == $tr2
-                                            ) {
-                                                // dd($trans2);
-                                                // dd($key);
-                                                if ($value2['check_input'] == 'manual' && $value2['nilai_input'] != 0) {
-                                                    $RekapWIlTabel[$key][$key1][$key2]['data'] = 'ada';
-                                                } else if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
-                                                    $RekapWIlTabel[$key][$key1][$key2]['data'] = 'kosong';
-                                                }
+            foreach ($value as $key1 => $value1) {
+                if (is_array($value1)) {
+                    foreach ($value1 as $key2 => $value2) {
+                        if (is_array($value2)) {
+                            foreach ($mtBuahtab1Wil as $bh => $buah) {
+                                foreach ($buah as $bh1 => $buah1) {
+                                    if (is_array($buah1)) {
+                                        foreach ($buah1 as $bh2 => $buah2) {
+                                            if (is_array($buah2)) {
+                                                foreach ($mtTranstab1Wil as $tr => $trans) {
+                                                    foreach ($trans as $tr1 => $trans1) {
+                                                        if (is_array($trans1)) {
+                                                            foreach ($trans1 as $tr2 => $trans2) {
+                                                                if (is_array($trans2)) {
+                                                                    if (
+                                                                        $bh == $key &&
+                                                                        $bh == $tr &&
+                                                                        $bh1 == $key1 &&
+                                                                        $bh1 == $tr1 &&
+                                                                        $bh2 == $key2 &&
+                                                                        $bh2 == $tr2
+                                                                    ) {
+                                                                        // dd($trans2);
+                                                                        // dd($key);
+                                                                        if ($value2['check_input'] === 'manual' && $value2['nilai_input'] != 0) {
+                                                                            $RekapWIlTabel[$key][$key1][$key2]['data'] = 'ada';
+                                                                        } else if ($trans2['check_data'] === 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                                            $RekapWIlTabel[$key][$key1][$key2]['data'] = 'kosong';
+                                                                        }
 
-                                                if ($value2['check_input'] == 'manual') {
-                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['nilai_input'];
-                                                } else  if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
-                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = 0;
-                                                } else {
-                                                    $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['skor_akhir'] + $buah2['TOTAL_SKOR'] + $trans2['totalSkor'];
-                                                }
-
-
-                                                if ($trans2['check_data'] == 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
-                                                    $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = 0;
-                                                    $RekapWIlTabel[$key][$key1]['data'] = 'kosong';
-                                                } else {
-                                                    $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = $value1['skor_akhir'] + $buah1['TOTAL_SKOR'] + $trans1['totalSkor'];
-                                                }
+                                                                        if ($value2['check_input'] === 'manual') {
+                                                                            $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['nilai_input'];
+                                                                        } else  if ($trans2['check_data'] === 'kosong' && $buah2['check_data'] === 'kosong' && $value2['check_data'] === 'kosong') {
+                                                                            $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = 0;
+                                                                        } else {
+                                                                            $RekapWIlTabel[$key][$key1][$key2]['TotalSkor'] = $value2['skor_akhir'] + $buah2['TOTAL_SKOR'] + $trans2['totalSkor'];
+                                                                        }
 
 
-                                                if ($value1['check_data'] == 'kosong' && $buah1['check_data'] === 'kosong' && $trans1['check_data'] === 'kosong') {
-                                                    $RekapWIlTabel[$key][$key1]['dataEst'] = 'kosong';
-                                                }
+                                                                        if ($trans1['check_data'] === 'kosong' && $buah1['check_data'] === 'kosong' && $value1['check_data'] === 'kosong') {
+                                                                            $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = 0;
+                                                                            $RekapWIlTabel[$key][$key1]['data'] = 'kosong';
+                                                                        } else {
+                                                                            $RekapWIlTabel[$key][$key1]['TotalSkorEST'] = $value1['skor_akhir'] + $buah1['TOTAL_SKOR'] + $trans1['totalSkor'];
+                                                                        }
 
-                                                // dd($value,$buah,$trans);
-                                                if ($trans['check_data'] == 'kosong' && $buah['check_data'] === 'kosong' && $value['check_data'] === 'kosong') {
-                                                    $RekapWIlTabel[$key]['TotalSkorWil'] = 0;
-                                                } else {
-                                                    $RekapWIlTabel[$key]['TotalSkorWil'] = $value['skor_akhir'] + $buah['TOTAL_SKOR'] + $trans['totalSkor'];
+
+                                                                        if ($value1['check_data'] === 'kosong' && $buah1['check_data'] === 'kosong' && $trans1['check_data'] === 'kosong') {
+                                                                            $RekapWIlTabel[$key][$key1]['dataEst'] = 'kosong';
+                                                                        }
+
+                                                                        // dd($value,$buah,$trans);
+                                                                        if ($trans['check_data'] === 'kosong' && $buah['check_data'] === 'kosong' && $value['check_data'] === 'kosong') {
+                                                                            $RekapWIlTabel[$key]['TotalSkorWil'] = 0;
+                                                                        } else {
+                                                                            $RekapWIlTabel[$key]['TotalSkorWil'] = $value['skor_akhir'] + $buah['TOTAL_SKOR'] + $trans['totalSkor'];
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
+                                        }
                                     }
                                 }
                             }
@@ -2540,6 +2555,9 @@ class RekapController extends Controller
                 }
             }
         }
+
+        // dd($RekapWIlTabel);
+        // dd($mtancaktab1Wil, $mtBuahtab1Wil, $mtTranstab1Wil, $RekapWIlTabel);
 
         foreach ($RekapWIlTabel as $key1 => $estates)  if (is_array($estates)) {
             $sortedData = array();
