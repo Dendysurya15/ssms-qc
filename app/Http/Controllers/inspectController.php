@@ -1475,7 +1475,7 @@ class inspectController extends Controller
             $testing[$key]['total_score']  = skor_buah_tinggal($rst_esttph) +  skor_brd_tinggal($bt_esttph);
         }
 
-        // dd($dataSkor);
+        // dd($testing);
         $regdata = [];
         $tphblok2 = 0;
         $tot_jjg2 = 0;
@@ -1686,12 +1686,22 @@ class inspectController extends Controller
         $regdata['mtb_per_kr'] = $per_kr;
         $regdata['mtb_abnormal'] = $total_abnormal2;
         $regdata['mtb_per_abnormal'] = $PerAbr;
-        $regdata['skor_mentah'] = skor_buah_mentah_mb($PerMth);
-        $regdata['skor_masak'] = skor_buah_masak_mb($PerMsk);
-        $regdata['skor_over'] = skor_buah_over_mb($PerOver);
-        $regdata['skor_jjgKosong'] = skor_jangkos_mb($Perkosongjjg);
-        $regdata['skor_vcut'] = skor_vcut_mb($PerVcut);
-        $regdata['skor_kr'] = skor_abr_mb($per_kr);
+        if ($dataBLok != 0) {
+            $regdata['skor_mentah'] = skor_buah_mentah_mb($PerMth);
+            $regdata['skor_masak'] = skor_buah_masak_mb($PerMsk);
+            $regdata['skor_over'] = skor_buah_over_mb($PerOver);
+            $regdata['skor_jjgKosong'] = skor_jangkos_mb($Perkosongjjg);
+            $regdata['skor_vcut'] = skor_vcut_mb($PerVcut);
+            $regdata['skor_kr'] = skor_abr_mb($per_kr);
+        } else {
+            $regdata['skor_mentah'] = '-';
+            $regdata['skor_masak']  = '-';
+            $regdata['skor_over']  = '-';
+            $regdata['skor_jjgKosong']  = '-';
+            $regdata['skor_vcut']  = '-';
+            $regdata['skor_kr'] = '-';
+        }
+
         $regdata['totalmtb_skor'] = $totalSkor;
         //mutu ancak 
         $mta_brdtotal2 = $p_cak2 + $k_cak2 + $tgl_cak2;
@@ -1744,9 +1754,16 @@ class inspectController extends Controller
         $regdata['mta_buah'] = $sumPerBHWil;
         $regdata['mta_palepah'] = $palepah2;
         $regdata['mta_perpalepah'] = $perPiWil;
-        $regdata['mta_skor_bh'] = skor_brd_ma($brdPerwil);
-        $regdata['mta_skor_brd'] = skor_buah_Ma($sumPerBHWil);
-        $regdata['mta_skor_ps'] = skor_palepah_ma($perPiWil);
+        if ($pk_panen2 != 0) {
+            $regdata['mta_skor_bh'] = skor_brd_ma($brdPerwil);
+            $regdata['mta_skor_brd'] = skor_buah_Ma($sumPerBHWil);
+            $regdata['mta_skor_ps'] = skor_palepah_ma($perPiWil);
+        } else {
+            $regdata['mta_skor_bh'] = '-';
+            $regdata['mta_skor_brd'] = '-';
+            $regdata['mta_skor_ps'] = '-';
+        }
+
         $regdata['mta_totalskor'] = $totalWil;
         //mutu transport 
 
@@ -1769,11 +1786,27 @@ class inspectController extends Controller
         $regdata['mtt_brdpertph'] = $brdPertphWil;
         $regdata['mtt_buahx'] = $total_rst2x;
         $regdata['mtt_buahpertph'] = $buahPerTPHWil;
-        $regdata['mtt_brd'] = skor_brd_tinggal($brdPertphWil);
-        $regdata['mtt_buah'] = skor_buah_tinggal($buahPerTPHWil);
+        if ($tphsample2 != 0) {
+            $regdata['mtt_brd'] = skor_brd_tinggal($brdPertphWil);
+            $regdata['mtt_buah'] = skor_buah_tinggal($buahPerTPHWil);
+        } else {
+            $regdata['mtt_brd'] = '-';
+            $regdata['mtt_buah']  = '-';
+        }
+
         $regdata['mtt_totalskor'] = $totalSkorWil;
 
-        $regdata['allscore'] = $totalSkorWil + $totalWil + $totalSkor;
+        if (
+            $dataBLok != 0 &&
+            $pk_panen2 != 0 &&
+            $tphsample2 != 0
+        ) {
+            $regdata['allscore'] = $totalSkorWil + $totalWil + $totalSkor;
+        } else {
+            $regdata['allscore'] = '-';
+        }
+
+
         $regdata['est'] = 'REG-' . convertToRoman($regs);
         // dd($dataSkor, $regdata);
 
