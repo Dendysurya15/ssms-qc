@@ -231,3 +231,4 @@ Route::get('/getdatayear', [RekapController::class, 'getdatayear'])->name('allsk
 Route::get('/getdataweek', [RekapController::class, 'getdataweek'])->name('getdataweek');
 Route::get('/getestatesidakmtbuah', [MutubuahController::class, 'getestatesidakmtbuah'])->name('getestatesidakmtbuah');
 Route::post('/duplicatesidakmtb', [MutubuahController::class, 'duplicatesidakmtb'])->name('duplicatesidakmtb');
+Route::post('/changedatadate', [MutubuahController::class, 'changedatadate'])->name('changedatadate');

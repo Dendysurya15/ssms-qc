@@ -457,6 +457,11 @@
         <!-- end animasi -->
     </div>
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
+        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten'|| session('jabatan') == 'Askep/Asisten' )
+
+        <button id="moveDataButton" class="btn btn-primary mr-3" disabled>Pindah Data</button>
+        @endif
+
         <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
         <form action="{{ route('pdfBAsidak') }}" method="GET" class="form-inline" style="display: inline;" target="_blank">
             {{ csrf_field() }}
@@ -697,6 +702,9 @@
         }
     }
 
+    document.getElementById('showFindingYear').addEventListener('click', function() {
+        document.getElementById('moveDataButton').disabled = false;
+    });
 
     document.getElementById('showFindingYear').onclick = function() {
         Swal.fire({
@@ -1509,4 +1517,97 @@
             }
         });
     }
+
+
+
+    let getest = @json($est)
+
+    function selectDate() {
+        Swal.fire({
+            title: "Apakah Anda ingin mengubah tanggal sidak?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let tanggalorix = document.getElementById('inputDate').value
+
+                Swal.fire({
+                    title: "Perhatian!",
+                    html: 'Ini Akan memindahkan Data dari semua afdeling {{$est}} di tanggal ' + tanggalorix + '  ke tanggal yang dipilih: <br><input id="swal-input-date" type="date" class="swal2-input">',
+                    showCancelButton: true,
+                    confirmButtonText: "Pindahkan",
+                    cancelButtonText: "Batal",
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: false,
+                    preConfirm: () => {
+                        const selectedDate = document.getElementById('swal-input-date').value;
+                        if (!selectedDate) {
+                            Swal.showValidationMessage('Silakan pilih tanggal!');
+                        }
+                        // Handle the selected date with AJAX request
+                        // Replace the code below with your actual logic to handle the selected date with AJAX
+                        return new Promise((resolve) => {
+                            // Simulate AJAX request delay
+                            setTimeout(() => {
+                                resolve(selectedDate);
+                            }, 1000);
+                        });
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If user confirms, show a success message
+
+                        // console.log(getest);
+
+                        var tanggalori = document.getElementById('inputDate').value
+                        var tanggalset = result.value
+                        var type = 'sidaktph'
+                        // console.log(tanggal);
+                        var _token = $('input[name="_token"]').val();
+                        $.ajax({
+                            url: "{{ route('changedatadate') }}",
+                            method: "post",
+                            data: {
+                                tglreal: tanggalori,
+                                tgledit: tanggalset,
+                                est: getest,
+                                type: type,
+                                _token: _token
+                            },
+                            success: function(result) {
+                                // Check if data was successfully updated
+                                if (result && result.message === 'Data berhasil diupdate') {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Data berhasil diupdate',
+                                        icon: 'success',
+                                        allowOutsideClick: false // Prevents clicking outside the modal to close it
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload(); // Reload the page
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire('Error', 'Gagal mengupdate data', 'error');
+                                }
+                            },
+                            error: function() {
+                                Swal.fire('Error', 'Gagal menghubungi server', 'error');
+                            }
+                        });
+
+                    } else {
+                        // If user cancels, show a message
+                        Swal.fire("Pemilihan tanggal dibatalkan!", "", "info");
+                    }
+                });
+            }
+        });
+    }
+
+    // Attach click event listener to the button
+    document.getElementById("moveDataButton").addEventListener("click", selectDate);
 </script>

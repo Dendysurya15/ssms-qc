@@ -137,10 +137,12 @@ class mutubuahController extends Controller
         ]);
     }
 
+
     public function getWeek(Request $request)
     {
         $regional = $request->input('reg');
-
+        // $startWeek = $request->input('startWeek');
+        // $lastWeek = $request->input('lastWeek');
         $bulan = $request->input('bulan');
 
         $queryAsisten = DB::connection('mysql2')->table('asisten_qc')
@@ -203,9 +205,6 @@ class mutubuahController extends Controller
             ->get();
         $queryMTbuah = $queryMTbuah->groupBy(['estate', 'afdeling']);
         $queryMTbuah = json_decode($queryMTbuah, true);
-
-
-        // dd($bulan, $queryMTbuah);
 
         $databulananBuah = array();
         foreach ($queryMTbuah as $key => $value) {
@@ -1638,7 +1637,7 @@ class mutubuahController extends Controller
         } else {
             $sidak_buah_mua = [];
         }
-        // dd($mutu_buah);
+        // dd($sidak_buah_mua);
 
         $arrView = array();
 
@@ -3782,6 +3781,7 @@ class mutubuahController extends Controller
         // return view('cetakSidakmutubuah');
     }
 
+
     public function getWeekData(Request $request)
     {
         $regional = $request->input('reg');
@@ -5415,7 +5415,7 @@ class mutubuahController extends Controller
             }
 
             $sidakbuahmuah = array();
-            // dd($defPerbulanWilmua);
+            // dd($defPerbulanWil);
             $jjg_samplexy = 0;
             $tnpBRDxy = 0;
             $krgBRDxy = 0;
@@ -5779,6 +5779,7 @@ class mutubuahController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
+
 
     public function chartsbi_oke(Request $request)
     {
@@ -8040,5 +8041,91 @@ class mutubuahController extends Controller
                 # code...
                 break;
         }
+    }
+
+
+    public function changedatadate(Request $request)
+    {
+
+        $tglreal = $request->input('tglreal');
+        $tgledit = $request->input('tgledit');
+        $est = $request->input('est');
+        $type = $request->input('type');
+
+        switch ($type) {
+            case 'sidakmtb':
+                $query = DB::connection('mysql2')->table('sidak_mutu_buah')
+                    ->select(
+                        "sidak_mutu_buah.*",
+                        DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'),
+                        DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun')
+                    )
+                    ->where('sidak_mutu_buah.estate', $est)
+                    ->where('sidak_mutu_buah.datetime', 'like', '%' . $tglreal . '%')
+                    ->pluck('id');
+
+                $query = json_decode($query, true);
+
+                // Iterate over each id and update the datetime field
+                foreach ($query as $id) {
+                    // Get the current datetime value
+                    $currentDatetime = DB::connection('mysql2')->table('sidak_mutu_buah')
+                        ->where('id', $id)
+                        ->value('datetime');
+
+                    // Extract the time part from the current datetime
+                    $timePart = substr($currentDatetime, 11);
+
+                    // Concatenate the new date with the time part
+                    $newDatetime = $tgledit . ' ' . $timePart;
+
+                    // Update the datetime field
+                    DB::connection('mysql2')->table('sidak_mutu_buah')
+                        ->where('id', $id)
+                        ->update(['datetime' => $newDatetime]);
+                }
+
+                return response()->json(['message' => 'Data berhasil diupdate'], 200);
+
+                break;
+            case 'sidaktph':
+                $query = DB::connection('mysql2')->table('sidak_tph')
+                    ->select(
+                        "sidak_tph.*"
+                    )
+                    ->where('sidak_tph.est', $est)
+                    ->where('sidak_tph.datetime', 'like', '%' . $tglreal . '%')
+                    ->pluck('id');
+
+                $query = json_decode($query, true);
+
+                foreach ($query as $id) {
+                    // Get the current datetime value
+                    $currentDatetime = DB::connection('mysql2')->table('sidak_tph')
+                        ->where('id', $id)
+                        ->value('datetime');
+
+                    // Extract the time part from the current datetime
+                    $timePart = substr($currentDatetime, 11);
+
+                    // Concatenate the new date with the time part
+                    $newDatetime = $tgledit . ' ' . $timePart;
+
+                    // Update the datetime field
+                    DB::connection('mysql2')->table('sidak_tph')
+                        ->where('id', $id)
+                        ->update(['datetime' => $newDatetime]);
+                }
+
+                return response()->json(['message' => 'Data berhasil diupdate'], 200);
+
+                break;
+            default:
+                // Handle default case
+                break;
+        }
+
+
+        // dd($tglreal, $tgledit, $est, $type);
     }
 }

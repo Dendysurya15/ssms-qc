@@ -4816,6 +4816,7 @@
         });
     }
 
+
     let showFindingYear
     document.getElementById('showFindingYear').onclick = function() {
         showFindingYear = showLoadingSwal();

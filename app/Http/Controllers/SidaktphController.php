@@ -3492,23 +3492,64 @@ class SidaktphController extends Controller
                 $new_dvdest = $devidenEst_x ?? 0;
 
 
-                if ($v2check4 != 0 && $total_skoreest == 0) {
-                    $tot_afdscore = 100;
+                // if ($v2check4 != 0 && $total_skoreest == 0) {
+                //     $tot_afdscore = 100;
+                //     $newpembagi2 = 1;
+                // } else if ($v2check4 != 0) {
+                //     $tot_afdscore = round($total_skoreest / $newpembagi1, 1);
+                //     $newpembagi2 = 1;
+                // } else if ($newpembagi1 == 0 && $v2check4 == 0) {
+                //     $tot_afdscore = 0;
+                //     $newpembagi2 = 0;
+                // }
+
+
+                // if ($tot_afdscore < 0) {
+                //     # code...
+                //     $newscore = 0;
+                // } else {
+                //     $newscore = $tot_afdscore;
+                // }
+
+                $total_estkors = $totskor_brd1 + $totskor_janjang1;
+                if ($total_estkors != 0) {
+
+                    $checkscore = 100 - ($total_estkors);
+
+                    if ($checkscore < 0) {
+                        $newscore = 0;
+                        $newSidak[$key][$key1][$key2]['mines'] = 'ada';
+                    } else {
+                        $newscore = $checkscore;
+                        $newSidak[$key][$key1][$key2]['mines'] = 'tidak';
+                    }
+
+                    $newSidak[$key][$key1]['all_score'] = $newscore;
+                    $newSidak[$key][$key1]['check_data'] = 'ada';
+
+                    $total_skoreafd = $newscore;
                     $newpembagi2 = 1;
                 } else if ($v2check4 != 0) {
-                    $tot_afdscore = round($total_skoreest / $newpembagi1, 1);
+                    $checkscore = 100 - ($total_estkors);
+
+                    if ($checkscore < 0) {
+                        $newscore = 0;
+                        $newSidak[$key][$key1]['mines'] = 'ada';
+                    } else {
+                        $newscore = $checkscore;
+                        $newSidak[$key][$key1]['mines'] = 'tidak';
+                    }
+                    $newSidak[$key][$key1]['all_score'] = 100 - ($total_estkors);
+                    $newSidak[$key][$key1]['check_data'] = 'ada';
+
+                    $total_skoreafd = $newscore;
+
                     $newpembagi2 = 1;
-                } else if ($newpembagi1 == 0 && $v2check4 == 0) {
-                    $tot_afdscore = 0;
-                    $newpembagi2 = 0;
-                }
-
-
-                if ($tot_afdscore < 0) {
-                    # code...
-                    $newscore = 0;
                 } else {
-                    $newscore = $tot_afdscore;
+                    $newSidak[$key][$key1]['all_score'] = 0;
+                    $newSidak[$key][$key1]['check_data'] = 'null';
+                    $total_skoreafd = 0;
+                    $newpembagi2 = 0;
                 }
                 // $newSidak[$key][$key1]['deviden'] = $deviden;
 
@@ -3522,7 +3563,7 @@ class SidaktphController extends Controller
                 if ($v2check4 == 0) {
                     $newSidak[$key][$key1]['total_score'] = '-';
                 } else {
-                    $newSidak[$key][$key1]['total_score'] = $newscore;
+                    $newSidak[$key][$key1]['total_score'] = $total_skoreafd;
                 }
 
                 $newSidak[$key][$key1]['est'] = $key;
@@ -3608,7 +3649,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['chartrst'] = $total_janjangchart3;
         }
 
-        dd($newSidak);
+        // dd($newSidak);
         // dd($newSidak['UPE']);
         $mtancakWIltab1 = array();
         foreach ($queryEstereg as $key => $value) {
@@ -5120,6 +5161,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['v2check6'] = $v2check6;
         }
 
+        dd($newSidak);
         // dd($);
 
         // dd($newSidak['SJE']['OL']);

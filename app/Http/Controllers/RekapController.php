@@ -829,26 +829,46 @@ class RekapController extends Controller
                 $new_dvdest = $devidenEst_x ?? 0;
 
 
-                if ($v2check4 != 0 && $total_skoreest == 0) {
-                    $tot_afdscore = 100;
+                $total_estkors = $totskor_brd1 + $totskor_janjang1;
+                if ($total_estkors != 0) {
+
+                    $checkscore = 100 - ($total_estkors);
+
+                    if ($checkscore < 0) {
+                        $newscore = 0;
+                        $newSidak[$key][$key1][$key2]['mines'] = 'ada';
+                    } else {
+                        $newscore = $checkscore;
+                        $newSidak[$key][$key1][$key2]['mines'] = 'tidak';
+                    }
+
+                    $newSidak[$key][$key1]['all_score'] = $newscore;
+                    $newSidak[$key][$key1]['check_data'] = 'ada';
+
+                    $total_skoreafd = $newscore;
                     $newpembagi2 = 1;
                 } else if ($v2check4 != 0) {
-                    $tot_afdscore = round($total_skoreest / $newpembagi1, 1);
+                    $checkscore = 100 - ($total_estkors);
+
+                    if ($checkscore < 0) {
+                        $newscore = 0;
+                        $newSidak[$key][$key1]['mines'] = 'ada';
+                    } else {
+                        $newscore = $checkscore;
+                        $newSidak[$key][$key1]['mines'] = 'tidak';
+                    }
+                    $newSidak[$key][$key1]['all_score'] = 100 - ($total_estkors);
+                    $newSidak[$key][$key1]['check_data'] = 'ada';
+
+                    $total_skoreafd = $newscore;
+
                     $newpembagi2 = 1;
-                } else if ($newpembagi1 == 0 && $v2check4 == 0) {
-                    $tot_afdscore = 0;
+                } else {
+                    $newSidak[$key][$key1]['all_score'] = 0;
+                    $newSidak[$key][$key1]['check_data'] = 'null';
+                    $total_skoreafd = 0;
                     $newpembagi2 = 0;
                 }
-
-
-                if ($tot_afdscore < 0) {
-                    # code...
-                    $newscore = 0;
-                } else {
-                    $newscore = $tot_afdscore;
-                }
-                // $newSidak[$key][$key1]['deviden'] = $deviden;
-
                 $newSidak[$key][$key1]['total_brd'] = $totskor_brd1;
                 $newSidak[$key][$key1]['total_janjang'] = $totskor_janjang1;
                 $newSidak[$key][$key1]['new_deviden'] = $new_dvd;
