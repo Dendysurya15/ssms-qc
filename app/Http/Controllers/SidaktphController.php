@@ -2871,7 +2871,7 @@ class SidaktphController extends Controller
             }
         }
 
-        dd($sidaktph, $testing);
+        // dd($sidaktph, $testing);
 
         // dd($newSidak, $listest, $brdchart, $chartrstx);
         $arr = array();
@@ -3608,7 +3608,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['chartrst'] = $total_janjangchart3;
         }
 
-        // dd($newSidak);
+        dd($newSidak);
         // dd($newSidak['UPE']);
         $mtancakWIltab1 = array();
         foreach ($queryEstereg as $key => $value) {
@@ -3994,10 +3994,15 @@ class SidaktphController extends Controller
                         break;
                     }
                 }
+                if ($divwil2 != 0) {
+                    $skor = round($total_skorest / $divwil2, 0);
+                } else {
+                    $skor = 0; // or handle it in a way that makes sense for your application
+                }
                 $resultest2[] = array(
                     'afd' => 'GM',
                     'est' =>  $newKey, // Concatenate $keyEst here
-                    'skor' => round($total_skorest / $divwil2, 0),
+                    'skor' => $skor,
                     'asisten' => $namaGM,
                     'ranking' => '-',
                     'est_score' => $estateScore,
@@ -4436,7 +4441,7 @@ class SidaktphController extends Controller
                     $new_dvdest = $devidenEst_x ?? 0;
 
 
-                    if ($v2check4 != 0 && $total_skoreest == 0) {
+                    if ($v2check4 != 0) {
                         $tot_afdscore = 100;
                     } else if ($new_dvd != 0) {
                         $tot_afdscore = round($total_skoreest / $new_dvd, 1);
@@ -4600,8 +4605,10 @@ class SidaktphController extends Controller
             $chartbrd = 0;
             $chartrst = 0;
             foreach ($value as $key1 => $value1) {
+                $score_estate = ($value1['score_estate'] == "-") ? 0 : $value1['score_estate'];
 
-                $estateScore += $value1['score_estate'];
+                // $estateScore += $value1['score_estate'];
+                $estateScore += $score_estate;
                 $chartbrd += $value1['chartbrd'];
                 $chartrst += $value1['chartrst'];
 

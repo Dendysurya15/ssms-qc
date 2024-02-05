@@ -140,8 +140,7 @@ class mutubuahController extends Controller
     public function getWeek(Request $request)
     {
         $regional = $request->input('reg');
-        // $startWeek = $request->input('startWeek');
-        // $lastWeek = $request->input('lastWeek');
+
         $bulan = $request->input('bulan');
 
         $queryAsisten = DB::connection('mysql2')->table('asisten_qc')
@@ -204,6 +203,9 @@ class mutubuahController extends Controller
             ->get();
         $queryMTbuah = $queryMTbuah->groupBy(['estate', 'afdeling']);
         $queryMTbuah = json_decode($queryMTbuah, true);
+
+
+        // dd($bulan, $queryMTbuah);
 
         $databulananBuah = array();
         foreach ($queryMTbuah as $key => $value) {
@@ -1636,7 +1638,7 @@ class mutubuahController extends Controller
         } else {
             $sidak_buah_mua = [];
         }
-        // dd($sidak_buah_mua);
+        // dd($mutu_buah);
 
         $arrView = array();
 
@@ -4208,11 +4210,12 @@ class mutubuahController extends Controller
                 $total_kr = 0;
             }
             $per_kr = round($total_kr * 100, 3);
-            $skor_total = round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3);
-            $skor_jjgMSk = round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3);
-            $skor_lewatMTng =  round(($overripe / ($jjg_sample - $abr)) * 100, 3);
-            $skor_jjgKosong =  round(($empty / ($jjg_sample - $abr)) * 100, 3);
-            $skor_vcut =   round(($vcut / $jjg_sample) * 100, 3);
+            $skor_total = ($jjg_sample - $abr) != 0 ? round((($tnpBRD + $krgBRD) / ($jjg_sample - $abr)) * 100, 3) : 0;
+            $skor_jjgMSk = ($jjg_sample - $abr) != 0 ? round(($jjg_sample - ($tnpBRD + $krgBRD + $overripe + $empty + $abr)) / ($jjg_sample - $abr) * 100, 3) : 0;
+            $skor_lewatMTng = ($jjg_sample - $abr) != 0 ? round(($overripe / ($jjg_sample - $abr)) * 100, 3) : 0;
+            $skor_jjgKosong = ($jjg_sample - $abr) != 0 ? round(($empty / ($jjg_sample - $abr)) * 100, 3) : 0;
+            $skor_vcut = $jjg_sample != 0 ? round(($vcut / $jjg_sample) * 100, 3) : 0;
+
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
 
             $totKategor = sidak_akhir($allSkor);
@@ -4278,8 +4281,10 @@ class mutubuahController extends Controller
             $nestedData['nama_staff'] = $staff;
             $nestedData['tnp_brd'] = $tnpBRD;
             $nestedData['krg_brd'] = $krgBRD;
-            $nestedData['persenTNP_brd'] = round(($tnpBRD / ($jjg_sample - $abr)) * 100, 3);
-            $nestedData['persenKRG_brd'] = round(($krgBRD / ($jjg_sample - $abr)) * 100, 3);
+            $denominator = ($jjg_sample - $abr) != 0 ? ($jjg_sample - $abr) : 1;
+            $nestedData['persenTNP_brd'] = round(($tnpBRD / $denominator) * 100, 3);
+            $nestedData['persenKRG_brd'] = round(($krgBRD / $denominator) * 100, 3);
+
             $nestedData['total_jjg'] = $tnpBRD + $krgBRD;
             $nestedData['persen_totalJjg'] = $skor_total;
             $nestedData['skor_total'] = sidak_brdTotal($skor_total);
@@ -4296,9 +4301,11 @@ class mutubuahController extends Controller
             $nestedData['vcut_persen'] = $skor_vcut;
             $nestedData['vcut_skor'] = sidak_tangkaiP($skor_vcut);
             $nestedData['abnormal'] = $abr;
-            $nestedData['abnormal_persen'] = round(($abr / $jjg_sample) * 100, 3);
+            $denominator2 = $jjg_sample != 0 ? $jjg_sample : 1;
+            $nestedData['abnormal_persen'] = round(($abr / $denominator2) * 100, 3);
             $nestedData['rat_dmg'] = $rd;
-            $nestedData['rd_persen'] = round(($rd / $jjg_sample) * 100, 3);
+            $nestedData['rd_persen'] = round(($rd / $denominator2) * 100, 3);
+
             $nestedData['TPH'] = $total_kr;
             $nestedData['persen_krg'] = $per_kr;
             $nestedData['karung_est'] = $sum_kr;
