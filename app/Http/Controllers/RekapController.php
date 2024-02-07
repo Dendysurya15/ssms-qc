@@ -832,8 +832,8 @@ class RekapController extends Controller
                 $total_estkors = $totskor_brd1 + $totskor_janjang1;
                 if ($total_estkors != 0) {
 
-                    $checkscore = 100 - ($total_estkors);
-
+                    // $checkscore = 100 - ($total_estkors);
+                    $checkscore = round($total_skoreest / $newpembagi1, 1);
                     if ($checkscore < 0) {
                         $newscore = 0;
                         $newSidak[$key][$key1][$key2]['mines'] = 'ada';
@@ -848,8 +848,7 @@ class RekapController extends Controller
                     $total_skoreafd = $newscore;
                     $newpembagi2 = 1;
                 } else if ($v2check4 != 0) {
-                    $checkscore = 100 - ($total_estkors);
-
+                    $checkscore = round($total_skoreest / $newpembagi1, 1);
                     if ($checkscore < 0) {
                         $newscore = 0;
                         $newSidak[$key][$key1]['mines'] = 'ada';
