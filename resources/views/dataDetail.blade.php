@@ -2513,6 +2513,7 @@
                         // Get the form data
                         var formData = new FormData(this);
                         formData.append('id', $('#editId').val()); // Append the id field to the form data
+                        formData.append('type', 'mutuancak'); // Add the type parameter with the desired value
 
 
                         var sampCak = $('#update-sampCak').val();
@@ -2616,6 +2617,7 @@
                             // Create a form data object
                             var formData = new FormData();
                             formData.append('delete_id', id);
+                            formData.append('type', 'mutuancak'); // Add the type parameter with the desired value
 
                             // Get the CSRF token from the meta tag
                             var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -2904,6 +2906,7 @@
                         // Get the form data
                         var formData = new FormData(this);
                         formData.append('id', $('#editId_buah').val()); // Append the id field to the form data
+                        formData.append('type', 'mutubuah'); // Add the type parameter with the desired value
 
                         var bmt = $('#update-bmt').val();
                         var bmk = $('#update-bmk').val();
@@ -2994,6 +2997,7 @@
                             // Create a form data object
                             var formData = new FormData();
                             formData.append('delete_idBuah', id);
+                            formData.append('type', 'mutubuah'); // Add the type parameter with the desired value
 
                             // Get the CSRF token from the meta tag
                             var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -3233,6 +3237,7 @@
                         // Get the form data
                         var formData = new FormData(this);
                         formData.append('id', $('#id_trans').val()); // Append the id field to the form data
+                        formData.append('type', 'mututrans'); // Add the type parameter with the desired value
 
                         // Validate the bt_trans and rstTrans fields
                         var btTransValue = $('#update-bt_trans').val();
@@ -3311,6 +3316,7 @@
                             // Create a form data object
                             var formData = new FormData();
                             formData.append('id_trans', id);
+                            formData.append('type', 'mututrans'); // Add the type parameter with the desired value
 
                             // Get the CSRF token from the meta tag
                             var csrfToken = $('meta[name="csrf-token"]').attr('content');

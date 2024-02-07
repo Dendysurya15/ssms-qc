@@ -3841,6 +3841,7 @@ class SidaktphController extends Controller
             }
         }
 
+        // dd($resultafd3);
 
         // dd($resultafd1, $resultafd2, $resultafd3, $resultafd4, $mtancakWIltab1);
 
@@ -7025,37 +7026,101 @@ class SidaktphController extends Controller
         $ids = $request->input('id');
         $blok_bh = $request->input('blok_bh');
         $brdtgl = $request->input('brdtgl');
-
-        // dd($brdtgl, $ids);
         $brdjln = $request->input('brdjln');
         $brdbin = $request->input('brdbin');
         $qc = $request->input('qc');
         $jumkrng = $request->input('jumkrng');
         $buahtgl = $request->input('buahtgl');
         $restan = $request->input('restan');
+        $username = session('user_name');
+        $userid = session('user_id');
+        $date = Carbon::now();
 
+        // Retrieve the data before updating
+        $oldData = DB::connection('mysql2')->table('sidak_tph')->where('id', $ids)->first();
 
-        DB::connection('mysql2')->table('sidak_tph')->where('id', $ids)->update([
-            'blok' => $blok_bh,
-            'bt_tph' => $brdtgl,
-            'bt_jalan' => $brdjln,
-            'bt_bin' => $brdbin,
-            'qc' => $qc,
-            'jum_karung' => $jumkrng,
-            'buah_tinggal' => $buahtgl,
-            'restan_unreported' => $restan,
-        ]);
+        // Perform the update
+        try {
+            DB::connection('mysql2')->table('sidak_tph')->where('id', $ids)->update([
+                'blok' => $blok_bh,
+                'bt_tph' => $brdtgl,
+                'bt_jalan' => $brdjln,
+                'bt_bin' => $brdbin,
+                'qc' => $qc,
+                'jum_karung' => $jumkrng,
+                'buah_tinggal' => $buahtgl,
+                'restan_unreported' => $restan,
+            ]);
+
+            // Retrieve the updated data
+            $updatedData = DB::connection('mysql2')->table('sidak_tph')->where('id', $ids)->first();
+        } catch (\Throwable $th) {
+            // Handle exceptions if needed
+        } finally {
+            // Insert a record into the history table
+            DB::connection('mysql2')->table('history_edit')->insert([
+                'id_user' => $userid,
+                'nama_user' => $username,
+                'data_baru' => json_encode($updatedData),
+                'data_lama' => json_encode($oldData),
+                'tanggal' => $date,
+                'menu' => 'edit_sidaktph',
+
+            ]);
+        }
     }
     public function deletedetailtph(Request $request)
     {
         $ancaks = $request->input('delete_id');
+        $oldData = DB::connection('mysql2')->table('sidak_tph')->where('id', $ancaks)->first();
 
         if (is_array($ancaks)) {
             // Delete multiple rows
-            DB::connection('mysql2')->table('sidak_tph')->whereIn('id', $ancaks)->delete();
+
+            try {
+                DB::connection('mysql2')->table('sidak_tph')->whereIn('id', $ancaks)->delete();
+            } catch (\Throwable $th) {
+                //throw $th;
+            } finally {
+                $username = session('user_name');
+                $userid = session('user_id');
+                $date = Carbon::now();
+
+                // Insert a record into the history table
+                DB::connection('mysql2')->table('history_edit')->insert([
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'data_baru' => 'delete_action',
+                    'data_lama' => json_encode($oldData),
+                    'tanggal' => $date,
+                    'menu' => 'delete_tph',
+
+                ]);
+            }
         } else {
+
+            try {
+                DB::connection('mysql2')->table('sidak_tph')->where('id', $ancaks)->delete();
+            } catch (\Throwable $th) {
+                //throw $th;
+            } finally {
+                $username = session('user_name');
+                $userid = session('user_id');
+                $date = Carbon::now();
+
+                // Insert a record into the history table
+                DB::connection('mysql2')->table('history_edit')->insert([
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'data_baru' => 'delete_action',
+                    'data_lama' => json_encode($oldData),
+                    'tanggal' => $date,
+                    'menu' => 'delete_tph',
+
+                ]);
+            }
             // Delete a single row
-            DB::connection('mysql2')->table('sidak_tph')->where('id', $ancaks)->delete();
+
         }
 
         return response()->json(['status' => 'success']);

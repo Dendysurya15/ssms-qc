@@ -248,227 +248,355 @@ class pdfgenerateController extends Controller
     public function updateBA(Request $request)
     {
 
+        $type = $request->input('type');
+        $username = session('user_name');
+        $userid = session('user_id');
+        $date = Carbon::now();
+
+        // dd($type);
+
+        switch ($type) {
+            case 'mutuancak':
+                $id = $request->input('id');
+                $blok = $request->input('blokCak');
+                $status_panen = $request->input('StatusPnen');
+                $sph = $request->input('sph');
+                $br1 = $request->input('br1');
+                $br2 = $request->input('br2');
+                $sample = $request->input('sampCak');
+                $pk_kuning = $request->input('pkKuning');
+                $piringan_semak = $request->input('prSmk');
+                $underpruning = $request->input('undrPR');
+                $overpruning = $request->input('overPR');
+                $janjang = $request->input('jjgCak');
+                $brtp = $request->input('brtp');
+                $brtk = $request->input('brtk');
+                $brtgl = $request->input('brtgl');
+                $bhts = $request->input('bhts');
+                $bhtm1 = $request->input('bhtm1');
+                $bhtm2 = $request->input('bhtm2');
+                $bhtm3 = $request->input('bhtm3');
+                $ps = $request->input('ps');
+                $sp = $request->input('sp');
+                $pk_panen = $request->input('pk_panenCAk');
+                $cakmandor = $request->input('cakmandor');
+
+                $oldData = DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $id)->first();
+
+                try {
+                    DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $id)->update([
+                        'blok' => $blok,
+                        'status_panen' => $status_panen,
+                        'sph' => $sph,
+                        'br1' => $br1,
+                        'br2' => $br2,
+                        'sample' => $sample,
+                        'pokok_kuning' => $pk_kuning,
+                        'piringan_semak' => $piringan_semak,
+                        'underpruning' => $underpruning,
+                        'overpruning' => $overpruning,
+                        'jjg' => $janjang,
+                        'brtp' => $brtp,
+                        'brtk' => $brtk,
+                        'brtgl' => $brtgl,
+                        'bhts' => $bhts,
+                        'bhtm1' => $bhtm1,
+                        'bhtm2' => $bhtm2,
+                        'kemandoran' => $cakmandor,
+                        'bhtm3' => $bhtm3,
+                        'ps' => $ps,
+                        'sp' => $sp,
+                        'pokok_panen' => $pk_panen,
+                    ]);
+                    $updatedData = DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $id)->first();
+                } catch (\Throwable $th) {
+                    //throw $th;
+                } finally {
 
 
-        // mutu ancak 
-        $est = $request->input('est');
-        $afd = $request->input('afd');
-        $date = $request->input('date');
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => json_encode($updatedData),
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'edit_mutuancakqc',
 
-        $estate = $request->input('estate');
-        $afdeling = $request->input('afdeling');
-        $id = $request->input('id');
-        $blok = $request->input('blokCak');
-        $status_panen = $request->input('StatusPnen');
-        $sph = $request->input('sph');
-        $br1 = $request->input('br1');
-        $br2 = $request->input('br2');
-        $sample = $request->input('sampCak');
-        $pk_kuning = $request->input('pkKuning');
-        $piringan_semak = $request->input('prSmk');
-        $underpruning = $request->input('undrPR');
-        $overpruning = $request->input('overPR');
-        $janjang = $request->input('jjgCak');
-        $brtp = $request->input('brtp');
-        $brtk = $request->input('brtk');
-        $brtgl = $request->input('brtgl');
-        $bhts = $request->input('bhts');
-        $bhtm1 = $request->input('bhtm1');
-        $bhtm2 = $request->input('bhtm2');
-        $bhtm3 = $request->input('bhtm3');
-        $ps = $request->input('ps');
-        $sp = $request->input('sp');
-        $pk_panen = $request->input('pk_panenCAk');
-        $cakmandor = $request->input('cakmandor');
-        // dd($id, $estate, $afdeling,$blok,$status_panen);
+                    ]);
+                }
+                break;
+            case 'mutubuah':
+                $ids = $request->input('editId_buah');
+                $blok_bh = $request->input('blok_bh');
+                $status_bhpanen = $request->input('StatusBhpnen');
+                $bmt = $request->input('bmt');
+                $bmk = $request->input('bmk');
+                $pemanen_bh = $request->input('pemanen_bh');
 
+                $estBH = $request->input('estBH');
+                $afdBH = $request->input('afdBH');
+                $tphBH = $request->input('tphBH');
+                $petugasBHs = $request->input('petugasBH');
+                $emptyBHS = $request->input('emptyBH');
+                $jjgBH = $request->input('jjgBH');
+                $overBH = $request->input('overBH');
+                $abrBH = $request->input('abrBH');
+                $vcutBHs = $request->input('vcutBH');
+                $alsBR = $request->input('alsBR');
+                $bhmandor = $request->input('bhmandor');
 
-        // $kmnBH = $request->input('kmnBH');
-        // mutu transport
-        // dd($ids,$jjgBH);
+                $oldData = DB::connection('mysql2')->table('mutu_buah')->where('id', $ids)->first();
 
-        $id_trans = $request->input('id_trans');
-        $afd_trans = $request->input('afd_trans');
-        $blok_trans = $request->input('blok_trans');
-        $trans_panen = $request->input('Status_trPanen');
-        $tphbrTrans = $request->input('tphbrTrans');
-        $bt_trans = $request->input('bt_trans');
-        $komentar_trans = $request->input('komentar_trans');
-        $petugasTrans = $request->input('petugasTrans');
-        $rstTrans = $request->input('rstTrans');
-        $estTrans = $request->input('estTrans');
-        $transmandor = $request->input('transmandor');
+                //  dd($ids,$blok_bh,$status_bhpanen,$bmt);
+                try {
+                    DB::connection('mysql2')->table('mutu_buah')->where('id', $ids)->update([
+                        'blok' => $blok_bh,
+                        'status_panen' => $status_bhpanen,
+                        'bmt' => $bmt,
+                        'bmk' => $bmk,
+                        'ancak_pemanen' => $pemanen_bh,
+                        'estate' => $estBH,
+                        'afdeling' => $afdBH,
+                        'tph_baris' => $tphBH,
+                        'petugas' => $petugasBHs,
+                        'empty_bunch' => $emptyBHS,
+                        'jumlah_jjg' => $jjgBH,
+                        'overripe' => $overBH,
+                        'kemandoran' => $bhmandor,
+                        'abnormal' => $abrBH,
+                        'vcut' => $vcutBHs,
+                        'alas_br' => $alsBR,
+                        // 'komentar' => $kmnBH,
+                    ]);
+                    $updatedData = DB::connection('mysql2')->table('mutu_buah')->where('id', $ids)->first();
+                } catch (\Throwable $th) {
+                    //throw $th;
+                } finally {
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => json_encode($updatedData),
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'edit_mutu_buahqc',
 
-        // dd($id_trans, $afd_trans, $blok_trans, $bt_trans, $komentar_trans);
+                    ]);
+                }
 
-        DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $id)->update([
-            'blok' => $blok,
-            'status_panen' => $status_panen,
-            'sph' => $sph,
-            'br1' => $br1,
-            'br2' => $br2,
-            'sample' => $sample,
-            'pokok_kuning' => $pk_kuning,
-            'piringan_semak' => $piringan_semak,
-            'underpruning' => $underpruning,
-            'overpruning' => $overpruning,
-            'jjg' => $janjang,
-            'brtp' => $brtp,
-            'brtk' => $brtk,
-            'brtgl' => $brtgl,
-            'bhts' => $bhts,
-            'bhtm1' => $bhtm1,
-            'bhtm2' => $bhtm2,
-            'kemandoran' => $cakmandor,
-            'bhtm3' => $bhtm3,
-            'ps' => $ps,
-            'sp' => $sp,
-            'pokok_panen' => $pk_panen,
-        ]);
+                break;
+            case 'mututrans':
+                $id_trans = $request->input('id_trans');
+                $afd_trans = $request->input('afd_trans');
+                $blok_trans = $request->input('blok_trans');
+                $trans_panen = $request->input('Status_trPanen');
+                $tphbrTrans = $request->input('tphbrTrans');
+                $bt_trans = $request->input('bt_trans');
+                $komentar_trans = $request->input('komentar_trans');
+                $petugasTrans = $request->input('petugasTrans');
+                $rstTrans = $request->input('rstTrans');
+                $estTrans = $request->input('estTrans');
+                $transmandor = $request->input('transmandor');
+                $oldData = DB::connection('mysql2')->table('mutu_transport')->where('id', $id_trans)->first();
 
+                try {
+                    DB::connection('mysql2')->table('mutu_transport')->where('id', $id_trans)->update([
+                        'afdeling' => $afd_trans,
+                        'blok' => $blok_trans,
+                        'status_panen' => $trans_panen,
+                        'bt' => $bt_trans,
+                        'komentar' => $komentar_trans,
+                        'petugas' => $petugasTrans,
+                        'rst' => $rstTrans,
+                        'estate' => $estTrans,
+                        'tph_baris' => $tphbrTrans,
+                        'kemandoran' => $transmandor,
+                    ]);
+                    $updatedData = DB::connection('mysql2')->table('mutu_transport')->where('id', $id_trans)->first();
+                } catch (\Throwable $th) {
+                    //throw $th;
+                } finally {
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => json_encode($updatedData),
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'edit_mutu_transportqc',
 
-        $ids = $request->input('editId_buah');
-        $blok_bh = $request->input('blok_bh');
-        $status_bhpanen = $request->input('StatusBhpnen');
-        $bmt = $request->input('bmt');
-        $bmk = $request->input('bmk');
-        $pemanen_bh = $request->input('pemanen_bh');
+                    ]);
+                }
+                break;
 
-        $estBH = $request->input('estBH');
-        $afdBH = $request->input('afdBH');
-        $tphBH = $request->input('tphBH');
-        $petugasBHs = $request->input('petugasBH');
-        $emptyBHS = $request->input('emptyBH');
-        $jjgBH = $request->input('jjgBH');
-        $overBH = $request->input('overBH');
-        $abrBH = $request->input('abrBH');
-        $vcutBHs = $request->input('vcutBH');
-        $alsBR = $request->input('alsBR');
-        $bhmandor = $request->input('bhmandor');
-
-        //  dd($ids,$blok_bh,$status_bhpanen,$bmt);
-
-        DB::connection('mysql2')->table('mutu_buah')->where('id', $ids)->update([
-            'blok' => $blok_bh,
-            'status_panen' => $status_bhpanen,
-            'bmt' => $bmt,
-            'bmk' => $bmk,
-            'ancak_pemanen' => $pemanen_bh,
-            'estate' => $estBH,
-            'afdeling' => $afdBH,
-            'tph_baris' => $tphBH,
-            'petugas' => $petugasBHs,
-            'empty_bunch' => $emptyBHS,
-            'jumlah_jjg' => $jjgBH,
-            'overripe' => $overBH,
-            'kemandoran' => $bhmandor,
-            'abnormal' => $abrBH,
-            'vcut' => $vcutBHs,
-            'alas_br' => $alsBR,
-            // 'komentar' => $kmnBH,
-        ]);
-        DB::connection('mysql2')->table('mutu_transport')->where('id', $id_trans)->update([
-            'afdeling' => $afd_trans,
-            'blok' => $blok_trans,
-            'status_panen' => $trans_panen,
-            'bt' => $bt_trans,
-            'komentar' => $komentar_trans,
-            'petugas' => $petugasTrans,
-            'rst' => $rstTrans,
-            'estate' => $estTrans,
-            'tph_baris' => $tphbrTrans,
-            'kemandoran' => $transmandor,
-        ]);
+            default:
+                return abort(404);
+                break;
+        }
     }
     public function deleteBA(Request $request)
     {
+        $username = session('user_name');
+        $userid = session('user_id');
+        $date = Carbon::now();
 
-        $idBuah = $request->input('delete_idBuah');
-        // $ancak = $request->input('id');
-        $ancaks = $request->input('delete_id');
-        $id_trans = $request->input('id_trans');
+        $type = $request->input('type');
 
-        // dd($id_trans);
+        switch ($type) {
+            case 'mutuancak':
+                $ancakFA = DB::connection('mysql2')->table('mutu_ancak_new')
+                    // ->where('id', $request->input('id'))
+                    ->where('id', $request->input('delete_id'))
+                    ->get();
+                $ancakFA = $ancakFA->groupBy(['estate', 'afdeling']);
+                $ancakFA = json_decode($ancakFA, true);
 
+                $followup = DB::connection('mysql2')->table('follow_up_ma')
+                    // ->where('id', $request->input('id'))
+                    ->get();
+                $followup = $followup->groupBy(['estate', 'afdeling']);
+                $followup = json_decode($followup, true);
+                // dd($ancakFA ,$followup['GDE']['OD']);
+                $getID = []; // initialize it as array for follow_up_ma
+                $getAncakID = []; // initialize it as array for mutu_ancak_new
+                foreach ($ancakFA as $key => $value) {
+                    if (!isset($followup[$key])) {
+                        continue;
+                    }
+                    foreach ($value as $key1 => $value1) {
+                        if (!isset($followup[$key][$key1])) {
+                            continue;
+                        }
+                        foreach ($value1 as $key2 => $value2) {
+                            // Convert the datetime strings to date format
+                            $dateAncak = (new DateTime($value2['datetime']))->format('Y-m-d');
 
-        $ancakFA = DB::connection('mysql2')->table('mutu_ancak_new')
-            // ->where('id', $request->input('id'))
-            ->where('id', $request->input('delete_id'))
-            ->get();
-        $ancakFA = $ancakFA->groupBy(['estate', 'afdeling']);
-        $ancakFA = json_decode($ancakFA, true);
+                            foreach ($followup[$key][$key1] as $val3) {
+                                // Convert the datetime strings to date format
+                                $dateFollowUp = (new DateTime($val3['waktu_temuan']))->format('Y-m-d');
 
-        $followup = DB::connection('mysql2')->table('follow_up_ma')
-            // ->where('id', $request->input('id'))
-            ->get();
-        $followup = $followup->groupBy(['estate', 'afdeling']);
-        $followup = json_decode($followup, true);
-        // dd($ancakFA ,$followup['GDE']['OD']);
-        $getID = []; // initialize it as array for follow_up_ma
-        $getAncakID = []; // initialize it as array for mutu_ancak_new
-        foreach ($ancakFA as $key => $value) {
-            if (!isset($followup[$key])) {
-                continue;
-            }
-            foreach ($value as $key1 => $value1) {
-                if (!isset($followup[$key][$key1])) {
-                    continue;
-                }
-                foreach ($value1 as $key2 => $value2) {
-                    // Convert the datetime strings to date format
-                    $dateAncak = (new DateTime($value2['datetime']))->format('Y-m-d');
-
-                    foreach ($followup[$key][$key1] as $val3) {
-                        // Convert the datetime strings to date format
-                        $dateFollowUp = (new DateTime($val3['waktu_temuan']))->format('Y-m-d');
-
-                        // Compare the dates and other values
-                        if (
-                            $value2['br1'] == $val3['br1']
-                            && $value2['br2'] == $val3['br2']
-                            && $value2['estate'] == $val3['estate']
-                            && $value2['afdeling'] == $val3['afdeling']
-                            && $value2['jalur_masuk'] == $val3['jalur_masuk']
-                            && $dateFollowUp == $dateAncak
-                        ) {
-                            $getID[] = $val3['id']; // store the id in the array for follow_up_ma
-                            $getAncakID[] = $value2['id']; // store the id in the array for mutu_ancak_new
+                                // Compare the dates and other values
+                                if (
+                                    $value2['br1'] == $val3['br1']
+                                    && $value2['br2'] == $val3['br2']
+                                    && $value2['estate'] == $val3['estate']
+                                    && $value2['afdeling'] == $val3['afdeling']
+                                    && $value2['jalur_masuk'] == $val3['jalur_masuk']
+                                    && $dateFollowUp == $dateAncak
+                                ) {
+                                    $getID[] = $val3['id']; // store the id in the array for follow_up_ma
+                                    $getAncakID[] = $value2['id']; // store the id in the array for mutu_ancak_new
+                                }
+                            }
                         }
                     }
                 }
-            }
+
+                $oldData = DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $request->input('delete_id'))->first();
+
+
+
+                try {
+                    DB::connection('mysql2')->table('follow_up_ma')->whereIn('id', $getID)->delete();
+                    DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $request->input('delete_id'))->delete();
+
+                    return response()->json(['status' => 'success']);
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    return response()->json(['error' => 'error']);
+                } finally {
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => 'delete_data',
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'delete_mutuancakqc',
+
+                    ]);
+                }
+                break;
+            case 'mututrans':
+                $id_trans = $request->input('id_trans');
+                $oldData = DB::connection('mysql2')->table('mutu_transport')->where('id', $id_trans)->first();
+
+                try {
+                    DB::connection('mysql2')->table('mutu_transport')
+                        ->where('id', $id_trans)
+                        ->delete();
+                    return response()->json(['status' => 'success']);
+                } catch (\Throwable $th) {
+                    return response()->json(['error' => 'error']);
+                } finally {
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => 'delete_data',
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'delete_mututranskqc',
+
+                    ]);
+                }
+                break;
+            case 'mutubuah':
+                $idBuah = $request->input('delete_idBuah');
+                $oldData = DB::connection('mysql2')->table('mutu_buah')->where('id', $idBuah)->first();
+                // dd($oldData);
+                try {
+                    DB::connection('mysql2')->table('mutu_buah')
+                        ->where('id', $idBuah)
+                        ->delete();
+                    return response()->json(['status' => 'success']);
+                } catch (\Throwable $th) {
+                    return response()->json(['error' => 'error']);
+                } finally {
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => 'delete_data',
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'delete_mutubuahkqc',
+
+                    ]);
+                }
+                break;
+            default:
+                # code...
+                break;
         }
-
-
-        // dd($getID);
-
-
-        // Now you have IDs for both tables, so you can delete rows from both tables
-
-        DB::connection('mysql2')->table('follow_up_ma')->whereIn('id', $getID)->delete();
-
-
-
-        DB::connection('mysql2')->table('mutu_ancak_new')->where('id', $request->input('delete_id'))->delete();
-
-
-        //mutu buah
-        DB::connection('mysql2')->table('mutu_buah')
-            ->where('id', $idBuah)
-            ->delete();
-        DB::connection('mysql2')->table('mutu_transport')
-            ->where('id', $id_trans)
-            ->delete();
-
-        return response()->json(['status' => 'success']);
     }
 
     public function deleteTrans($id)
     {
-        DB::connection('mysql2')->table('mutu_transport')
-            ->where('id', $id)
-            ->delete();
-        return response()->json(['status' => 'success']);
+        $username = session('user_name');
+        $userid = session('user_id');
+        $date = Carbon::now();
+        $oldData = DB::connection('mysql2')->table('mutu_transport')->where('id', $id)->first();
+
+        try {
+            DB::connection('mysql2')->table('mutu_transport')
+                ->where('id', $id)
+                ->delete();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'error']);
+        } finally {
+            // Insert a record into the history table
+            DB::connection('mysql2')->table('history_edit')->insert([
+                'id_user' => $userid,
+                'nama_user' => $username,
+                'data_baru' => 'delete_data',
+                'data_lama' => json_encode($oldData),
+                'tanggal' => $date,
+                'menu' => 'delete_mututranskqc',
+
+            ]);
+        }
     }
 
 

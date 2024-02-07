@@ -6255,7 +6255,10 @@ class mutubuahController extends Controller
         $rd = $request->input('ratdmg');
         $vcut = $request->input('vcut');
         $alas_br = $request->input('alasbr');
-        // dd($alas_br);
+        $username = session('user_name');
+        $userid = session('user_id');
+        $date = Carbon::now();
+        $oldData = DB::connection('mysql2')->table('sidak_mutu_buah')->where('id', $id)->get();
 
         if ($id !== null && !empty($id)) {
             try {
@@ -6276,10 +6279,24 @@ class mutubuahController extends Controller
                     'vcut' => $vcut,
                     'alas_br' => $alas_br,
                 ]);
+                $newdata = DB::connection('mysql2')->table('sidak_mutu_buah')->where('id', $id)->get();
 
                 return response()->json(['message' => 'Success'], 200);
             } catch (\Throwable $th) {
                 return response()->json(['message' => 'Error updating record'], 500);
+            } finally {
+
+
+                // Insert a record into the history table
+                DB::connection('mysql2')->table('history_edit')->insert([
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'data_baru' => json_encode($newdata),
+                    'data_lama' => json_encode($oldData),
+                    'tanggal' => $date,
+                    'menu' => 'update_sidakmutubuah',
+
+                ]);
             }
         } else {
             return response()->json(['message' => 'Invalid ID'], 400);
@@ -6292,6 +6309,7 @@ class mutubuahController extends Controller
     public function deleteBA_mutubuah(Request $request)
     {
         $id = $request->input('id');
+        $oldData = DB::connection('mysql2')->table('sidak_mutu_buah')->where('id', $id)->get();
 
         if ($id !== null && !empty($id)) {
             try {
@@ -6303,6 +6321,21 @@ class mutubuahController extends Controller
             } catch (\Throwable $th) {
                 // Return error message if deletion fails
                 return response()->json(['message' => 'Error updating record'], 500);
+            } finally {
+                $username = session('user_name');
+                $userid = session('user_id');
+                $date = Carbon::now();
+
+                // Insert a record into the history table
+                DB::connection('mysql2')->table('history_edit')->insert([
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'data_baru' => 'delete_action',
+                    'data_lama' => json_encode($oldData),
+                    'tanggal' => $date,
+                    'menu' => 'delete_sidakmutubuah',
+
+                ]);
             }
         } else {
             // Return error message if ID is invalid
@@ -8010,6 +8043,8 @@ class mutubuahController extends Controller
 
         switch ($type) {
             case 'sidaktph':
+                $oldData = DB::connection('mysql2')->table('sidak_tph')->whereIn('id', $data)->get();
+
                 try {
                     // Code...
 
@@ -8020,9 +8055,24 @@ class mutubuahController extends Controller
                     return response()->json(['success' => 'Data dihapus']);
                 } catch (\Throwable $th) {
                     return response()->json(['error' => 'Gagal menghapus data'], 500);
+                } finally {
+                    $username = session('user_name');
+                    $userid = session('user_id');
+                    $date = Carbon::now();
+
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => 'delete_action',
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'delete_tph_duplicate',
+                    ]);
                 }
                 break;
             case 'sidakmtb':
+                $oldData = DB::connection('mysql2')->table('sidak_mutu_buah')->whereIn('id', $data)->get();
 
                 try {
                     // Code...
@@ -8034,6 +8084,20 @@ class mutubuahController extends Controller
                     return response()->json(['success' => 'Data dihapus']);
                 } catch (\Throwable $th) {
                     return response()->json(['error' => 'Gagal menghapus data'], 500);
+                } finally {
+                    $username = session('user_name');
+                    $userid = session('user_id');
+                    $date = Carbon::now();
+
+                    // Insert a record into the history table
+                    DB::connection('mysql2')->table('history_edit')->insert([
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'data_baru' => 'delete_action',
+                        'data_lama' => json_encode($oldData),
+                        'tanggal' => $date,
+                        'menu' => 'delete_sidakmutubuah_duplicates',
+                    ]);
                 }
                 break;
 
@@ -8051,9 +8115,13 @@ class mutubuahController extends Controller
         $tgledit = $request->input('tgledit');
         $est = $request->input('est');
         $type = $request->input('type');
-
+        $username = session('user_name');
+        $userid = session('user_id');
+        $date = Carbon::now();
         switch ($type) {
             case 'sidakmtb':
+
+
                 $query = DB::connection('mysql2')->table('sidak_mutu_buah')
                     ->select(
                         "sidak_mutu_buah.*",
@@ -8085,6 +8153,31 @@ class mutubuahController extends Controller
                         ->update(['datetime' => $newDatetime]);
                 }
 
+
+                $newdata = DB::connection('mysql2')->table('sidak_mutu_buah')
+                    ->select(
+                        "sidak_mutu_buah.*",
+                        DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%M") as bulan'),
+                        DB::raw('DATE_FORMAT(sidak_mutu_buah.datetime, "%Y") as tahun')
+                    )
+                    ->where('sidak_mutu_buah.estate', $est)
+                    ->where('sidak_mutu_buah.datetime', 'like', '%' . $tgledit . '%')
+                    ->pluck('id');
+
+                $newdata = json_decode($newdata, true);
+
+
+
+                // Insert a record into the history table
+                DB::connection('mysql2')->table('history_edit')->insert([
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'data_baru' => json_encode($newdata),
+                    'data_lama' => json_encode($query),
+                    'tanggal' => $date,
+                    'menu' => 'movedata_sidakmutubuah',
+
+                ]);
                 return response()->json(['message' => 'Data berhasil diupdate'], 200);
 
                 break;
@@ -8116,7 +8209,24 @@ class mutubuahController extends Controller
                         ->where('id', $id)
                         ->update(['datetime' => $newDatetime]);
                 }
+                $newdata = DB::connection('mysql2')->table('sidak_tph')
+                    ->select(
+                        "sidak_tph.*"
+                    )
+                    ->where('sidak_tph.est', $est)
+                    ->where('sidak_tph.datetime', 'like', '%' . $tgledit . '%')
+                    ->pluck('id');
 
+                $newdata = json_decode($newdata, true);
+                DB::connection('mysql2')->table('history_edit')->insert([
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'data_baru' => json_encode($newdata),
+                    'data_lama' => json_encode($query),
+                    'tanggal' => $date,
+                    'menu' => 'movedata_sidaktph',
+
+                ]);
                 return response()->json(['message' => 'Data berhasil diupdate'], 200);
 
                 break;

@@ -4811,7 +4811,7 @@
             let item3 = element[1]['asisten']
             // let item4 = element[1]['skor']
 
-            let item4 = element[1]['skor']
+            let item4 = element[1]['skor'];
 
             // Check if item4 is less than 0, and set it to 0 if true
             // item4 = (item4 < 0) ? 0 : item4;
@@ -4896,7 +4896,7 @@
             let item2 = element[1]['afd']
             let item3 = element[1]['asisten']
 
-            let item4 = element[1]['skor']
+            let item4 = element[1]['skor'];
 
             // Check if item4 is less than 0, and set it to 0 if true
             // item4 = (item4 < 0) ? 0 : item4;
@@ -4979,7 +4979,7 @@
             let item2 = element[1]['afd']
             let item3 = element[1]['asisten']
 
-            let item4 = element[1]['skor']
+            let item4 = element[1]['skor'];
 
             // Check if item4 is less than 0, and set it to 0 if true
             // item4 = (item4 < 0) ? 0 : item4;
@@ -5096,7 +5096,7 @@
             let item2 = element[1]['afd']
             let item3 = element[1]['asisten']
 
-            let item4 = element[1]['skor']
+            let item4 = element[1]['skor'];
 
             // Check if item4 is less than 0, and set it to 0 if true
             // item4 = (item4 < 0) ? 0 : item4;
