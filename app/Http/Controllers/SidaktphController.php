@@ -1848,7 +1848,6 @@ class SidaktphController extends Controller
         echo json_encode($arrView);
         exit();
     }
-
     public function getBtTph(Request $request)
     {
         $week = $request->input('start');
@@ -2931,6 +2930,7 @@ class SidaktphController extends Controller
         echo json_encode($arr);
         exit();
     }
+
 
     public function getBtTphMonth(Request $request)
     {
@@ -4823,6 +4823,7 @@ class SidaktphController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
+
 
     public function getBtTphYear(Request $request)
     {
@@ -7128,9 +7129,7 @@ class SidaktphController extends Controller
         $jumkrng = $request->input('jumkrng');
         $buahtgl = $request->input('buahtgl');
         $restan = $request->input('restan');
-        $username = session('user_name');
-        $userid = session('user_id');
-        $date = Carbon::now();
+
 
         // Retrieve the data before updating
         $oldData = DB::connection('mysql2')->table('sidak_tph')->where('id', $ids)->first();
@@ -7153,12 +7152,16 @@ class SidaktphController extends Controller
         } catch (\Throwable $th) {
             // Handle exceptions if needed
         } finally {
+            $username = session('user_name');
+            $userid = session('user_id');
+            $date = Carbon::now();
+
             // Insert a record into the history table
             DB::connection('mysql2')->table('history_edit')->insert([
                 'id_user' => $userid,
                 'nama_user' => $username,
-                'data_baru' => json_encode($updatedData),
-                'data_lama' => json_encode($oldData),
+                'data_baru' => json_encode($updatedData), // Data after the update
+                'data_lama' => json_encode($oldData), // Data before the update
                 'tanggal' => $date,
                 'menu' => 'edit_sidaktph',
 
