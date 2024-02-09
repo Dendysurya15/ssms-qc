@@ -3056,26 +3056,26 @@ class RekapController extends Controller
             $new_dvdAfdesx = 0;
             $v2check5x = 0;
             $newSidak_mua = array();
+
             foreach ($defaultweekmua as $key => $value) {
-                $dividen_afd = 0;
                 $total_skoreest = 0;
                 $tot_estAFd = 0;
                 $new_dvdAfd = 0;
                 $new_dvdAfdest = 0;
                 $total_estkors = 0;
                 $total_skoreafd = 0;
-
-                $deviden = 0;
                 $devest = count($value);
                 // dd($devest);
                 // dd($value);
                 $v2check5 = 0;
+                $newpembagi3 = 0;
                 foreach ($value as $key1 => $value2)  if (is_array($value2)) {
 
                     $tot_afdscore = 0;
                     $totskor_brd1 = 0;
                     $totskor_janjang1 = 0;
                     $total_skoreest = 0;
+                    $newpembagi1 = 0;
                     $v2check4 = 0;
                     foreach ($value2 as $key2 => $value3) {
 
@@ -3209,19 +3209,43 @@ class RekapController extends Controller
 
                         $total_estkors = $totskor_brd + $totskor_janjang;
                         if ($total_estkors != 0) {
-                            $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
+
+                            $newSidak_mua[$key][$key1][$key2]['all_score'] = $newscore;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+                            $newpembagi = 1;
                         } else if ($v2check3 != 0) {
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+
+                            $newpembagi = 1;
                         } else {
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 0;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'null';
                             $total_skoreafd = 0;
+                            $newpembagi = 0;
                         }
                         // $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                         $newSidak_mua[$key][$key1][$key2]['total_brd'] = $tot_brdxm;
@@ -3231,32 +3255,16 @@ class RekapController extends Controller
                         $newSidak_mua[$key][$key1][$key2]['total_skor'] = $total_skoreafd;
                         $newSidak_mua[$key][$key1][$key2]['janjang_brd'] = $totskor_brd + $totskor_janjang;
                         $newSidak_mua[$key][$key1][$key2]['v2check3'] = $v2check3;
+                        $newSidak_mua[$key][$key1][$key2]['newpembagi'] = $newpembagi;
 
                         $totskor_brd1 += $totskor_brd;
                         $totskor_janjang1 += $totskor_janjang;
                         $total_skoreest += $total_skoreafd;
+                        $newpembagi1 += $newpembagi;
                         $v2check4 += $v2check3;
                     }
 
 
-                    // dd($newSidak_mua);
-
-                    foreach ($dividenmua as $keyx => $value) {
-                        if ($keyx == $key) {
-                            foreach ($value as $keyx1 => $value2) {
-                                if ($keyx1 == $key1) {
-                                    // dd($value2);
-                                    $dividen_x = $value2['dividen'];
-                                    if ($value2['dividen'] != 0) {
-                                        $devidenEst_x = 1;
-                                    } else {
-                                        $devidenEst_x = 0;
-                                    }
-                                    // dd($dividen);
-                                }
-                            }
-                        }
-                    }
 
                     // dd($deviden);
 
@@ -3276,27 +3284,52 @@ class RekapController extends Controller
                     $new_dvdest = $devidenEst_x ?? 0;
 
 
-                    if ($v2check4 != 0 && $total_skoreest == 0) {
-                        $tot_afdscore = 100;
-                    } else if ($new_dvd != 0) {
-                        $tot_afdscore = round($total_skoreest / $new_dvd, 1);
-                    } else if ($new_dvd == 0 && $v2check4 == 0) {
-                        $tot_afdscore = 0;
-                    }
+                    $total_estkors = $totskor_brd1 + $totskor_janjang1;
+                    if ($total_estkors != 0) {
 
+                        // $checkscore = 100 - ($total_estkors);
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                        }
 
-                    if ($tot_afdscore < 0) {
-                        # code...
-                        $newscore = 0;
+                        $newSidak_mua[$key][$key1]['all_score'] = $newscore;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+                        $newpembagi2 = 1;
+                    } else if ($v2check4 != 0) {
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1]['mines'] = 'tidak';
+                        }
+                        $newSidak_mua[$key][$key1]['all_score'] = 100 - ($total_estkors);
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+
+                        $newpembagi2 = 1;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'ada';
                     } else {
-                        $newscore = $tot_afdscore;
+                        $newSidak_mua[$key][$key1]['all_score'] = 0;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'null';
+                        $total_skoreafd = 0;
+                        $newpembagi2 = 0;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
                     }
-                    // $newSidak_mua[$key][$key1]['deviden'] = $deviden;
-
                     $newSidak_mua[$key][$key1]['total_brd'] = $totskor_brd1;
                     $newSidak_mua[$key][$key1]['total_janjang'] = $totskor_janjang1;
                     $newSidak_mua[$key][$key1]['new_deviden'] = $new_dvd;
                     $newSidak_mua[$key][$key1]['asisten'] = $namaGM;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = $total_skoreest;
                     if ($v2check4 == 0) {
                         $newSidak_mua[$key][$key1]['total_score'] = '-';
                     } else {
@@ -3305,25 +3338,38 @@ class RekapController extends Controller
 
                     $newSidak_mua[$key][$key1]['est'] = $key;
                     $newSidak_mua[$key][$key1]['afd'] = $key1;
-                    $newSidak_mua[$key][$key1]['devidenest'] = $devest;
+                    $newSidak_mua[$key][$key1]['devidenest'] = $newpembagi1;
                     $newSidak_mua[$key][$key1]['v2check4'] = $v2check4;
 
                     $tot_estAFd += $newscore;
                     $new_dvdAfd += $new_dvd;
                     $new_dvdAfdest += $new_dvdest;
                     $v2check5 += $v2check4;
+                    $newpembagi3 += $newpembagi2;
+                } else {
+                    $newSidak_mua[$key][$key1]['total_brd'] = 0;
+                    $newSidak_mua[$key][$key1]['total_janjang'] = 0;
+                    $newSidak_mua[$key][$key1]['new_deviden'] = 0;
+                    $newSidak_mua[$key][$key1]['asisten'] = 0;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = 0;
+                    $newSidak_mua[$key][$key1]['total_score'] = '-';
+                    $newSidak_mua[$key][$key1]['est'] = $key;
+                    $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
+                    $newSidak_mua[$key][$key1]['afd'] = $key1;
+                    $newSidak_mua[$key][$key1]['devidenest'] = 0;
+                    $newSidak_mua[$key][$key1]['v2check4'] = 0;
                 }
 
-                $dividen_afd = count($value);
+
                 if ($v2check5 != 0) {
-                    $total_skoreest = round($tot_estAFd / $devest, 1);
-                    $checkdata = 'ada';
-                } else if ($v2check5 != 0 && $devest != 0) {
-                    $checkdata = 'ada';
-                    $total_skoreest = 0;
+                    $total_skoreest = round($tot_estAFd / $newpembagi3, 1);
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
+                } else if ($v2check5 != 0 && $tot_estAFd == 0) {
+                    $total_skoreest = 100;
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
                 } else {
-                    $total_skoreest = '-';
-                    $checkdata = 'kosong';
+                    $total_skoreest = 0;
+                    $newSidak_mua[$key]['checkdata'] = 'kosong';
                 }
 
                 // dd($value);
@@ -3342,14 +3388,12 @@ class RekapController extends Controller
                 }
 
                 $newSidak_mua[$key]['total_skorest'] = $tot_estAFd;
-                $newSidak_mua[$key]['checkdata'] = $checkdata;
                 $newSidak_mua[$key]['score_estate'] = $total_skoreest;
                 $newSidak_mua[$key]['asisten'] = $namaGM;
                 $newSidak_mua[$key]['estate'] = $key;
                 $newSidak_mua[$key]['afd'] = 'GM';
-                $newSidak_mua[$key]['afdeling'] = $devest;
+                $newSidak_mua[$key]['afdeling'] = $newpembagi3;
                 $newSidak_mua[$key]['v2check5'] = $v2check5;
-
                 if ($v2check5 != 0) {
                     $devidenlast = 1;
                 } else {
@@ -3395,6 +3439,8 @@ class RekapController extends Controller
                 'afdeling' => $devmuxax,
                 'v2check6' => $v2check5,
             ];
+
+            // dd($newSidak_mua);
 
             // qc inspeksi mua 
 
@@ -4523,7 +4569,7 @@ class RekapController extends Controller
                     }
                 }
             }
-
+            // dd($newSidak_mua);
             $rekapmua = [];
             foreach ($qcinspeksimua as $key => $value) {
                 if (
@@ -4531,6 +4577,8 @@ class RekapController extends Controller
                     isset($newSidak_mua[$key])
                 ) {
                     $valtph2 = $newSidak_mua[$key];
+
+                    // dd($valtph2);
                     $valmtb = $sidak_buah_mua[$key];
                     $skortph = $valtph2['score_estate'] ?? null;
                     $skormtb = $valmtb['All_skor'] ?? null;
@@ -12408,26 +12456,26 @@ class RekapController extends Controller
             $new_dvdAfdesx = 0;
             $v2check5x = 0;
             $newSidak_mua = array();
+
             foreach ($defaultweekmua as $key => $value) {
-                $dividen_afd = 0;
                 $total_skoreest = 0;
                 $tot_estAFd = 0;
                 $new_dvdAfd = 0;
                 $new_dvdAfdest = 0;
                 $total_estkors = 0;
                 $total_skoreafd = 0;
-
-                $deviden = 0;
                 $devest = count($value);
                 // dd($devest);
                 // dd($value);
                 $v2check5 = 0;
+                $newpembagi3 = 0;
                 foreach ($value as $key1 => $value2)  if (is_array($value2)) {
 
                     $tot_afdscore = 0;
                     $totskor_brd1 = 0;
                     $totskor_janjang1 = 0;
                     $total_skoreest = 0;
+                    $newpembagi1 = 0;
                     $v2check4 = 0;
                     foreach ($value2 as $key2 => $value3) {
 
@@ -12561,19 +12609,43 @@ class RekapController extends Controller
 
                         $total_estkors = $totskor_brd + $totskor_janjang;
                         if ($total_estkors != 0) {
-                            $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
+
+                            $newSidak_mua[$key][$key1][$key2]['all_score'] = $newscore;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+                            $newpembagi = 1;
                         } else if ($v2check3 != 0) {
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+
+                            $newpembagi = 1;
                         } else {
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 0;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'null';
                             $total_skoreafd = 0;
+                            $newpembagi = 0;
                         }
                         // $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                         $newSidak_mua[$key][$key1][$key2]['total_brd'] = $tot_brdxm;
@@ -12583,32 +12655,16 @@ class RekapController extends Controller
                         $newSidak_mua[$key][$key1][$key2]['total_skor'] = $total_skoreafd;
                         $newSidak_mua[$key][$key1][$key2]['janjang_brd'] = $totskor_brd + $totskor_janjang;
                         $newSidak_mua[$key][$key1][$key2]['v2check3'] = $v2check3;
+                        $newSidak_mua[$key][$key1][$key2]['newpembagi'] = $newpembagi;
 
                         $totskor_brd1 += $totskor_brd;
                         $totskor_janjang1 += $totskor_janjang;
                         $total_skoreest += $total_skoreafd;
+                        $newpembagi1 += $newpembagi;
                         $v2check4 += $v2check3;
                     }
 
 
-                    // dd($newSidak_mua);
-
-                    foreach ($dividenmua as $keyx => $value) {
-                        if ($keyx == $key) {
-                            foreach ($value as $keyx1 => $value2) {
-                                if ($keyx1 == $key1) {
-                                    // dd($value2);
-                                    $dividen_x = $value2['dividen'];
-                                    if ($value2['dividen'] != 0) {
-                                        $devidenEst_x = 1;
-                                    } else {
-                                        $devidenEst_x = 0;
-                                    }
-                                    // dd($dividen);
-                                }
-                            }
-                        }
-                    }
 
                     // dd($deviden);
 
@@ -12628,27 +12684,52 @@ class RekapController extends Controller
                     $new_dvdest = $devidenEst_x ?? 0;
 
 
-                    if ($v2check4 != 0 && $total_skoreest == 0) {
-                        $tot_afdscore = 100;
-                    } else if ($new_dvd != 0) {
-                        $tot_afdscore = round($total_skoreest / $new_dvd, 1);
-                    } else if ($new_dvd == 0 && $v2check4 == 0) {
-                        $tot_afdscore = 0;
-                    }
+                    $total_estkors = $totskor_brd1 + $totskor_janjang1;
+                    if ($total_estkors != 0) {
 
+                        // $checkscore = 100 - ($total_estkors);
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                        }
 
-                    if ($tot_afdscore < 0) {
-                        # code...
-                        $newscore = 0;
+                        $newSidak_mua[$key][$key1]['all_score'] = $newscore;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+                        $newpembagi2 = 1;
+                    } else if ($v2check4 != 0) {
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1]['mines'] = 'tidak';
+                        }
+                        $newSidak_mua[$key][$key1]['all_score'] = 100 - ($total_estkors);
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+
+                        $newpembagi2 = 1;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'ada';
                     } else {
-                        $newscore = $tot_afdscore;
+                        $newSidak_mua[$key][$key1]['all_score'] = 0;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'null';
+                        $total_skoreafd = 0;
+                        $newpembagi2 = 0;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
                     }
-                    // $newSidak_mua[$key][$key1]['deviden'] = $deviden;
-
                     $newSidak_mua[$key][$key1]['total_brd'] = $totskor_brd1;
                     $newSidak_mua[$key][$key1]['total_janjang'] = $totskor_janjang1;
                     $newSidak_mua[$key][$key1]['new_deviden'] = $new_dvd;
                     $newSidak_mua[$key][$key1]['asisten'] = $namaGM;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = $total_skoreest;
                     if ($v2check4 == 0) {
                         $newSidak_mua[$key][$key1]['total_score'] = '-';
                     } else {
@@ -12657,25 +12738,38 @@ class RekapController extends Controller
 
                     $newSidak_mua[$key][$key1]['est'] = $key;
                     $newSidak_mua[$key][$key1]['afd'] = $key1;
-                    $newSidak_mua[$key][$key1]['devidenest'] = $devest;
+                    $newSidak_mua[$key][$key1]['devidenest'] = $newpembagi1;
                     $newSidak_mua[$key][$key1]['v2check4'] = $v2check4;
 
                     $tot_estAFd += $newscore;
                     $new_dvdAfd += $new_dvd;
                     $new_dvdAfdest += $new_dvdest;
                     $v2check5 += $v2check4;
+                    $newpembagi3 += $newpembagi2;
+                } else {
+                    $newSidak_mua[$key][$key1]['total_brd'] = 0;
+                    $newSidak_mua[$key][$key1]['total_janjang'] = 0;
+                    $newSidak_mua[$key][$key1]['new_deviden'] = 0;
+                    $newSidak_mua[$key][$key1]['asisten'] = 0;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = 0;
+                    $newSidak_mua[$key][$key1]['total_score'] = '-';
+                    $newSidak_mua[$key][$key1]['est'] = $key;
+                    $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
+                    $newSidak_mua[$key][$key1]['afd'] = $key1;
+                    $newSidak_mua[$key][$key1]['devidenest'] = 0;
+                    $newSidak_mua[$key][$key1]['v2check4'] = 0;
                 }
 
-                $dividen_afd = count($value);
+
                 if ($v2check5 != 0) {
-                    $total_skoreest = round($tot_estAFd / $devest, 1);
-                    $checkdata = 'ada';
-                } else if ($v2check5 != 0 && $devest != 0) {
-                    $checkdata = 'ada';
-                    $total_skoreest = 0;
+                    $total_skoreest = round($tot_estAFd / $newpembagi3, 1);
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
+                } else if ($v2check5 != 0 && $tot_estAFd == 0) {
+                    $total_skoreest = 100;
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
                 } else {
-                    $total_skoreest = '-';
-                    $checkdata = 'kosong';
+                    $total_skoreest = 0;
+                    $newSidak_mua[$key]['checkdata'] = 'kosong';
                 }
 
                 // dd($value);
@@ -12694,14 +12788,12 @@ class RekapController extends Controller
                 }
 
                 $newSidak_mua[$key]['total_skorest'] = $tot_estAFd;
-                $newSidak_mua[$key]['checkdata'] = $checkdata;
                 $newSidak_mua[$key]['score_estate'] = $total_skoreest;
                 $newSidak_mua[$key]['asisten'] = $namaGM;
                 $newSidak_mua[$key]['estate'] = $key;
                 $newSidak_mua[$key]['afd'] = 'GM';
-                $newSidak_mua[$key]['afdeling'] = $devest;
+                $newSidak_mua[$key]['afdeling'] = $newpembagi3;
                 $newSidak_mua[$key]['v2check5'] = $v2check5;
-
                 if ($v2check5 != 0) {
                     $devidenlast = 1;
                 } else {

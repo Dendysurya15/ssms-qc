@@ -2493,34 +2493,34 @@ class SidaktphController extends Controller
             $new_dvdAfdx = 0;
             $new_dvdAfdesx = 0;
             $v2check5x = 0;
-            $tot_brdxm3 = 0;
-            $tod_janjangxm3 = 0;
+            $chartbrd4 = 0;
+            $chartrst4 = 0;
             $newSidak_mua = array();
+
             foreach ($defaultweekmua as $key => $value) {
-                $dividen_afd = 0;
                 $total_skoreest = 0;
                 $tot_estAFd = 0;
                 $new_dvdAfd = 0;
                 $new_dvdAfdest = 0;
                 $total_estkors = 0;
                 $total_skoreafd = 0;
-
-                $deviden = 0;
                 $devest = count($value);
                 // dd($devest);
                 // dd($value);
                 $v2check5 = 0;
-                $tot_brdxm2 = 0;
-                $tod_janjangxm2 = 0;
+                $newpembagi3 = 0;
+                $chartbrd3 = 0;
+                $chartrst3 = 0;
                 foreach ($value as $key1 => $value2)  if (is_array($value2)) {
 
                     $tot_afdscore = 0;
                     $totskor_brd1 = 0;
                     $totskor_janjang1 = 0;
                     $total_skoreest = 0;
+                    $newpembagi1 = 0;
                     $v2check4 = 0;
-                    $tot_brdxm1 = 0;
-                    $tod_janjangxm1 = 0;
+                    $chartbrd2 = 0;
+                    $chartrst2 = 0;
                     foreach ($value2 as $key2 => $value3) {
 
 
@@ -2533,6 +2533,8 @@ class SidaktphController extends Controller
                         $tot_brdxm = 0;
                         $tod_janjangxm = 0;
                         $v2check3 = 0;
+                        $chartbrd1 = 0;
+                        $chartrst1 = 0;
 
                         foreach ($value3 as $key3 => $value4) if (is_array($value4)) {
                             $tph1 = 0;
@@ -2614,6 +2616,8 @@ class SidaktphController extends Controller
                             // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                             $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
                             $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
+                            $chartbrd =  $tph1 + $jalan1 + $bin1 + $karung1;
+                            $chartrst =  $buah1 + $restan1;
                             $tod_brd = $tph1 + $jalan1 + $bin1 + $karung1;
                             $tod_jjg = $buah1 + $restan1;
                             $newSidak_mua[$key][$key1][$key2][$key3]['tphx'] = $tph1;
@@ -2634,6 +2638,8 @@ class SidaktphController extends Controller
                             $tot_brdxm += $tod_brd;
                             $tod_janjangxm += $tod_jjg;
                             $v2check3 += $v2check2;
+                            $chartbrd1 += $chartbrd;
+                            $chartrst1 += $chartrst;
                         } else {
                             $newSidak_mua[$key][$key1][$key2][$key3]['tphx'] = 0;
                             $newSidak_mua[$key][$key1][$key2][$key3]['jalan'] = 0;
@@ -2653,19 +2659,43 @@ class SidaktphController extends Controller
 
                         $total_estkors = $totskor_brd + $totskor_janjang;
                         if ($total_estkors != 0) {
-                            $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
+
+                            $newSidak_mua[$key][$key1][$key2]['all_score'] = $newscore;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+                            $newpembagi = 1;
                         } else if ($v2check3 != 0) {
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+
+                            $newpembagi = 1;
                         } else {
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 0;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'null';
                             $total_skoreafd = 0;
+                            $newpembagi = 0;
                         }
                         // $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                         $newSidak_mua[$key][$key1][$key2]['total_brd'] = $tot_brdxm;
@@ -2675,34 +2705,18 @@ class SidaktphController extends Controller
                         $newSidak_mua[$key][$key1][$key2]['total_skor'] = $total_skoreafd;
                         $newSidak_mua[$key][$key1][$key2]['janjang_brd'] = $totskor_brd + $totskor_janjang;
                         $newSidak_mua[$key][$key1][$key2]['v2check3'] = $v2check3;
+                        $newSidak_mua[$key][$key1][$key2]['newpembagi'] = $newpembagi;
 
                         $totskor_brd1 += $totskor_brd;
                         $totskor_janjang1 += $totskor_janjang;
                         $total_skoreest += $total_skoreafd;
+                        $newpembagi1 += $newpembagi;
                         $v2check4 += $v2check3;
-                        $tot_brdxm1 += $tot_brdxm;
-                        $tod_janjangxm1 += $tod_janjangxm;
+                        $chartbrd2 += $chartbrd1;
+                        $chartrst2 += $chartrst1;
                     }
 
 
-                    // dd($newSidak_mua);
-
-                    foreach ($dividenmua as $keyx => $value) {
-                        if ($keyx == $key) {
-                            foreach ($value as $keyx1 => $value2) {
-                                if ($keyx1 == $key1) {
-                                    // dd($value2);
-                                    $dividen_x = $value2['dividen'];
-                                    if ($value2['dividen'] != 0) {
-                                        $devidenEst_x = 1;
-                                    } else {
-                                        $devidenEst_x = 0;
-                                    }
-                                    // dd($dividen);
-                                }
-                            }
-                        }
-                    }
 
                     // dd($deviden);
 
@@ -2722,27 +2736,52 @@ class SidaktphController extends Controller
                     $new_dvdest = $devidenEst_x ?? 0;
 
 
-                    if ($v2check4 != 0 && $total_skoreest == 0) {
-                        $tot_afdscore = 100;
-                    } else if ($new_dvd != 0) {
-                        $tot_afdscore = round($total_skoreest / $new_dvd, 1);
-                    } else if ($new_dvd == 0 && $v2check4 == 0) {
-                        $tot_afdscore = 0;
-                    }
+                    $total_estkors = $totskor_brd1 + $totskor_janjang1;
+                    if ($total_estkors != 0) {
 
+                        // $checkscore = 100 - ($total_estkors);
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                        }
 
-                    if ($tot_afdscore < 0) {
-                        # code...
-                        $newscore = 0;
+                        $newSidak_mua[$key][$key1]['all_score'] = $newscore;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+                        $newpembagi2 = 1;
+                    } else if ($v2check4 != 0) {
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1]['mines'] = 'tidak';
+                        }
+                        $newSidak_mua[$key][$key1]['all_score'] = 100 - ($total_estkors);
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+
+                        $newpembagi2 = 1;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'ada';
                     } else {
-                        $newscore = $tot_afdscore;
+                        $newSidak_mua[$key][$key1]['all_score'] = 0;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'null';
+                        $total_skoreafd = 0;
+                        $newpembagi2 = 0;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
                     }
-                    // $newSidak_mua[$key][$key1]['deviden'] = $deviden;
-
                     $newSidak_mua[$key][$key1]['total_brd'] = $totskor_brd1;
                     $newSidak_mua[$key][$key1]['total_janjang'] = $totskor_janjang1;
                     $newSidak_mua[$key][$key1]['new_deviden'] = $new_dvd;
                     $newSidak_mua[$key][$key1]['asisten'] = $namaGM;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = $total_skoreest;
                     if ($v2check4 == 0) {
                         $newSidak_mua[$key][$key1]['total_score'] = '-';
                     } else {
@@ -2751,36 +2790,47 @@ class SidaktphController extends Controller
 
                     $newSidak_mua[$key][$key1]['est'] = $key;
                     $newSidak_mua[$key][$key1]['afd'] = $key1;
-                    $newSidak_mua[$key][$key1]['devidenest'] = $devest;
+                    $newSidak_mua[$key][$key1]['devidenest'] = $newpembagi1;
                     $newSidak_mua[$key][$key1]['v2check4'] = $v2check4;
-                    $newSidak_mua[$key][$key1]['chartbrd'] = $tot_brdxm1;
-                    $newSidak_mua[$key][$key1]['chartrst'] = $tod_janjangxm1;
 
                     $tot_estAFd += $newscore;
                     $new_dvdAfd += $new_dvd;
                     $new_dvdAfdest += $new_dvdest;
                     $v2check5 += $v2check4;
-                    $tot_brdxm2 += $tot_brdxm1;
-                    $tod_janjangxm2 += $tod_janjangxm1;
+                    $newpembagi3 += $newpembagi2;
+                    $chartbrd3 += $chartbrd2;
+                    $chartrst3 += $chartrst2;
+                } else {
+                    $newSidak_mua[$key][$key1]['total_brd'] = 0;
+                    $newSidak_mua[$key][$key1]['total_janjang'] = 0;
+                    $newSidak_mua[$key][$key1]['new_deviden'] = 0;
+                    $newSidak_mua[$key][$key1]['asisten'] = 0;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = 0;
+                    $newSidak_mua[$key][$key1]['total_score'] = '-';
+                    $newSidak_mua[$key][$key1]['est'] = $key;
+                    $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
+                    $newSidak_mua[$key][$key1]['afd'] = $key1;
+                    $newSidak_mua[$key][$key1]['devidenest'] = 0;
+                    $newSidak_mua[$key][$key1]['v2check4'] = 0;
                 }
 
-                $dividen_afd = count($value);
+
                 if ($v2check5 != 0) {
-                    $total_skoreest = round($tot_estAFd / $devest, 1);
-                    $checkdata = 'ada';
-                } else if ($v2check5 != 0 && $devest != 0) {
-                    $checkdata = 'ada';
-                    $total_skoreest = 0;
+                    $total_skoreest = round($tot_estAFd / $newpembagi3, 1);
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
+                } else if ($v2check5 != 0 && $tot_estAFd == 0) {
+                    $total_skoreest = 100;
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
                 } else {
-                    $total_skoreest = '-';
-                    $checkdata = 'kosong';
+                    $total_skoreest = 0;
+                    $newSidak_mua[$key]['checkdata'] = 'kosong';
                 }
 
                 // dd($value);
 
                 $namaGM = '-';
                 foreach ($queryAsisten as $asisten) {
-                    if ($asisten['est'] == $key && $asisten['afd'] == 'OA') {
+                    if ($asisten['est'] == $key && $asisten['afd'] == 'EM') {
                         $namaGM = $asisten['nama'];
                         break;
                     }
@@ -2792,16 +2842,12 @@ class SidaktphController extends Controller
                 }
 
                 $newSidak_mua[$key]['total_skorest'] = $tot_estAFd;
-                $newSidak_mua[$key]['checkdata'] = $checkdata;
                 $newSidak_mua[$key]['score_estate'] = $total_skoreest;
                 $newSidak_mua[$key]['asisten'] = $namaGM;
                 $newSidak_mua[$key]['estate'] = $key;
                 $newSidak_mua[$key]['afd'] = 'GM';
-                $newSidak_mua[$key]['afdeling'] = $devest;
+                $newSidak_mua[$key]['afdeling'] = $newpembagi3;
                 $newSidak_mua[$key]['v2check5'] = $v2check5;
-                $newSidak_mua[$key]['chartbrd'] = $tot_brdxm2;
-                $newSidak_mua[$key]['chartrst'] = $tod_janjangxm2;
-
                 if ($v2check5 != 0) {
                     $devidenlast = 1;
                 } else {
@@ -2813,8 +2859,8 @@ class SidaktphController extends Controller
                 $new_dvdAfdx  += $new_dvdAfd;
                 $new_dvdAfdesx += $new_dvdAfdest;
                 $v2check5x += $v2check5;
-                $tot_brdxm3 += $tot_brdxm2;
-                $tod_janjangxm3 += $tod_janjangxm2;
+                $chartbrd4 += $chartbrd3;
+                $chartrst4 += $chartrst3;
             }
             $devmuxax = array_sum($devmuxa);
 
@@ -2833,7 +2879,7 @@ class SidaktphController extends Controller
 
             $namaGMnewSidak_mua = '-';
             foreach ($queryAsisten as $asisten) {
-                if ($asisten['est'] == 'PT.MUA' && $asisten['afd'] == 'EM') {
+                if ($asisten['est'] == $key && $asisten['afd'] == 'EM') {
                     $namaGMnewSidak_mua = $asisten['nama'];
                     break;
                 }
@@ -2843,13 +2889,15 @@ class SidaktphController extends Controller
                 'checkdata' => $checkdata,
                 'total_skorest' => $tot_estAFdx,
                 'score_estate' => $total_skoreestxyz,
-                'asisten' => $namaGMnewSidak_mua,
+                'asisten' => $namaGM,
                 'estate' => $key,
+                'chartbrd' => $chartbrd4,
+                'chartrst' => $chartrst4,
+                'afd' => $namaGMnewSidak_mua,
                 'afdeling' => $devmuxax,
-                'chartbrd' => $tot_brdxm3,
-                'chartrst' => $tod_janjangxm3,
                 'v2check6' => $v2check5,
             ];
+
 
             $newSidak['PT.MUA']['est'] = $newSidak_mua['PT.MUA'];
             $testing['PT.MUA']['est']  = $newSidak_mua['PT.MUA'];
@@ -4253,34 +4301,34 @@ class SidaktphController extends Controller
             $new_dvdAfdx = 0;
             $new_dvdAfdesx = 0;
             $v2check5x = 0;
-            $tot_brdxm3 = 0;
-            $tod_janjangxm3 = 0;
+            $chartbrd4 = 0;
+            $chartrst4 = 0;
             $newSidak_mua = array();
+
             foreach ($defaultweekmua as $key => $value) {
-                $dividen_afd = 0;
                 $total_skoreest = 0;
                 $tot_estAFd = 0;
                 $new_dvdAfd = 0;
                 $new_dvdAfdest = 0;
                 $total_estkors = 0;
                 $total_skoreafd = 0;
-
-                $deviden = 0;
                 $devest = count($value);
                 // dd($devest);
                 // dd($value);
                 $v2check5 = 0;
-                $tot_brdxm2 = 0;
-                $tod_janjangxm2 = 0;
+                $newpembagi3 = 0;
+                $chartbrd3 = 0;
+                $chartrst3 = 0;
                 foreach ($value as $key1 => $value2)  if (is_array($value2)) {
 
                     $tot_afdscore = 0;
                     $totskor_brd1 = 0;
                     $totskor_janjang1 = 0;
                     $total_skoreest = 0;
+                    $newpembagi1 = 0;
                     $v2check4 = 0;
-                    $tot_brdxm1 = 0;
-                    $tod_janjangxm1 = 0;
+                    $chartbrd2 = 0;
+                    $chartrst2 = 0;
                     foreach ($value2 as $key2 => $value3) {
 
 
@@ -4293,6 +4341,8 @@ class SidaktphController extends Controller
                         $tot_brdxm = 0;
                         $tod_janjangxm = 0;
                         $v2check3 = 0;
+                        $chartbrd1 = 0;
+                        $chartrst1 = 0;
 
                         foreach ($value3 as $key3 => $value4) if (is_array($value4)) {
                             $tph1 = 0;
@@ -4374,6 +4424,8 @@ class SidaktphController extends Controller
                             // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                             $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
                             $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
+                            $chartbrd =  $tph1 + $jalan1 + $bin1 + $karung1;
+                            $chartrst =  $buah1 + $restan1;
                             $tod_brd = $tph1 + $jalan1 + $bin1 + $karung1;
                             $tod_jjg = $buah1 + $restan1;
                             $newSidak_mua[$key][$key1][$key2][$key3]['tphx'] = $tph1;
@@ -4394,6 +4446,8 @@ class SidaktphController extends Controller
                             $tot_brdxm += $tod_brd;
                             $tod_janjangxm += $tod_jjg;
                             $v2check3 += $v2check2;
+                            $chartbrd1 += $chartbrd;
+                            $chartrst1 += $chartrst;
                         } else {
                             $newSidak_mua[$key][$key1][$key2][$key3]['tphx'] = 0;
                             $newSidak_mua[$key][$key1][$key2][$key3]['jalan'] = 0;
@@ -4413,19 +4467,43 @@ class SidaktphController extends Controller
 
                         $total_estkors = $totskor_brd + $totskor_janjang;
                         if ($total_estkors != 0) {
-                            $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
+
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
+
+                            $newSidak_mua[$key][$key1][$key2]['all_score'] = $newscore;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+                            $newpembagi = 1;
                         } else if ($v2check3 != 0) {
+                            $checkscore = 100 - ($total_estkors);
+
+                            if ($checkscore < 0) {
+                                $newscore = 0;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                            } else {
+                                $newscore = $checkscore;
+                                $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                            }
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'ada';
 
-                            $total_skoreafd = 100 - ($total_estkors);
+                            $total_skoreafd = $newscore;
+
+                            $newpembagi = 1;
                         } else {
                             $newSidak_mua[$key][$key1][$key2]['all_score'] = 0;
                             $newSidak_mua[$key][$key1][$key2]['check_data'] = 'null';
                             $total_skoreafd = 0;
+                            $newpembagi = 0;
                         }
                         // $newSidak_mua[$key][$key1][$key2]['all_score'] = 100 - ($total_estkors);
                         $newSidak_mua[$key][$key1][$key2]['total_brd'] = $tot_brdxm;
@@ -4435,34 +4513,18 @@ class SidaktphController extends Controller
                         $newSidak_mua[$key][$key1][$key2]['total_skor'] = $total_skoreafd;
                         $newSidak_mua[$key][$key1][$key2]['janjang_brd'] = $totskor_brd + $totskor_janjang;
                         $newSidak_mua[$key][$key1][$key2]['v2check3'] = $v2check3;
+                        $newSidak_mua[$key][$key1][$key2]['newpembagi'] = $newpembagi;
 
                         $totskor_brd1 += $totskor_brd;
                         $totskor_janjang1 += $totskor_janjang;
                         $total_skoreest += $total_skoreafd;
+                        $newpembagi1 += $newpembagi;
                         $v2check4 += $v2check3;
-                        $tot_brdxm1 += $tot_brdxm;
-                        $tod_janjangxm1 += $tod_janjangxm;
+                        $chartbrd2 += $chartbrd1;
+                        $chartrst2 += $chartrst1;
                     }
 
 
-                    // dd($newSidak_mua);
-
-                    foreach ($dividenmua as $keyx => $value) {
-                        if ($keyx == $key) {
-                            foreach ($value as $keyx1 => $value2) {
-                                if ($keyx1 == $key1) {
-                                    // dd($value2);
-                                    $dividen_x = $value2['dividen'];
-                                    if ($value2['dividen'] != 0) {
-                                        $devidenEst_x = 1;
-                                    } else {
-                                        $devidenEst_x = 0;
-                                    }
-                                    // dd($dividen);
-                                }
-                            }
-                        }
-                    }
 
                     // dd($deviden);
 
@@ -4482,27 +4544,52 @@ class SidaktphController extends Controller
                     $new_dvdest = $devidenEst_x ?? 0;
 
 
-                    if ($v2check4 != 0) {
-                        $tot_afdscore = 100;
-                    } else if ($new_dvd != 0) {
-                        $tot_afdscore = round($total_skoreest / $new_dvd, 1);
-                    } else if ($new_dvd == 0 && $v2check4 == 0) {
-                        $tot_afdscore = 0;
-                    }
+                    $total_estkors = $totskor_brd1 + $totskor_janjang1;
+                    if ($total_estkors != 0) {
 
+                        // $checkscore = 100 - ($total_estkors);
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1][$key2]['mines'] = 'tidak';
+                        }
 
-                    if ($tot_afdscore < 0) {
-                        # code...
-                        $newscore = 0;
+                        $newSidak_mua[$key][$key1]['all_score'] = $newscore;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+                        $newpembagi2 = 1;
+                    } else if ($v2check4 != 0) {
+                        $checkscore = round($total_skoreest / $newpembagi1, 1);
+                        if ($checkscore < 0) {
+                            $newscore = 0;
+                            $newSidak_mua[$key][$key1]['mines'] = 'ada';
+                        } else {
+                            $newscore = $checkscore;
+                            $newSidak_mua[$key][$key1]['mines'] = 'tidak';
+                        }
+                        $newSidak_mua[$key][$key1]['all_score'] = 100 - ($total_estkors);
+                        $newSidak_mua[$key][$key1]['check_data'] = 'ada';
+
+                        $total_skoreafd = $newscore;
+
+                        $newpembagi2 = 1;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'ada';
                     } else {
-                        $newscore = $tot_afdscore;
+                        $newSidak_mua[$key][$key1]['all_score'] = 0;
+                        $newSidak_mua[$key][$key1]['check_data'] = 'null';
+                        $total_skoreafd = 0;
+                        $newpembagi2 = 0;
+                        $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
                     }
-                    // $newSidak_mua[$key][$key1]['deviden'] = $deviden;
-
                     $newSidak_mua[$key][$key1]['total_brd'] = $totskor_brd1;
                     $newSidak_mua[$key][$key1]['total_janjang'] = $totskor_janjang1;
                     $newSidak_mua[$key][$key1]['new_deviden'] = $new_dvd;
                     $newSidak_mua[$key][$key1]['asisten'] = $namaGM;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = $total_skoreest;
                     if ($v2check4 == 0) {
                         $newSidak_mua[$key][$key1]['total_score'] = '-';
                     } else {
@@ -4511,36 +4598,47 @@ class SidaktphController extends Controller
 
                     $newSidak_mua[$key][$key1]['est'] = $key;
                     $newSidak_mua[$key][$key1]['afd'] = $key1;
-                    $newSidak_mua[$key][$key1]['devidenest'] = $devest;
+                    $newSidak_mua[$key][$key1]['devidenest'] = $newpembagi1;
                     $newSidak_mua[$key][$key1]['v2check4'] = $v2check4;
-                    $newSidak_mua[$key][$key1]['chartbrd'] = $tot_brdxm1;
-                    $newSidak_mua[$key][$key1]['chartrst'] = $tod_janjangxm1;
 
                     $tot_estAFd += $newscore;
                     $new_dvdAfd += $new_dvd;
                     $new_dvdAfdest += $new_dvdest;
                     $v2check5 += $v2check4;
-                    $tot_brdxm2 += $tot_brdxm1;
-                    $tod_janjangxm2 += $tod_janjangxm1;
+                    $newpembagi3 += $newpembagi2;
+                    $chartbrd3 += $chartbrd2;
+                    $chartrst3 += $chartrst2;
+                } else {
+                    $newSidak_mua[$key][$key1]['total_brd'] = 0;
+                    $newSidak_mua[$key][$key1]['total_janjang'] = 0;
+                    $newSidak_mua[$key][$key1]['new_deviden'] = 0;
+                    $newSidak_mua[$key][$key1]['asisten'] = 0;
+                    $newSidak_mua[$key][$key1]['total_skoreest'] = 0;
+                    $newSidak_mua[$key][$key1]['total_score'] = '-';
+                    $newSidak_mua[$key][$key1]['est'] = $key;
+                    $newSidak_mua[$key][$key1]['checkdata'] = 'kosong';
+                    $newSidak_mua[$key][$key1]['afd'] = $key1;
+                    $newSidak_mua[$key][$key1]['devidenest'] = 0;
+                    $newSidak_mua[$key][$key1]['v2check4'] = 0;
                 }
 
-                $dividen_afd = count($value);
+
                 if ($v2check5 != 0) {
-                    $total_skoreest = round($tot_estAFd / $devest, 1);
-                    $checkdata = 'ada';
-                } else if ($v2check5 != 0 && $devest != 0) {
-                    $checkdata = 'ada';
-                    $total_skoreest = 0;
+                    $total_skoreest = round($tot_estAFd / $newpembagi3, 1);
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
+                } else if ($v2check5 != 0 && $tot_estAFd == 0) {
+                    $total_skoreest = 100;
+                    $newSidak_mua[$key]['checkdata'] = 'ada';
                 } else {
-                    $total_skoreest = '-';
-                    $checkdata = 'kosong';
+                    $total_skoreest = 0;
+                    $newSidak_mua[$key]['checkdata'] = 'kosong';
                 }
 
                 // dd($value);
 
                 $namaGM = '-';
                 foreach ($queryAsisten as $asisten) {
-                    if ($asisten['est'] == $key && $asisten['afd'] == 'OA') {
+                    if ($asisten['est'] == $key && $asisten['afd'] == 'EM') {
                         $namaGM = $asisten['nama'];
                         break;
                     }
@@ -4552,16 +4650,12 @@ class SidaktphController extends Controller
                 }
 
                 $newSidak_mua[$key]['total_skorest'] = $tot_estAFd;
-                $newSidak_mua[$key]['checkdata'] = $checkdata;
                 $newSidak_mua[$key]['score_estate'] = $total_skoreest;
                 $newSidak_mua[$key]['asisten'] = $namaGM;
                 $newSidak_mua[$key]['estate'] = $key;
                 $newSidak_mua[$key]['afd'] = 'GM';
-                $newSidak_mua[$key]['afdeling'] = $devest;
+                $newSidak_mua[$key]['afdeling'] = $newpembagi3;
                 $newSidak_mua[$key]['v2check5'] = $v2check5;
-                $newSidak_mua[$key]['chartbrd'] = $tot_brdxm2;
-                $newSidak_mua[$key]['chartrst'] = $tod_janjangxm2;
-
                 if ($v2check5 != 0) {
                     $devidenlast = 1;
                 } else {
@@ -4573,8 +4667,8 @@ class SidaktphController extends Controller
                 $new_dvdAfdx  += $new_dvdAfd;
                 $new_dvdAfdesx += $new_dvdAfdest;
                 $v2check5x += $v2check5;
-                $tot_brdxm3 += $tot_brdxm2;
-                $tod_janjangxm3 += $tod_janjangxm2;
+                $chartbrd4 += $chartbrd3;
+                $chartrst4 += $chartrst3;
             }
             $devmuxax = array_sum($devmuxa);
 
@@ -4593,7 +4687,7 @@ class SidaktphController extends Controller
 
             $namaGMnewSidak_mua = '-';
             foreach ($queryAsisten as $asisten) {
-                if ($asisten['est'] == 'PT.MUA' && $asisten['afd'] == 'EM') {
+                if ($asisten['est'] == $key && $asisten['afd'] == 'EM') {
                     $namaGMnewSidak_mua = $asisten['nama'];
                     break;
                 }
@@ -4603,11 +4697,12 @@ class SidaktphController extends Controller
                 'checkdata' => $checkdata,
                 'total_skorest' => $tot_estAFdx,
                 'score_estate' => $total_skoreestxyz,
-                'asisten' => $namaGMnewSidak_mua,
+                'asisten' => $namaGM,
                 'estate' => $key,
+                'chartbrd' => $chartbrd4,
+                'chartrst' => $chartrst4,
+                'afd' => $namaGMnewSidak_mua,
                 'afdeling' => $devmuxax,
-                'chartbrd' => $tot_brdxm3,
-                'chartrst' => $tod_janjangxm3,
                 'v2check6' => $v2check5,
             ];
 
@@ -4620,6 +4715,7 @@ class SidaktphController extends Controller
             $newSidak_mua = [];
         }
 
+        // dd($newSidak_mua);
 
         // dd($testing);
         // $mtancakWIltab1[] = $testing;
@@ -4938,11 +5034,9 @@ class SidaktphController extends Controller
             }
         }
 
-        // dd($result);
-
-        // dd($result['SJE']['OL']);
         $newSidak = array();
 
+        // dd($result);
 
         foreach ($result as $key => $value1) {
             $v2check6 = 0;
@@ -5116,7 +5210,12 @@ class SidaktphController extends Controller
                 if ($v2check5 != 0 && $tot_estAFd == 0) {
                     $tot_afdscoremonth = 100;
                 } else if ($devidenmonth != 0) {
-                    $tot_afdscoremonth = round($tot_estAFd / $devidenmonth, 2);
+                    $score =  round($tot_estAFd / $devidenmonth, 2);
+                    if ($score < 0) {
+                        $tot_afdscoremonth = 0;
+                    } else {
+                        $tot_afdscoremonth = $score;
+                    }
                 } else if ($devidenmonth == 0 && $v2check5 == 0) {
                     $tot_afdscoremonth = 0;
                 }
@@ -5154,14 +5253,12 @@ class SidaktphController extends Controller
                 $newSidak[$key]['total_score'] = $todest;
             }
             $newSidak[$key]['total_brd'] = $totskor_brd6;
-            $newSidak[$key]['totscoreest'] = $tot_estAFd6;
             $newSidak[$key]['total_janjang'] = $totskor_janjang6;
             $newSidak[$key]['est'] = $key;
             $newSidak[$key]['afd'] = $key1;
             $newSidak[$key]['v2check6'] = $v2check6;
         }
-
-        dd($newSidak);
+        // dd($newSidak);
         // dd($);
 
         // dd($newSidak['SJE']['OL']);

@@ -2286,21 +2286,22 @@
     });
     ///
 
-    function enableShowButton() {
-        const showButton = document.getElementById("show-button");
-        showButton.disabled = false;
-    }
+    // function enableShowButton() {
+    //     const showButton = document.getElementById("show-button");
+    //     showButton.disabled = false;
+    // }
 
     function updateDate() {
         const inputDate = document.getElementById("inputDate");
         const selectedDate = inputDate.value;
-        document.getElementById("date").value = selectedDate;
 
+        // document.getElementById("date").value = selectedDate;
+        document.getElementById('show-button').disabled = false;
         // Update the "selectedDate" span
         document.getElementById("selectedDate").textContent = selectedDate;
 
         // Enable the "Show" button once a date is selected
-        enableShowButton();
+        // enableShowButton();
     }
 
 
@@ -2333,22 +2334,7 @@
         const updateModal3 = document.getElementById("update-modal-trans");
         updateModal3.style.display = "none";
     }
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     setInitialDate();
 
-    //     // Add an event listener to update the date when the selected date changes
-    //     const inputDate = document.getElementById("inputDate");
-    //     inputDate.addEventListener("change", updateDate);
-
-    //     // Add event listeners to close the modals when the close buttons are clicked
-    //     const closeModalButton = document.getElementById("close-modal");
-    //     closeModalButton.addEventListener("click", closeModal);
-
-    //     const closeModalButtonBuah = document.getElementById("close-modal-buah");
-    //     closeModalButtonBuah.addEventListener("click", closeModal);
-    //     const closeModalButtonTrans = document.getElementById("close-modal-trans");
-    //     closeModalButtonTrans.addEventListener("click", closeModal);
-    // });
     //buat animasi loading ketika tombol show di klik
     const lottieContainer = document.getElementById('lottie-container');
     const lottieAnimation = lottie.loadAnimation({
