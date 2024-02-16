@@ -3575,9 +3575,9 @@ class SidaktphController extends Controller
                         [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
 
                         // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
-                        $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
+                        $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 4);
                         $total_brondolanchart = $tph1 + $jalan1 + $bin1 + $karung1;
-                        $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
+                        $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 4);
                         $total_janjangchart =  $buah1 + $restan1;
                         $tod_brd = $tph1 + $jalan1 + $bin1 + $karung1;
                         $tod_jjg = $buah1 + $restan1;
@@ -3681,7 +3681,7 @@ class SidaktphController extends Controller
 
 
 
-                // dd($deviden);
+                // dd($newSidak);
 
                 $namaGM = '-';
                 foreach ($queryAsisten as $asisten) {
@@ -3699,56 +3699,37 @@ class SidaktphController extends Controller
                 $new_dvdest = $devidenEst_x ?? 0;
 
 
-                // if ($v2check4 != 0 && $total_skoreest == 0) {
-                //     $tot_afdscore = 100;
-                //     $newpembagi2 = 1;
-                // } else if ($v2check4 != 0) {
-                // $tot_afdscore = round($total_skoreest / $newpembagi1, 1);
-                //     $newpembagi2 = 1;
-                // } else if ($newpembagi1 == 0 && $v2check4 == 0) {
-                //     $tot_afdscore = 0;
-                //     $newpembagi2 = 0;
-                // }
-
-
-                // if ($tot_afdscore < 0) {
-                //     # code...
-                //     $newscore = 0;
-                // } else {
-                //     $newscore = $tot_afdscore;
-                // }
-
                 $total_estkors = $totskor_brd1 + $totskor_janjang1;
                 if ($total_estkors != 0) {
 
                     // $checkscore = 100 - ($total_estkors);
-                    $checkscore = round($total_skoreest / $newpembagi1, 1);
+                    $checkscore = round($total_skoreest / $newpembagi1, 4);
                     if ($checkscore < 0) {
-                        $newscore = 0;
+                        $newscore = 0.001;
                         $newSidak[$key][$key1][$key2]['mines'] = 'ada';
                     } else {
                         $newscore = $checkscore;
                         $newSidak[$key][$key1][$key2]['mines'] = 'tidak';
                     }
 
-                    $newSidak[$key][$key1]['all_score'] = $newscore;
+                    $newSidak[$key][$key1]['all_score'] = round($newscore, 1);
                     $newSidak[$key][$key1]['check_data'] = 'ada';
 
-                    $total_skoreafd = $newscore;
+                    $total_skoreafd = round($newscore, 1);
                     $newpembagi2 = 1;
                 } else if ($v2check4 != 0) {
-                    $checkscore = round($total_skoreest / $newpembagi1, 1);
+                    $checkscore = round($total_skoreest / $newpembagi1, 4);
                     if ($checkscore < 0) {
-                        $newscore = 0;
+                        $newscore = 0.001;
                         $newSidak[$key][$key1]['mines'] = 'ada';
                     } else {
                         $newscore = $checkscore;
                         $newSidak[$key][$key1]['mines'] = 'tidak';
                     }
-                    $newSidak[$key][$key1]['all_score'] = 100 - ($total_estkors);
+                    $newSidak[$key][$key1]['all_score'] = round($newscore, 1);
                     $newSidak[$key][$key1]['check_data'] = 'ada';
 
-                    $total_skoreafd = $newscore;
+                    $total_skoreafd = round($newscore, 1);
 
                     $newpembagi2 = 1;
                 } else {
@@ -3843,7 +3824,7 @@ class SidaktphController extends Controller
                 $newSidak[$key]['deviden'] = 0;
             }
 
-            $newSidak[$key]['total_skorest'] = $tot_estAFd;
+            $newSidak[$key]['total_skorest'] = round($tot_estAFd, 4);
             $newSidak[$key]['score_estate'] = $total_skoreest;
             $newSidak[$key]['asisten'] = $namaGM;
             $newSidak[$key]['estate'] = $key;
@@ -3855,7 +3836,9 @@ class SidaktphController extends Controller
             $newSidak[$key]['chartrst'] = $total_janjangchart3;
         }
 
+
         // dd($newSidak);
+        // dd($newSidak['KTE']['OA']);
         // dd($newSidak['UPE']);
         $mtancakWIltab1 = array();
         foreach ($queryEstereg as $key => $value) {
@@ -4104,7 +4087,7 @@ class SidaktphController extends Controller
                             $skor = $total_score;
                         }
 
-                        $sumestscore = array_sum($allkey);
+                        $sumestscore = round(array_sum($allkey), 2);
                         $ciuntestscore = count(array_filter($allkey, function ($value) {
                             return $value !== 0;
                         }));
@@ -4115,6 +4098,9 @@ class SidaktphController extends Controller
                             'asisten' => $asisten,
                             'ranking' => null,
                             'v2check5' => $v2check5,
+                            'scoreest' => $allkey,
+                            'allscore' => $ciuntestscore,
+                            'estscore' => $sumestscore,
                         );
 
                         $estscoreah += $sumestscore;
@@ -4189,7 +4175,7 @@ class SidaktphController extends Controller
         }
 
 
-        // dd($mtancakWIltab1);
+        // dd($resultest1);
         $resultest2 = array();
         $keyEst2 = [2, 5, 8, 11];
 
@@ -4632,8 +4618,8 @@ class SidaktphController extends Controller
                             [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
 
                             // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
-                            $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
-                            $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
+                            $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 4);
+                            $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 4);
                             $chartbrd =  $tph1 + $jalan1 + $bin1 + $karung1;
                             $chartrst =  $buah1 + $restan1;
                             $tod_brd = $tph1 + $jalan1 + $bin1 + $karung1;
@@ -6782,6 +6768,8 @@ class SidaktphController extends Controller
                                     foreach ($value3 as $key4 => $value4) {
                                         if (is_array($value4)) {
                                             $totalKeys = array_merge($totalKeys, array_keys($value4));
+
+                                            // dd($value4);
                                         }
                                     }
                                 }
@@ -6789,11 +6777,13 @@ class SidaktphController extends Controller
                         }
                     }
 
+                    $uniqueArray = array_unique($totalKeys);
+
                     // Extract the first 4 characters from each key and remove '0'
                     $shortenedKeys = array_map(function ($key) {
                         $shortenedKey = substr($key, 0, 4);
                         return str_replace('0', '', $shortenedKey);
-                    }, $totalKeys);
+                    }, $uniqueArray);
 
                     // dd($totalKeys);
 
@@ -6803,8 +6793,41 @@ class SidaktphController extends Controller
             }
         }
 
+        $cariluas = DB::connection('mysql2')->table('sidak_tph')
+            ->select('*')
+            ->where('sidak_tph.est', $request->input('est'))
+            ->where('sidak_tph.datetime', 'like', '%' . $request->input('inputDates') . '%')
+            ->orderBy('afd', 'asc')
+            ->orderBy('status', 'asc')
+            ->get();
 
-        // dd($calculation);
+
+        $cariluas = $cariluas->groupBy(['est', 'afd', 'blok']);
+        $cariluas = json_decode($cariluas, true);
+
+        // dd($request->input('Estate'), $est);
+        // dd($cariluas);
+
+        foreach ($cariluas as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                $getluas = [];
+                foreach ($value1 as $key2 => $value2) {
+
+                    foreach ($value2 as $key3 => $value3) {
+                        $luas = $value3['luas'];
+                    }
+
+                    $getluas[] = $luas;
+                }
+
+                $sumluas = array_sum($getluas);
+
+                $luastod[$key][$key1]['Luas'] = $sumluas;
+                $luastod[$key][$key1]['getluas'] = $getluas;
+            }
+        }
+
+        // dd($luastod);
         $hitung = [];
         // dd($newDefaultWeek);
 
@@ -6838,7 +6861,7 @@ class SidaktphController extends Controller
                                     $jum_karung += $value6['jum_karung'];
                                     $buah_tinggal += $value6['buah_tinggal'];
                                     $restan_unreported += $value6['restan_unreported'];
-                                    $luas = $value6['luas'];
+                                    // $luas = $value6['luas'];
                                 }
 
                                 $hitung[$key][$key1][$key2][$key3][$key4][$key5]['brondolan_tph'] = $bt_tph;
@@ -6854,18 +6877,19 @@ class SidaktphController extends Controller
                                 $janjang = $restan_unreported + $buah_tinggal;
                                 $brd1 += $brd;
                                 $janjang1 += $janjang;
-                                $luas1 += $luas;
+                                // $luas1 += $luas;
                             }
 
                             $hitung[$key][$key1][$key2][$key3][$key4]['tot_janjnag'] = $janjang1;
                             $hitung[$key][$key1][$key2][$key3][$key4]['tod_brd'] = $brd1;
-                            $hitung[$key][$key1][$key2][$key3][$key4]['tod_luas'] = $luas1;
+                            // $hitung[$key][$key1][$key2][$key3][$key4]['tod_luas'] = $luas1;
 
 
                             $janjang2 += $janjang1;
                             $brd2 += $brd1;
-                            $luas2 += $luas1;
+                            // $luas2 += $luas1;
                         }
+
 
                         $status_panen = $key3;
                         [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
@@ -6873,14 +6897,14 @@ class SidaktphController extends Controller
                         $total_janjang =  round(($janjang2) * $panen_jjg / 100, 1);
                         $hitung[$key][$key1][$key2][$key3]['tot_janjnag'] = $janjang2;
                         $hitung[$key][$key1][$key2][$key3]['tod_brd'] = $brd2;
-                        $hitung[$key][$key1][$key2][$key3]['tod_luas'] = $luas2;
+
                         $hitung[$key][$key1][$key2][$key3]['skor_brd'] = $total_brondolan;
                         $hitung[$key][$key1][$key2][$key3]['skor_jjg'] = $total_janjang;
                         $hitung[$key][$key1][$key2][$key3]['avg'] = 1;
                     } else {
                         $hitung[$key][$key1][$key2][$key3]['tot_janjnag'] = 0;
                         $hitung[$key][$key1][$key2][$key3]['tod_brd'] = 0;
-                        $hitung[$key][$key1][$key2][$key3]['tod_luas'] = 0;
+                        // $hitung[$key][$key1][$key2][$key3]['tod_luas'] = 0;
                         $hitung[$key][$key1][$key2][$key3]['skor_brd'] = 0;
                         $hitung[$key][$key1][$key2][$key3]['skor_jjg'] = 0;
                         $hitung[$key][$key1][$key2][$key3]['avg'] = 0;
@@ -6888,7 +6912,7 @@ class SidaktphController extends Controller
                 }
             }
         }
-        dd($newDefaultWeek, $hitung);
+        // dd($newDefaultWeek, $hitung);
         $final = [];
         foreach ($hitung as $key => $value) {
 
@@ -6904,23 +6928,31 @@ class SidaktphController extends Controller
                     foreach ($value2 as $key3 => $value3) {
                         foreach ($calculation as $keyx => $value4) if ($key == $keyx) {
                             foreach ($value4 as $keyx1 => $value5) if ($key1 == $keyx1) {
+                                // dd($calculation);
                                 $blok = $value5;
                             } # code...
                         }
+
+                        foreach ($luastod as $keyx => $valuex1) if ($keyx == $key) {
+                            foreach ($valuex1 as $keyx1 => $valuex1) if ($keyx1 == $key1) {
+                                $luasbw = $valuex1['Luas'];
+                            }
+                        }
+
                         $weekestate = [
                             'est' => $key,
                             'afd' => $key1,
                             'status' => $key3,
                             'janjang' => $value3['tot_janjnag'],
                             'brd' => $value3['tod_brd'],
-                            'luas' => $value3['tod_luas'],
+                            'luas' => $luasbw,
                             'skor_brd' => $value3['skor_brd'],
                             'skor_luas' => $value3['skor_jjg'],
                         ];
 
                         $final[$key][$key1][$key3] = $weekestate;
 
-                        $tot_luas += $value3['tod_luas'];
+                        // $tot_luas += $value3['tod_luas'];
                         $tot_janjnag += $value3['skor_jjg'];
                         $tod_brd += $value3['skor_brd'];
                         $avg += $value3['avg'];
@@ -6929,7 +6961,7 @@ class SidaktphController extends Controller
                     $skorakhir = 100 - ($tot_janjnag + $tod_brd);
                     $totskor = $tot_janjnag + $tod_brd;
                     $final[$key][$key1]['blok'] = $blok;
-                    $final[$key][$key1]['luas'] = $tot_luas;
+                    $final[$key][$key1]['luas'] = $luasbw;
                     $final[$key][$key1]['total_skor'] = $totskor;
                     $final[$key][$key1]['skor_akhir'] = $skorakhir;
                 } # code...
@@ -6948,7 +6980,7 @@ class SidaktphController extends Controller
                 'skor_akhir' => round($sum / $div, 2)
             ];
         }
-        dd($final);
+        // dd($final);
         // Now $keysCollection contains the keys as you described, including the date values.
 
         // dd($final);

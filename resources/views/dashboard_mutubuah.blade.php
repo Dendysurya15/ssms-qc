@@ -800,6 +800,7 @@
                             <h5><b>DATA</b></h5>
                         </div>
                         <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3" style="padding-top: 20px;">
+
                             <div class="row w-100">
                                 <div class="col-md-2 offset-md-8">
                                     {{csrf_field()}}
@@ -814,8 +815,12 @@
                                     {{csrf_field()}}
                                     <input class="form-control" value="{{ date('Y-m') }}" type="month" name="inputDateMonth" id="inputDateMonth">
                                 </div>
+
                             </div>
+
                             <button class="btn btn-primary mb-3" style="float: right" id="btnShoWeekdata">Show</button>
+                            <button class="btn btn-primary mb-3" style="float: right" id="downloaddatapdf" disabled>Excel</button>
+
                         </div>
 
                         <style>
@@ -6345,4 +6350,18 @@
             text: message
         });
     }
+    document.getElementById('btnShoWeekdata').addEventListener('click', function() {
+        document.getElementById('downloaddatapdf').disabled = false;
+    });
+    $('#downloaddatapdf').click(function() {
+        var reg = $('#regional_data').val();
+        var month = $('#inputDateMonth').val();
+        var _token = $('input[name="_token"]').val();
+
+        // Construct the URL
+        var url = '/pdfmutubuhuahdata/' + reg + '/' + month;
+
+        // Open the URL in a new tab
+        window.open(url, '_blank');
+    });
 </script>

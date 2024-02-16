@@ -232,3 +232,5 @@ Route::get('/getdataweek', [RekapController::class, 'getdataweek'])->name('getda
 Route::get('/getestatesidakmtbuah', [MutubuahController::class, 'getestatesidakmtbuah'])->name('getestatesidakmtbuah');
 Route::post('/duplicatesidakmtb', [MutubuahController::class, 'duplicatesidakmtb'])->name('duplicatesidakmtb');
 Route::post('/changedatadate', [MutubuahController::class, 'changedatadate'])->name('changedatadate');
+Route::get('/pdfdatatable', [MutubuahController::class, 'pdfdatatable'])->name('pdfdatatable');
+Route::get('/pdfmutubuhuahdata/{reg}/{est}', [MutubuahController::class, 'pdfmutubuhuahdata'])->name('pdfmutubuhuahdata');
