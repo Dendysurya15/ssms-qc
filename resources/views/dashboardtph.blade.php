@@ -683,6 +683,7 @@
                 </div>
               </div>
               <button class="btn btn-primary mb-3 ml-3" id="showDataTph">Show</button>
+              <button class="btn btn-primary mb-3 ml-3" id="downloaddataexcel">Excel</button>
             </div>
 
 
@@ -5792,4 +5793,19 @@
       });
     });
   }
+
+  // document.getElementById('showDataTph').addEventListener('click', function() {
+  //   document.getElementById('downloaddataexcel').disabled = false;
+  // });
+  $('#downloaddataexcel').click(function() {
+    var reg = $('#regDataTph').val();
+    var month = $('#dateDataTph').val();
+    var _token = $('input[name="_token"]').val();
+
+    // Construct the URL
+    var url = '/excelqcinspeksi/' + reg + '/' + month;
+
+    // Open the URL in a new tab
+    window.open(url, '_blank');
+  });
 </script>

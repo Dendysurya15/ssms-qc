@@ -234,3 +234,5 @@ Route::post('/duplicatesidakmtb', [MutubuahController::class, 'duplicatesidakmtb
 Route::post('/changedatadate', [MutubuahController::class, 'changedatadate'])->name('changedatadate');
 Route::get('/pdfdatatable', [MutubuahController::class, 'pdfdatatable'])->name('pdfdatatable');
 Route::get('/pdfmutubuhuahdata/{reg}/{est}', [MutubuahController::class, 'pdfmutubuhuahdata'])->name('pdfmutubuhuahdata');
+Route::get('/pdfsidaktphdata/{reg}/{est}', [SidaktphController::class, 'pdfsidaktphdata'])->name('pdfsidaktphdata');
+Route::get('/excelqcinspeksi/{reg}/{est}', [inspectController::class, 'excelqcinspeksi'])->name('excelqcinspeksi');

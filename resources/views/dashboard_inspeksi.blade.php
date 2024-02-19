@@ -1144,6 +1144,7 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary mb-3 ml-3" id="showDataIns">Show</button>
+                            <button class="btn btn-primary mb-3 ml-3" id="downloadexcel">Excel</button>
                         </div>
 
 
@@ -8339,4 +8340,18 @@
                 Swal.close(); // Close Swal on error
             });
     }
+
+    // showDataIns
+
+    $('#downloadexcel').click(function() {
+        var reg = $('#regDataIns').val();
+        var month = $('#dateDataIns').val();
+        var _token = $('input[name="_token"]').val();
+
+        // Construct the URL
+        var url = '/excelqcinspeksi/' + reg + '/' + month;
+
+        // Open the URL in a new tab
+        window.open(url, '_blank');
+    });
 </script>
