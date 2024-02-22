@@ -4621,12 +4621,55 @@
             }
           });
 
+
+          var rh = document.getElementById('tbodySkorRHMonth');
+          // console.log(hasilRh);
+          tr = document.createElement('tr')
+          let reg1 = hasilRh[0][1]['est']
+          let reg2 = hasilRh[0][1]['jab']
+          let reg3 = hasilRh[0][1]['nama']
+          let reg4 = hasilRh[0][1]['skor']
+          // let reg4 = 'oke'
+          let regElement1 = document.createElement('td')
+          let regElement2 = document.createElement('td')
+          let regElement3 = document.createElement('td')
+          let regElement4 = document.createElement('td')
+
+          regElement1.classList.add("text-center")
+          regElement2.classList.add("text-center")
+          regElement3.classList.add("text-center")
+          regElement4.classList.add("text-center")
+
+          regElement1.style.backgroundColor = "#c8e4b4";
+          regElement2.style.backgroundColor = "#c8e4b4";
+          regElement3.style.backgroundColor = "#c8e4b4";
+          regElement4.style.backgroundColor = "white";
+
+
+          if (reg4 === '-') {
+            regElement4.style.backgroundColor = "white";
+          }
+          setBackgroundColor(regElement4, reg4);
+
+
+          regElement1.innerText = reg1;
+          regElement2.innerText = reg2;
+          regElement3.innerText = reg3;
+          regElement4.innerText = reg4;
+
+          tr.appendChild(regElement1)
+          tr.appendChild(regElement2)
+          tr.appendChild(regElement3)
+          tr.appendChild(regElement4)
+
+          rh.appendChild(tr)
           ///untuk table
           //table wil 1
 
           var arrTbody1 = afdeling1
           // console.log(arrTbody1);
           var table1 = document.getElementById('table1Month');
+
           var tbody1 = document.getElementById('tbody1Month');
           // Create a copy of the original array and sort it in descending order of scores
           arrTbody1.forEach((element, index) => {

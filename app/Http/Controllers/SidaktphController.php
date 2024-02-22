@@ -4977,14 +4977,27 @@ class SidaktphController extends Controller
 
         // dd($willbrd);
 
+        $regrom = 'REG-' . convertToRoman($regSidak);
+        // dd($regrom);
+        $names = '-';
+        foreach ($queryAsisten as $key => $value) {
+            # code...
+            if ($value['afd'] === 'RH' && $value['est'] === $regrom) {
+                $names = $value['nama'];
+                break;
+            }
+        }
+
         // Create a new array for each iteration
         $rhEstate[] = array(
-            'est' => 'REG-1',
+            'est' => $regrom,
             'jab' => 'RH',
-            'nama' => '-',
+            'nama' => $names,
             'total' => $reg_finalskor,
             'skor' => ($reg_devskor != 0) ? round($reg_finalskor / $reg_devskor, 2) : 0
         );
+
+        // dd($rhEstate);
         foreach ($willbrd as $key => $value) {
             # code...
             $listwil[] = 'WIL-' . $key;
@@ -4999,7 +5012,7 @@ class SidaktphController extends Controller
         $arrView['afdeling1'] = $resultafd1;
         $arrView['afdeling2'] = $resultafd2;
         $arrView['afdeling3'] = $resultafd3;
-        // dd($resultest1);
+        // dd($rhEstate);
         $arrView['estate1'] = $resultest1;
         $arrView['estate2'] = $resultest2;
         $arrView['estate3'] = $resultest3;

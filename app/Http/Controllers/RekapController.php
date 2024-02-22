@@ -3010,7 +3010,7 @@ class RekapController extends Controller
                 'kategori' => sidak_akhir($allSkor),
             ];
 
-
+            // dd($sidak_buah_mua);
             // sidak_tph mua 
 
             $defaultweekmua = array();
@@ -4333,6 +4333,8 @@ class RekapController extends Controller
                     'TOTAL_SKOR' => $totalSkorWil,
                 ];
             }
+
+            // dd($qcbuahmua);
             foreach ($qcbuahmua as $key => $value) {
                 # code...
                 $qcbuahmua = $value;
@@ -4569,21 +4571,22 @@ class RekapController extends Controller
                     }
                 }
             }
-            // dd($newSidak_mua);
+            // dd($sidak_buah_mua);
             $rekapmua = [];
             foreach ($qcinspeksimua as $key => $value) {
+                // dd($value['PT.MUA']);
                 if (
                     isset($sidak_buah_mua[$key]) &&
                     isset($newSidak_mua[$key])
                 ) {
                     $valtph2 = $newSidak_mua[$key];
 
-                    // dd($valtph2);
+
                     $valmtb = $sidak_buah_mua[$key];
                     $skortph = $valtph2['score_estate'] ?? null;
                     $skormtb = $valmtb['All_skor'] ?? null;
 
-                    if ($valmtb['check_arr'] == 'ada') {
+                    if ($newSidak_mua['PT.MUA']['checkdata'] == 'ada') {
                         $databh = 1;
                     } else {
                         $databh = 0;
@@ -4593,7 +4596,7 @@ class RekapController extends Controller
                     } else {
                         $dataqc = 0;
                     }
-                    if ($valtph2['checkdata'] == 'ada') {
+                    if ($sidak_buah_mua['PT.MUA']['check_arr'] == 'ada') {
                         $datatph = 1;
                     } else {
                         $datatph = 0;
@@ -4617,8 +4620,8 @@ class RekapController extends Controller
                     $rekapmua[$key]['check'] = $check;
 
                     $a = $value['TotalSkor'];
-                    $b = $skormtb;
-                    $c = $skortph;
+                    $b = $sidak_buah_mua['PT.MUA']['All_skor'];
+                    $c = $newSidak_mua['PT.MUA']['score_estate'];
 
                     // Convert '-' to 0, keeping other values unchanged
                     $a = ($a === '-') ? 0 : $a;
