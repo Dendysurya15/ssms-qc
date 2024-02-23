@@ -1763,11 +1763,19 @@
                 var parseResult = JSON.parse(result)
                 var rekapafd = Object.entries(parseResult['rekapafd'])
                 var rekapmua = parseResult['rekapmua']
-                // console.log(rekapmua);
+                var rekapwil = Object.entries(parseResult['rekapwil'])
+                // console.log(rekapwil);
                 // console.log(rekapafd);
                 let table1 = rekapafd[0]
                 let table2 = rekapafd[1]
                 let table3 = rekapafd[2]
+                let tabwil = rekapwil[0]
+                let tabwi2 = rekapwil[1]
+                let tabwi3 = rekapwil[2]
+
+                // console.log(tabwil);
+                // console.log(tabwi2);
+                // console.log(tabwi3);
 
                 function assignValue(checkValue, compareValue, assignIfEqual, assignIfNotEqual) {
                     return checkValue === compareValue ? assignIfEqual : assignIfNotEqual;
@@ -1819,6 +1827,7 @@
                         trekap1.appendChild(tr);
                     });
                 });
+
 
 
                 var title2 = document.getElementById('wil2');
@@ -2017,6 +2026,10 @@
                         tbody2.appendChild(tr);
                     });
                 });
+                getwil1(tabwil)
+                getwil2(tabwi2)
+                // console.log(tabwil);
+
                 var tbody3 = document.getElementById('afd3');
                 var title3 = document.getElementById('wil3');
                 let key = table3[0] ?? 'INTI';
@@ -2115,7 +2128,6 @@
                 });
 
 
-                // console.log(table3);
 
                 // untuk perestate 
                 var trekap3 = document.getElementById('week3');
@@ -2184,6 +2196,8 @@
                     trekap3.appendChild(tr);
                 });
 
+                getwil3(tabwi3)
+
 
 
             },
@@ -2192,6 +2206,122 @@
                 console.error(xhr.responseText);
             }
         });
+
+        function getwil1(tabwil) {
+
+            // console.log(tabwil);
+            var tbody1 = document.getElementById('afd1');
+            let item1 = 'WIL'
+            let item2 = 'GM'
+            let item3 = tabwil[1]['qcinspeks']
+            let item4 = tabwil[1]['sidaktph']
+            let item5 = tabwil[1]['sidakmutubuah']
+
+            // Create table row and cell for each 'total' value
+            let tr = document.createElement('tr');
+            let itemElement1 = document.createElement('td');
+            let itemElement2 = document.createElement('td');
+            let itemElement3 = document.createElement('td');
+            let itemElement4 = document.createElement('td');
+            let itemElement5 = document.createElement('td');
+
+
+
+            itemElement1.classList.add("text-center");
+            itemElement1.innerText = item1;
+            itemElement2.innerText = item2;
+            itemElement3.innerText = item3;
+            itemElement4.innerText = item4;
+            itemElement5.innerText = item5
+
+            setBackgroundColor(itemElement3, item3);
+            setBackgroundColor(itemElement4, item4);
+            setBackgroundColor(itemElement5, item5);
+
+
+            tr.appendChild(itemElement1)
+            tr.appendChild(itemElement2)
+            tr.appendChild(itemElement3)
+            tr.appendChild(itemElement4)
+            tr.appendChild(itemElement5)
+            tbody1.appendChild(tr);
+        }
+
+        function getwil2(tabwi2) {
+            var tbody1 = document.getElementById('afd2');
+            let item1 = 'WIL'
+            let item2 = 'GM'
+            let item3 = tabwi2[1]['qcinspeks']
+            let item4 = tabwi2[1]['sidaktph']
+            let item5 = tabwi2[1]['sidakmutubuah']
+
+            // Create table row and cell for each 'total' value
+            let tr = document.createElement('tr');
+            let itemElement1 = document.createElement('td');
+            let itemElement2 = document.createElement('td');
+            let itemElement3 = document.createElement('td');
+            let itemElement4 = document.createElement('td');
+            let itemElement5 = document.createElement('td');
+
+
+
+            itemElement1.classList.add("text-center");
+            itemElement1.innerText = item1;
+            itemElement2.innerText = item2;
+            itemElement3.innerText = item3;
+            itemElement4.innerText = item4;
+            itemElement5.innerText = item5
+
+            setBackgroundColor(itemElement3, item3);
+            setBackgroundColor(itemElement4, item4);
+            setBackgroundColor(itemElement5, item5);
+
+
+            tr.appendChild(itemElement1)
+            tr.appendChild(itemElement2)
+            tr.appendChild(itemElement3)
+            tr.appendChild(itemElement4)
+            tr.appendChild(itemElement5)
+            tbody1.appendChild(tr);
+        }
+
+        function getwil3(tabwi3) {
+            var tbody1 = document.getElementById('afd3');
+            let item1 = 'WIL'
+            let item2 = 'GM'
+            let item3 = tabwi3[1]['qcinspeks']
+            let item4 = tabwi3[1]['sidaktph']
+            let item5 = tabwi3[1]['sidakmutubuah']
+
+            // Create table row and cell for each 'total' value
+            let tr = document.createElement('tr');
+            let itemElement1 = document.createElement('td');
+            let itemElement2 = document.createElement('td');
+            let itemElement3 = document.createElement('td');
+            let itemElement4 = document.createElement('td');
+            let itemElement5 = document.createElement('td');
+
+
+
+            itemElement1.classList.add("text-center");
+            itemElement1.innerText = item1;
+            itemElement2.innerText = item2;
+            itemElement3.innerText = item3;
+            itemElement4.innerText = item4;
+            itemElement5.innerText = item5
+
+            setBackgroundColor(itemElement3, item3);
+            setBackgroundColor(itemElement4, item4);
+            setBackgroundColor(itemElement5, item5);
+
+
+            tr.appendChild(itemElement1)
+            tr.appendChild(itemElement2)
+            tr.appendChild(itemElement3)
+            tr.appendChild(itemElement4)
+            tr.appendChild(itemElement5)
+            tbody1.appendChild(tr);
+        }
 
     }
 

@@ -4870,7 +4870,7 @@ class SidaktphController extends Controller
         }
         // dd($listwil, $brdchartwil, $chartrstwil);
         // dd($chartrstx);
-        // dd($resultafd1, $resultafd2, $resultafd3);
+        // dd($resultest1, $resultest2, $resultest3);
         // new tph result 
         // untuk afdeling table 1 sampe 4 
         $arrView['afdeling1'] = $resultafd1;

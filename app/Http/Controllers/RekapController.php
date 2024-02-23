@@ -946,9 +946,6 @@ class RekapController extends Controller
 
 
         // dd($sidaktph);
-        // dd($sidaktph[4]['MRE']['OA']);
-
-        // dd($newDefaultWeek['KNE'], $newSidak['KNE']['OA']);
 
         // qc inspeksi 
         $QueryMTancakWil = DB::connection('mysql2')->table('mutu_ancak_new')
@@ -2578,71 +2575,10 @@ class RekapController extends Controller
         // dd($RekapWIlTabel);
         // dd($mtancaktab1Wil, $mtBuahtab1Wil, $mtTranstab1Wil, $RekapWIlTabel);
 
-        foreach ($RekapWIlTabel as $key1 => $estates)  if (is_array($estates)) {
-            $sortedData = array();
-            $sortedDataEst = array();
-
-            foreach ($estates as $estateName => $data) {
-                if (is_array($data)) {
-                    $sortedDataEst[] = array(
-                        'key1' => $key1,
-                        'estateName' => $estateName,
-                        'data' => $data
-                    );
-                    foreach ($data as $key2 => $scores) {
-                        if (is_array($scores)) {
-                            $sortedData[] = array(
-                                'estateName' => $estateName,
-                                'key2' => $key2,
-                                'scores' => $scores
-                            );
-                        }
-                    }
-                }
-            }
-
-            //mengurutkan untuk nilai afd
-            usort($sortedData, function ($a, $b) {
-                return $b['scores']['TotalSkor'] - $a['scores']['TotalSkor'];
-            });
-            //mengurutkan untuk nilai estate
-            usort($sortedDataEst, function ($a, $b) {
-                return $b['data']['TotalSkorEST'] - $a['data']['TotalSkorEST'];
-            });
-
-            //menambahkan nilai rank ke dalam afd
-            $rank = 1;
-            foreach ($sortedData as $sortedEstate) {
-                $RekapWIlTabel[$key1][$sortedEstate['estateName']][$sortedEstate['key2']]['rankAFD'] = $rank;
-                $rank++;
-            }
-
-            //menambahkan nilai rank ke dalam estate
-            $rank = 1;
-            foreach ($sortedDataEst as $sortedest) {
-                $RekapWIlTabel[$key1][$sortedest['estateName']]['rankEST'] = $rank;
-                $rank++;
-            }
-
-
-            unset($sortedData, $sortedDataEst);
-        }
-
         // dd($RekapWIlTabel);
         $qcinspeksi = $RekapWIlTabel;
 
-        $sortedArray = [];
-
-        foreach ($qcinspeksi as $key => $value) {
-            $sortedArray[$key] = $value['TotalSkorWil'];
-        }
-
-        arsort($sortedArray);
-
-        $rank = 1;
-        foreach ($sortedArray as $key => $value) {
-            $qcinspeksi[$key]['rankWil'] = $rank++;
-        }
+    
         // dd($qcinspeksi);
 
         // untuk get mua ===============================================
@@ -4631,16 +4567,10 @@ class RekapController extends Controller
                     $rekapmua[$key]['skorestate'] = round(($a + $b + $c) / $check, 2);
                 }
             }
-            // dd($qcinspeksimua, $sidak_buah_mua, $newSidak_mua, $rekapmua);
-            // dd($rekapmua);
+          
 
-            // foreach ($rekapmua as $key => $value) {
-            //     # code...
-            // }
-
-            // $mutu_buah[]['PTMUA'] = $sidak_buah_mua['PT.MUA'];
-            // $sidaktph[]['PTMUA'] = $newSidak_mua['PT.MUA'];
-            // $qcinspeksi[]['PTMUA'] = $qcinspeksimua['PT.MUA'];
+            $sidaktph[3]['PT.MUA']['OA'] = $newSidak_mua['PT.MUA'];
+            $mutu_buah[3]['PT.MUA'] = $sidak_buah_mua['PT.MUA'];
         } else {
             $rekapmua = [];
         }
@@ -4857,13 +4787,187 @@ class RekapController extends Controller
             }
         }
 
-        // dd($rekapafd);
-        // dd($sidak_buah_mua, $newSidak_mua, $qcinspeksimua);
+        // dd($sidaktph);
+        $calwil = [];
+        $gettotal2 =[] ;
+        $getdiv=[];
+        foreach ($sidaktph as $key => $value) {
+            $gettotal1 =[] ;
+            $getdiv1=[];
+            foreach ($value as $key1 => $value1) {
+                $getnilai = [];
+                $getdiv = [];
+                foreach ($value1 as $key2 => $value2) {
+                    if (is_array($value2)) {
+                        // Standardize the key to lowercase for comparison
+                        $checkDataKey = $value2['check_data'] ??  $value2['checkdata'] ?? 'kosong';
+                        if ($checkDataKey === 'ada') {
+                            $nilai = $value2['all_score'] ?? $value2['score_estate'];
+                            $div = 1;
+                        }else {
+                            $nilai = 0;
+                            $div = 0;
+                        }
+                        $getnilai[] = $nilai ?? null; // Default to null if $nilai is not set
+                        $getdiv[] = $div ?? null; // Default to null if $div is not set
+     
+                    }
+                    
+                    $gettotal =array_sum($getnilai);
+                    $getdivs =array_sum($getdiv);
 
-        // dd($rekapafd);
+                    $calwil[$key][$key1]['nilai'] = $getnilai;
+                    $calwil[$key][$key1]['div'] = $getdiv;
+                    $calwil[$key][$key1]['total'] = $gettotal;
+                    $calwil[$key][$key1]['pembagi'] = $getdivs;
+
+                
+                }
+                $gettotal1[] = $gettotal;
+                $getdiv1[] = $getdivs;
+             
+                // $calwil[$key][$key1]['total'] = $gettotal;
+                // $calwil[$key][$key1]['pembagi'] = $getdivs;
+            }
+            $arrtot =array_sum($gettotal1);
+            $arrdiv =array_sum($getdiv1);
+
+            $calwil[$key]['total'] = round($arrtot/$arrdiv,2);
+        }
+        // dd($calwil,$sidaktph);
+        $calwilmtb = [];
+        foreach ($mutu_buah as $key => $value) {
+             $jjg_samplexy = 0;
+            $tnpBRDxy = 0;
+            $krgBRDxy = 0;
+            $abrxy = 0;
+            $overripexy = 0;
+            $emptyxy = 0;
+            $vcutxy = 0;
+            $rdxy = 0;
+            $dataBLokxy = 0;
+            $sum_krxy = 0;
+            $csrmsy = 0;
+            foreach ($value as $key1 => $value1) {
+                // dd($value1);
+                $jjg_samplexy += $value1['Jumlah_janjang'];
+                $tnpBRDxy += $value1['tnp_brd'];
+                $krgBRDxy += $value1['krg_brd'];
+                $abrxy += $value1['abnormal'];
+                $overripexy += $value1['lewat_matang'];
+                $emptyxy += $value1['janjang_kosong'];
+                $vcutxy += $value1['vcut'];
+                $rdxy += $value1['rat_dmg'];
+                $dataBLokxy += $value1['blok'];
+                $sum_krxy += $value1['karung'];
+                $csrmsy += $value1['csrms'];
+             
+            }
+            if ($sum_krxy != 0) {
+                $total_kr = round($sum_krxy / $dataBLokxy, 2);
+            } else {
+                $total_kr = 0;
+            }
+            $per_kr = round($total_kr * 100, 2);
+            $skor_total = round(($jjg_samplexy - $abrxy != 0 ? (($tnpBRDxy + $krgBRDxy) / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+
+            $skor_jjgMSk = round(($jjg_samplexy - $abrxy != 0 ? (($jjg_samplexy - ($tnpBRDxy + $krgBRDxy + $overripexy + $emptyxy + $abrxy)) / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+
+            $skor_lewatMTng = round(($jjg_samplexy - $abrxy != 0 ? ($overripexy / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+
+            $skor_jjgKosong = round(($jjg_samplexy - $abrxy != 0 ? ($emptyxy / ($jjg_samplexy - $abrxy)) * 100 : 0), 2);
+
+            $skor_vcut = round(($jjg_samplexy != 0 ? ($vcutxy / $jjg_samplexy) * 100 : 0), 2);
+
+            $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
+
+            $em = 'EM';
+
+            $nama_em = '';
+
+            // dd($key1);
+            foreach ($queryAsisten as $ast => $asisten) {
+                if ('PT.MUA' === $asisten['est'] && $em === $asisten['afd']) {
+                    $nama_em = $asisten['nama'];
+                }
+            }
+            $jjg_mthxy = $tnpBRDxy + $krgBRDxy + $overripexy + $emptyxy;
+
+            $skor_jjgMTh = ($jjg_samplexy - $abrxy != 0) ? round($jjg_mth / ($jjg_samplexy - $abrxy) * 100, 2) : 0;
+            if ($csrmsy == 0) {
+                $check_arr = 'kosong';
+                $All_skor = '-';
+            } else {
+                $check_arr = 'ada';
+                $All_skor = $allSkor;
+            };
+
+
+
+            $calwilmtb[$key] = [
+                // 'reg' => 'WiL',
+                // 'pt' => 'SSMS',
+                // 'est' => 'PT.MUA',
+                // 'afd' => 'OE',
+                // 'background_color' => '#fffc04',
+                // 'jjg_mantah' => $jjg_mthxy,
+                // 'persen_jjgmentah' => $skor_jjgMTh,
+                // 'check_arr' => $check_arr,
+                'all_skor' => $All_skor,
+                // 'Jumlah_janjang' => $jjg_samplexy,
+                // 'csrms' => $csrmsy,
+                // 'blok' => $dataBLokxy,
+                // 'EM' => 'EM',
+                // 'Nama_assist' => $nama_em,
+                // 'nama_staff' => $nama_em,
+                // 'tnp_brd' => $tnpBRDxy,
+                // 'krg_brd' => $krgBRDxy,
+                // 'persenTNP_brd' => round(($jjg_samplexy - $abrxy != 0 ? ($tnpBRDxy / ($jjg_samplexy - $abrxy)) * 100 : 0), 2),
+                // 'persenKRG_brd' => round(($jjg_samplexy - $abrxy != 0 ? ($krgBRDxy / ($jjg_samplexy - $abrxy)) * 100 : 0), 2),
+                // 'abnormal_persen' => round(($jjg_samplexy != 0 ? ($abrxy / $jjg_samplexy) * 100 : 0), 2),
+                // 'rd_persen' => round(($jjg_samplexy != 0 ? ($rdxy / $jjg_samplexy) * 100 : 0), 2),
+                // 'total_jjg' => $tnpBRDxy + $krgBRDxy,
+                // 'persen_totalJjg' => $skor_total,
+                // 'skor_total' => sidak_brdTotal($skor_total),
+                // 'jjg_matang' => $jjg_samplexy - ($tnpBRDxy + $krgBRDxy + $overripexy + $emptyxy + $abrxy),
+                // 'persen_jjgMtang' => $skor_jjgMSk,
+                // 'skor_jjgMatang' => sidak_matangSKOR($skor_jjgMSk),
+                // 'lewat_matang' => $overripexy,
+                // 'persen_lwtMtng' =>  $skor_lewatMTng,
+                // 'skor_lewatMTng' => sidak_lwtMatang($skor_lewatMTng),
+                // 'janjang_kosong' => $emptyxy,
+                // 'persen_kosong' => $skor_jjgKosong,
+                // 'skor_kosong' => sidak_jjgKosong($skor_jjgKosong),
+                // 'vcut' => $vcutxy,
+                // 'vcut_persen' => $skor_vcut,
+                // 'vcut_skor' => sidak_tangkaiP($skor_vcut),
+                // 'abnormal' => $abrxy,
+                // 'rat_dmg' => $rdxy,
+                // 'karung_est' => $sum_krxy,
+                // 'TPH' => $total_kr,
+                // 'persen_krg' => $per_kr,
+                // 'skor_kr' => sidak_PengBRD($per_kr),
+                // 'kategori' => sidak_akhir($allSkor),
+            ];
+       
+        }
+        $finalwil = [];
+        foreach ($calwilmtb as $key => $value) {
+            foreach ($calwil as $key1 => $value1) {
+                foreach ($RekapWIlTabel as $key2 => $value2)if(
+                        $key == $key1 && $key == $key2
+                ) {
+                    $finalwil[$key]['sidakmutubuah'] = $value['all_skor'];
+                    $finalwil[$key]['sidaktph'] = $value1['total'];
+                    $finalwil[$key]['qcinspeks'] = $value2['TotalSkorWil'];
+                }
+            }
+        }
+        // dd($calwilmtb,$calwil,$RekapWIlTabel,$finalwil);
         $arr = array();
         $arr['rekapafd'] = $rekapafd;
         $arr['rekapmua'] = $rekapmua;
+        $arr['rekapwil'] = $finalwil;
 
         echo json_encode($arr);
         exit();
