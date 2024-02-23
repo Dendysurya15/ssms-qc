@@ -4956,6 +4956,8 @@
                 var data_Sidakv2 = Object.entries(parseResult['data_weekv2'])
                 var regional = Object.entries(parseResult['reg_data'])
 
+
+
                 delete data_Sidakv2[0][1].Plasma1;
                 // console.log(data_Sidakv2);
 

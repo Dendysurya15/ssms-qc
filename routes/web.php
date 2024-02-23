@@ -236,3 +236,4 @@ Route::get('/pdfdatatable', [MutubuahController::class, 'pdfdatatable'])->name('
 Route::get('/pdfmutubuhuahdata/{reg}/{est}', [MutubuahController::class, 'pdfmutubuhuahdata'])->name('pdfmutubuhuahdata');
 Route::get('/pdfsidaktphdata/{reg}/{est}', [SidaktphController::class, 'pdfsidaktphdata'])->name('pdfsidaktphdata');
 Route::get('/excelqcinspeksi/{reg}/{est}', [inspectController::class, 'excelqcinspeksi'])->name('excelqcinspeksi');
+Route::get('/getmonthrh', [RekapController::class, 'getmonthrh'])->name('getmonthrh');

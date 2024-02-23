@@ -914,160 +914,26 @@ class SidaktphController extends Controller
             $newSidak[$key]['dividen'] = $new_dvdAfdest;
             $newSidak[$key]['afdeling'] = $devest;
         }
-        // dd($newSidak);
+
         // if ($regional == 1) {
-
-        //     // Initialize arrays
-        //     $lde = [];
-        //     $sre = [];
-        //     $ske = [];
-
-        //     // Iterate over $newSidak
-        //     foreach ($newSidak as $key => $value) {
-        //         // Check if the current key is 'LDE', 'SRE', or 'SKE'
-        //         if ($key === 'LDE' || $key === 'SRE' || $key === 'SKE') {
-        //             // Iterate over nested arrays
-        //             foreach ($value as $key1 => $value1) if (is_array($value1)) {
-        //                 foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
-        //                     foreach ($value2 as $key3 => $value3) if (is_array($value3)) {
-        //                         // Assign values to respective arrays based on the key
-        //                         ${strtolower($key)}[$key1][$key2][$key3] = [
-        //                             "tphx" => $value3['tphx'],
-        //                             "jalan" => $value3['jalan'],
-        //                             "bin" => $value3['bin'],
-        //                             "karung" => $value3['karung'],
-        //                             "tot_brd" => $value3['tot_brd'],
-        //                             "buah" => $value3['buah'],
-        //                             "restan" => $value3['restan'],
-        //                             "skor_brd" => $value3['skor_brd'],
-        //                             "skor_janjang" => $value3['skor_janjang'],
-        //                             "tod_jjg" => $value3['tod_jjg'],
-        //                             "v2check2" => $value3['v2check2'],
-        //                         ];
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     // Assign arrays to $datamua
-        //     foreach ($lde as $key => $outerValue) {
-        //         foreach ($outerValue as $key1 => $middleValue) {
-        //             foreach ($middleValue as $key2 => $innerValue) {
-        //                 foreach ($sre as $srekey => $sreval) {
-        //                     foreach ($ske as $skekey => $skeval) {
-        //                         if (
-        //                             isset($sreval[$key1][$key2]) &&
-        //                             isset($skeval[$key1][$key2])
-        //                         ) {
-        //                             $ptmua['PT.MUA'][$key1][$key2]['tphx'] = $skeval[$key1][$key2]['tphx'] + $sreval[$key1][$key2]['tphx'] + $innerValue['tphx'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['jalan'] = $skeval[$key1][$key2]['jalan'] + $sreval[$key1][$key2]['jalan'] + $innerValue['jalan'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['bin'] = $skeval[$key1][$key2]['bin'] + $sreval[$key1][$key2]['bin'] + $innerValue['bin'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['karung'] = $skeval[$key1][$key2]['karung'] + $sreval[$key1][$key2]['karung'] + $innerValue['karung'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['tot_brd'] = $skeval[$key1][$key2]['tot_brd'] + $sreval[$key1][$key2]['tot_brd'] + $innerValue['tot_brd'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['buah'] = $skeval[$key1][$key2]['buah'] + $sreval[$key1][$key2]['buah'] + $innerValue['buah'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['restan'] = $skeval[$key1][$key2]['restan'] + $sreval[$key1][$key2]['restan'] + $innerValue['restan'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['skor_brd'] = $skeval[$key1][$key2]['skor_brd'] + $sreval[$key1][$key2]['skor_brd'] + $innerValue['skor_brd'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['skor_janjang'] = $skeval[$key1][$key2]['skor_janjang'] + $sreval[$key1][$key2]['skor_janjang'] + $innerValue['skor_janjang'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['tod_jjg'] = $skeval[$key1][$key2]['tod_jjg'] + $sreval[$key1][$key2]['tod_jjg'] + $innerValue['tod_jjg'];
-        //                             $ptmua['PT.MUA'][$key1][$key2]['v2check2'] = $skeval[$key1][$key2]['v2check2'] + $sreval[$key1][$key2]['v2check2'] + $innerValue['v2check2'];
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     // dd($ptmua);
-
-        //     foreach ($ptmua as $key => $value) {
+        //     $datamua['PT.MUA'] = [
+        //         $newSidak['SRE'],
+        //         $newSidak['LDE'],
+        //         $newSidak['SKE'],
+        //     ];
+        //     $sidakmua = [];
+        //     foreach ($datamua as $key => $value) {
+        //         $devmuxax = 0;
         //         foreach ($value as $key1 => $value1) {
-        //             foreach ($value1 as $key2 => $value2) {
 
-        //                 $total_estkors = $value2['skor_brd'] + $value2['skor_janjang'];
-        //                 $v2check3 = $value2['v2check2'];
-        //                 if ($total_estkors != 0) {
-
-        //                     $checkscore = 100 - ($total_estkors);
-
-        //                     if ($checkscore < 0) {
-        //                         $newscore = 0;
-        //                         $ptmua[$key][$key1]['mines'] = 'ada';
-        //                     } else {
-        //                         $newscore = $checkscore;
-        //                         $ptmua[$key][$key1]['mines'] = 'tidak';
-        //                     }
-
-        //                     $ptmua[$key][$key1]['all_score'] = $newscore;
-        //                     $ptmua[$key][$key1]['check_data'] = 'ada';
-
-        //                     $total_skoreafd = $newscore;
-        //                     $newpembagi = 1;
-        //                 } else if ($v2check3 != 0) {
-        //                     $checkscore = 100 - ($total_estkors);
-
-        //                     if ($checkscore < 0) {
-        //                         $newscore = 0;
-        //                         $ptmua[$key][$key1]['mines'] = 'ada';
-        //                     } else {
-        //                         $newscore = $checkscore;
-        //                         $ptmua[$key][$key1]['mines'] = 'tidak';
-        //                     }
-        //                     $ptmua[$key][$key1]['all_score'] = 100 - ($total_estkors);
-        //                     $ptmua[$key][$key1]['check_data'] = 'ada';
-
-        //                     $total_skoreafd = $newscore;
-
-        //                     $newpembagi = 1;
-        //                 } else {
-        //                     $ptmua[$key][$key1]['all_score'] = 0;
-        //                     $ptmua[$key][$key1]['check_data'] = 'null';
-        //                     $total_skoreafd = 0;
-        //                     $newpembagi = 0;
-        //                 }
-        //                 // $ptmua[$key][$key1]['all_score'] = 100 - ($total_estkors);
-        //                 $ptmua[$key][$key1]['total_brd'] = $value2['tot_brd'];
-        //                 $ptmua[$key][$key1]['total_brdSkor'] = $value2['skor_brd'];
-        //                 $ptmua[$key][$key1]['total_janjang'] = $value2['tod_jjg'];
-        //                 $ptmua[$key][$key1]['total_janjangSkor'] = $value2['skor_janjang'];
-        //                 $ptmua[$key][$key1]['total_skor'] = $total_skoreafd;
-        //                 $ptmua[$key][$key1]['janjang_brd'] = $value2['skor_brd'] + $value2['skor_janjang'];
-        //                 $ptmua[$key][$key1]['v2check3'] = $v2check3;
-        //                 $ptmua[$key][$key1]['newpembagi'] = $newpembagi;
-
-        //                 $totskor_brd1 += $totskor_brd;
-        //                 $totskor_janjang1 += $totskor_janjang;
-        //                 $total_skoreest += $total_skoreafd;
-        //                 $newpembagi1 += $newpembagi;
-        //             }
-
-
-
-        //             $ptmua[$key]['deviden'] = 1;
-        //             $ptmua[$key]['total_skorest'] = 0;
-        //             $ptmua[$key]['score_estate'] = 99;
-        //             $ptmua[$key]['asisten'] = 0;
-        //             $ptmua[$key]['estate'] = 0;
-        //             $ptmua[$key]['new_deviden'] = 0;
-        //             $ptmua[$key]['afd'] = 0;
-        //             $ptmua[$key]['devidenest'] = 0;
-        //             $ptmua[$key]['afdeling'] = 0;
+        //             // dd($value1);
+        //             $devmuxax += $value1['dividen'];
         //         }
 
-        //         $ptmua['total_skorest'] = 69;
-        //         $ptmua['score_estate'] = 69;
-        //         $ptmua['asisten'] = 0;
-        //         $ptmua['estate'] = 0;
-        //         $ptmua['afd'] = 0;
-        //         $ptmua['dividen'] = 1;
-        //         $ptmua['afdeling'] = 1;
+        //         $sidakmua[$key]['avg'] = $devmuxax;
         //     }
-        //     // dd($ptmua);
-        //     // foreach ($datamua as $key => $ptmua) {
-        //     unset($newSidak['LDE'], $newSidak['SKE'], $newSidak['SRE']);
-        //     $newSidak['PT.MUA'] = $ptmua;
         // }
-        // dd($newSidak['KNE'], $ptmua);
+        // dd($newSidak, $sidakmua);
 
         $week1 = []; // Initialize the new array
         foreach ($newSidak as $key => $value) {
@@ -1078,7 +944,7 @@ class SidaktphController extends Controller
             $devnew = 0;
             $skor_akhir = 0;
             $nulldata = [];
-            $afdcount = $value['afdeling'] ?? 0;
+            $afdcount = $value['afdeling'];
             $scoreest = 0;
             foreach ($value as $subKey => $subValue) {
                 if (is_array($subValue) && isset($subValue['week1'])) {
@@ -1867,7 +1733,6 @@ class SidaktphController extends Controller
         echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
         exit();
     }
-
     public function listAsisten(Request $request)
     {
         $query = DB::connection('mysql2')->table('asisten_qc')
@@ -3089,7 +2954,6 @@ class SidaktphController extends Controller
         echo json_encode($arr);
         exit();
     }
-
 
     public function getBtTphMonth(Request $request)
     {
@@ -6505,6 +6369,7 @@ class SidaktphController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
 
     public function pdfBAsidak(Request $request)
     {

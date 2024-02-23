@@ -99,6 +99,13 @@
                                 </table>
                             </div>
                         </div>
+
+                        <div class="col-sm-12">
+                            <table class="table table-bordered">
+                                <thead id="tbodySkorRHYear">
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -344,6 +351,27 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="col-sm-12">
+                            <table class="table table-bordered">
+                                <thead id="rhqcinspeksi">
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="col-sm-12">
+                            <table class="table table-bordered">
+                                <thead id="rhsidaktph">
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="col-sm-12">
+                            <table class="table table-bordered">
+                                <thead id="rhmutubuah">
+                                </thead>
+                            </table>
+                        </div>
+
+
+
                     </div>
                 </div>
             </div>
@@ -545,6 +573,8 @@
         getdatayear()
         getdataweek()
         fixtable(regs)
+
+        getdatarh()
     });
 
     function resetClassList(element) {
@@ -706,6 +736,7 @@
         fixtable(regs)
         getdata();
         getdatayear();
+        getdatarh()
     }
 
     document.getElementById('btnrekapweek').onclick = function() {
@@ -2162,5 +2193,191 @@
             }
         });
 
+    }
+
+    function getdatarh() {
+        var reg = document.getElementById('regionalPanen').value;
+        var bulan = document.getElementById('inputbulan').value;
+        var _token = $('input[name="_token"]').val();
+        $('#tbodySkorRHYear').empty()
+        $('#rhmutubuah').empty()
+        $('#rhsidaktph').empty()
+        $('#rhqcinspeksi').empty()
+        $.ajax({
+            url: "{{ route('getmonthrh') }}",
+            method: "GET",
+            data: {
+                reg: reg,
+                bulan: bulan,
+                _token: _token
+            },
+            headers: {
+                'X-CSRF-TOKEN': _token
+            },
+            success: function(result) {
+                var parseResult = JSON.parse(result)
+                var rhresult = parseResult['rhresult']
+                var rhsidakbuah = parseResult['rhsidakbuah']
+                var rhsidaktphx = parseResult['rhsidaktph']
+                var rhqcinspeksix = parseResult['rhqcinspeksi']
+
+                // console.log(rhresult);
+
+                getrhrekap(rhresult)
+                getrhsidakmtb(rhsidakbuah)
+                getrhsidaktph(rhsidaktphx)
+                getrhqcinspeksi(rhqcinspeksix)
+
+                // // console.log(regional);
+
+
+
+
+
+            },
+            error: function(xhr, status, error) {
+                // Handle the error, if any
+                console.error(xhr.responseText);
+            }
+        });
+
+        function getrhrekap(rhresult) {
+            var theadreg = document.getElementById('tbodySkorRHYear');
+            tr = document.createElement('tr')
+            let reg1 = rhresult[0]['est']
+            let reg2 = rhresult[0]['jab']
+            let reg3 = rhresult[0]['nama']
+            let reg4 = rhresult[0]['skor']
+            // let reg4 = '-'
+            let regElement1 = document.createElement('td')
+            let regElement2 = document.createElement('td')
+            let regElement3 = document.createElement('td')
+            let regElement4 = document.createElement('td')
+
+            regElement1.classList.add("text-center")
+            regElement2.classList.add("text-center")
+            regElement3.classList.add("text-center")
+            regElement4.classList.add("text-center")
+
+            regElement1.innerText = reg1;
+            regElement2.innerText = reg2;
+            regElement3.innerText = reg3;
+            regElement4.innerText = reg4;
+            setBackgroundColor(regElement4, reg4);
+            tr.appendChild(regElement1)
+            tr.appendChild(regElement2)
+            tr.appendChild(regElement3)
+            tr.appendChild(regElement4)
+
+            theadreg.appendChild(tr)
+        }
+
+        function getrhsidakmtb(rhsidakbuah) {
+            var theadreg = document.getElementById('rhmutubuah');
+            tr = document.createElement('tr')
+            let reg1 = rhsidakbuah[0]['est']
+            let reg2 = rhsidakbuah[0]['jab']
+            let reg3 = 'Mutu buah'
+            let reg4 = rhsidakbuah[0]['nama']
+            let reg5 = rhsidakbuah[0]['skor']
+            // let reg4 = '-'
+            let regElement1 = document.createElement('td')
+            let regElement2 = document.createElement('td')
+            let regElement3 = document.createElement('td')
+            let regElement4 = document.createElement('td')
+            let regElement5 = document.createElement('td')
+
+            regElement1.classList.add("text-center")
+            regElement2.classList.add("text-center")
+            regElement3.classList.add("text-center")
+            regElement4.classList.add("text-center")
+            regElement5.classList.add("text-center")
+
+            regElement1.innerText = reg1;
+            regElement2.innerText = reg2;
+            regElement3.innerText = reg3;
+            regElement4.innerText = reg4;
+            regElement5.innerText = reg5;
+            setBackgroundColor(regElement5, reg5);
+            tr.appendChild(regElement1)
+            tr.appendChild(regElement2)
+            tr.appendChild(regElement3)
+            tr.appendChild(regElement4)
+            tr.appendChild(regElement5)
+
+            theadreg.appendChild(tr)
+        }
+
+        function getrhsidaktph(rhsidaktphx) {
+            var theadreg = document.getElementById('rhsidaktph');
+            tr = document.createElement('tr')
+            let reg1 = rhsidaktphx[0]['est']
+            let reg2 = rhsidaktphx[0]['jab']
+            let reg3 = 'Mutu transport'
+            let reg4 = rhsidaktphx[0]['nama']
+            let reg5 = rhsidaktphx[0]['skor']
+            // let reg4 = '-'
+            let regElement1 = document.createElement('td')
+            let regElement2 = document.createElement('td')
+            let regElement3 = document.createElement('td')
+            let regElement4 = document.createElement('td')
+            let regElement5 = document.createElement('td')
+
+            regElement1.classList.add("text-center")
+            regElement2.classList.add("text-center")
+            regElement3.classList.add("text-center")
+            regElement4.classList.add("text-center")
+            regElement5.classList.add("text-center")
+
+            regElement1.innerText = reg1;
+            regElement2.innerText = reg2;
+            regElement3.innerText = reg3;
+            regElement4.innerText = reg4;
+            regElement5.innerText = reg5;
+            setBackgroundColor(regElement5, reg5);
+            tr.appendChild(regElement1)
+            tr.appendChild(regElement2)
+            tr.appendChild(regElement3)
+            tr.appendChild(regElement4)
+            tr.appendChild(regElement5)
+
+
+            theadreg.appendChild(tr)
+        }
+
+        function getrhqcinspeksi(rhqcinspeksix) {
+            var theadreg = document.getElementById('rhqcinspeksi');
+            tr = document.createElement('tr')
+            let reg1 = rhqcinspeksix[0]['est']
+            let reg2 = rhqcinspeksix[0]['jab']
+            let reg3 = 'Panen Reguler'
+            let reg4 = rhqcinspeksix[0]['nama']
+            let reg5 = rhqcinspeksix[0]['skor']
+            // let reg4 = '-'
+            let regElement1 = document.createElement('td')
+            let regElement2 = document.createElement('td')
+            let regElement3 = document.createElement('td')
+            let regElement4 = document.createElement('td')
+            let regElement5 = document.createElement('td')
+
+            regElement1.classList.add("text-center")
+            regElement2.classList.add("text-center")
+            regElement3.classList.add("text-center")
+            regElement4.classList.add("text-center")
+            regElement5.classList.add("text-center")
+
+            regElement1.innerText = reg1;
+            regElement2.innerText = reg2;
+            regElement3.innerText = reg3;
+            regElement4.innerText = reg4;
+            regElement5.innerText = reg5;
+            setBackgroundColor(regElement5, reg5);
+            tr.appendChild(regElement1)
+            tr.appendChild(regElement2)
+            tr.appendChild(regElement3)
+            tr.appendChild(regElement4)
+            tr.appendChild(regElement5)
+            theadreg.appendChild(tr)
+        }
     }
 </script>

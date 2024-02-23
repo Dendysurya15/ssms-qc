@@ -6330,6 +6330,8 @@ class inspeksidashController extends Controller
         unsetPlasmaKeys($result_brd);
         unsetPlasmaKeys($result_buah);
 
+        // dd($RekapRegTable);
+
         $arrView = array();
         // dd($result_brd,$chrtBuahMentahv2);
         $arrView['chart_brd'] = $result_brd;
