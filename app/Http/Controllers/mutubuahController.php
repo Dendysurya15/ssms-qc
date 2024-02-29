@@ -1791,33 +1791,22 @@ class mutubuahController extends Controller
             $totalJJG = 0;
             $totaltnpBRD = 0;
             $totalkrgBRD = 0;
-            $totalabr = 0;
-            $TotPersenTNP = 0;
-            $TotPersenKRG = 0;
-            $totJJG = 0;
             $totPersenTOtaljjg = 0;
-            $totSkor_total = 0;
             $totoverripe = 0;
             $totempty = 0;
             $totJJG_matang = 0;
             $totPer_jjgMtng = 0;
             $totPer_over = 0;
-            $totSkor_Over = 0;
             $totPer_Empty = 0;
-            $totSkor_Empty = 0;
             $totVcut = 0;
             $totPer_vcut =  0;
-            $totSkor_Vcut =  0;
-            $totPer_abr =  0;
             $totRD = 0;
-            $totPer_rd = 0;
             $totBlok = 0;
             $totKR = 0;
             $tot_krS = 0;
             $totPer_kr = 0;
-            $totSkor_kr = 0;
             $totALlskor = 0;
-            $totKategor = 0;
+            $totalabr = 0;
             foreach ($value as $key1 => $value1) {
                 if (is_array($value1)) {
                     $jjg_sample = 0;
@@ -1910,27 +1899,16 @@ class mutubuahController extends Controller
                     $totaltnpBRD += $tnpBRD;
                     $totalkrgBRD += $krgBRD;
                     $totalabr += $abr;
-                    $TotPersenTNP = round(($totaltnpBRD / ($totalJJG - $totalabr)) * 100, 3);
-                    $TotPersenKRG = round(($totalkrgBRD / ($totalJJG - $totalabr)) * 100, 3);
-                    $totJJG = $totaltnpBRD + $totalkrgBRD;
                     $totPersenTOtaljjg = round((($totaltnpBRD + $totalkrgBRD) / ($totalJJG - $totalabr)) * 100, 3);
-                    $totSkor_total = sidak_brdTotal($totPersenTOtaljjg);
                     $totoverripe += $overripe;
                     $totempty += $empty;
                     $totJJG_matang = $totalJJG - ($totaltnpBRD + $totalkrgBRD + $totoverripe + $totempty + $totalabr);
                     $totPer_jjgMtng = round($totJJG_matang / ($totalJJG - $totalabr) * 100, 3);
-
-                    $totSkor_jjgMtng = sidak_matangSKOR($totPer_jjgMtng);
                     $totPer_over = round(($totoverripe / ($totalJJG - $totalabr)) * 100, 3);
-                    $totSkor_Over = sidak_lwtMatang($totPer_over);
                     $totPer_Empty = round(($totempty / ($totalJJG - $totalabr)) * 100, 3);
-                    $totSkor_Empty = sidak_jjgKosong($totPer_Empty);
                     $totVcut += $vcut;
                     $totPer_vcut =   round(($totVcut / $totalJJG) * 100, 3);
-                    $totSkor_Vcut =  sidak_tangkaiP($totPer_vcut);
-                    $totPer_abr =  round(($totalabr / $totalJJG) * 100, 3);
                     $totRD += $rd;
-                    $totPer_rd = round(($totRD / $totalJJG) * 100, 3);
                     $totBlok += $dataBLok;
                     $totKR += $sum_kr;
                     if ($totKR != 0) {
@@ -1939,10 +1917,7 @@ class mutubuahController extends Controller
                         $tot_krS = 0;
                     }
                     $totPer_kr = round($tot_krS * 100, 3);
-                    $totSkor_kr = sidak_PengBRD($totPer_kr);
                     $totALlskor = sidak_brdTotal($totPersenTOtaljjg) + sidak_matangSKOR($totPer_jjgMtng) + sidak_lwtMatang($totPer_over) + sidak_jjgKosong($totPer_Empty) + sidak_tangkaiP($totPer_vcut) + sidak_PengBRD($totPer_kr);
-
-                    $totKategor = sidak_akhir($totALlskor);
                 } else {
 
                     $sidak_buah[$key][$key1]['Jumlah_janjang'] = 0;
@@ -4736,7 +4711,7 @@ class mutubuahController extends Controller
         // $new_sidakBuah = updateKeyRecursive2($new_sidakBuah);
 
 
-        // dd($new_sidakBuah);
+        dd($new_sidakBuah);
         $arrView = array();
 
 
@@ -4921,7 +4896,7 @@ class mutubuahController extends Controller
                     // $dataBLok = count($combination_counts);
                     $dataBLok = $newblok;
                     if ($sum_kr != 0) {
-                        $total_kr = round($sum_kr / $dataBLok, 3);
+                        // $total_kr = round($sum_kr / $dataBLok, 3);
                     } else {
                         $total_kr = 0;
                     }

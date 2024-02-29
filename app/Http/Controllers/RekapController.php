@@ -16425,14 +16425,19 @@ class RekapController extends Controller
         // dd($listest, $brdchart, $chartrst);
         // dd($mtancakWIltab1);
         $rhEstate = array();
+        $newrh = array();
         $total_rh = 0;
         $reg_finalskor = 0;
         $reg_devskor = 0;
+        $afdscore3 = 0;
+        $arrdiv3 = 0;
         foreach ($mtancakWIltab1 as $key => $value) {
             $estateScore = 0;
             $diveden = 0;
             $chartbrd = 0;
             $chartrst = 0;
+            $afdscore2 = 0;
+            $arrdiv2 = 0;
             foreach ($value as $key1 => $value1) {
                 $score_estate = ($value1['score_estate'] == "-") ? 0 : $value1['score_estate'];
 
@@ -16449,6 +16454,27 @@ class RekapController extends Controller
                 } else {
                     $totalEst = 0;
                 }
+                $afdscore = [];
+                $arrdiv = [];
+                foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
+                    // dd($value2);
+                    $afdscore[] = $value2['all_score'];
+                    if ($value2['all_score'] != 0 || '-') {
+                        $divafd = 1;
+                    } else {
+                        $divafd = 0;
+                    }
+                    $arrdiv[] = $divafd;
+                }
+
+                $afdscore1 = array_sum($afdscore);
+                $arrdiv1 = array_sum($arrdiv);
+
+                $newrh[$key][$key1]['afdscore'] = $afdscore1;
+                $newrh[$key][$key1]['divafd'] =  $arrdiv1;
+
+                $afdscore2 += $afdscore1;
+                $arrdiv2 += $arrdiv1;
             }
             if ($diveden != 0) {
                 $reg_est = $estateScore / $diveden;
@@ -16468,10 +16494,14 @@ class RekapController extends Controller
                 'chartbrd' => $chartbrd,
                 'chartrst' => $chartrst,
             ];
+            $newrh[$key]['afdscore'] = $afdscore2;
+            $newrh[$key]['divafd'] =  $arrdiv2;
+
+            $afdscore3 += $afdscore2;
+            $arrdiv3 += $arrdiv2;
         }
 
-
-        // dd($willbrd);
+        // dd($newrh);
 
         $regrom = 'REG-' . convertToRoman($regSidak);
         // dd($regrom);
@@ -16489,9 +16519,11 @@ class RekapController extends Controller
             'est' => $regrom,
             'jab' => 'RH',
             'nama' => $names,
-            'total' => $reg_finalskor,
-            'skor' => ($reg_devskor != 0) ? round($reg_finalskor / $reg_devskor, 2) : 0
+            'total' => round($afdscore3 / $arrdiv3, 1),
+            // 'skor' => ($reg_devskor != 0) ? round($reg_finalskor / $reg_devskor, 2) : 0
+            'skor' => round($afdscore3 / $arrdiv3, 1),
         );
+
         // dd($rhEstate);
 
         return $rhEstate;
