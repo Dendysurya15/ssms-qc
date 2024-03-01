@@ -206,6 +206,22 @@ class SidaktphController extends Controller
         $tanggal = $request->get('date');
         $regional = $request->get('regional');
 
+
+
+        $newparamsdate = '2024-03-01';
+
+        $tanggalDateTime = new DateTime($tanggal);
+        // dd($tanggalDateTime);
+        $newparamsdateDateTime = new DateTime($newparamsdate);
+        // dd($newparamsdateDateTime);
+
+        if ($tanggalDateTime >= $newparamsdateDateTime) {
+            $dataparams = 'new';
+        } else {
+            $dataparams = 'old';
+        }
+
+        // dd($dataparams);
         $ancakFA = DB::connection('mysql2')
             ->table('sidak_tph')
             ->select(
@@ -731,9 +747,13 @@ class SidaktphController extends Controller
                         // dd($key3);
                         $status_panen = $key3;
                         // dd($tanggal);
-                        $todate = '2024-03';
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        }
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+
 
                         // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                         $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
@@ -1020,8 +1040,13 @@ class SidaktphController extends Controller
                             $estateValues["tod_jjg$i"] = 0;
                         }
 
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        // [$panen_brd, $panen_jjg] = calculatePanen($i);
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -1182,8 +1207,11 @@ class SidaktphController extends Controller
                             $estateValues["tod_jjg$i"] = 0;
                         }
 
-
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -1341,7 +1369,11 @@ class SidaktphController extends Controller
                         }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -1493,7 +1525,11 @@ class SidaktphController extends Controller
                         }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -1651,7 +1687,11 @@ class SidaktphController extends Controller
                         }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -1883,7 +1923,18 @@ class SidaktphController extends Controller
         $startDate = $weekDateTime->format('Y-m-d');
         $weekDateTime->modify('+6 days');
         $endDate = $weekDateTime->format('Y-m-d');
+        $newparamsdate = '2024-03-01';
 
+        $tanggalDateTime = new DateTime($startDate);
+        // dd($tanggalDateTime);
+        $newparamsdateDateTime = new DateTime($newparamsdate);
+        // dd($newparamsdateDateTime);
+
+        if ($tanggalDateTime >= $newparamsdateDateTime) {
+            $dataparams = 'new';
+        } else {
+            $dataparams = 'old';
+        }
         // dd($startDate, $endDate);
         $regional = $request->input('reg');
 
@@ -2219,7 +2270,12 @@ class SidaktphController extends Controller
                         // dd($key3);
                         $status_panen = $key3;
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        }
+
 
                         // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                         $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
@@ -2635,8 +2691,13 @@ class SidaktphController extends Controller
                             }
                             // dd($key3);
                             $status_panen = $key3;
+                            if ($dataparams === 'new') {
+                                [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                            } else {
+                                [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                            }
 
-                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+
 
                             // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                             $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
@@ -2962,6 +3023,23 @@ class SidaktphController extends Controller
 
         $regSidak = $request->get('reg');
         $monthSidak = $request->get('month');
+
+        // dd($monthSidak);
+        $newparamsdate = '2024-03-01';
+
+        $tanggalDateTime = new DateTime($monthSidak);
+        // dd($tanggalDateTime);
+        $newparamsdateDateTime = new DateTime($newparamsdate);
+        // dd($newparamsdateDateTime);
+
+        if ($tanggalDateTime >= $newparamsdateDateTime) {
+            $dataparams = 'new';
+        } else {
+            $dataparams = 'old';
+        }
+
+        // dd($dataparams);
+
         $queryReg2 = DB::connection('mysql2')
             ->table('wil')
             ->whereIn('regional', [$regSidak])
@@ -3437,8 +3515,14 @@ class SidaktphController extends Controller
                         }
                         // dd($key3);
                         $status_panen = $key3;
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        }
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+
+                        // [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
 
                         // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                         $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 4);
@@ -4484,7 +4568,13 @@ class SidaktphController extends Controller
                             // dd($key3);
                             $status_panen = $key3;
 
-                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                            if ($dataparams === 'new') {
+                                [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                            } else {
+                                [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                            }
+
+
 
                             // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                             $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 4);
@@ -4942,6 +5032,9 @@ class SidaktphController extends Controller
         $regional = $request->get('reg');
         $tahun = $request->get('year');
 
+
+
+
         // dd($tahun, $regional);
         $queryAsisten = DB::connection('mysql2')->table('asisten_qc')
             ->select('asisten_qc.*')
@@ -5186,7 +5279,7 @@ class SidaktphController extends Controller
                         $tot_brdxm = 0;
                         $tod_janjangxm = 0;
                         $v2check3 = 0;
-
+                        // dd($key2);
                         $deviden = count($value3);
                         foreach ($value4 as $key4 => $value5) {
                             $tph = 0;
@@ -5203,15 +5296,29 @@ class SidaktphController extends Controller
                                 $sum_jum_karung = 0;
                                 $sum_buah_tinggal = 0;
                                 $sum_restan_unreported = 0;
+                                $dataparams = '-';
                                 foreach ($value6 as $key6 => $value7) {
                                     $sum_bt_tph += $value7['bt_tph'];
                                     $sum_bt_jalan += $value7['bt_jalan'];
                                     $sum_bt_bin += $value7['bt_bin'];
                                     $sum_jum_karung += $value7['jum_karung'];
 
-
+                                    // dd($value7);
                                     $sum_buah_tinggal += $value7['buah_tinggal'];
                                     $sum_restan_unreported += $value7['restan_unreported'];
+
+                                    $newparamsdate = '2024-03-01';
+
+                                    $tanggalDateTime = new DateTime($value7['tanggal']);
+                                    // dd($tanggalDateTime);
+                                    $newparamsdateDateTime = new DateTime($newparamsdate);
+                                    // dd($newparamsdateDateTime);
+
+                                    if ($tanggalDateTime >= $newparamsdateDateTime) {
+                                        $dataparams = 'new';
+                                    } else {
+                                        $dataparams = 'old';
+                                    }
                                 } # code... dd($value3);
 
                                 $newSidak[$key][$key1][$key2][$key3][$key4][$key5]['tph'] = $sum_bt_tph;
@@ -5228,8 +5335,16 @@ class SidaktphController extends Controller
                                 $buah += $sum_buah_tinggal;
                                 $restan += $sum_restan_unreported;
                             } # code... dd($value3);
+
+
                             $status_panen = $key4;
-                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                            if ($dataparams === 'new') {
+                                [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                            } else {
+                                [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                            }
+
+                            // [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
 
                             $total_brondolan =  round(($tph + $jalan + $bin + $karung) * $panen_brd / 100, 1);
                             $total_janjang =  round(($buah + $restan) * $panen_jjg / 100, 1);
@@ -5247,6 +5362,7 @@ class SidaktphController extends Controller
                             $newSidak[$key][$key1][$key2][$key3][$key4]['skor_janjang'] = $total_janjang;
                             $newSidak[$key][$key1][$key2][$key3][$key4]['tod_jjg'] = $tod_jjg;
                             $newSidak[$key][$key1][$key2][$key3][$key4]['v2check2'] = $v2check;
+                            $newSidak[$key][$key1][$key2][$key3][$key4]['dataparams'] = $dataparams;
 
 
                             $totskor_brd += $total_brondolan;
@@ -5371,7 +5487,7 @@ class SidaktphController extends Controller
             $newSidak[$key]['afd'] = $key1;
             $newSidak[$key]['v2check6'] = $v2check6;
         }
-        // dd($newSidak);
+        // dd($newSidak['BGE']['OA']);
         // dd($);
 
         // dd($newSidak['SJE']['OL']);
@@ -6418,6 +6534,21 @@ class SidaktphController extends Controller
         // $awal = $request->input('inputDates');
 
         $tanggal = $request->get('inputDates');
+
+
+        $newparamsdate = '2024-03-01';
+
+        $tanggalDateTime = new DateTime($tanggal);
+        // dd($tanggalDateTime);
+        $newparamsdateDateTime = new DateTime($newparamsdate);
+        // dd($newparamsdateDateTime);
+
+        if ($tanggalDateTime >= $newparamsdateDateTime) {
+            $dataparams = 'new';
+        } else {
+            $dataparams = 'old';
+        }
+
         // $regional = $request->get('regional');
         $ancakFA = DB::connection('mysql2')
             ->table('sidak_tph')
@@ -6809,7 +6940,12 @@ class SidaktphController extends Controller
 
 
                         $status_panen = $key3;
-                        [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        }
+
                         $total_brondolan =  round(($brd2) * $panen_brd / 100, 1);
                         $total_janjang =  round(($janjang2) * $panen_jjg / 100, 1);
                         $hitung[$key][$key1][$key2][$key3]['tot_janjnag'] = $janjang2;
@@ -7392,6 +7528,18 @@ class SidaktphController extends Controller
     {
         $tanggal = $month;
         $regional = $reg;
+        $newparamsdate = '2024-03-01';
+
+        $tanggalDateTime = new DateTime($tanggal);
+        // dd($tanggalDateTime);
+        $newparamsdateDateTime = new DateTime($newparamsdate);
+        // dd($newparamsdateDateTime);
+
+        if ($tanggalDateTime >= $newparamsdateDateTime) {
+            $dataparams = 'new';
+        } else {
+            $dataparams = 'old';
+        }
 
         $ancakFA = DB::connection('mysql2')
             ->table('sidak_tph')
@@ -7918,7 +8066,13 @@ class SidaktphController extends Controller
                         // dd($key3);
                         $status_panen = $key3;
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($status_panen);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
+                        }
+
+
 
                         // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                         $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
@@ -8338,9 +8492,15 @@ class SidaktphController extends Controller
                             $estateValues["tot_brd$i"] = 0;
                             $estateValues["tod_jjg$i"] = 0;
                         }
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+
+                        // [$panen_brd, $panen_jjg] = calculatePanen($i);
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -8502,7 +8662,12 @@ class SidaktphController extends Controller
                         }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
+
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -8660,7 +8825,12 @@ class SidaktphController extends Controller
                         }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
+
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -8812,7 +8982,12 @@ class SidaktphController extends Controller
                         }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
+
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
@@ -8970,7 +9145,12 @@ class SidaktphController extends Controller
                         }
 
 
-                        [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        if ($dataparams === 'new') {
+                            [$panen_brd, $panen_jjg] = calculatePanennew($i);
+                        } else {
+                            [$panen_brd, $panen_jjg] = calculatePanen($i);
+                        }
+
 
                         $estateValues["tph$i"] += $tphxValue;
                         $estateValues["jalan$i"] += $jalan;
