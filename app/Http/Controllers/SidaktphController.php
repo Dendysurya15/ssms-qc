@@ -730,6 +730,8 @@ class SidaktphController extends Controller
                         }
                         // dd($key3);
                         $status_panen = $key3;
+                        // dd($tanggal);
+                        $todate = '2024-03';
 
                         [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
 
@@ -3993,7 +3995,8 @@ class SidaktphController extends Controller
                 $resultest1[] = array(
                     'afd' => 'GM',
                     'est' => $newKey,
-                    'skor' => round($estscoreah / $devestah, 1),
+                    'skor' => $devestah != 0 ? round($estscoreah / $devestah, 1) : 0,
+
                     'asisten' => $namaGM,
                     'ranking' => '-',
                     'divwil2' => $divwil2,
@@ -4137,10 +4140,11 @@ class SidaktphController extends Controller
                 $resultest2[] = array(
                     'afd' => 'GM',
                     'est' =>  $newKey, // Concatenate $keyEst here
-                    'skor' => round($estscoreah / $devestah, 1),
+                    'skor' => $devestah != 0 ? round($estscoreah / $devestah, 1) : 0,
                     'asisten' => $namaGM,
                     'ranking' => '-',
-                    'est_score' => round($estscoreah / $devestah, 1),
+                    'est_score' => $devestah != 0 ? round($estscoreah / $devestah, 1) : 0,
+
                     'dividen' => $diveden
                 );
             }
@@ -4261,10 +4265,11 @@ class SidaktphController extends Controller
                 $resultest3[] = array(
                     'afd' => 'GM',
                     'est' =>  $newKey, // Concatenate $keyEst here
-                    'skor' => round($total_skorest / $divwil2, 0),
+                    'skor' => $divwil2 != 0 ? round($total_skorest / $divwil2, 0) : 0,
                     'asisten' => $namaGM,
                     'ranking' => '-',
-                    'est_score' => round($estscoreah / $devestah, 1),
+                    'est_score' => $devestah != 0 ? round($estscoreah / $devestah, 1) : 0,
+
                     'dividen' => $diveden
                 );
             }
@@ -4826,8 +4831,10 @@ class SidaktphController extends Controller
                 $arrdiv = [];
                 foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                     // dd($value2);
-                    $afdscore[] = $value2['all_score'];
-                    if ($value2['all_score'] != 0 || '-') {
+                    $afdscore[] = $value2['all_score'] ?? 0;
+
+                    $tes = $value2['all_score'] ?? 0;
+                    if ($tes != 0 || '-') {
                         $divafd = 1;
                     } else {
                         $divafd = 0;
@@ -7283,8 +7290,9 @@ class SidaktphController extends Controller
         $jumkrng = $request->input('jumkrng');
         $buahtgl = $request->input('buahtgl');
         $restan = $request->input('restan');
+        $hplus = $request->input('hpluss');
 
-
+        // dd($hplus);
         // Retrieve the data before updating
         $oldData = DB::connection('mysql2')->table('sidak_tph')->where('id', $ids)->first();
 
@@ -7298,6 +7306,7 @@ class SidaktphController extends Controller
                 'qc' => $qc,
                 'jum_karung' => $jumkrng,
                 'buah_tinggal' => $buahtgl,
+                'status' => $hplus,
                 'restan_unreported' => $restan,
             ]);
 

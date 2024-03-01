@@ -16458,8 +16458,9 @@ class RekapController extends Controller
                 $arrdiv = [];
                 foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                     // dd($value2);
-                    $afdscore[] = $value2['all_score'];
-                    if ($value2['all_score'] != 0 || '-') {
+                    $afdscore[] = $value2['all_score'] ?? 0;
+                    $tes = $value2['all_score'] ?? 0;
+                    if ($tes != 0 || '-') {
                         $divafd = 1;
                     } else {
                         $divafd = 0;

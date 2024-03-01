@@ -549,18 +549,39 @@
                                 <input type="text" class="form-control" id="update-qc" name="qc" value="">
 
                             </div>
+
                         </div>
 
                         <div class="row m-1">
                             <div class="col">
-                                <label for="update-jumkrng" class="col-form-label">Jumlah Karung</label>
-                                <input type="text" class="form-control" id="update-jumkrng" name="jumkrng" value="" required>
 
                                 <label for="update-buahtgl" class="col-form-label">Buah Tinggal</label>
                                 <input type="text" class="form-control" id="update-buahtgl" name="buahtgl" value="" required>
 
                                 <label for="update-restan" class="col-form-label">Restan Unreported Karung</label>
                                 <input type="text" class="form-control" id="update-restan" name="restan" value="" required>
+
+                            </div>
+                            <div class="col">
+
+                                <label for="update-jumkrng" class="col-form-label">Jumlah Karung</label>
+                                <input type="text" class="form-control" id="update-jumkrng" name="jumkrng" value="" required>
+
+                                <label for="update-hplus" class="col-form-label mt-4">Plih H+</label>
+                                <select class="form-control" name="hpluss" id="update-hplus">
+                                    <option value="H+1">H+1</option>
+                                    <option value="H+2">H+2</option>
+                                    <option value="H+3">H+3</option>
+                                    <option value="H+4">H+4</option>
+                                    <option value="H+5">H+5</option>
+                                    <option value="H+6">H+6</option>
+                                    <option value="H+7">H+7</option>
+                                    <option value=">H+7">>H+7</option>
+                                </select>
+
+
+
+                                <!-- <input type="text" class="form-control" id="update-hplus" name="hplus" value="" required> -->
 
                             </div>
                         </div>
@@ -894,7 +915,9 @@
                     $('#update-jumkrng').val(rowData.jum_karung)
                     $('#update-buahtgl').val(rowData.buah_tinggal)
                     $('#update-restan').val(rowData.restan_unreported)
-
+                    $('#update-hplus').val(rowData.status)
+                    // update-hplus
+                    // hplus
 
 
                     $('#editModalTPH').modal('show');
@@ -928,12 +951,14 @@
                         var jumkarung = $('#update-jumkrng').val();
                         var buahtgl = $('#update-buahtgl').val();
                         var restan = $('#update-restan').val();
+                        var hplus = $('#update-hplus').val();
 
                         if (!isNumber(brdtgl) ||
                             !isNumber(brdjln) ||
                             !isNumber(brdbin) ||
                             !isNumber(jumkarung) ||
                             !isNumber(buahtgl) ||
+
                             !isNumber(restan)
                         ) {
                             Swal.fire({

@@ -842,6 +842,46 @@ if (!function_exists('calculatePanen')) {
     }
 }
 
+if (!function_exists('calculatePanennew')) {
+    function calculatePanennew($status_panen)
+    {
+        $panen_brd = 0; // Initialize panen_brd
+        $panen_jjg = 0; // Initialize panen_jjg
+
+        if ($status_panen == 0) {
+            $panen_brd = 0;
+            $panen_jjg = 0;
+        } else if ($status_panen == 1) {
+            $panen_brd = 1.00;
+            $panen_jjg = 50.00;
+        } else if ($status_panen == 2) {
+            $panen_brd = 1.25;
+            $panen_jjg = 75.0;
+        } else if ($status_panen == 3) {
+            $panen_brd = 1.50;
+            $panen_jjg = 100.0;
+        } else if ($status_panen == 4) {
+            $panen_brd = 2.00;
+            $panen_jjg = 150.0;
+        } else if ($status_panen == 5) {
+            $panen_brd = 2.50;
+            $panen_jjg = 200.0;
+        } else if ($status_panen == 6) {
+            $panen_brd = 3.00;
+            $panen_jjg = 250.0;
+        } else if ($status_panen == 7) {
+            $panen_brd = 3.50;
+            $panen_jjg = 300.0;
+        } else if ($status_panen >= 7) {
+            $panen_brd = 4.50;
+            $panen_jjg = 400.0;
+        }
+
+        return [$panen_brd, $panen_jjg];
+    }
+}
+
+
 
 if (!function_exists('list_wil')) {
     function list_wil($collection)
