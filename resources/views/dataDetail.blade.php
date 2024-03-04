@@ -435,6 +435,10 @@
         <!-- end animasi -->
     </div>
     <div class="d-flex justify-content-end mt-3 mb-2 ml-3 mr-3">
+        @if (session('jabatan') == 'Manager' || session('jabatan') == 'Askep' || session('jabatan') == 'Asisten'|| session('jabatan') == 'Askep/Asisten' )
+
+        <button id="moveDataButton" class="btn btn-primary mr-3" disabled>Pindah Data</button>
+        @endif
         <button id="back-to-data-btn" class="btn btn-primary" onclick="goBack()">Back to Data</button>
         <div class="d-flex align-items-center">
             <!-- Your existing PDF and Excel buttons and their respective forms -->
@@ -1534,6 +1538,9 @@
 @include('layout/footer')
 
 <script>
+    let getest = @json($est);
+    let getafd = @json($afd);
+
     function openModal(src, komentar) {
         var modalImg = document.getElementById("img01");
         modalImg.src = src;
@@ -2282,6 +2289,7 @@
             tglPDF.value = inputDate.value;
             downloadButton.disabled = false;
             enableExcelDownloadButton();
+            document.getElementById('moveDataButton').disabled = false;
         });
     });
     ///
@@ -2297,6 +2305,7 @@
 
         // document.getElementById("date").value = selectedDate;
         document.getElementById('show-button').disabled = false;
+
         // Update the "selectedDate" span
         document.getElementById("selectedDate").textContent = selectedDate;
 
@@ -3505,7 +3514,7 @@
                 var all_data = Object.entries(parseResult['data_chuack'])
                 var resmandr = Object.entries(parseResult['tabelmandor'])
 
-                console.log(resmandr);
+                // console.log(resmandr);
                 var tbody1 = document.getElementById('dataInspeksi');
 
                 // console.log(all_data);
@@ -4756,6 +4765,124 @@
 
                 }
 
+            }
+        });
+    }
+
+
+    document.getElementById('moveDataButton').onclick = function() {
+
+
+        Swal.fire({
+            title: "Apakah Anda ingin mengubah tanggal sidak?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let tanggalorix = document.getElementById('inputDate').value;
+
+                Swal.fire({
+                    title: "Perhatian!",
+                    html: 'Ini Akan memindahkan Data dari semua afdeling {{$est}} di tanggal ' + tanggalorix + '  ke tanggal yang dipilih: <br><input id="swal-input-date" type="date" class="swal2-input">',
+                    showCancelButton: true,
+                    confirmButtonText: "Pindahkan",
+                    cancelButtonText: "Batal",
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: false,
+                    preConfirm: () => {
+                        const selectedDate = document.getElementById('swal-input-date').value;
+                        if (!selectedDate) {
+                            Swal.showValidationMessage('Silakan pilih tanggal!');
+                        }
+                        // console.log(selectDate);
+                        return selectedDate; // Return the selected date
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        Swal.fire({
+                            title: "Perhatian!",
+                            html: 'Silahkan pilih kategori',
+                            input: 'select',
+                            inputOptions: {
+                                'mutu_ancak': 'Mutu Ancak',
+                                'mutu_buah': 'Mutu Buah',
+                                'mutu_transport': 'Mutu Transport'
+                            },
+                            inputPlaceholder: 'Pilih kategori',
+                            showCancelButton: true,
+                            confirmButtonText: "Pindahkan",
+                            cancelButtonText: "Batal",
+                            allowOutsideClick: false,
+                            preConfirm: (category) => {
+                                if (!category) {
+                                    Swal.showValidationMessage('Silakan pilih kategori!');
+                                }
+                                return category;
+                            }
+
+                        }).then((result1) => {
+                            if (result.isConfirmed) {
+                                // console.log(date);
+                                Swal.fire({
+                                    title: 'Loading',
+                                    html: '<span class="loading-text">Mohon Tunggu...</span>',
+                                    allowOutsideClick: false,
+                                    showConfirmButton: false,
+                                    willOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                                var tanggalori = document.getElementById('inputDate').value;
+                                var selectedDate = result.dismiss ? '' : result.value; // Get the selected date
+                                var category = result1.dismiss ? '' : result1.value;
+                                var type = 'qcinspeksi';
+                                var _token = $('input[name="_token"]').val();
+                                $.ajax({
+                                    url: "{{ route('changedatadate') }}",
+                                    method: "post",
+                                    data: {
+                                        tglreal: tanggalori,
+                                        tgledit: selectedDate, // Set tgledit to the selected date
+                                        est: getest,
+                                        afd: getafd,
+                                        type: type,
+                                        category: category,
+                                        _token: _token
+                                    },
+                                    success: function(result) {
+                                        if (result && result.message === 'Data berhasil diupdate') {
+                                            Swal.close();
+                                            Swal.fire({
+                                                title: 'Success',
+                                                text: 'Data berhasil diupdate',
+                                                icon: 'success',
+                                                allowOutsideClick: false
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    location.reload();
+                                                }
+                                            });
+                                        } else {
+                                            Swal.close();
+                                            Swal.fire('Error', 'Gagal mengupdate data', 'error');
+
+                                        }
+                                    },
+                                    error: function() {
+                                        Swal.close();
+                                        Swal.fire('Error', 'Gagal menghubungi server', 'error');
+                                    }
+                                });
+                            } else {
+                                Swal.fire("Pemilihan tanggal dibatalkan!", "", "info");
+                            }
+                        });
+                    }
+                });
             }
         });
     }

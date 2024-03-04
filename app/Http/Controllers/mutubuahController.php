@@ -8100,11 +8100,14 @@ class mutubuahController extends Controller
 
         $tglreal = $request->input('tglreal');
         $tgledit = $request->input('tgledit');
+
         $est = $request->input('est');
         $type = $request->input('type');
         $username = session('user_name');
         $userid = session('user_id');
         $date = Carbon::now();
+
+
         switch ($type) {
             case 'sidakmtb':
 
@@ -8216,6 +8219,168 @@ class mutubuahController extends Controller
                 ]);
                 return response()->json(['message' => 'Data berhasil diupdate'], 200);
 
+                break;
+            case 'qcinspeksi':
+                $category = $request->input('category');
+                $afd = $request->input('afd');
+
+                // dd($afd);
+
+                switch ($category) {
+                    case 'mutu_ancak':
+                        $query = DB::connection('mysql2')->table('mutu_ancak_new')
+                            ->select(
+                                "mutu_ancak_new.*"
+                            )
+                            ->where('mutu_ancak_new.estate', $est)
+                            ->where('mutu_ancak_new.afdeling', $afd)
+                            ->where('mutu_ancak_new.datetime', 'like', '%' . $tglreal . '%')
+                            ->pluck('id');
+
+                        $query = json_decode($query, true);
+
+                        foreach ($query as $id) {
+                            // Get the current datetime value
+                            $currentDatetime = DB::connection('mysql2')->table('mutu_ancak_new')
+                                ->where('id', $id)
+                                ->value('datetime');
+
+                            // Extract the time part from the current datetime
+                            $timePart = substr($currentDatetime, 11);
+
+                            // Concatenate the new date with the time part
+                            $newDatetime = $tgledit . ' ' . $timePart;
+
+                            // Update the datetime field
+                            DB::connection('mysql2')->table('mutu_ancak_new')
+                                ->where('id', $id)
+                                ->update(['datetime' => $newDatetime]);
+                        }
+                        $newdata = DB::connection('mysql2')->table('mutu_ancak_new')
+                            ->select(
+                                "mutu_ancak_new.*"
+                            )
+                            ->where('mutu_ancak_new.estate', $est)
+                            ->where('mutu_ancak_new.afdeling', $afd)
+                            ->where('mutu_ancak_new.datetime', 'like', '%' . $tgledit . '%')
+                            ->pluck('id');
+
+                        $newdata = json_decode($newdata, true);
+                        DB::connection('mysql2')->table('history_edit')->insert([
+                            'id_user' => $userid,
+                            'nama_user' => $username,
+                            'data_baru' => json_encode($newdata),
+                            'data_lama' => json_encode($query),
+                            'tanggal' => $date,
+                            'menu' => 'movedata_inspek_ancak',
+
+                        ]);
+                        return response()->json(['message' => 'Data berhasil diupdate'], 200);
+                        break;
+                    case 'mutu_buah':
+                        $query = DB::connection('mysql2')->table('mutu_buah')
+                            ->select(
+                                "mutu_buah.*"
+                            )
+                            ->where('mutu_buah.estate', $est)
+                            ->where('mutu_buah.afdeling', $afd)
+                            ->where('mutu_buah.datetime', 'like', '%' . $tglreal . '%')
+                            ->pluck('id');
+
+                        $query = json_decode($query, true);
+
+                        foreach ($query as $id) {
+                            // Get the current datetime value
+                            $currentDatetime = DB::connection('mysql2')->table('mutu_buah')
+                                ->where('id', $id)
+                                ->value('datetime');
+
+                            // Extract the time part from the current datetime
+                            $timePart = substr($currentDatetime, 11);
+
+                            // Concatenate the new date with the time part
+                            $newDatetime = $tgledit . ' ' . $timePart;
+
+                            // Update the datetime field
+                            DB::connection('mysql2')->table('mutu_buah')
+                                ->where('id', $id)
+                                ->update(['datetime' => $newDatetime]);
+                        }
+                        $newdata = DB::connection('mysql2')->table('mutu_buah')
+                            ->select(
+                                "mutu_buah.*"
+                            )
+                            ->where('mutu_buah.estate', $est)
+                            ->where('mutu_buah.afdeling', $afd)
+                            ->where('mutu_buah.datetime', 'like', '%' . $tgledit . '%')
+                            ->pluck('id');
+
+                        $newdata = json_decode($newdata, true);
+                        DB::connection('mysql2')->table('history_edit')->insert([
+                            'id_user' => $userid,
+                            'nama_user' => $username,
+                            'data_baru' => json_encode($newdata),
+                            'data_lama' => json_encode($query),
+                            'tanggal' => $date,
+                            'menu' => 'movedata_inspek_mtbuah',
+
+                        ]);
+                        return response()->json(['message' => 'Data berhasil diupdate'], 200);
+                        break;
+                    case 'mutu_transport':
+                        $query = DB::connection('mysql2')->table('mutu_transport')
+                            ->select(
+                                "mutu_transport.*"
+                            )
+                            ->where('mutu_transport.estate', $est)
+                            ->where('mutu_transport.afdeling', $afd)
+                            ->where('mutu_transport.datetime', 'like', '%' . $tglreal . '%')
+                            ->pluck('id');
+
+                        $query = json_decode($query, true);
+
+                        foreach ($query as $id) {
+                            // Get the current datetime value
+                            $currentDatetime = DB::connection('mysql2')->table('mutu_transport')
+                                ->where('id', $id)
+                                ->value('datetime');
+
+                            // Extract the time part from the current datetime
+                            $timePart = substr($currentDatetime, 11);
+
+                            // Concatenate the new date with the time part
+                            $newDatetime = $tgledit . ' ' . $timePart;
+
+                            // Update the datetime field
+                            DB::connection('mysql2')->table('mutu_transport')
+                                ->where('id', $id)
+                                ->update(['datetime' => $newDatetime]);
+                        }
+                        $newdata = DB::connection('mysql2')->table('mutu_transport')
+                            ->select(
+                                "mutu_transport.*"
+                            )
+                            ->where('mutu_transport.estate', $est)
+                            ->where('mutu_transport.afdeling', $afd)
+                            ->where('mutu_transport.datetime', 'like', '%' . $tgledit . '%')
+                            ->pluck('id');
+
+                        $newdata = json_decode($newdata, true);
+                        DB::connection('mysql2')->table('history_edit')->insert([
+                            'id_user' => $userid,
+                            'nama_user' => $username,
+                            'data_baru' => json_encode($newdata),
+                            'data_lama' => json_encode($query),
+                            'tanggal' => $date,
+                            'menu' => 'movedata_inspek_mttrans',
+
+                        ]);
+                        return response()->json(['message' => 'Data berhasil diupdate'], 200);
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
                 break;
             default:
                 // Handle default case

@@ -1475,7 +1475,7 @@ class inspectController extends Controller
             $testing[$key]['total_score']  = skor_buah_tinggal($rst_esttph) +  skor_brd_tinggal($bt_esttph);
         }
 
-        // dd($testing);
+        // dd($dataSkor);
         $regdata = [];
         $tphblok2 = 0;
         $tot_jjg2 = 0;
@@ -1531,27 +1531,27 @@ class inspectController extends Controller
                 // mutu buah 
 
                 // dd($value1);
-                $tphblok += $value1['tot_blok'];
-                $tot_jjg += $value1['tot_jjg'];
-                $total_mentah += $value1['tot_mentah'];
-                $total_masak += $value1['tot_matang'];
-                $total_over += $value1['tot_over'];
-                $total_abnormal += $value1['tot_abr'];
-                $total_jjgKosong += $value1['tot_empty'];
-                $total_vcut += $value1['tot_vcut'];
-                $jum_kr += $value1['tot_alas'];
+                $tphblok += $value1['tot_blok'] ?? 0;
+                $tot_jjg += $value1['tot_jjg'] ?? 0;
+                $total_mentah += $value1['tot_mentah'] ?? 0;
+                $total_masak += $value1['tot_matang'] ?? 0;
+                $total_over += $value1['tot_over'] ?? 0;
+                $total_abnormal += $value1['tot_abr'] ?? 0;
+                $total_jjgKosong += $value1['tot_empty'] ?? 0;
+                $total_vcut += $value1['tot_vcut'] ?? 0;
+                $jum_kr += $value1['tot_alas'] ?? 0;
                 //mutuancak
-                $pk_sample += $value1['tot_jml_pokok_ma'];
-                $luas_hacak += $value1['tot_luas_ha_ma'];
-                $pk_panen += $value1['tot_jml_jjg_panen_ma'];
-                $p_cak += $value1['p_ma_est'];
-                $k_cak += $value1['k_ma_est'];
-                $tgl_cak += $value1['gl_ma_est'];
-                $palepah += $value1['ps_ma_est'];
-                $bhts += $value1['bhts_ma_est'];
-                $bhtm1 += $value1['bhtm1_ma_est'];
-                $bhtm2 += $value1['bhtm2_ma_est'];
-                $bhtm3 += $value1['bhtm3_ma_est'];
+                $pk_sample += $value1['tot_jml_pokok_ma'] ?? 0;
+                $luas_hacak += $value1['tot_luas_ha_ma'] ?? 0;
+                $pk_panen += $value1['tot_jml_jjg_panen_ma'] ?? 0;
+                $p_cak += $value1['p_ma_est'] ?? 0;
+                $k_cak += $value1['k_ma_est'] ?? 0;
+                $tgl_cak += $value1['gl_ma_est'] ?? 0;
+                $palepah += $value1['ps_ma_est'] ?? 0;
+                $bhts += $value1['bhts_ma_est'] ?? 0;
+                $bhtm1 += $value1['bhtm1_ma_est'] ?? 0;
+                $bhtm2 += $value1['bhtm2_ma_est'] ?? 0;
+                $bhtm3 += $value1['bhtm3_ma_est'] ?? 0;
                 // mutu transport 
                 if ($regs == 2 || $regs === '2') {
                     foreach ($testing as $trans => $transval) if ($key == $trans) {
@@ -1797,8 +1797,8 @@ class inspectController extends Controller
         $regdata['mtt_totalskor'] = $totalSkorWil;
 
         if (
-            $dataBLok != 0 &&
-            $pk_panen2 != 0 &&
+            $dataBLok != 0 ||
+            $pk_panen2 != 0 ||
             $tphsample2 != 0
         ) {
             $regdata['allscore'] = $totalSkorWil + $totalWil + $totalSkor;

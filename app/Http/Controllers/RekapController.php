@@ -16550,21 +16550,17 @@ class RekapController extends Controller
                     $totalEst = 0;
                 }
                 $afdscore = [];
-                $arrdiv = [];
+                $v2check4 = [];
                 foreach ($value1 as $key2 => $value2) if (is_array($value2)) {
                     // dd($value2);
                     $afdscore[] = $value2['all_score'] ?? 0;
-                    $tes = $value2['all_score'] ?? 0;
-                    if ($tes != 0 || '-') {
-                        $divafd = 1;
-                    } else {
-                        $divafd = 0;
-                    }
-                    $arrdiv[] = $divafd;
+
+                    // dd($value2);
+                    $v2check4[] = ($value2['v2check4'] != 0) ? 1 : 0;
                 }
 
                 $afdscore1 = array_sum($afdscore);
-                $arrdiv1 = array_sum($arrdiv);
+                $arrdiv1 = array_sum($v2check4);
 
                 $newrh[$key][$key1]['afdscore'] = $afdscore1;
                 $newrh[$key][$key1]['divafd'] =  $arrdiv1;

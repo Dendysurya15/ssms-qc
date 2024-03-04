@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\Afdeling;
+use App\Models\Blok;
+use App\Models\Estate;
+use App\Models\Regional;
+use App\Models\Wilayah;
 
 
 
@@ -69,6 +73,10 @@ class AbsensiController extends Controller
 
         $listkerja = json_decode($listkerja, true);
         // dd($listkerja); 
+
+        $sidakmutubuah = $this->plotBlok('SYE', '2024-03-01');
+
+        dd($sidakmutubuah);
 
         return view('Absensi.index', ['header_month' => $header_month, 'dates' => $JumlahBulan, 'useroption' => $user_Data, 'listkerja' => $listkerja]);
     }
@@ -1260,5 +1268,149 @@ class AbsensiController extends Controller
                 return response()->json(['message' => 'Unexpected error occurred. Please check logs for details.'], 500);
             }
         }
+    }
+
+    private function plotBlok($est, $dates)
+    {
+        $estate_input = $est;
+
+        $tgl = $dates;
+        function isPointInPolygon($point, $polygon)
+        {
+
+            $x = $point[0];
+            $y = $point[1];
+
+            // dd($polygon);
+            $vertices = array_map(function ($vertex) {
+                return explode(',', $vertex);
+            }, explode('$', $polygon));
+
+            // dd($vertices);
+
+            $numVertices = count($vertices);
+            $isInside = false;
+
+            for ($i = 0, $j = $numVertices - 1; $i < $numVertices; $j = $i++) {
+                $xi = $vertices[$i][0];
+                $yi = $vertices[$i][1];
+                $xj = $vertices[$j][0];
+                $yj = $vertices[$j][1];
+
+                $intersect = (($yi > $y) != ($yj > $y)) && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
+
+                if ($intersect) {
+                    $isInside = !$isInside;
+                }
+            }
+
+            return $isInside;
+        }
+
+
+        $queryData = DB::connection('mysql2')->table('taksasi')
+            ->select('taksasi.*')
+            ->whereDate('taksasi.waktu_upload', $tgl)
+            ->where('lokasi_kerja', $estate_input)
+            ->orderBy('taksasi.waktu_upload', 'desc')
+            ->get();
+
+        $markers = [];
+
+        foreach ($queryData as $row) {
+            $lat = floatval($row->lat_awal);
+            $lon = floatval($row->lon_awal);
+            $markers[] = [$lat, $lon];
+        }
+        $markers = array_values($markers);
+
+
+        $estateQuery = Estate::with("afdeling")->where('est', $estate_input)->get();
+
+        // dd($estateQuery);
+
+        $polygons = array();
+        $listBlok = [];
+        foreach ($estateQuery as $key => $value) {
+            foreach ($value->afdeling as $key2 => $data) {
+                foreach ($data as $value2) {
+                    // dd($value2);
+                    $data2 = Afdeling::with("blok")->find($data->id)->blok;
+                    foreach ($data2 as $value2) {
+                        $nama = $value2->nama;
+                        $latln = $value2->lat . ',' . $value2->lon;
+
+                        if (!isset($polygons[$nama])) {
+                            $polygons[$nama] = $latln;
+                            $listBlok[] = $nama;
+                        } else {
+                            $polygons[$nama] .= '$' . $latln;
+                        }
+                    }
+                }
+            }
+        }
+
+        $polygons = array_values($polygons);
+
+        // dd($polygons);
+
+
+
+
+        $finalResultBlok = [];
+
+        // dd($polygons, $markers);
+        foreach ($polygons as $key => $polygon) {
+            foreach ($markers as $index => $marker) {
+                // dd($marker, $polygon);
+                if (isPointInPolygon($marker, $polygon)) {
+
+                    $finalResultBlok[] = $listBlok[$key];
+                }
+            }
+        }
+        $finalResultBlok = array_unique($finalResultBlok);
+
+        // dd($finalResultBlok);
+        // // //get lat lang dan key $result_blok atau semua list_blok
+
+        $blokLatLn = array();
+        $inc = 0;
+        foreach ($finalResultBlok as $key => $value) {
+
+
+            $query = DB::connection('mysql2')->table('blok')
+                ->select('blok.*', 'estate.est', 'afdeling.nama as nama_afdeling')
+                ->join('afdeling', 'blok.afdeling', '=', 'afdeling.id')
+                ->join('estate', 'afdeling.estate', '=', 'estate.id')
+                ->where('estate.est', $estate_input)
+                ->where('blok.nama', $value)
+                ->get();
+
+            $latln = '';
+
+            foreach ($query as $key2 => $data) {
+                $latln .= '[' . $data->lon . ',' . $data->lat . '],';
+                $estate = DB::connection('mysql2')->table('estate')
+                    ->select('estate.*')
+                    ->where('estate.est', $estate_input)
+                    ->first();
+
+                $nama_estate = $estate->nama;
+
+
+                // dd($latln);
+                $blokLatLn[$inc]['blok'] = $data->nama;
+                $blokLatLn[$inc]['estate'] = $nama_estate;
+                $blokLatLn[$inc]['afdeling'] = $data->nama_afdeling;
+                $blokLatLn[$inc]['latln'] = rtrim($latln, ',');
+            }
+            $inc++;
+        }
+
+
+        dd($blokLatLn);
+        // echo json_encode($blokLatLn);
     }
 }
