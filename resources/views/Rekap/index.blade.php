@@ -2244,7 +2244,43 @@
             tr.appendChild(itemElement3)
             tr.appendChild(itemElement4)
             tr.appendChild(itemElement5)
+
             tbody1.appendChild(tr);
+
+            var trekap1 = document.getElementById('week1');
+            let item1a = 'WIL'
+            let item2a = 'GM'
+            let item3a = tabwil[1]['gmnama']
+            let item4a = tabwil[1]['gmrekap']
+            let item5a = '-'
+
+            // Create table row and cell for each 'total' value
+            let tra = document.createElement('tr');
+            let itemElement1a = document.createElement('td');
+            let itemElement2a = document.createElement('td');
+            let itemElement3a = document.createElement('td');
+            let itemElement4a = document.createElement('td');
+            let itemElement5a = document.createElement('td');
+
+
+
+            itemElement1a.classList.add("text-center");
+            itemElement1a.innerText = item1a;
+            itemElement2a.innerText = item2a;
+            itemElement3a.innerText = item3a;
+            itemElement4a.innerText = item4a;
+            itemElement5a.innerText = item5a
+
+            setBackgroundColor(itemElement4a, item4a);
+
+
+            tra.appendChild(itemElement1a)
+            tra.appendChild(itemElement2a)
+            tra.appendChild(itemElement3a)
+            tra.appendChild(itemElement4a)
+            tra.appendChild(itemElement5a)
+
+            trekap1.appendChild(tra);
         }
 
         function getwil2(tabwi2) {
@@ -2283,6 +2319,41 @@
             tr.appendChild(itemElement4)
             tr.appendChild(itemElement5)
             tbody1.appendChild(tr);
+
+            var trekap1 = document.getElementById('week2');
+            let item1a = 'WIL'
+            let item2a = 'GM'
+            let item3a = tabwi2[1]['gmnama']
+            let item4a = tabwi2[1]['gmrekap']
+            let item5a = '-'
+
+            // Create table row and cell for each 'total' value
+            let tra = document.createElement('tr');
+            let itemElement1a = document.createElement('td');
+            let itemElement2a = document.createElement('td');
+            let itemElement3a = document.createElement('td');
+            let itemElement4a = document.createElement('td');
+            let itemElement5a = document.createElement('td');
+
+
+
+            itemElement1a.classList.add("text-center");
+            itemElement1a.innerText = item1a;
+            itemElement2a.innerText = item2a;
+            itemElement3a.innerText = item3a;
+            itemElement4a.innerText = item4a;
+            itemElement5a.innerText = item5a
+
+            setBackgroundColor(itemElement4a, item4a);
+
+
+            tra.appendChild(itemElement1a)
+            tra.appendChild(itemElement2a)
+            tra.appendChild(itemElement3a)
+            tra.appendChild(itemElement4a)
+            tra.appendChild(itemElement5a)
+
+            trekap1.appendChild(tra);
         }
 
         function getwil3(tabwi3) {
@@ -2321,6 +2392,41 @@
             tr.appendChild(itemElement4)
             tr.appendChild(itemElement5)
             tbody1.appendChild(tr);
+
+            var trekap1 = document.getElementById('week3');
+            let item1a = 'WIL'
+            let item2a = 'GM'
+            let item3a = tabwi3[1]['gmnama']
+            let item4a = tabwi3[1]['gmrekap']
+            let item5a = '-'
+
+            // Create table row and cell for each 'total' value
+            let tra = document.createElement('tr');
+            let itemElement1a = document.createElement('td');
+            let itemElement2a = document.createElement('td');
+            let itemElement3a = document.createElement('td');
+            let itemElement4a = document.createElement('td');
+            let itemElement5a = document.createElement('td');
+
+
+
+            itemElement1a.classList.add("text-center");
+            itemElement1a.innerText = item1a;
+            itemElement2a.innerText = item2a;
+            itemElement3a.innerText = item3a;
+            itemElement4a.innerText = item4a;
+            itemElement5a.innerText = item5a
+
+            setBackgroundColor(itemElement4a, item4a);
+
+
+            tra.appendChild(itemElement1a)
+            tra.appendChild(itemElement2a)
+            tra.appendChild(itemElement3a)
+            tra.appendChild(itemElement4a)
+            tra.appendChild(itemElement5a)
+
+            trekap1.appendChild(tra);
         }
 
     }

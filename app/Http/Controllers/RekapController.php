@@ -4985,9 +4985,40 @@ class RekapController extends Controller
                     $finalwil[$key]['sidakmutubuah'] = $value['all_skor'];
                     $finalwil[$key]['sidaktph'] = $value1['total'];
                     $finalwil[$key]['qcinspeks'] = $value2['TotalSkorWil'];
+                    
+                    $a1 = $value['all_skor'] === '-' ?  0: $value['all_skor'] ;
+                    $a2 =  $value1['total'] === '-' ?  0: $value1['total'] ;
+                    $a3 = $value2['TotalSkorWil'] === '-' ?  0: $value2['TotalSkorWil'] ;
+
+                    $b1 = $a1 !== 0 ? 1 : 0;
+                    $b2 = $a2 !== 0 ? 1 : 0;
+                    $b3 = $a3 !== 0 ? 1 : 0;
+                 
+                    $a4 = $a1 + $a2+ $a3;
+                    $b4 = $b1 + $b2+ $b3;
+
+                    $finalwil[$key]['gmrekap'] = $b4 !== 0 ? round($a4 / $b4, 2) : 0;
+
+                    
+                
+                    $em = 'GM';
+
+                    $nama_em = '';
+                    $regrom = 'WIL-' . convertToRoman($key);
+                    // dd($key1);
+                    foreach ($queryAsisten as $ast => $asisten) {
+                        if ( $regrom === $asisten['est'] && $em === $asisten['afd']) {
+                            $nama_em = $asisten['nama'];
+                            $finalwil[$key]['gmnama'] = $nama_em;
+                            break;
+                        }
+                    }
                 }
             }
         }
+        // dd($finalwil);
+
+        
         // dd($calwilmtb,$calwil,$RekapWIlTabel,$finalwil);
         $arr = array();
         $arr['rekapafd'] = $rekapafd;
@@ -5523,7 +5554,7 @@ class RekapController extends Controller
 
                         foreach ($weeksdata[$month] as $weekNumber => $week) {
                             if (strtotime($date) >= strtotime($week['start']) && strtotime($date) <= strtotime($week['end'])) {
-                                // Create a new entry for the week if not exists
+                                // Create b new entry for the week if not exists
                                 // dd('sex');
                                 if (!isset($result[$category][$subCategory][$month]['week' . $weekNumber])) {
                                     $result[$category][$subCategory][$month]['week' . $weekNumber] = [];
