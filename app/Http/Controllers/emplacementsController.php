@@ -3766,7 +3766,7 @@ class emplacementsController extends Controller
         }
         // dd($hitungRmh, $hitungLingkungan, $hitungLandscape, $mergedArray2);
         // // dd($nila_akhir, $mergedArray);
-        // dd($mergedArray2);
+        // dd($mergedArray);
         // dd($date, $est);
         $arrView = array();
 

@@ -24,3 +24,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/getDataEMp', [TestingApiController::class, 'index']);
 Route::get('/gettaksasi', [taksasiController::class, 'dashboard']);
 Route::get('/history', [ApiqcController::class, 'getHistoryedit']);
+Route::post('/plotmaps', [ApiqcController::class, 'plotmaps']);

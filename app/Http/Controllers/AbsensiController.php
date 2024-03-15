@@ -76,7 +76,7 @@ class AbsensiController extends Controller
 
         $sidakmutubuah = $this->plotBlok('SYE', '2024-03-01');
 
-        dd($sidakmutubuah);
+        // dd($sidakmutubuah);
 
         return view('Absensi.index', ['header_month' => $header_month, 'dates' => $JumlahBulan, 'useroption' => $user_Data, 'listkerja' => $listkerja]);
     }

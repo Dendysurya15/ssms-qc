@@ -8166,9 +8166,43 @@ class mutubuahController extends Controller
                     'data_lama' => json_encode($query),
                     'tanggal' => $date,
                     'menu' => 'movedata_sidakmutubuah',
-
                 ]);
+
+                $dataarr = [
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'tanggal' => $date,
+                    'menu' => 'movedata_sidakmutubuah'
+                ];
+
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => http_build_query([
+                        'message' => json_encode($dataarr),
+                        'id_group' => '120363205553012899@g.us@g.us'
+                    ]),
+                ]);
+
+                $response = curl_exec($curl);
+
+                if ($response === false) {
+                    $error_message = curl_error($curl);
+                } else {
+                }
+
+                curl_close($curl);
+
+                // After processing the response, return the JSON response indicating success
                 return response()->json(['message' => 'Data berhasil diupdate'], 200);
+
 
                 break;
             case 'sidaktph':
@@ -8217,6 +8251,38 @@ class mutubuahController extends Controller
                     'menu' => 'movedata_sidaktph',
 
                 ]);
+
+                $dataarr = [
+                    'id_user' => $userid,
+                    'nama_user' => $username,
+                    'tanggal' => $date,
+                    'menu' => 'movedata_sidaktph'
+                ];
+
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => http_build_query([
+                        'message' => json_encode($dataarr),
+                        'id_group' => '120363205553012899@g.us@g.us'
+                    ]),
+                ]);
+
+                $response = curl_exec($curl);
+
+                if ($response === false) {
+                    $error_message = curl_error($curl);
+                } else {
+                }
+
+                curl_close($curl);
                 return response()->json(['message' => 'Data berhasil diupdate'], 200);
 
                 break;
@@ -8275,6 +8341,38 @@ class mutubuahController extends Controller
                             'menu' => 'movedata_inspek_ancak',
 
                         ]);
+
+                        $dataarr = [
+                            'id_user' => $userid,
+                            'nama_user' => $username,
+                            'tanggal' => $date,
+                            'menu' => 'movedata_inspek_ancak'
+                        ];
+
+                        $curl = curl_init();
+                        curl_setopt_array($curl, [
+                            CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => http_build_query([
+                                'message' => json_encode($dataarr),
+                                'id_group' => '120363205553012899@g.us@g.us'
+                            ]),
+                        ]);
+
+                        $response = curl_exec($curl);
+
+                        if ($response === false) {
+                            $error_message = curl_error($curl);
+                        } else {
+                        }
+
+                        curl_close($curl);
                         return response()->json(['message' => 'Data berhasil diupdate'], 200);
                         break;
                     case 'mutu_buah':
@@ -8325,6 +8423,37 @@ class mutubuahController extends Controller
                             'menu' => 'movedata_inspek_mtbuah',
 
                         ]);
+                        $dataarr = [
+                            'id_user' => $userid,
+                            'nama_user' => $username,
+                            'tanggal' => $date,
+                            'menu' => 'movedata_inspek_mtbuah'
+                        ];
+
+                        $curl = curl_init();
+                        curl_setopt_array($curl, [
+                            CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => http_build_query([
+                                'message' => json_encode($dataarr),
+                                'id_group' => '120363205553012899@g.us@g.us'
+                            ]),
+                        ]);
+
+                        $response = curl_exec($curl);
+
+                        if ($response === false) {
+                            $error_message = curl_error($curl);
+                        } else {
+                        }
+
+                        curl_close($curl);
                         return response()->json(['message' => 'Data berhasil diupdate'], 200);
                         break;
                     case 'mutu_transport':
@@ -8375,6 +8504,37 @@ class mutubuahController extends Controller
                             'menu' => 'movedata_inspek_mttrans',
 
                         ]);
+                        $dataarr = [
+                            'id_user' => $userid,
+                            'nama_user' => $username,
+                            'tanggal' => $date,
+                            'menu' => 'movedata_inspek_mttrans'
+                        ];
+
+                        $curl = curl_init();
+                        curl_setopt_array($curl, [
+                            CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => http_build_query([
+                                'message' => json_encode($dataarr),
+                                'id_group' => '120363205553012899@g.us@g.us'
+                            ]),
+                        ]);
+
+                        $response = curl_exec($curl);
+
+                        if ($response === false) {
+                            $error_message = curl_error($curl);
+                        } else {
+                        }
+
+                        curl_close($curl);
                         return response()->json(['message' => 'Data berhasil diupdate'], 200);
                         break;
                     default:

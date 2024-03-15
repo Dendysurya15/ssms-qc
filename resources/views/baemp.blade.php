@@ -305,14 +305,15 @@
                 @php
                 $total = 0;
 
-                $total = $item2['total_nilailcp'] ?? 0 + $item2['total_nilailkng'] ?? 0 + $item2['total_nilairmh'] ?? 0 ;
+                $total = ($item2['total_nilailcp'] ?? 0) + ($item2['total_nilailkng'] ?? 0) + ($item2['total_nilairmh'] ?? 0);
                 @endphp
                 <tr>
                     <td colspan="5" style="text-align: center;border: 1px solid black;background-color: #e8ecdc;">TOTAL</td>
                     <td colspan="1" style="text-align: center;border: 1px solid black;background-color: #e8ecdc;">100</td>
-                    <td colspan="1" style="text-align: center;border: 1px solid black;background-color: #e8ecdc;">{{$total?? 0 }}</td>
+                    <td colspan="1" style="text-align: center;border: 1px solid black;background-color: #e8ecdc;">{{$total}}</td>
                     <td colspan="5" style="text-align: center;border: 1px solid black;background-color: #e8ecdc;">&nbsp;</td>
                 </tr>
+
 
             </body>
 
