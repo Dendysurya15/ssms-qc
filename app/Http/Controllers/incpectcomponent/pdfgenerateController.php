@@ -324,6 +324,38 @@ class pdfgenerateController extends Controller
                         'menu' => 'edit_mutuancakqc',
 
                     ]);
+
+                    $dataarr = [
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'tanggal' => $date,
+                        'menu' => 'edit_mutuancakqc'
+                    ];
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, [
+                        CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => http_build_query([
+                            'message' => json_encode($dataarr),
+                            'id_group' => '120363205553012899@g.us@g.us'
+                        ]),
+                    ]);
+
+                    $response = curl_exec($curl);
+
+                    if ($response === false) {
+                        $error_message = curl_error($curl);
+                    } else {
+                    }
+
+                    curl_close($curl);
                 }
                 break;
             case 'mutubuah':
@@ -383,6 +415,38 @@ class pdfgenerateController extends Controller
                         'menu' => 'edit_mutu_buahqc',
 
                     ]);
+
+                    $dataarr = [
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'tanggal' => $date,
+                        'menu' => 'edit_mutu_buahqc'
+                    ];
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, [
+                        CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => http_build_query([
+                            'message' => json_encode($dataarr),
+                            'id_group' => '120363205553012899@g.us@g.us'
+                        ]),
+                    ]);
+
+                    $response = curl_exec($curl);
+
+                    if ($response === false) {
+                        $error_message = curl_error($curl);
+                    } else {
+                    }
+
+                    curl_close($curl);
                 }
 
                 break;
@@ -427,6 +491,38 @@ class pdfgenerateController extends Controller
                         'menu' => 'edit_mutu_transportqc',
 
                     ]);
+
+                    $dataarr = [
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'tanggal' => $date,
+                        'menu' => 'edit_mutu_transportqc'
+                    ];
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, [
+                        CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => http_build_query([
+                            'message' => json_encode($dataarr),
+                            'id_group' => '120363205553012899@g.us@g.us'
+                        ]),
+                    ]);
+
+                    $response = curl_exec($curl);
+
+                    if ($response === false) {
+                        $error_message = curl_error($curl);
+                    } else {
+                    }
+
+                    curl_close($curl);
                 }
                 break;
 
@@ -516,6 +612,37 @@ class pdfgenerateController extends Controller
                         'menu' => 'delete_mutuancakqc',
 
                     ]);
+                    $dataarr = [
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'tanggal' => $date,
+                        'menu' => 'delete_mutuancakqc'
+                    ];
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, [
+                        CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => http_build_query([
+                            'message' => json_encode($dataarr),
+                            'id_group' => '120363205553012899@g.us@g.us'
+                        ]),
+                    ]);
+
+                    $response = curl_exec($curl);
+
+                    if ($response === false) {
+                        $error_message = curl_error($curl);
+                    } else {
+                    }
+
+                    curl_close($curl);
                 }
                 break;
             case 'mututrans':
@@ -540,6 +667,38 @@ class pdfgenerateController extends Controller
                         'menu' => 'delete_mututranskqc',
 
                     ]);
+
+                    $dataarr = [
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'tanggal' => $date,
+                        'menu' => 'delete_mututranskqc'
+                    ];
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, [
+                        CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => http_build_query([
+                            'message' => json_encode($dataarr),
+                            'id_group' => '120363205553012899@g.us@g.us'
+                        ]),
+                    ]);
+
+                    $response = curl_exec($curl);
+
+                    if ($response === false) {
+                        $error_message = curl_error($curl);
+                    } else {
+                    }
+
+                    curl_close($curl);
                 }
                 break;
             case 'mutubuah':
@@ -564,6 +723,38 @@ class pdfgenerateController extends Controller
                         'menu' => 'delete_mutubuahkqc',
 
                     ]);
+
+                    $dataarr = [
+                        'id_user' => $userid,
+                        'nama_user' => $username,
+                        'tanggal' => $date,
+                        'menu' => 'delete_mutubuahkqc'
+                    ];
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, [
+                        CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => http_build_query([
+                            'message' => json_encode($dataarr),
+                            'id_group' => '120363205553012899@g.us@g.us'
+                        ]),
+                    ]);
+
+                    $response = curl_exec($curl);
+
+                    if ($response === false) {
+                        $error_message = curl_error($curl);
+                    } else {
+                    }
+
+                    curl_close($curl);
                 }
                 break;
             default:
@@ -596,6 +787,38 @@ class pdfgenerateController extends Controller
                 'menu' => 'delete_mututranskqc',
 
             ]);
+
+            $dataarr = [
+                'id_user' => $userid,
+                'nama_user' => $username,
+                'tanggal' => $date,
+                'menu' => 'delete_mututranskqc'
+            ];
+
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => 'https://dawhatsappservices.srs-ssms.com/send-group-message',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => http_build_query([
+                    'message' => json_encode($dataarr),
+                    'id_group' => '120363205553012899@g.us@g.us'
+                ]),
+            ]);
+
+            $response = curl_exec($curl);
+
+            if ($response === false) {
+                $error_message = curl_error($curl);
+            } else {
+            }
+
+            curl_close($curl);
         }
     }
 

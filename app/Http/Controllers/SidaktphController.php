@@ -6487,37 +6487,41 @@ class SidaktphController extends Controller
 
         // dd($id, $qc);
 
+        try {
+            DB::connection('mysql2')->table('sidak_tph')->where('id', $id)->update([
+                'no_tph' => $notph,
+                'est' => $est,
+                'afd' => $afd,
+                'qc' => $qc,
 
+                'bt_tph' => $bttph,
+                'bt_jalan' => $btjalan,
+                'bt_bin' => $btbin,
+                'jum_karung' => $jumkrng,
+                'buah_tinggal' => $buahtgl,
+                'restan_unreported' => $restanunr,
+                'tph_semak' => $tphsemak,
 
-        // dd($id_trans, $afd_trans, $blok_trans, $bt_trans, $komentar_trans);
-
-        DB::connection('mysql2')->table('sidak_tph')->where('id', $id)->update([
-            'no_tph' => $notph,
-            'est' => $est,
-            'afd' => $afd,
-            'qc' => $qc,
-
-            'bt_tph' => $bttph,
-            'bt_jalan' => $btjalan,
-            'bt_bin' => $btbin,
-            'jum_karung' => $jumkrng,
-            'buah_tinggal' => $buahtgl,
-            'restan_unreported' => $restanunr,
-            'tph_semak' => $tphsemak,
-
-        ]);
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
     public function deleteBAsidakTPH(Request $request)
     {
 
         $idBuah = $request->input('id');
 
-        // dd($idBuah);
-        DB::connection('mysql2')->table('sidak_tph')
-            ->where('id', $idBuah)
-            ->delete();
+        try {
+            DB::connection('mysql2')->table('sidak_tph')
+                ->where('id', $idBuah)
+                ->delete();
 
-        return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success']);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        // dd($idBuah);
     }
 
 

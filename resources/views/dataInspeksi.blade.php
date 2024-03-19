@@ -1,726 +1,240 @@
 <body>
-    @foreach ($dataSkor as $key3 => $item3)
+    @foreach ($data as $item)
+    @foreach ($item as $items)
+    @foreach ($items as $item1)
     @php
-    // Mutu Transport Wilayah
-    $bt_total_wil = 0;
-    $tph_total_wil = 0;
-    $bt_tph_total_wil = 0;
-    $jjg_total_wil = 0;
-    $jjg_tph_total_wil = 0;
 
-    // Mutu Buah Wilayah
-    $blok_mb = 0;
-    $alas_mb = 0;
-    $tot_jjg_wil = 0;
-    $tot_mentah_wil = 0;
-    $tot_matang_wil = 0;
-    $tot_over_wil = 0;
-    $tot_empty_wil = 0;
-    $tot_vcut_wil = 0;
-    $tot_abr_wil = 0;
-    $tot_krg_wil = 0;
-    $tot_Permentah_wil = 0;
-    $tot_Permatang_wil = 0;
-    $tot_Perover_wil = 0;
-    $tot_Perjangkos_wil = 0;
-    $tot_Pervcut_wil = 0;
-    $tot_Perabr_wil = 0;
-    $tot_Perkrg_wil = 0;
+    if($item1['afd'] === 'est'){
+    $color = '#76C5E8';
+    }else if ($item1['afd'] === 'wil'){
+    $color = '#FF7043';
+    }
+    else{
+    $color = '#EBEBEB';
+    };
 
-    // Mutu Ancak Wilayah
-    $jml_pokok_sm_wil = 0;
-    $luas_ha_wil = 0;
-    $jml_jjg_panen_wil = 0;
-    $jml_brtp_wil = 0;
-    $jml_brtk_wil = 0;
-    $jml_brtgl_wil = 0;
-    $jml_bhts_wil = 0;
-    $jml_bhtm1_wil = 0;
-    $jml_bhtm2_wil = 0;
-    $jml_bhtm3_wil = 0;
-    $jml_ps_wil = 0;
-    $btr_jjg_ma_wil = 0;
-    $jjg_tgl_ma_wil = 0;
-    @endphp
-    @foreach ($dataSkor[$key3] as $key => $item)
-    @if (is_array($item))
-    @foreach ($item as $key2 => $value)
-    @if (is_array($value))
-    @php
-    $bt_total_wil += check_array('bt_total', $value);
-    $tph_total_wil += check_array('tph_sample', $value);
-    $jjg_total_wil += check_array('restan_total', $value);
 
-    $blok_mb += check_array('blok_mb', $value);
-    $alas_mb += check_array('alas_mb', $value);
-    $tot_jjg_wil += check_array('jml_janjang', $value);
-    $tot_mentah_wil += check_array('jml_mentah', $value);
-    $tot_matang_wil += check_array('jml_masak', $value);
-    $tot_over_wil += check_array('jml_over', $value);
-    $tot_empty_wil += check_array('jml_empty', $value);
-    $tot_abr_wil += check_array('jml_abnormal', $value);
-    $tot_vcut_wil += check_array('jml_vcut', $value);
+    $allskor = 0;
 
-    $jml_pokok_sm_wil += check_array('jml_pokok_sampel', $value);
-    $luas_ha_wil += check_array('luas_ha', $value);
-    $jml_jjg_panen_wil += check_array('jml_jjg_panen', $value);
-    $jml_brtp_wil += check_array('p_ma', $value);
-    $jml_brtk_wil += check_array('k_ma', $value);
-    $jml_brtgl_wil += check_array('gl_ma', $value);
-    $jml_bhts_wil += check_array('bhts_ma', $value);
-    $jml_bhtm1_wil += check_array('bhtm1_ma', $value);
-    $jml_bhtm2_wil += check_array('bhtm2_ma', $value);
-    $jml_bhtm3_wil += check_array('bhtm3_ma', $value);
-    $jml_ps_wil += check_array('ps_ma', $value);
 
-    $totalSkorAkhir = skor_brd_ma(check_array('btr_jjg_ma', $value)) + skor_buah_Ma(check_array('jjg_tgl_ma', $value)) +
-    skor_palepah_ma(check_array('PerPSMA', $value)) + skor_brd_tinggal(check_array('skor', $value)) +
-    skor_buah_tinggal(check_array('skor_restan', $value)) + skor_buah_mentah_mb(check_array('PersenBuahMentah', $value)) +
-    skor_buah_masak_mb(check_array('PersenBuahMasak', $value))
-    + skor_buah_over_mb(check_array('PersenBuahOver', $value)) +
-    skor_jangkos_mb(check_array('PersenPerJanjang', $value)) +
-    skor_buah_over_mb(check_array('PersenVcut', $value)) +
-    skor_abr_mb(check_array('PersenKrgBrd', $value));
-    $skor_kategori_akhir = skor_kategori_akhir($totalSkorAkhir);
+    if($item1['check_databh'] === 'ada' || $item1['check_datacak'] === 'ada' || $item1['check_datatrans'] === 'ada'){
+    $allskor = $item1['skor_akhircak'] + $item1['totalSkortrans'] + $item1['TOTAL_SKORbh'];
+
+    if ($allskor >= 95) {
+    $newktg = "EXCELLENT";
+    $color2 = '#5074c4';
+    } elseif ($allskor >= 85) {
+    $newktg = "GOOD";
+    $color2 = '#08fc2c';
+    } elseif ($allskor >= 75) {
+    $newktg = "SATISFACTORY";
+    $color2 = '#ffdc04';
+    } elseif ($allskor >= 65) {
+    $newktg = "FAIR";
+    $color2 = '#ffa404';
+    } else {
+    $newktg = "POOR";
+    $color2 = '#ff0404';
+    }
+
+    }else{
+    $allskor = '-';
+    $newktg = "-";
+    $color2 = '#E2E2E2';
+    }
+
+
     @endphp
     <tr>
-        {{-- Bagian Mutu Transport --}}
-        <td>{{$key}}</td>
-        <!-- <td>{{$key2}}</td> -->
-        <!-- <td> <a href="dataDetails/{{$key}}/{$key2}}" target="_blank"> {{$key2}}</a></td> -->
-        <td> <a href="dataDetail/{{$key}}/{{$key2}}/{{$tanggal}}/{{$regional}}"> {{$key2}}</a></td>
+        {{--
+            <td> <a href="dataDetail/{{$key}}/{{$key2}}/{{$tanggal}}/{{$regional}}"> {{$key2}}</a></td>
+        --}}
+        @if ($item1['afd'] === 'wil')
+        <td style="background-color: {{ $color }}">WIL-{{ $item1['est'] }}</td>
 
-
-        <td>{{check_array('jml_pokok_sampel', $value)}}</td>
-        <td>{{check_array('luas_ha', $value)}}</td>
-        <td>{{check_array('jml_jjg_panen', $value)}}</td>
-        <td>{{check_array('akp_real', $value)}}</td>
-        <td>{{check_array('p_ma', $value)}}</td>
-        <td>{{check_array('k_ma', $value)}}</td>
-        <td>{{check_array('gl_ma', $value)}}</td>
-        <td>{{check_array('total_brd_ma', $value)}}</td>
-        <td>{{check_array('btr_jjg_ma', $value)}}</td>
-        <td>{{skor_brd_ma(check_array('btr_jjg_ma', $value))}}</td>
-        <td>{{check_array('bhts_ma', $value)}}</td>
-        <td>{{check_array('bhtm1_ma', $value)}}</td>
-        <td>{{check_array('bhtm2_ma', $value)}}</td>
-        <td>{{check_array('bhtm3_ma', $value)}}</td>
-        <td>{{check_array('tot_jjg_ma', $value)}}</td>
-        <td>{{check_array('jjg_tgl_ma', $value)}}</td>
-        <td>{{skor_buah_Ma(check_array('jjg_tgl_ma', $value))}}</td>
-        <td>{{check_array('ps_ma', $value)}}</td>
-        <td>{{check_array('PerPSMA', $value)}}</td>
-        <td>{{skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
-        <td>{{skor_brd_ma(check_array('btr_jjg_ma', $value)) + skor_buah_Ma(check_array('jjg_tgl_ma', $value)) + skor_palepah_ma(check_array('PerPSMA', $value))}}</td>
-
-        @if($regional == 2 || $regional == '2' )
-        @foreach ($tph_trans as $keys => $value)
-        @if($key3 == $keys)
-        @foreach ($value as $keys1 => $value1)
-        @if($keys1 == $key)
-        @foreach ($value1 as $keys2 => $value2)
-        @if($keys2 == $key2)
-        <td>{{$value2['tph_sample']}}</td>
-        <td>{{$value2['bt_total']}}</td>
-        <td>{{$value2['skor']}}</td>
-        <td>{{skor_brd_tinggal($value2['skor'])}}</td>
-        <td>{{$value2['restan_total']}}</td>
-        <td>{{$value2['skor_restan']}}</td>
-        <td>{{skor_buah_tinggal($value2['skor_restan'])}}</td>
-        <td>{{skor_buah_tinggal($value2['skor_restan']) + skor_brd_tinggal($value2['skor'])}}</td>
-
-        <td>{{$value2['blok_mb'] ?? 0}}</td>
-        <td>{{$value2['jml_janjang'] ?? 0}}</td>
-        <td>{{$value2['jml_mentah']?? 0}}</td>
-        <td>{{$value2['PersenBuahMentah']?? 0}}</td>
-        <td>{{skor_buah_mentah_mb($value2['PersenBuahMentah']?? 0 )}}</td>
-
-        <td>{{$value2['jml_masak']?? 0}}</td>
-        <td>{{$value2['PersenBuahMasak']?? 0}}</td>
-        <td>{{skor_buah_masak_mb($value2['PersenBuahMasak']?? 0)}}</td>
-
-        <td>{{$value2['jml_over']?? 0}}</td>
-        <td>{{$value2['PersenBuahOver']?? 0}}</td>
-        <td>{{skor_buah_over_mb($value2['PersenBuahOver']?? 0)}}</td>
-
-        <td>{{$value2['jml_empty']?? 0}}</td>
-        <td>{{$value2['PersenPerJanjang']?? 0}}</td>
-        <td>{{skor_jangkos_mb($value2['PersenPerJanjang']?? 0)}}</td>
-
-        <td>{{$value2['jml_vcut']?? 0}}</td>
-        <td>{{$value2['PersenVcut']?? 0}}</td>
-        <td>{{skor_buah_over_mb($value2['PersenVcut']?? 0)}}</td>
-
-        <td>{{$value2['jml_abnormal']?? 0}}</td>
-        <td>{{$value2['PersenAbr']?? 0}}</td>
-
-        <td>{{$value2['alas_mb']?? 0}} / {{$value2['blok_mb']?? 0}}</td>
-        <td>{{$value2['PersenKrgBrd']?? 0}}</td>
-        <td>{{skor_abr_mb($value2['PersenKrgBrd']?? 0)}}</td>
-
-        <td>{{
-            skor_buah_mentah_mb($value2['PersenBuahMentah']?? 0) +
-            skor_buah_masak_mb($value2['PersenBuahMasak']?? 0) +
-            skor_buah_over_mb($value2['PersenBuahOver']?? 0) +
-            skor_jangkos_mb($value2['PersenPerJanjang']?? 0) +
-            skor_buah_over_mb($value2['PersenVcut']?? 0) +
-            skor_abr_mb($value2['PersenKrgBrd']?? 0) 
-        }}</td>
-
-
-        @endif
-        @endforeach
-        @endif
-        @endforeach
-        @endif
-        @endforeach
         @else
-        <td>{{check_array('tph_sample', $value)}}</td>
-        <td>{{check_array('bt_total', $value)}}</td>
-        <td>{{check_array('skor', $value)}}</td>
-        <td>{{skor_brd_tinggal(check_array('skor', $value))}}</td>
-        <td>{{check_array('restan_total', $value)}}</td>
-        <td>{{check_array('skor_restan', $value)}}</td>
-        <td>{{skor_buah_tinggal(check_array('skor_restan', $value))}}</td>
-        <td>{{ skor_brd_tinggal(check_array('skor', $value)) + skor_buah_tinggal(check_array('skor_restan', $value)) }}</td>
-
-        {{-- Bagian Mutu Buah - Buah Mentah --}}
-        <td>{{check_array('blok_mb', $value)}}</td>
-        <td>{{check_array('jml_janjang', $value)}}</td>
-        <td>{{check_array('jml_mentah', $value)}}</td>
-        <td>{{check_array('PersenBuahMentah', $value)}}</td>
-        <td>{{skor_buah_mentah_mb(check_array('PersenBuahMentah', $value))}}</td>
-        {{-- Bagian Mutu Buah - Buah Matang --}}
-        <td>{{check_array('jml_masak', $value)}}</td>
-        <td>{{check_array('PersenBuahMasak', $value)}}</td>
-        <td>{{skor_buah_masak_mb(check_array('PersenBuahMasak', $value))}}</td>
-        {{-- Bagian Mutu Buah - Lewat Matang --}}
-        <td>{{check_array('jml_over', $value)}}</td>
-        <td>{{check_array('PersenBuahOver', $value)}}</td>
-        <td>{{skor_buah_over_mb(check_array('PersenBuahOver', $value))}}</td>
-        {{-- Bagian Mutu Buah - Jangkos --}}
-        <td>{{check_array('jml_empty', $value)}}</td>
-        <td>{{check_array('PersenPerJanjang', $value)}}</td>
-        <td>{{skor_jangkos_mb(check_array('PersenPerJanjang', $value))}}</td>
-        {{-- Bagian Mutu Buah - Tidak Standar V-Cut --}}
-        <td>{{check_array('jml_vcut', $value)}}</td>
-        <td>{{check_array('PersenVcut', $value)}}</td>
-        <td>{{skor_buah_over_mb(check_array('PersenVcut', $value))}}</td>
-        {{-- Bagian Mutu Buah - Abnormal --}}
-        <td>{{check_array('jml_abnormal', $value)}}</td>
-        <td>{{check_array('PersenAbr', $value)}}</td>
-        {{-- Bagian Mutu Buah - Karung Brondolan --}}
-        <td>{{check_array('alas_mb', $value)}}/{{check_array('blok_mb', $value)}}</td>
-        <td>{{check_array('PersenKrgBrd', $value)}}</td>
-        <td>{{skor_abr_mb(check_array('PersenKrgBrd', $value))}}</td>
-        <td>{{skor_buah_mentah_mb(check_array('PersenBuahMentah', $value)) +
-            skor_buah_masak_mb(check_array('PersenBuahMasak', $value))
-            + skor_buah_over_mb(check_array('PersenBuahOver', $value)) +
-            skor_jangkos_mb(check_array('PersenPerJanjang', $value)) +
-            skor_buah_over_mb(check_array('PersenVcut', $value)) +
-            skor_abr_mb(check_array('PersenKrgBrd', $value))}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['est'] }}</td>
         @endif
 
+        @if ($item1['afd'] != 'est' && $item1['afd'] != 'wil')
 
+        <td> <a href="dataDetail/{{$item1['est']}}/{{$item1['afd']}}/{{$bulan}}/{{$reg}}"> {{$item1['afd']}}</a></td>
+        @else
+        <td style="background-color: {{ $color }}">{{$item1['afd']}} </td>
+        @endif
 
-
-        @if($regional == 2 || $regional == '2' )
-        @foreach ($tph_trans as $keys => $value)
-        @if($key3 == $keys)
-        @foreach ($value as $keys1 => $value1)
-        @if($keys1 == $key)
-        @foreach ($value1 as $keys2 => $value2)
-        @if($keys2 == $key2)
-
-        <td bgcolor="{{ $skor_kategori_akhir[0] }}">
-            {{skor_brd_ma($value2['btr_jjg_ma']?? 0) + skor_buah_Ma($value2['jjg_tgl_ma']?? 0) +  skor_palepah_ma($value2['PerPSMA']?? 0) 
-            +
-          skor_buah_tinggal($value2['skor_restan']?? 0) + skor_brd_tinggal($value2['skor']?? 0) 
-            +
-           skor_buah_mentah_mb($value2['PersenBuahMentah']?? 0) +
-            skor_buah_masak_mb($value2['PersenBuahMasak']?? 0) +
-            skor_buah_over_mb($value2['PersenBuahOver']?? 0) +
-            skor_jangkos_mb($value2['PersenPerJanjang']?? 0) +
-            skor_buah_over_mb($value2['PersenVcut']?? 0) +
-            skor_abr_mb($value2['PersenKrgBrd']?? 0) }}
-
-
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['pokok_samplecak'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['ha_samplecak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['jumlah_panencak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['akp_rlcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['pcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['kcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['tglcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_brdcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['brd/jjgcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_brdcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['bhts_scak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['bhtm1cak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['bhtm2cak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['bhtm3cak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_buahcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['buah/jjgcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_bhcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['palepah_pokokcak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['palepah_percak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_pscak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_akhircak']  : '-'}}</td>
+        <td style="background-color: {{ $color }}">
+            {{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'?  $item1['tph_sampleNew'] : '-' }}
         </td>
-        @endif
-        @endforeach
-        @endif
-        @endforeach
-        @endif
-        @endforeach
-        @else
-        <td bgcolor="{{ $skor_kategori_akhir[0] }}">{{ $totalSkorAkhir }}</td>
-        @endif
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_brdtrans'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_brdperTPHtrans'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_brdPertphtrans'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_buahtrans'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_buahPerTPHtrans'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_buahPerTPHtrans'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{ $item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['totalSkortrans'] : '-'}}</td>
 
-        <td bgcolor="{{ $skor_kategori_akhir[0] }}">{{ $skor_kategori_akhir[1] }}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['tph_baris_bloksbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['sampleJJG_totalbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_mentahbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_perMentahbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_mentahbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_masakbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_perMasakbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_masakbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_overbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_perOverbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_overbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_jjgKosongbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_perKosongjjgbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_jjgKosongbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_vcutbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['perVcutbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_vcutbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['total_abnormalbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['perAbnormalbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['jum_krbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['persen_krbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['skor_krbh'] : '-'}}</td>
+        <td style="background-color: {{ $color }}">{{$item1['check_databh'] === 'ada' ||  $item1['check_datacak'] === 'ada'   ||  $item1['check_datatrans'] === 'ada'? $item1['TOTAL_SKORbh'] : '-'}}</td>
+
+        <td style="background-color: {{ $color }}">{{$allskor}}</td>
+        <td style="background-color: {{ $color2 }}" data-b-a-s="medium" data-a-h="center">{{$newktg}}</td>
     </tr>
-    @endif
+
     @endforeach
-    @php
-    $totalSkorAkhirEst = skor_brd_ma(check_array('btr_jjg_ma_est', $item)) +
-    skor_buah_Ma(check_array('jjg_tgl_ma_est', $item)) +
-    skor_palepah_ma(check_array('PerPSMA_est', $item)) +
-    skor_brd_tinggal(check_array('bt_tph_total', $item))
-    +skor_buah_tinggal(check_array('jjg_tph_total', $item))+
-    skor_buah_mentah_mb(check_array('tot_PersenBuahMentah', $item)) +
-    skor_buah_masak_mb(check_array('tot_PersenBuahMasak', $item))
-    + skor_buah_over_mb(check_array('tot_PersenBuahOver', $item)) +
-    skor_jangkos_mb(check_array('tot_PersenPerJanjang', $item)) +
-    skor_buah_over_mb(check_array('tot_PersenVcut', $item)) +
-    skor_abr_mb(check_array('tot_PersenKrgBrd', $item));
-    $skor_kategori_akhir_est = skor_kategori_akhir($totalSkorAkhirEst);
-    @endphp
-    <tr>
-        <td style="background-color : #b0d48c; color: #000000;" colspan="2">{{$key}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('tot_jml_pokok_ma', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('tot_luas_ha_ma', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('tot_jml_jjg_panen_ma', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('akp_real_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('p_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('k_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('gl_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('total_brd_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('btr_jjg_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{skor_brd_ma(check_array('btr_jjg_ma_est', $item))}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhts_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhtm1_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhtm2_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('bhtm3_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('tot_jjg_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('jjg_tgl_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{skor_buah_Ma(check_array('jjg_tgl_ma_est', $item))}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('ps_ma_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('PerPSMA_est', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{skor_brd_ma(check_array('btr_jjg_ma_est', $item)) + skor_buah_Ma(check_array('jjg_tgl_ma_est', $item)) + skor_palepah_ma(check_array('PerPSMA_est', $item))}}</td>
-
-        @if($regional == 2 || $regional == '2' )
-        @foreach ($tph_trans as $keys => $value)
-        @if($key3 == $keys)
-        @foreach ($value as $keys1 => $value1)
-        @if($keys1 == $key)
-
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['tph_tod']}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['total_bt']}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['bt_tph']}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['scorre_bt']}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['total_rst']}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['rst_tph']}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['scorre_rst']}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">{{$value1['scorre_rst'] + $value1['scorre_bt'] }} </td>
 
 
-        @endif
-        @endforeach
-        @endif
-        @endforeach
-        @else
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tph_sample_total', $item)}}
-        </td>
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('bt_total', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('bt_tph_total', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_brd_tinggal(check_array('bt_tph_total', $item)) }}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('jjg_total', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('jjg_tph_total', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_buah_tinggal(check_array('jjg_tph_total', $item)) }}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_brd_tinggal(check_array('bt_tph_total',
-            $item))+skor_buah_tinggal(check_array('jjg_tph_total', $item))
-            }}
-        </td>
-        @endif
-
-
-
-
-
-
-
-
-        <td style="background-color : #b0d48c; color: #000000;">{{check_array('tot_blok', $item)}}</td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_jjg', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_mentah', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{round(check_array('tot_PersenBuahMentah', $item),1)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_buah_mentah_mb(check_array('tot_PersenBuahMentah', $item))}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_matang', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_PersenBuahMasak', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_buah_masak_mb(check_array('tot_PersenBuahMasak', $item))}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_over', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_PersenBuahOver', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_buah_over_mb(check_array('tot_PersenBuahOver', $item))}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_empty', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_PersenPerJanjang', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_jangkos_mb(check_array('tot_PersenPerJanjang', $item))}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_vcut', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_PersenVcut', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_buah_over_mb(check_array('tot_PersenVcut', $item))}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_abr', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_PersenAbr', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_alas', $item)}}/{{check_array('tot_blok', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{check_array('tot_PersenKrgBrd', $item)}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_abr_mb(check_array('tot_PersenKrgBrd', $item))}}
-        </td>
-        <td style="background-color : #b0d48c; color: #000000;">
-            {{skor_buah_mentah_mb(check_array('tot_PersenBuahMentah', $item)) +
-            skor_buah_masak_mb(check_array('tot_PersenBuahMasak', $item))
-            + skor_buah_over_mb(check_array('tot_PersenBuahOver', $item)) +
-            skor_jangkos_mb(check_array('tot_PersenPerJanjang', $item)) +
-            skor_buah_over_mb(check_array('tot_PersenVcut', $item)) +
-            skor_abr_mb(check_array('tot_PersenKrgBrd', $item))}}
-        </td>
-
-        @if($regional == 2 || $regional == '2' )
-        @foreach ($tph_trans as $keys => $value)
-        @if($key3 == $keys)
-        @foreach ($value as $keys1 => $value1)
-        @if($keys1 == $key)
-
-        <td style="background-color : {{$skor_kategori_akhir_est[0]}}; color: #000000;">
-            {{skor_brd_ma(check_array('btr_jjg_ma_est', $item)) + skor_buah_Ma(check_array('jjg_tgl_ma_est', $item)) + skor_palepah_ma(check_array('PerPSMA_est', $item)) +
-                skor_buah_mentah_mb(check_array('tot_PersenBuahMentah', $item)) +
-            skor_buah_masak_mb(check_array('tot_PersenBuahMasak', $item))
-            + skor_buah_over_mb(check_array('tot_PersenBuahOver', $item)) +
-            skor_jangkos_mb(check_array('tot_PersenPerJanjang', $item)) +
-            skor_buah_over_mb(check_array('tot_PersenVcut', $item)) +
-            skor_abr_mb(check_array('tot_PersenKrgBrd', $item))
-            + $value1['scorre_rst'] + $value1['scorre_bt'] 
-            }}
-
-        </td>
-
-
-        @endif
-        @endforeach
-        @endif
-        @endforeach
-        @else
-        <td style="background-color : {{$skor_kategori_akhir_est[0]}}; color: #000000;">{{$totalSkorAkhirEst}}</td>
-        @endif
-
-        <td style="background-color : {{$skor_kategori_akhir_est[0]}}; color: #000000;">{{$skor_kategori_akhir_est[1]}}</td>
-    </tr>
-    @php
-    $bt_tph_total_wil = $tph_total_wil == 0 ? $bt_total_wil : round($bt_total_wil / $tph_total_wil, 3);
-    $jjg_tph_total_wil = $tph_total_wil == 0 ? $jjg_total_wil : round($jjg_total_wil / $tph_total_wil, 3);
-    $tot_krg_wil = $alas_mb == 0 ? $blok_mb : round($blok_mb / $alas_mb, 3);
-    $tot_Permentah_wil = ($tot_jjg_wil - $tot_abr_wil) == 0 ? $tot_mentah_wil : round(($tot_mentah_wil / ($tot_jjg_wil - $tot_abr_wil)) * 100, 3);
-    $tot_Permatang_wil = ($tot_jjg_wil - $tot_abr_wil) == 0 ? $tot_matang_wil : round(($tot_matang_wil / ($tot_jjg_wil - $tot_abr_wil)) * 100, 3);
-    $tot_Perover_wil = ($tot_jjg_wil - $tot_abr_wil) == 0 ? $tot_over_wil : round(($tot_over_wil / ($tot_jjg_wil - $tot_abr_wil)) * 100, 3);
-    $tot_Perjangkos_wil = ($tot_jjg_wil - $tot_abr_wil) == 0 ? $tot_empty_wil : round(($tot_empty_wil / ($tot_jjg_wil - $tot_abr_wil)) * 100, 3);
-    $tot_Pervcut_wil = count_percent($tot_vcut_wil, $tot_jjg_wil);
-    $tot_Perabr_wil = count_percent($tot_abr_wil, $tot_jjg_wil);
-    $tot_Perkrg_wil = count_percent($alas_mb, $blok_mb);
-
-    $akp_real_wil = count_percent($jml_jjg_panen_wil, $jml_pokok_sm_wil);
-    $tot_brd_wil = $jml_brtp_wil + $jml_brtk_wil + $jml_brtgl_wil;
-    $btr_jjg_ma_wil = $jml_jjg_panen_wil == 0 ? $tot_brd_wil : round(($tot_brd_wil / $jml_jjg_panen_wil), 3);
-    $tot_bt_wil = $jml_bhts_wil + $jml_bhtm1_wil + $jml_bhtm2_wil + $jml_bhtm3_wil;
-    $bt_jjg_ma_wil = ($jml_jjg_panen_wil + $tot_bt_wil) == 0 ? $tot_bt_wil : round(($tot_bt_wil / ($jml_jjg_panen_wil + $tot_bt_wil)) * 100, 3);
-    $PerPSMA_wil = count_percent($jml_ps_wil, $jml_pokok_sm_wil);
-    @endphp
-    @endif
     @endforeach
-    @php
-    $totalSkorAkhirWil = skor_brd_ma($btr_jjg_ma_wil) +
-    skor_buah_Ma($bt_jjg_ma_wil) +
-    skor_palepah_ma($PerPSMA_wil) +
-    skor_brd_tinggal($bt_tph_total_wil)+
-    skor_buah_tinggal($jjg_tph_total_wil)+
-    skor_buah_mentah_mb($tot_Permentah_wil) +
-    skor_buah_masak_mb($tot_Permatang_wil) +
-    skor_buah_over_mb($tot_Perover_wil) +
-    skor_jangkos_mb($tot_Perjangkos_wil) +
-    skor_buah_over_mb($tot_Pervcut_wil) + skor_abr_mb($tot_Perkrg_wil);
-    $skor_kategori_akhir_wil = skor_kategori_akhir($totalSkorAkhirWil);
-    @endphp
-    <tr>
-        <td style="background-color : yellow; color: #000000;" colspan="2">
-            WIL-{{$key3}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_pokok_sm_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $luas_ha_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_jjg_panen_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $akp_real_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_brtp_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_brtk_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_brtgl_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $tot_brd_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $btr_jjg_ma_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{skor_brd_ma($btr_jjg_ma_wil)}}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_bhts_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_bhtm1_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_bhtm2_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_bhtm3_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $tot_bt_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $bt_jjg_ma_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{skor_buah_Ma($bt_jjg_ma_wil)}}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $jml_ps_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{ $PerPSMA_wil }}</td>
-        <td style="background-color : yellow; color: #000000;">{{skor_palepah_ma($PerPSMA_wil)}}</td>
-        <td style="background-color : yellow; color: #000000;">{{skor_brd_ma($btr_jjg_ma_wil) + skor_buah_Ma($bt_jjg_ma_wil) + skor_palepah_ma($PerPSMA_wil)}}</td>
-
-        @if($regional == 2 || $regional == '2' )
-        @foreach ($tph_trans as $keys => $value)
-        @if($key3 == $keys)
-
-        <td style="background-color : yellow; color: #000000;">{{$value['tph_tod']}}</td>
-        <td style="background-color : yellow; color: #000000;">{{$value['total_bt']}}</td>
-        <td style="background-color : yellow; color: #000000;">{{$value['bt_tph']}}</td>
-        <td style="background-color : yellow; color: #000000;">{{$value['scorre_bt']}}</td>
-        <td style="background-color : yellow; color: #000000;">{{$value['total_rst']}}</td>
-        <td style="background-color : yellow; color: #000000;">{{$value['rst_tph']}}</td>
-        <td style="background-color : yellow; color: #000000;">{{$value['score_rst']}}</td>
-        <td style="background-color : yellow; color: #000000;">{{$value['score_rst'] + $value['scorre_bt'] }} </td>
-        @endif
-        @endforeach
-        @else
-        <td style="background-color : yellow; color: #000000;">{{ $tph_total_wil }}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{ $bt_total_wil }}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $bt_tph_total_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            skor_brd_tinggal($bt_tph_total_wil) }}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{ $jjg_total_wil }}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $jjg_tph_total_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            skor_buah_tinggal($jjg_tph_total_wil) }}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            skor_brd_tinggal($bt_tph_total_wil)+skor_buah_tinggal($jjg_tph_total_wil)}}
-        </td>
-        @endif
-
-
-
-
-
-        <td style="background-color : yellow; color: #000000;">{{$blok_mb}}</td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_jjg_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_mentah_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_Permentah_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">
-            {{skor_buah_mentah_mb($tot_Permentah_wil)}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_matang_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_Permatang_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">
-            {{skor_buah_masak_mb($tot_Permatang_wil)}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_over_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_Perover_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">
-            {{skor_buah_over_mb($tot_Perover_wil)}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_empty_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_Perjangkos_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">
-            {{skor_jangkos_mb($tot_Perjangkos_wil)}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_vcut_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_Pervcut_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">
-            {{skor_buah_over_mb($tot_Pervcut_wil)}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_abr_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_Perabr_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">{{$alas_mb}}/{{$blok_mb}}</td>
-        <td style="background-color : yellow; color: #000000;">{{
-            $tot_Perkrg_wil}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">
-            {{skor_abr_mb($tot_Perkrg_wil)}}
-        </td>
-        <td style="background-color : yellow; color: #000000;">
-            {{skor_buah_mentah_mb($tot_Permentah_wil) +
-            skor_buah_masak_mb($tot_Permatang_wil) +
-            skor_buah_over_mb($tot_Perover_wil) +
-            skor_jangkos_mb($tot_Perjangkos_wil) +
-            skor_buah_over_mb($tot_Pervcut_wil) + skor_abr_mb($tot_Perkrg_wil)}}
-        </td>
-        @if($regional == 2 || $regional == '2' )
-        @foreach ($tph_trans as $keys => $value)
-        @if($key3 == $keys)
-        <td style="background-color : {{ $skor_kategori_akhir_wil[0] }}; color: #000000;">{{skor_buah_mentah_mb($tot_Permentah_wil) +
-            skor_buah_masak_mb($tot_Permatang_wil) +
-            skor_buah_over_mb($tot_Perover_wil) +
-            skor_jangkos_mb($tot_Perjangkos_wil) +
-            skor_buah_over_mb($tot_Pervcut_wil) + skor_abr_mb($tot_Perkrg_wil)+ $value['score_rst'] + $value['scorre_bt'] + skor_brd_ma($btr_jjg_ma_wil) + skor_buah_Ma($bt_jjg_ma_wil) + skor_palepah_ma($PerPSMA_wil)
-
-        }}
-        </td>
-        @endif
-        @endforeach
-        @else
-        <td style="background-color : {{ $skor_kategori_akhir_wil[0] }}; color: #000000;">{{ $totalSkorAkhirWil }}</td>
-        @endif
-
-        <td style="background-color : {{ $skor_kategori_akhir_wil[0] }}; color: #000000;">{{ $skor_kategori_akhir_wil[1] }}</td>
-    </tr>
-    @if ($key3 === array_key_last($dataSkor))
-    @else
     <tr style="border: none;">
         <td colspan="32" style="background-color : #fff;">&nbsp;</td>
     </tr>
-    @endif
     @endforeach
 
-    @php
-    $testResult = skor_kategori_akhir($rh_data['allscore']);
-    @endphp
     <tr>
-        <td style="background-color: {{ $testResult[0] }}" colspan="2"> {{$rh_data['est']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_pokoksample']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_luasha']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_pokokpanen']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_akp']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_p']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_k']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_tgl']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_brd']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_totalbrd']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_skor_brd']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_s']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_m1']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_m2']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_m3']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_totalbuah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_buah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_skor_bh']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_palepah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_perpalepah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_skor_ps']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mta_totalskor']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_tphsample']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_brdx']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_brdpertph']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_brd']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_buahx']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_buahpertph']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_buah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtt_totalskor']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_tphblok']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_tot_jjg']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_mentah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_mentah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_mentah']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_masak']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_masak']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_masak']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_over']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_over']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_over']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_jjgKosong']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_jjgKosong']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_jjgKosong']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_total_vcut']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_vcut']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_vcut']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_abnormal']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_abnormal']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_jum_kr']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['mtb_per_kr']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['skor_kr']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['totalmtb_skor']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{$rh_data['allscore']}}</td>
-        <td style="background-color: {{ $testResult[0] }}">{{ $testResult[1] }}</td>
+        @php
 
-    </tr>
+        if($datareg['afd'] === 'est'){
+        $colorreg = '#76C5E8';
+        }else if ($datareg['afd'] === 'wil'){
+        $colorreg = '#FF7043';
+        }
+        else{
+        $colorreg = '#EBEBEB';
+        };
 
-    <tr style="border: none;">
-        <td colspan="32" style="background-color : #fff;">&nbsp;</td>
+
+        $allskor = 0;
+
+
+        if($datareg['check_databh'] === 'ada' || $datareg['check_datacak'] === 'ada' || $datareg['check_datatrans'] === 'ada'){
+        $allskorreg = $datareg['skor_akhircak'] + $datareg['totalSkortrans'] + $datareg['TOTAL_SKORbh'];
+
+        if ($allskorreg >= 95) {
+        $newktgreg = "EXCELLENT";
+        $color2reg = '#5074c4';
+        } elseif ($allskorreg >= 85) {
+        $newktgreg = "GOOD";
+        $color2reg = '#08fc2c';
+        } elseif ($allskorreg >= 75) {
+        $newktgreg = "SATISFACTORY";
+        $color2reg = '#ffdc04';
+        } elseif ($allskorreg >= 65) {
+        $newktgreg = "FAIR";
+        $color2reg = '#ffa404';
+        } else {
+        $newktgreg = "POOR";
+        $color2reg = '#ff0404';
+        }
+
+        }else{
+        $allskorreg = '-';
+        $newktgreg = "-";
+        $color2reg = '#E2E2E2';
+        }
+
+
+        @endphp
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['est'] }}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['afd'] }}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['pokok_samplecak'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['ha_samplecak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['jumlah_panencak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['akp_rlcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['pcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['kcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['tglcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_brdcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['brd/jjgcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_brdcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhts_scak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhtm1cak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhtm2cak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhtm3cak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_buahcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['buah/jjgcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_bhcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['palepah_pokokcak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['palepah_percak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_pscak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_akhircak']  : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">
+            {{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'?  $datareg['tph_sampleNew'] : '-' }}
+        </td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_brdtrans'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_brdperTPHtrans'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_brdPertphtrans'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_buahtrans'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_buahPerTPHtrans'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_buahPerTPHtrans'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['totalSkortrans'] : '-'}}</td>
+
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['tph_baris_bloksbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['sampleJJG_totalbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_mentahbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perMentahbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_mentahbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_masakbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perMasakbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_masakbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_overbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perOverbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_overbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_jjgKosongbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perKosongjjgbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_jjgKosongbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_vcutbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['perVcutbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_vcutbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_abnormalbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['perAbnormalbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['jum_krbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['persen_krbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_krbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['TOTAL_SKORbh'] : '-'}}</td>
+        <td style="background-color: {{ $colorreg }}">{{$allskorreg}}</td>
+        <td style="background-color: {{ $color2reg }}" data-b-a-s="medium" data-a-h="center">{{$newktgreg}}</td>
     </tr>
 
 </body>

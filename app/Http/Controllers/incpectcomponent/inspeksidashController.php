@@ -4117,6 +4117,7 @@ class inspeksidashController extends Controller
 
             // dd($ancakcount);
 
+            // dd($newmua_ancak, $newmua_trans, $newmua_buah);
             $muacak = [];
             foreach ($newmua_ancak as $key => $value) {
                 # code...
@@ -4164,19 +4165,24 @@ class inspeksidashController extends Controller
                 $muacak[$key]['skorps'] = $skor_ps;
             }
 
-            $muatrans = [];
-            foreach ($newmua_trans as $key => $value) {
-                $dataBLok += $value['tph_sample'];
-                $sum_bt += $value['total_brd'];
-                $sum_rst += $value['total_buah'];
+            // dd($newmua_trans);
 
-                if ($dataBLok != 0) {
-                    $brdPertph = round($sum_bt / $dataBLok, 3);
+            $muatrans = [];
+            $dataBLoktrans = 0;
+            $sum_bttrans = 0;
+            $sum_rsttrans = 0;
+            foreach ($newmua_trans as $key => $value) {
+                $dataBLoktrans += $value['tph_sample'];
+                $sum_bttrans += $value['total_brd'];
+                $sum_rsttrans += $value['total_buah'];
+
+                if ($dataBLoktrans != 0) {
+                    $brdPertph = round($sum_bttrans / $dataBLoktrans, 3);
                 } else {
                     $brdPertph = 0;
                 }
-                if ($dataBLok != 0) {
-                    $buahPerTPH = round($sum_rst / $dataBLok, 3);
+                if ($dataBLoktrans != 0) {
+                    $buahPerTPH = round($sum_rsttrans / $dataBLoktrans, 3);
                 } else {
                     $buahPerTPH = 0;
                 }
@@ -4195,7 +4201,10 @@ class inspeksidashController extends Controller
                 $muatrans[$key]['skorTrans'] = $ttlSkorMA;
                 $muatrans[$key]['skorbuah'] = $skor_bh;
                 $muatrans[$key]['skorbrd'] = $skor_brd;
+                $muatrans[$key]['buahPerTPH'] = $sum_rsttrans;
             }
+
+            // dd($muatrans);
             $muabuah = [];
             foreach ($newmua_buah as $key => $value) {
 
@@ -4254,7 +4263,7 @@ class inspeksidashController extends Controller
 
                 $muabuah[$key]['skorbuah'] = $totalSkor;
             }
-
+            // dd($muabuah);
 
             $finalcheck[] = [
                 $muacak['Ancak']['data'],
@@ -6330,7 +6339,7 @@ class inspeksidashController extends Controller
         unsetPlasmaKeys($result_brd);
         unsetPlasmaKeys($result_buah);
 
-        // dd($RekapRegTable);
+        // dd($newmua);
 
         $arrView = array();
         // dd($result_brd,$chrtBuahMentahv2);
