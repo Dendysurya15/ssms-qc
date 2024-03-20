@@ -2922,1470 +2922,672 @@
                 Swal.close();
                 // console.log(reg);
                 var parseResult = JSON.parse(result)
-                //list estate
-                var list_will = Object.entries(parseResult['list_estate']);
-
-                // //untuk chart
-                var chart_btt = Object.entries(parseResult['chart_brd'])
-                var chart_buah = Object.entries(parseResult['chart_buah'])
-                // console.log(chart_buah);
-
-                var chartWillbt = Object.entries(parseResult['chart_brdwil'])
-                var chartWillbh = Object.entries(parseResult['chart_buahwil'])
-
-                // chart mutu buah
-                var mtbuah_mentah = Object.entries(parseResult['mtbuah_mentah'])
-                var mtbuah_masak = Object.entries(parseResult['mtbuah_masak'])
-                var mtbuah_over = Object.entries(parseResult['mtbuah_over'])
-                var mtbuah_abnr = Object.entries(parseResult['mtbuah_abnr'])
-                var mtbuah_ksong = Object.entries(parseResult['mtbuah_ksong'])
-                var mtbuah_vcut = Object.entries(parseResult['mtbuah_vcut'])
-                var mttrans_brd = Object.entries(parseResult['mttrans_brd'])
-                var mttrans_buah = Object.entries(parseResult['mttrans_buah'])
-                var mttrans_wilbrd = Object.entries(parseResult['mttrans_wilbrd'])
-                var mttrans_wilbuah = Object.entries(parseResult['mttrans_wilbuah'])
-
-                var willBuah_Mentah = Object.entries(parseResult['willBuah_Mentah'])
-                var willBuah_Masak = Object.entries(parseResult['willBuah_Masak'])
-                var willBuah_Over = Object.entries(parseResult['willBuah_Over'])
-                var willBuah_Abr = Object.entries(parseResult['willBuah_Abr'])
-                var willBuah_Kosong = Object.entries(parseResult['willBuah_Kosong'])
-                var willBuah_Vcut = Object.entries(parseResult['willBuah_Vcut'])
-
-
-                //perbaikan untuk table utama unutuk rekap 
-                // var Data_TableUtama = Object.entries(parseResult['data_tabelutama'])
-                // console.log(Data_TableUtama);
-                // unutk table utama
-                const Data_TableUtama = Object.entries(parseResult['data_tabelutama']);
-                const regional = Object.entries(parseResult['RekapRegTable']);
-                const plasma = Object.entries(parseResult['plasma']);
-                const plasmaEM = Object.entries(parseResult['plasmaEM']);
-                const plasmaGM = Object.entries(parseResult['plasmaGM']);
-                const skor_ptmua = Object.entries(parseResult['pt_mua']);
-                const list_asisten = Object.entries(parseResult['list_asisten']);
-                // console.log(plasma);
-                const newPlasma = plasma.map(([_, data]) => ({
-
-                    est: data.est,
-                    afd: data.afd,
-                    nama: data.nama,
-                    skor: data.data === 'kosong' ? 0 : data.skor,
-                    rank: data.rank,
-                    // namaEM: namaEM,
-                    // namaGM: namaGM,
-                }));
-                // console.log(newPlasma);
-                const newPlasmaEM = plasmaEM.map(([_, data]) => ({
-
-                    est: data.est,
-                    afd: data.afd,
-                    nama: data.namaEM,
-                    skor: data.Skor,
-
-                    // namaEM: namaEM,
-                    // namaGM: namaGM,
-                }));
-                const newPlasmaGM = plasmaGM.map(([_, data]) => ({
-
-                    est: data.est,
-                    afd: data.afd,
-                    nama: data.namaEM,
-                    skor: data.Skor,
-
-                    // namaEM: namaEM,
-                    // namaGM: namaGM,
-                }));
-                // console.log(newPlasmaEM);
-
-                const newData_TableUtama = Data_TableUtama.map(([_, data]) => ({
-                    afd: data.afd,
-                    est: data.est,
-                    est_afd: `${data.est}_${data.afd}`,
-                    nama: data.nama,
-                    rank: data.rank,
-                    data: data.data,
-                    skor: data.data === 'kosong' ? '-' : data.skor
-                }));
-
-                const Data_TableKedua = Object.entries(parseResult['data_tabelkedua']);
-
-                // console.log(newData_TableUtama);
-                const newData_TableKedua = Data_TableKedua.map(([_, data]) => ({
-                    afd: data.afd,
-                    est: data.est,
-                    est_afd: `${data.est}_${data.afd}`,
-                    nama: data.nama,
-                    rank: data.rank,
-                    data: data.data,
-                    skor: data.data === 'kosong' ? '-' : data.skor
-                }));
-                const Data_TableKetiga = Object.entries(parseResult['data_tabeketiga']);
-                const newData_TableKetiga = Data_TableKetiga.map(([_, data]) => ({
-                    afd: data.afd,
-                    est: data.est,
-                    est_afd: `${data.est}_${data.afd}`,
-                    nama: data.nama,
-                    rank: data.rank,
-                    data: data.data,
-                    skor: data.data === 'kosong' ? '-' : data.skor
-                }));
+                var rekapafd = Object.entries(parseResult['tab_afdeling'])
+                var rekapest = Object.entries(parseResult['tab_estate'])
+                var rekapwil = Object.entries(parseResult['tab_wil'])
+                var dataReg = Object.entries(parseResult['dataReg'])
+                let table1 = rekapafd[0]
+                let table2 = rekapafd[1]
+                let table3 = rekapafd[2] ?? []
+                let table1est = rekapest[0]
+                let table2est = rekapest[1]
+                let table3est = rekapest[2] ?? []
+                let table1wil = rekapwil[0]
+                let table2wil = rekapwil[1]
+                let table3wil = rekapwil[2] ?? []
+                // chart est 
+                var getnameest = parseResult['getnameest'];
+                var cakbrd = parseResult['cakbrd'];
+                var cakbuah = parseResult['cakbuah'];
+                var brdtrans = parseResult['brdtrans'];
+                var buahtrans = parseResult['buahtrans'];
+                var mentahbuah = parseResult['mentahbuah'];
+                var masakbuah = parseResult['masakbuah'];
+                var overbuah = parseResult['overbuah'];
+                var abrbuah = parseResult['abrbuah'];
+                var emptybuah = parseResult['emptybuah'];
+                var vcutbuah = parseResult['vcutbuah'];
+                // chart wil 
+                var getnamewil = parseResult['getnamewil'];
+                var cakbrdwil = parseResult['cakbrdwil'];
+                var cakbuahwil = parseResult['cakbuahwil'];
+                var brdtranswil = parseResult['brdtranswil'];
+                var buahtranswil = parseResult['buahtranswil'];
+                var mentahbuahwil = parseResult['mentahbuahwil'];
+                var masakbuahwil = parseResult['masakbuahwil'];
+                var overbuahwil = parseResult['overbuahwil'];
+                var abrbuahwil = parseResult['abrbuahwil'];
+                var emptybuahwil = parseResult['emptybuahwil'];
+                var vcutbuahwil = parseResult['vcutbuahwil'];
+                // table pertama 
+                var trekap1 = document.getElementById('tbody1');
+                Object.keys(table1[1]).forEach(key => {
+                    Object.keys(table1[1][key]).forEach(subKey => {
+                        let item1 = table1[1][key][subKey]['est'];
+                        let item2 = table1[1][key][subKey]['afd'];
+                        let item3 = table1[1][key][subKey]['nama']
+                        let item4 = table1[1][key][subKey]['data'] !== 'kosong' ? table1[1][key][subKey]['total_skor'] : '-';
 
 
-                //untuk table perestate
-                const data_Est1 = Object.entries(parseResult['data_Est1']);
-                const newData_data_Est1 = data_Est1.map(([_, data]) => ({
+                        // item4 = (item4 < 0) ? 0 : item4;
+                        let item5 = table1[1][key][subKey]['rank'] ?? '-';
 
-                    est: data.est,
-                    em: data.EM,
-                    nama: data.nama,
-                    rank: data.rank,
-                    skor: data.skor,
-                }));
-                const data_Est2 = Object.entries(parseResult['data_Est2']);
-                const newData_data_Est2 = data_Est2.map(([_, data]) => ({
+                        let bg = table1[1][key][subKey]['bgcolor'];
 
-                    est: data.est,
-                    em: data.EM,
-                    nama: data.nama,
-                    rank: data.rank,
-                    skor: data.skor,
-                }));
-
-                const data_Est3 = Object.entries(parseResult['data_Est3']);
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
 
 
 
-                const newData_data_Est3 = data_Est3.map(([_, data]) => ({
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
 
-                    est: data.est,
-                    em: data.EM,
-                    nama: data.nama,
-                    rank: data.rank,
-                    skor: data.skor,
-                }));
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
 
-                const data_GM = Object.entries(parseResult['data_GM']);
-                // console.log(data_GM);
-                const GM_list = data_GM.map(([_, data]) => ({
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap1.appendChild(tr);
+                    });
+                });
 
-                    est: data.est,
-                    em: data.EM,
-                    nama: data.nama,
-                    skor: data.skor,
-                }));
-                //testing table otomatis ketengah
-                let regInpt = reg;
+                Object.keys(table1est[1]).forEach(key => {
+                    let item1 = table1est[1][key]['est'];
+                    let item2 = table1est[1][key]['afd'];
+                    let item3 = table1est[1][key]['nama']
+                    let item4 = table1est[1][key]['data'] !== 'kosong' ? table1est[1][key]['total_skor'] : '-';
 
-                var GM_1 = Object.entries(parseResult['GM_1'])
-                var GM_2 = Object.entries(parseResult['GM_2'])
-                var GM_3 = Object.entries(parseResult['GM_3'])
+                    // item4 = (item4 < 0) ? 0 : item4;
+                    let item5 = table1est[1][key]['rank'] ?? '-';
 
-                //buat menambahkan berdsarkan inputan reg 
+                    let bg = table1est[1][key]['bgcolor'];
 
-                let regIonal = '';
-                let regIonalRH = '';
-                let regIonalNama = '';
-                let titleHead1 = '';
-                let titleHead2 = '';
-                let titleHead3 = '';
-
-                switch (regInpt) {
-                    case '1':
-                        regIonal = 'REG-I';
-                        regIonalRH = 'RH-I';
-                        regIonalNama = 'Akhmad Faisyal';
-                        titleHead1 = 'WIL I';
-                        titleHead2 = 'WIL II';
-                        titleHead3 = 'WIL III';
-                        break;
-                    case '2':
-                        regIonal = 'REG-II';
-                        regIonalRH = 'RH-II';
-                        regIonalNama = '';
-                        titleHead1 = 'WIL IV';
-                        titleHead2 = 'WIL V';
-                        titleHead3 = 'WIL VI';
-                        break;
-                    case '3':
-                        regIonal = 'REG-III';
-                        regIonalRH = 'RH-III';
-                        regIonalNama = '';
-                        titleHead1 = 'WIL VII';
-                        titleHead2 = 'WIL VIII';
-                        titleHead3 = 'WIL NULL';
-
-                        break;
-                }
+                    // Create table row and cell for each 'total' value
+                    let tr = document.createElement('tr');
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
 
 
 
-
-
-                function filterArrayByEst(array) {
-                    return array.filter(obj => obj.est !== 'Plasma1');
-                }
-                const originalArray = newData_TableUtama
-                const filteredArray = filterArrayByEst(originalArray);
-
-
-
-
-                var arrTbody1 = filteredArray
-                // console.log(arrTbody1);
-
-                var tbody1 = document.getElementById('tbody1');
-                //         $('#thead1').empty()
-                // $('#thead2').empty()
-                // $('#thead3').empty()
-                let sortedArr = arrTbody1.slice().sort((a, b) => b['skor'] - a['skor']);
-                arrTbody1.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = sortedArr.findIndex(sortedElement => sortedElement === element) + 1;
-
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-                    let data = element['data']
-                    if (data === "ada") {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = item4
-                    } else {
-                        itemElement4.style.backgroundColor = "white";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = '-'
-                    }
-                    setBackgroundColor(itemElement4, item4);
-
-
-                    // if (item4 != 0 && item4 != 90) {
-                    //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
-                    // } else {
-                    //     itemElement4.innerText = item4
-                    // }
-
-                    itemElement4.innerText = item4
-                    itemElement1.innerText = item1
-                    // itemElement2.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '" target="_blank">' + element['afd'] + ' </a>';
-
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    //   itemElement4.innerText  = item4
+                    itemElement1.classList.add("text-center");
+                    itemElement1.innerText = item1;
+                    itemElement2.innerText = item2;
+                    itemElement3.innerText = item3;
+                    itemElement4.innerText = item4;
                     itemElement5.innerText = item5
+                    // itemElement3.style.color === "#609cd4"
+                    setBackgroundColor(itemElement4, item4);
+                    tr.style.backgroundColor = "#f0f0f0";
+                    tr.appendChild(itemElement1)
+                    tr.appendChild(itemElement2)
+                    tr.appendChild(itemElement3)
+                    tr.appendChild(itemElement4)
+                    tr.appendChild(itemElement5)
+                    trekap1.appendChild(tr);
+                });
+
+                getwil1(table1wil)
+
+
+
+
+                // table kedua 
+                var trekap2 = document.getElementById('tbody2');
+                Object.keys(table2[1]).forEach(key => {
+                    Object.keys(table2[1][key]).forEach(subKey => {
+                        let item1 = table2[1][key][subKey]['est'];
+                        let item2 = table2[1][key][subKey]['afd'];
+                        let item3 = table2[1][key][subKey]['nama'] ?? '-'
+                        let item4 = table2[1][key][subKey]['data'] !== 'kosong' ? table2[1][key][subKey]['total_skor'] : '-';
+                        let item5 = table2[1][key][subKey]['rank'] ?? '-';
+
+                        let bg = table2[1][key][subKey]['bgcolor'];
+
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
+
+
+
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
+
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = bg;
+
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap2.appendChild(tr);
+                    });
+                });
+
+                Object.keys(table2est[1]).forEach(key => {
+                    let item1 = table2est[1][key]['est'];
+                    let item2 = table2est[1][key]['afd'];
+                    let item3 = table2est[1][key]['nama']
+                    let item4 = table2est[1][key]['data'] !== 'kosong' ? table2est[1][key]['total_skor'] : '-';
+
+                    let item5 = table2est[1][key]['rank'] ?? '-';
+
+                    let bg = table2est[1][key]['bgcolor'];
+
+                    // Create table row and cell for each 'total' value
+                    let tr = document.createElement('tr');
+                    let itemElement1 = document.createElement('td');
+                    let itemElement2 = document.createElement('td');
+                    let itemElement3 = document.createElement('td');
+                    let itemElement4 = document.createElement('td');
+                    let itemElement5 = document.createElement('td');
+
+
+
+                    itemElement1.classList.add("text-center");
+                    itemElement1.innerText = item1;
+                    itemElement2.innerText = item2;
+                    itemElement3.innerText = item3;
+                    itemElement4.innerText = item4;
+                    itemElement5.innerText = item5
+
+                    setBackgroundColor(itemElement4, item4);
+                    tr.style.backgroundColor = "#f0f0f0";
 
                     tr.appendChild(itemElement1)
                     tr.appendChild(itemElement2)
                     tr.appendChild(itemElement3)
                     tr.appendChild(itemElement4)
                     tr.appendChild(itemElement5)
-
-                    tbody1.appendChild(tr)
-                    // }
+                    trekap2.appendChild(tr);
                 });
 
-                const arrTab1 = newData_data_Est1
-                const EstTab1 = filterArrayByEst(arrTab1);
-                var arrTbody1 = EstTab1
-                // console.log(arrTbody1);
-                // var table1 = document.getElementById('table1');
-                var tbody1 = document.getElementById('tbody1');
-                // console.log(arrTbody1);
-
-                arrTbody1.forEach(element => {
-                    // for (let i = 0; i < 5; i++) {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['em']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = element['rank']
-
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
+                getwil2(table2wil)
 
 
 
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
+                // tableketiga 
+                if (table3.length > 0) {
+                    // console.log('tidak kosong');
+                    // console.log(table3);
+                    var trekap3 = document.getElementById('tbody3');
+                    Object.keys(table3[1]).forEach(key => {
+                        Object.keys(table3[1][key]).forEach(subKey => {
+                            let item1 = table3[1][key][subKey]['est'];
+                            let item2 = table3[1][key][subKey]['afd'];
+                            let item3 = table3[1][key][subKey]['nama']
+                            let item4 = table3[1][key][subKey]['data'] !== 'kosong' ? table3[1][key][subKey]['total_skor'] : '-';
 
+                            let item5 = table3[1][key][subKey]['rank'] ?? '-';
 
-                    itemElement1.style.backgroundColor = "#e8ecdc";
-                    itemElement2.style.backgroundColor = "#e8ecdc";
-                    itemElement3.style.backgroundColor = "#e8ecdc";
+                            let bg = table3[1][key][subKey]['bgcolor'];
 
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
+                            // Create table row and cell for each 'total' value
+                            let tr = document.createElement('tr');
+                            let itemElement1 = document.createElement('td');
+                            let itemElement2 = document.createElement('td');
+                            let itemElement3 = document.createElement('td');
+                            let itemElement4 = document.createElement('td');
+                            let itemElement5 = document.createElement('td');
 
+                            itemElement1.classList.add("text-center");
+                            itemElement1.innerText = item1;
+                            itemElement2.innerText = item2;
+                            itemElement3.innerText = item3;
+                            itemElement4.innerText = item4;
+                            itemElement5.innerText = item5
 
-                    let data = element['data']
+                            setBackgroundColor(itemElement4, item4);
+                            tr.style.backgroundColor = bg;
 
-                    if (data === "ada") {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = item4
-                    } else {
-                        itemElement4.style.backgroundColor = "white";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = '-'
-                    }
-                    setBackgroundColor(itemElement4, item4);
+                            tr.appendChild(itemElement1)
+                            tr.appendChild(itemElement2)
+                            tr.appendChild(itemElement3)
+                            tr.appendChild(itemElement4)
+                            tr.appendChild(itemElement5)
+                            trekap3.appendChild(tr);
+                        });
+                    });
 
+                    Object.keys(table3est[1]).forEach(key => {
+                        let item1 = table3est[1][key]['est'];
+                        let item2 = table3est[1][key]['afd'];
+                        let item3 = table3est[1][key]['nama']
+                        let item4 = table3est[1][key]['data'] !== 'kosong' ? table3est[1][key]['total_skor'] : '-';
 
+                        let item5 = table3est[1][key]['rank'] ?? '-';
 
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    itemElement4.innerText = item4
-                    itemElement5.innerText = item5
+                        let bg = table3est[1][key]['bgcolor'];
 
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    tbody1.appendChild(tr)
-                    // }
-                });
-
-                //untuk GM
-                tr = document.createElement('tr')
-                let item1 = GM_list[0].est;
-                let item2 = GM_list[0].em;
-                let item3 = GM_list[0].nama;
-                let item4 = GM_list[0].skor;
-                let item5 = ''
-                let itemElement1 = document.createElement('td')
-                let itemElement2 = document.createElement('td')
-                let itemElement3 = document.createElement('td')
-                let itemElement4 = document.createElement('td')
-                let itemElement5 = document.createElement('td')
-                itemElement1.classList.add("text-center")
-                itemElement2.classList.add("text-center")
-                itemElement3.classList.add("text-center")
-                itemElement4.classList.add("text-center")
-                itemElement5.classList.add("text-center")
-                itemElement1.style.backgroundColor = "#fff4cc";
-                itemElement2.style.backgroundColor = "#fff4cc";
-                itemElement3.style.backgroundColor = "#fff4cc";
+                        // Create table row and cell for each 'total' value
+                        let tr = document.createElement('tr');
+                        let itemElement1 = document.createElement('td');
+                        let itemElement2 = document.createElement('td');
+                        let itemElement3 = document.createElement('td');
+                        let itemElement4 = document.createElement('td');
+                        let itemElement5 = document.createElement('td');
 
 
 
-                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                    itemElement3.style.color = "red";
+                        itemElement1.classList.add("text-center");
+                        itemElement1.innerText = item1;
+                        itemElement2.innerText = item2;
+                        itemElement3.innerText = item3;
+                        itemElement4.innerText = item4;
+                        itemElement5.innerText = item5
+
+                        setBackgroundColor(itemElement4, item4);
+                        tr.style.backgroundColor = "#f0f0f0";
+
+                        tr.appendChild(itemElement1)
+                        tr.appendChild(itemElement2)
+                        tr.appendChild(itemElement3)
+                        tr.appendChild(itemElement4)
+                        tr.appendChild(itemElement5)
+                        trekap3.appendChild(tr);
+                    });
+
+                    getwil3(table3wil)
+
+
                 } else {
-                    itemElement3.style.color = "black";
+                    // console.log('kosong');
                 }
+                // console.log(dataReg);
 
-                setBackgroundColor(itemElement4, item4);
+                var theadreg = document.getElementById('theadreg');
+                let item1 = dataReg[2][1]
+                let item2 = 'RH'
+                let item3 = dataReg[1][1]
+                let item4 = dataReg[21][1] + dataReg[33][1] + dataReg[60][1]
+
+                let tr = document.createElement('tr');
+                let itemElement1 = document.createElement('td');
+                let itemElement2 = document.createElement('td');
+                let itemElement3 = document.createElement('td');
+                let itemElement4 = document.createElement('td');
+
+
+
+                itemElement1.classList.add("text-center");
                 itemElement1.innerText = item1;
                 itemElement2.innerText = item2;
                 itemElement3.innerText = item3;
                 itemElement4.innerText = item4;
-                itemElement5.innerText = item5;
+
+                // itemElement3.style.color === "#609cd4"
+                setBackgroundColor(itemElement4, item4);
+                tr.style.backgroundColor = "#d0e4b4";
                 tr.appendChild(itemElement1)
                 tr.appendChild(itemElement2)
                 tr.appendChild(itemElement3)
                 tr.appendChild(itemElement4)
-                tr.appendChild(itemElement5)
-                tbody1.appendChild(tr)
 
-                //table wil 2
-
-
-
-                var tbody2 = document.getElementById('tbody2');
-                var arrTbody2 = newData_TableKedua
-                let sortedArr2 = arrTbody2.slice().sort((a, b) => b['skor'] - a['skor']);
-                // console.log(sortedArr2);
-                arrTbody2.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    // let item5 = element['rank']
-                    let item5 = sortedArr2.findIndex(sortedElement => sortedElement === element) + 1;
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-
-
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-
-                    let data = element['data']
-                    if (data === "ada") {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "white";
-                        itemElement4.style.color = "black";
-                    }
-                    setBackgroundColor(itemElement4, item4);
-
-
-
-
-                    // if (item4 != 0 && item4 != 90) {
-                    //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
-                    // } else {
-                    //     itemElement4.innerText = item4
-                    // }
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    // itemElement2.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '" target="_blank">' + element['afd'] + ' </a>';
-
-                    itemElement3.innerText = item3
-                    itemElement4.innerText = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    tbody2.appendChild(tr)
-                    // }
-                });
-                var arrTbody2 = newData_data_Est2
-                // var table1 = document.getElementById('table1');
-                var tbody2 = document.getElementById('tbody2');
-
-
-                arrTbody2.forEach(element => {
-                    // for (let i = 0; i < 5; i++) {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['em']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = element['rank']
-
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-
-                    itemElement1.style.backgroundColor = "#e8ecdc";
-                    itemElement2.style.backgroundColor = "#e8ecdc";
-                    itemElement3.style.backgroundColor = "#e8ecdc";
-
-                    // console.log(item3);
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-                    let data = element['data']
-                    if (data === "ada") {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                    } else {
-                        itemElement4.style.backgroundColor = "white";
-                        itemElement4.style.color = "black";
-                    }
-                    setBackgroundColor(itemElement4, item4);
-
-
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    itemElement4.innerText = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    tbody2.appendChild(tr)
-                    // }
-                });
-                //untuk GM
-                tr = document.createElement('tr')
-                let items1 = GM_list[1].est;
-                let items2 = GM_list[1].em;
-                let items3 = GM_list[1].nama;
-                let items4 = GM_list[1].skor;
-                let items5 = ''
-                let itemsElementsx1 = document.createElement('td')
-                let itemsElementsx2 = document.createElement('td')
-                let itemsElementsx3 = document.createElement('td')
-                let itemsElementsx4 = document.createElement('td')
-                let itemsElementsx5 = document.createElement('td')
-                itemsElementsx1.classList.add("text-center")
-                itemsElementsx2.classList.add("text-center")
-                itemsElementsx3.classList.add("text-center")
-                itemsElementsx4.classList.add("text-center")
-                itemsElementsx5.classList.add("text-center")
-                itemsElementsx1.style.backgroundColor = "#fff4cc";
-                itemsElementsx2.style.backgroundColor = "#fff4cc";
-                itemsElementsx3.style.backgroundColor = "#fff4cc";
-
-                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                    itemsElementsx3.style.color = "red";
-                } else {
-                    itemsElementsx3.style.color = "black";
-                }
-
-
-
-
-                setBackgroundColor(itemsElementsx4, items4);
-
-                itemsElementsx1.innerText = items1;
-                itemsElementsx2.innerText = items2;
-                itemsElementsx3.innerText = items3;
-                itemsElementsx4.innerText = items4;
-                itemsElementsx5.innerText = items5;
-                tr.appendChild(itemsElementsx1)
-                tr.appendChild(itemsElementsx2)
-                tr.appendChild(itemsElementsx3)
-                tr.appendChild(itemsElementsx4)
-                tr.appendChild(itemsElementsx5)
-                tbody2.appendChild(tr)
-
-                //table wil 2
-                var arrTbody3 = newData_TableKetiga
-                // console.log(newData_TableKetiga);
-
-                var tbody3 = document.getElementById('tbody3');
-
-                let sortedArr3 = arrTbody3.slice().sort((a, b) => b['skor'] - a['skor']);
-
-                arrTbody3.forEach(element => {
-
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['afd']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    // let item5 = element['rank']
-                    let item5 = sortedArr3.findIndex(sortedElement => sortedElement === element) + 1;
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-
-
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-
-                    let data = element['data']
-                    if (data === "ada") {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = item4
-                    } else {
-                        itemElement4.style.backgroundColor = "white";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = '-'
-                    }
-
-                    setBackgroundColor(itemElement4, item4);
-
-                    // if (item4 != 0 && item4 != 90) {
-                    //     itemElement4.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '">' + element['skor'] + ' </a>'
-                    // } else {
-                    //     itemElement4.innerText = item4
-                    // }
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    // itemElement2.innerHTML = '<a href="detailInpeksi/' + element['est'] + '/' + element['afd'] + '/' + date + '" target="_blank">' + element['afd'] + ' </a>';
-
-                    itemElement3.innerText = item3
-                    itemElement4.innerText = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    tbody3.appendChild(tr)
-                    // }
-                });
-                // console.log(list_asisten)
-
-                // Assuming your data is stored in a variable called data
-
-
-
-                // console.log(newData_data_Est3);
-
-                if (regInpt == '1') {
-                    var data = list_asisten
-
-                    function getNamaByEstAndAfd(data, est, afd) {
-                        // Filter the array to find the matching object
-                        var matchingObjects = data.filter(function(item) {
-                            // Each item is an array, and the second element of the array is an object
-                            // Check if this object's est and afd match the given values
-                            return item[1].est === est && item[1].afd === afd;
-                        });
-
-                        // If we found a matching object, return its nama
-                        if (matchingObjects.length > 0) {
-                            return matchingObjects[0][1].nama;
-                        } else {
-                            // If there was no matching object, return null
-                            return null;
-                        }
-                    }
-
-                    // Use the function
-                    const newskormua = Object.entries(parseResult['newmua']);
-                    // console.log(newskormua);
-                    var est = "PT.MUA";
-                    var afd = "EM";
-                    var nama = getNamaByEstAndAfd(data, est, afd);
-                    var arrTbody3 = newData_data_Est3.filter(element => !["SRE", "SKE", "LDE"].includes(element.est));
-                    arrTbody3.push({
-                        est: 'PT.MUA',
-                        em: 'EM',
-                        nama: nama,
-                        rank: '-',
-                        skor: newskormua[3][1]
-                    });
-                } else {
-                    var arrTbody3 = newData_data_Est3
-                }
-
-                arrTbody3.sort((a, b) => b['skor'] - a['skor']);
-
-                // Assign ranks to the sorted array
-                let rank = 1;
-                arrTbody3.forEach((element, index) => {
-                    // Always increment rank regardless of the score
-                    element['rank'] = rank++;
-                });
-                // console.log(arrTbody3);
-                // var table1 = document.getElementById('table1');
-                var tbody3 = document.getElementById('tbody3');
-                arrTbody3.forEach(element => {
-                    tr = document.createElement('tr')
-                    let item1 = element['est']
-                    let item2 = element['em']
-                    let item3 = element['nama']
-                    let item4 = element['skor']
-                    let item5 = element['rank'];
-
-
-                    let itemElement1 = document.createElement('td')
-                    let itemElement2 = document.createElement('td')
-                    let itemElement3 = document.createElement('td')
-                    let itemElement4 = document.createElement('td')
-                    let itemElement5 = document.createElement('td')
-
-                    itemElement1.classList.add("text-center")
-                    itemElement2.classList.add("text-center")
-                    itemElement3.classList.add("text-center")
-                    itemElement4.classList.add("text-center")
-                    itemElement5.classList.add("text-center")
-
-                    itemElement1.style.backgroundColor = "#e8ecdc";
-                    itemElement2.style.backgroundColor = "#e8ecdc";
-                    itemElement3.style.backgroundColor = "#e8ecdc";
-
-                    if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                        itemElement3.style.color = "red";
-                    } else {
-                        itemElement3.style.color = "black";
-                    }
-
-
-
-                    let data = element['data']
-                    if (data === "ada") {
-                        itemElement4.style.backgroundColor = "red";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = item4
-                    } else {
-                        itemElement4.style.backgroundColor = "white";
-                        itemElement4.style.color = "black";
-                        itemElement4.innerText = '-'
-                    }
-
-                    setBackgroundColor(itemElement4, item4);
-
-
-                    itemElement1.innerText = item1
-                    itemElement2.innerText = item2
-                    itemElement3.innerText = item3
-                    itemElement4.innerText = item4
-                    itemElement5.innerText = item5
-
-                    tr.appendChild(itemElement1)
-                    tr.appendChild(itemElement2)
-                    tr.appendChild(itemElement3)
-                    tr.appendChild(itemElement4)
-                    tr.appendChild(itemElement5)
-
-                    tbody3.appendChild(tr)
-                    // }
-                });
-
-
-                //untuk GM
-                tr = document.createElement('tr')
-                let itemx1 = GM_list[2].est;
-                let itemx2 = GM_list[2].em;
-                let itemx3 = GM_list[2].nama;
-                let itemx4 = GM_list[2].skor;
-                let itemx5 = ''
-                let itemxElementcv1 = document.createElement('td')
-                let itemxElementcv2 = document.createElement('td')
-                let itemxElementcv3 = document.createElement('td')
-                let itemxElementcv4 = document.createElement('td')
-                let itemxElementcv5 = document.createElement('td')
-                itemxElementcv1.classList.add("text-center")
-                itemxElementcv2.classList.add("text-center")
-                itemxElementcv3.classList.add("text-center")
-                itemxElementcv4.classList.add("text-center")
-                itemxElementcv5.classList.add("text-center")
-                itemxElementcv1.style.backgroundColor = "#fff4cc";
-                itemxElementcv2.style.backgroundColor = "#fff4cc";
-                itemxElementcv3.style.backgroundColor = "#fff4cc";
-
-                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                    itemxElementcv3.style.color = "red";
-                } else {
-                    itemxElementcv3.style.color = "black";
-                }
-
-
-                setBackgroundColor(itemxElementcv4, itemx4);
-
-
-
-                itemxElementcv1.innerText = itemx1;
-                itemxElementcv2.innerText = itemx2;
-                itemxElementcv3.innerText = itemx3;
-                itemxElementcv4.innerText = itemx4;
-                itemxElementcv5.innerText = itemx5;
-                tr.appendChild(itemxElementcv1)
-                tr.appendChild(itemxElementcv2)
-                tr.appendChild(itemxElementcv3)
-                tr.appendChild(itemxElementcv4)
-                tr.appendChild(itemxElementcv5)
-                tbody3.appendChild(tr)
-
-
-                // // <thead id="theadreg">
-
-
-
-
-                tr = document.createElement('tr')
-                let reg1 = regIonal
-                let reg2 = regIonalRH
-                let reg3 = regIonalNama
-                let reg4 = regional[0][1]
-                // let reg4 = 'oke'
-                let regElement1 = document.createElement('td')
-                let regElement2 = document.createElement('td')
-                let regElement3 = document.createElement('td')
-                let regElement4 = document.createElement('td')
-
-                regElement1.classList.add("text-center")
-                regElement2.classList.add("text-center")
-                regElement3.classList.add("text-center")
-                regElement4.classList.add("text-center")
-
-                regElement1.style.backgroundColor = "#c8e4b4";
-                regElement2.style.backgroundColor = "#c8e4b4";
-                regElement3.style.backgroundColor = "#c8e4b4";
-                regElement4.style.backgroundColor = "white";
-
-                if (item3.trim() === "VACANT") { // Use trim to remove leading/trailing spaces
-                    itemElement3.style.color = "red";
-                } else {
-                    itemElement3.style.color = "black";
-                }
-
-                if (reg4 === '-') {
-                    regElement4.style.backgroundColor = "white";
-                }
-                setBackgroundColor(regElement4, reg4);
-
-
-                regElement1.innerText = reg1;
-                regElement2.innerText = reg2;
-                regElement3.innerText = reg3;
-                regElement4.innerText = reg4;
-
-                tr.appendChild(regElement1)
-                tr.appendChild(regElement2)
-                tr.appendChild(regElement3)
-                tr.appendChild(regElement4)
-
-                theadreg.appendChild(tr)
-
-
-
-                //chart
-                var wilayah = '['
-                list_will.forEach(element => {
-                    wilayah += '"' + element + '",'
-                });
-                wilayah = wilayah.substring(0, wilayah.length - 1);
-                wilayah += ']'
-
-                var brd = '['
-                if (chart_btt.length > 0) {
-                    chart_btt.forEach(element => {
-                        brd += '"' + element[1] + '",'
-                    });
-                    brd = brd.substring(0, brd.length - 1);
-                } else {
-                    brd = '[0, 0 , 0, 0, 0, 0, 0 , 0 ,0 , 0 , 0 , 0]'
-                }
-                brd += ']'
-
-                var buah = '['
-                chart_buah.forEach(element => {
-                    buah += '"' + element[1] + '",'
-                });
-                buah = buah.substring(0, buah.length - 1);
-                buah += ']'
-
-                var bttWil = '['
-                chartWillbt.forEach(element => {
-                    bttWil += '"' + element[1] + '",'
-                });
-                bttWil = bttWil.substring(0, bttWil.length - 1);
-                bttWil += ']'
-
-                var bhWil = '['
-                chartWillbh.forEach(element => {
-                    bhWil += '"' + element[1] + '",'
-                });
-                bhWil = bhWil.substring(0, bhWil.length - 1);
-                bhWil += ']'
-
-                var estate = JSON.parse(wilayah)
-                var brd_jjgJson = JSON.parse(brd)
-                var buah_jjgJson = JSON.parse(buah)
-
-                var brd_wilJson = JSON.parse(bttWil)
-                var buah_wilJson = JSON.parse(bhWil)
-
-                // mutu buah 
-                var mutubuah_mentah = '['
-                mtbuah_mentah.forEach(element => {
-                    mutubuah_mentah += '"' + element[1] + '",'
-                });
-                mutubuah_mentah = mutubuah_mentah.substring(0, mutubuah_mentah.length - 1);
-                mutubuah_mentah += ']'
-                var finalbh_mentah = JSON.parse(mutubuah_mentah)
-                var mutubuah_msak = '['
-                mtbuah_masak.forEach(element => {
-                    mutubuah_msak += '"' + element[1] + '",'
-                });
-                mutubuah_msak = mutubuah_msak.substring(0, mutubuah_msak.length - 1);
-                mutubuah_msak += ']'
-                var finalbh_masak = JSON.parse(mutubuah_msak)
-                var mutubuah_over = '['
-                mtbuah_over.forEach(element => {
-                    mutubuah_over += '"' + element[1] + '",'
-                });
-                mutubuah_over = mutubuah_over.substring(0, mutubuah_over.length - 1);
-                mutubuah_over += ']'
-                var finalbh_over = JSON.parse(mutubuah_over)
-                var mutubuah_abnr = '['
-                mtbuah_abnr.forEach(element => {
-                    mutubuah_abnr += '"' + element[1] + '",'
-                });
-                mutubuah_abnr = mutubuah_abnr.substring(0, mutubuah_abnr.length - 1);
-                mutubuah_abnr += ']'
-                var finalbh_abnormal = JSON.parse(mutubuah_abnr)
-                var mutubuah_ksong = '['
-                mtbuah_ksong.forEach(element => {
-                    mutubuah_ksong += '"' + element[1] + '",'
-                });
-                mutubuah_ksong = mutubuah_ksong.substring(0, mutubuah_ksong.length - 1);
-                mutubuah_ksong += ']'
-                var finalbh_ksong = JSON.parse(mutubuah_ksong)
-                var mutubuah_vcut = '['
-                mtbuah_vcut.forEach(element => {
-                    mutubuah_vcut += '"' + element[1] + '",'
-                });
-                mutubuah_vcut = mutubuah_vcut.substring(0, mutubuah_vcut.length - 1);
-                mutubuah_vcut += ']'
-                var finalbh_vcut = JSON.parse(mutubuah_vcut)
-
-
-                var wilayahbuah_mentah = '['
-                willBuah_Mentah.forEach(element => {
-                    wilayahbuah_mentah += '"' + element[1] + '",'
-                });
-                wilayahbuah_mentah = wilayahbuah_mentah.substring(0, wilayahbuah_mentah.length - 1);
-                wilayahbuah_mentah += ']'
-                var finalwilayahmentah = JSON.parse(wilayahbuah_mentah)
-                // console.log();
-
-                var wilayahbuah_masak = '['
-                willBuah_Masak.forEach(element => {
-                    wilayahbuah_masak += '"' + element[1] + '",'
-                });
-                wilayahbuah_masak = wilayahbuah_masak.substring(0, wilayahbuah_masak.length - 1);
-                wilayahbuah_masak += ']'
-                var finalwilayahmasak = JSON.parse(wilayahbuah_masak)
-
-                var wilayahbuah_over = '['
-                willBuah_Over.forEach(element => {
-                    wilayahbuah_over += '"' + element[1] + '",'
-                });
-                wilayahbuah_over = wilayahbuah_over.substring(0, wilayahbuah_over.length - 1);
-                wilayahbuah_over += ']'
-                var finalwilayahover = JSON.parse(wilayahbuah_over)
-
-                var wilayahbuah_abr = '['
-                willBuah_Abr.forEach(element => {
-                    wilayahbuah_abr += '"' + element[1] + '",'
-                });
-                wilayahbuah_abr = wilayahbuah_abr.substring(0, wilayahbuah_abr.length - 1);
-                wilayahbuah_abr += ']'
-                var finalwilayahabr = JSON.parse(wilayahbuah_abr)
-
-                var wilayahbuah_kosong = '['
-                willBuah_Kosong.forEach(element => {
-                    wilayahbuah_kosong += '"' + element[1] + '",'
-                });
-                wilayahbuah_kosong = wilayahbuah_kosong.substring(0, wilayahbuah_kosong.length - 1);
-                wilayahbuah_kosong += ']'
-                var finalwilayahkosong = JSON.parse(wilayahbuah_kosong)
-
-                var wilayahbuah_vcut = '['
-                willBuah_Vcut.forEach(element => {
-                    wilayahbuah_vcut += '"' + element[1] + '",'
-                });
-                wilayahbuah_vcut = wilayahbuah_vcut.substring(0, wilayahbuah_vcut.length - 1);
-                wilayahbuah_vcut += ']'
-                var finalwilayahvcut = JSON.parse(wilayahbuah_vcut)
-
-
-
-
-                // mutu transport 
-                var mutu_transbrd = '['
-                mttrans_brd.forEach(element => {
-                    mutu_transbrd += '"' + element[1] + '",'
-                });
-                mutu_transbrd = mutu_transbrd.substring(0, mutu_transbrd.length - 1);
-                mutu_transbrd += ']'
-                var finaltrans_brd = JSON.parse(mutu_transbrd)
-
-                var mutu_transbuah = '['
-                mttrans_buah.forEach(element => {
-                    mutu_transbuah += '"' + element[1] + '",'
-                });
-                mutu_transbuah = mutu_transbuah.substring(0, mutu_transbuah.length - 1);
-                mutu_transbuah += ']'
-                var final_transbuah = JSON.parse(mutu_transbuah)
-
-                var mutu_transwilbrd = '['
-                mttrans_wilbrd.forEach(element => {
-                    mutu_transwilbrd += '"' + element[1] + '",'
-                });
-                mutu_transwilbrd = mutu_transwilbrd.substring(0, mutu_transwilbrd.length - 1);
-                mutu_transwilbrd += ']'
-                var finalwil_transbrd = JSON.parse(mutu_transwilbrd)
-
-                var mutu_transwilbuah = '['
-                mttrans_wilbuah.forEach(element => {
-                    mutu_transwilbuah += '"' + element[1] + '",'
-                });
-                mutu_transwilbuah = mutu_transwilbuah.substring(0, mutu_transwilbuah.length - 1);
-                mutu_transwilbuah += ']'
-                var finalwil_transbuah = JSON.parse(mutu_transwilbuah)
-
-
-
-
-
-
-
-
-                const arr = estate;
-                let formatEst;
-
-                if (regInpt === '1') {
-                    formatEst = Array.from(arr, (item, index) => {
-                            const value = item.split(',')[1];
-                            return {
-                                index,
-                                value
-                            };
-                        })
-                        .filter((item) => item.index < 13 || item.index > 15)
-                        .map((item) => item.value);
-
-                    formatEst.push("PT.MUA");
-                } else {
-
-                    formatEst = Array.from(arr, (item, index) => {
-                            const value = item.split(',')[1];
-                            return {
-                                index,
-                                value
-                            };
-                        })
-                        .map((item) => item.value);
-                }
-
-
-                // if (regInpt === '2' || regInpt === '3' || regInpt === '4') {
-
-
-                //     const index = formatEst.indexOf('PT.MUA');
-                //     if (index > -1) { // only splice formatEst when item is found
-                //         formatEst.splice(index, 1); // 2nd parameter means remove one item only
-                //     }
-
-                // } else {
-                //     formatEst;
-                // }
-
-                // console.log(formatEst);
-
-
-                // let regInpt = reg;
-                let wilayahReg = '';
-
-
-                if (regInpt === '1') {
-                    wilayahReg = ['WIL I', 'WIL II', 'WIL III']
-
-                } else if (regInpt === '2') {
-                    wilayahReg = ['WIL IV', 'WIL V', 'WIL VI']
-
-                } else if (regInpt === '3') {
-                    wilayahReg = ['WIL VII', 'WIL VIII']
-
-                } else if (regInpt === '4') {
-                    wilayahReg = ['WIL IX', 'WIL X']
-
-                }
-
-                let colors = '';
-
-
-
-                if (regInpt === '1') {
-                    colors = ['#00FF00',
-                        '#00FF00',
-                        '#00FF00',
-                        '#00FF00',
-                        '#3063EC',
-                        '#3063EC',
-                        '#3063EC',
-                        '#3063EC',
-                        '#FF8D1A',
-                        '#FF8D1A',
-                        '#FF8D1A',
-                        '#FF8D1A',
-                        '#49be25',
-                        '#49be25'
-                    ]
-
-                } else if (regInpt === '2') {
-                    colors = ['#145369',
-                        '#145369',
-                        '#145369',
-                        '#145369',
-                        '#3063EC',
-                        '#3063EC',
-                        '#3063EC',
-                        '#49be25',
-                        '#49be25'
-                    ]
-
-
-                } else if (regInpt === '3') {
-                    colors = ['#00FF00',
-                        '#00FF00',
-                        '#00FF00',
-                        '#00FF00',
-                        '#3063EC',
-                        '#3063EC',
-                        '#3063EC',
-                        '#3063EC',
-                    ]
-                } else if (regInpt === '4') {
-                    colors = ['#00FF00',
-                        '#00FF00',
-                        '#00FF00',
-                        '#3063EC',
-                        '#3063EC',
-
-                    ]
-                }
-
+                theadreg.appendChild(tr);
                 chartGrain.updateSeries([{
-                    name: 'butir/jjg panen',
-                    data: brd_jjgJson,
-
-                }])
+                    name: 'Btr / jjg Panen',
+                    data: cakbrd
+                }]);
 
                 chartGrain.updateOptions({
                     xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
-
-                // console.log(buah_jjgJson);
-
+                        categories: getnameest
+                    }
+                });
 
                 chartFruit.updateSeries([{
-                    name: '% buah tinggal',
-                    data: buah_jjgJson,
+                    name: '% Buah tinggal',
+                    data: cakbuah
+                }]);
 
-                }])
                 chartFruit.updateOptions({
                     xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
+                        categories: getnameest
+                    }
+                });
 
+                mtb_mentah.updateSeries([{
+                    name: 'Mentah / TPH',
+                    data: mentahbuah
+                }]);
+
+                mtb_mentah.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+                mtb_masak.updateSeries([{
+                    name: 'Masak / TPH',
+                    data: masakbuah
+                }]);
+
+                mtb_masak.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+                mtb_over.updateSeries([{
+                    name: 'Over / TPH',
+                    data: overbuah
+                }]);
+
+                mtb_over.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+                mtb_abnr.updateSeries([{
+                    name: 'Abnormal / TPH',
+                    data: abrbuah
+                }]);
+
+                mtb_abnr.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+                mtb_kosong.updateSeries([{
+                    name: 'Kosong / TPH',
+                    data: emptybuah
+                }]);
+
+                mtb_kosong.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+                mtb_vcuts.updateSeries([{
+                    name: 'Tidak Standar Vcut',
+                    data: vcutbuah
+                }]);
+
+                mtb_vcuts.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+                transprot_brd.updateSeries([{
+                    name: 'Brd / TPH',
+                    data: brdtrans
+                }]);
+
+                transprot_brd.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+                transport_buah.updateSeries([{
+                    name: 'Buah / TPH',
+                    data: buahtrans
+                }]);
+
+                transport_buah.updateOptions({
+                    xaxis: {
+                        categories: getnameest
+                    }
+                });
+
+
+                // chart wil 
+                // var getnamewil = parseResult['getnamewil'];
+                // var cakbrdwil = parseResult['cakbrdwil'];
+                // var cakbuahwil = parseResult['cakbuahwil'];
+                // var brdtranswil = parseResult['brdtranswil'];
+                // var buahtranswil = parseResult['buahtranswil'];
+                // var mentahbuahwil = parseResult['mentahbuahwil'];
+                // var masakbuahwil = parseResult['masakbuahwil'];
+                // var overbuahwil = parseResult['overbuahwil'];
+                // var abrbuahwil = parseResult['abrbuahwil'];
+                // var emptybuahwil = parseResult['emptybuahwil'];
+                // var vcutbuahwil = parseResult['vcutbuahwil'];
                 chartGrainWil.updateSeries([{
-                    name: 'butir/jjg panen',
-                    data: brd_wilJson
-                }])
+                    name: 'Btr / jjg Panen',
+                    data: cakbrdwil
+                }]);
 
                 chartGrainWil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
-
+                });
 
                 chartFruitWil.updateSeries([{
-                    name: '% buah tinggal',
-                    data: buah_wilJson
-                }])
+                    name: '% Buah tinggal',
+                    data: cakbuahwil
+                }]);
 
                 chartFruitWil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
+                });
 
-                // chart mutu buah estate 
-                mtb_mentah.updateSeries([{
-                    name: 'Mentah/tph',
-                    data: finalbh_mentah,
-
-                }])
-                mtb_mentah.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
-
-                mtb_masak.updateSeries([{
-                    name: 'Masak/tph',
-                    data: finalbh_masak,
-
-                }])
-                mtb_masak.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
-
-                mtb_over.updateSeries([{
-                    name: 'Over/tph',
-                    data: finalbh_over,
-
-                }])
-                mtb_over.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
-
-                mtb_abnr.updateSeries([{
-                    name: 'Abnormal/tph',
-                    data: finalbh_abnormal,
-
-                }])
-                mtb_abnr.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
-
-                mtb_kosong.updateSeries([{
-                    name: 'Kosong/tph',
-                    data: finalbh_ksong,
-
-                }])
-                mtb_kosong.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
-
-                mtb_vcuts.updateSeries([{
-                    name: 'tidak standar vcut',
-                    data: finalbh_vcut,
-
-                }])
-                mtb_vcuts.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
-
-                transportwil_buah.updateSeries([{
-                    name: 'buah/tph',
-                    data: finalwil_transbuah
-                }])
-
-                transportwil_buah.updateOptions({
-                    xaxis: {
-                        categories: wilayahReg
-                    }
-                })
-                transportwil_buah.updateSeries([{
-                    name: 'buah/tph',
-                    data: finalwil_transbuah
-                }])
-
-                transportwil_buah.updateOptions({
-                    xaxis: {
-                        categories: wilayahReg
-                    }
-                })
-
-                // wilayah 
                 mtb_mentahwil.updateSeries([{
-                    name: 'mentah/tph',
-                    data: finalwilayahmentah
-                }])
+                    name: 'Mentah / TPH',
+                    data: mentahbuahwil
+                }]);
 
                 mtb_mentahwil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
-
+                });
 
                 mtb_masakwil.updateSeries([{
-                    name: 'masak/tph',
-                    data: finalwilayahmasak
-                }])
+                    name: 'Masak / TPH',
+                    data: masakbuahwil
+                }]);
 
                 mtb_masakwil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
+                });
 
                 mtb_overwil.updateSeries([{
-                    name: 'over/tph',
-                    data: finalwilayahover
-                }])
+                    name: 'Over / TPH',
+                    data: overbuahwil
+                }]);
 
                 mtb_overwil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
+                });
 
                 mtb_abnrwil.updateSeries([{
-                    name: 'abnormal/tph',
-                    data: finalwilayahabr
-                }])
+                    name: 'Abnormal / TPH',
+                    data: abrbuahwil
+                }]);
 
                 mtb_abnrwil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
+                });
 
                 mtb_kosongwil.updateSeries([{
-                    name: 'kosong/tph',
-                    data: finalwilayahkosong
-                }])
+                    name: 'Kosong / TPH',
+                    data: emptybuahwil
+                }]);
 
                 mtb_kosongwil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
+                });
+
                 mtb_vcutswil.updateSeries([{
-                    name: 'tidak standar vcut',
-                    data: finalwilayahvcut
-                }])
+                    name: 'Tidak Standar Vcut',
+                    data: vcutbuahwil
+                }]);
 
                 mtb_vcutswil.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
+                });
 
-
-
-                // mutu transport 
-
-
-
-
-
-                transprot_brd.updateSeries([{
-                    name: 'brd/tph',
-                    data: finaltrans_brd,
-
-                }])
-                transprot_brd.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
                 transportwil_brd.updateSeries([{
-                    name: 'brd/tph',
-                    data: finalwil_transbrd
-                }])
+                    name: 'Brd / TPH',
+                    data: brdtranswil
+                }]);
 
                 transportwil_brd.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
-
-                transport_buah.updateSeries([{
-                    name: 'buah/th',
-                    data: final_transbuah,
-
-                }])
-                transport_buah.updateOptions({
-                    xaxis: {
-                        categories: formatEst
-                    },
-                    colors: colors // Set the colors directly, no need for an object
-                })
+                });
 
                 transportwil_buah.updateSeries([{
-                    name: 'buah/tph',
-                    data: finalwil_transbuah
-                }])
+                    name: 'Buah / TPH',
+                    data: buahtranswil
+                }]);
 
                 transportwil_buah.updateOptions({
                     xaxis: {
-                        categories: wilayahReg
+                        categories: getnamewil
                     }
-                })
+                });
 
-                //untuk table utama
-
-                //end table
-
-
-                //end ajax
             }
         });
     }
 
+    function getwil1(table1wil) {
+        var trekap1 = document.getElementById('tbody1');
+        let item1 = table1wil[1]['est'];
+        let item2 = table1wil[1]['afd'];
+        let item3 = table1wil[1]['nama']
+        let item4 = table1wil[1]['total_skor'];
+        let item5 = table1wil[1]['rank'] ?? '-';
+        let bg = table1wil[1]['bgcolor'];
+        let tr = document.createElement('tr');
+        let itemElement1 = document.createElement('td');
+        let itemElement2 = document.createElement('td');
+        let itemElement3 = document.createElement('td');
+        let itemElement4 = document.createElement('td');
+        let itemElement5 = document.createElement('td');
+
+
+
+        itemElement1.classList.add("text-center");
+        itemElement1.innerText = item1;
+        itemElement2.innerText = item2;
+        itemElement3.innerText = item3;
+        itemElement4.innerText = item4;
+        itemElement5.innerText = item5
+        // itemElement3.style.color === "#609cd4"
+        setBackgroundColor(itemElement4, item4);
+        tr.style.backgroundColor = "#FCF086";
+        tr.appendChild(itemElement1)
+        tr.appendChild(itemElement2)
+        tr.appendChild(itemElement3)
+        tr.appendChild(itemElement4)
+        tr.appendChild(itemElement5)
+        trekap1.appendChild(tr);
+
+    }
+
+    function getwil2(table1wil) {
+        var trekap1 = document.getElementById('tbody2');
+        let item1 = table1wil[1]['est'];
+        let item2 = table1wil[1]['afd'];
+        let item3 = table1wil[1]['nama']
+        let item4 = table1wil[1]['total_skor'];
+        let item5 = table1wil[1]['rank'] ?? '-';
+        let bg = table1wil[1]['bgcolor'];
+        let tr = document.createElement('tr');
+        let itemElement1 = document.createElement('td');
+        let itemElement2 = document.createElement('td');
+        let itemElement3 = document.createElement('td');
+        let itemElement4 = document.createElement('td');
+        let itemElement5 = document.createElement('td');
+
+
+
+        itemElement1.classList.add("text-center");
+        itemElement1.innerText = item1;
+        itemElement2.innerText = item2;
+        itemElement3.innerText = item3;
+        itemElement4.innerText = item4;
+        itemElement5.innerText = item5
+        // itemElement3.style.color === "#609cd4"
+        setBackgroundColor(itemElement4, item4);
+        tr.style.backgroundColor = "#FCF086";
+        tr.appendChild(itemElement1)
+        tr.appendChild(itemElement2)
+        tr.appendChild(itemElement3)
+        tr.appendChild(itemElement4)
+        tr.appendChild(itemElement5)
+        trekap1.appendChild(tr);
+
+    }
+
+    function getwil3(table1wil) {
+        var trekap1 = document.getElementById('tbody3');
+        let item1 = table1wil[1]['est'];
+        let item2 = table1wil[1]['afd'];
+        let item3 = table1wil[1]['nama']
+        let item4 = table1wil[1]['total_skor'];
+        let item5 = table1wil[1]['rank'] ?? '-';
+        let bg = table1wil[1]['bgcolor'];
+        let tr = document.createElement('tr');
+        let itemElement1 = document.createElement('td');
+        let itemElement2 = document.createElement('td');
+        let itemElement3 = document.createElement('td');
+        let itemElement4 = document.createElement('td');
+        let itemElement5 = document.createElement('td');
+
+
+
+        itemElement1.classList.add("text-center");
+        itemElement1.innerText = item1;
+        itemElement2.innerText = item2;
+        itemElement3.innerText = item3;
+        itemElement4.innerText = item4;
+        itemElement5.innerText = item5
+        // itemElement3.style.color === "#609cd4"
+        setBackgroundColor(itemElement4, item4);
+        tr.style.backgroundColor = "#FCF086";
+        tr.appendChild(itemElement1)
+        tr.appendChild(itemElement2)
+        tr.appendChild(itemElement3)
+        tr.appendChild(itemElement4)
+        tr.appendChild(itemElement5)
+        trekap1.appendChild(tr);
+
+    }
 
     document.getElementById('showTahung').onclick = function() {
         // Show loading screen
