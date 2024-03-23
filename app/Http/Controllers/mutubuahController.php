@@ -6284,6 +6284,10 @@ class mutubuahController extends Controller
                     'menu' => 'update_sidakmutubuah',
 
                 ]);
+
+                $username = $request->session()->get('user_name');
+                $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: update_sidakmutubuah';
+                sendwhatsapp($dataarr);
             }
         } else {
             return response()->json(['message' => 'Invalid ID'], 400);
@@ -6323,6 +6327,10 @@ class mutubuahController extends Controller
                     'menu' => 'delete_sidakmutubuah',
 
                 ]);
+
+                $username = $request->session()->get('user_name');
+                $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: delete_sidakmutubuah';
+                sendwhatsapp($dataarr);
             }
         } else {
             // Return error message if ID is invalid
@@ -8056,6 +8064,10 @@ class mutubuahController extends Controller
                         'tanggal' => $date,
                         'menu' => 'delete_tph_duplicate',
                     ]);
+
+                    $username = $request->session()->get('user_name');
+                    $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: delete_tph_duplicate';
+                    sendwhatsapp($dataarr);
                 }
                 break;
             case 'sidakmtb':
@@ -8085,6 +8097,9 @@ class mutubuahController extends Controller
                         'tanggal' => $date,
                         'menu' => 'delete_sidakmutubuah_duplicates',
                     ]);
+                    $username = $request->session()->get('user_name');
+                    $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: delete_sidakmutubuah_duplicates';
+                    sendwhatsapp($dataarr);
                 }
                 break;
 

@@ -7464,6 +7464,10 @@ class SidaktphController extends Controller
                 'menu' => 'edit_sidaktph',
 
             ]);
+
+            $username = $request->session()->get('user_name');
+            $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: edit_sidaktph';
+            sendwhatsapp($dataarr);
         }
     }
     public function deletedetailtph(Request $request)
@@ -7515,6 +7519,9 @@ class SidaktphController extends Controller
                     'menu' => 'delete_tph',
 
                 ]);
+                $username = $request->session()->get('user_name');
+                $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: delete_tph';
+                sendwhatsapp($dataarr);
             }
             // Delete a single row
 

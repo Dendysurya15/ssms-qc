@@ -1108,14 +1108,6 @@ class AbsensiController extends Controller
             ];
         }
 
-        // $arrView = array();
-        // $arrView['table'] =  $table;
-
-        // // dd($FinalTahun);
-        // echo json_encode($arrView); //di decode ke dalam bentuk json dalam vaiavel arrview yang dapat menampung banyak isi array
-        // exit();
-        // dd($table);
-
         return response()->json($table);
     }
 
@@ -1138,7 +1130,9 @@ class AbsensiController extends Controller
                         ->update([
                             'waktu_absensi' => $newTime,
                         ]);
-
+                    $username = $request->session()->get('user_name');
+                    $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: waktu_absensi';
+                    sendwhatsapp($dataarr);
                     return response()->json('Successfully updated');
                 } catch (\Throwable $th) {
                     // Handle the exception - log the error or rollback if necessary
@@ -1153,7 +1147,9 @@ class AbsensiController extends Controller
                         ->table('absensi_qc')
                         ->where('id', $iddata)
                         ->delete();
-
+                    $username = $request->session()->get('user_name');
+                    $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: deleted_absensi';
+                    sendwhatsapp($dataarr);
                     return response()->json('Successfully deleted');
                 } catch (\Throwable $th) {
                     // Handle the exception - log the error or rollback if necessary
@@ -1268,6 +1264,9 @@ class AbsensiController extends Controller
                 return response()->json(['message' => 'Unexpected error occurred. Please check logs for details.'], 500);
             }
         }
+        $username = $request->session()->get('user_name');
+        $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: Tambah data absensi';
+        sendwhatsapp($dataarr);
     }
 
     private function plotBlok($est, $dates)

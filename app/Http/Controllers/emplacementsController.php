@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use DateTime;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Carbon;
 
 require '../app/helpers.php';
 
@@ -4769,9 +4770,9 @@ class emplacementsController extends Controller
                 # code...
                 break;
         }
-        // Perform any other actions you need based on the selected options
-
-
+        $username = $request->session()->get('user_name');
+        $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: edit komentar di qc emlasment';
+        sendwhatsapp($dataarr);
     }
 
 
@@ -4837,6 +4838,10 @@ class emplacementsController extends Controller
                 // Handle default case or any other type
                 break;
         }
+
+        $username = $request->session()->get('user_name');
+        $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: edit Nilai di qc emlasment';
+        sendwhatsapp($dataarr);
     }
 
 
@@ -5174,5 +5179,9 @@ class emplacementsController extends Controller
                 // Handle default case or any other type
                 break;
         }
+
+        $username = $request->session()->get('user_name');
+        $dataarr = 'User:' . $username . ' ' . 'Tanggal:' . Carbon::now() . ' ' . 'Melakukan: tambah foto di qc emlasment';
+        sendwhatsapp($dataarr);
     }
 }

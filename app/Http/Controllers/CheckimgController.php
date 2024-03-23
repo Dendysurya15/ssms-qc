@@ -71,6 +71,6 @@ class CheckimgController extends Controller
 
         $missingImages = array_diff($databaseImageNames, $folderImageNames);
 
-        dd($missingImages);
+        // dd($missingImages);
     }
 }
