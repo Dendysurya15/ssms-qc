@@ -1243,7 +1243,7 @@ class inspectController extends Controller
             }
             $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
             $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
-            $janjang_panenWil = $janjang_panenWilx + array_sum($data);
+            $janjang_panenWil = $janjang_panenWilx;
 
             if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
                 $akpWil = 0;
@@ -2738,7 +2738,7 @@ class inspectController extends Controller
             $PerAbr = 0;
         }
 
-        $totalSkorEsttrans = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+        $totalSkorEsttrans = skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
         $totalSkorEstancak =  skor_palepah_ma($perPl) + skor_buah_Ma($sumPerBH) + skor_brd_ma($brdPerjjg);
         $totalSkorBuah =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
 
@@ -2771,8 +2771,8 @@ class inspectController extends Controller
         $dataReg['total_buahtrans'] = $total_buahtrans;
         $dataReg['total_brdperTPHtrans'] = $brdPertph;
         $dataReg['total_buahPerTPHtrans'] = $buahPerTPH;
-        $dataReg['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertphEst);
-        $dataReg['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPHEst);
+        $dataReg['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertph);
+        $dataReg['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPH);
         $dataReg['totalSkortrans'] = $totalSkorEsttrans;
         $dataReg['check_datatrans'] = 'ada';
         $dataReg['mututrans'] = '------------------------------------------------------';
@@ -2802,7 +2802,7 @@ class inspectController extends Controller
         $dataReg['total_buahcak'] = $totalSkorBuah;
         $dataReg['TOTAL_SKORbh'] = $totalSkorBuah;
         $dataReg['check_databh'] = 'ada';
-        // dd($dataReg, $getwilx);
+        // dd($dataReg);
         return view('dataInspeksi', ['data' => $rekap, 'reg' => $regional, 'bulan' => $bulan, 'datareg' => $dataReg]);
     }
 
@@ -11445,7 +11445,7 @@ class inspectController extends Controller
             }
             $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
             $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
-            $janjang_panenWil = $janjang_panenWilx + array_sum($data);
+            $janjang_panenWil = $janjang_panenWilx;
 
             if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
                 $akpWil = 0;

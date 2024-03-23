@@ -16,7 +16,7 @@ class RekapController extends Controller
     public function index()
     {
 
-     
+
         // dd($queryEste['KNE']['OA']);
 
         $optionREg = DB::connection('mysql2')->table('reg')
@@ -43,7 +43,7 @@ class RekapController extends Controller
         // dd($tanggalDateTime);
         $newparamsdateDateTime = new DateTime($newparamsdate);
         // dd($newparamsdateDateTime);
-        $rekapqcwil = $this->calculateqiinspeksi($regional,$bulan);
+        $rekapqcwil = $this->calculateqiinspeksi($regional, $bulan);
 
         $datawilrekap = $rekapqcwil['datawil'];
         // dd($datawilrekap);
@@ -2572,7 +2572,7 @@ class RekapController extends Controller
         // dd($RekapWIlTabel);
         $qcinspeksi = $RekapWIlTabel;
 
-    
+
         // dd($qcinspeksi);
 
         // untuk get mua ===============================================
@@ -3100,7 +3100,7 @@ class RekapController extends Controller
                             } else {
                                 [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
                             }
-    
+
                             // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                             $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
                             $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
@@ -4487,7 +4487,7 @@ class RekapController extends Controller
                     $check_data1 = $value['check_data'] ?? 'kosong';
                     $check_data2 = $qcbuahmua[$key]['check_data'] ?? 'kosong';
                     $check_data3 = $qctransmua[$key]['check_data'] ?? 'kosong';
-            
+
                     // Check if all 'check_data' values are 'kosong'
                     if ($check_data1 === 'kosong' && $check_data2 === 'kosong' && $check_data3 === 'kosong') {
                         $qcinspeksimua[$key]['TotalSkor'] = '-';
@@ -4500,8 +4500,8 @@ class RekapController extends Controller
                     $qcinspeksimua[$key]['afd'] = 'OA';
                 }
             }
-            
-            
+
+
             // dd($qcinspeksimua);
             $rekapmua = [];
             foreach ($qcinspeksimua as $key => $value) {
@@ -4566,10 +4566,9 @@ class RekapController extends Controller
                         // Handle division by zero error, for example, set skorestate to 0 or some default value
                         $rekapmua[$key]['skorestate'] = 0;
                     }
-
                 }
             }
-          
+
 
             $sidaktph[3]['PT.MUA']['OA'] = $newSidak_mua['PT.MUA'];
             $mutu_buah[3]['PT.MUA'] = $sidak_buah_mua['PT.MUA'];
@@ -4583,7 +4582,7 @@ class RekapController extends Controller
         // ending ================================================================
         // dd($qcinspeksi, $sidaktph, $mutu_buah);
 
-        
+
 
         $rekapafd = [];
         foreach ($qcinspeksi as $keyqc => $valqc) {
@@ -4793,11 +4792,11 @@ class RekapController extends Controller
 
         // dd($sidaktph);
         $calwil = [];
-        $gettotal2 =[] ;
-        $getdiv=[];
+        $gettotal2 = [];
+        $getdiv = [];
         foreach ($sidaktph as $key => $value) {
-            $gettotal1 =[] ;
-            $getdiv1=[];
+            $gettotal1 = [];
+            $getdiv1 = [];
             foreach ($value as $key1 => $value1) {
                 $getnilai = [];
                 $getdiv = [];
@@ -4808,41 +4807,38 @@ class RekapController extends Controller
                         if ($checkDataKey === 'ada') {
                             $nilai = $value2['all_score'] ?? $value2['score_estate'];
                             $div = 1;
-                        }else {
+                        } else {
                             $nilai = 0;
                             $div = 0;
                         }
                         $getnilai[] = $nilai ?? null; // Default to null if $nilai is not set
                         $getdiv[] = $div ?? null; // Default to null if $div is not set
-     
+
                     }
-                    
-                    $gettotal =array_sum($getnilai);
-                    $getdivs =array_sum($getdiv);
+
+                    $gettotal = array_sum($getnilai);
+                    $getdivs = array_sum($getdiv);
 
                     $calwil[$key][$key1]['nilai'] = $getnilai;
                     $calwil[$key][$key1]['div'] = $getdiv;
                     $calwil[$key][$key1]['total'] = $gettotal;
                     $calwil[$key][$key1]['pembagi'] = $getdivs;
-
-                
                 }
                 $gettotal1[] = $gettotal;
                 $getdiv1[] = $getdivs;
-             
+
                 // $calwil[$key][$key1]['total'] = $gettotal;
                 // $calwil[$key][$key1]['pembagi'] = $getdivs;
             }
-            $arrtot =array_sum($gettotal1);
-            $arrdiv =array_sum($getdiv1);
+            $arrtot = array_sum($gettotal1);
+            $arrdiv = array_sum($getdiv1);
 
             $calwil[$key]['total'] = $arrdiv != 0 ? round($arrtot / $arrdiv, 2) : 0;
-
         }
         // dd($calwil,$sidaktph);
         $calwilmtb = [];
         foreach ($mutu_buah as $key => $value) {
-             $jjg_samplexy = 0;
+            $jjg_samplexy = 0;
             $tnpBRDxy = 0;
             $krgBRDxy = 0;
             $abrxy = 0;
@@ -4866,7 +4862,6 @@ class RekapController extends Controller
                 $dataBLokxy += $value1['blok'];
                 $sum_krxy += $value1['karung'];
                 $csrmsy += $value1['csrms'];
-             
             }
             if ($sum_krxy != 0) {
                 $total_kr = round($sum_krxy / $dataBLokxy, 2);
@@ -4954,42 +4949,41 @@ class RekapController extends Controller
                 // 'skor_kr' => sidak_PengBRD($per_kr),
                 // 'kategori' => sidak_akhir($allSkor),
             ];
-       
         }
 
         // dd($calwilmtb,$calwil,$RekapWIlTabel,$datawilrekap);
         $finalwil = [];
         foreach ($calwilmtb as $key => $value) {
             foreach ($calwil as $key1 => $value1) {
-                foreach ($datawilrekap as $key2 => $value2)if(
-                        $key == $key1 && $key == $key2
+                foreach ($datawilrekap as $key2 => $value2) if (
+                    $key == $key1 && $key == $key2
                 ) {
                     $finalwil[$key]['sidakmutubuah'] = $value['all_skor'];
                     $finalwil[$key]['sidaktph'] = $value1['total'];
                     $finalwil[$key]['qcinspeks'] = $value2['total_skor'];
-                    
-                    $a1 = $value['all_skor'] === '-' ?  0: $value['all_skor'] ;
-                    $a2 =  $value1['total'] === '-' ?  0: $value1['total'] ;
-                    $a3 = $value2['total_skor'] === '-' ?  0: $value2['total_skor'] ;
+
+                    $a1 = $value['all_skor'] === '-' ?  0 : $value['all_skor'];
+                    $a2 =  $value1['total'] === '-' ?  0 : $value1['total'];
+                    $a3 = $value2['total_skor'] === '-' ?  0 : $value2['total_skor'];
 
                     $b1 = $a1 !== 0 ? 1 : 0;
                     $b2 = $a2 !== 0 ? 1 : 0;
                     $b3 = $a3 !== 0 ? 1 : 0;
-                 
-                    $a4 = $a1 + $a2+ $a3;
-                    $b4 = $b1 + $b2+ $b3;
+
+                    $a4 = $a1 + $a2 + $a3;
+                    $b4 = $b1 + $b2 + $b3;
 
                     $finalwil[$key]['gmrekap'] = $b4 !== 0 ? round($a4 / $b4, 2) : 0;
 
-                    
-                
+
+
                     $em = 'GM';
 
                     $nama_em = '';
                     $regrom = 'WIL-' . convertToRoman($key);
                     // dd($key1);
                     foreach ($queryAsisten as $ast => $asisten) {
-                        if ( $regrom === $asisten['est'] && $em === $asisten['afd']) {
+                        if ($regrom === $asisten['est'] && $em === $asisten['afd']) {
                             $nama_em = $asisten['nama'];
                             $finalwil[$key]['gmnama'] = $nama_em;
                             break;
@@ -5000,7 +4994,7 @@ class RekapController extends Controller
         }
         // dd($finalwil);
 
-        
+
         // dd($calwilmtb,$calwil,$RekapWIlTabel,$finalwil);
         $arr = array();
         $arr['rekapafd'] = $rekapafd;
@@ -5613,7 +5607,7 @@ class RekapController extends Controller
                                     $sum_buah_tinggal += $value7['buah_tinggal'];
                                     $sum_restan_unreported += $value7['restan_unreported'];
 
-                                    
+
                                     $newparamsdate = '2024-03-01';
 
                                     $tanggalDateTime = new DateTime($value7['tanggal']);
@@ -10138,7 +10132,7 @@ class RekapController extends Controller
                             [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
                         }
 
-   
+
                         $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
                         $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
                         $tod_brd = $tph1 + $jalan1 + $bin1 + $karung1;
@@ -12750,8 +12744,8 @@ class RekapController extends Controller
                             } else {
                                 [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
                             }
-    
-    
+
+
                             // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                             $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 1);
                             $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 1);
@@ -14264,7 +14258,7 @@ class RekapController extends Controller
         }
 
         // dd($names);
-         // Convert '-' values to 0
+        // Convert '-' values to 0
         $skorqcinspeksi = $skorqcinspeksi == '-' ? 0 : $skorqcinspeksi;
         $skorrhmutubuah = $skorrhmutubuah == '-' ? 0 : $skorrhmutubuah;
         $skorrhsidaktph = $skorrhsidaktph == '-' ? 0 : $skorrhsidaktph;
@@ -15188,12 +15182,11 @@ class RekapController extends Controller
 
         if ($blok != 0) {
             $allSkor = sidak_brdTotal($skor_total) +  sidak_matangSKOR($skor_jjgMSk) +  sidak_lwtMatang($skor_lewatMTng) + sidak_jjgKosong($skor_jjgKosong) + sidak_tangkaiP($skor_vcut) + sidak_PengBRD($per_kr);
-
         } else {
             $allSkor = '-';
         }
 
-     
+
         if (in_array($key, [1, 3, 3])) {
             $regional = 'REG-I';
         } else if (in_array($key, [4, 5, 6])) {
@@ -16226,7 +16219,7 @@ class RekapController extends Controller
                             } else {
                                 [$panen_brd, $panen_jjg] = calculatePanen($status_panen);
                             }
-     // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
+                            // untuk brondolan gabungan dari bt-tph,bt-jalan,bt-bin,jum-karung 
                             $total_brondolan =  round(($tph1 + $jalan1 + $bin1 + $karung1) * $panen_brd / 100, 4);
                             $total_janjang =  round(($buah1 + $restan1) * $panen_jjg / 100, 4);
                             $chartbrd =  $tph1 + $jalan1 + $bin1 + $karung1;
@@ -17225,7 +17218,7 @@ class RekapController extends Controller
             }
             $totalPKTwil = $p_panenWil + $k_panenWil + $brtgl_panenWil;
             $sumBHWil = $bhts_panenWil +  $bhtm1_panenWil +  $bhtm2_panenWil +  $bhtm3_oanenWil;
-            $janjang_panenWil = $janjang_panenWilx + array_sum($data);
+            $janjang_panenWil = $janjang_panenWilx;
 
             if ($janjang_panenWil == 0 || $pokok_panenWil == 0) {
                 $akpWil = 0;
@@ -18731,7 +18724,7 @@ class RekapController extends Controller
             $PerAbr = 0;
         }
 
-        $totalSkorEsttrans = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+        $totalSkorEsttrans = skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
         $totalSkorEstancak =  skor_palepah_ma($perPl) + skor_buah_Ma($sumPerBH) + skor_brd_ma($brdPerjjg);
         $totalSkorBuah =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
         $namaGM = '-';
@@ -18775,8 +18768,8 @@ class RekapController extends Controller
         $dataReg['total_buahtrans'] = $total_buahtrans;
         $dataReg['total_brdperTPHtrans'] = $brdPertph;
         $dataReg['total_buahPerTPHtrans'] = $buahPerTPH;
-        $dataReg['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertphEst);
-        $dataReg['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPHEst);
+        $dataReg['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertph);
+        $dataReg['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPH);
         $dataReg['totalSkortrans'] = $totalSkorEsttrans;
         $dataReg['check_datatrans'] = 'ada';
         $dataReg['mututrans'] = '------------------------------------------------------';
@@ -18839,7 +18832,7 @@ class RekapController extends Controller
             $emptybuahwiil[] = $value['total_perKosongjjgbh'];
             $vcutbuahwiil[] = $value['perVcutbh'];
         }
-       
+
         $skorreg = $totalSkorBuah + $totalSkorEsttrans + $totalSkorEstancak;
 
         // dd($skorreg);
