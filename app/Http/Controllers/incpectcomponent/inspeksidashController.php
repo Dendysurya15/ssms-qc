@@ -1881,7 +1881,7 @@ class inspeksidashController extends Controller
                 $PerAbr = 0;
             }
 
-            $totalSkorEsttrans = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+            $totalSkorEsttrans = skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
             $totalSkorEstancak =  skor_palepah_ma($perPl) + skor_buah_Ma($sumPerBH) + skor_brd_ma($brdPerjjg);
             $totalSkorBuah =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
 
@@ -1914,8 +1914,8 @@ class inspeksidashController extends Controller
             $resultmua['total_buahtrans'] = $total_buahtrans;
             $resultmua['total_brdperTPHtrans'] = $brdPertph;
             $resultmua['total_buahPerTPHtrans'] = $buahPerTPH;
-            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertphEst);
-            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPHEst);
+            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertph);
+            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPH);
             $resultmua['totalSkortrans'] = $totalSkorEsttrans;
             $resultmua['check_datatrans'] = 'ada';
             $resultmua['mututrans'] = '------------------------------------------------------';
@@ -1978,7 +1978,7 @@ class inspeksidashController extends Controller
             }
         }
 
-        // dd($getwilx);
+        // dd($rekap[3]);
         $dataReg = array();
 
         $ha_samplecak = 0;
@@ -2245,7 +2245,7 @@ class inspeksidashController extends Controller
                 $datawil[$key] = $value['wilayah']['wil'];
             }
         }
-
+        // dd($dataafdeling[2]['LDE']);
         $tabelafdeling = array();
         foreach ($dataafdeling as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -2261,7 +2261,7 @@ class inspeksidashController extends Controller
                     } else {
                         $TOTAL_SKORbh = 0;
                     }
-                    if ($value2['check_datatrans'] != 'kosong') {
+                    if ($value2['tph_sampleNew'] != 'kosong') {
                         $totalSkortrans = $value2['totalSkortrans'];
                     } else {
                         $totalSkortrans = 0;
@@ -2372,7 +2372,7 @@ class inspeksidashController extends Controller
         }
         // dd($getnamewil, $vcutbuahwiil, $emptybuahwiil);
         $arrView = array();
-
+        // dd($tabelafdeling);
         $arrView['tab_afdeling'] = $tabelafdeling;
         $arrView['tab_estate'] = $tableestate;
         $arrView['tab_wil'] = $tablewil;

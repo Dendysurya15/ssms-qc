@@ -2507,7 +2507,7 @@ class inspectController extends Controller
                 $PerAbr = 0;
             }
 
-            $totalSkorEsttrans = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+            $totalSkorEsttrans = skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
             $totalSkorEstancak =  skor_palepah_ma($perPl) + skor_buah_Ma($sumPerBH) + skor_brd_ma($brdPerjjg);
             $totalSkorBuah =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
 
@@ -2540,8 +2540,8 @@ class inspectController extends Controller
             $resultmua['total_buahtrans'] = $total_buahtrans;
             $resultmua['total_brdperTPHtrans'] = $brdPertph;
             $resultmua['total_buahPerTPHtrans'] = $buahPerTPH;
-            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertphEst);
-            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPHEst);
+            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertph);
+            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPH);
             $resultmua['totalSkortrans'] = $totalSkorEsttrans;
             $resultmua['check_datatrans'] = 'ada';
             $resultmua['mututrans'] = '------------------------------------------------------';
@@ -2604,7 +2604,7 @@ class inspectController extends Controller
             }
         }
 
-        // dd($getwilx);
+        // dd($rekap[3]);
         $dataReg = array();
 
         $ha_samplecak = 0;
@@ -12709,7 +12709,7 @@ class inspectController extends Controller
                 $PerAbr = 0;
             }
 
-            $totalSkorEsttrans = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+            $totalSkorEsttrans = skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
             $totalSkorEstancak =  skor_palepah_ma($perPl) + skor_buah_Ma($sumPerBH) + skor_brd_ma($brdPerjjg);
             $totalSkorBuah =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
 
@@ -12742,8 +12742,8 @@ class inspectController extends Controller
             $resultmua['total_buahtrans'] = $total_buahtrans;
             $resultmua['total_brdperTPHtrans'] = $brdPertph;
             $resultmua['total_buahPerTPHtrans'] = $buahPerTPH;
-            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertphEst);
-            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPHEst);
+            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertph);
+            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPH);
             $resultmua['totalSkortrans'] = $totalSkorEsttrans;
             $resultmua['check_datatrans'] = 'ada';
             $resultmua['mututrans'] = '------------------------------------------------------';

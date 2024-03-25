@@ -4479,6 +4479,8 @@ class RekapController extends Controller
             foreach ($qctransmua as $key => $value) {
                 $qctransmua = $value;
             }
+
+            // dd($qctransmua);
             // dd($qcancakmua, $qcbuahmua, $qctransmua);
             $qcinspeksimua = [];
             foreach ($qcancakmua as $key => $value) {
@@ -4568,7 +4570,7 @@ class RekapController extends Controller
                     }
                 }
             }
-
+            // dd($rekapmua);
 
             $sidaktph[3]['PT.MUA']['OA'] = $newSidak_mua['PT.MUA'];
             $mutu_buah[3]['PT.MUA'] = $sidak_buah_mua['PT.MUA'];
@@ -4992,7 +4994,7 @@ class RekapController extends Controller
                 }
             }
         }
-        // dd($finalwil);
+        // dd($rekapafd);
 
 
         // dd($calwilmtb,$calwil,$RekapWIlTabel,$finalwil);
@@ -18493,7 +18495,7 @@ class RekapController extends Controller
                 $PerAbr = 0;
             }
 
-            $totalSkorEsttrans = skor_brd_tinggal($brdPertphEst) + skor_buah_tinggal($buahPerTPHEst);
+            $totalSkorEsttrans = skor_brd_tinggal($brdPertph) + skor_buah_tinggal($buahPerTPH);
             $totalSkorEstancak =  skor_palepah_ma($perPl) + skor_buah_Ma($sumPerBH) + skor_brd_ma($brdPerjjg);
             $totalSkorBuah =  skor_buah_mentah_mb($PerMth) + skor_buah_masak_mb($PerMsk) + skor_buah_over_mb($PerOver) + skor_vcut_mb($PerVcut) + skor_jangkos_mb($Perkosongjjg) + skor_abr_mb($per_kr);
 
@@ -18526,8 +18528,8 @@ class RekapController extends Controller
             $resultmua['total_buahtrans'] = $total_buahtrans;
             $resultmua['total_brdperTPHtrans'] = $brdPertph;
             $resultmua['total_buahPerTPHtrans'] = $buahPerTPH;
-            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertphEst);
-            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPHEst);
+            $resultmua['skor_brdPertphtrans'] = skor_brd_tinggal($brdPertph);
+            $resultmua['skor_buahPerTPHtrans'] = skor_buah_tinggal($buahPerTPH);
             $resultmua['totalSkortrans'] = $totalSkorEsttrans;
             $resultmua['check_datatrans'] = 'ada';
             $resultmua['mututrans'] = '------------------------------------------------------';
@@ -18835,7 +18837,7 @@ class RekapController extends Controller
 
         $skorreg = $totalSkorBuah + $totalSkorEsttrans + $totalSkorEstancak;
 
-        // dd($skorreg);
+        // dd($tablewil);
 
         $arr = array();
         $arr['reg'] = $skorreg;
