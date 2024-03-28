@@ -14,7 +14,7 @@ use DateTime;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 
-require '../app/helpers.php';
+require_once(app_path('helpers.php'));
 
 use Illuminate\Support\Facades\Storage;
 

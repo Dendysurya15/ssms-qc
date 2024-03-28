@@ -13,7 +13,7 @@ use Illuminate\Validation\Rules\Unique;
 use Barryvdh\DomPDF\Facade\Pdf;
 use PhpParser\Node\Expr\Isset_;
 
-require '../app/helpers.php';
+require_once(app_path('helpers.php'));
 
 class emplacementsController extends Controller
 {

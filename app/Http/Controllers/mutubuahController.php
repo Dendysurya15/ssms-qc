@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\File;
 
 use function PHPUnit\Framework\isEmpty;
 
-require '../app/helpers.php';
+require_once(app_path('helpers.php'));
 class mutubuahController extends Controller
 {
     //

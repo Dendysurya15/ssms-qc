@@ -26,3 +26,6 @@ Route::get('/gettaksasi', [taksasiController::class, 'dashboard']);
 Route::get('/history', [ApiqcController::class, 'getHistoryedit']);
 Route::post('/plotmaps', [ApiqcController::class, 'plotmaps']);
 Route::get('/testapi', [ApiqcController::class, 'testapi']);
+Route::get('/getdatacron', [ApiqcController::class, 'getdatacron']);
+Route::post('/recordcronjob', [ApiqcController::class, 'recordcronjob']);
+Route::get('/checkcronjob', [ApiqcController::class, 'checkcronjob']);

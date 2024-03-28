@@ -954,6 +954,7 @@ if (!function_exists('detectDuplicates')) {
         return $result;
     }
 }
+
 if (!function_exists('sendwhatsapp')) {
     function sendwhatsapp($dataarr)
     {

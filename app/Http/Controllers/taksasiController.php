@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Carbon\Carbon;
 
 
-require '../app/helpers.php';
+require_once(app_path('helpers.php'));
 
 class taksasiController extends Controller
 {

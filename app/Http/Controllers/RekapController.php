@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
-require '../app/helpers.php';
+require_once(app_path('helpers.php'));
 
 class RekapController extends Controller
 {

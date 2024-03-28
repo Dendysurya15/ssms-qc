@@ -9,6 +9,8 @@ use App\Models\Blok;
 use App\Models\Estate;
 use App\Models\Regional;
 use App\Models\Wilayah;
+use App\Models\historycron;
+use Carbon\Carbon;
 
 class ApiqcController extends Controller
 {
@@ -234,5 +236,89 @@ class ApiqcController extends Controller
 
         curl_close($curl);
         echo $response;
+    }
+
+    public function getdatacron()
+    {
+
+        $getdata = DB::connection('mysql2')->table('crontab')
+            ->select('*')
+            ->get();
+
+        return response()->json($getdata);
+    }
+
+    public function recordcronjob(Request $request)
+    {
+        $estate = $request->input('est');
+        $datetime = $request->input('datetime');
+
+        if (!$estate || !$datetime) {
+            return response()->json(['error' => 'Invalid data provided.'], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $newdata = new historycron();
+            $newdata->datetime = $datetime;
+            $newdata->estate = $estate;
+            $newdata->save();
+
+            DB::commit();
+
+            return response()->json(['success' => true], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            if ($th instanceof \Illuminate\Database\QueryException) {
+                return response()->json(['error' => 'Database error.'], 500);
+            }
+
+            return response()->json(['error' => 'An error occurred while saving data. Please try again.'], 500);
+        }
+    }
+
+    public function checkcronjob()
+    {
+        $time = Carbon::now('Asia/Jakarta'); // Get the current time in GMT+7 (Asia/Jakarta time zone)
+        $hours = $time->format('H:i:s');
+        $ymd = $time->format('Y-m-d H:i:s');
+
+        $startTime = Carbon::createFromTime(6, 0, 0)->format('H:i:s');
+        $yearmonth = $time->format('Y-m-d') . ' ' . $startTime;
+
+        // Query to get data between 06:00:00 and the current time
+        $getdatacron = DB::connection('mysql2')->table('crontab')
+            ->select('*')
+            ->whereBetween('datetime', [$startTime, $hours])
+            ->get();
+
+        $gethistorycron = DB::connection('mysql2')->table('cron_history')
+            ->select('*')
+            ->whereBetween('datetime', [$yearmonth, $ymd])
+            ->get();
+
+        $cronfail = [];
+        foreach ($getdatacron as $value) {
+            $foundInHistory = false;
+            foreach ($gethistorycron as $value1) {
+                if ($value->estate == $value1->estate) {
+                    $foundInHistory = true;
+                    break; // Exit the inner loop if found in history
+                }
+            }
+            if (!$foundInHistory) {
+                $cronfail[] = $value; // Add to cronfail if not found in history
+            }
+        }
+
+        return response()->json([
+            'time' => $ymd,
+            'hours' => $hours,
+            'cronfail' => $cronfail,
+            'crondata' => $getdatacron,
+            'cronhistory' => $gethistorycron,
+        ], 200);
     }
 }

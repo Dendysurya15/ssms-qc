@@ -10,7 +10,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
 
-require '../app/helpers.php';
+require_once(app_path('helpers.php'));
 
 class emplacementsController extends Controller
 {

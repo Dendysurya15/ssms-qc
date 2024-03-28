@@ -15,7 +15,7 @@ use PhpParser\Node\Stmt\Foreach_;
 use Termwind\Components\Dd;
 use Symfony\Component\VarDumper\VarDumper;
 
-require "../app/helpers.php";
+require_once(app_path('helpers.php'));
 
 class SidaktphController extends Controller
 {

@@ -11,7 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
 use Illuminate\Support\Facades\Session;
 
-require '../app/helpers.php';
+require_once(app_path('helpers.php'));
 
 class pdfgenerateController extends Controller
 {
