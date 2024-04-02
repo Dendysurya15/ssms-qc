@@ -173,7 +173,7 @@
     <div class="ml-3 mr-3 mb-3">
         <div class="row text-center tbl-fixed">
 
-            <table id="headshot" data-cols-width="8,8,10,10,15,10,8,10,8,5,15,8,8">
+            <table id="headshot" data-cols-width="8,8,10,10,15,10,8,10,8,8,15,8,8">
                 <tr>
                     <th data-b-a-s="medium" colspan="13" data-a-h="center" data-a-v="middle" data-fill-color="e0e4f4" class="freeze-col align-middle" bgcolor="#e0e4f4" style="color: #000000;"> Laporan Taksai Panen</th>
                 </tr>
@@ -408,19 +408,19 @@
 
 
                     <tr>
-                        <td>* Asumsi 1 rit = 6500 kg</td>
+                        <td  colspan="3">* Asumsi 1 rit = 6500 kg</td>
                     </tr>
                     <tr>
                         <td data-cols-width="4" data-fill-color="e8645c"></td>
-                        <td>User melakukan taksasi kurang dari 100 m & kurang dari 4 min</td>
+                        <td colspan="4">User melakukan taksasi kurang dari 100 m & kurang dari 4 min</td>
                     </tr>
                     <tr>
                         <td data-cols-width="4" data-fill-color="f88c44"></td>
-                        <td>User melakukan taksasi kurang dari 4 min</td>
+                        <td  colspan="4">User melakukan taksasi kurang dari 4 min</td>
                     </tr>
                     <tr>
                         <td data-cols-width="4" data-fill-color="f8ec7c"></td>
-                        <td>User melakukan taksasi kurang dari 100 m</td>
+                        <td  colspan="4">User melakukan taksasi kurang dari 100 m</td>
                     </tr>
                 </tbody>
 
@@ -428,7 +428,6 @@
             </table>
         </div>
     </div>
-
     <button id="exportButton" style="display: none;">Export to Excel</button>
 
 
@@ -447,9 +446,9 @@
                 });
 
                 // Close the window after exporting
-                // setTimeout(function() {
-                //     window.close();
-                // }, 500);
+                setTimeout(function() {
+                    window.close();
+                }, 500);
             });
 
             // Trigger the click event on the export button
@@ -457,7 +456,7 @@
         }
 
         // Call the function when the page loads
-        // window.onload = autoExportDownloadAndClose;
+        window.onload = autoExportDownloadAndClose;
     </script>
 
 </body>

@@ -9,13 +9,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script> -->
 
-    <!-- <script src="{{asset('sheetjs/dist/xlsx.bundle.js')}}"></script> -->
+     <!--<script src="{{asset('sheetjs/dist/xlsx.bundle.js')}}"></script> -->
 
-    <script type="text/javascript" src="{{ asset('table-to-excel-master/dist/tableToExcel.js') }}"></script>
+    <script type="javascript" src="{{ asset('table-to-excel-master/dist/tableToExcel.js') }}"></script>
 </head>
 
 
 <body>
+       <img src="{{ asset('img/Logo-SSS.png') }}" style="height:90px;margin-top : 10px;margin-left: 10px">
     <table id="export">
         <thead style="color: white;">
             <tr>
@@ -236,116 +237,11 @@
             @endforeach
             @endforeach
             @endforeach
-            <tr>
-                @php
-
-                if($datareg['afd'] === 'est'){
-                $colorreg = '76C5E8';
-                }else if ($datareg['afd'] === 'wil'){
-                $colorreg = 'FF7043';
-                }
-                else{
-                $colorreg = 'EBEBEB';
-                };
-
-
-                $allskorreg = 0;
-
-
-                if($datareg['check_databh'] === 'ada' || $datareg['check_datacak'] === 'ada' || $datareg['check_datatrans'] === 'ada'){
-                $allskorreg = $datareg['skor_akhircak'] + $datareg['totalSkortrans'] + $datareg['TOTAL_SKORbh'];
-
-                if ($allskorreg >= 95) {
-                $newktgreg = "EXCELLENT";
-                $color2reg = '5074c4';
-                } elseif ($allskorreg >= 85) {
-                $newktgreg = "GOOD";
-                $color2reg = '08fc2c';
-                } elseif ($allskorreg >= 75) {
-                $newktgreg = "SATISFACTORY";
-                $color2reg = 'ffdc04';
-                } elseif ($allskorreg >= 65) {
-                $newktgreg = "FAIR";
-                $color2reg = 'ffa404';
-                } else {
-                $newktgreg = "POOR";
-                $color2reg = 'ff0404';
-                }
-
-                }else{
-                $allskorreg = '-';
-                $newktgreg = "-";
-                $color2reg = 'E2E2E2';
-                }
-
-
-                @endphp
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['est'] }}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['afd'] }}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['pokok_samplecak'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['ha_samplecak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['jumlah_panencak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['akp_rlcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['pcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['kcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['tglcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_brdcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['brd/jjgcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_brdcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhts_scak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhtm1cak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhtm2cak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['bhtm3cak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_buahcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['buah/jjgcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_bhcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['palepah_pokokcak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['palepah_percak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_pscak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_akhircak']  : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">
-                    {{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'?  $datareg['tph_sampleNew'] : '-' }}
-                </td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_brdtrans'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_brdperTPHtrans'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_brdPertphtrans'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_buahtrans'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_buahPerTPHtrans'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_buahPerTPHtrans'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{ $datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['totalSkortrans'] : '-'}}</td>
-
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['tph_baris_bloksbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['sampleJJG_totalbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_mentahbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perMentahbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_mentahbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_masakbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perMasakbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_masakbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_overbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perOverbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_overbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_jjgKosongbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_perKosongjjgbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_jjgKosongbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_vcutbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['perVcutbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_vcutbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['total_abnormalbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['perAbnormalbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['jum_krbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['persen_krbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['skor_krbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$datareg['check_databh'] === 'ada' ||  $datareg['check_datacak'] === 'ada'   ||  $datareg['check_datatrans'] === 'ada'? $datareg['TOTAL_SKORbh'] : '-'}}</td>
-                <td data-fill-color="{{ $colorreg }}" data-b-a-s="medium" data-a-h="center">{{$allskorreg}}</td>
-                <td data-fill-color="{{ $color2reg }}" data-b-a-s="medium" data-a-h="center">{{$newktgreg}}</td>
-            </tr>
-
         </tbody>
     </table>
-
-    <button onclick=" exportToExcel()">Export to Excel</button>
-
+  
+    <button onclick="exportToExcel()">Export to Excel</button>
+    
     <script>
         function exportToExcel() {
             var table = document.getElementById("export");

@@ -1,7 +1,6 @@
 @include('layout/header')
 
 <div class="content-wrapper">
-
     <section class="content"><br>
         <div class="container-fluid">
             <div class="card table_wrapper p-4">
@@ -44,10 +43,12 @@
                             <td>{{$user->email}}</td>
                             <td style="display: inline-flex">
 
-                                <a href="{{ route('edit', ['id' => $user->user_id])}}" class="btn btn-success mr-2"><i class="nav-icon fa-solid fa-edit"></i></a>
+                                <a href="{{ route('edit', ['id' => $user->user_id])}}" class="btn btn-success mr-2"><i
+                                        class="nav-icon fa-solid fa-edit"></i></a>
                                 <form action="{{ route('delete', ['id' => $user->user_id])}}" method="POST">{{
                                     csrf_field() }}
-                                    <input type="hidden" name="id" value="{{$user->user_id}}"><button type="submit" class="btn btn-danger"><i class="nav-icon fa-solid fa-trash"></i></button>
+                                    <input type="hidden" name="id" value="{{$user->user_id}}"><button type="submit"
+                                        class="btn btn-danger"><i class="nav-icon fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
 
@@ -62,7 +63,7 @@
 @include('layout/footer')
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function(){
         $('#dataTable').DataTable();
     });
 

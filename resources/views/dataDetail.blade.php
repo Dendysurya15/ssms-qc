@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-
-<!-- JavaScript dependencies -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/datatables.min.css" rel="stylesheet">
-
-<script src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/datatables.min.js"></script>
-
 @include('layout/header')
-
-
 <style>
     .Wraping {
         width: 100%;
@@ -1523,6 +1508,11 @@
 </div>
 
 
+
+@include('layout/footer')
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
@@ -1533,9 +1523,9 @@
 
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-
-
-@include('layout/footer')
+<link href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.0.3/datatables.min.css" rel="stylesheet">
+ 
+<script src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.0.3/datatables.min.js"></script>
 
 <script>
     let getest = @json($est);
@@ -2289,7 +2279,10 @@
             tglPDF.value = inputDate.value;
             downloadButton.disabled = false;
             enableExcelDownloadButton();
-            document.getElementById('moveDataButton').disabled = false;
+            
+        if (currentUserName === 'Askep' || currentUserName === 'Manager'){
+                    document.getElementById('moveDataButton').disabled = false;
+        }
         });
     });
     ///
@@ -2317,7 +2310,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         const inputDate = document.getElementById("inputDate");
         if (inputDate.value) {
-            enableShowButton();
+            // enableShowButton();
         }
     });
 
@@ -4769,8 +4762,8 @@
         });
     }
 
-
-    document.getElementById('moveDataButton').onclick = function() {
+if (currentUserName === 'Askep' || currentUserName === 'Manager'){
+     document.getElementById('moveDataButton').onclick = function() {
 
 
         Swal.fire({
@@ -4846,7 +4839,7 @@
                                     method: "post",
                                     data: {
                                         tglreal: tanggalori,
-                                        tgledit: selectedDate, // Set tgledit to the selected date
+                                        tgledit: selectedDate, // Set tgledit to the selected dateenableShowButton
                                         est: getest,
                                         afd: getafd,
                                         type: type,
@@ -4886,4 +4879,6 @@
             }
         });
     }
+}
+   
 </script>

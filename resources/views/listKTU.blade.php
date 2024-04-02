@@ -1,7 +1,7 @@
 @include('layout/header')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 
-@if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada')
+ @if (session('user_name') == 'Dennis Irawan' || session('user_name') == 'Ferry Suhada')
 <div class="content-wrapper">
     @if(session('status'))
     <div class="mr-3 ml-3 alert alert-success">
@@ -17,7 +17,7 @@
 
     <section class="content">
         <div class="container-fluid pt-3">
-            <a href="{{ route('dashboard_gudang') }}" class="btn btn-dark"> <i class="nav-icon fa-solid fa-arrow-left "></i></a>
+            <a href="{{ route('dashboard') }}" class="btn btn-dark"> <i class="nav-icon fa-solid fa-arrow-left "></i></a>
             <div class="card mt-2">
                 <div class="card-body">
                     <button class="btn btn-primary mb-2" style="float: right;" data-bs-toggle="modal" data-bs-target="#tambahData">Tambah Data</button>
@@ -115,10 +115,18 @@
                         <label for="jabatan" class="col-form-label">Jabatan</label>
                         <input type="text" class="form-control" id="jabatan_id" name="jabatan" value="KTU " required>
                     </div>
-
+ <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Regional</label>
+                        <select id="regional-dropdown" name="reg" class="form-control" required>
+                            <option value="" disabled selected>SILAKAN PILIH</option>
+                            @foreach ($regional as $key => $value)
+                            <option value="{{$key}}">{{$value}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label">Estate</label>
-                        <select name="est" class="form-control" required>
+                        <select id="estate-dropdown" name="est" class="form-control" required>
                             <option value="" disabled selected>SILAKAN PILIH</option>
                             @foreach ($estate as $value)
                             <option value="{{$value->est}}">{{$value->est}}</option>
@@ -126,7 +134,7 @@
                         </select>
                     </div>
                     <div class="mt-2 mb-2" style="float: right">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button id="submitData" type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -143,4 +151,61 @@
     $(document).ready(function() {
         $('#listAsisten').DataTable();
     });
+    
+    const regionalDropdown = document.getElementById('regional-dropdown');
+    const estateDropdown = document.getElementById('estate-dropdown');
+
+    // Listen for changes on the regional dropdown
+    regionalDropdown.addEventListener('change', () => {
+        // Clear existing options in the estate dropdown
+        estateDropdown.innerHTML = '<option value="" disabled selected>SILAKAN PILIH</option>';
+
+        // Get the selected regional value
+        const selectedRegional = regionalDropdown.value;
+        var _token = $('input[name="_token"]').val();
+        
+        $.ajax({
+        url: 'get-estate-list-ktu',
+        method: "POST",
+            data: {
+                _token: _token,
+                regional: selectedRegional
+            },
+            success: function(result) {
+                var parseResult = JSON.parse(result)
+                
+                console.log(parseResult)
+                const estateDropdown = $('#estate-dropdown');
+
+                // Clear the existing options
+                estateDropdown.empty();
+
+                // Add the default option
+                estateDropdown.append($('<option>').val('').text('SILAKAN PILIH'));
+
+                // Add the options for each estate
+                // $.each(parseResult, function(item) {
+                //     console.log(item)
+                //     // estateDropdown.append($('<option>').val(estate.est).text(estate.est));
+                // });
+
+                for (let i = 0; i < parseResult.length; i++) {
+                const option = $('<option>').val(parseResult[i]).text(parseResult[i]);
+                estateDropdown.append(option);
+                }
+     } });
+
+    });
+
+        $('#estate-dropdown').on('change', function() {
+        const selectedValue = $(this).val();
+        console.log(selectedValue);
+        
+        });
+
+        document.getElementById('submitData').onclick = function() {
+            var est = document.getElementById('estate-dropdown').value;
+
+            console.log(est)
+    }
 </script>

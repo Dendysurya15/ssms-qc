@@ -1700,6 +1700,7 @@
     }
 
 
+  
     function getdata() {
         // showloading()
         $('#afd1').empty()

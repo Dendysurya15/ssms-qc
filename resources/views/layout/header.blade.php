@@ -104,7 +104,7 @@ session_start();
 
         </nav>
         <aside class="main-sidebar sidebar-light-primary elevation-4">
-            <a href="{{ asset('dashboard') }}" class="brand-link">
+            <a href="{{ asset('rekap') }}" class="brand-link">
                 <img src="{{ asset('img/CBI-logo.png') }}" alt="Covid Tracker" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">Dashboard</span>
             </a>
@@ -213,16 +213,16 @@ session_start();
                         @endif
 
 
-                        @if (strpos(session('departemen'), 'QC') !== false)
-                        <li class="nav-item">
-                            <a class="nav-link" id="deleteData">
-                                <div class="nav-icon lottie-animation justify-between" data-animation-path="https://assets4.lottiefiles.com/packages/lf20_d6r9tuqy.json" style="width:25px; height:25px;"></div>
-                                <p>
-                                    Hapus Data Duplikat
-                                </p>
-                            </a>
-                        </li>
-                        @endif
+                        <!--@if (strpos(session('departemen'), 'QC') !== false)-->
+                        <!--<li class="nav-item">-->
+                        <!--    <a class="nav-link" id="deleteData">-->
+                        <!--        <div class="nav-icon lottie-animation justify-between" data-animation-path="https://assets4.lottiefiles.com/packages/lf20_d6r9tuqy.json" style="width:25px; height:25px;"></div>-->
+                        <!--        <p>-->
+                        <!--            Hapus Data Duplikat-->
+                        <!--        </p>-->
+                        <!--    </a>-->
+                        <!--</li>-->
+                        <!--@endif-->
 
 
 
@@ -263,71 +263,71 @@ session_start();
         @if (strpos(session('departemen'), 'QC') !== false)
         @section('js')
         <script>
-            $("#deleteData").click(function() {
-                Swal.fire({
-                    title: 'Yakin menghapus data duplikat?',
-                    text: "Anda tidak dapat mengembalikan ini!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus data!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Perform the request to the PHP file when the confirmation is triggered
-                        fetch('http://localhost/php/deleteDuplicate.php')
-                            .then(response => response.json())
-                            .then(data => {
-                                // Show SweetAlert based on the response for each object
-                                if (data.mutu_ancak_new.status === 'success') {
-                                    Swal.fire({
-                                        title: 'Berhasil!',
-                                        text: data.mutu_ancak_new.message,
-                                        icon: 'success'
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Gagal!',
-                                        text: data.mutu_ancak_new.message,
-                                        icon: 'error'
-                                    });
-                                }
+            // $("#deleteData").click(function() {
+            //     Swal.fire({
+            //         title: 'Yakin menghapus data duplikat?',
+            //         text: "Anda tidak dapat mengembalikan ini!",
+            //         icon: 'warning',
+            //         showCancelButton: true,
+            //         confirmButtonColor: '#3085d6',
+            //         cancelButtonColor: '#d33',
+            //         confirmButtonText: 'Ya, hapus data!'
+            //     }).then((result) => {
+            //         if (result.isConfirmed) {
+            //             // Perform the request to the PHP file when the confirmation is triggered
+            //             fetch('http://localhost/php/deleteDuplicate.php')
+            //                 .then(response => response.json())
+            //                 .then(data => {
+            //                     // Show SweetAlert based on the response for each object
+            //                     if (data.mutu_ancak_new.status === 'success') {
+            //                         Swal.fire({
+            //                             title: 'Berhasil!',
+            //                             text: data.mutu_ancak_new.message,
+            //                             icon: 'success'
+            //                         });
+            //                     } else {
+            //                         Swal.fire({
+            //                             title: 'Gagal!',
+            //                             text: data.mutu_ancak_new.message,
+            //                             icon: 'error'
+            //                         });
+            //                     }
 
-                                if (data.mutu_buah.status === 'success') {
-                                    Swal.fire({
-                                        title: 'Berhasil!',
-                                        text: data.mutu_buah.message,
-                                        icon: 'success'
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Gagal!',
-                                        text: data.mutu_buah.message,
-                                        icon: 'error'
-                                    });
-                                }
+            //                     if (data.mutu_buah.status === 'success') {
+            //                         Swal.fire({
+            //                             title: 'Berhasil!',
+            //                             text: data.mutu_buah.message,
+            //                             icon: 'success'
+            //                         });
+            //                     } else {
+            //                         Swal.fire({
+            //                             title: 'Gagal!',
+            //                             text: data.mutu_buah.message,
+            //                             icon: 'error'
+            //                         });
+            //                     }
 
-                                if (data.mutu_transport.status === 'success') {
-                                    Swal.fire({
-                                        title: 'Berhasil!',
-                                        text: data.mutu_transport.message,
-                                        icon: 'success'
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Gagal!',
-                                        text: data.mutu_transport.message,
-                                        icon: 'error'
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                // Handle any errors that occur during the request
-                                console.error('Error:', error);
-                            });
-                    }
-                });
-            });
+            //                     if (data.mutu_transport.status === 'success') {
+            //                         Swal.fire({
+            //                             title: 'Berhasil!',
+            //                             text: data.mutu_transport.message,
+            //                             icon: 'success'
+            //                         });
+            //                     } else {
+            //                         Swal.fire({
+            //                             title: 'Gagal!',
+            //                             text: data.mutu_transport.message,
+            //                             icon: 'error'
+            //                         });
+            //                     }
+            //                 })
+            //                 .catch(error => {
+            //                     // Handle any errors that occur during the request
+            //                     console.error('Error:', error);
+            //                 });
+            //         }
+            //     });
+            // });
         </script>
         @endsection
         @endif

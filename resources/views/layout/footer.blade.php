@@ -2,7 +2,7 @@
     <strong>Copyright © 2021-2026 <a href="https://srs-ssms.com">SRS-SSMS.COM</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 3.0.5
+        <b>Version</b> 4.0.1
     </div>
 </footer>
 
