@@ -11,6 +11,9 @@ use App\Models\Regional;
 use App\Models\Wilayah;
 use App\Models\historycron;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ApiqcController extends Controller
 {
@@ -322,13 +325,31 @@ class ApiqcController extends Controller
         ], 200);
     }
 
-    public function sendwamaintence()
+    public function sendwamaintence(): JsonResponse
     {
-
         $check = DB::table('message_info')
             ->select('*')
+            ->where('status_sending', 0)
             ->get();
 
-        dd($check);
+        // Check if the result is empty
+        if ($check->isEmpty()) {
+            return response()->json([
+                'message' => 'No pending messages found.'
+            ], 404); // 404 Not Found
+        } else {
+            $data = [];
+            $id = null;
+
+            foreach ($check as $value) {
+                $data[] = json_decode($value->data, true); // Decode JSON to array
+                $id = $value->id;
+            }
+
+            return response()->json([
+                'id' => $id,
+                'data' => $data,
+            ], 200); // 200 OK
+        }
     }
 }
