@@ -43,6 +43,7 @@ class LoginController extends Controller
             'lok' => $user->lokasi_kerja,
             'jabatan' => $user->jabatan,
         ]);
+        // dd(session());
 
         return redirect()->intended('rekap');
     }

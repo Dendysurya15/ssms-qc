@@ -56,7 +56,8 @@ session_start();
     <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.0/jszip.min.js"></script>
-
+    <link href="DataTables/datatables.min.css" rel="stylesheet">
+    <script src="DataTables/datatables.min.js"></script>
     <style type="text/css">
         .center {
             margin: auto;

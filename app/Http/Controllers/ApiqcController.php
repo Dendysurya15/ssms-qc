@@ -321,4 +321,14 @@ class ApiqcController extends Controller
             'cronhistory' => $gethistorycron,
         ], 200);
     }
+
+    public function sendwamaintence()
+    {
+
+        $check = DB::table('message_info')
+            ->select('*')
+            ->get();
+
+        dd($check);
+    }
 }
